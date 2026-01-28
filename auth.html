@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bari Plux Tool Pro - Authentication</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Reset & Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+        
+        :root {
+            --primary: #F97316;
+            --primary-dark: #EA580C;
+            --secondary: #8B5CF6;
+            --dark-bg: #020617;
+            --dark-card: #0B1120;
+            --dark-border: #1E293B;
+            --text-primary: #F1F5F9;
+            --text-secondary: #94A3B8;
+            --text-muted: #64748B;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --info: #3B82F6;
+            --radius-lg: 20px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+            --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            --shadow-md: 0 10px 25px rgba(0, 0, 0, 0.3);
+            --gradient-primary: linear-gradient(135deg, #F97316 0%, #8B5CF6 100%);
+            --gradient-dark: linear-gradient(135deg, #020617 0%, #0B1120 100%);
+        }
+        
+        body {
+            background: var(--gradient-dark);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: var(--text-primary);
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .bg-particle {
+            position: absolute;
+            border-radius: 50%;
+            background: var(--primary);
+            opacity: 0.1;
+            animation: float 20s infinite linear;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(100px, 100px); }
+            50% { transform: translate(0, 200px); }
+            75% { transform: translate(-100px, 100px); }
+        }
+        
+        /* Main Container */
+        .auth-container {
+            width: 100%;
+            max-width: 500px;
+            background: var(--dark-card);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--dark-border);
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 10;
+            animation: slideUp 0.6s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .logo-wrapper {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 20px;
+            position: relative;
+        }
+        
+        .logo-glow {
+            position: absolute;
+            width: 120%;
+            height: 120%;
+            top: -10%;
+            left: -10%;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            filter: blur(20px);
+            opacity: 0.3;
+            animation: pulse 2s infinite alternate;
+        }
+        
+        @keyframes pulse {
+            from { opacity: 0.2; }
+            to { opacity: 0.4; }
+        }
+        
+        .logo {
+            width: 100px;
+            height: 100px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(249, 115, 22, 0.3);
+        }
+        
+        .logo i {
+            font-size: 40px;
+            color: white;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+        }
+        
+        .app-title {
+            font-size: 28px;
+            font-weight: 900;
+            margin-bottom: 8px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+        }
+        
+        .app-subtitle {
+            color: var(--text-secondary);
+            font-size: 15px;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+        
+        /* Status Badge */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: 15px;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: blink 2s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        /* Form */
+        .form-section {
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--dark-border);
+        }
+        
+        .section-title i {
+            color: var(--primary);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .input-wrapper {
+            position: relative;
+        }
+        
+        .input-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            z-index: 2;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 16px 16px 16px 48px;
+            background: rgba(15, 23, 42, 0.8);
+            border: 2px solid var(--dark-border);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-size: 15px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.2);
+            background: rgba(15, 23, 42, 1);
+        }
+        
+        .form-input::placeholder {
+            color: var(--text-muted);
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 18px;
+            padding: 4px;
+            transition: color 0.3s;
+        }
+        
+        .password-toggle:hover {
+            color: var(--primary);
+        }
+        
+        /* Checkbox */
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .checkbox-input {
+            display: none;
+        }
+        
+        .checkbox-custom {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--dark-border);
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex-shrink: 0;
+        }
+        
+        .checkbox-input:checked + .checkbox-custom {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+        
+        .checkbox-input:checked + .checkbox-custom i {
+            opacity: 1;
+            color: white;
+            font-size: 12px;
+        }
+        
+        .checkbox-custom i {
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .checkbox-label {
+            color: var(--text-secondary);
+            font-size: 14px;
+            cursor: pointer;
+        }
+        
+        .checkbox-label a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .checkbox-label a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Tabs */
+        .auth-tabs {
+            display: flex;
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: var(--radius-md);
+            padding: 5px;
+            margin-bottom: 30px;
+        }
+        
+        .auth-tab {
+            flex: 1;
+            text-align: center;
+            padding: 15px;
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            color: var(--text-secondary);
+            transition: all 0.3s;
+        }
+        
+        .auth-tab.active {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+        }
+        
+        .auth-form {
+            display: none;
+        }
+        
+        .auth-form.active {
+            display: block;
+        }
+        
+        /* Buttons */
+        .btn {
+            width: 100%;
+            padding: 18px;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(249, 115, 22, 0.4);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+        
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        
+        .btn-secondary {
+            background: rgba(30, 41, 59, 0.8);
+            color: var(--text-primary);
+            border: 1px solid var(--dark-border);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(30, 41, 59, 1);
+            border-color: var(--primary);
+        }
+        
+        /* Loader */
+        .loader {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .loader-spinner {
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Messages */
+        .alert {
+            padding: 15px;
+            border-radius: var(--radius-md);
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+            animation: fadeIn 0.3s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .alert-success {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        
+        .alert-error {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+        
+        .alert-info {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--info);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+        
+        /* Password Strength */
+        .password-strength {
+            margin-top: 8px;
+        }
+        
+        .strength-bar {
+            height: 6px;
+            background: var(--dark-border);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 5px;
+        }
+        
+        .strength-fill {
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s, background 0.3s;
+        }
+        
+        .strength-text {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--dark-border);
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 13px;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+        
+        .copyright {
+            font-size: 11px;
+            opacity: 0.7;
+        }
+        
+        /* Responsive */
+        @media (max-width: 600px) {
+            .auth-container {
+                padding: 30px 25px;
+            }
+            
+            .logo-wrapper {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .logo {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .logo i {
+                font-size: 32px;
+            }
+            
+            .app-title {
+                font-size: 24px;
+            }
+            
+            .form-input {
+                padding: 14px 14px 14px 44px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-animation" id="bgAnimation"></div>
+    
+    <!-- Main Container -->
+    <div class="auth-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-wrapper">
+                <div class="logo-glow"></div>
+                <div class="logo">
+                    <i class="fas fa-crown"></i>
+                </div>
+            </div>
+            
+            <h1 class="app-title">Bari Plux Tool Pro</h1>
+            <p class="app-subtitle">Professional PUBG Mobile Optimization Suite</p>
+            
+            <div class="status-badge">
+                <div class="status-dot"></div>
+                <span id="connectionStatus">Ready for Authentication</span>
+            </div>
+        </div>
+        
+        <!-- Messages -->
+        <div class="alert alert-success" id="successAlert"></div>
+        <div class="alert alert-error" id="errorAlert"></div>
+        <div class="alert alert-info" id="infoAlert"></div>
+        
+        <!-- Tabs -->
+        <div class="auth-tabs">
+            <div class="auth-tab active" id="loginTab" onclick="showForm('login')">
+                <i class="fas fa-sign-in-alt"></i> Login
+            </div>
+            <div class="auth-tab" id="registerTab" onclick="showForm('register')">
+                <i class="fas fa-user-plus"></i> Register
+            </div>
+        </div>
+        
+        <!-- Login Form -->
+        <div class="auth-form active" id="loginForm">
+            <form id="loginFormElement">
+                <div class="form-group">
+                    <label class="form-label" for="loginEmail">
+                        <i class="fas fa-envelope"></i> Email Address
+                    </label>
+                    <div class="input-wrapper">
+                        <div class="input-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <input type="email" 
+                               id="loginEmail" 
+                               class="form-input" 
+                               placeholder="your@email.com"
+                               required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="loginPassword">
+                        <i class="fas fa-lock"></i> Password
+                    </label>
+                    <div class="input-wrapper">
+                        <div class="input-icon">
+                            <i class="fas fa-key"></i>
+                        </div>
+                        <input type="password" 
+                               id="loginPassword" 
+                               class="form-input" 
+                               placeholder="••••••••"
+                               required>
+                        <button type="button" class="password-toggle" id="toggleLoginPassword">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="rememberMe" class="checkbox-input" checked>
+                    <label for="rememberMe" class="checkbox-custom">
+                        <i class="fas fa-check"></i>
+                    </label>
+                    <label for="rememberMe" class="checkbox-label">
+                        Keep me logged in for 30 days
+                    </label>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" id="loginBtn">
+                    <span id="loginBtnText">
+                        <i class="fas fa-rocket"></i> Login to Bari Plux
+                    </span>
+                    <div class="loader" id="loginLoader">
+                        <div class="loader-spinner"></div>
+                        <span>Authenticating...</span>
+                    </div>
+                </button>
+            </form>
+        </div>
+        
+        <!-- Register Form -->
+        <div class="auth-form" id="registerForm">
+            <form id="registerFormElement">
+                <div class="form-group">
+                    <label class="form-label" for="registerEmail">
+                        <i class="fas fa-envelope"></i> Email Address
+                    </label>
+                    <div class="input-wrapper">
+                        <div class="input-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <input type="email" 
+                               id="registerEmail" 
+                               class="form-input" 
+                               placeholder="your@email.com"
+                               required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="registerPassword">
+                        <i class="fas fa-lock"></i> Password
+                    </label>
+                    <div class="input-wrapper">
+                        <div class="input-icon">
+                            <i class="fas fa-key"></i>
+                        </div>
+                        <input type="password" 
+                               id="registerPassword" 
+                               class="form-input" 
+                               placeholder="••••••••"
+                               required>
+                        <button type="button" class="password-toggle" id="toggleRegisterPassword">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="password-strength">
+                        <div class="strength-bar">
+                            <div class="strength-fill" id="passwordStrengthBar"></div>
+                        </div>
+                        <div class="strength-text" id="passwordStrengthText">Password strength</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="confirmPassword">
+                        <i class="fas fa-lock"></i> Confirm Password
+                    </label>
+                    <div class="input-wrapper">
+                        <div class="input-icon">
+                            <i class="fas fa-key"></i>
+                        </div>
+                        <input type="password" 
+                               id="confirmPassword" 
+                               class="form-input" 
+                               placeholder="••••••••"
+                               required>
+                        <button type="button" class="password-toggle" id="toggleConfirmPassword">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="acceptTerms" class="checkbox-input" required>
+                    <label for="acceptTerms" class="checkbox-custom">
+                        <i class="fas fa-check"></i>
+                    </label>
+                    <label for="acceptTerms" class="checkbox-label">
+                        I accept the <a href="#" onclick="showTerms()">Terms of Service</a> and <a href="#" onclick="showPrivacy()">Privacy Policy</a>
+                    </label>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" id="registerBtn">
+                    <span id="registerBtnText">
+                        <i class="fas fa-user-plus"></i> Create Account
+                    </span>
+                    <div class="loader" id="registerLoader">
+                        <div class="loader-spinner"></div>
+                        <span>Creating account...</span>
+                    </div>
+                </button>
+            </form>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-links">
+                <a href="#" onclick="showTerms()">Terms of Service</a>
+                <a href="#" onclick="showPrivacy()">Privacy Policy</a>
+                <a href="#" onclick="showSupport()">Support</a>
+            </div>
+            <div class="copyright">
+                © 2026 Bari Plux Technologies. All rights reserved.<br>
+                Version 1.4.1.7 • Build 20261225
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // دریافت پارامترهای URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const redirectUri = urlParams.get('redirect') || 'baripluxtool://auth/callback';
+        const state = urlParams.get('state') || '';
+        const hwid = urlParams.get('hwid') || 'unknown';
+        const app = urlParams.get('app') || 'bariplux-tool-pro';
+        
+        // عناصر DOM
+        const loginEmail = document.getElementById('loginEmail');
+        const loginPassword = document.getElementById('loginPassword');
+        const toggleLoginPassword = document.getElementById('toggleLoginPassword');
+        const loginBtn = document.getElementById('loginBtn');
+        const loginBtnText = document.getElementById('loginBtnText');
+        const loginLoader = document.getElementById('loginLoader');
+        const loginFormElement = document.getElementById('loginFormElement');
+        
+        const registerEmail = document.getElementById('registerEmail');
+        const registerPassword = document.getElementById('registerPassword');
+        const toggleRegisterPassword = document.getElementById('toggleRegisterPassword');
+        const confirmPassword = document.getElementById('confirmPassword');
+        const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+        const registerBtn = document.getElementById('registerBtn');
+        const registerBtnText = document.getElementById('registerBtnText');
+        const registerLoader = document.getElementById('registerLoader');
+        const registerFormElement = document.getElementById('registerFormElement');
+        const passwordStrengthBar = document.getElementById('passwordStrengthBar');
+        const passwordStrengthText = document.getElementById('passwordStrengthText');
+        
+        const successAlert = document.getElementById('successAlert');
+        const errorAlert = document.getElementById('errorAlert');
+        const infoAlert = document.getElementById('infoAlert');
+        const connectionStatus = document.getElementById('connectionStatus');
+        
+        // محل ذخیره‌سازی کاربران (در localStorage)
+        const USERS_STORAGE_KEY = 'bariplux_users';
+        const ACTIVE_USER_KEY = 'bariplux_active_user';
+        
+        // بارگذاری کاربران از localStorage
+        function getUsers() {
+            const usersJson = localStorage.getItem(USERS_STORAGE_KEY);
+            return usersJson ? JSON.parse(usersJson) : [];
+        }
+        
+        // ذخیره کاربران در localStorage
+        function saveUsers(users) {
+            localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(users));
+        }
+        
+        // ذخیره کاربر فعال
+        function setActiveUser(user) {
+            localStorage.setItem(ACTIVE_USER_KEY, JSON.stringify(user));
+        }
+        
+        // ایجاد پس‌زمینه متحرک
+        function createParticles() {
+            const bg = document.getElementById('bgAnimation');
+            const colors = ['#F97316', '#8B5CF6', '#3B82F6', '#10B981'];
+            
+            for (let i = 0; i < 15; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'bg-particle';
+                particle.style.width = `${Math.random() * 100 + 50}px`;
+                particle.style.height = particle.style.width;
+                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.left = `${Math.random() * 100}vw`;
+                particle.style.top = `${Math.random() * 100}vh`;
+                particle.style.animationDuration = `${Math.random() * 30 + 20}s`;
+                particle.style.animationDelay = `${Math.random() * 5}s`;
+                bg.appendChild(particle);
+            }
+        }
+        
+        // نمایش/مخفی کردن پسورد
+        function setupPasswordToggle(toggleBtn, passwordField) {
+            toggleBtn.addEventListener('click', function() {
+                const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordField.setAttribute('type', type);
+                this.innerHTML = type === 'password' ? 
+                    '<i class="fas fa-eye"></i>' : 
+                    '<i class="fas fa-eye-slash"></i>';
+            });
+        }
+        
+        // نمایش پیام
+        function showAlert(type, message) {
+            const alert = type === 'success' ? successAlert : 
+                         type === 'error' ? errorAlert : infoAlert;
+            
+            alert.textContent = message;
+            alert.style.display = 'block';
+            
+            // مخفی کردن بقیه آلرت‌ها
+            if (type === 'success') {
+                errorAlert.style.display = 'none';
+                infoAlert.style.display = 'none';
+            } else if (type === 'error') {
+                successAlert.style.display = 'none';
+                infoAlert.style.display = 'none';
+            } else {
+                successAlert.style.display = 'none';
+                errorAlert.style.display = 'none';
+            }
+            
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 5000);
+        }
+        
+        // حالت لودینگ
+        function setLoading(button, textElement, loader, isLoading) {
+            if (isLoading) {
+                textElement.style.display = 'none';
+                loader.style.display = 'flex';
+                button.disabled = true;
+            } else {
+                textElement.style.display = 'block';
+                loader.style.display = 'none';
+                button.disabled = false;
+            }
+        }
+        
+        // بررسی قدرت رمز عبور
+        function checkPasswordStrength(password) {
+            let strength = 0;
+            let tips = "";
+            
+            if (password.length >= 8) strength++;
+            if (password.match(/[a-z]/)) strength++;
+            if (password.match(/[A-Z]/)) strength++;
+            if (password.match(/[0-9]/)) strength++;
+            if (password.match(/[^a-zA-Z0-9]/)) strength++;
+            
+            let barColor = '#EF4444';
+            let text = 'Very Weak';
+            
+            if (strength > 4) {
+                barColor = '#10B981';
+                text = 'Strong';
+            } else if (strength > 3) {
+                barColor = '#3B82F6';
+                text = 'Good';
+            } else if (strength > 2) {
+                barColor = '#F59E0B';
+                text = 'Fair';
+            }
+            
+            passwordStrengthBar.style.width = `${strength * 20}%`;
+            passwordStrengthBar.style.background = barColor;
+            passwordStrengthText.textContent = text;
+            passwordStrengthText.style.color = barColor;
+            
+            return strength;
+        }
+        
+        // تغییر فرم
+        function showForm(formType) {
+            // آپدیت تب‌ها
+            document.getElementById('loginTab').classList.toggle('active', formType === 'login');
+            document.getElementById('registerTab').classList.toggle('active', formType === 'register');
+            
+            // آپدیت فرم‌ها
+            document.getElementById('loginForm').classList.toggle('active', formType === 'login');
+            document.getElementById('registerForm').classList.toggle('active', formType === 'register');
+            
+            // پاک کردن فرم‌ها
+            if (formType === 'login') {
+                registerFormElement.reset();
+                passwordStrengthBar.style.width = '0%';
+                passwordStrengthText.textContent = 'Password strength';
+                passwordStrengthText.style.color = 'var(--text-muted)';
+            } else {
+                loginFormElement.reset();
+            }
+            
+            showAlert('info', formType === 'login' ? 'Enter your credentials to login' : 'Create a new account');
+        }
+        
+        // ثبت‌نام کاربر جدید
+        async function registerUser(email, password) {
+            const users = getUsers();
+            
+            // بررسی وجود کاربر
+            const existingUser = users.find(u => u.email === email);
+            if (existingUser) {
+                throw new Error('Email already registered');
+            }
+            
+            // ایجاد کاربر جدید
+            const newUser = {
+                id: Date.now().toString(),
+                email: email,
+                password: btoa(password), // رمزگذاری ساده
+                createdAt: new Date().toISOString(),
+                plan: 'trial',
+                trialEnds: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+                features: ['fps_presets', 'dns_tools'],
+                hwid: hwid
+            };
+            
+            users.push(newUser);
+            saveUsers(users);
+            
+            return newUser;
+        }
+        
+        // ورود کاربر
+        async function loginUser(email, password) {
+            const users = getUsers();
+            
+            // پیدا کردن کاربر
+            const user = users.find(u => u.email === email);
+            if (!user) {
+                throw new Error('User not found');
+            }
+            
+            // بررسی رمز عبور
+            if (btoa(password) !== user.password) {
+                throw new Error('Invalid password');
+            }
+            
+            return user;
+        }
+        
+        // تکمیل احراز هویت
+        function completeAuth(user, isNewUser = false) {
+    // ساخت توکن
+    const timestamp = Date.now();
+    const random = Math.random().toString(36).substr(2, 9);
+    const token = btoa(`${user.email}|${user.id}|${timestamp}|${random}|${hwid}`);
+    
+    // ذخیره کاربر فعال
+    setActiveUser(user);
+    
+    // نمایش پیام موفقیت
+    showAlert('success', isNewUser ? 
+        `Welcome to Bari Plux! 7-day trial activated.` : 
+        `Welcome back, ${user.email.split('@')[0]}!`);
+    
+    // اضافه کردن پارامتر remember_me
+    const rememberMe = document.getElementById('rememberMe')?.checked ?? true;
+    
+    // ساخت callback URL
+    const callbackUrl = new URL(redirectUri);
+    callbackUrl.searchParams.set('token', token);
+    callbackUrl.searchParams.set('email', user.email);
+    callbackUrl.searchParams.set('state', state);
+    callbackUrl.searchParams.set('remember_me', rememberMe.toString());
+    callbackUrl.searchParams.set('timestamp', timestamp.toString());
+    
+    console.log('Redirecting to:', callbackUrl.toString());
+    
+    // هدایت به برنامه
+    setTimeout(() => {
+        // اول سعی کن با custom scheme
+        window.location.href = callbackUrl.toString();
+        
+        // Fallback بعد از 2 ثانیه
+        setTimeout(() => {
+            if (!document.hidden) {
+                showAlert('info', 
+                    `Authentication successful!<br>
+                    Token: <code style="background: rgba(0,0,0,0.2); padding: 5px; border-radius: 4px;">${token.substring(0, 30)}...</code><br>
+                    Remember Me: ${rememberMe}<br>
+                    <small>If not redirected, copy this token to the app.</small>`);
+            }
+        }, 2000);
+    }, 1500);
+}
+        
+        // هندلر فرم ثبت‌نام
+        registerFormElement.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = registerEmail.value.trim();
+            const password = registerPassword.value;
+            const confirm = confirmPassword.value;
+            
+            // اعتبارسنجی
+            if (!email || !password || !confirm) {
+                showAlert('error', 'Please fill in all fields');
+                return;
+            }
+            
+            if (!email.includes('@') || !email.includes('.')) {
+                showAlert('error', 'Please enter a valid email address');
+                return;
+            }
+            
+            if (password !== confirm) {
+                showAlert('error', 'Passwords do not match');
+                return;
+            }
+            
+            const strength = checkPasswordStrength(password);
+            if (strength < 3) {
+                showAlert('error', 'Password is too weak. Use at least 8 characters with letters and numbers.');
+                return;
+            }
+            
+            if (!document.getElementById('acceptTerms').checked) {
+                showAlert('error', 'You must accept the Terms of Service');
+                return;
+            }
+            
+            setLoading(registerBtn, registerBtnText, registerLoader, true);
+            showAlert('info', 'Creating your account...');
+            
+            try {
+                const user = await registerUser(email, password);
+                completeAuth(user, true);
+            } catch (error) {
+                showAlert('error', `Registration failed: ${error.message}`);
+                setLoading(registerBtn, registerBtnText, registerLoader, false);
+            }
+        });
+        
+        // هندلر فرم ورود
+        loginFormElement.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = loginEmail.value.trim();
+            const password = loginPassword.value;
+            
+            // اعتبارسنجی
+            if (!email || !password) {
+                showAlert('error', 'Please fill in all fields');
+                return;
+            }
+            
+            setLoading(loginBtn, loginBtnText, loginLoader, true);
+            showAlert('info', 'Authenticating...');
+            
+            try {
+                const user = await loginUser(email, password);
+                completeAuth(user, false);
+            } catch (error) {
+                showAlert('error', `Login failed: ${error.message}`);
+                setLoading(loginBtn, loginBtnText, loginLoader, false);
+            }
+        });
+        
+        // رویداد تغییر رمز برای بررسی قدرت
+        registerPassword.addEventListener('input', function() {
+            if (this.value.length > 0) {
+                checkPasswordStrength(this.value);
+            } else {
+                passwordStrengthBar.style.width = '0%';
+                passwordStrengthText.textContent = 'Password strength';
+                passwordStrengthText.style.color = 'var(--text-muted)';
+            }
+        });
+        
+        // توابع footer
+        function showTerms() {
+            alert(`Bari Plux Tool Pro - Terms of Service
+
+1. License Grant
+You are granted a non-exclusive, non-transferable license to use the software.
+
+2. Restrictions
+You may not reverse engineer, decompile, or disassemble the software.
+
+3. User Accounts
+You are responsible for maintaining the confidentiality of your account.
+
+4. Termination
+We may terminate your account for violations of these terms.
+
+5. Limitation of Liability
+We are not liable for any damages arising from use of the software.`);
+        }
+        
+        function showPrivacy() {
+            alert(`Bari Plux Tool Pro - Privacy Policy
+
+1. Information We Collect
+- Email address and password for authentication
+- Hardware ID for license management
+- Usage data for service improvement
+
+2. How We Use Information
+- To provide and maintain our service
+- To authenticate users
+- To prevent abuse and unauthorized access
+
+3. Data Security
+Your password is encrypted and stored locally on your device.
+
+4. Data Sharing
+We do not share your personal data with third parties.
+
+5. Your Rights
+You can delete your account and associated data at any time.`);
+        }
+        
+        function showSupport() {
+            window.open('https://t.me/BariPluxYT', '_blank');
+        }
+        
+        // چک کردن اتصال
+        function checkConnection() {
+            try {
+                connectionStatus.textContent = 'Ready for Authentication';
+                connectionStatus.style.color = '#10B981';
+                
+                // نمایش تعداد کاربران ثبت‌نام شده
+                const users = getUsers();
+                if (users.length > 0) {
+                    const info = document.createElement('div');
+                    info.style.marginTop = '5px';
+                    info.style.fontSize = '11px';
+                    info.style.opacity = '0.7';
+                    info.textContent = `${users.length} user(s) registered`;
+                    connectionStatus.parentNode.appendChild(info);
+                }
+            } catch {
+                connectionStatus.textContent = 'Local Storage Available';
+                connectionStatus.style.color = '#F59E0B';
+            }
+        }
+        
+        // Auto-login اگر کاربری فعال وجود دارد
+        if (urlParams.get('autologin') === 'true') {
+            const activeUserJson = localStorage.getItem(ACTIVE_USER_KEY);
+            if (activeUserJson) {
+                try {
+                    const user = JSON.parse(activeUserJson);
+                    loginEmail.value = user.email;
+                    setTimeout(() => {
+                        showAlert('info', 'Auto-login detected. Click login to continue.');
+                    }, 500);
+                } catch (e) {}
+            }
+        }
+        
+        // مقداردهی اولیه
+        window.addEventListener('DOMContentLoaded', function() {
+            createParticles();
+            checkConnection();
+            
+            // تنظیم toggle password
+            setupPasswordToggle(toggleLoginPassword, loginPassword);
+            setupPasswordToggle(toggleRegisterPassword, registerPassword);
+            setupPasswordToggle(toggleConfirmPassword, confirmPassword);
+            
+            // Enter key برای فرم‌ها
+            loginPassword.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    loginFormElement.dispatchEvent(new Event('submit'));
+                }
+            });
+            
+            confirmPassword.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    registerFormElement.dispatchEvent(new Event('submit'));
+                }
+            });
+            
+            // Auto-fill از URL
+            if (urlParams.get('email')) {
+                const email = urlParams.get('email');
+                loginEmail.value = email;
+                registerEmail.value = email;
+                showAlert('info', `Email prefilled: ${email}`);
+            }
+            
+            // نمایش تعداد کاربران
+            const users = getUsers();
+            if (users.length > 0) {
+                console.log(`${users.length} user(s) registered in local storage`);
+            }
+        });
+    </script>
+</body>
+</html>

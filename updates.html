@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PUBG MOBILE | Version 4.0 Update</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="https://i.postimg.cc/65cjsvfQ/imglogo.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://i.postimg.cc/65cjsvfQ/imglogo.png">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;600;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff4d00;
+            --secondary: #00a8ff;
+            --accent: #ffcc00;
+            --dark: #0d0d12;
+            --darker: #08080c;
+            --light: #f0f0f5;
+            --lighter: #ffffff;
+            --text: #e0e0e5;
+            --text-dark: #1a1a1f;
+            --bg: #14141a;
+            --card-bg: #1e1e26;
+            --header-bg: rgba(13, 13, 18, 0.96);
+            --nav-width: 280px;
+            --section-gap: 80px;
+            --glow: 0 0 15px rgba(255, 77, 0, 0.5);
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+        }
+
+        .light-mode {
+            --primary: #ff4d00;
+            --secondary: #0077cc;
+            --accent: #ff9500;
+            --dark: #f0f0f5;
+            --darker: #e0e0e5;
+            --light: #14141a;
+            --lighter: #0d0d12;
+            --text: #1a1a1f;
+            --text-dark: #e0e0e5;
+            --bg: #ffffff;
+            --card-bg: #f5f5fa;
+            --header-bg: rgba(240, 240, 245, 0.96);
+            --glow: 0 0 15px rgba(255, 77, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            overflow-x: hidden;
+            transition: background-color 0.5s ease, color 0.3s ease;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(255, 77, 0, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 80% 70%, rgba(0, 168, 255, 0.05) 0%, transparent 20%);
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Oxanium', sans-serif;
+            font-weight: 700;
+            line-height: 1.2;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background-color: var(--header-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: var(--transition);
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+            position: relative;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 1001;
+        }
+
+        .logo img {
+            height: 40px;
+            filter: drop-shadow(0 0 5px rgba(255, 77, 0, 0.7));
+            transition: var(--transition);
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 10px rgba(255, 77, 0, 0.3);
+            transition: var(--transition);
+        }
+
+        .nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 1001;
+            transition: var(--transition);
+        }
+
+        .nav-toggle:hover {
+            color: var(--primary);
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            position: relative;
+            padding: 5px 0;
+            transition: var(--transition);
+        }
+
+        .nav-links a:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a:hover:after {
+            width: 100%;
+        }
+
+        .search-container {
+            position: relative;
+            margin-left: 20px;
+        }
+
+        .search-btn {
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .search-btn:hover {
+            color: var(--primary);
+            transform: scale(1.1);
+            background: rgba(255, 77, 0, 0.2);
+        }
+
+        .search-box {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            width: 300px;
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-20px);
+            transition: var(--transition);
+            z-index: 1000;
+        }
+
+        .search-box.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 15px;
+            background: var(--bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            color: var(--text);
+            font-family: inherit;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(255, 77, 0, 0.2);
+        }
+
+        .highlight {
+            background-color: var(--accent);
+            color: var(--text-dark);
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: bold;
+            box-shadow: 0 0 5px rgba(255, 204, 0, 0.5);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.3rem;
+            cursor: pointer;
+            margin-left: 20px;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .theme-toggle:hover {
+            color: var(--accent);
+            transform: rotate(30deg) scale(1.1);
+            background: rgba(255, 204, 0, 0.2);
+        }
+
+        .theme-toggle .fa-sun {
+            display: none;
+        }
+
+        .light-mode .theme-toggle .fa-moon {
+            display: none;
+        }
+
+        .light-mode .theme-toggle .fa-sun {
+            display: block;
+        }
+
+        main {
+            margin-top: 120px;
+            padding-bottom: 80px;
+        }
+
+        .hero {
+            position: relative;
+            height: 60vh;
+            min-height: 500px;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            margin-bottom: var(--section-gap);
+            border-radius: 15px;
+            transition: var(--transition);
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(13, 13, 18, 0.7), rgba(13, 13, 18, 0.9)), 
+                        url('https://images.contentstack.io/v3/assets/bltb6530b271fddd0b1/blt29d7c4f6bc077e9a/5eb26f54402b8b4d13a56656/05222020-PUBGM_KeyArt_1920x1080.jpg') no-repeat center center/cover;
+            z-index: -1;
+            transform: scale(1.1);
+            transition: transform 10s ease-out;
+        }
+
+        .hero:hover .hero-bg {
+            transform: scale(1);
+        }
+
+        .hero-content {
+            max-width: 800px;
+            position: relative;
+            z-index: 1;
+            padding: 40px;
+            background: rgba(var(--dark-rgb), 0.6);
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-left: 10%;
+            animation: fadeInUp 1s ease-out;
+            color: var(--text);
+        }
+
+        .hero-content h2 {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            line-height: 1.1;
+            text-shadow: 0 0 20px rgba(255, 77, 0, 0.3);
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+            color: var(--text);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--text-dark);
+            padding: 15px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            filter: brightness(1.1);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .section-title h2 {
+            font-size: 3rem;
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            position: relative;
+        }
+
+        .section-title:after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            margin: 15px auto 0;
+            border-radius: 5px;
+        }
+
+        /* Update Sections */
+        .updates-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: var(--section-gap);
+        }
+
+        .update-section {
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: var(--transition);
+        }
+
+        .update-section:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3), var(--glow);
+        }
+
+        .update-header {
+            padding: 20px;
+            background: linear-gradient(135deg, var(--dark), var(--darker));
+            border-bottom: 2px solid var(--primary);
+            text-align: center;
+        }
+
+        .update-header h3 {
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .update-header p {
+            opacity: 0.8;
+        }
+
+        .update-content {
+            padding: 20px;
+        }
+
+        .update-item {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .update-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .update-item h4 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+
+        .update-item p {
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .update-item .date {
+            font-size: 0.8rem;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .update-item .date i {
+            font-size: 0.9rem;
+        }
+
+        .update-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        /* Features Section */
+        .features-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: var(--section-gap);
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: var(--transition);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3), var(--glow);
+        }
+
+        .feature-img {
+            height: 200px;
+            width: 100%;
+            object-fit: cover;
+        }
+
+        .feature-content {
+            padding: 25px;
+        }
+
+        .feature-content h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .feature-content p {
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+
+        /* Download Section */
+        .downloads {
+            background: linear-gradient(135deg, var(--dark), var(--darker));
+            border-radius: 15px;
+            padding: 60px 40px;
+            margin-bottom: var(--section-gap);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .downloads:before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 77, 0, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+            z-index: 0;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .downloads-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .download-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+
+        .download-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--text-dark);
+            padding: 18px 30px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border: none;
+            cursor: pointer;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .download-btn img {
+            width: 20px;
+            height: 20px;
+        }
+
+        footer {
+            background: var(--darker);
+            color: var(--text);
+            padding: 50px 0 30px;
+            position: relative;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .footer-logo img {
+            height: 30px;
+        }
+
+        .footer-logo h3 {
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .footer-about p {
+            opacity: 0.8;
+            margin-bottom: 20px;
+        }
+
+        .footer-links h4,
+        .footer-contact h4 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: var(--text);
+            text-decoration: none;
+            transition: var(--transition);
+            opacity: 0.8;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+            opacity: 1;
+            padding-left: 5px;
+        }
+
+        .footer-contact p {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            opacity: 0.8;
+        }
+
+        .footer-contact i {
+            color: var(--primary);
+            width: 20px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: var(--text);
+            font-size: 1.2rem;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            background: var(--primary);
+            color: var(--text-dark);
+            transform: translateY(-5px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 1200px) {
+            .container {
+                padding: 0 30px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .hero-content h2 {
+                font-size: 3rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-toggle {
+                display: block;
+            }
+
+            nav {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 100%;
+                max-width: 400px;
+                height: 100vh;
+                background: var(--header-bg);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+                flex-direction: column;
+                justify-content: center;
+                gap: 40px;
+                transition: var(--transition);
+                z-index: 1000;
+            }
+
+            nav.active {
+                right: 0;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                align-items: center;
+                gap: 30px;
+            }
+
+            .search-container {
+                margin: 0;
+            }
+
+            .search-box {
+                top: 60px;
+                right: 20px;
+            }
+
+            .hero {
+                height: auto;
+                min-height: auto;
+                padding: 100px 0;
+            }
+
+            .hero-content {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .hero-content h2 {
+                font-size: 2.5rem;
+            }
+
+            .download-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .container {
+                padding: 0 20px;
+            }
+
+            .header-container {
+                height: 70px;
+            }
+
+            .logo h1 {
+                font-size: 1.5rem;
+            }
+
+            .hero-content h2 {
+                font-size: 2rem;
+            }
+
+            .section-title h2 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <img src="https://www.pubgmobile.com/images/event/common/long_cache_30d/nav_logo.png" alt="PUBG Logo">
+                <h1>PUBG MOBILE</h1>
+            </div>
+
+            <button class="nav-toggle" id="navToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <nav id="mainNav">
+                <nav id="mainNav">
+                <ul class="nav-links">
+                    <li><a href="org">Home</a></li>
+                    <li><a href="index">Bari Plux</a></li>
+                    <li><a href="updates">Updates</a></li>
+                    <li><a href="news">News</a></li>
+                    <li><a href="org#downloads">Downloads</a></li>
+                    <li><a href="org#introduction">About</a></li>
+                    <li><a href="org#community">Community</a></li>
+                </ul>
+
+                <div class="search-container">
+                    <button class="search-btn" id="searchBtn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <div class="search-box" id="searchBox">
+                        <input type="text" id="searchInput" placeholder="Search updates...">
+                        <button class="btn" id="searchSubmit">Search</button>
+                    </div>
+                </div>
+
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                    <i class="fas fa-sun"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <div class="hero-bg" id="heroBg"></div>
+            <div class="hero-content">
+                <h2>Version 4.0 Update</h2>
+                <p>Explore the latest features, improvements, and content in PUBG Mobile's Version 4.0 update. From new gameplay mechanics to visual enhancements, discover what's new in the battlegrounds.</p>
+                <a href="#downloads" class="btn">
+                    <i class="fas fa-download"></i>
+                    <span>Update Now</span>
+                </a>
+            </div>
+        </section>
+
+        <section id="updates">
+            <div class="section-title">
+                <h2>Version 4.0 Update Details</h2>
+                <p>All the new features, improvements, and changes in the latest update</p>
+            </div>
+            
+            <div class="updates-container">
+                <div class="update-section">
+                    <div class="update-header">
+                        <h3>New Updates</h3>
+                        <p>Fresh content added in Version 4.0</p>
+                    </div>
+                    <div class="update-content">
+                        <div class="update-item">
+                            <img src="https://cdn-pubgm-cms.vasdgame.com/vasd-cms-pubgm/01_09aa6e5767.png" alt="Spooky Soiree" class="update-img">
+                            <h4>Spooky Soiree Themed Mode</h4>
+                            <p>Explore a mysterious mansion with your ghost companion, Ghostie! Ghostie's unique skills add a layer of fun to battles. Fear not if you get defeated–become a Prankster Ghost and continue supporting your teammates in battle! Come explore all these haunted new abilities now!</p>
+                            <div class="date">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span>May 15, 2025</span>
+                            </div>
+                        </div>
+                        
+                        <div class="update-item">
+                            <h4>New Weapon: Dragon's Breath</h4>
+                            <p>A powerful new shotgun that fires incendiary rounds, causing burn damage over time to enemies.</p>
+                            <div class="date">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span>May 15, 2025</span>
+                            </div>
+                        </div>
+                        
+                        <div class="update-item">
+                            <h4>Time Warp Zones</h4>
+                            <p>Special zones that temporarily speed up or slow down time for players inside them, creating unique tactical opportunities.</p>
+                            <div class="date">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span>May 15, 2025</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="update-section">
+                    <div class="update-header">
+                        <h3>Old Updates</h3>
+                        <p>Previous features from past versions</p>
+                    </div>
+                    <div class="update-content">
+                        <div class="update-item">
+                            <img src="https://r.res.easebar.com/pic/20240905/775d5943-0826-430b-88cb-bf9e17e443a1.webp" alt="Classic Mode" class="update-img">
+                            <h4>Classic Battle Royale</h4>
+                            <p>The original 100-player battle royale experience that started it all. Jump, loot, survive, and be the last one standing.</p>
+                            <div class="date">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span>March 2018</span>
+                            </div>
+                        </div>
+                        
+                        <div class="update-item">
+                            <h4>Erangel 2.0</h4>
+                            <p>The complete visual overhaul of the original map with improved graphics, new locations, and enhanced gameplay.</p>
+                            <div class="date">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span>September 2020</span>
+                            </div>
+                        </div>
+                        
+                        <div class="update-item">
+                            <h4>Payload Mode</h4>
+                            <p>A special mode featuring armed vehicles, helicopters, and powerful weapons like rocket launchers.</p>
+                            <div class="date">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span>December 2020</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="update-section">
+                    <div class="update-header">
+                        <h3>Popular Updates</h3>
+                        <p>Fan-favorite features</p>
+                    </div>
+                    <div class="update-content">
+                        <div class="update-item">
+                            <img src="https://static1.anpoimages.com/wordpress/wp-content/uploads/2022/07/PUBG-Mobile-21-update-hero.jpg" alt="Livik Map" class="update-img">
+                            <h4>Livik Map</h4>
+                            <p>The fast-paced 15-minute battle royale experience on a smaller map designed specifically for mobile.</p>
+                            <div class="date">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span>July 2021</span>
+                            </div>
+                        </div>
+                        
+                        <div class="update-item">
+                            <h4>Metro Royale</h4>
+                            <p>A PvE and PvP hybrid mode where players complete missions, collect loot, and extract safely.</p>
+                            <div class="date">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span>October 2021</span>
+                            </div>
+                        </div>
+                        
+                        <div class="update-item">
+                            <h4>Gun Game Mode</h4>
+                            <p>A fast-paced mode where players progress through different weapons by getting kills.</p>
+                            <div class="date">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span>February 2022</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="features">
+            <div class="section-title">
+                <h2>Key Features</h2>
+                <p>Major improvements in Version 4.0</p>
+            </div>
+            
+            <div class="features-container">
+                <div class="feature-card">
+                    <img src="https://i.ytimg.com/vi/G95IOFbymrw/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLAHs1u1TTD2DOduc2HvAL7H8QkNPA" alt="Graphics Upgrade" class="feature-img">
+                    <div class="feature-content">
+                        <h3>Enhanced Graphics</h3>
+                        <p>Improved lighting, textures, and effects for a more immersive visual experience. New Vulkan API support for better performance on compatible devices.</p>
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <img src="https://preview.redd.it/m385gozkwbu01.jpg?width=640&crop=smart&auto=webp&s=53e99e5d5bcfd908000439b6f3c2b048a6b3a12d" alt="New Vehicles" class="feature-img">
+                    <div class="feature-content">
+                        <h3>New Vehicles</h3>
+                        <p>Introducing the Sandstorm Buggy - a high-speed desert vehicle with special drifting capabilities perfect for the Golden Dynasty map.</p>
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <img src="https://pbs.twimg.com/media/Ez3I7YjVIAEAb05.png" alt="Balance Changes" class="feature-img">
+                    <div class="feature-content">
+                        <h3>Weapon Balance</h3>
+                        <p>Significant adjustments to weapon stats including recoil patterns, damage values, and attachment effects to improve gameplay balance.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="downloads" id="downloads">
+            <div class="downloads-content">
+                <div class="section-title">
+                    <h2>Update PUBG Mobile</h2>
+                    <p>Get Version 4.0 now on your platform</p>
+                </div>
+                <div class="download-buttons">
+                    <a href="https://apps.apple.com/app/id1330123889" class="download-btn">App Store</a>
+                        
+                    <a href="https://play.google.com/store/apps/details?id=com.tencent.ig" class="download-btn">Google Play</a>
+
+                    <a href="https://gameloop.com/" class="download-btn">Game Loop</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-about">
+                <div class="footer-logo">
+                    <img src="https://www.pubgmobile.com/images/event/common/long_cache_30d/nav_logo.png" alt="PUBG Logo">
+                    <h3>PUBG MOBILE</h3>
+                </div>
+                <p>Join the ultimate battle royale experience with PUBG Mobile. Play with friends, discover new maps, and stay updated with the latest content and esports events.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="org">Home</a></li>
+                    <li><a href="#index">Bari Plux</a></li>
+                    <li><a href="updates">Updates</a></li>
+                    <li><a href="#downloads">Downloads</a></li>
+                    <li><a href="#introduction">About</a></li>
+                    <li><a href="#community">Community</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h4>Contact Us</h4>
+                <p>
+                    <a href="https://guns.lol/BariPlux" target="_blank">
+                        <i class="fas fa-envelope"></i> guns.lol/BariPlux
+                    </a>
+                </p>                
+                <p><i class="fas fa-envelope"></i> BariPlux@gmail.com</p>
+
+                <div class="social-links">
+                    <a href="https://www.facebook.com/PUBGMOBILE" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://twitter.com/PUBGMOBILE" target="_blank"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.instagram.com/PUBGMOBILE" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.youtube.com/c/PUBGMOBILE" target="_blank"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">
+            <a href="Legal Information" style="text-decoration: none; color: inherit;">&copy; 2025 Bari Plux. All rights reserved.</a>
+        </div>
+    </footer>
+
+    <script>
+        // Convert HEX color to RGB for use in rgba
+        function hexToRgb(hex) {
+            // Remove # from beginning if present
+            hex = hex.replace('#', '');
+            
+            // Convert to RGB values
+            const r = parseInt(hex.substring(0, 2), 16);
+            const g = parseInt(hex.substring(2, 4), 16);
+            const b = parseInt(hex.substring(4, 6), 16);
+            
+            return `${r}, ${g}, ${b}`;
+        }
+
+        // Set RGB variables at page load time
+        document.addEventListener('DOMContentLoaded', function() {
+            const darkColor = getComputedStyle(document.documentElement).getPropertyValue('--dark').trim();
+            document.documentElement.style.setProperty('--dark-rgb', hexToRgb(darkColor));
+        });
+
+        document.getElementById('navToggle').addEventListener('click', function() {
+            document.getElementById('mainNav').classList.toggle('active');
+        });
+
+        document.getElementById('searchBtn').addEventListener('click', function() {
+            document.getElementById('searchBox').classList.toggle('active');
+            if (document.getElementById('searchBox').classList.contains('active')) {
+                document.getElementById('searchInput').focus();
+            }
+        });
+
+        document.getElementById('themeToggle').addEventListener('click', function() {
+            document.body.classList.toggle('light-mode');
+            // Update RGB variables after theme change
+            const darkColor = getComputedStyle(document.documentElement).getPropertyValue('--dark').trim();
+            document.documentElement.style.setProperty('--dark-rgb', hexToRgb(darkColor));
+        });
+
+        document.getElementById('searchSubmit').addEventListener('click', performSearch);
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+
+        function performSearch() {
+            removeHighlights();
+            
+            const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
+            
+            if (searchTerm.length < 2) {
+                alert('Please enter at least 2 characters to search');
+                return;
+            }
+            
+            const elements = document.querySelectorAll('h1, h2, h3, h4, h5, h6, p, li, a, span, div');
+            let found = false;
+            const regex = new RegExp(searchTerm, 'gi');
+            
+            elements.forEach(element => {
+                if (element.childNodes.length === 1 && element.childNodes[0].nodeType === Node.TEXT_NODE) {
+                    const content = element.textContent;
+                    if (content.toLowerCase().includes(searchTerm)) {
+                        const highlighted = content.replace(regex, match => 
+                            `<span class="highlight">${match}</span>`);
+                        element.innerHTML = highlighted;
+                        if (!found) {
+                            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            found = true;
+                        }
+                    }
+                }
+            });
+            
+            if (!found) {
+                alert('No results found');
+            }
+        }
+
+        function removeHighlights() {
+            const highlights = document.querySelectorAll('.highlight');
+            highlights.forEach(highlight => {
+                const parent = highlight.parentNode;
+                parent.textContent = parent.textContent;
+            });
+        }
+
+        document.getElementById('submitComment').addEventListener('click', function() {
+            var commentName = document.getElementById('comment-name').value;
+            var commentEmail = document.getElementById('comment-email').value;
+            var commentMessage = document.getElementById('comment-message').value;
+            var commentsContainer = document.getElementById('commentsContainer');
+
+            if (commentName && commentEmail && commentMessage) {
+                var newComment = document.createElement('div');
+                newComment.classList.add('comment');
+
+                var avatar = document.createElement('div');
+                avatar.classList.add('comment-avatar');
+                avatar.innerHTML = '<span>' + commentName.charAt(0).toUpperCase() + '</span>';
+
+                var content = document.createElement('div');
+                content.classList.add('comment-content');
+
+                var name = document.createElement('h4');
+                name.textContent = commentName;
+
+                var message = document.createElement('p');
+                message.textContent = commentMessage;
+
+                var meta = document.createElement('div');
+                meta.classList.add('comment-meta');
+                var date = new Date().toISOString().split('T')[0];
+                meta.innerHTML = '<i class="fas fa-clock"></i> <span>' + date + '</span>';
+
+                content.appendChild(name);
+                content.appendChild(message);
+                content.appendChild(meta);
+
+                newComment.appendChild(avatar);
+                newComment.appendChild(content);
+
+                commentsContainer.appendChild(newComment);
+
+                document.getElementById('comment-name').value = '';
+                document.getElementById('comment-email').value = '';
+                document.getElementById('comment-message').value = '';
+            } else {
+                alert('Please fill in all fields.');
+            }
+        });
+    </script>
+</body>
+</html>

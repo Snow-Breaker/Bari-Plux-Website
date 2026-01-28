@@ -1,0 +1,2339 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <!-- بهبود Meta Tags برای سئو -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bari Plux | Optimization Apps & Keymappings - Performance Tools</title>
+    <meta name="description" content="Download optimization apps and keymappings for PUBG Mobile. Park Control, Revo Uninstaller, IObit Driver Booster, and resolution-specific keymappings">
+    <meta name="keywords" content="optimization apps, keymappings, pubg mobile, park control, revo uninstaller, iobit driver booster, advanced systemcare">
+    <meta name="author" content="Bari Plux">
+
+    <!-- کنترل کش مرورگر -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="https://i.postimg.cc/65cjsvfQ/imglogo.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://i.postimg.cc/65cjsvfQ/imglogo.png">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Bari Plux | Optimization Apps & Keymappings">
+    <meta property="og:description" content="Download optimization apps and keymappings for PUBG Mobile - Performance tuning tools and resolution-specific configurations">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://yt3.googleusercontent.com/RPW5Z_kcoEu0ES_VpL4-7ZqI4eI1OQfuVL-DbuCYWmRhXono9hA5NOCSGGMDLzJqNcHUlhOg=s160-c-k-c0x00ffffff-no-rj">
+    
+    <!-- Schema.org Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Bari Plux Optimization Apps & Keymappings",
+        "description": "Download optimization apps and keymappings for PUBG Mobile - Performance tuning tools and resolution-specific configurations",
+        "url": "https://bariplux.com",
+        "publisher": {
+            "@type": "Organization",
+            "name": "Bari Plux",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://yt3.googleusercontent.com/RPW5Z_kcoEu0ES_VpL4-7ZqI4eI1OQfuVL-DbuCYWmRhXono9hA5NOCSGGMDLzJqNcHUlhOg=s160-c-k-c0x00ffffff-no-rj"
+            }
+        }
+    }
+    </script>
+
+    <!-- Particles.js Library -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <style>
+        :root {
+            --bg-1: #0f1115;
+            --bg-2: #15171b;
+            --glass-bg: rgba(255,255,255,0.06);
+            --glass-strong: rgba(255,255,255,0.08);
+            --glass-accent: rgba(108,99,255,0.12);
+            --accent: #6C63FF;
+            --accent-2: #00BFA6;
+            --text: #e8eef8;
+            --muted: rgba(232,238,248,0.65);
+            --radius-lg: 20px;
+            --radius: 12px;
+            --transition: 300ms cubic-bezier(.2,.9,.2,1);
+            --glass-border: rgba(255,255,255,0.08);
+            --glass-inner-shadow: rgba(0,0,0,0.35);
+            --success: #4CAF50;
+            --warning: #FF9800;
+            --danger: #F44336;
+            --shadow: 0 8px 30px rgba(0,0,0,0.35);
+            --shadow-hover: 0 24px 50px rgba(0,0,0,0.45);
+        }
+
+        [data-theme="light"]{
+            --bg-1: #f6f8fb;
+            --bg-2: #eef2f7;
+            --glass-bg: rgba(255,255,255,0.85);
+            --glass-strong: rgba(255,255,255,0.95);
+            --glass-accent: rgba(108,99,255,0.08);
+            --accent: #5748E8;
+            --accent-2: #07bfa0;
+            --text: #111827;
+            --muted: rgba(17,24,39,0.6);
+            --glass-border: rgba(0,0,0,0.04);
+            --glass-inner-shadow: rgba(255,255,255,0.6);
+        }
+
+        /* base */
+        *{box-sizing:border-box; margin:0; padding:0;}
+        html,body{height:100%}
+        body{
+            margin:0;
+            font-family:'Poppins',sans-serif;
+            background:
+                radial-gradient(800px 400px at 10% 20%, rgba(108,99,255,0.08), transparent 10%),
+                radial-gradient(600px 300px at 90% 80%, rgba(0,191,166,0.06), transparent 12%),
+                linear-gradient(180deg,var(--bg-1),var(--bg-2));
+            color:var(--text);
+            -webkit-font-smoothing:antialiased;
+            -moz-osx-font-smoothing:grayscale;
+            transition: color var(--transition);
+            padding-bottom:80px;
+            background-attachment: fixed;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Particles.js Container */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Animated background elements */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -2;
+            overflow: hidden;
+        }
+
+        .floating-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--accent), transparent 70%);
+            opacity: 0.05;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .circle-1 {
+            width: 300px;
+            height: 300px;
+            top: 10%;
+            left: 5%;
+            animation-delay: 0s;
+        }
+
+        .circle-2 {
+            width: 200px;
+            height: 200px;
+            top: 60%;
+            right: 10%;
+            animation-delay: 5s;
+            background: radial-gradient(circle, var(--accent-2), transparent 70%);
+        }
+
+        .circle-3 {
+            width: 150px;
+            height: 150px;
+            bottom: 20%;
+            left: 20%;
+            animation-delay: 10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-2);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, var(--accent), var(--accent-2));
+            border-radius: 50px;
+            border: 2px solid var(--bg-2);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Liquid glass base utility */
+        .glass {
+            background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            backdrop-filter: blur(15px) saturate(150%);
+            -webkit-backdrop-filter: blur(15px) saturate(150%);
+            box-shadow: var(--shadow), inset 0 1px 0 var(--glass-inner-shadow);
+            transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+            position:relative;
+            overflow:hidden;
+        }
+
+        /* subtle accent layer to mimic iOS specular highlights */
+        .glass::before{
+            content:"";
+            position:absolute;
+            inset: -30% -30% auto auto;
+            width:60%;
+            height:60%;
+            background: radial-gradient(closest-side, rgba(255,255,255,0.08), transparent 40%);
+            transform: translate(-10%,-10%) rotate(-15deg);
+            pointer-events:none;
+            mix-blend-mode:overlay;
+            filter: blur(18px);
+            opacity:0.9;
+            transition: opacity var(--transition);
+        }
+
+        /* thin highlight at top */
+        .glass::after{
+            content:"";
+            position:absolute;
+            left:0;right:0;top:0;
+            height:40%;
+            background: linear-gradient(180deg, rgba(255,255,255,0.06), transparent 40%);
+            pointer-events:none;
+            mix-blend-mode:overlay;
+        }
+
+        /* Header */
+        .header{
+            position:fixed;top:0;left:0;width:100%;z-index:1000;
+            margin:12px auto;
+            padding:10px 18px;
+            border-radius:28px;
+            display:flex;align-items:center;justify-content:space-between;
+            gap:16px;
+            box-shadow: 0 6px 22px rgba(0,0,0,0.35);
+            backdrop-filter: blur(20px) saturate(150%);
+            -webkit-backdrop-filter: blur(20px) saturate(150%);
+            max-width: 1400px;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: var(--transition);
+        }
+
+        .header.scrolled {
+            margin: 6px auto;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.45);
+        }
+
+        .header .left{display:flex;align-items:center;gap:14px}
+        .logo-img{width:54px;height:54px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,0.12)}
+        .logo-text{font-weight:800;font-size:1.2rem;background:linear-gradient(90deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent}
+
+        /* Theme Toggle */
+        .theme-toggle {
+            width: 60px;
+            height: 30px;
+            border-radius: 999px;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .theme-toggle .knob {
+            width: 22px;
+            height: 22px;
+            border-radius: 999px;
+            background: var(--accent);
+            position: absolute;
+            left: 4px;
+            transition: transform var(--transition);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        [data-theme="light"] .theme-toggle .knob {
+            transform: translateX(30px);
+            background: var(--accent-2);
+        }
+
+        .theme-toggle-icons {
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+            padding: 0 6px;
+            font-size: 12px;
+        }
+
+        /* Navigation */
+        .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav-link {
+            position: relative;
+            font-weight: 500;
+            padding: 10px 0;
+            transition: var(--transition);
+            color: var(--text);
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(to right, var(--accent), var(--accent-2));
+            transition: var(--transition);
+            border-radius: 3px;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--accent);
+        }
+
+        .nav-link:hover::before, .nav-link.active::before {
+            width: 100%;
+        }
+
+        /* Mobile Menu - Glass Style */
+        .mobile-menu-btn {
+            display: none;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text);
+            font-size: 1.4rem;
+            cursor: pointer;
+            z-index: 1001;
+            transition: var(--transition);
+            padding: 12px;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            box-shadow: var(--shadow);
+        }
+
+        .mobile-menu-btn:hover {
+            background: var(--glass-strong);
+            transform: scale(1.05);
+        }
+
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 320px;
+            max-width: 85%;
+            height: 100vh;
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.1) 0%,
+                rgba(255, 255, 255, 0.05) 100%);
+            z-index: 1000;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 90px 25px 30px;
+            box-shadow: -8px 0 50px rgba(0, 0, 0, 0.4);
+            border-left: 1px solid var(--glass-border);
+            overflow-y: auto;
+            backdrop-filter: blur(30px) saturate(180%);
+            -webkit-backdrop-filter: blur(30px) saturate(180%);
+        }
+
+        .mobile-menu::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 120px;
+            background: linear-gradient(180deg, 
+                var(--bg-1) 0%, 
+                transparent 100%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .mobile-menu.active {
+            right: 0;
+        }
+
+        .mobile-nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 30px;
+        }
+
+        /* Close Button */
+        .mobile-menu-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 44px;
+            height: 44px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 50%;
+            color: var(--text);
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            z-index: 1002;
+        }
+
+        .mobile-menu-close:hover {
+            background: var(--danger);
+            color: white;
+            transform: rotate(90deg);
+            border-color: var(--danger);
+            box-shadow: 0 5px 15px rgba(244, 67, 54, 0.3);
+        }
+
+        /* Overlay */
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-nav-link {
+            font-size: 1.1rem;
+            padding: 16px 20px;
+            border-radius: var(--radius-lg);
+            transition: all 0.3s ease;
+            color: var(--text);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            min-height: 56px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mobile-nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.1), 
+                transparent);
+            transition: left 0.6s;
+        }
+
+        .mobile-nav-link:hover::before {
+            left: 100%;
+        }
+
+        .mobile-nav-link i {
+            width: 20px;
+            text-align: center;
+            font-size: 1.2rem;
+            color: var(--accent);
+            transition: var(--transition);
+        }
+
+        .mobile-nav-link:hover, 
+        .mobile-nav-link.active {
+            background: var(--glass-strong);
+            color: var(--accent);
+            transform: translateX(8px);
+            border-color: var(--accent);
+            box-shadow: 0 5px 20px rgba(108, 99, 255, 0.2);
+        }
+
+        .mobile-nav-link:hover i,
+        .mobile-nav-link.active i {
+            color: var(--accent-2);
+            transform: scale(1.1);
+        }
+
+        /* Quick Actions Section */
+        .mobile-quick-actions {
+            margin: 25px 0;
+            padding: 20px;
+            background: var(--glass-bg);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+        }
+
+        .quick-actions-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quick-actions-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .quick-action-btn {
+            padding: 12px 8px;
+            background: var(--glass-strong);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            color: var(--text);
+            text-decoration: none;
+            font-size: 0.85rem;
+            text-align: center;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            min-height: 60px;
+            justify-content: center;
+        }
+
+        .quick-action-btn i {
+            font-size: 1.1rem;
+            color: var(--accent);
+        }
+
+        .quick-action-btn:hover {
+            background: var(--glass-accent);
+            transform: translateY(-2px);
+            border-color: var(--accent);
+            box-shadow: 0 4px 15px rgba(108, 99, 255, 0.15);
+        }
+
+        /* Social Links */
+        .mobile-social-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .social-link {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text);
+            text-decoration: none;
+            transition: var(--transition);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .social-link:hover {
+            background: var(--accent);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(108, 99, 255, 0.3);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            padding: 150px 0 100px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .hero-icon {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .hero-stats {
+            border-top: 1px solid var(--glass-border);
+            padding-top: 30px;
+            margin-top: 30px;
+        }
+
+        /* افکت‌های اضافی برای هدر */
+        .hero-content::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--glass-accent) 0%, transparent 70%);
+            opacity: 0.1;
+            pointer-events: none;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            background-size: 200% 200%;
+            animation: gradientText 3s ease infinite;
+            text-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        @keyframes gradientText {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .hero-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(to right, var(--accent), var(--accent-2));
+            border-radius: 50px;
+        }
+
+        .hero-subtitle {
+            font-size: 1.4rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+            color: var(--text);
+            font-weight: 300;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* استایل مخصوص برای عنوان بخش Bari Plux Tools Pro - طلایی و نقره‌ای */
+        #tools-apps .section-title {
+            background: 
+                linear-gradient(135deg, 
+                    #FFB347 0%, 
+                    #FFCC33 15%,
+                    #FFD700 30%,
+                    #E8E8E8 45%,
+                    #C0C0C0 60%,
+                    #E8E8E8 75%,
+                    #FFD700 90%,
+                    #FFB347 100%) !important;
+            border: 2px solid #FFD700 !important;
+            color: #8B4513 !important;
+            font-weight: 800 !important;
+            text-shadow: 
+                0 1px 2px rgba(255, 255, 255, 0.9),
+                0 0 10px rgba(255, 215, 0, 0.5) !important;
+            box-shadow: 
+                0 12px 30px rgba(255, 179, 71, 0.4),
+                0 6px 18px rgba(192, 192, 192, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.6),
+                inset 0 -1px 0 rgba(140, 90, 20, 0.3) !important;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+
+        #tools-apps .section-title::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                linear-gradient(135deg, 
+                    rgba(255, 215, 0, 0.4) 0%,
+                    rgba(255, 255, 255, 0.3) 25%,
+                    rgba(192, 192, 192, 0.3) 50%,
+                    rgba(255, 255, 255, 0.3) 75%,
+                    rgba(255, 215, 0, 0.4) 100%) !important;
+            pointer-events: none;
+        }
+
+        #tools-apps .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 4px;
+            background: linear-gradient(90deg, 
+                transparent, 
+                #8B4513, 
+                #FFD700,
+                #C0C0C0,
+                #FFD700,
+                #8B4513,
+                transparent) !important;
+            border-radius: 2px;
+            box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
+        }
+
+        /* افکت هاویر برای عنوان */
+        #tools-apps .section-title:hover {
+            transform: translateY(-3px) !important;
+            box-shadow: 
+                0 16px 40px rgba(255, 179, 71, 0.5),
+                0 8px 25px rgba(192, 192, 192, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.7),
+                inset 0 -1px 0 rgba(140, 90, 20, 0.4) !important;
+            transition: all 0.3s ease !important;
+        }
+
+        /* استایل مخصوص برای بخش Bari Plux Tools Pro - طلایی واقعی */
+        #tools-apps .download-grid {
+            position: relative;
+        }
+
+        #tools-apps .download-card {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            border: none;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            border-radius: 16px;
+            padding: 35px 30px;
+            border: 2px solid transparent;
+        }
+
+        /* کارت اول - طلایی گرم */
+        #tools-apps .download-card:nth-child(1) {
+            background: 
+                linear-gradient(135deg, 
+                    #FFB347 0%, 
+                    #FFCC33 20%,
+                    #FFD700 40%,
+                    #FFCC33 60%,
+                    #FFB347 80%,
+                    #FFA500 100%);
+            box-shadow: 
+                0 15px 35px rgba(255, 179, 71, 0.4),
+                0 8px 20px rgba(255, 204, 51, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5),
+                inset 0 -1px 0 rgba(140, 90, 20, 0.3);
+            border: 2px solid #FFD700;
+        }
+
+        #tools-apps .download-card:nth-child(1)::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                linear-gradient(135deg, 
+                    rgba(255, 215, 0, 0.4) 0%,
+                    rgba(255, 255, 255, 0.3) 50%,
+                    rgba(255, 215, 0, 0.4) 100%);
+            border-radius: 14px;
+            pointer-events: none;
+        }
+
+        #tools-apps .download-card:nth-child(1) .download-icon {
+            color: #8B4513;
+            filter: 
+                drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3))
+                drop-shadow(0 0 10px rgba(255, 215, 0, 0.6));
+            transform: scale(1.1);
+        }
+
+        /* کارت دوم - طلایی نرم */
+        #tools-apps .download-card:nth-child(2) {
+            background: 
+                linear-gradient(135deg, 
+                    #E6B325 0%, 
+                    #F4C542 25%,
+                    #FFD700 50%,
+                    #F4C542 75%,
+                    #E6B325 100%);
+            box-shadow: 
+                0 15px 35px rgba(230, 179, 37, 0.35),
+                0 8px 20px rgba(244, 197, 66, 0.25),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4),
+                inset 0 -1px 0 rgba(120, 90, 30, 0.25);
+            border: 2px solid #F4C542;
+        }
+
+        #tools-apps .download-card:nth-child(2)::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                linear-gradient(135deg, 
+                    rgba(244, 197, 66, 0.3) 0%,
+                    rgba(255, 255, 255, 0.2) 50%,
+                    rgba(244, 197, 66, 0.3) 100%);
+            border-radius: 14px;
+            pointer-events: none;
+        }
+
+        #tools-apps .download-card:nth-child(2) .download-icon {
+            color: #8B5A2B;
+            filter: 
+                drop-shadow(0 2px 4px rgba(0, 0, 0, 0.25))
+                drop-shadow(0 0 8px rgba(244, 197, 66, 0.4));
+        }
+
+        /* کارت سوم - طلایی مایل به نقره */
+        #tools-apps .download-card:nth-child(3) {
+            background: 
+                linear-gradient(135deg, 
+                    #C9AE5D 0%, 
+                    #D4C19C 30%,
+                    #E8E8E8 50%,
+                    #D4C19C 70%,
+                    #C9AE5D 100%);
+            box-shadow: 
+                0 15px 35px rgba(201, 174, 93, 0.3),
+                0 8px 20px rgba(232, 232, 232, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4),
+                inset 0 -1px 0 rgba(102, 87, 45, 0.2);
+            border: 2px solid #D4C19C;
+        }
+
+        #tools-apps .download-card:nth-child(3)::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                linear-gradient(135deg, 
+                    rgba(212, 193, 156, 0.25) 0%,
+                    rgba(255, 255, 255, 0.15) 50%,
+                    rgba(232, 232, 232, 0.25) 100%);
+            border-radius: 14px;
+            pointer-events: none;
+        }
+
+        #tools-apps .download-card:nth-child(3) .download-icon {
+            color: #8B7355;
+            filter: 
+                drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2))
+                drop-shadow(0 0 6px rgba(212, 193, 156, 0.3));
+        }
+
+        /* کارت چهارم - نقره‌ای درخشان */
+        #tools-apps .download-card:nth-child(4) {
+            background: 
+                linear-gradient(135deg, 
+                    #B8B8B8 0%, 
+                    #D0D0D0 25%,
+                    #E8E8E8 50%,
+                    #F0F0F0 75%,
+                    #FFFFFF 100%);
+            box-shadow: 
+                0 15px 35px rgba(184, 184, 184, 0.35),
+                0 8px 20px rgba(240, 240, 240, 0.25),
+                inset 0 1px 0 rgba(255, 255, 255, 0.6),
+                inset 0 -1px 0 rgba(85, 85, 85, 0.15);
+            border: 2px solid #E8E8E8;
+        }
+
+        #tools-apps .download-card:nth-child(4)::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                linear-gradient(135deg, 
+                    rgba(255, 255, 255, 0.4) 0%,
+                    rgba(232, 232, 232, 0.3) 50%,
+                    rgba(255, 255, 255, 0.4) 100%);
+            border-radius: 14px;
+            pointer-events: none;
+        }
+
+        #tools-apps .download-card:nth-child(4) .download-icon {
+            color: #696969;
+            filter: 
+                drop-shadow(0 2px 4px rgba(0, 0, 0, 0.25))
+                drop-shadow(0 0 8px rgba(255, 255, 255, 0.4));
+            transform: scale(1.1);
+        }
+
+        /* خط زیر عنوان برای همه کارت‌ها */
+        #tools-apps .download-card .download-title {
+            position: relative;
+            margin-bottom: 20px;
+            font-weight: 800;
+            font-size: 1.6rem;
+        }
+
+        #tools-apps .download-card .download-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            border-radius: 2px;
+        }
+
+        /* رنگ خطوط برای هر کارت */
+        #tools-apps .download-card:nth-child(1) .download-title {
+            color: #8B4513;
+            text-shadow: 
+                0 1px 2px rgba(255, 255, 255, 0.8),
+                0 0 8px rgba(255, 215, 0, 0.4);
+        }
+
+        #tools-apps .download-card:nth-child(1) .download-title::after {
+            background: linear-gradient(90deg, 
+                transparent, 
+                #8B4513, 
+                #FFD700,
+                #8B4513,
+                transparent);
+        }
+
+        #tools-apps .download-card:nth-child(2) .download-title {
+            color: #8B5A2B;
+            text-shadow: 
+                0 1px 2px rgba(255, 255, 255, 0.7),
+                0 0 6px rgba(244, 197, 66, 0.3);
+        }
+
+        #tools-apps .download-card:nth-child(2) .download-title::after {
+            background: linear-gradient(90deg, 
+                transparent, 
+                #8B5A2B, 
+                #F4C542,
+                #8B5A2B,
+                transparent);
+        }
+
+        #tools-apps .download-card:nth-child(3) .download-title {
+            color: #8B7355;
+            text-shadow: 
+                0 1px 2px rgba(255, 255, 255, 0.6),
+                0 0 5px rgba(212, 193, 156, 0.2);
+        }
+
+        #tools-apps .download-card:nth-child(3) .download-title::after {
+            background: linear-gradient(90deg, 
+                transparent, 
+                #8B7355, 
+                #D4C19C,
+                #8B7355,
+                transparent);
+        }
+
+        #tools-apps .download-card:nth-child(4) .download-title {
+            color: #696969;
+            text-shadow: 
+                0 1px 2px rgba(255, 255, 255, 0.8),
+                0 0 6px rgba(255, 255, 255, 0.3);
+        }
+
+        #tools-apps .download-card:nth-child(4) .download-title::after {
+            background: linear-gradient(90deg, 
+                transparent, 
+                #696969, 
+                #E8E8E8,
+                #696969,
+                transparent);
+        }
+
+        /* توضیحات برای همه کارت‌ها */
+        #tools-apps .download-card .download-description {
+            opacity: 0.95;
+            font-weight: 500;
+            text-shadow: 0 1px 1px rgba(255, 255, 255, 0.6);
+            line-height: 1.6;
+        }
+
+        #tools-apps .download-card:nth-child(1) .download-description {
+            color: #8B4513;
+        }
+
+        #tools-apps .download-card:nth-child(2) .download-description {
+            color: #8B5A2B;
+        }
+
+        #tools-apps .download-card:nth-child(3) .download-description {
+            color: #8B7355;
+        }
+
+        #tools-apps .download-card:nth-child(4) .download-description {
+            color: #696969;
+        }
+
+        /* افکت‌های هاویر */
+        #tools-apps .download-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            z-index: 100;
+        }
+
+        #tools-apps .download-card:nth-child(1):hover {
+            box-shadow: 
+                0 20px 45px rgba(255, 179, 71, 0.5),
+                0 10px 25px rgba(255, 204, 51, 0.4),
+                inset 0 2px 0 rgba(255, 255, 255, 0.7),
+                inset 0 -2px 0 rgba(140, 90, 20, 0.4);
+        }
+
+        #tools-apps .download-card:nth-child(2):hover {
+            box-shadow: 
+                0 20px 45px rgba(230, 179, 37, 0.45),
+                0 10px 25px rgba(244, 197, 66, 0.35),
+                inset 0 2px 0 rgba(255, 255, 255, 0.6),
+                inset 0 -2px 0 rgba(120, 90, 30, 0.35);
+        }
+
+        #tools-apps .download-card:nth-child(3):hover {
+            box-shadow: 
+                0 20px 45px rgba(201, 174, 93, 0.4),
+                0 10px 25px rgba(232, 232, 232, 0.3),
+                inset 0 2px 0 rgba(255, 255, 255, 0.5),
+                inset 0 -2px 0 rgba(102, 87, 45, 0.25);
+        }
+
+        #tools-apps .download-card:nth-child(4):hover {
+            box-shadow: 
+                0 20px 45px rgba(184, 184, 184, 0.4),
+                0 10px 25px rgba(240, 240, 240, 0.3),
+                inset 0 2px 0 rgba(255, 255, 255, 0.8),
+                inset 0 -2px 0 rgba(85, 85, 85, 0.2);
+        }
+
+        /* دکمه‌های دانلود */
+        #tools-apps .download-card .download-btn {
+            background: 
+                linear-gradient(135deg, 
+                    rgba(255, 255, 255, 0.95) 0%,
+                    rgba(255, 255, 255, 0.8) 50%,
+                    rgba(255, 255, 255, 0.95) 100%);
+            border: 2px solid rgba(255, 255, 255, 0.9);
+            color: #333;
+            font-weight: 700;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+            box-shadow: 
+                0 4px 15px rgba(0, 0, 0, 0.15),
+                0 2px 6px rgba(255, 255, 255, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            border-radius: 50px;
+            padding: 12px 25px;
+            font-size: 1rem;
+            margin-top: 15px;
+        }
+
+        #tools-apps .download-card .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 6px 20px rgba(0, 0, 0, 0.2),
+                0 3px 10px rgba(255, 255, 255, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 1),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+            border-color: rgba(255, 255, 255, 1);
+        }
+
+        #tools-apps .download-card .download-btn i {
+            filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.2));
+            transition: transform 0.3s ease;
+        }
+
+        #tools-apps .download-card .download-btn:hover i {
+            transform: scale(1.1);
+        }
+
+        /* رنگ‌های متن برای دکمه‌ها */
+        #tools-apps .download-card:nth-child(1) .download-btn {
+            color: #8B4513;
+        }
+
+        #tools-apps .download-card:nth-child(2) .download-btn {
+            color: #8B5A2B;
+        }
+
+        #tools-apps .download-card:nth-child(3) .download-btn {
+            color: #8B7355;
+        }
+
+        #tools-apps .download-card:nth-child(4) .download-btn {
+            color: #696969;
+        }
+
+        /* افکت ripple */
+        #tools-apps .download-card .ripple {
+            background: radial-gradient(circle, 
+                rgba(255, 255, 255, 0.3), 
+                transparent 70%);
+        }
+
+        /* Section Styles */
+        .section {
+            padding: 80px 0;
+            position: relative;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+            text-align: center;
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, var(--accent), var(--accent-2));
+            border-radius: 50px;
+        }
+
+        /* Download Section */
+        .download-section {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--glass-border);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .download-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .download-card {
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            transition: var(--transition);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            min-height: 360px;
+            position: relative;
+        }
+
+        .download-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--accent);
+        }
+
+        /* افکت hover برای استات‌ها */
+        .stat-item {
+            transition: var(--transition);
+            padding: 15px;
+            border-radius: var(--radius);
+        }
+
+        .stat-item:hover {
+            background: var(--glass-bg);
+            transform: translateY(-5px);
+        }
+
+        /* ripple hover (liquid feel) */
+        .download-card .ripple {
+            position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(0);border-radius:999px;background: radial-gradient(circle, rgba(255,255,255,0.06), transparent 40%);width:10px;height:10px;pointer-events:none;opacity:0;transition:all 600ms cubic-bezier(.2,.9,.2,1);
+        }
+        .ripple.active{transform:translate(-50%,-50%) scale(20);opacity:1;transition:all 900ms cubic-bezier(.2,.9,.2,1)}
+
+        .download-icon {
+            font-size: 3rem;
+            color: var(--accent);
+            margin-bottom: 20px;
+            transition: var(--transition);
+        }
+
+        .download-card:hover .download-icon {
+            color: var(--accent-2);
+            transform: scale(1.1);
+        }
+
+        .download-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .download-description {
+            margin-bottom: 25px;
+            opacity: 0.9;
+            flex-grow: 1;
+        }
+
+        .download-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .download-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, 
+                rgba(108, 99, 255, 0.8),
+                rgba(0, 191, 166, 0.8));
+            color: white;
+            border-radius: 50px;
+            transition: var(--transition);
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .download-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.7s;
+        }
+
+        .download-btn:hover::before {
+            left: 100%;
+        }
+
+        .download-btn:hover {
+            background: linear-gradient(135deg, 
+                rgba(108, 99, 255, 0.9),
+                rgba(0, 191, 166, 0.9));
+            transform: translateY(-3px);
+            box-shadow: 
+                0 12px 40px rgba(107, 255, 223, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* برای حالت لایت تم */
+        [data-theme="light"] .download-btn {
+            background: linear-gradient(135deg, 
+                rgba(87, 72, 232, 0.8),
+                rgba(7, 191, 160, 0.8));
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.6),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="light"] .download-btn:hover {
+            background: linear-gradient(135deg, 
+                rgba(87, 72, 232, 0.9),
+                rgba(7, 191, 160, 0.9));
+            box-shadow: 
+                0 12px 40px rgba(7, 191, 160, 0.25),
+                inset 0 1px 0 rgba(255, 255, 255, 0.7),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+        }
+
+        /* Version Table */
+        .version-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 40px 0;
+            border-radius: var(--radius);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+        }
+
+        .version-table th, .version-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .version-table th {
+            background: linear-gradient(to right, var(--accent), var(--accent-2));
+            color: white;
+            font-weight: 600;
+        }
+
+        .version-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .version-table tr:hover {
+            background: var(--glass-accent);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--bg-2);
+            padding: 80px 0 30px;
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .footer-col {
+            padding: 20px;
+            border-radius: var(--radius);
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .footer-logo-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--accent);
+            transition: var(--transition);
+        }
+
+        .footer-logo:hover .footer-logo-img {
+            border-color: var(--accent-2);
+        }
+
+        .footer-logo-text {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            background-size: 200% 200%;
+            animation: gradientText 5s ease infinite;
+        }
+
+        .footer-about {
+            margin-bottom: 20px;
+            opacity: 0.8;
+        }
+
+        .footer-title {
+            font-size: 1.3rem;
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(to right, var(--accent), var(--accent-2));
+            border-radius: 50px;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-link {
+            opacity: 0.8;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .footer-link:hover {
+            opacity: 1;
+            color: var(--accent);
+            transform: translateX(5px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .copyright {
+            opacity: 0.7;
+        }
+
+        /* scroll top */
+        .scroll-top{position:fixed;bottom:26px;right:26px;width:52px;height:52px;border-radius:999px;display:flex;align-items:center;justify-content:center;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:white;box-shadow:0 18px 40px rgba(0,0,0,0.45);cursor:pointer;transform:translateY(20px);opacity:0;visibility:hidden;transition:all var(--transition);z-index: 100; border: none;}
+        .scroll-top.visible{transform:translateY(0);opacity:1;visibility:visible}
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .hero {
+                text-align: center;
+                padding: 150px 0 80px;
+            }
+            
+            .hero-content {
+                max-width: 100%;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .section-title {
+                font-size: 2.2rem;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .header {
+                padding: 10px 15px;
+                margin: 6px auto;
+                width: calc(100% - 12px);
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .download-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Particles.js Container -->
+    <div id="particles-js"></div>
+
+    <!-- Animated Background -->
+    <div class="bg-animation">
+        <div class="floating-circle circle-1"></div>
+        <div class="floating-circle circle-2"></div>
+        <div class="floating-circle circle-3"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="header glass">
+        <div class="left">
+            <a href="index" class="logo" style="display:flex;align-items:center;gap:12px;text-decoration:none">
+                <img class="logo-img" src="https://yt3.googleusercontent.com/RPW5Z_kcoEu0ES_VpL4-7ZqI4eI1OQfuVL-DbuCYWmRhXono9hA5NOCSGGMDLzJqNcHUlhOg=s160-c-k-c0x00ffffff-no-rj" alt="Bari Plux">
+                <span class="logo-text">Bari Plux</span>
+            </a>
+        </div>
+        
+        <nav class="nav">
+            <ul class="nav-links">
+                <li><a href="index" class="nav-link">Home</a></li>
+                <li><a href="index#downloads" class="nav-link">Downloads</a></li>
+                <li><a href="index#videos" class="nav-link">Videos</a></li>
+                <li><a href="index#pubg" class="nav-link">Content</a></li>
+                <li><a href="index#plux-times" class="nav-link">Plux Times</a></li>
+            </ul>
+        </nav>
+        
+        <div style="display:flex;align-items:center;gap:12px">
+            <div id="theme-toggle" class="theme-toggle glass" title="Toggle Theme">
+                <div class="theme-toggle-icons">
+                    <div style="font-size:12px;color:var(--muted)">🌙</div>
+                    <div style="font-size:12px;color:var(--muted)">☀️</div>
+                </div>
+                <div class="knob" id="theme-knob"></div>
+            </div>
+            
+            <button class="mobile-menu-btn glass">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+    
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay"></div>
+    
+    <!-- Mobile Menu -->
+    <div class="mobile-menu glass">
+        <!-- Close Button -->
+        <button class="mobile-menu-close">
+            <i class="fas fa-times"></i>
+        </button>
+        
+        <ul class="mobile-nav-links">
+            <li><a href="index" class="mobile-nav-link">
+                <i class="fas fa-home"></i>
+                Home
+            </a></li>
+            <li><a href="index#downloads" class="mobile-nav-link">
+                <i class="fas fa-download"></i>
+                Downloads
+            </a></li>
+            <li><a href="index#videos" class="mobile-nav-link">
+                <i class="fas fa-play-circle"></i>
+                Videos
+            </a></li>
+            <li><a href="index#pubg" class="mobile-nav-link">
+                <i class="fas fa-gamepad"></i>
+                Content
+            </a></li>
+            <li><a href="index#plux-times" class="mobile-nav-link">
+                <i class="fas fa-newspaper"></i>
+                Plux Times
+            </a></li>
+            <li><a href="Legal Information" class="mobile-nav-link">
+                <i class="fas fa-gavel"></i>
+                Legal Info
+            </a></li>
+        </ul>
+        
+        <!-- Social Links -->
+        <div class="mobile-social-links">
+            <a href="https://t.me/BariPlux" class="social-link">
+                <i class="fab fa-telegram"></i>
+            </a>
+            <a href="https://youtube.com/@BariPlux" class="social-link">
+                <i class="fab fa-youtube"></i>
+            </a>
+            <a href="https://instagram.com/BariPlux" class="social-link">
+                <i class="fab fa-instagram"></i>
+            </a>
+        </div>
+    </div>
+    
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content glass" style="padding: 40px; border-radius: var(--radius-lg);">
+                <h1 class="hero-title">Optimization Apps & Keymappings</h1>
+                <p class="hero-subtitle">Download optimization tools and resolution-specific keymappings for the best PUBG Mobile gaming experience</p>
+                
+                <div class="hero-stats" style="display: flex; gap: 30px; justify-content: center; margin-top: 30px; flex-wrap: wrap;">
+                    <div class="stat-item glass" style="text-align: center; padding: 20px; border-radius: var(--radius);">
+                        <div class="stat-number" style="font-size: 2rem; font-weight: 800; color: var(--accent);">4+</div>
+                        <div class="stat-label" style="font-size: 0.9rem; opacity: 0.8;">Optimization Tools</div>
+                    </div>
+                    <div class="stat-item glass" style="text-align: center; padding: 20px; border-radius: var(--radius);">
+                        <div class="stat-number" style="font-size: 2rem; font-weight: 800; color: var(--accent-2);">8+</div>
+                        <div class="stat-label" style="font-size: 0.9rem; opacity: 0.8;">Keymapping Profiles</div>
+                    </div>
+                    <div class="stat-item glass" style="text-align: center; padding: 20px; border-radius: var(--radius);">
+                        <div class="stat-number" style="font-size: 2rem; font-weight: 800; color: var(--accent);">100%</div>
+                        <div class="stat-label" style="font-size: 0.9rem; opacity: 0.8;">Performance Boost</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bari Plux Tool Pro -->
+    <section id="tools-apps" class="section download-section">
+        <div class="container">
+            <h2 class="section-title glass" style="padding: 20px; display: inline-block; width: auto;">Bari Plux Tools Pro</h2>
+            
+            <div class="download-grid">
+                <div class="download-card glass">
+                    <div class="ripple" aria-hidden="true"></div>
+                    <div class="download-icon">
+                        <img src="https://i.postimg.cc/65cjsvfQ/imglogo.png" loading="lazy" alt="Plux Tool Pro" width="90" height="70">
+                    </div>
+                    <h3 class="download-title">Plux Tool Pro</h3>
+                    <p class="download-description">Allows users to change settings related to graphics, PUBG Mobile FPS, and keymapping according to the relevant resolution.</p>
+                    
+                    <div class="download-buttons">
+                        <a href="https://workupload.com/download/pCJn7mRpBYb" class="download-btn">
+                            <i class="fas fa-download"></i>
+                            Download
+                        </a>
+                        <p style="margin: 1px 0; font-size: 0.9rem; opacity: 0.8; color: #000000;">Version 1.4.2.7</p>
+                    </div>
+                </div>
+                
+                <div class="download-card glass">
+                    <div class="ripple" aria-hidden="true"></div>
+                    <div class="download-icon">
+                        <i class="fas fa-redo"></i>
+                    </div>
+                    <h3 class="download-title">PUBG Mobile Launcher Pro</h3>
+                    <p class="download-description">It helps you run PUBG Mobile in Game Loop in the most convenient way without having to open and close the App Market.</p>
+                    
+                    <div class="download-buttons">
+                        <a href="https://workupload.com/download/s4mDFWKuut6" class="download-btn">
+                            <i class="fas fa-download"></i>
+                            Download
+                        </a>
+                        <p style="margin: 1px 0; font-size: 0.9rem; opacity: 0.8; color: #000000;">Version 1.0.0.3</p>
+                    </div>
+                </div>
+                
+                <div class="download-card glass">
+                    <div class="ripple" aria-hidden="true"></div>
+                    <div class="download-icon">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <h3 class="download-title">OpenGL+ Activation</h3>
+                    <p class="download-description">Since OpenGL+ has been disabled for several seasons, you can use this bat to enable rendering in OpenGL.</p>
+                    
+                    <div class="download-buttons">
+                        <a href="https://workupload.com/download/LztctcFCPsE" class="download-btn">
+                            <i class="fas fa-download"></i>
+                            Download
+                        </a>
+                        <p style="margin: 1px 0; font-size: 0.9rem; opacity: 0.8; color: #000000;">Version 1.0.0.0</p>
+                    </div>
+                </div>
+
+                <div class="download-card glass">
+                    <div class="ripple" aria-hidden="true"></div>
+                    <div class="download-icon">
+                        <i class="fas fa-quidditch"></i>
+                    </div>
+                    <h3 class="download-title">Shader & System Cleaner</h3>
+                    <p class="download-description">If you place these bats in startup, GameLoop shader caches and additional Windows files such as temp will be automatically deleted.</p>
+                    
+                    <div class="download-buttons">
+                        <a href="https://workupload.com/archive/9DbAm2KvAC" class="download-btn">
+                            <i class="fas fa-download"></i>
+                            Download
+                        </a>
+                        <p style="margin: 1px 0; font-size: 0.9rem; opacity: 0.8; color: #000000;">Version 1.0.0.0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Graphic Section -->
+    <section id="keymappings" class="section">
+        <div class="container">
+            <h2 class="section-title glass" style="padding: 20px; display: inline-block; width: auto;">Graphic Packs 4.1</h2>
+            
+            <div class="download-grid">
+                <div class="download-card glass">
+                    <div class="ripple" aria-hidden="true"></div>
+                    <div class="download-icon">
+                        <img src="https://i.postimg.cc/X74zFrtN/temp-17-4-59-image-upscayl-5x-ultramix-balanced-4x.png" loading="lazy" alt="ParkControl" width="250" height="70">
+                    </div>
+                    <h3 class="download-title">Balanced 90 & 120</h3>
+                    
+                    <div class="download-buttons">
+                        <a href="https://workupload.com/download/7T5695QVLqK" class="download">
+                                <img src="https://i.postimg.cc/X7Nrr0c5/temp-17-16-18-image-upscayl-5x-ultramix-balanced-4x.png" loading="lazy" alt="ParkControl" width="150" height="40">
+                            </i>
+                        </a>
+                        <p style="margin: 1px 0; font-size: 0.9rem; opacity: 0.8;">90 FPS</p>
+                        <a href="https://workupload.com/download/RzYgNFndexU" class="download">
+                            <img src="https://i.postimg.cc/rw0F4ydR/temp-17-17-14-image-upscayl-5x-ultramix-balanced-4x.png" loading="lazy" alt="ParkControl" width="150" height="40">
+                            </i>
+                        </a>
+                        <p style="margin: 1px 0; font-size: 0.9rem; opacity: 0.8;">120 FPS</p>
+                    </div>
+                </div>
+                
+                <div class="download-card glass">
+                    <div class="ripple" aria-hidden="true"></div>
+                    <div class="download-icon">
+                        <img src="https://i.postimg.cc/SsGWpxd8/temp-17-7-26-image-upscayl-5x-ultramix-balanced-4x.png" loading="lazy" alt="ParkControl" width="250" height="70">
+                    </div>
+                    <h3 class="download-title">HD 90 & 120</h3>
+                    
+                    <div class="download-buttons">
+                        <a href="https://workupload.com/download/PKa5rjBRr65" class="download">
+                                <img src="https://i.postimg.cc/X7Nrr0c5/temp-17-16-18-image-upscayl-5x-ultramix-balanced-4x.png" loading="lazy" alt="ParkControl" width="150" height="40">
+                            </i>
+                        </a>
+                        <p style="margin: 1px 0; font-size: 0.9rem; opacity: 0.8;">90 FPS</p>
+                        <a href="https://workupload.com/download/J62CS6MJRCG" class="download">
+                            <img src="https://i.postimg.cc/rw0F4ydR/temp-17-17-14-image-upscayl-5x-ultramix-balanced-4x.png" loading="lazy" alt="ParkControl" width="150" height="40">
+                            </i>
+                        </a>
+                        <p style="margin: 1px 0; font-size: 0.9rem; opacity: 0.8;">120 FPS</p>
+                    </div>
+                </div>
+
+                <div class="download-card glass">
+                    <div class="ripple" aria-hidden="true"></div>
+                    <div class="download-icon">
+                        <img src="https://i.postimg.cc/wjcx2Rjc/temp-17-10-13-image-upscayl-5x-ultramix-balanced-4x.png" loading="lazy" alt="ParkControl" width="250" height="70">
+                    </div>
+                    <h3 class="download-title">HDR 90 & 120</h3>
+                    
+                    <div class="download-buttons">
+                        <a href="https://workupload.com/download/jp9XVCj6EWE" class="download">
+                                <img src="https://i.postimg.cc/X7Nrr0c5/temp-17-16-18-image-upscayl-5x-ultramix-balanced-4x.png" loading="lazy" alt="ParkControl" width="150" height="40">
+                            </i>
+                        </a>
+                        <p style="margin: 1px 0; font-size: 0.9rem; opacity: 0.8;">90 FPS</p>
+                        <a href="https://workupload.com/download/fmbRVCy89U6" class="download">
+                            <img src="https://i.postimg.cc/rw0F4ydR/temp-17-17-14-image-upscayl-5x-ultramix-balanced-4x.png" loading="lazy" alt="ParkControl" width="150" height="40">
+                            </i>
+                        </a>
+                        <p style="margin: 1px 0; font-size: 0.9rem; opacity: 0.8;">120 FPS</p>
+                    </div>
+                </div>
+                
+                <div class="download-card glass">
+                    <div class="ripple" aria-hidden="true"></div>
+                    <div class="download-icon">
+                        <img src="https://i.postimg.cc/GhMnmP9L/temp-17-13-59-image-upscayl-5x-ultramix-balanced-4x.png" loading="lazy" alt="ParkControl" width="250" height="70">
+                    </div>
+                    <h3 class="download-title">Ultra HDR 90 & 120</h3>
+                    
+                    <div class="download-buttons">
+                        <a href="https://workupload.com/download/rfV8DSVznxe" class="download">
+                                <img src="https://i.postimg.cc/X7Nrr0c5/temp-17-16-18-image-upscayl-5x-ultramix-balanced-4x.png" loading="lazy" alt="ParkControl" width="150" height="40">
+                            </i>
+                        </a>
+                        <p style="margin: 1px 0; font-size: 0.9rem; opacity: 0.8;">90 FPS</p>
+                        <a href="https://workupload.com/download/uVDXXKkzKD5" class="download">
+                            <img src="https://i.postimg.cc/rw0F4ydR/temp-17-17-14-image-upscayl-5x-ultramix-balanced-4x.png" loading="lazy" alt="ParkControl" width="150" height="40">
+                            </i>
+                        </a>
+                        <p style="margin: 1px 0; font-size: 0.9rem; opacity: 0.8;">120 FPS</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Optimization Apps Section -->
+    <section id="optimization-apps" class="section download-section">
+        <div class="container">
+            <h2 class="section-title glass" style="padding: 20px; display: inline-block; width: auto;">Optimization Apps</h2>
+            
+            <div class="download-grid">
+                <div class="download-card glass">
+                    <div class="ripple" aria-hidden="true"></div>
+                    <div class="download-icon">
+                        <img src="https://img.utdstc.com/icon/2f3/5e3/2f35e324af7727a509e7dcd739864bdb263af8771757670942ddf675aa209438:100" loading="lazy" alt="ParkControl" width="70" height="70">
+                    </div>
+                    <h3 class="download-title">Park Control</h3>
+                    <p class="download-description">Allows users to manage and adjust CPU core parking and frequency scaling settings to improve performance or save battery life.</p>
+                    
+                    <div class="download-buttons">
+                        <a href="https://dl.bitsum.com/files/parkcontrolsetup64.exe" class="download-btn">
+                            <i class="fas fa-download"></i>
+                            Download
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="download-card glass">
+                    <div class="ripple" aria-hidden="true"></div>
+                    <div class="download-icon">
+                        <img src="https://img.utdstc.com/icon/70d/abe/70dabeba5cd6e884ca2c498e8875cec577823283b0a23067f576ed5e931b2f33:100" loading="lazy" alt="RevoUninstaller" width="70" height="70">
+                    </div>
+                    <h3 class="download-title">Revo Uninstaller</h3>
+                    <p class="download-description">Helps you to completely remove programs and their leftover files, registry entries, and other data from your computer or Android device.</p>
+                    
+                    <div class="download-buttons">
+                        <a href="https://download.revouninstaller.com/download/revosetup.exe" class="download-btn">
+                            <i class="fas fa-download"></i>
+                            Download
+                        </a>
+                    </div>
+                </div>
+
+                <div class="download-card glass">
+                    <div class="ripple" aria-hidden="true"></div>
+                    <div class="download-icon">
+                        <img src="https://img.utdstc.com/icon/fb9/f48/fb9f48287ed2e872280cbb96fa1445dbb707f52ba84fbddd54b0ecff06cdfd68:100" loading="lazy" alt="iobitbooster" width="90" height="90">
+                    </div>
+                    <h3 class="download-title">IObit Driver Booster Pro</h3>
+                    <p class="download-description">Automatically scan, download, and install outdated, missing, or faulty drivers for your Windows PC.</p>
+                    
+                    <div class="download-buttons">
+                        <a href="https://workupload.com/download/ETLFcqFa2A3" class="download-btn">
+                            <i class="fas fa-download"></i>
+                            Download
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="download-card glass">
+                    <div class="ripple" aria-hidden="true"></div>
+                    <div class="download-icon">
+                        <img src="https://img.utdstc.com/icon/2ae/723/2ae72380b9e9194a16c011ca83423b393143c065ceb4aac6d7020254f30eaa12:100" loading="lazy" alt="advancedsystemcare" width="70" height="70">
+                    </div>
+                    <h3 class="download-title">Advanced SystemCare Ultimate/Pro</h3>
+                    <p class="download-description">Provides a comprehensive suite of tools to optimize PC performance and enhance system security.</p>
+                    
+                    <div class="download-buttons">
+                        <a href="https://workupload.com/download/ETLFcqFa2A3" class="download-btn">
+                            <i class="fas fa-download"></i>
+                            Download
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Keymappings Section -->
+    <section id="keymappings" class="section">
+        <div class="container">
+            <h2 class="section-title glass" style="padding: 20px; display: inline-block; width: auto;">Keymappings Versions</h2>
+            
+            <div class="download-grid">
+                <div class="download-card glass">
+                    <div class="ripple" aria-hidden="true"></div>
+                    <div class="download-icon">
+                        <i class="fas fa-keyboard"></i>
+                    </div>
+                    <h3 class="download-title">iPad View Keymapping - 4:3</h3>
+                    <p class="download-description">Optimized keymapping for 4:3 aspect ratio resolutions</p>
+                    <p style="margin: 10px 0; font-size: 0.9rem; opacity: 0.8;">2880x2160 - 2048x1536</p>
+                    <p style="margin: 10px 0; font-size: 0.9rem; opacity: 0.8;">1920x1440 - 1440x1080</p>
+                    
+                    <div class="download-buttons">
+                        <a href="https://workupload.com/download/atpZfrvJfeN" class="download-btn">
+                            <i class="fas fa-download"></i>
+                            Download
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="download-card glass">
+                    <div class="ripple" aria-hidden="true"></div>
+                    <div class="download-icon">
+                        <i class="fas fa-keyboard"></i>
+                    </div>
+                    <h3 class="download-title">iPad View Keymapping - 32:27</h3>
+                    <p class="download-description">Optimized keymapping for 32:27 aspect ratio resolutions</p>
+                    <p style="margin: 10px 0; font-size: 0.9rem; opacity: 0.8;">2560×2160 - 1920x1620</p>
+                    <p style="margin: 10px 0; font-size: 0.9rem; opacity: 0.8;">1280×1080</p>
+                    
+                    <div class="download-buttons">
+                        <a href="https://workupload.com/download/FwEyYkYVMt7" class="download-btn">
+                            <i class="fas fa-download"></i>
+                            Download
+                        </a>
+                    </div>
+                </div>
+
+                <div class="download-card glass">
+                    <div class="ripple" aria-hidden="true"></div>
+                    <div class="download-icon">
+                        <i class="fas fa-keyboard"></i>
+                    </div>
+                    <h3 class="download-title">iPad View Keymapping - 96:95</h3>
+                    <p class="download-description">Optimized keymapping for 96:95 aspect ratio resolutions</p>
+                    <p style="margin: 10px 0; font-size: 0.9rem; opacity: 0.8;">2880x2850 - 1920x1900</p>
+                    <p style="margin: 10px 0; font-size: 0.9rem; opacity: 0.8;">1420×1400</p>
+                    
+                    <div class="download-buttons">
+                        <a href="https://workupload.com/download/YUR6X6PepSJ" class="download-btn">
+                            <i class="fas fa-download"></i>
+                            Download
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="download-card glass">
+                    <div class="ripple" aria-hidden="true"></div>
+                    <div class="download-icon">
+                        <i class="fas fa-keyboard"></i>
+                    </div>
+                    <h3 class="download-title">TAC Keybinding PUBG Mobile</h3>
+                    <p style="margin: 10px 0; font-size: 0.9rem; opacity: 0.8;">Works perfect for 2K resolution without lag and we recommend you to use 3rd layout on PUBGM with this prepared⤵</p>
+                    <p style="margin: 10px 0; font-size: 0.9rem; opacity: 0.8;">1-7569-0584-8575-4146-544</p>
+                    
+                    <div class="download-buttons">
+                        <a href="https://workupload.com/download/9LG7NF2vP78" class="download-btn">
+                            <i class="fas fa-download"></i>
+                            Download
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-col glass">
+                    <div class="footer-logo">
+                        <img src="https://yt3.googleusercontent.com/RPW5Z_kcoEu0ES_VpL4-7ZqI4eI1OQfuVL-DbuCYWmRhXono9hA5NOCSGGMDLzJqNcHUlhOg=s160-c-k-c0x00ffffff-no-rj" loading="lazy" alt="Bari Plux Logo" class="footer-logo-img">
+                        <span class="footer-logo-text">Bari Plux</span>
+                    </div>
+                    <p class="footer-about">Gaming & Tech Content Creator specializing in PUBG optimizations, performance tuning, and system optimization tools.</p>
+                </div>
+                <div class="footer-col glass">
+                    <h3 class="footer-title">Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="index" class="footer-link">Home</a></li>
+                        <li><a href="index#about" class="footer-link">About</a></li>
+                        <li><a href="index#downloads" class="footer-link">Downloads</a></li>
+                        <li><a href="index#videos" class="footer-link">Videos</a></li>
+                        <li><a href="index#pubg" class="footer-link">Content</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col glass">
+                    <h3 class="footer-title">Content</h3>
+                    <ul class="footer-links">
+                        <li><a href="https://t.me/BariPlux" class="footer-link">Guides</a></li>
+                        <li><a href="https://youtu.be/cb3S6lu-QF0?si=VP0YmHVCWPDt9ZJA" class="footer-link">Tutorials</a></li>
+                        <li><a href="https://youtube.com/playlist?list=PLZLU1S_ro5zq_XRREwTneN1p7FcPGDjsU&si=XHL7xWXrRvqYN6vR" class="footer-link">Streams</a></li>
+                        <li><a href="https://youtu.be/EPggWr5TKVo?si=kqRcobFKXdIi6YmH" class="footer-link">News</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col glass">
+                    <h3 class="footer-title">Legal</h3>
+                    <ul class="footer-links">
+                        <li><a href="Legal Information" class="footer-link">Privacy Policy</a></li>
+                        <li><a href="Legal Information" class="footer-link">Terms of Service</a></li>
+                        <li><a href="Legal Information" class="footer-link">Disclaimer</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <a href="Legal Information" class="copyright">&copy; 2026 Bari Plux. All rights reserved.</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll to top -->
+    <div id="scroll-top" class="scroll-top" title="Back to top"><i class="fas fa-arrow-up"></i></div>
+
+    <script>
+        // Mobile Menu Toggle - Fixed
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+            const mobileMenu = document.querySelector('.mobile-menu');
+            const mobileMenuClose = document.querySelector('.mobile-menu-close');
+            const mobileMenuOverlay = document.querySelector('.mobile-menu-overlay');
+            const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+
+            function openMobileMenu() {
+                mobileMenu.classList.add('active');
+                mobileMenuOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                
+                const icon = mobileMenuBtn.querySelector('i');
+                if (icon) {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                }
+            }
+
+            function closeMobileMenu() {
+                mobileMenu.classList.remove('active');
+                mobileMenuOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+                
+                const icon = mobileMenuBtn.querySelector('i');
+                if (icon) {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            }
+
+            mobileMenuBtn.addEventListener('click', openMobileMenu);
+            mobileMenuClose.addEventListener('click', closeMobileMenu);
+            mobileMenuOverlay.addEventListener('click', closeMobileMenu);
+
+            mobileNavLinks.forEach(link => {
+                link.addEventListener('click', closeMobileMenu);
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && mobileMenu.classList.contains('active')) {
+                    closeMobileMenu();
+                }
+            });
+        });
+
+        // Header Scroll Effect - Fixed
+        const header = document.querySelector('.header');
+        if (header) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            });
+        }
+
+        // Theme Toggle - Fixed
+        function setupThemeToggle(){
+            const themeToggle = document.getElementById('theme-toggle');
+            if (!themeToggle) return;
+            
+            const stored = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', stored);
+            
+            themeToggle.addEventListener('click', ()=>{
+                const current = document.documentElement.getAttribute('data-theme');
+                const next = current === 'light' ? 'dark' : 'light';
+                document.documentElement.setAttribute('data-theme', next);
+                localStorage.setItem('theme', next);
+            });
+        }
+
+        // Scroll to top - Fixed
+        function setupScrollTop(){
+            const btn = document.getElementById('scroll-top');
+            if (!btn) return;
+            
+            window.addEventListener('scroll', ()=>{
+                if (window.pageYOffset > 350) {
+                    btn.classList.add('visible');
+                } else {
+                    btn.classList.remove('visible');
+                }
+            });
+            
+            btn.addEventListener('click', ()=> {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        }
+
+        // Ripple effect for download cards - Fixed
+        function setupRippleEffect() {
+            document.querySelectorAll('.download-card').forEach(card => {
+                card.addEventListener('click', e => {
+                    const r = card.querySelector('.ripple');
+                    if (!r) return;
+                    
+                    r.classList.remove('active');
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    r.style.left = x + 'px';
+                    r.style.top = y + 'px';
+                    
+                    requestAnimationFrame(() => r.classList.add('active'));
+                    setTimeout(() => r.classList.remove('active'), 900);
+                });
+            });
+        }
+
+        // Advanced Image Auto-Reload System
+        function setupAdvancedImageReload() {
+            console.log('Starting Advanced Image Auto-Reload System...');
+            
+            // Function to force reload an image with cache busting
+            function forceImageReload(img) {
+                const originalSrc = img.src;
+                
+                // Remove existing cache busting parameters
+                const cleanSrc = originalSrc.split('?')[0].split('#')[0];
+                
+                // Add new cache busting parameter with timestamp
+                const newSrc = cleanSrc + '?v=' + Date.now() + '&cache=' + Math.random();
+                
+                // Only reload if the source is different
+                if (newSrc !== originalSrc) {
+                    img.src = newSrc;
+                    console.log('Reloaded image:', cleanSrc);
+                }
+            }
+
+            // Function to reload all images on the page
+            function reloadAllImages() {
+                const images = document.querySelectorAll('img');
+                console.log(`Found ${images.length} images to reload`);
+                
+                images.forEach((img, index) => {
+                    // Add a small delay between reloads to avoid overwhelming the browser
+                    setTimeout(() => {
+                        if (img.complete && img.naturalHeight !== 0) {
+                            forceImageReload(img);
+                        }
+                    }, index * 100); // 100ms delay between each image
+                });
+            }
+
+            // Reload images on page load
+            window.addEventListener('load', function() {
+                console.log('Page loaded, starting initial image reload...');
+                setTimeout(reloadAllImages, 1000);
+            });
+
+            // Reload images when page becomes visible again
+            document.addEventListener('visibilitychange', function() {
+                if (!document.hidden) {
+                    console.log('Page became visible, reloading images...');
+                    setTimeout(reloadAllImages, 500);
+                }
+            });
+
+            // Reload images when the page is shown from back/forward cache
+            window.addEventListener('pageshow', function(event) {
+                if (event.persisted) {
+                    console.log('Page restored from bfcache, reloading images...');
+                    setTimeout(reloadAllImages, 500);
+                }
+            });
+
+            // Periodic reload every 30 seconds (optional)
+            setInterval(() => {
+                console.log('Periodic image reload...');
+                reloadAllImages();
+            }, 30000);
+
+            // Also reload images when user focuses on the page
+            window.addEventListener('focus', function() {
+                console.log('Window focused, reloading images...');
+                setTimeout(reloadAllImages, 1000);
+            });
+
+            // Create a manual reload button in console for testing
+            window.manualImageReload = reloadAllImages;
+            console.log('Manual reload available: type manualImageReload() in console');
+        }
+
+        let lastHash = null;
+
+async function checkForPageUpdate() {
+    try {
+        const res = await fetch(window.location.href + '?v=' + Date.now(), {
+            cache: 'no-store'
+        });
+        const text = await res.text();
+
+        // ساخت hash ساده
+        let hash = 0;
+        for (let i = 0; i < text.length; i++) {
+            hash = ((hash << 5) - hash) + text.charCodeAt(i);
+            hash |= 0;
+        }
+
+        if (lastHash && lastHash !== hash) {
+            location.reload(true);
+        }
+
+        lastHash = hash;
+    } catch (e) {
+        console.log('Auto update check failed');
+    }
+}
+
+// اجرای اولیه
+checkForPageUpdate();
+
+// هر 45 ثانیه چک کن (ایمن برای صفحه سنگین)
+setInterval(checkForPageUpdate, 45000);
+
+        /* -------------------------
+          Particles.js Configuration - Fixed
+        ----------------------------*/
+        function initParticles() {
+            if (typeof particlesJS !== 'undefined') {
+                particlesJS('particles-js', {
+                    "particles": {
+                        "number": {
+                            "value": 80,
+                            "density": {
+                                "enable": true,
+                                "value_area": 800
+                            }
+                        },
+                        "color": {
+                            "value": "#6C63FF"
+                        },
+                        "shape": {
+                            "type": "circle"
+                        },
+                        "opacity": {
+                            "value": 0.5,
+                            "random": false
+                        },
+                        "size": {
+                            "value": 3,
+                            "random": true
+                        },
+                        "line_linked": {
+                            "enable": true,
+                            "distance": 150,
+                            "color": "#6C63FF",
+                            "opacity": 0.4,
+                            "width": 1
+                        },
+                        "move": {
+                            "enable": true,
+                            "speed": 6,
+                            "direction": "none",
+                            "random": false,
+                            "straight": false,
+                            "out_mode": "out"
+                        }
+                    },
+                    "interactivity": {
+                        "detect_on": "canvas",
+                        "events": {
+                            "onhover": {
+                                "enable": true,
+                                "mode": "grab"
+                            },
+                            "onclick": {
+                                "enable": true,
+                                "mode": "push"
+                            }
+                        }
+                    },
+                    "retina_detect": true
+                });
+            }
+        }
+
+        // Initialize everything - Fixed
+        document.addEventListener('DOMContentLoaded', () => {
+            setupThemeToggle();
+            setupScrollTop();
+            setupRippleEffect();
+            setupAdvancedImageReload(); // NEW: Advanced auto-reload system
+            initParticles();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sell UC at the lowest price and best quality at Elite UC Shop.">
+    <meta name="keywords" content="UC, PUBG, Elite UC Shop, Buy UC, UC Discount">
+    <title>Elite UC Shop - Buy UC with Special Discount</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* General styles */
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            background: #000;
+        }
+
+        /* Title style */
+        .header-section h1 {
+            font-size: 4rem; /* Larger font size */
+            color: #ffcc00; /* Golden color */
+            text-shadow: 0 0 10px #ffcc00, 0 0 20px #ffcc00; /* Glowing shadow */
+            animation: fadeIn 2s ease-in-out forwards, float 3s ease-in-out infinite; /* Animations */
+            text-align: center; /* Centered text */
+            margin-top: 20px; /* Top margin */
+        }
+
+        /* Improved Region Selector Styles */
+        .region-selector {
+            margin: 30px 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .region-container {
+            background: rgba(20, 20, 30, 0.8);
+            border: 1px solid #ffcc00;
+            border-radius: 12px;
+            padding: 20px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 5px 15px rgba(255, 204, 0, 0.2);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .region-container:hover {
+            box-shadow: 0 8px 25px rgba(255, 204, 0, 0.3);
+            transform: translateY(-3px);
+        }
+
+        .region-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            color: #ffcc00;
+        }
+
+        .region-header i {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+
+        .region-header h3 {
+            margin: 0;
+            font-size: 1.2rem;
+            text-shadow: 0 0 5px #ffcc00;
+        }
+
+        .region-dropdown {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        .region-dropdown select {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid #ffcc00;
+            border-radius: 8px;
+            color: white;
+            font-family: 'Vazirmatn', sans-serif;
+            font-size: 16px;
+            appearance: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .region-dropdown select:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(255, 204, 0, 0.5);
+        }
+
+        .dropdown-arrow {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: #ffcc00;
+        }
+
+        .region-info {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            color: #aaa;
+        }
+
+        .region-info i {
+            margin-right: 8px;
+            color: #ffcc00;
+        }
+
+        /* Fade-in animation */
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.8); /* Smaller at start */
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1); /* Normal size */
+            }
+        }
+
+        /* Floating animation */
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* Background video */
+        #video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+            opacity: 0.7;
+        }
+
+        /* Sound button */
+        #sound-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #ffcc00;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1000;
+            color: #ffcc00;
+            font-size: 24px;
+        }
+
+        #sound-button:hover {
+            background: rgba(255, 204, 0, 0.2);
+        }
+
+        h1, h2, h3 {
+            font-family: 'Orbitron', sans-serif;
+            color: #ffcc00;
+            text-shadow: 0 0 10px #ffcc00;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(255, 204, 0, 0.5);
+            backdrop-filter: blur(10px); /* Glass effect */
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            transition: opacity 0.3s ease;
+        }
+
+        .region-changing .grid {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .table {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #ffcc00;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            backdrop-filter: blur(10px); /* Glass effect */
+        }
+
+        .table::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, rgba(255, 204, 0, 0.2), rgba(255, 204, 0, 0));
+            transform: rotate(45deg);
+            transition: opacity 0.5s ease;
+            opacity: 0;
+        }
+
+        .table:hover::before {
+            opacity: 1;
+        }
+
+        .table:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(255, 204, 0, 0.8);
+        }
+
+        .table img {
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .table h3 {
+            font-size: 20px;
+            margin: 0 0 10px 0;
+            color: #ffcc00;
+        }
+
+        .table p {
+            font-size: 16px;
+            margin: 5px 0;
+        }
+
+        .table .discount {
+            font-size: 14px;
+            color: #00ff00;
+        }
+
+        .middle-row {
+            grid-column: span 3;
+            background: linear-gradient(to right, #ff0000, #0000ff);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            text-align: center;
+            font-size: 26px;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px); /* Glass effect */
+        }
+
+        .social-links {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+        }
+
+        .social-links a {
+            color: white;
+            font-size: 28px;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: #ffcc00;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+
+        /* Registration page styles */
+        #registration {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        #registration form {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(255, 204, 0, 0.5);
+            width: 350px;
+            text-align: center;
+            backdrop-filter: blur(10px); /* Glass effect */
+        }
+
+        #registration input {
+            width: 100%;
+            padding: 12px;
+            margin: 15px 0;
+            border: 1px solid #ffcc00;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 16px;
+        }
+
+        #registration button {
+            width: 100%;
+            padding: 12px;
+            background: #ffcc00;
+            border: none;
+            border-radius: 8px;
+            color: black;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        #registration button:hover {
+            background: #e6b800;
+        }
+
+        #error-message {
+            color: red;
+            font-size: 14px;
+            display: none;
+            margin-top: 10px;
+        }
+
+        /* WhatsApp/Telegram choice popup */
+        #popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(255, 204, 0, 0.5);
+            z-index: 1000;
+            text-align: center;
+            backdrop-filter: blur(10px); /* Glass effect */
+        }
+
+        #popup h3 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #ffcc00;
+        }
+
+        #popup button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            margin: 0 15px;
+            transition: color 0.3s ease;
+        }
+
+        #popup button:hover {
+            color: #ffcc00;
+        }
+
+        /* Animations */
+        .table {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .fade-in {
+            animation: fadeIn 1s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <!-- Audio file -->
+    <audio id="background-music" loop>
+        <source src="https://cdn.pixabay.com/audio/2023/05/16/audio_1282eb1c8c.mp3" type="audio/mpeg">
+        Your browser does not support audio.
+    </audio>
+
+    <!-- Sound button -->
+    <div id="sound-button" onclick="toggleSound()">
+        <i class="fas fa-volume-mute"></i>
+    </div>
+
+    <script>
+        // Sound control function
+        function toggleSound() {
+            const audio = document.getElementById('background-music');
+            const soundButton = document.getElementById('sound-button');
+            const icon = soundButton.querySelector('i');
+
+            if (audio.paused) {
+                audio.play().then(() => {
+                    icon.classList.remove('fa-volume-mute');
+                    icon.classList.add('fa-volume-up');
+                }).catch(error => {
+                    console.error("Audio playback failed: ", error);
+                    alert("Please interact with the page (e.g., click) to play sound.");
+                });
+            } else {
+                audio.pause();
+                icon.classList.remove('fa-volume-up');
+                icon.classList.add('fa-volume-mute');
+            }
+        }
+
+        // Stop sound initially
+        document.addEventListener('DOMContentLoaded', function() {
+            const audio = document.getElementById('background-music');
+            const soundButton = document.getElementById('sound-button');
+            const icon = soundButton.querySelector('i');
+
+            audio.pause();
+            icon.classList.remove('fa-volume-up');
+            icon.classList.add('fa-volume-mute');
+        });
+    </script>
+
+    <!-- Background video -->
+    <video id="video-background" autoplay muted loop>
+        <source src="https://r2.guns.lol/96d858eb-6113-4c11-b4fd-1e16f6a9882a.mp4" type="video/mp4">
+        Your browser does not support video.
+    </video>
+
+    <!-- Registration page -->
+    <div id="registration">
+        <form id="registerForm">
+            <h2>Registration</h2>
+            <p id="error-message"></p>
+            <input type="text" id="username" placeholder="Username" required>
+            <input type="email" id="email" placeholder="Email" required>
+            <input type="tel" id="phone" placeholder="Phone Number" required>
+            <button type="submit">Register</button>
+        </form>
+    </div>
+
+    <!-- Main content -->
+    <div id="main-content" class="container fade-in" style="display: none;">
+        <div class="header-section">
+            <h1>Elite UC Shop</h1>
+        </div>
+        <div class="region-selector">
+            <div class="region-container">
+                <div class="region-header">
+                    <i class="fas fa-globe-americas"></i>
+                    <h3>Select Your Region</h3>
+                </div>
+                <div class="region-dropdown">
+                    <select id="region" onchange="changeRegion()">
+                        <option value="" disabled selected>Choose your region</option>
+                        <option value="usa">🇺🇸 United States (USD)</option>
+                        <option value="norway">🇳🇴 Norway (NOK)</option>
+                        <option value="uk">🇬🇧 United Kingdom (GBP)</option>
+                        <option value="canada">🇨🇦 Canada (CAD)</option>
+                        <option value="australia">🇦🇺 Australia (AUD)</option>
+                        <option value="fa">🇮🇷 ایران (تومان)</option>
+                        <option value="af">🇦🇫 افغانستان (افغانی)</option>
+                    </select>
+                    <div class="dropdown-arrow">
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+                <div class="region-info">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Prices will update automatically based on your selection</span>
+                </div>
+            </div>
+        </div>
+        <div class="middle-row">
+            <p>Please note! This UC site is just a demonstration and does not intend to sell any type of UC. It was created solely to display the site better and more professionally!</p>
+        </div>
+        <div class="grid">
+            <!-- Cards are dynamically created with JavaScript -->
+        </div>
+        <div class="social-links">
+            <a href="" target="_blank" title="Telegram"><i class="fab fa-telegram"></i></a>
+            <a href="" target="_blank" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+            <a href="" title="Phone"><i class="fas fa-phone"></i></a>
+        </div>
+    </div>
+
+    <!-- WhatsApp/Telegram choice popup -->
+    <div id="popup">
+        <h3>Sorry, this section is not yet available!</h3>
+        <button id="whatsappBtn"><i class="fab fa-whatsapp"></i></button>
+        <button id="telegramBtn"><i class="fab fa-telegram"></i></button>
+    </div>
+    <div class="copyright">
+            <a href="Legal Information" style="text-decoration: none; color: inherit;">&copy; 2025 Bari Plux. All rights reserved.</a>
+        </div>
+
+    <script>
+        // Card Data
+        const regionData = {
+            af: {
+                currency: "افغانی",
+                prices: [
+                    { uc: "60", price: "150", discount: "-15.38%" },
+                    { uc: "120", price: "280", discount: "-15.38%" },
+                    { uc: "180", price: "370", discount: "-15.38%" },
+                    { uc: "325", price: "680", discount: "-15.4%" },
+                    { uc: "385", price: "810", discount: "-15.4%" },
+                    { uc: "660", price: "1320", discount: "-15.4%" },
+                    { uc: "720", price: "1450", discount: "-15.4%" },
+                    { uc: "1590", price: "2620", discount: "-15.4%" },
+                    { uc: "1800", price: "3240", discount: "-15.4%" },
+                    { uc: "2460", price: "4530", discount: "-15.4%" },
+                    { uc: "3850", price: "6510", discount: "-15.4%" },
+                    { uc: "4510", price: "7850", discount: "-15.4%" },
+                    { uc: "5650", price: "9740", discount: "-15.4%" },
+                    { uc: "8100", price: "13000", discount: "-15.4%" },
+                    { uc: "10225", price: "16800", discount: "-15.4%" },
+                    { uc: "16200", price: "25900", discount: "-15.4%" },
+                    { uc: "24300", price: "38900", discount: "-15.4%" },
+                    { uc: "32400", price: "51800", discount: "-15.4%" },
+                ]
+            },
+            fa: {
+                currency: "تومان",
+                prices: [
+                    { uc: "60", price: "90", discount: "-15.38%" },
+                    { uc: "120", price: "180", discount: "-15.38%" },
+                    { uc: "180", price: "270", discount: "-15.38%" },
+                    { uc: "325", price: "460", discount: "-15.4%" },
+                    { uc: "385", price: "550", discount: "-15.4%" },
+                    { uc: "660", price: "920", discount: "-15.4%" },
+                    { uc: "720", price: "1.000", discount: "-15.4%" },
+                    { uc: "1590", price: "1.850", discount: "-15.4%" },
+                    { uc: "1800", price: "2.200", discount: "-15.4%" },
+                    { uc: "2460", price: "3.250", discount: "-15.4%" },
+                    { uc: "3850", price: "4.200", discount: "-15.4%" },
+                    { uc: "4510", price: "5.300", discount: "-15.4%" },
+                    { uc: "5650", price: "6.400", discount: "-15.4%" },
+                    { uc: "8100", price: "9.200", discount: "-15.4%" },
+                    { uc: "10225", price: "11.000", discount: "-15.4%" },
+                    { uc: "16200", price: "17.500", discount: "-15.4%" },
+                    { uc: "24300", price: "25.500", discount: "-15.4%" },
+                    { uc: "32400", price: "35.000", discount: "-15.4%" },
+                ]
+            },
+            usa: {
+                currency: "USD",
+                prices: [
+                    { uc: "60", price: "5.00", discount: "-15.38%" },
+                    { uc: "120", price: "10.00", discount: "-15.38%" },
+                    { uc: "180", price: "15.00", discount: "-15.38%" },
+                    { uc: "325", price: "25.00", discount: "-15.4%" },
+                    { uc: "385", price: "30.00", discount: "-15.4%" },
+                    { uc: "660", price: "45.00", discount: "-15.4%" },
+                    { uc: "720", price: "50.00", discount: "-15.4%" },
+                    { uc: "1590", price: "80.00", discount: "-15.4%" },
+                    { uc: "1800", price: "90.00", discount: "-15.4%" },
+                    { uc: "2460", price: "120.00", discount: "-15.4%" },
+                    { uc: "3850", price: "150.00", discount: "-15.4%" },
+                    { uc: "4510", price: "180.00", discount: "-15.4%" },
+                    { uc: "5650", price: "220.00", discount: "-15.4%" },
+                    { uc: "8100", price: "300.00", discount: "-15.4%" },
+                    { uc: "10225", price: "350.00", discount: "-15.4%" },
+                    { uc: "16200", price: "500.00", discount: "-15.4%" },
+                    { uc: "24300", price: "700.00", discount: "-15.4%" },
+                    { uc: "32400", price: "900.00", discount: "-15.4%" },
+                ]
+            },
+            norway: {
+                currency: "NOK",
+                prices: [
+                    { uc: "60", price: "50", discount: "-15.38%" },
+                    { uc: "120", price: "100", discount: "-15.38%" },
+                    { uc: "180", price: "150", discount: "-15.38%" },
+                    { uc: "325", price: "250", discount: "-15.4%" },
+                    { uc: "385", price: "300", discount: "-15.4%" },
+                { uc: "660", price: "450", discount: "-15.4%" },
+                { uc: "720", price: "500", discount: "-15.4%" },
+                { uc: "1590", price: "800", discount: "-15.4%" },
+                { uc: "1800", price: "900", discount: "-15.4%" },
+                { uc: "2460", price: "1200", discount: "-15.4%" },
+                { uc: "3850", price: "1500", discount: "-15.4%" },
+                { uc: "4510", price: "1800", discount: "-15.4%" },
+                { uc: "5650", price: "2200", discount: "-15.4%" },
+                { uc: "8100", price: "3000", discount: "-15.4%" },
+                { uc: "10225", price: "3500", discount: "-15.4%" },
+                { uc: "16200", price: "5000", discount: "-15.4%" },
+                { uc: "24300", price: "7000", discount: "-15.4%" },
+                { uc: "32400", price: "9000", discount: "-15.4%" },
+            ]
+        },
+        uk: {
+            currency: "GBP",
+            prices: [
+                { uc: "60", price: "4.00", discount: "-15.38%" },
+                { uc: "120", price: "8.00", discount: "-15.38%" },
+                { uc: "180", price: "12.00", discount: "-15.38%" },
+                { uc: "325", price: "20.00", discount: "-15.4%" },
+                { uc: "385", price: "25.00", discount: "-15.4%" },
+                { uc: "660", price: "40.00", discount: "-15.4%" },
+                { uc: "720", price: "45.00", discount: "-15.4%" },
+                { uc: "1590", price: "70.00", discount: "-15.4%" },
+                { uc: "1800", price: "80.00", discount: "-15.4%" },
+                { uc: "2460", price: "100.00", discount: "-15.4%" },
+                { uc: "3850", price: "130.00", discount: "-15.4%" },
+                { uc: "4510", price: "160.00", discount: "-15.4%" },
+                { uc: "5650", price: "200.00", discount: "-15.4%" },
+                { uc: "8100", price: "280.00", discount: "-15.4%" },
+                { uc: "10225", price: "320.00", discount: "-15.4%" },
+                { uc: "16200", price: "450.00", discount: "-15.4%" },
+                { uc: "24300", price: "600.00", discount: "-15.4%" },
+                { uc: "32400", price: "800.00", discount: "-15.4%" },
+            ]
+        },
+        canada: {
+            currency: "CAD",
+            prices: [
+                { uc: "60", price: "6.00", discount: "-15.38%" },
+                { uc: "120", price: "12.00", discount: "-15.38%" },
+                { uc: "180", price: "18.00", discount: "-15.38%" },
+                { uc: "325", price: "30.00", discount: "-15.4%" },
+                { uc: "385", price: "36.00", discount: "-15.4%" },
+                { uc: "660", price: "54.00", discount: "-15.4%" },
+                { uc: "720", price: "60.00", discount: "-15.4%" },
+                { uc: "1590", price: "90.00", discount: "-15.4%" },
+                { uc: "1800", price: "100.00", discount: "-15.4%" },
+                { uc: "2460", price: "130.00", discount: "-15.4%" },
+                { uc: "3850", price: "160.00", discount: "-15.4%" },
+                { uc: "4510", price: "200.00", discount: "-15.4%" },
+                { uc: "5650", price: "250.00", discount: "-15.4%" },
+                { uc: "8100", price: "350.00", discount: "-15.4%" },
+                { uc: "10225", price: "400.00", discount: "-15.4%" },
+                { uc: "16200", price: "600.00", discount: "-15.4%" },
+                { uc: "24300", price: "800.00", discount: "-15.4%" },
+                { uc: "32400", price: "1000.00", discount: "-15.4%" },
+            ]
+        },
+        australia: {
+            currency: "AUD",
+            prices: [
+                { uc: "60", price: "7.00", discount: "-15.38%" },
+                { uc: "120", price: "14.00", discount: "-15.38%" },
+                { uc: "180", price: "21.00", discount: "-15.38%" },
+                { uc: "325", price: "35.00", discount: "-15.4%" },
+                { uc: "385", price: "42.00", discount: "-15.4%" },
+                { uc: "660", price: "63.00", discount: "-15.4%" },
+                { uc: "720", price: "70.00", discount: "-15.4%" },
+                { uc: "1590", price: "100.00", discount: "-15.4%" },
+                { uc: "1800", price: "110.00", discount: "-15.4%" },
+                { uc: "2460", price: "140.00", discount: "-15.4%" },
+                { uc: "4510", price: "220.00", discount: "-15.4%" },
+                { uc: "5650", price: "270.00", discount: "-15.4%" },
+                { uc: "8100", price: "380.00", discount: "-15.4%" },
+                { uc: "10225", price: "450.00", discount: "-15.4%" },
+                { uc: "16200", price: "650.00", discount: "-15.4%" },
+                { uc: "24300", price: "850.00", discount: "-15.4%" },
+                { uc: "32400", price: "1100.00", discount: "-15.4%" },
+            ]
+        }
+    };
+
+    // Create cards dynamically
+    function createCards(region) {
+        const grid = document.querySelector('.grid');
+        grid.innerHTML = ''; // Clear existing cards
+        const selectedData = regionData[region];
+
+        selectedData.prices.forEach(card => {
+            const cardElement = document.createElement('div');
+            cardElement.classList.add('table');
+            cardElement.innerHTML = `
+                <img src="https://cdn.midasbuy.com/images/apps/pubgm/1599546071746KqkIhrzG.png" alt="UC Image">
+                <h3>${card.uc} UC</h3>
+                <p>${card.price} ${selectedData.currency}</p>
+                <p class="discount">${card.discount} (Only Elite UC)</p>
+            `;
+            cardElement.addEventListener('click', () => {
+                document.getElementById('popup').style.display = 'block';
+            });
+            grid.appendChild(cardElement);
+        });
+    }
+
+    // Change Region with animation
+    function changeRegion() {
+        const mainContent = document.getElementById('main-content');
+        mainContent.classList.add('region-changing');
+        
+        setTimeout(() => {
+            const selectedRegion = document.getElementById('region').value;
+            createCards(selectedRegion);
+            mainContent.classList.remove('region-changing');
+        }, 300);
+    }
+
+    // Auto-detect user's region
+    function detectRegion() {
+        // This is a simple example - you might want to use a more reliable geolocation API
+        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        const language = navigator.language || navigator.userLanguage;
+        
+        if (language.includes('fa') || timezone.includes('Tehran')) {
+            return 'fa';
+        } else if (language.includes('en-US') || timezone.includes('America')) {
+            return 'usa';
+        } else if (language.includes('en-GB') || timezone.includes('Europe/London')) {
+            return 'uk';
+        } else if (timezone.includes('Europe/Oslo')) {
+            return 'norway';
+        } else if (timezone.includes('Asia/Kabul')) {
+            return 'af';
+        } else if (timezone.includes('Canada')) {
+            return 'canada';
+        } else if (timezone.includes('Australia')) {
+            return 'australia';
+        }
+        
+        return 'usa'; // default
+    }
+
+    // Initialize with detected region
+    function initializeRegion() {
+        const detectedRegion = detectRegion();
+        const regionSelect = document.getElementById('region');
+        if (regionSelect) {
+            regionSelect.value = detectedRegion;
+            createCards(detectedRegion);
+        }
+    }
+
+    // Validations
+    function validateUsername(username) {
+        const regex = /^[a-zA-Z0-9]{1,20}$/;
+        return regex.test(username);
+    }
+
+    function validateEmail(email) {
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return regex.test(email);
+    }
+
+    function validatePhone(phone) {
+        // Support for Iran, Afghanistan and Norway phone numbers with different prefixes
+        const regex = /^(0098|\+98|98|0)?9\d{9}$|^(0093|\+93|93|0)?7\d{8}$|^(0047|\+47|47)?[49]\d{7}$/;
+        return regex.test(phone);
+    }
+
+    // Registration management
+    document.getElementById('registerForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const username = document.getElementById('username').value;
+        const email = document.getElementById('email').value;
+        const phone = document.getElementById('phone').value;
+        const errorMessage = document.getElementById('error-message');
+
+        errorMessage.style.display = 'none';
+        errorMessage.textContent = '';
+
+        if (!validateUsername(username)) {
+            errorMessage.textContent = 'Invalid username! Only use English letters and numbers (1-20 characters).';
+            errorMessage.style.display = 'block';
+            return;
+        }
+        if (!validateEmail(email)) {
+            errorMessage.textContent = 'Invalid email!';
+            errorMessage.style.display = 'block';
+            return;
+        }
+        if (!validatePhone(phone)) {
+            errorMessage.textContent = 'Invalid phone number! Please enter an Iran number (starting with 09 or +98), Afghanistan number (starting with 07 or +93) or Norway number (starting with 4/9 or +47).';
+            errorMessage.style.display = 'block';
+            return;
+        }
+
+        // Save information to localStorage
+        localStorage.setItem('isRegistered', true);
+        localStorage.setItem('username', username);
+        localStorage.setItem('email', email);
+        localStorage.setItem('phone', phone);
+
+        // Show main content
+        document.getElementById('registration').style.display = 'none';
+        document.getElementById('main-content').style.display = 'block';
+        
+        // Initialize region after registration
+        initializeRegion();
+    });
+
+    // Check registration status on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        if (localStorage.getItem('isRegistered')) {
+            document.getElementById('registration').style.display = 'none';
+            document.getElementById('main-content').style.display = 'block';
+            initializeRegion();
+        }
+    });
+
+    // Handle popup buttons
+    document.getElementById('whatsappBtn').addEventListener('click', () => {
+        window.location.href = "";
+    });
+
+    document.getElementById('telegramBtn').addEventListener('click', () => {
+        window.location.href = "";
+    });
+
+    // Close popup when clicking outside
+    window.addEventListener('click', (event) => {
+        if (event.target === document.getElementById('popup')) {
+            document.getElementById('popup').style.display = 'none';
+        }
+    });
+</script>
+</body>
+</html>

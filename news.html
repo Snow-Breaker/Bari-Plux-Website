@@ -1,0 +1,1741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PMGC 2025 | PUBG MOBILE News</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="https://i.postimg.cc/65cjsvfQ/imglogo.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://i.postimg.cc/65cjsvfQ/imglogo.png">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;600;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff4d00;
+            --secondary: #00a8ff;
+            --accent: #ffcc00;
+            --dark: #0d0d12;
+            --darker: #08080c;
+            --light: #f0f0f5;
+            --lighter: #ffffff;
+            --text: #e0e0e5;
+            --text-dark: #1a1a1f;
+            --bg: #14141a;
+            --card-bg: #1e1e26;
+            --header-bg: rgba(13, 13, 18, 0.96);
+            --nav-width: 280px;
+            --section-gap: 80px;
+            --glow: 0 0 15px rgba(255, 77, 0, 0.5);
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+        }
+
+        .light-mode {
+            --primary: #ff4d00;
+            --secondary: #0077cc;
+            --accent: #ff9500;
+            --dark: #f0f0f5;
+            --darker: #e0e0e5;
+            --light: #14141a;
+            --lighter: #0d0d12;
+            --text: #1a1a1f;
+            --text-dark: #e0e0e5;
+            --bg: #ffffff;
+            --card-bg: #f5f5fa;
+            --header-bg: rgba(240, 240, 245, 0.96);
+            --glow: 0 0 15px rgba(255, 77, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            overflow-x: hidden;
+            transition: background-color 0.5s ease, color 0.3s ease;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(255, 77, 0, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 80% 70%, rgba(0, 168, 255, 0.05) 0%, transparent 20%);
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Oxanium', sans-serif;
+            font-weight: 700;
+            line-height: 1.2;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background-color: var(--header-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: var(--transition);
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+            position: relative;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 1001;
+        }
+
+        .logo img {
+            height: 40px;
+            filter: drop-shadow(0 0 5px rgba(255, 77, 0, 0.7));
+            transition: var(--transition);
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 10px rgba(255, 77, 0, 0.3);
+            transition: var(--transition);
+        }
+
+        .nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 1001;
+            transition: var(--transition);
+        }
+
+        .nav-toggle:hover {
+            color: var(--primary);
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            position: relative;
+            padding: 5px 0;
+            transition: var(--transition);
+        }
+
+        .nav-links a:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a:hover:after {
+            width: 100%;
+        }
+
+        .search-container {
+            position: relative;
+            margin-left: 20px;
+        }
+
+        .search-btn {
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .search-btn:hover {
+            color: var(--primary);
+            transform: scale(1.1);
+            background: rgba(255, 77, 0, 0.2);
+        }
+
+        .search-box {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            width: 300px;
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-20px);
+            transition: var(--transition);
+            z-index: 1000;
+        }
+
+        .search-box.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 15px;
+            background: var(--bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            color: var(--text);
+            font-family: inherit;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(255, 77, 0, 0.2);
+        }
+
+        .highlight {
+            background-color: var(--accent);
+            color: var(--text-dark);
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: bold;
+            box-shadow: 0 0 5px rgba(255, 204, 0, 0.5);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.3rem;
+            cursor: pointer;
+            margin-left: 20px;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .theme-toggle:hover {
+            color: var(--accent);
+            transform: rotate(30deg) scale(1.1);
+            background: rgba(255, 204, 0, 0.2);
+        }
+
+        .theme-toggle .fa-sun {
+            display: none;
+        }
+
+        .light-mode .theme-toggle .fa-moon {
+            display: none;
+        }
+
+        .light-mode .theme-toggle .fa-sun {
+            display: block;
+        }
+
+        main {
+            margin-top: 120px;
+            padding-bottom: 80px;
+        }
+
+        .hero {
+            position: relative;
+            height: 80vh;
+            min-height: 600px;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            margin-bottom: var(--section-gap);
+            border-radius: 15px;
+            transition: var(--transition);
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(13, 13, 18, 0.7), rgba(13, 13, 18, 0.9)), 
+                        url('https://d16f573ilcot6q.cloudfront.net/wp-content/uploads/2024/11/PMGC-2024-H.webp') no-repeat center center/cover;
+            z-index: -1;
+            transform: scale(1.1);
+            transition: transform 10s ease-out;
+        }
+
+        .hero:hover .hero-bg {
+            transform: scale(1);
+        }
+
+        .hero-content {
+            max-width: 800px;
+            position: relative;
+            z-index: 1;
+            padding: 40px;
+            background: rgba(var(--dark-rgb), 0.6);
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-left: 10%;
+            animation: fadeInUp 1s ease-out;
+            color: var(--text);
+        }
+
+        .hero-content h2 {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            line-height: 1.1;
+            text-shadow: 0 0 20px rgba(255, 77, 0, 0.3);
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+            color: var(--text);
+        }
+
+        .side-box-hero {
+            position: absolute;
+            right: 10%;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 300px;
+            padding: 25px;
+            background: rgba(var(--dark-rgb), 0.6);
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text);
+        }
+
+        .side-box-hero h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+
+        .side-box-hero p {
+            opacity: 0.9;
+            color: var(--text);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--text-dark);
+            padding: 15px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            filter: brightness(1.1);
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            grid-template-rows: auto auto auto;
+            gap: 30px;
+            margin-bottom: var(--section-gap);
+        }
+
+        .big-box {
+            grid-column: span 1;
+            grid-row: span 1;
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: var(--transition);
+            position: relative;
+            min-height: 400px;
+        }
+
+        .big-box:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3), var(--glow);
+        }
+
+        .big-box:nth-child(1) {
+            grid-column: 1;
+            grid-row: 1;
+        }
+
+        .big-box:nth-child(2) {
+            grid-column: 1;
+            grid-row: 2;
+        }
+
+        .side-box-container {
+            grid-column: 2;
+            grid-row: 1 / span 3;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .side-box {
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: var(--transition);
+            min-height: 300px;
+            flex: 1;
+        }
+
+        .side-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3), var(--glow);
+        }
+
+        .box-img {
+            height: 250px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .big-box .box-img {
+            height: 350px;
+        }
+
+        .box-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .big-box:hover .box-img img,
+        .side-box:hover .box-img img {
+            transform: scale(1.05);
+        }
+
+        .box-content {
+            padding: 25px;
+        }
+
+        .box-content h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        .big-box .box-content h3 {
+            font-size: 2.2rem;
+        }
+
+        .box-content p {
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+
+        .box-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--primary);
+            color: var(--text-dark);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            box-shadow: 0 5px 15px rgba(255, 77, 0, 0.3);
+            z-index: 2;
+        }
+
+        .downloads {
+            background: linear-gradient(135deg, var(--dark), var(--darker));
+            border-radius: 15px;
+            padding: 60px 40px;
+            margin-bottom: var(--section-gap);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .downloads:before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 77, 0, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+            z-index: 0;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .downloads-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .section-title h2 {
+            font-size: 3rem;
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            position: relative;
+        }
+
+        .section-title:after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            margin: 15px auto 0;
+            border-radius: 5px;
+        }
+
+        .download-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+
+        .download-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--text-dark);
+            padding: 18px 30px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border: none;
+            cursor: pointer;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .download-btn img {
+            width: 20px;
+            height: 20px;
+        }
+
+        .intro {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 50px;
+            margin-bottom: var(--section-gap);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .intro:after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
+            opacity: 0.1;
+            z-index: 0;
+        }
+
+        .intro-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .intro-content h3 {
+            font-size: 2.5rem;
+            margin-bottom: 25px;
+            color: var(--primary);
+        }
+
+        .intro-content p {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .community {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 50px;
+            margin-bottom: var(--section-gap);
+        }
+
+        .comment-system {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .comment-form {
+            background: var(--bg);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .comment-form h3 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 18px;
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: var(--text);
+            font-family: inherit;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 77, 0, 0.2);
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .comment-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--text-dark);
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .comment-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .comments-container {
+            max-height: 600px;
+            overflow-y: auto;
+            padding-right: 15px;
+        }
+
+        .comments-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .comments-container::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        .comments-container::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+
+        .comment {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 25px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .comment-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .comment-content {
+            flex: 1;
+        }
+
+        .comment-content h4 {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+            color: var(--primary);
+        }
+
+        .comment-content p {
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .comment-meta {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 0.9rem;
+            color: var(--accent);
+        }
+
+        .comment-meta i {
+            margin-right: 5px;
+        }
+
+        footer {
+            background: var(--darker);
+            color: var(--text);
+            padding: 50px 0 30px;
+            position: relative;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .footer-logo img {
+            height: 30px;
+        }
+
+        .footer-logo h3 {
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .footer-about p {
+            opacity: 0.8;
+            margin-bottom: 20px;
+        }
+
+        .footer-links h4,
+        .footer-contact h4 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: var(--text);
+            text-decoration: none;
+            transition: var(--transition);
+            opacity: 0.8;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+            opacity: 1;
+            padding-left: 5px;
+        }
+
+        .footer-contact p {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            opacity: 0.8;
+        }
+
+        .footer-contact i {
+            color: var(--primary);
+            width: 20px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: var(--text);
+            font-size: 1.2rem;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            background: var(--primary);
+            color: var(--text-dark);
+            transform: translateY(-5px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+
+        /* News specific styles */
+        .news-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: var(--section-gap);
+        }
+
+        .news-item {
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: var(--transition);
+        }
+
+        .news-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3), var(--glow);
+        }
+
+        .news-img {
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .news-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .news-item:hover .news-img img {
+            transform: scale(1.05);
+        }
+
+        .news-content {
+            padding: 25px;
+        }
+
+        .news-date {
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .news-date i {
+            font-size: 0.9rem;
+        }
+
+        .news-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        .news-content p {
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+
+        .news-tag {
+            display: inline-block;
+            background: rgba(255, 77, 0, 0.2);
+            color: var(--primary);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        /* Schedule table styles */
+        .schedule-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 40px;
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .schedule-table th, 
+        .schedule-table td {
+            padding: 15px 20px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .schedule-table th {
+            background: var(--primary);
+            color: var(--text-dark);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        .schedule-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .schedule-table tr:hover {
+            background: rgba(255, 77, 0, 0.05);
+        }
+
+        .match-time {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .match-teams {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .team-logo {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .vs {
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .match-stage {
+            display: inline-block;
+            padding: 3px 10px;
+            background: rgba(0, 168, 255, 0.2);
+            color: var(--secondary);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .match-stage.finals {
+            background: rgba(255, 204, 0, 0.2);
+            color: var(--accent);
+        }
+
+        @media (max-width: 1200px) {
+            .container {
+                padding: 0 30px;
+            }
+
+            .comment-system {
+                grid-template-columns: 1fr;
+            }
+
+            .comments-container {
+                max-height: none;
+            }
+
+            .side-box-hero {
+                display: none;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .big-box:nth-child(1) {
+                grid-column: 1;
+            }
+
+            .side-box-container {
+                grid-column: 1;
+                grid-row: 3;
+                flex-direction: row;
+            }
+
+            .hero-content h2 {
+                font-size: 3rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-toggle {
+                display: block;
+            }
+
+            nav {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 100%;
+                max-width: 400px;
+                height: 100vh;
+                background: var(--header-bg);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+                flex-direction: column;
+                justify-content: center;
+                gap: 40px;
+                transition: var(--transition);
+                z-index: 1000;
+            }
+
+            nav.active {
+                right: 0;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                align-items: center;
+                gap: 30px;
+            }
+
+            .search-container {
+                margin: 0;
+            }
+
+            .search-box {
+                top: 60px;
+                right: 20px;
+            }
+
+            .hero {
+                height: auto;
+                min-height: auto;
+                padding: 100px 0;
+            }
+
+            .hero-content {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .hero-content h2 {
+                font-size: 2.5rem;
+            }
+
+            .download-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .intro {
+                padding: 30px;
+            }
+
+            .side-box-container {
+                flex-direction: column;
+            }
+
+            .news-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .container {
+                padding: 0 20px;
+            }
+
+            .header-container {
+                height: 70px;
+            }
+
+            .logo h1 {
+                font-size: 1.5rem;
+            }
+
+            .hero-content h2 {
+                font-size: 2rem;
+            }
+
+            .section-title h2 {
+                font-size: 2.2rem;
+            }
+
+            .box-content {
+                padding: 20px;
+            }
+
+            .community {
+                padding: 30px;
+            }
+
+            .comment-form {
+                padding: 20px;
+            }
+
+            .schedule-table th, 
+            .schedule-table td {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+
+            .match-teams {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <img src="https://www.pubgmobile.com/images/event/common/long_cache_30d/nav_logo.png" alt="PUBG Logo">
+                <h1>PMGC 2025</h1>
+            </div>
+
+            <button class="nav-toggle" id="navToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <nav id="mainNav">
+                <nav id="mainNav">
+                <ul class="nav-links">
+                    <li><a href="org">Home</a></li>
+                    <li><a href="index">Bari Plux</a></li>
+                    <li><a href="updates">Updates</a></li>
+                    <li><a href="news">News</a></li>
+                    <li><a href="org#downloads">Downloads</a></li>
+                    <li><a href="org#introduction">About</a></li>
+                    <li><a href="org#community">Community</a></li>
+                </ul>
+
+                <div class="search-container">
+                    <button class="search-btn" id="searchBtn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <div class="search-box" id="searchBox">
+                        <input type="text" id="searchInput" placeholder="Search for teams, matches...">
+                        <button class="btn" id="searchSubmit">Search</button>
+                    </div>
+                </div>
+
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                    <i class="fas fa-sun"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <div class="hero-bg" id="heroBg"></div>
+            <div class="hero-content">
+                <h2>PMGC 2025 Championship</h2>
+                <p>The biggest PUBG Mobile esports event of the year with a $5 million prize pool. Watch the best teams from around the world compete for glory in this ultimate battle royale tournament.</p>
+                <a href="#schedule" class="btn">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>View Schedule</span>
+                </a>
+            </div>
+            <div class="side-box-hero">
+                <h3>Tournament Info</h3>
+                <p>November 15 - December 20, 2025<br>Istanbul, Turkey<br>48 Teams Worldwide</p>
+            </div>
+        </section>
+
+        <section class="section" id="news">
+            <div class="section-title">
+                <h2>Latest PUBG Mobile News</h2>
+            </div>
+            
+            <div class="news-container">
+                <div class="news-item">
+                    <div class="news-img">
+                        <img src="https://d16f573ilcot6q.cloudfront.net/wp-content/uploads/2024/11/PMGC-2024-H.webp" alt="PMGC 2025 Announcement">
+                    </div>
+                    <div class="news-content">
+                        <div class="news-date">
+                            <i class="far fa-calendar-alt"></i> November 5, 2025
+                        </div>
+                        <h3>PMGC 2025 Finals Location Revealed</h3>
+                        <p>The PUBG Mobile Global Championship 2025 finals will be held in Istanbul, Turkey with a live audience. 16 teams will compete for the $2 million grand prize.</p>
+                        <span class="news-tag">Esports</span>
+                        <span class="news-tag">PMGC</span>
+                        <a href="https://esports.pubgmobile.com/#/index" class="btn">Read More</a>
+                    </div>
+                </div>
+                
+                <div class="news-item">
+                    <div class="news-img">
+                        <img src="V3.8.jpg" alt="PUBG New Update">
+                    </div>
+                    <div class="news-content">
+                        <div class="news-date">
+                            <i class="far fa-calendar-alt"></i> May 8, 2025
+                        </div>
+                        <h3>Version 3.8 Update Patch Notes</h3>
+                        <p>New Steampunk Frontier themed mode, weapon balancing changes, and performance improvements. The update will be available from May 8.</p>
+                        <span class="news-tag">Update</span>
+                        <span class="news-tag">Gameplay</span>
+                        <a href="https://www.pubgmobile.com/en-US/news-detail.shtml?father_content_id=afd67312aa184a4f9da99bba9bb00efaf273&content_id=afd67312aa184a4f9da99bba9bb00efaf273" class="btn">Read More</a>
+                    </div>
+                </div>
+                
+                <div class="news-item">
+                    <div class="news-img">
+                        <img src="https://staticg.sportskeeda.com/editor/2024/01/ee9f5-17063471519325-1920.jpg" alt="PUBG Weapons">
+                    </div>
+                    <div class="news-content">
+                        <div class="news-date">
+                            <i class="far fa-calendar-alt"></i> October 20, 2025
+                        </div>
+                        <h3>New Weapon Coming in Season 26</h3>
+                        <p>Leaked images show a futuristic energy rifle that may be introduced in the upcoming season. Expected to be a crate-exclusive weapon.</p>
+                        <span class="news-tag">Weapons</span>
+                        <span class="news-tag">Leaks</span>
+                        <a href="https://www.pubgmobile.com/en/event/PUBGMOBILE-WIKI/arms_content.shtml?1" class="btn">Read More</a>
+                    </div>
+                </div>
+                
+                <div class="news-item">
+                    <div class="news-img">
+                        <img src="https://cdn2.unrealengine.com/pubg-battlegrounds-rondo-map-4-1920x1080-4927acbe80e8.jpg" alt="PUBG Maps">
+                    </div>
+                    <div class="news-content">
+                        <div class="news-date">
+                            <i class="far fa-calendar-alt"></i> October 15, 2025
+                        </div>
+                        <h3>Rondo Map Getting Major Changes</h3>
+                        <p>Developers announced significant changes to the Rondo map including new areas, improved loot distribution, and dynamic weather effects.</p>
+                        <span class="news-tag">Maps</span>
+                        <span class="news-tag">Updates</span>
+                        <a href="https://youtu.be/WR1apUSFnUY?si=WAGWd9N40SO7O-aT" class="btn">Read More</a>
+                    </div>
+                </div>
+                
+                <div class="news-item">
+                    <div class="news-img">
+                        <img src="https://play-lh.googleusercontent.com/dDXaVOALS1bQzjs6b_un4Ey6bmMLTJFUNVJXjEdAuZsPldRhZo-AGVqOOgjodRsgqHs=w526-h296-rw" alt="PUBG Events">
+                    </div>
+                    <div class="news-content">
+                        <div class="news-date">
+                            <i class="far fa-calendar-alt"></i> March 21, 2025
+                        </div>
+                        <h3>7th Anniversary Event Details</h3>
+                        <p>Special login rewards, free skins, and limited-time game modes announced for PUBG Mobile's 6th anniversary celebration starting November 15.</p>
+                        <span class="news-tag">Events</span>
+                        <span class="news-tag">Rewards</span>
+                        <a href="https://youtu.be/GCFgCL3FkOQ?si=rHD4FTk96-dK2cz2" class="btn">Read More</a>
+                    </div>
+                </div>
+                
+                <div class="news-item">
+                    <div class="news-img">
+                        <img src="AOT.jpg" alt="PUBG Collaboration">
+                    </div>
+                    <div class="news-content">
+                        <div class="news-date">
+                            <i class="far fa-calendar-alt"></i> May 8, 2025
+                        </div>
+                        <h3>New Collaboration With Attack On Titan</h3>
+                        <p>PUBG Mobile announces crossover event with Attack On Titan featuring themed skins, vehicles, and special abilities inspired game mode.</p>
+                        <span class="news-tag">Collaboration</span>
+                        <span class="news-tag">Skins</span>
+                        <a href="https://www.reddit.com/r/ShingekiNoKyojin/comments/1k45z1q/pubg_mobile_x_attack_on_titan_collaboration/" class="btn">Read More</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="schedule">
+            <div class="section-title">
+                <h2>PMGC 2025 Schedule</h2>
+            </div>
+            
+            <table class="schedule-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Match</th>
+                        <th>Time (UTC)</th>
+                        <th>Stage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Nov 15</td>
+                        <td class="match-teams">
+                            <span>Nova Esports</span>
+                            <span class="vs">vs</span>
+                            <span>Team Soul</span>
+                        </td>
+                        <td class="match-time">18:00</td>
+                        <td><span class="match-stage">Group Stage</span></td>
+                    </tr>
+                    <tr>
+                        <td>Nov 15</td>
+                        <td class="match-teams">
+                            <span>GodLike Esports</span>
+                            <span class="vs">vs</span>
+                            <span>Alpha7 Esports</span>
+                        </td>
+                        <td class="match-time">20:00</td>
+                        <td><span class="match-stage">Group Stage</span></td>
+                    </tr>
+                    <tr>
+                        <td>Nov 16</td>
+                        <td class="match-teams">
+                            <span>RRQ Athena</span>
+                            <span class="vs">vs</span>
+                            <span>4 Angry Men</span>
+                        </td>
+                        <td class="match-time">18:00</td>
+                        <td><span class="match-stage">Group Stage</span></td>
+                    </tr>
+                    <tr>
+                        <td>Nov 16</td>
+                        <td class="match-teams">
+                            <span>D'Xavier</span>
+                            <span class="vs">vs</span>
+                            <span>Bigetron RA</span>
+                        </td>
+                        <td class="match-time">20:00</td>
+                        <td><span class="match-stage">Group Stage</span></td>
+                    </tr>
+                    <tr>
+                        <td>Nov 22</td>
+                        <td class="match-teams">
+                            <span>Vampire Esports</span>
+                            <span class="vs">vs</span>
+                            <span>Team Queso</span>
+                        </td>
+                        <td class="match-time">18:00</td>
+                        <td><span class="match-stage">Quarter Finals</span></td>
+                    </tr>
+                    <tr>
+                        <td>Nov 23</td>
+                        <td class="match-teams">
+                            <span>Faze Clan</span>
+                            <span class="vs">vs</span>
+                            <span>Skylightz Gaming</span>
+                        </td>
+                        <td class="match-time">18:00</td>
+                        <td><span class="match-stage">Quarter Finals</span></td>
+                    </tr>
+                    <tr>
+                        <td>Dec 14</td>
+                        <td class="match-teams">
+                            <span>TBD</span>
+                            <span class="vs">vs</span>
+                            <span>TBD</span>
+                        </td>
+                        <td class="match-time">18:00</td>
+                        <td><span class="match-stage finals">Semi Finals</span></td>
+                    </tr>
+                    <tr>
+                        <td>Dec 15</td>
+                        <td class="match-teams">
+                            <span>TBD</span>
+                            <span class="vs">vs</span>
+                            <span>TBD</span>
+                        </td>
+                        <td class="match-time">18:00</td>
+                        <td><span class="match-stage finals">Semi Finals</span></td>
+                    </tr>
+                    <tr>
+                        <td>Dec 20</td>
+                        <td class="match-teams">
+                            <span>TBD</span>
+                            <span class="vs">vs</span>
+                            <span>TBD</span>
+                        </td>
+                        <td class="match-time">18:00</td>
+                        <td><span class="match-stage finals">Grand Finals</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="intro" id="teams">
+            <div class="intro-content">
+                <h3>PMGC 2025 Teams</h3>
+                <p>The PUBG Mobile Global Championship 2025 features 48 of the best teams from around the world, divided into 3 regional groups:</p>
+                <p><strong>Group A (Americas & Europe):</strong> Team Queso, Faze Clan, Natus Vincere, Knights, A7 Esports, and 11 more teams</p>
+                <p><strong>Group B (Asia):</strong> Nova Esports, 4 Angry Men, Vampire Esports, D'Xavier, Bigetron RA, and 10 more teams</p>
+                <p><strong>Group C (South Asia & MENA):</strong> Team Soul, GodLike Esports, Skylightz Gaming, Trained to Kill, i8 Esports, and 9 more teams</p>
+                <p>The tournament will run for 5 weeks with Group Stages, Quarter Finals, Semi Finals, and the Grand Finals in Istanbul.</p>
+            </div>
+        </section>
+
+        <section class="community" id="community">
+            <div class="section-title">
+                <h2>Community Discussions</h2>
+            </div>
+            <div class="comment-system">
+                <div class="comment-form">
+                    <h3>Leave a Comment</h3>
+                    <div class="form-group">
+                        <label for="comment-name">Name</label>
+                        <input type="text" id="comment-name" placeholder="Enter your name">
+                    </div>
+                    <div class="form-group">
+                        <label for="comment-email">Email</label>
+                        <input type="email" id="comment-email" placeholder="Enter your email">
+                    </div>
+                    <div class="form-group">
+                        <label for="comment-message">Message</label>
+                        <textarea id="comment-message" placeholder="Share your thoughts about PMGC 2025"></textarea>
+                    </div>
+                    <button class="comment-btn" id="submitComment">Submit Comment</button>
+                </div>
+
+                <div class="comments-container" id="commentsContainer">
+                    <div class="comment">
+                        <div class="comment-avatar">
+                            <span>P</span>
+                        </div>
+                        <div class="comment-content">
+                            <h4>PUBG Fan</h4>
+                            <p>Can't wait for PMGC 2025! Team Soul is looking strong this year. Hope they can bring home the trophy.</p>
+                            <div class="comment-meta">
+                                <i class="fas fa-clock"></i> <span>November 1, 2025</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="comment">
+                        <div class="comment-avatar">
+                            <span>E</span>
+                        </div>
+                        <div class="comment-content">
+                            <h4>Esports Viewer</h4>
+                            <p>The new Istanbul venue looks amazing. Definitely planning to attend the finals in person!</p>
+                            <div class="comment-meta">
+                                <i class="fas fa-clock"></i> <span>October 30, 2025</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-about">
+                <div class="footer-logo">
+                    <img src="https://www.pubgmobile.com/images/event/common/long_cache_30d/nav_logo.png" alt="PUBG Logo">
+                    <h3>PMGC 2025</h3>
+                </div>
+                <p>The PUBG Mobile Global Championship is the premier esports tournament for PUBG Mobile featuring the best teams from around the world competing for a $5 million prize pool.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="org">Home</a></li>
+                    <li><a href="#index">Bari Plux</a></li>
+                    <li><a href="updates">Updates</a></li>
+                    <li><a href="#downloads">Downloads</a></li>
+                    <li><a href="#introduction">About</a></li>
+                    <li><a href="#community">Community</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h4>Contact Us</h4>
+                <p>
+                    <a href="https://guns.lol/BariPlux" target="_blank">
+                        <i class="fas fa-envelope"></i> guns.lol/BariPlux
+                    </a>
+                </p>                
+                <p><i class="fas fa-envelope"></i> BariPlux@gmail.com</p>
+
+                <div class="social-links">
+                    <a href="https://www.facebook.com/PUBGMOBILE" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://twitter.com/PUBGMOBILE" target="_blank"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.instagram.com/PUBGMOBILE" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.youtube.com/c/PUBGMOBILE" target="_blank"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">
+            <a href="Legal Information" style="text-decoration: none; color: inherit;">&copy; 2025 Bari Plux. All rights reserved.</a>
+        </div>
+    </footer>
+
+    <script>
+        // Convert HEX color to RGB for use in rgba
+        function hexToRgb(hex) {
+            // Remove # from beginning if present
+            hex = hex.replace('#', '');
+            
+            // Convert to RGB values
+            const r = parseInt(hex.substring(0, 2), 16);
+            const g = parseInt(hex.substring(2, 4), 16);
+            const b = parseInt(hex.substring(4, 6), 16);
+            
+            return `${r}, ${g}, ${b}`;
+        }
+
+        // Set RGB variables at page load time
+        document.addEventListener('DOMContentLoaded', function() {
+            const darkColor = getComputedStyle(document.documentElement).getPropertyValue('--dark').trim();
+            document.documentElement.style.setProperty('--dark-rgb', hexToRgb(darkColor));
+        });
+
+        document.getElementById('navToggle').addEventListener('click', function() {
+            document.getElementById('mainNav').classList.toggle('active');
+        });
+
+        document.getElementById('searchBtn').addEventListener('click', function() {
+            document.getElementById('searchBox').classList.toggle('active');
+            if (document.getElementById('searchBox').classList.contains('active')) {
+                document.getElementById('searchInput').focus();
+            }
+        });
+
+        document.getElementById('themeToggle').addEventListener('click', function() {
+            document.body.classList.toggle('light-mode');
+            // Update RGB variables after theme change
+            const darkColor = getComputedStyle(document.documentElement).getPropertyValue('--dark').trim();
+            document.documentElement.style.setProperty('--dark-rgb', hexToRgb(darkColor));
+        });
+
+        document.getElementById('searchSubmit').addEventListener('click', performSearch);
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+
+        function performSearch() {
+            removeHighlights();
+            
+            const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
+            
+            if (searchTerm.length < 2) {
+                alert('Please enter at least 2 characters to search');
+                return;
+            }
+            
+            const elements = document.querySelectorAll('h1, h2, h3, h4, h5, h6, p, li, a, span, div');
+            let found = false;
+            const regex = new RegExp(searchTerm, 'gi');
+            
+            elements.forEach(element => {
+                if (element.childNodes.length === 1 && element.childNodes[0].nodeType === Node.TEXT_NODE) {
+                    const content = element.textContent;
+                    if (content.toLowerCase().includes(searchTerm)) {
+                        const highlighted = content.replace(regex, match => 
+                            `<span class="highlight">${match}</span>`);
+                        element.innerHTML = highlighted;
+                        if (!found) {
+                            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            found = true;
+                        }
+                    }
+                }
+            });
+            
+            if (!found) {
+                alert('No results found');
+            }
+        }
+
+        function removeHighlights() {
+            const highlights = document.querySelectorAll('.highlight');
+            highlights.forEach(highlight => {
+                const parent = highlight.parentNode;
+                parent.textContent = parent.textContent;
+            });
+        }
+
+        document.getElementById('submitComment').addEventListener('click', function() {
+            var commentName = document.getElementById('comment-name').value;
+            var commentEmail = document.getElementById('comment-email').value;
+            var commentMessage = document.getElementById('comment-message').value;
+            var commentsContainer = document.getElementById('commentsContainer');
+
+            if (commentName && commentEmail && commentMessage) {
+                var newComment = document.createElement('div');
+                newComment.classList.add('comment');
+
+                var avatar = document.createElement('div');
+                avatar.classList.add('comment-avatar');
+                avatar.innerHTML = '<span>' + commentName.charAt(0).toUpperCase() + '</span>';
+
+                var content = document.createElement('div');
+                content.classList.add('comment-content');
+
+                var name = document.createElement('h4');
+                name.textContent = commentName;
+
+                var message = document.createElement('p');
+                message.textContent = commentMessage;
+
+                var meta = document.createElement('div');
+                meta.classList.add('comment-meta');
+                var date = new Date().toISOString().split('T')[0];
+                meta.innerHTML = '<i class="fas fa-clock"></i> <span>' + date + '</span>';
+
+                content.appendChild(name);
+                content.appendChild(message);
+                content.appendChild(meta);
+
+                newComment.appendChild(avatar);
+                newComment.appendChild(content);
+
+                commentsContainer.prepend(newComment);
+
+                document.getElementById('comment-name').value = '';
+                document.getElementById('comment-email').value = '';
+                document.getElementById('comment-message').value = '';
+            } else {
+                alert('Please fill in all fields.');
+            }
+        });
+    </script>
+</body>
+</html>
