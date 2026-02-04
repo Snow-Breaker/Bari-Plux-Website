@@ -1,0 +1,16 @@
+✨ Version 1.4.2.9 - 2026-02-05
+
+NEW FEATURES:
+• Added auto-update system
+• Enhanced DNS testing
+• Improved user interface
+
+IMPROVEMENTS:
+• Faster application startup
+• Better error handling
+• Reduced memory usage
+
+BUG FIXES:
+• Fixed DNS auto-test issues
+• Resolved network connectivity bugs
+• Fixed UI glitches in FPS section

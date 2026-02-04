@@ -1,0 +1,18 @@
+# Enable CORS for version checking
+<IfModule mod_headers.c>
+    Header set Access-Control-Allow-Origin "*"
+    Header set Access-Control-Allow-Methods "GET"
+</IfModule>
+
+# Prevent caching of version files
+<FilesMatch "^(version|changelog)\.txt$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+    Header set Expires 0
+</FilesMatch>
+
+# Force download for .exe files
+<FilesMatch "\.exe$">
+    ForceType application/octet-stream
+    Header set Content-Disposition attachment
+</FilesMatch>
