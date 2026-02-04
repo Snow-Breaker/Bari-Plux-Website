@@ -1487,6 +1487,217 @@
             opacity: 0.7;
         }
 
+        /* اضافه کردن به CSS موجود */
+
+/* مودال پسورد */
+.password-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    animation: fadeIn 0.3s ease;
+}
+
+.password-modal.active {
+    display: flex;
+}
+
+.modal-content {
+    width: 90%;
+    max-width: 400px;
+    padding: 30px;
+    border-radius: var(--radius-lg);
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { 
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to { 
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.modal-header h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--accent);
+    font-size: 1.4rem;
+}
+
+.close-modal {
+    background: none;
+    border: none;
+    color: var(--text);
+    font-size: 2rem;
+    cursor: pointer;
+    line-height: 1;
+    transition: var(--transition);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.close-modal:hover {
+    background: var(--glass-bg);
+    color: var(--danger);
+    transform: rotate(90deg);
+}
+
+.password-input-group {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+#password-input {
+    flex: 1;
+    padding: 15px 20px;
+    border-radius: 50px;
+    border: 1px solid var(--glass-border);
+    background: var(--glass-bg);
+    color: var(--text);
+    font-size: 1rem;
+    outline: none;
+    transition: var(--transition);
+}
+
+#password-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2);
+}
+
+.submit-btn {
+    padding: 15px 25px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: var(--transition);
+}
+
+.submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(108, 99, 255, 0.3);
+}
+
+.password-hint {
+    margin-top: 10px;
+    padding: 10px 15px;
+    background: var(--glass-bg);
+    border-radius: var(--radius);
+    border-left: 3px solid var(--accent);
+    opacity: 0.8;
+}
+
+.error-message {
+    margin-top: 15px;
+    padding: 12px;
+    background: rgba(244, 67, 54, 0.1);
+    border: 1px solid rgba(244, 67, 54, 0.3);
+    border-radius: var(--radius);
+    color: #f44336;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: shake 0.5s;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+/* دکمه قفل‌دار */
+.unlock-btn {
+    background: linear-gradient(135deg, #ffffff, #ffffff) !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.unlock-btn::after {
+    content: '🔒';
+    position: absolute;
+    right: 15px;
+    font-size: 1.2rem;
+    animation: lockPulse 2s infinite;
+}
+
+@keyframes lockPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.unlock-btn:hover::after {
+    animation: lockShake 0.5s;
+}
+
+@keyframes lockShake {
+    0%, 100% { transform: rotate(0); }
+    25% { transform: rotate(-15deg); }
+    75% { transform: rotate(15deg); }
+}
+
+/* لینک دانلود مخفی */
+.hidden-download {
+    display: none !important;
+}
+
+.hidden-download.visible {
+    display: flex !important;
+    animation: bounceIn 0.5s;
+}
+
+@keyframes bounceIn {
+    0% { transform: scale(0.5); opacity: 0; }
+    70% { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* استایل برای سایر دکمه‌های قفل‌دار */
+.download-btn[data-password] {
+    position: relative;
+}
+
+.download-btn[data-password]::before {
+    content: '🔒';
+    margin-right: 8px;
+}
+
         /* scroll top */
         .scroll-top{position:fixed;bottom:26px;right:26px;width:52px;height:52px;border-radius:999px;display:flex;align-items:center;justify-content:center;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:white;box-shadow:0 18px 40px rgba(0,0,0,0.45);cursor:pointer;transform:translateY(20px);opacity:0;visibility:hidden;transition:all var(--transition);z-index: 100; border: none;}
         .scroll-top.visible{transform:translateY(0);opacity:1;visibility:visible}
@@ -1684,15 +1895,23 @@
                     <p class="download-description">Allows users to change settings related to graphics, PUBG Mobile FPS, and keymapping according to the relevant resolution.</p>
                     
                     <div class="download-buttons">
-                        <a href="https://workupload.com/download/VNud5LDb5Ds" class="download-btn">
-                            <i class="fas fa-download"></i>
-                            Download
-                        </a>
-                        <p style="margin: 1px 0; font-size: 0.9rem; opacity: 0.8; color: #000000;">Version 1.4.2.8</p>
-                    </div>
-                </div>
-                
-                <div class="download-card glass">
+            <button class="download-btn unlock-btn" data-password="BariPlux" data-file="https://bariplux.com/BariPluxTool.7z">
+            <i class="fas fa-lock"></i>
+            Unlock to Download
+        </button>
+        <p style="margin: 1px 0; font-size: 0.9rem; opacity: 0.8; color: #000000;">Version 1.4.2.8</p>
+        
+        <!-- لینک مخفی اصلی (بعد از وارد کردن رمز نشان داده می‌شود) -->
+        <a href="https://bariplux.com/BariPluxTool.7z" 
+           class="download-btn hidden-download" 
+           id="real-download-link" 
+           style="display: none;">
+            <i class="fas fa-download"></i>
+            Download Now
+        </a>
+    </div>
+</div>
+<div class="download-card glass">
                     <div class="ripple" aria-hidden="true"></div>
                     <div class="download-icon">
                         <i class="fas fa-redo"></i>
@@ -1743,6 +1962,31 @@
                     </div>
                 </div>
             </div>
+            <div id="password-modal" class="password-modal">
+    <div class="modal-content glass">
+        <div class="modal-header">
+            <h3><i class="fas fa-key"></i> Enter Password</h3>
+            <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p>Please enter the password to download this file.</p>
+            <div class="password-input-group">
+                <input type="password" 
+                       id="password-input" 
+                       placeholder="Enter password..." 
+                       autocomplete="off">
+                <button id="submit-password" class="submit-btn">
+                    <i class="fas fa-unlock"></i> Unlock
+                </button>
+            </div>
+            <div class="password-hint">
+                <small>Hint: The name of this website</small>
+            </div>
+            <div id="password-error" class="error-message" style="display: none;">
+                <i class="fas fa-exclamation-circle"></i> Incorrect password!
+            </div>
+        </div>
+    </div>
         </div>
     </section>
 
@@ -2156,6 +2400,238 @@
                 });
             });
         }
+
+        // اضافه کردن این کد در بخش اسکریپت صفحه
+
+function setupPasswordProtection() {
+    console.log('Setting up password protection...');
+    
+    // المنت‌ها
+    const passwordModal = document.getElementById('password-modal');
+    const passwordInput = document.getElementById('password-input');
+    const submitBtn = document.getElementById('submit-password');
+    const closeBtn = document.querySelector('.close-modal');
+    const errorMessage = document.getElementById('password-error');
+    const unlockButtons = document.querySelectorAll('.unlock-btn');
+    
+    // متغیرهای موقت
+    let currentFileUrl = '';
+    let correctPassword = 'BariPlux';
+    
+    // باز کردن مودال هنگام کلیک روی دکمه‌های قفل‌دار
+    unlockButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // ذخیره اطلاعات دکمه
+            currentFileUrl = this.dataset.file;
+            correctPassword = this.dataset.password || 'BariPlux';
+            
+            // نمایش مودال
+            openPasswordModal();
+        });
+    });
+    
+    // باز کردن مودال
+    function openPasswordModal() {
+        passwordModal.classList.add('active');
+        passwordInput.value = '';
+        passwordInput.focus();
+        errorMessage.style.display = 'none';
+        document.body.style.overflow = 'hidden';
+    }
+    
+    // بستن مودال
+    function closePasswordModal() {
+        passwordModal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+    
+    // بررسی رمز
+    function checkPassword() {
+        const enteredPassword = passwordInput.value.trim();
+        
+        if (enteredPassword === '') {
+            showError('Please enter a password');
+            return;
+        }
+        
+        if (enteredPassword === correctPassword) {
+            // رمز صحیح
+            passwordSuccess();
+        } else {
+            // رمز نادرست
+            showError('Incorrect password! Try again.');
+            passwordInput.value = '';
+            passwordInput.focus();
+            
+            // افکت لرزش
+            passwordInput.style.animation = 'shake 0.5s';
+            setTimeout(() => {
+                passwordInput.style.animation = '';
+            }, 500);
+        }
+    }
+    
+    // نمایش خطا
+    function showError(message) {
+        errorMessage.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
+        errorMessage.style.display = 'block';
+    }
+    
+    // موفقیت در وارد کردن رمز
+    function passwordSuccess() {
+        // بستن مودال
+        closePasswordModal();
+        
+        // پیدا کردن لینک دانلود واقعی
+        const realDownloadLink = document.getElementById('real-download-link');
+        if (realDownloadLink && currentFileUrl) {
+            // آپدیت لینک
+            realDownloadLink.href = currentFileUrl;
+            
+            // نمایش لینک
+            realDownloadLink.classList.add('visible');
+            
+            // خودکار کلیک روی لینک بعد از 1 ثانیه
+            setTimeout(() => {
+                realDownloadLink.click();
+                
+                // مخفی کردن مجدد لینک بعد از 5 ثانیه
+                setTimeout(() => {
+                    realDownloadLink.classList.remove('visible');
+                }, 5000);
+            }, 1000);
+        } else {
+            // اگر لینک پیدا نشد، مستقیم باز کن
+            window.open(currentFileUrl, '_blank');
+        }
+        
+        // نمایش پیام موفقیت
+        showSuccessMessage();
+    }
+    
+    // نمایش پیام موفقیت
+    function showSuccessMessage() {
+        // ساخت نوتفیکیشن موقت
+        const notification = document.createElement('div');
+        notification.className = 'success-notification glass';
+        notification.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <i class="fas fa-check-circle" style="color: #4CAF50; font-size: 1.5rem;"></i>
+                <div>
+                    <strong>Access Granted!</strong>
+                    <p style="margin: 5px 0 0; font-size: 0.9rem;">Download starting...</p>
+                </div>
+            </div>
+        `;
+        
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: var(--radius);
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(20px);
+            z-index: 99999;
+            animation: slideInRight 0.3s ease;
+            max-width: 300px;
+            box-shadow: var(--shadow);
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // حذف بعد از 3 ثانیه
+        setTimeout(() => {
+            notification.style.animation = 'slideOutRight 0.3s ease';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
+        }, 3000);
+        
+        // اضافه کردن انیمیشن‌ها
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideInRight {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOutRight {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    
+    // رویدادها
+    submitBtn.addEventListener('click', checkPassword);
+    
+    passwordInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            checkPassword();
+        }
+    });
+    
+    closeBtn.addEventListener('click', closePasswordModal);
+    
+    // بستن با کلیک خارج مودال
+    passwordModal.addEventListener('click', function(e) {
+        if (e.target === passwordModal) {
+            closePasswordModal();
+        }
+    });
+    
+    // بستن با کلید ESC
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && passwordModal.classList.contains('active')) {
+            closePasswordModal();
+        }
+    });
+    
+    // اضافه کردن آبشاری برای همه دکمه‌های دانلود دیگر
+    document.querySelectorAll('.download-btn').forEach(btn => {
+        if (!btn.classList.contains('unlock-btn')) {
+            btn.addEventListener('click', function(e) {
+                if (this.dataset.password) {
+                    e.preventDefault();
+                    currentFileUrl = this.href;
+                    correctPassword = this.dataset.password;
+                    openPasswordModal();
+                }
+            });
+        }
+    });
+}
+
+// راه‌اندازی هنگام بارگذاری صفحه
+document.addEventListener('DOMContentLoaded', function() {
+    // ... کدهای موجود ...
+    setupPasswordProtection();
+});
+
+// ذخیره کردن که کاربر نیازی به وارد کردن مجدد رمز نداشته باشد
+function rememberPassword() {
+    const rememberCheckbox = document.createElement('div');
+    rememberCheckbox.innerHTML = `
+        <label style="display: flex; align-items: center; gap: 8px; margin-top: 10px;">
+            <input type="checkbox" id="remember-password">
+            <span style="font-size: 0.9rem;">Remember for 24 hours</span>
+        </label>
+    `;
+    
+    document.querySelector('.modal-body').appendChild(rememberCheckbox);
+    
+    // بررسی کوکی
+    const remembered = localStorage.getItem('bariplux_download_access');
+    if (remembered && remembered === 'granted') {
+        passwordSuccess();
+    }
+}
 
         // Advanced Image Auto-Reload System
         function setupAdvancedImageReload() {
