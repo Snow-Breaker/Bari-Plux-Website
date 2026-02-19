@@ -1010,27 +1010,21 @@
                     btn.disabled = false;
                     btn.innerHTML = '<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"> Sign in with Google';
                     
+                    // If Firebase config error, fall back to demo mode
+                    if (error.code === 'auth/configuration-not-found' || error.message.includes('configuration-not-found')) {
+                        alert('Firebase Google Auth not configured. Using demo mode instead.');
+                        // Fall back to demo mode
+                        simulateGoogleLogin(btn);
+                        return;
+                    }
+                    
                     if (error.code !== 'auth/popup-closed-by-user') {
                         alert('Google login failed: ' + error.message);
                     }
                 }
             } else {
                 // Demo mode - simulate Google login
-                btn.disabled = true;
-                btn.innerHTML = '<div class="loading-spinner" style="border-color: #333; border-top-color: #666;"></div> Redirecting...';
-
-                setTimeout(() => {
-                    const user = {
-                        id: generateUserId(),
-                        name: 'Google User',
-                        email: 'google.user@gmail.com',
-                        loginMethod: 'demo.google',
-                        loginTime: new Date().toISOString()
-                    };
-
-                    localStorage.setItem('bariplux_user', JSON.stringify(user));
-                    showLoggedInView(user);
-                }, 2000);
+                simulateGoogleLogin(btn);
             }
         });
 
@@ -1063,6 +1057,25 @@
                 showLoginFormView();
             }
         });
+
+        // Simulate Google Login (Demo Mode)
+        function simulateGoogleLogin(btn) {
+            btn.disabled = true;
+            btn.innerHTML = '<div class="loading-spinner" style="border-color: #333; border-top-color: #666;"></div> Redirecting...';
+
+            setTimeout(() => {
+                const user = {
+                    id: generateUserId(),
+                    name: 'Google User',
+                    email: 'google.user@gmail.com',
+                    loginMethod: 'demo.google',
+                    loginTime: new Date().toISOString()
+                };
+
+                localStorage.setItem('bariplux_user', JSON.stringify(user));
+                showLoggedInView(user);
+            }, 2000);
+        }
 
         // Helper function
         function isValidEmail(email) {
