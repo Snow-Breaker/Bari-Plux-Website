@@ -11,8 +11,9 @@
     
     <link rel="icon" type="image/x-icon" href="https://i.postimg.cc/65cjsvfQ/imglogo.png">
     
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     
     <style>
@@ -311,61 +312,6 @@
             padding: 0 15px;
         }
 
-        .verification-code {
-            display: none;
-            margin-top: 20px;
-            padding: 20px;
-            background: var(--glass-accent);
-            border-radius: var(--radius);
-            border-left: 4px solid var(--accent);
-        }
-
-        .verification-code.active {
-            display: block;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .code-inputs {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin: 15px 0;
-        }
-
-        .code-input {
-            width: 45px;
-            height: 50px;
-            text-align: center;
-            font-size: 1.5rem;
-            font-weight: 700;
-            border-radius: var(--radius);
-            border: 1px solid var(--glass-border);
-            background: var(--glass-bg);
-            color: var(--text);
-        }
-
-        .code-input:focus {
-            outline: none;
-            border-color: var(--accent);
-        }
-
-        .resend-code {
-            text-align: center;
-            margin-top: 15px;
-            color: var(--muted);
-            font-size: 0.85rem;
-        }
-
-        .resend-code a {
-            color: var(--accent);
-            cursor: pointer;
-            text-decoration: none;
-        }
-
-        .resend-code a:hover {
-            text-decoration: underline;
-        }
-
         .error-message {
             background: rgba(244, 67, 54, 0.1);
             border: 1px solid var(--danger);
@@ -489,6 +435,69 @@
             color: var(--accent);
         }
 
+        /* Token for App */
+        .app-token-section {
+            background: var(--glass-bg);
+            border: 1px solid var(--accent);
+            border-radius: var(--radius);
+            padding: 15px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .app-token-section h4 {
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .token-display {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .token-input {
+            flex: 1;
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--glass-border);
+            background: rgba(0,0,0,0.3);
+            color: var(--text);
+            font-family: monospace;
+            font-size: 0.8rem;
+        }
+
+        .copy-token-btn {
+            padding: 8px 16px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .copy-token-btn:hover {
+            background: var(--accent-2);
+        }
+
+        .copied-msg {
+            color: var(--success);
+            font-size: 0.8rem;
+            margin-top: 8px;
+            display: none;
+        }
+
+        .copied-msg.active {
+            display: block;
+        }
+
         .loading-spinner {
             width: 20px;
             height: 20px;
@@ -500,6 +509,23 @@
 
         @keyframes spin {
             to { transform: rotate(360deg); }
+        }
+
+        .firebase-config-note {
+            background: var(--glass-accent);
+            border: 1px solid var(--accent);
+            border-radius: var(--radius);
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 0.85rem;
+            color: var(--muted);
+        }
+
+        .firebase-config-note code {
+            background: rgba(0,0,0,0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.8rem;
         }
 
         @media (max-width: 576px) {
@@ -532,6 +558,14 @@
                     <p class="login-subtitle">Login to your Bari Plux account</p>
                 </div>
 
+                <!-- Firebase Config Note -->
+                <div class="firebase-config-note" id="firebaseConfigNote">
+                    <strong><i class="fas fa-info-circle"></i> Setup Required:</strong><br>
+                    To enable real authentication, configure Firebase in the code below.
+                    <br><br>
+                    <code>YOUR_FIREBASE_CONFIG_HERE</code>
+                </div>
+
                 <div class="login-tabs">
                     <div class="login-tab active" data-tab="email">Email Login</div>
                     <div class="login-tab" data-tab="google">Google</div>
@@ -554,45 +588,25 @@
                     
                     <button id="btnLoginEmail" class="btn-primary">
                         <i class="fas fa-sign-in-alt"></i>
-                        Login
+                        Login with Email
                     </button>
                     
                     <div class="divider"><span>or</span></div>
                     
-                    <button id="btnSendCode" class="btn-primary" style="background: linear-gradient(135deg, var(--accent-2), var(--accent));">
-                        <i class="fas fa-envelope"></i>
-                        Send Verification Code
+                    <button id="btnRegisterEmail" class="btn-primary" style="background: linear-gradient(135deg, var(--accent-2), var(--accent));">
+                        <i class="fas fa-user-plus"></i>
+                        Register New Account
                     </button>
-                    
-                    <!-- Verification Code Section -->
-                    <div id="verificationSection" class="verification-code">
-                        <p>We've sent a verification code to your email. Please enter it below:</p>
-                        <div class="code-inputs">
-                            <input type="text" class="code-input" maxlength="1" data-index="0">
-                            <input type="text" class="code-input" maxlength="1" data-index="1">
-                            <input type="text" class="code-input" maxlength="1" data-index="2">
-                            <input type="text" class="code-input" maxlength="1" data-index="3">
-                            <input type="text" class="code-input" maxlength="1" data-index="4">
-                            <input type="text" class="code-input" maxlength="1" data-index="5">
-                        </div>
-                        <button id="btnVerifyCode" class="btn-primary">
-                            <i class="fas fa-check"></i>
-                            Verify Code
-                        </button>
-                        <div class="resend-code">
-                            Didn't receive the code? <a id="resendCode">Resend</a>
-                        </div>
-                    </div>
                 </div>
 
                 <!-- Google Login -->
                 <div id="googleForm" class="login-form">
                     <button id="btnGoogleLogin" class="btn-google">
-                        <img src="https://www.google.com/favicon.ico" alt="Google">
-                        Continue with Google
+                        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+                        Sign in with Google
                     </button>
                     <p style="text-align: center; color: var(--muted); font-size: 0.85rem; margin-top: 15px;">
-                        We'll redirect you to Google to sign in securely.
+                        You'll be redirected to Google to sign in securely.
                     </p>
                 </div>
             </div>
@@ -613,6 +627,20 @@
                     <strong>User ID:</strong> <span id="userId">---</span>
                 </div>
                 
+                <!-- Token for App -->
+                <div class="app-token-section" id="appTokenSection">
+                    <h4><i class="fas fa-mobile-alt"></i> Use in Bari Plux App</h4>
+                    <div class="token-display">
+                        <input type="text" class="token-input" id="loginToken" readonly placeholder="Login token will appear here">
+                        <button class="copy-token-btn" id="copyTokenBtn">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <div class="copied-msg" id="copiedMsg">
+                        <i class="fas fa-check"></i> Token copied! Paste it in the app to login.
+                    </div>
+                </div>
+                
                 <button id="btnLogout" class="btn-logout">
                     <i class="fas fa-sign-out-alt"></i>
                     Logout
@@ -627,13 +655,68 @@
     </div>
 
     <script>
-        // Initialize Firebase (you need to replace with your own config)
-        // For demo purposes, we'll simulate the authentication
-        
+        // ==================== FIREBASE CONFIGURATION ====================
+        // TODO: Replace with your Firebase configuration
+        // Get your config from: https://console.firebase.google.com/project/YOUR_PROJECT/settings/general
+        const firebaseConfig = {
+            apiKey: "AIzaSyCFAuCSqP6hxg9lrM2gT-niuOoEMeIYJ-Q",
+            authDomain: "bpww-525fe.firebaseapp.com",
+            projectId: "bpww-525fe",
+            storageBucket: "bpww-525fe.firebasestorage.app",
+            messagingSenderId: "671761698906",
+            appId: "1:671761698906:web:22de4cdc18aa4f73d1c863"
+        };
+
+        // Initialize Firebase (only if configured)
+        let auth = null;
+        let firebaseInitialized = false;
+
+        function initFirebase() {
+            try {
+                // Check if config is replaced (not the placeholder)
+                if (firebaseConfig.apiKey === "YOUR_API_KEY") {
+                    console.log("Firebase not configured - using local demo mode");
+                    document.getElementById('firebaseConfigNote').innerHTML = 
+                        '<strong><i class="fas fa-exclamation-triangle"></i> Demo Mode:</strong> Firebase is not configured. ' +
+                        'Edit the login.html file and replace the firebaseConfig with your own Firebase project credentials.';
+                    return false;
+                }
+                
+                firebase.initializeApp(firebaseConfig);
+                auth = firebase.auth();
+                firebaseInitialized = true;
+                document.getElementById('firebaseConfigNote').style.display = 'none';
+                console.log("Firebase initialized successfully");
+                return true;
+            } catch (error) {
+                console.error("Firebase initialization error:", error);
+                return false;
+            }
+        }
+
         // Check if user is already logged in
         function checkLoginStatus() {
             const storedUser = localStorage.getItem('bariplux_user');
-            if (storedUser) {
+            
+            // Also check Firebase auth state
+            if (firebaseInitialized && auth) {
+                auth.onAuthStateChanged((user) => {
+                    if (user) {
+                        const firebaseUser = {
+                            id: user.uid,
+                            name: user.displayName || user.email.split('@')[0],
+                            email: user.email,
+                            loginMethod: user.providerData[0]?.providerId || 'firebase',
+                            loginTime: new Date().toISOString(),
+                            photoURL: user.photoURL
+                        };
+                        localStorage.setItem('bariplux_user', JSON.stringify(firebaseUser));
+                        showLoggedInView(firebaseUser);
+                    } else if (!storedUser) {
+                        showLoginFormView();
+                    }
+                });
+            } else if (storedUser) {
                 const user = JSON.parse(storedUser);
                 showLoggedInView(user);
             }
@@ -646,7 +729,27 @@
             document.getElementById('userName').textContent = user.name;
             document.getElementById('userEmail').textContent = user.email;
             document.getElementById('userId').textContent = user.id;
-            document.getElementById('userAvatar').textContent = user.name.charAt(0).toUpperCase();
+            
+            const initial = user.name ? user.name.charAt(0).toUpperCase() : 'U';
+            document.getElementById('userAvatar').textContent = initial;
+            
+            // Generate login token for app
+            const token = btoa(JSON.stringify({
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                method: user.loginMethod,
+                time: Date.now()
+            }));
+            document.getElementById('loginToken').value = token;
+            
+            // Update header button on index
+            if (window.parent !== window) {
+                localStorage.setItem('bariplux_user_new', JSON.stringify(user));
+            }
+            
+            // Save token for app sync
+            localStorage.setItem('bariplux_login_token', token);
         }
 
         function showLoginFormView() {
@@ -654,7 +757,7 @@
             document.getElementById('loginFormView').style.display = 'block';
         }
 
-        // Generate random user ID
+        // Generate local user ID for demo mode
         function generateUserId() {
             return 'BP_' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).substring(2, 6).toUpperCase();
         }
@@ -675,8 +778,8 @@
             });
         });
 
-        // Email Login
-        document.getElementById('btnLoginEmail').addEventListener('click', function() {
+        // Email Login with Firebase
+        document.getElementById('btnLoginEmail').addEventListener('click', async function() {
             const email = document.getElementById('emailInput').value.trim();
             const password = document.getElementById('passwordInput').value;
             const errorEl = document.getElementById('emailError');
@@ -698,41 +801,84 @@
                 return;
             }
 
-            // Simulate login (in production, this would call your backend)
-            btn.disabled = true;
-            btn.innerHTML = '<div class="loading-spinner"></div> Logging in...';
+            if (firebaseInitialized && auth) {
+                // Real Firebase login
+                btn.disabled = true;
+                btn.innerHTML = '<div class="loading-spinner"></div> Logging in...';
 
-            setTimeout(() => {
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login';
-                
-                // Create user object
-                const user = {
-                    id: generateUserId(),
-                    name: email.split('@')[0],
-                    email: email,
-                    loginMethod: 'email',
-                    loginTime: new Date().toISOString()
-                };
+                try {
+                    const userCredential = await auth.signInWithEmailAndPassword(email, password);
+                    const user = userCredential.user;
+                    
+                    const userData = {
+                        id: user.uid,
+                        name: user.displayName || email.split('@')[0],
+                        email: user.email,
+                        loginMethod: 'firebase.email',
+                        loginTime: new Date().toISOString()
+                    };
 
-                // Save to localStorage
-                localStorage.setItem('bariplux_user', JSON.stringify(user));
+                    localStorage.setItem('bariplux_user', JSON.stringify(userData));
+                    successEl.textContent = 'Login successful!';
+                    successEl.classList.add('active');
 
-                // Also save for app sync
-                localStorage.setItem('bariplux_user_new', JSON.stringify(user));
-
-                successEl.textContent = 'Login successful! Redirecting...';
-                successEl.classList.add('active');
+                    setTimeout(() => showLoggedInView(userData), 1000);
+                } catch (error) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login with Email';
+                    
+                    // Handle specific Firebase errors
+                    switch (error.code) {
+                        case 'auth/invalid-email':
+                            errorEl.textContent = 'Invalid email address.';
+                            break;
+                        case 'auth/user-disabled':
+                            errorEl.textContent = 'This account has been disabled.';
+                            break;
+                        case 'auth/user-not-found':
+                            errorEl.textContent = 'No account found with this email.';
+                            break;
+                        case 'auth/wrong-password':
+                            errorEl.textContent = 'Incorrect password.';
+                            break;
+                        default:
+                            errorEl.textContent = 'Login failed: ' + error.message;
+                    }
+                    errorEl.classList.add('active');
+                }
+            } else {
+                // Demo mode - local login
+                btn.disabled = true;
+                btn.innerHTML = '<div class="loading-spinner"></div> Logging in...';
 
                 setTimeout(() => {
-                    showLoggedInView(user);
-                }, 1000);
-            }, 1500);
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login with Email';
+                    
+                    const user = {
+                        id: generateUserId(),
+                        name: email.split('@')[0],
+                        email: email,
+                        loginMethod: 'demo',
+                        loginTime: new Date().toISOString()
+                    };
+
+                    localStorage.setItem('bariplux_user', JSON.stringify(user));
+
+                    successEl.textContent = 'Login successful! (Demo Mode)';
+                    successEl.classList.add('active');
+
+                    setTimeout(() => {
+                        showLoggedInView(user);
+                    }, 1000);
+                }, 1500);
+            }
         });
 
-        // Send Verification Code
-        document.getElementById('btnSendCode').addEventListener('click', function() {
+        // Email Registration with Firebase
+        document.getElementById('btnRegisterEmail').addEventListener('click', async function() {
             const email = document.getElementById('emailInput').value.trim();
+            const password = document.getElementById('passwordInput').value;
             const errorEl = document.getElementById('emailError');
             const successEl = document.getElementById('emailSuccess');
             const btn = this;
@@ -740,8 +886,8 @@
             errorEl.classList.remove('active');
             successEl.classList.remove('active');
 
-            if (!email) {
-                errorEl.textContent = 'Please enter your email address.';
+            if (!email || !password) {
+                errorEl.textContent = 'Please enter both email and password.';
                 errorEl.classList.add('active');
                 return;
             }
@@ -752,148 +898,166 @@
                 return;
             }
 
-            // Simulate sending code
-            btn.disabled = true;
-            btn.innerHTML = '<div class="loading-spinner"></div> Sending...';
-
-            // Generate random verification code
-            const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
-            localStorage.setItem('bariplux_verification_code', verificationCode);
-            localStorage.setItem('bariplux_verification_email', email);
-
-            setTimeout(() => {
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fas fa-envelope"></i> Send Verification Code';
-                
-                successEl.textContent = 'Verification code sent to ' + email + '! (Demo: ' + verificationCode + ')';
-                successEl.classList.add('active');
-                
-                document.getElementById('verificationSection').classList.add('active');
-            }, 1500);
-        });
-
-        // Verify Code
-        document.getElementById('btnVerifyCode').addEventListener('click', function() {
-            const codeInputs = document.querySelectorAll('.code-input');
-            let code = '';
-            codeInputs.forEach(input => code += input.value);
-            
-            const errorEl = document.getElementById('emailError');
-            const successEl = document.getElementById('emailSuccess');
-            const btn = this;
-            const storedCode = localStorage.getItem('bariplux_verification_code');
-            const email = localStorage.getItem('bariplux_verification_email');
-
-            errorEl.classList.remove('active');
-            successEl.classList.remove('active');
-
-            if (code.length !== 6) {
-                errorEl.textContent = 'Please enter the complete 6-digit code.';
+            if (password.length < 6) {
+                errorEl.textContent = 'Password must be at least 6 characters.';
                 errorEl.classList.add('active');
                 return;
             }
 
-            if (code === storedCode) {
+            if (firebaseInitialized && auth) {
+                // Real Firebase registration
                 btn.disabled = true;
-                btn.innerHTML = '<div class="loading-spinner"></div> Verifying...';
+                btn.innerHTML = '<div class="loading-spinner"></div> Creating account...';
+
+                try {
+                    const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                    const user = userCredential.user;
+                    
+                    // Send email verification
+                    await user.sendEmailVerification();
+                    
+                    const userData = {
+                        id: user.uid,
+                        name: email.split('@')[0],
+                        email: user.email,
+                        loginMethod: 'firebase.email',
+                        loginTime: new Date().toISOString()
+                    };
+
+                    localStorage.setItem('bariplux_user', JSON.stringify(userData));
+                    successEl.textContent = 'Account created! Please check your email to verify.';
+                    successEl.classList.add('active');
+
+                    setTimeout(() => showLoggedInView(userData), 2000);
+                } catch (error) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-user-plus"></i> Register New Account';
+                    
+                    switch (error.code) {
+                        case 'auth/email-already-in-use':
+                            errorEl.textContent = 'An account with this email already exists.';
+                            break;
+                        case 'auth/invalid-email':
+                            errorEl.textContent = 'Invalid email address.';
+                            break;
+                        case 'auth/weak-password':
+                            errorEl.textContent = 'Password is too weak.';
+                            break;
+                        default:
+                            errorEl.textContent = 'Registration failed: ' + error.message;
+                    }
+                    errorEl.classList.add('active');
+                }
+            } else {
+                // Demo mode
+                btn.disabled = true;
+                btn.innerHTML = '<div class="loading-spinner"></div> Creating account...';
 
                 setTimeout(() => {
                     btn.disabled = false;
-                    btn.innerHTML = '<i class="fas fa-check"></i> Verify Code';
+                    btn.innerHTML = '<i class="fas fa-user-plus"></i> Register New Account';
                     
-                    // Create user object
                     const user = {
                         id: generateUserId(),
                         name: email.split('@')[0],
                         email: email,
-                        loginMethod: 'email_verified',
+                        loginMethod: 'demo',
                         loginTime: new Date().toISOString()
                     };
 
-                    // Save to localStorage
                     localStorage.setItem('bariplux_user', JSON.stringify(user));
-                    localStorage.setItem('bariplux_user_new', JSON.stringify(user));
 
-                    // Clear verification data
-                    localStorage.removeItem('bariplux_verification_code');
-                    localStorage.removeItem('bariplux_verification_email');
-
-                    successEl.textContent = 'Email verified! Login successful!';
+                    successEl.textContent = 'Account created! (Demo Mode)';
                     successEl.classList.add('active');
 
                     setTimeout(() => {
                         showLoggedInView(user);
-                    }, 1000);
+                    }, 1500);
                 }, 1500);
-            } else {
-                errorEl.textContent = 'Invalid verification code. Please try again.';
-                errorEl.classList.add('active');
             }
         });
 
-        // Code input handling
-        document.querySelectorAll('.code-input').forEach((input, index, inputs) => {
-            input.addEventListener('input', (e) => {
-                if (e.target.value.length === 1) {
-                    if (index < inputs.length - 1) {
-                        inputs[index + 1].focus();
-                    }
-                }
-            });
-
-            input.addEventListener('keydown', (e) => {
-                if (e.key === 'Backspace' && e.target.value.length === 0) {
-                    if (index > 0) {
-                        inputs[index - 1].focus();
-                    }
-                }
-            });
-
-            input.addEventListener('paste', (e) => {
-                e.preventDefault();
-                const pasteData = e.clipboardData.getData('text').slice(0, 6);
-                pasteData.split('').forEach((char, i) => {
-                    if (inputs[i]) {
-                        inputs[i].value = char;
-                    }
-                });
-            });
-        });
-
-        // Resend code
-        document.getElementById('resendCode').addEventListener('click', function() {
-            document.getElementById('btnSendCode').click();
-        });
-
-        // Google Login (Simulated)
-        document.getElementById('btnGoogleLogin').addEventListener('click', function() {
+        // Google Login with Firebase
+        document.getElementById('btnGoogleLogin').addEventListener('click', async function() {
             const btn = this;
+
+            if (firebaseInitialized && auth) {
+                // Real Firebase Google login
+                const provider = new firebase.auth.GoogleAuthProvider();
+                provider.setCustomParameters({
+                    prompt: 'select_account'
+                });
+
+                btn.disabled = true;
+                btn.innerHTML = '<div class="loading-spinner" style="border-color: #333; border-top-color: #666;"></div> Redirecting...';
+
+                try {
+                    const result = await auth.signInWithPopup(provider);
+                    const user = result.user;
+                    
+                    const userData = {
+                        id: user.uid,
+                        name: user.displayName,
+                        email: user.email,
+                        loginMethod: 'firebase.google',
+                        loginTime: new Date().toISOString(),
+                        photoURL: user.photoURL
+                    };
+
+                    localStorage.setItem('bariplux_user', JSON.stringify(userData));
+                    showLoggedInView(userData);
+                } catch (error) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"> Sign in with Google';
+                    
+                    if (error.code !== 'auth/popup-closed-by-user') {
+                        alert('Google login failed: ' + error.message);
+                    }
+                }
+            } else {
+                // Demo mode - simulate Google login
+                btn.disabled = true;
+                btn.innerHTML = '<div class="loading-spinner" style="border-color: #333; border-top-color: #666;"></div> Redirecting...';
+
+                setTimeout(() => {
+                    const user = {
+                        id: generateUserId(),
+                        name: 'Google User',
+                        email: 'google.user@gmail.com',
+                        loginMethod: 'demo.google',
+                        loginTime: new Date().toISOString()
+                    };
+
+                    localStorage.setItem('bariplux_user', JSON.stringify(user));
+                    showLoggedInView(user);
+                }, 2000);
+            }
+        });
+
+        // Copy token to clipboard
+        document.getElementById('copyTokenBtn').addEventListener('click', function() {
+            const tokenInput = document.getElementById('loginToken');
+            tokenInput.select();
+            tokenInput.setSelectionRange(0, 99999);
             
-            btn.disabled = true;
-            btn.innerHTML = '<div class="loading-spinner" style="border-color: #333; border-top-color: #666;"></div> Redirecting...';
-
-            // In production, you would use Firebase Google Sign-In
-            // For demo, we'll simulate it
-            
-            setTimeout(() => {
-                // Simulate Google user data
-                const googleUser = {
-                    id: generateUserId(),
-                    name: 'Google User',
-                    email: 'google.user@gmail.com',
-                    loginMethod: 'google',
-                    loginTime: new Date().toISOString()
-                };
-
-                localStorage.setItem('bariplux_user', JSON.stringify(googleUser));
-                localStorage.setItem('bariplux_user_new', JSON.stringify(googleUser));
-
-                showLoggedInView(googleUser);
-            }, 2000);
+            navigator.clipboard.writeText(tokenInput.value).then(() => {
+                document.getElementById('copiedMsg').classList.add('active');
+                setTimeout(() => {
+                    document.getElementById('copiedMsg').classList.remove('active');
+                }, 3000);
+            });
         });
 
         // Logout
-        document.getElementById('btnLogout').addEventListener('click', function() {
+        document.getElementById('btnLogout').addEventListener('click', async function() {
+            if (firebaseInitialized && auth) {
+                try {
+                    await auth.signOut();
+                } catch (error) {
+                    console.error("Firebase logout error:", error);
+                }
+            }
+            
             if (confirm('Are you sure you want to logout?')) {
                 localStorage.removeItem('bariplux_user');
                 showLoginFormView();
@@ -965,25 +1129,20 @@
             }
         }
 
-        // Check for app sync (for WPF app)
-        function checkAppSync() {
-            const appUser = localStorage.getItem('bariplux_user_new');
-            if (appUser) {
-                localStorage.setItem('bariplux_user', appUser);
-                localStorage.removeItem('bariplux_user_new');
-                const user = JSON.parse(appUser);
-                showLoggedInView(user);
-            }
-        }
-
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
+            initFirebase();
             checkLoginStatus();
-            checkAppSync();
             initParticles();
 
             // Check for app sync periodically
-            setInterval(checkAppSync, 5000);
+            setInterval(() => {
+                const storedUser = localStorage.getElement('bariplux_user');
+                if (storedUser) {
+                    // Sync with potential app
+                    localStorage.setItem('bariplux_user_new', storedUser);
+                }
+            }, 3000);
         });
     </script>
 </body>
