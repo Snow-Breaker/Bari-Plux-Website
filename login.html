@@ -662,6 +662,7 @@
         const firebaseConfig = {
             apiKey: "AIzaSyBH_t3Uue7fbb-DahwjSJGjG2-quCqiLEs",
             authDomain: "baripluxwebsite.firebaseapp.com",
+            databaseURL: "https://baripluxwebsite-default-rtdb.firebaseio.com",
             projectId: "baripluxwebsite",
             storageBucket: "baripluxwebsite.firebasestorage.app",
             messagingSenderId: "280043766563",
@@ -702,10 +703,14 @@
         function syncLoginToFirebase(user) {
             if (!firebaseInitialized || !database) {
                 console.log("Firebase not initialized, skipping sync");
+                showNotification('Firebase not configured - cannot sync to app', 'error');
                 return;
             }
             
             try {
+                console.log("Syncing to Firebase database...");
+                console.log("Database URL:", database.app.options.databaseURL);
+                
                 const userRef = database.ref('users/' + user.id);
                 userRef.set({
                     name: user.name,
@@ -715,8 +720,7 @@
                     lastActive: firebase.database.ServerValue.TIMESTAMP,
                     platform: 'website'
                 }).then(() => {
-                    console.log('Login synced to Firebase successfully');
-                    // Show success message
+                    console.log('Login synced to Firebase successfully!');
                     showNotification('Login synced to app!', 'success');
                 }).catch(err => {
                     console.error('Error syncing to Firebase:', err.code, err.message);
@@ -724,6 +728,7 @@
                 });
             } catch (error) {
                 console.error("Sync error:", error);
+                showNotification('Sync error: ' + error.message, 'error');
             }
         }
 
