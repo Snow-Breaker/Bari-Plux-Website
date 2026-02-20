@@ -14,6 +14,7 @@
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     
     <style>
@@ -669,7 +670,9 @@
 
         // Initialize Firebase (only if configured)
         let auth = null;
+        let database = null;
         let firebaseInitialized = false;
+        let currentUser = null;
 
         function initFirebase() {
             try {
@@ -684,6 +687,7 @@
                 
                 firebase.initializeApp(firebaseConfig);
                 auth = firebase.auth();
+                database = firebase.database();
                 firebaseInitialized = true;
                 document.getElementById('firebaseConfigNote').style.display = 'none';
                 console.log("Firebase initialized successfully");
@@ -691,6 +695,45 @@
             } catch (error) {
                 console.error("Firebase initialization error:", error);
                 return false;
+            }
+        }
+
+        // Sync login state to Firebase Database
+        function syncLoginToFirebase(user) {
+            if (!firebaseInitialized || !database) return;
+            
+            try {
+                const userRef = database.ref('users/' + user.id);
+                userRef.set({
+                    name: user.name,
+                    email: user.email,
+                    loginMethod: user.loginMethod,
+                    loginTime: user.loginTime || new Date().toISOString(),
+                    lastActive: firebase.database.ServerValue.TIMESTAMP,
+                    platform: 'website'
+                }).then(() => {
+                    console.log('Login synced to Firebase');
+                }).catch(err => {
+                    console.error('Error syncing to Firebase:', err);
+                });
+            } catch (error) {
+                console.error("Sync error:", error);
+            }
+        }
+
+        // Remove login state from Firebase on logout
+        function removeLoginFromFirebase(userId) {
+            if (!firebaseInitialized || !database || !userId) return;
+            
+            try {
+                const userRef = database.ref('users/' + userId);
+                userRef.remove().then(() => {
+                    console.log('Logout synced to Firebase');
+                }).catch(err => {
+                    console.error('Error removing from Firebase:', err);
+                });
+            } catch (error) {
+                console.error("Remove error:", error);
             }
         }
 
@@ -723,6 +766,7 @@
         }
 
         function showLoggedInView(user) {
+            currentUser = user;
             document.getElementById('loginFormView').style.display = 'none';
             document.getElementById('loggedInView').classList.add('active');
             
@@ -750,6 +794,9 @@
             
             // Save token for app sync
             localStorage.setItem('bariplux_login_token', token);
+            
+            // Sync login to Firebase for app sync
+            syncLoginToFirebase(user);
         }
 
         function showLoginFormView() {
@@ -1053,7 +1100,13 @@
             }
             
             if (confirm('Are you sure you want to logout?')) {
+                // Remove from Firebase sync
+                if (currentUser) {
+                    removeLoginFromFirebase(currentUser.id);
+                }
                 localStorage.removeItem('bariplux_user');
+                localStorage.removeItem('bariplux_login_token');
+                currentUser = null;
                 showLoginFormView();
             }
         });
