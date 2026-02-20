@@ -700,7 +700,10 @@
 
         // Sync login state to Firebase Database
         function syncLoginToFirebase(user) {
-            if (!firebaseInitialized || !database) return;
+            if (!firebaseInitialized || !database) {
+                console.log("Firebase not initialized, skipping sync");
+                return;
+            }
             
             try {
                 const userRef = database.ref('users/' + user.id);
@@ -712,13 +715,39 @@
                     lastActive: firebase.database.ServerValue.TIMESTAMP,
                     platform: 'website'
                 }).then(() => {
-                    console.log('Login synced to Firebase');
+                    console.log('Login synced to Firebase successfully');
+                    // Show success message
+                    showNotification('Login synced to app!', 'success');
                 }).catch(err => {
-                    console.error('Error syncing to Firebase:', err);
+                    console.error('Error syncing to Firebase:', err.code, err.message);
+                    showNotification('Could not sync to app: ' + err.message, 'error');
                 });
             } catch (error) {
                 console.error("Sync error:", error);
             }
+        }
+
+        // Show notification
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 25px;
+                border-radius: 8px;
+                color: white;
+                font-weight: 600;
+                z-index: 10000;
+                animation: fadeIn 0.3s ease;
+                ${type === 'success' ? 'background: #10B981;' : 'background: #EF4444;'}
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
         }
 
         // Remove login state from Firebase on logout
