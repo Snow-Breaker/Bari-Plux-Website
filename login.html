@@ -640,6 +640,9 @@
                     <div class="copied-msg" id="copiedMsg">
                         <i class="fas fa-check"></i> Token copied! Paste it in the app to login.
                     </div>
+                    <button class="open-app-btn" id="openAppBtn" style="margin-top: 10px; background: linear-gradient(135deg, #8B5CF6, #6366F1); color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 14px; width: 100%;">
+                        <i class="fas fa-external-link-alt"></i> Open Bari Plux App
+                    </button>
                 </div>
                 
                 <button id="btnLogout" class="btn-logout">
@@ -1121,6 +1124,27 @@
                     document.getElementById('copiedMsg').classList.remove('active');
                 }, 3000);
             });
+        });
+
+        // Open App with login
+        document.getElementById('openAppBtn').addEventListener('click', function() {
+            const storedUser = localStorage.getItem('bariplux_user');
+            if (storedUser) {
+                try {
+                    const user = JSON.parse(storedUser);
+                    const userData = {
+                        id: user.uid || user.id,
+                        name: user.displayName || user.name,
+                        email: user.email
+                    };
+                    const jsonStr = JSON.stringify(userData);
+                    const base64Token = btoa(jsonStr);
+                    const appUrl = 'baripluxtool://login?token=' + base64Token;
+                    window.location.href = appUrl;
+                } catch (e) {
+                    alert('Error opening app. Please copy the token and paste in the app.');
+                }
+            }
         });
 
         // Logout
