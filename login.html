@@ -520,6 +520,7 @@
             margin-bottom: 20px;
             font-size: 0.85rem;
             color: var(--muted);
+            display: none;
         }
 
         .firebase-config-note code {
@@ -664,10 +665,9 @@
         // Get your config from: https://console.firebase.google.com/project/YOUR_PROJECT/settings/general
         const firebaseConfig = {
             apiKey: "AIzaSyBH_t3Uue7fbb-DahwjSJGjG2-quCqiLEs",
-            authDomain: "bariplux.com",
-            databaseURL: "https://bariplux.com",
-            projectId: "bariplux",
-            storageBucket: "bariplux.firebasestorage.app",
+            authDomain: "baripluxwebsite.firebaseapp.com",
+            projectId: "baripluxwebsite",
+            storageBucket: "baripluxwebsite.firebasestorage.app",
             messagingSenderId: "280043766563",
             appId: "1:280043766563:web:409e6b78c1c24b568fc296"
         };
@@ -691,13 +691,18 @@
                 
                 firebase.initializeApp(firebaseConfig);
                 auth = firebase.auth();
-                database = firebase.database();
+                try {
+                    database = firebase.database();
+                } catch(e) {
+                    console.log("Firebase Database not available (may not be enabled)");
+                }
                 firebaseInitialized = true;
                 document.getElementById('firebaseConfigNote').style.display = 'none';
                 console.log("Firebase initialized successfully");
                 return true;
             } catch (error) {
                 console.error("Firebase initialization error:", error);
+                document.getElementById('firebaseConfigNote').style.display = 'block';
                 return false;
             }
         }
