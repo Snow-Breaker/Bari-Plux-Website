@@ -1132,18 +1132,54 @@
             if (storedUser) {
                 try {
                     const user = JSON.parse(storedUser);
+                    
                     const userData = {
-                        id: user.uid || user.id,
-                        name: user.displayName || user.name,
-                        email: user.email
+                        id: user.uid || user.id || user.userId || 'user_' + Date.now(),
+                        name: user.displayName || user.name || user.email || 'User',
+                        email: user.email || '',
+                        loginTime: Date.now()
                     };
+                    
+                    // Save to localStorage for app to read
+                    localStorage.setItem('bariplux_pending_login', JSON.stringify(userData));
+                    
+                    // Copy to clipboard
                     const jsonStr = JSON.stringify(userData);
-                    const base64Token = btoa(jsonStr);
-                    const appUrl = 'baripluxtool://login?token=' + base64Token;
-                    window.location.href = appUrl;
+                    const base64Token = btoa(unescape(encodeURIComponent(jsonStr)));
+                    const clipboardData = 'BPTV2_LOGIN:' + base64Token;
+                    
+                    navigator.clipboard.writeText(clipboardData).then(function() {
+                        // Try URL scheme
+                        const appUrls = [
+                            'baripluxtool://login?token=' + base64Token,
+                            'bptv2://login?token=' + base64Token
+                        ];
+                        
+                        let tried = 0;
+                        function tryNextUrl() {
+                            if (tried >= appUrls.length) {
+                                // All failed - tell user
+                                alert('Token copied to clipboard! The app should open automatically. If not, please open the app manually.');
+                                return;
+                            }
+                            window.location.href = appUrls[tried];
+                            tried++;
+                            setTimeout(tryNextUrl, 800);
+                        }
+                        tryNextUrl();
+                        
+                    }).catch(function(err) {
+                        // Clipboard failed, just try URL
+                        const appUrl = 'baripluxtool://login?token=' + base64Token;
+                        window.location.href = appUrl;
+                    });
+                    
                 } catch (e) {
-                    alert('Error opening app. Please copy the token and paste in the app.');
+                    console.error('Error:', e);
+                    alert('Error: ' + e.message);
                 }
+            } else {
+                alert('Please login first!');
             }
         });
 
