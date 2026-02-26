@@ -1,0 +1,611 @@
+// System Specs Animation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate progress bars on scroll
+            const progressBars = document.querySelectorAll('.performance-fill');
+            
+            function animateProgressBars() {
+                progressBars.forEach(bar => {
+                    const width = bar.style.width;
+                    bar.style.width = '0';
+                    
+                    setTimeout(() => {
+                        bar.style.transition = 'width 1.5s ease-in-out';
+                        bar.style.width = width;
+                    }, 200);
+                });
+            }
+            
+            // Intersection Observer for progress animation
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        animateProgressBars();
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+            
+            // Observe the system specs section
+            const systemSpecsSection = document.getElementById('system-specs');
+            if (systemSpecsSection) {
+                observer.observe(systemSpecsSection);
+            }
+            
+            // Add hover effects to spec cards
+            const specCards = document.querySelectorAll('.spec-card.pro-design');
+            
+            specCards.forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    card.style.transform = 'translateY(-8px)';
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'translateY(0)';
+                });
+            });
+        });
+
+
+        /* System Specs Section - Modern Redesign */
+        #system-specs .section-subtitle {
+            text-align: center;
+            margin-bottom: 50px;
+            opacity: 0.8;
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .specs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 60px;
+        }
+
+        .spec-card.pro-design {
+            background: var(--glass);
+            border-radius: var(--radius);
+            padding: 25px;
+            transition: var(--transition);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            position: relative;
+            overflow: hidden;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .light-mode .spec-card.pro-design {
+            background: var(--glass-dark);
+            border: 1px solid var(--glass-border-dark);
+        }
+
+        .spec-card.pro-design::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+        }
+
+        .spec-card.pro-design:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--primary);
+        }
+
+        .spec-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .spec-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--light);
+            box-shadow: 0 5px 15px rgba(107, 110, 255, 0.3);
+        }
+
+        .spec-badge {
+            background: linear-gradient(45deg, var(--accent), #ff6b6b);
+            color: var(--light);
+            padding: 5px 12px;
+            border-radius: var(--radius-round);
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .spec-title {
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+            color: var(--primary);
+        }
+
+        .spec-value {
+            font-family: monospace;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .spec-details {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+
+        .spec-detail {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            padding: 5px 0;
+            border-bottom: 1px dashed var(--glass-border);
+        }
+
+        .light-mode .spec-detail {
+            border-bottom: 1px dashed var(--glass-border-dark);
+        }
+
+        .spec-detail:last-child {
+            border-bottom: none;
+        }
+
+        .spec-performance {
+            margin-top: auto;
+        }
+
+        .performance-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--dark-light);
+            border-radius: var(--radius-round);
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .light-mode .performance-bar {
+            background: var(--light-dark);
+        }
+
+        .performance-fill {
+            height: 100%;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border-radius: var(--radius-round);
+            transition: width 1s ease-in-out;
+        }
+
+        .performance-label {
+            font-size: 0.85rem;
+            text-align: center;
+            opacity: 0.8;
+        }
+
+        /* Specs Summary */
+        .specs-summary {
+            margin-top: 40px;
+        }
+
+        .summary-card {
+            background: var(--glass);
+            border-radius: var(--radius);
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+        }
+
+        .light-mode .summary-card {
+            background: var(--glass-dark);
+            border: 1px solid var(--glass-border-dark);
+        }
+
+        .summary-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .summary-header i {
+            font-size: 2rem;
+            color: var(--primary);
+        }
+
+        .summary-header h3 {
+            font-size: 1.5rem;
+            margin: 0;
+            color: var(--primary);
+        }
+
+        .overall-performance {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .performance-circle {
+            position: relative;
+            width: 150px;
+            height: 150px;
+        }
+
+        .circle-progress {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .circle-progress::before {
+            content: '';
+            position: absolute;
+            width: 80%;
+            height: 80%;
+            background: var(--dark-light);
+            border-radius: 50%;
+        }
+
+        .light-mode .circle-progress::before {
+            background: var(--light);
+        }
+
+        .progress-value {
+            position: relative;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            z-index: 1;
+        }
+
+        .performance-details {
+            flex-grow: 1;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .light-mode .detail-item {
+            border-bottom: 1px solid var(--glass-border-dark);
+        }
+
+        .detail-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .detail-rating {
+            color: var(--accent);
+            font-size: 1.1rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .specs-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .spec-card.pro-design {
+                padding: 20px;
+            }
+            
+            .overall-performance {
+                flex-direction: column;
+                gap: 25px;
+                text-align: center;
+            }
+            
+            .performance-circle {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .progress-value {
+                font-size: 1.5rem;
+            }
+            
+            .detail-item {
+                flex-direction: column;
+                gap: 5px;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .spec-header {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+            
+            .spec-badge {
+                align-self: flex-start;
+            }
+            
+            .spec-value {
+                font-size: 1.1rem;
+            }
+            
+            .summary-card {
+                padding: 20px;
+            }
+            
+            .summary-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+        }
+
+
+        <!-- System Specs Section - Modern Redesign -->
+    <section id="system-specs" class="section">
+        <div class="container">
+            <h2 class="section-title">My Gaming Rig</h2>
+            <p class="section-subtitle">High-performance setup optimized for PUBG Mobile and content creation</p>
+            
+            <div class="specs-grid">
+                <!-- CPU -->
+                <div class="spec-card pro-design">
+                    <div class="spec-header">
+                        <div class="spec-icon">
+                            <i class="fas fa-microchip"></i>
+                        </div>
+                        <div class="spec-badge">Brain</div>
+                    </div>
+                    <h3 class="spec-title">Processor</h3>
+                    <div class="spec-value">Intel Core i5 11400H</div>
+                    <div class="spec-details">
+                        <span class="spec-detail">6 Cores / 12 Threads</span>
+                        <span class="spec-detail">4.5 GHz Turbo</span>
+                    </div>
+                    <div class="spec-performance">
+                        <div class="performance-bar">
+                            <div class="performance-fill" style="width: 85%"></div>
+                        </div>
+                        <div class="performance-label">Performance: 85%</div>
+                    </div>
+                </div>
+                
+                <!-- GPU -->
+                <div class="spec-card pro-design">
+                    <div class="spec-header">
+                        <div class="spec-icon">
+                            <i class="fas fa-gamepad"></i>
+                        </div>
+                        <div class="spec-badge">Power</div>
+                    </div>
+                    <h3 class="spec-title">Graphics</h3>
+                    <div class="spec-value">NVIDIA GeForce RTX 3050</div>
+                    <div class="spec-details">
+                        <span class="spec-detail">4GB GDDR6</span>
+                        <span class="spec-detail">Ray Tracing</span>
+                    </div>
+                    <div class="spec-performance">
+                        <div class="performance-bar">
+                            <div class="performance-fill" style="width: 80%"></div>
+                        </div>
+                        <div class="performance-label">Performance: 80%</div>
+                    </div>
+                </div>
+                
+                <!-- RAM -->
+                <div class="spec-card pro-design">
+                    <div class="spec-header">
+                        <div class="spec-icon">
+                            <i class="fas fa-memory"></i>
+                        </div>
+                        <div class="spec-badge">Speed</div>
+                    </div>
+                    <h3 class="spec-title">Memory</h3>
+                    <div class="spec-value">16GB DDR4</div>
+                    <div class="spec-details">
+                        <span class="spec-detail">3200MHz</span>
+                        <span class="spec-detail">Dual Channel</span>
+                    </div>
+                    <div class="spec-performance">
+                        <div class="performance-bar">
+                            <div class="performance-fill" style="width: 90%"></div>
+                        </div>
+                        <div class="performance-label">Performance: 90%</div>
+                    </div>
+                </div>
+                
+                <!-- Storage -->
+                <div class="spec-card pro-design">
+                    <div class="spec-header">
+                        <div class="spec-icon">
+                            <i class="fas fa-hdd"></i>
+                        </div>
+                        <div class="spec-badge">Capacity</div>
+                    </div>
+                    <h3 class="spec-title">Storage</h3>
+                    <div class="spec-value">2.5TB SSD</div>
+                    <div class="spec-details">
+                        <span class="spec-detail">Samsung 990 EVO 2TB</span>
+                        <span class="spec-detail">NVMe PCIe 512GB</span>
+                    </div>
+                    <div class="spec-performance">
+                        <div class="performance-bar">
+                            <div class="performance-fill" style="width: 95%"></div>
+                        </div>
+                        <div class="performance-label">Performance: 95%</div>
+                    </div>
+                </div>
+                
+                <!-- OS -->
+                <div class="spec-card pro-design">
+                    <div class="spec-header">
+                        <div class="spec-icon">
+                            <i class="fab fa-windows"></i>
+                        </div>
+                        <div class="spec-badge">Optimized</div>
+                    </div>
+                    <h3 class="spec-title">Operating System</h3>
+                    <div class="spec-value">Windows 10 Pro</div>
+                    <div class="spec-details">
+                        <span class="spec-detail">X-Lite Optimim 10 Pro v6</span>
+                        <span class="spec-detail">Gaming Optimized</span>
+                    </div>
+                    <div class="spec-performance">
+                        <div class="performance-bar">
+                            <div class="performance-fill" style="width: 88%"></div>
+                        </div>
+                        <div class="performance-label">Performance: 88%</div>
+                    </div>
+                </div>
+                
+                <!-- Game -->
+                <div class="spec-card pro-design">
+                    <div class="spec-header">
+                        <div class="spec-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <div class="spec-badge">Main</div>
+                    </div>
+                    <h3 class="spec-title">Game</h3>
+                    <div class="spec-value">PUBG MOBILE</div>
+                    <div class="spec-details">
+                        <span class="spec-detail">Global Version</span>
+                        <span class="spec-detail">Smooth or HDR Graphics</span>
+                    </div>
+                    <div class="spec-performance">
+                        <div class="performance-bar">
+                            <div class="performance-fill" style="width: 92%"></div>
+                        </div>
+                        <div class="performance-label">Performance: 92%</div>
+                    </div>
+                </div>
+                
+                <!-- Emulator -->
+                <div class="spec-card pro-design">
+                    <div class="spec-header">
+                        <div class="spec-icon">
+                            <i class="fas fa-desktop"></i>
+                        </div>
+                        <div class="spec-badge">Smooth</div>
+                    </div>
+                    <h3 class="spec-title">Emulator</h3>
+                    <div class="spec-value">GameLoop</div>
+                    <div class="spec-details">
+                        <span class="spec-detail">Optimized Settings</span>
+                        <span class="spec-detail">120 FPS</span>
+                    </div>
+                    <div class="spec-performance">
+                        <div class="performance-bar">
+                            <div class="performance-fill" style="width: 87%"></div>
+                        </div>
+                        <div class="performance-label">Performance: 87%</div>
+                    </div>
+                </div>
+                
+                <!-- Network -->
+                <div class="spec-card pro-design">
+                    <div class="spec-header">
+                        <div class="spec-icon">
+                            <i class="fas fa-wifi"></i>
+                        </div>
+                        <div class="spec-badge">Stable</div>
+                    </div>
+                    <h3 class="spec-title">Network</h3>
+                    <div class="spec-value">Fiber Internet</div>
+                    <div class="spec-details">
+                        <span class="spec-detail">50 Mbps</span>
+                        <span class="spec-detail">26ms Ping</span>
+                    </div>
+                    <div class="spec-performance">
+                        <div class="performance-bar">
+                            <div class="performance-fill" style="width: 93%"></div>
+                        </div>
+                        <div class="performance-label">Performance: 93%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+
+    
+        /* Advanced Liquid Glass CSS Variables */
+        :root {
+            /* Core Colors */
+            --primary: #6C63FF;
+            --primary-dark: #5548E0;
+            --secondary: #00BFA6;
+            --accent: #FF9F1C;
+            --dark: #0F1115;
+            --darker: #0A0B0F;
+            --light: #FFFFFF;
+            --gray: #8E8E93;
+            
+            /* Glass Effects - High Transparency like iOS */
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-bg-light: rgba(255, 255, 255, 0.15);
+            --glass-bg-dark: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --glass-border-light: rgba(255, 255, 255, 0.3);
+            --glass-border-dark: rgba(255, 255, 255, 0.1);
+            
+            /* Backdrop Filters - Strong blur like iOS */
+            --glass-blur-strong: blur(40px) saturate(180%);
+            --glass-blur-medium: blur(30px) saturate(160%);
+            --glass-blur-light: blur(20px) saturate(140%);
+            
+            /* Shadows */
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            --glass-shadow-hover: 0 16px 48px rgba(0, 0, 0, 0.3);
+            --glass-shadow-strong: 0 24px 64px rgba(0, 0, 0, 0.4);
+            
+            /* Gradients */
+            --gradient-primary: linear-gradient(135deg, var(--primary), var(--secondary));
+            --gradient-accent: linear-gradient(135deg, var(--accent), var(--primary));
+            --gradient-glass: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.1) 0%,
+                rgba(255, 255, 255, 0.05) 50%,
+                rgba(255, 255, 255, 0.1) 100%);
+            
+            /* Design Tokens */
+            --radius-small: 12px;
+            --radius-medium: 20px;
+            --radius-large: 28px;
+            --radius-round: 50px;
+            
+            --transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --transition-slow: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --transition-fast: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
