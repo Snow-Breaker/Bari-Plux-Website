@@ -1162,7 +1162,7 @@
     </style>
 </head>
 <body>
-    <!-- Security: Disable right-click -->
+    <!-- Security: Disable right-click and keyboard shortcuts -->
     <script>
         document.addEventListener('contextmenu', function(e) {
             e.preventDefault();
@@ -1170,39 +1170,11 @@
         
         document.addEventListener('keydown', function(e) {
             if (e.key === 'F12' || 
-                (e.ctrlKey && e.key === 'u') || 
-                (e.ctrlKey && e.key === 'U') ||
-                (e.ctrlKey && e.shiftKey && e.key === 'I') ||
-                (e.ctrlKey && e.shiftKey && e.key === 'i') ||
-                (e.ctrlKey && e.key === 's') || 
-                (e.ctrlKey && e.key === 'S') ||
-                (e.ctrlKey && e.key === 'p') ||
-                (e.ctrlKey && e.key === 'P') ||
-                (e.ctrlKey && e.shiftKey && e.key === 'C') ||
-                (e.ctrlKey && e.shiftKey && e.key === 'c')) {
+                (e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S')) || 
+                (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'C' || e.key === 'c'))) {
                 e.preventDefault();
-                return false;
             }
         }, false);
-        
-        // Block developer tools detection
-        (function() {
-            const devTools = function() {};
-            devTools.toString = function() {
-                if (window.innerWidth > 100 && window.innerHeight > 100) {
-                    window.location.href = 'about:blank';
-                }
-            };
-            console.log('%c', devTools);
-            
-            setInterval(function() {
-                const before = window.innerWidth;
-                window.dispatchEvent(new Event('resize'));
-                if (window.innerWidth !== before) {
-                    window.location.href = 'about:blank';
-                }
-            }, 1000);
-        })();
         
         // Disable text selection
         document.ondragstart = function() { return false; };
