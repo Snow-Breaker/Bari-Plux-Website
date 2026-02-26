@@ -200,6 +200,11 @@ ul {
     overflow: hidden;
 }
 
+.glass.user-dropdown,
+.user-dropdown.glass {
+    overflow: visible;
+}
+
 /* ========================
    HEADER STYLES
    ======================== */
