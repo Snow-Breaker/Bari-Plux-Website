@@ -6695,10 +6695,10 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
                 </div>
                 <div class="dropdown-divider"></div>
                 <div class="dropdown-actions">
-                    <button id="viewProfileBtn" class="dropdown-btn">
+                    <button type="button" id="viewProfileBtn" class="dropdown-btn">
                         <i class="fas fa-user-circle"></i> View Profile
                     </button>
-                    <button id="logoutBtn" class="dropdown-btn logout-btn">
+                    <button type="button" id="logoutBtn" class="dropdown-btn logout-btn">
                         <i class="fas fa-sign-out-alt"></i> Logout
                     </button>
                 </div>
@@ -8214,7 +8214,9 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
                 document.getElementById('userName').textContent = userName;
                 document.getElementById('userEmail').textContent = userEmail;
                 
-                document.getElementById('viewProfileBtn').onclick = function() {
+                document.getElementById('viewProfileBtn').onclick = function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
                     window.location.href = 'login.html';
                 };
                 

@@ -1041,11 +1041,11 @@
                     </div>
                     <div class="dropdown-divider"></div>
                     <div class="dropdown-actions">
-                        <button id="viewProfileBtn" class="dropdown-btn">
+                        <button type="button" id="viewProfileBtn" class="dropdown-btn">
                             <i class="fas fa-user-circle"></i>
                             <span>View Profile</span>
                         </button>
-                        <button id="logoutBtn" class="dropdown-btn">
+                        <button type="button" id="logoutBtn" class="dropdown-btn">
                             <i class="fas fa-sign-out-alt"></i>
                             <span>Logout</span>
                         </button>
@@ -1444,7 +1444,8 @@
     <script>
     function updateLoginButton() {
         const loginBtn = document.getElementById('loginBtnHeader');
-        if (!loginBtn) return;
+        const dropdown = document.getElementById('userDropdown');
+        if (!loginBtn || !dropdown) return;
         
         const storedUser = localStorage.getItem('bariplux_user');
         
@@ -1452,13 +1453,26 @@
             try {
                 const user = JSON.parse(storedUser);
                 const userName = user.name || user.email.split('@')[0];
+                const userEmail = user.email || '';
                 const initial = userName.charAt(0).toUpperCase();
                 
-                loginBtn.innerHTML = '<span style="display:flex;align-items:center;gap:6px;"><span style="width:24px;height:24px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--text-dark);">' + initial + '</span><span>' + userName.substring(0, 10) + (userName.length > 10 ? '...' : '') + '</span></span>';
-                loginBtn.title = 'Click to logout';
-                loginBtn.href = 'javascript:void(0)';
+                loginBtn.innerHTML = '<span style="display:flex;align-items:center;gap:8px;"><span style="width:28px;height:28px;background:linear-gradient(135deg,var(--accent),var(--accent-2));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:white;">' + initial + '</span><span style="font-size:0.9rem;">' + userName.substring(0, 12) + (userName.length > 12 ? '...' : '') + '</span></span>';
+                loginBtn.style.cursor = 'pointer';
                 loginBtn.onclick = function(e) {
                     e.preventDefault();
+                    e.stopPropagation();
+                    toggleDropdown();
+                };
+                
+                document.getElementById('userAvatar').innerHTML = initial;
+                document.getElementById('userName').textContent = userName;
+                document.getElementById('userEmail').textContent = userEmail;
+                
+                document.getElementById('viewProfileBtn').onclick = function() {
+                    window.location.href = 'login.html';
+                };
+                
+                document.getElementById('logoutBtn').onclick = function() {
                     if (confirm('Logout from Bari Plux?')) {
                         localStorage.removeItem('bariplux_user');
                         localStorage.removeItem('bariplux_login_token');
@@ -1468,8 +1482,27 @@
             } catch (e) {
                 console.error('Error parsing user:', e);
             }
+        } else {
+            loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i><span>Login</span>';
+            loginBtn.href = 'login.html';
+            loginBtn.onclick = null;
+            dropdown.classList.remove('active');
         }
     }
+    
+    function toggleDropdown() {
+        const dropdown = document.getElementById('userDropdown');
+        dropdown.classList.toggle('active');
+    }
+    
+    document.addEventListener('click', function(e) {
+        const dropdown = document.getElementById('userDropdown');
+        const container = document.querySelector('.user-menu-container');
+        
+        if (container && !container.contains(e.target)) {
+            dropdown.classList.remove('active');
+        }
+    });
     
     updateLoginButton();
     setTimeout(updateLoginButton, 500);
