@@ -10009,7 +10009,7 @@ document.addEventListener('touchend', function(event) {
             }
         } else {
             loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i><span>Login</span>';
-            loginBtn.href = 'login.html';
+            loginBtn.onclick = function() { window.location.href = 'login.html'; };
             loginBtn.onclick = null;
             dropdown.classList.remove('active');
         }
