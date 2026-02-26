@@ -1905,9 +1905,9 @@
         }
 
         .user-dropdown {
-            position: absolute;
-            top: calc(100% + 8px);
-            right: 0;
+            position: fixed;
+            top: auto;
+            right: auto;
             min-width: 280px;
             border-radius: var(--radius-lg);
             padding: 16px;
@@ -1920,7 +1920,7 @@
             visibility: hidden;
             transform: translateY(-10px) scale(0.95);
             transition: all var(--transition);
-            z-index: 1000;
+            z-index: 10001;
         }
 
         .user-dropdown.active {
@@ -3254,6 +3254,14 @@ setInterval(checkForPageUpdate, 45000);
     
     function toggleDropdown() {
         const dropdown = document.getElementById('userDropdown');
+        const loginBtn = document.getElementById('loginBtnHeader');
+        
+        if (loginBtn && dropdown) {
+            const rect = loginBtn.getBoundingClientRect();
+            dropdown.style.top = (rect.bottom + 8) + 'px';
+            dropdown.style.right = (window.innerWidth - rect.right) + 'px';
+        }
+        
         dropdown.classList.toggle('active');
     }
     

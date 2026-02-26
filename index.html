@@ -6440,9 +6440,9 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
         }
 
         .user-dropdown {
-            position: absolute;
-            top: calc(100% + 8px);
-            right: 0;
+            position: fixed;
+            top: auto;
+            right: auto;
             min-width: 280px;
             border-radius: var(--radius-lg);
             padding: 16px;
@@ -6455,7 +6455,7 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
             visibility: hidden;
             transform: translateY(-10px) scale(0.95);
             transition: all var(--transition);
-            z-index: 1000;
+            z-index: 10001;
         }
 
         .user-dropdown.active {

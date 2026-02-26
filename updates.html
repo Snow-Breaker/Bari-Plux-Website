@@ -90,9 +90,9 @@
         /* User Menu Dropdown */
         .user-menu-container { position: relative; }
         .user-dropdown {
-            position: absolute;
-            top: calc(100% + 8px);
-            right: 0;
+            position: fixed;
+            top: auto;
+            right: auto;
             min-width: 250px;
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
@@ -102,7 +102,7 @@
             visibility: hidden;
             transform: scale(0.95) translateY(-10px);
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            z-index: 1000;
+            z-index: 10001;
             backdrop-filter: blur(10px);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
         }
