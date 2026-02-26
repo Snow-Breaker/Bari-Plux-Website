@@ -12,7 +12,6 @@
 
     <!-- در <head> قرار دهید -->
 <script>
-// انتقال اجباری به نسخه موبایل
 if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) &&
     window.innerWidth <= 768 &&
     !window.location.href.includes('mobile')) {
@@ -32,7 +31,7 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
                style-src 'self' https://fonts.googleapis.com https://cdnjs.cloudflare.com 'unsafe-inline'; 
                img-src 'self' https: data: blob:; 
                font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; 
-               connect-src 'self' https:; 
+               connect-src 'self' https: https://api.groq.com; 
                frame-src 'self' https://www.youtube.com https://youtube.com https://*.youtube.com;
                object-src 'none';
                base-uri 'self';">
@@ -69,17 +68,22 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
 </script>
 
 <!-- در <head> -->
+<!-- Security: Disable right-click and keyboard shortcuts -->
 <script>
-// کد امنیتی ساده
-document.addEventListener('contextmenu', e => e.preventDefault());
-document.addEventListener('keydown', e => {
-    if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) e.preventDefault();
-});
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('keydown', e => {
+        if (e.key === 'F12' || (e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S')) || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'C' || e.key === 'c'))) {
+            e.preventDefault();
+        }
+    });
+    document.ondragstart = function() { return false; };
 </script>
 
 <!-- در انتهای <body> -->
-<script src="js/main.min.js"></script>
-<script src="js/features.min.js"></script>
+<!-- Scripts moved inline -->
+    <!-- External scripts (files not found - functionality included inline) -->
+    <!-- <script src="js/main.min.js"></script> -->
+    <!-- <script src="js/features.min.js"></script> -->
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -112,7 +116,8 @@ document.addEventListener('keydown', e => {
 
     <!-- Fonts and Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Montserrat:wght@700;800&family=Oxanium:wght@400;600;700&family=Rajdhani:wght@500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/all-styles.css">
 
     <!-- Preload critical resources -->
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -127,9 +132,11 @@ document.addEventListener('keydown', e => {
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js" defer></script>
     
     <!-- Particles.js -->
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js" defer></script>
 
+    <!-- Performance: Critical CSS inline -->
     <style>
+        /* Critical above-the-fold styles */
         :root {
             --bg-1: #0f1115;
             --bg-2: #15171b;
@@ -150,6 +157,31 @@ document.addEventListener('keydown', e => {
             --danger: #F44336;
             --shadow: 0 8px 30px rgba(0,0,0,0.35);
             --shadow-hover: 0 24px 50px rgba(0,0,0,0.45);
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 100px;
+        }
+
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            html { scroll-behavior: auto; }
+        }
+
+        /* Base responsive container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
         }
 
         [data-theme="light"]{
@@ -263,9 +295,10 @@ document.addEventListener('keydown', e => {
             margin: 0;
         }
 
-        /* Scrollbar */
+        /* Scrollbar - Modern Thin Style */
         ::-webkit-scrollbar {
-            width: 12px;
+            width: 8px;
+            height: 8px;
         }
 
         ::-webkit-scrollbar-track {
@@ -279,6 +312,22 @@ document.addEventListener('keydown', e => {
             border: 2px solid var(--bg-2);
         }
 
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(to bottom, var(--accent-2), var(--accent));
+        }
+
+        /* Selection */
+        ::selection {
+            background: var(--accent);
+            color: white;
+        }
+
+        /* Focus styles for accessibility */
+        :focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
+
         /* Container */
         .container {
             max-width: 1400px;
@@ -287,6 +336,54 @@ document.addEventListener('keydown', e => {
             position: relative;
             z-index: 1;
         }
+
+        /* Scroll Progress Bar */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            z-index: 10001;
+            transition: width 0.1s ease-out;
+            box-shadow: 0 0 10px var(--accent);
+        }
+
+        /* Intersection Observer Animation Classes */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .animate-on-scroll.delay-1 { transition-delay: 0.1s; }
+        .animate-on-scroll.delay-2 { transition-delay: 0.2s; }
+        .animate-on-scroll.delay-3 { transition-delay: 0.3s; }
+        .animate-on-scroll.delay-4 { transition-delay: 0.4s; }
+
+        /* Stagger animation */
+        .stagger-children > * {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: staggerFadeIn 0.5s ease forwards;
+        }
+
+        @keyframes staggerFadeIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .stagger-children > *:nth-child(1) { animation-delay: 0.05s; }
+        .stagger-children > *:nth-child(2) { animation-delay: 0.1s; }
+        .stagger-children > *:nth-child(3) { animation-delay: 0.15s; }
+        .stagger-children > *:nth-child(4) { animation-delay: 0.2s; }
+        .stagger-children > *:nth-child(5) { animation-delay: 0.25s; }
+        .stagger-children > *:nth-child(6) { animation-delay: 0.3s; }
 
         /* Liquid glass base utility */
         .glass {
@@ -362,18 +459,21 @@ document.addEventListener('keydown', e => {
             width: 100%;
         }
 
-        /* AI Chat Widget Styles - Integrated */
+        /* AI Chat Widget Styles - Modern Pro */
         .ai-chat-widget.professional {
             position: fixed;
-            bottom: 100px;
-            right: 30px;
-            width: 420px;
-            height: 700px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow);
+            bottom: 90px;
+            right: 20px;
+            width: 360px;
+            max-height: 65vh;
+            background: linear-gradient(145deg, rgba(15, 17, 21, 0.95), rgba(21, 23, 27, 0.98));
+            backdrop-filter: blur(25px) saturate(200%);
+            -webkit-backdrop-filter: blur(25px) saturate(200%);
+            border-radius: 20px;
+            box-shadow: 
+                0 20px 40px -10px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(108, 99, 255, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
             display: flex;
             flex-direction: column;
             z-index: 10000;
@@ -381,8 +481,8 @@ document.addEventListener('keydown', e => {
             transform: translateY(20px) scale(0.95);
             opacity: 0;
             visibility: hidden;
-            transition: var(--transition);
-            border: 1px solid var(--glass-border);
+            transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+            border: 1px solid rgba(108, 99, 255, 0.15);
         }
 
         .ai-chat-widget.professional.active {
@@ -391,15 +491,32 @@ document.addEventListener('keydown', e => {
             visibility: visible;
         }
 
-        /* Chat Header */
+        /* Chat Header - Modern Glass */
         .chat-header {
-            padding: 20px;
-            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            padding: 14px 18px;
+            background: linear-gradient(135deg, #6C63FF 0%, #8B5CF6 50%, #00BFA6 100%);
             color: white;
             display: flex;
             justify-content: space-between;
             align-items: center;
             position: relative;
+            overflow: hidden;
+        }
+
+        .chat-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+            animation: headerShine 3s ease-in-out infinite;
+        }
+
+        @keyframes headerShine {
+            0%, 100% { transform: translate(-10%, -10%); }
+            50% { transform: translate(10%, 10%); }
         }
 
         .chat-header::after {
@@ -409,14 +526,16 @@ document.addEventListener('keydown', e => {
             left: 0;
             width: 100%;
             height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
         }
 
         .chat-title {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
             flex-grow: 1;
+            position: relative;
+            z-index: 1;
         }
 
         .chat-avatar {
@@ -425,50 +544,62 @@ document.addEventListener('keydown', e => {
         }
 
         .chat-avatar img {
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             object-fit: cover;
-            border: 3px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .chat-avatar img:hover {
+            transform: scale(1.1) rotate(5deg);
         }
 
         .online-status {
             position: absolute;
-            bottom: 2px;
-            right: 2px;
+            bottom: -2px;
+            right: -2px;
             width: 12px;
             height: 12px;
-            background: #4CAF50;
+            background: linear-gradient(135deg, #4CAF50, #00E676);
             border-radius: 50%;
             border: 2px solid white;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 2px 6px rgba(76, 175, 80, 0.5);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 2px 6px rgba(76, 175, 80, 0.5); }
+            50% { box-shadow: 0 2px 12px rgba(76, 175, 80, 0.8); }
         }
 
         .chat-info h3 {
             margin: 0;
-            font-size: 1.1rem;
+            font-size: 0.95rem;
             font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
         .chat-info p {
             margin: 2px 0 0 0;
             opacity: 0.9;
-            font-size: 0.8rem;
+            font-size: 0.7rem;
         }
 
         .chat-status {
             display: flex;
             align-items: center;
-            gap: 6px;
-            margin-top: 4px;
-            font-size: 0.75rem;
-            opacity: 0.8;
+            gap: 5px;
+            margin-top: 2px;
+            font-size: 0.65rem;
+            opacity: 0.85;
         }
 
         .status-dot {
-            width: 6px;
-            height: 6px;
+            width: 5px;
+            height: 5px;
             background: #4CAF50;
             border-radius: 50%;
             animation: pulse 2s infinite;
@@ -477,48 +608,76 @@ document.addEventListener('keydown', e => {
         .chat-controls {
             display: flex;
             gap: 5px;
+            position: relative;
+            z-index: 1;
         }
 
         .chat-btn {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.15);
             border: none;
             color: white;
-            width: 32px;
-            height: 32px;
+            width: 28px;
+            height: 28px;
             border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             transition: all 0.2s ease;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
+            backdrop-filter: blur(5px);
         }
 
         .chat-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: scale(1.1);
+            background: rgba(255, 255, 255, 0.25);
+            transform: scale(1.1) rotate(5deg);
         }
 
         .chat-btn.close:hover {
-            background: #ff4757;
+            background: linear-gradient(135deg, #ff4757, #ff6b81);
+            transform: scale(1.1);
         }
 
-        /* Chat Messages */
+        /* Chat Messages - Modern */
         .chat-messages {
             flex: 1;
             overflow-y: auto;
-            padding: 20px;
+            padding: 14px;
             display: flex;
             flex-direction: column;
-            gap: 20px;
-            background: var(--bg-1);
+            gap: 12px;
+            background: linear-gradient(180deg, #0f1115 0%, #15171b 100%);
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #6C63FF, #00BFA6);
+            border-radius: 10px;
         }
 
         .message {
             display: flex;
-            gap: 12px;
-            max-width: 100%;
-            animation: messageSlide 0.3s ease;
+            gap: 10px;
+            max-width: 85%;
+            animation: messageSlide 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+        }
+
+        @keyframes messageSlide {
+            from {
+                opacity: 0;
+                transform: translateY(10px) scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
 
         .message.ai-message {
@@ -535,37 +694,330 @@ document.addEventListener('keydown', e => {
         }
 
         .message-avatar img {
-            width: 36px;
-            height: 36px;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
             object-fit: cover;
+            border: 2px solid rgba(108, 99, 255, 0.3);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
 
-        .message-content {
-            max-width: 280px;
-            background: var(--glass-bg);
-            border-radius: 18px;
-            padding: 15px;
+        .message.user-message .message-avatar img {
+            border-color: rgba(0, 191, 166, 0.3);
+        }
+
+        /* Message Bubble - Modern */
+        .message-bubble {
+            padding: 10px 14px;
+            border-radius: 16px;
+            font-size: 0.85rem;
+            line-height: 1.5;
             position: relative;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            border: 1px solid var(--glass-border);
+            word-wrap: break-word;
         }
 
-        .ai-message .message-content {
-            border-bottom-left-radius: 5px;
-            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        .message.ai-message .message-bubble {
+            background: linear-gradient(135deg, rgba(108, 99, 255, 0.15), rgba(139, 92, 246, 0.1));
+            border: 1px solid rgba(108, 99, 255, 0.2);
+            border-top-left-radius: 4px;
+            color: #e8eef8;
+        }
+
+        .message.user-message .message-bubble {
+            background: linear-gradient(135deg, #6C63FF, #8B5CF6);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-top-right-radius: 4px;
             color: white;
         }
 
+        .message-bubble p {
+            margin: 0;
+        }
+
+        .message-bubble strong {
+            color: #00BFA6;
+        }
+
+        .message.user-message .message-bubble strong {
+            color: #fff;
+        }
+
+        /* Typing Indicator - Modern */
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: 12px 16px;
+            background: rgba(108, 99, 255, 0.1);
+            border-radius: 16px;
+            border-top-left-radius: 4px;
+            width: fit-content;
+        }
+
+        .typing-indicator span {
+            width: 8px;
+            height: 8px;
+            background: linear-gradient(135deg, #6C63FF, #8B5CF6);
+            border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 80%, 100% {
+                transform: scale(0.6);
+                opacity: 0.5;
+            }
+            40% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Quick Replies - Modern */
+        .quick-replies {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        .quick-reply-btn {
+            padding: 6px 12px;
+            background: linear-gradient(135deg, rgba(108, 99, 255, 0.2), rgba(0, 191, 166, 0.1));
+            border: 1px solid rgba(108, 99, 255, 0.3);
+            border-radius: 16px;
+            color: #e8eef8;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .quick-reply-btn:hover {
+            background: linear-gradient(135deg, #6C63FF, #00BFA6);
+            border-color: transparent;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(108, 99, 255, 0.3);
+        }
+
+        /* Chat Input Area - Modern */
+        .chat-input-area {
+            padding: 12px 14px;
+            background: rgba(21, 23, 27, 0.8);
+            border-top: 1px solid rgba(108, 99, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .chat-input-wrapper {
+            display: flex;
+            gap: 8px;
+            align-items: flex-end;
+            background: rgba(15, 17, 21, 0.6);
+            border-radius: 14px;
+            padding: 8px 12px;
+            border: 1px solid rgba(108, 99, 255, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .chat-input-wrapper:focus-within {
+            border-color: rgba(108, 99, 255, 0.4);
+            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
+        }
+
+        #chat-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #e8eef8;
+            font-size: 0.85rem;
+            resize: none;
+            max-height: 80px;
+            min-height: 20px;
+            line-height: 1.4;
+            font-family: inherit;
+        }
+
+        #chat-input::placeholder {
+            color: rgba(232, 238, 248, 0.4);
+        }
+
+        #chat-input:focus {
+            outline: none;
+        }
+
+        #chat-send {
+            background: linear-gradient(135deg, #6C63FF, #8B5CF6);
+            border: none;
+            color: white;
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        #chat-send:hover {
+            background: linear-gradient(135deg, #8B5CF6, #00BFA6);
+            transform: scale(1.05);
+        }
+
+        #chat-send:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .char-count {
+            font-size: 0.65rem;
+            color: rgba(232, 238, 248, 0.4);
+            text-align: right;
+            padding: 0 2px;
+        }
+
+        /* Minimized Chat Button - Floating */
+        .ai-chat-minimized {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #6C63FF, #8B5CF6, #00BFA6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 9999;
+            box-shadow: 
+                0 8px 25px rgba(108, 99, 255, 0.4),
+                0 0 0 3px rgba(108, 99, 255, 0.1);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .ai-chat-minimized:hover {
+            transform: scale(1.1);
+            box-shadow: 
+                0 12px 30px rgba(108, 99, 255, 0.5),
+                0 0 0 5px rgba(108, 99, 255, 0.15);
+        }
+
+        .ai-chat-minimized img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .ai-chat-minimized .minimized-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, #00BFA6, #00E676);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            font-weight: bold;
+            color: white;
+            border: 2px solid #0f1115;
+            animation: pulse 2s infinite;
+        }
+
+        /* Old Toggle - Disabled for new design */
+        .chat-toggle {
+            display: none !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .ai-chat-widget.professional {
+                width: calc(100% - 20px);
+                right: 10px;
+                bottom: 80px;
+                max-height: 60vh;
+                border-radius: 16px;
+            }
+            
+            .ai-chat-minimized {
+                width: calc(100% - 20px);
+                right: 10px;
+                bottom: 80px;
+            }
+            
+            .message {
+                max-width: 88%;
+            }
+
+            .chat-header {
+                padding: 12px 14px;
+            }
+
+            .chat-avatar img {
+                width: 36px;
+                height: 36px;
+            }
+
+            .chat-info h3 {
+                font-size: 0.9rem;
+            }
+
+            .chat-btn {
+                width: 26px;
+                height: 26px;
+            }
+        }
+
+        .message-content {
+            max-width: 100%;
+            background: var(--glass-bg);
+            border-radius: 16px;
+            padding: 12px 14px;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(108, 99, 255, 0.15);
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            max-width: 85%;
+        }
+
+        .ai-message .message-content {
+            border-bottom-left-radius: 4px;
+            background: linear-gradient(135deg, rgba(108, 99, 255, 0.2), rgba(139, 92, 246, 0.15));
+            color: #e8eef8;
+        }
+
         .user-message .message-content {
-            border-bottom-right-radius: 5px;
-            background: var(--glass-accent);
-            color: var(--text);
+            border-bottom-right-radius: 4px;
+            background: linear-gradient(135deg, #6C63FF, #8B5CF6);
+            color: white;
         }
 
         .message.welcome .message-content {
             max-width: 100%;
-            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            background: linear-gradient(135deg, #6C63FF, #00BFA6);
             color: white;
         }
 
@@ -573,7 +1025,7 @@ document.addEventListener('keydown', e => {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .sender-name {
@@ -601,113 +1053,153 @@ document.addEventListener('keydown', e => {
 
         .message-text li {
             margin-bottom: 5px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
 
         .message-reactions {
             display: flex;
-            gap: 8px;
-            margin-top: 12px;
+            gap: 6px;
+            margin-top: 8px;
             flex-wrap: wrap;
         }
 
         .reaction {
             background: rgba(255, 255, 255, 0.1);
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 0.65rem;
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        /* Chat Bot Collapsible Sections */
+        /* Chat Bot Collapsible Sections - Fixed */
 .collapsible-section {
-    border-top: 1px solid var(--glass-border);
-    background: var(--bg-2);
+    border-top: 1px solid rgba(108, 99, 255, 0.1);
+    background: rgba(15, 17, 21, 0.95);
 }
 
 .collapsible-header {
-    padding: 12px 20px;
+    padding: 12px 16px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     cursor: pointer;
-    transition: var(--transition);
+    transition: all 0.3s ease;
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
+    color: #e8eef8;
+    background: linear-gradient(90deg, rgba(108, 99, 255, 0.15), transparent);
 }
 
 .collapsible-header:hover {
-    background: var(--glass-bg);
+    background: linear-gradient(90deg, rgba(108, 99, 255, 0.25), rgba(0, 191, 166, 0.1));
 }
 
 .collapsible-header i {
-    transition: var(--transition);
-    font-size: 0.8rem;
+    transition: all 0.3s ease;
+    font-size: 0.7rem;
+    color: #6C63FF;
 }
 
 .collapsible-section.active .collapsible-header i {
     transform: rotate(180deg);
+    color: #00BFA6;
 }
 
 .collapsible-content {
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.3s ease;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .collapsible-section.active .collapsible-content {
-    max-height: 500px;
+    max-height: 300px;
+    overflow-y: auto;
 }
 
-/* Quick Actions */
+/* Quick Actions - Compact Grid */
 .quick-actions {
-    padding: 15px 20px;
-    background: var(--bg-2);
+    padding: 12px;
+    background: rgba(15, 17, 21, 0.6);
+}
+
+.quick-actions .actions-header {
+    font-size: 0.7rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    opacity: 0.7;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #00BFA6;
+}
+
+.quick-actions .actions-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+}
+
+.quick-actions .action-btn {
+    padding: 8px 6px;
+    font-size: 0.65rem;
+    border-radius: 8px;
 }
 
 .actions-header {
-    font-size: 0.8rem;
-    font-weight: 600;
-    margin-bottom: 12px;
-    opacity: 0.8;
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-bottom: 14px;
+    opacity: 0.7;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #00BFA6;
 }
 
 .actions-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
 }
 
 .action-btn {
     background: var(--glass-bg);
     border: 1px solid var(--glass-border);
-    border-radius: 12px;
-    padding: 10px 8px;
+    border-radius: 14px;
+    padding: 14px 10px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.1);
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 6px;
-    color: var(--text);
-    font-size: 0.75rem;
+    gap: 8px;
+    color: #e8eef8;
+    font-size: 0.72rem;
+    background: linear-gradient(135deg, rgba(108, 99, 255, 0.1), rgba(0, 191, 166, 0.05));
+    border: 1px solid rgba(108, 99, 255, 0.15);
 }
 
 .action-btn:hover {
-    background: var(--accent);
+    background: linear-gradient(135deg, #6C63FF, #00BFA6);
     color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(108, 99, 255, 0.3);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 20px rgba(108, 99, 255, 0.35);
+    border-color: transparent;
 }
 
 .action-btn i {
-    font-size: 1rem;
+    font-size: 1.1rem;
+    color: #6C63FF;
+    transition: all 0.3s ease;
 }
 
-/* Suggested Questions */
+.action-btn:hover i {
+    color: white;
+    transform: scale(1.2);
+}
+
+/* Suggested Questions - Modern */
 .suggested-questions {
-    padding: 15px 20px;
-    background: var(--bg-2);
+    padding: 16px 20px;
+    background: rgba(15, 17, 21, 0.6);
 }
 
 .suggestions-header {
@@ -971,66 +1463,88 @@ document.addEventListener('keydown', e => {
             animation: bounce 2s infinite;
         }
 
-        /* Professional Chat Toggle */
-        .chat-toggle.professional {
+        /* AI Assistant Button - New Modern Design */
+        .ai-assistant-btn {
             position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: linear-gradient(135deg, var(--accent), var(--accent-2));
-            color: white;
-            border: none;
-            border-radius: 25px;
-            padding: 15px 20px;
-            cursor: pointer;
+            bottom: 24px;
+            right: 24px;
             display: flex;
             align-items: center;
-            gap: 12px;
-            box-shadow: var(--shadow);
+            gap: 10px;
+            padding: 10px 18px 10px 12px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border: 1px solid rgba(0, 191, 166, 0.3);
+            border-radius: 50px;
+            color: #00BFA6;
+            cursor: pointer;
             z-index: 9998;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            font-weight: 600;
-            font-size: 0.9rem;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 500;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), inset 0 0 20px rgba(0, 191, 166, 0.05);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
         }
 
-        .chat-toggle.professional:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: var(--shadow-hover);
+        .ai-assistant-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 191, 166, 0.15), transparent);
+            transition: left 0.5s;
         }
 
-        .toggle-icon {
-            position: relative;
-            width: 24px;
-            height: 24px;
+        .ai-assistant-btn:hover::before {
+            left: 100%;
+        }
+
+        .ai-assistant-btn:hover {
+            transform: translateY(-3px);
+            border-color: rgba(0, 191, 166, 0.6);
+            box-shadow: 0 8px 30px rgba(0, 191, 166, 0.25), 0 0 40px rgba(0, 191, 166, 0.1);
+        }
+
+        .ai-btn-icon {
+            width: 38px;
+            height: 38px;
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-
-        .pulse-ring {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: 2px solid rgba(255, 255, 255, 0.6);
+            background: linear-gradient(135deg, #00BFA6 0%, #00D4AA 100%);
             border-radius: 50%;
-            animation: pulse-ring 2s infinite;
+            color: #1a1a2e;
+            font-size: 1rem;
+            box-shadow: 0 2px 10px rgba(0, 191, 166, 0.4);
+            transition: all 0.3s;
         }
 
-        .toggle-text {
-            white-space: nowrap;
+        .ai-assistant-btn:hover .ai-btn-icon {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 4px 15px rgba(0, 191, 166, 0.5);
         }
 
-        .notification-dot {
+        .ai-btn-text {
+            position: relative;
+            letter-spacing: 0.3px;
+        }
+
+        .ai-btn-glow {
             position: absolute;
-            top: -5px;
-            right: -5px;
-            width: 12px;
-            height: 12px;
-            background: #ff4757;
-            border-radius: 50%;
-            border: 2px solid white;
-            animation: pulse 2s infinite;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 191, 166, 0.15) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .ai-assistant-btn:hover .ai-btn-glow {
+            opacity: 1;
         }
 
         /* Animations */
@@ -1204,11 +1718,17 @@ document.addEventListener('keydown', e => {
                 border-radius: 0;
             }
             
-            .chat-toggle.professional {
+            .ai-assistant-btn {
                 bottom: 20px;
                 right: 20px;
-                padding: 12px 16px;
-                font-size: 0.8rem;
+                padding: 8px 16px 8px 10px;
+                font-size: 0.85rem;
+            }
+            
+            .ai-btn-icon {
+                width: 34px;
+                height: 34px;
+                font-size: 0.9rem;
             }
             
             .ai-chat-minimized {
@@ -1944,7 +2464,7 @@ document.addEventListener('keydown', e => {
     }
 }
 
-        /* Collapsible Search Box */
+        /* Collapsible Search Box - Enhanced */
 .search-container {
     position: relative;
     display: flex;
@@ -1954,26 +2474,46 @@ document.addEventListener('keydown', e => {
 .collapsible-search {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 8px;
-    border-radius: 999px;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: 50px;
     border: 1px solid var(--glass-border);
     background: var(--glass-bg);
     backdrop-filter: blur(10px);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     width: 44px;
     height: 44px;
     cursor: pointer;
-    overflow: hidden;
+    overflow: visible;
+    position: relative;
+    z-index: 100;
+}
+
+.collapsible-search:hover {
+    border-color: var(--accent);
+    width: 200px;
+    border-radius: 50px;
 }
 
 .collapsible-search.active {
-    width: 280px;
-    padding: 8px 16px;
+    width: 240px;
+    padding: 12px 20px;
     cursor: default;
+    border-color: var(--accent);
+    box-shadow: 0 0 25px rgba(108, 99, 255, 0.25);
+    z-index: 10001;
+    border-radius: 50px;
 }
 
-.collapsible-search.active .search-input {
+.collapsible-search .search-input {
+    opacity: 0;
+    width: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+.collapsible-search.active .search-input,
+.collapsible-search:hover .search-input {
     opacity: 1;
     width: 100%;
     pointer-events: all;
@@ -1984,11 +2524,11 @@ document.addEventListener('keydown', e => {
     border: none;
     outline: none;
     color: var(--text);
-    font-size: 0.9rem;
-    width: 0;
-    opacity: 0;
+    font-size: 0.95rem;
+    width: 100%;
+    opacity: 1;
     transition: all 0.3s ease;
-    pointer-events: none;
+    font-family: 'Poppins', sans-serif;
 }
 
 .search-input::placeholder {
@@ -1996,11 +2536,12 @@ document.addEventListener('keydown', e => {
 }
 
 .search-icon {
-    color: var(--muted);
+    color: var(--accent);
     transition: var(--transition);
     flex-shrink: 0;
     width: 20px;
     text-align: center;
+    font-size: 1.1rem;
 }
 
 .collapsible-search:hover .search-icon,
@@ -2009,8 +2550,112 @@ document.addEventListener('keydown', e => {
 }
 
 .collapsible-search:hover {
-    border-color: var(--accent);
-    transform: scale(1.05);
+    border-color: rgba(108, 99, 255, 0.5);
+    background: var(--glass-strong);
+}
+
+/* Search Results Dropdown - Fixed Position */
+.search-results-dropdown {
+    position: fixed;
+    top: 80px;
+    right: 30px;
+    width: 340px;
+    max-height: 380px;
+    overflow-y: auto;
+    background: var(--bg-2);
+    border: 1px solid var(--glass-border);
+    border-radius: 14px;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5);
+    z-index: 10001;
+    display: none;
+    padding: 8px;
+    animation: searchDropIn 0.25s ease;
+}
+
+.search-result-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 4px;
+}
+
+.search-result-item:hover {
+    background: var(--glass-accent);
+}
+
+.search-result-icon {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--glass-bg);
+    border-radius: 8px;
+    color: var(--accent);
+    font-size: 0.9rem;
+}
+
+.search-result-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.search-result-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 2px;
+}
+
+.search-result-type {
+    font-size: 0.75rem;
+    color: var(--muted);
+}
+
+@keyframes searchDropIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.search-results-dropdown::-webkit-scrollbar {
+    width: 6px;
+}
+
+.search-results-dropdown::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.search-results-dropdown::-webkit-scrollbar-thumb {
+    background: var(--glass-border);
+    border-radius: 3px;
+}
+
+.search-results-dropdown::-webkit-scrollbar-thumb:hover {
+    background: var(--accent);
+}
+
+.collapsible-search.active .search-results-dropdown {
+    display: block;
+}
+
+/* Mobile search dropdown */
+@media (max-width: 768px) {
+    .search-results-dropdown {
+        right: 10px !important;
+        left: 10px !important;
+        width: auto !important;
+        top: 70px !important;
+    }
 }
 
 /* Search Highlight */
@@ -2042,43 +2687,98 @@ document.addEventListener('keydown', e => {
     transform: translateY(-2px);
 }
 
-        /* Theme Toggle */
+        /* Theme Toggle - Simple Circle */
         .theme-toggle {
-            width: 60px;
-            height: 30px;
-            border-radius: 999px;
-            padding: 4px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
-            background: rgba(255, 255, 255, 0.05);
+            justify-content: center;
+            background: var(--glass-bg);
             border: 1px solid var(--glass-border);
             cursor: pointer;
             position: relative;
-            backdrop-filter: blur(20px);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            font-size: 18px;
         }
 
-        .theme-toggle .knob {
-            width: 22px;
-            height: 22px;
-            border-radius: 999px;
-            background: var(--accent);
-            position: absolute;
-            left: 4px;
-            transition: transform var(--transition);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        .theme-toggle:hover {
+            border-color: var(--accent);
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(108, 99, 255, 0.3);
         }
 
-        [data-theme="light"] .theme-toggle .knob {
-            transform: translateX(30px);
-            background: var(--accent-2);
+        .theme-toggle .moon-icon {
+            display: block;
+            color: #FFD700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
         }
 
-        .theme-toggle-icons {
+        .theme-toggle .sun-icon {
+            display: none;
+            color: #FF6B6B;
+            text-shadow: 0 0 10px rgba(255, 107, 107, 0.8);
+        }
+
+        [data-theme="light"] .theme-toggle .moon-icon {
+            display: none;
+        }
+
+        [data-theme="light"] .theme-toggle .sun-icon {
+            display: block;
+        }
+
+        /* Login Button Header */
+        .login-btn-header {
             display: flex;
-            width: 100%;
-            justify-content: space-between;
-            padding: 0 6px;
-            font-size: 12px;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text);
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .login-btn-header:hover {
+            background: var(--glass-strong);
+            transform: translateY(-2px);
+            color: var(--text);
+        }
+
+        .login-btn-header i {
+            font-size: 0.9rem;
+        }
+
+        .login-btn-header.logged-in {
+            background: linear-gradient(135deg, #10B981, #059669);
+            border: none;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+            cursor: pointer;
+            color: white;
+        }
+
+        .login-btn-header.logged-in:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(16, 185, 129, 0.5);
+            color: white;
+        }
+
+        /* Mobile login button */
+        @media (max-width: 768px) {
+            .login-btn-header span {
+                display: none;
+            }
+            
+            .login-btn-header {
+                padding: 10px 14px;
+            }
         }
 
         /* Contact Section - Glass Morphism */
@@ -3807,9 +4507,20 @@ document.addEventListener('keydown', e => {
 }
 
 .download-icon {
-    margin-bottom: 20px;
-    transition: var(--transition);
-}
+            font-size: 3rem;
+            color: var(--accent);
+            margin-bottom: 20px;
+            transition: var(--transition);
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .download-icon img {
+            background: transparent;
+            border: none;
+        }
 
 .download-img {
     width: 80px;
@@ -5158,7 +5869,7 @@ document.addEventListener('keydown', e => {
 
 .about-hero {
     display: grid;
-    grid-template-columns: 280px 1fr;
+    grid-template-columns: 1fr 2fr;
     gap: 40px;
     align-items: start;
 }
@@ -5523,7 +6234,7 @@ document.addEventListener('keydown', e => {
 /* Responsive About */
 @media (max-width: 1024px) {
     .about-hero {
-        grid-template-columns: 240px 1fr;
+        grid-template-columns: 1fr 1.5fr;
         gap: 30px;
     }
 }
@@ -5759,6 +6470,22 @@ document.addEventListener('keydown', e => {
                 margin: 6px auto;
                 width: calc(100% - 12px);
             }
+
+            .collapsible-search {
+                width: 160px;
+            }
+
+            .collapsible-search.active {
+                width: calc(100vw - 100px);
+                max-width: 320px;
+            }
+
+            .search-results-dropdown {
+                min-width: unset;
+                width: calc(100vw - 100px);
+                max-width: 320px;
+                left: 0;
+            }
         }
 
         @media (max-width: 576px) {
@@ -5793,6 +6520,9 @@ document.addEventListener('keydown', e => {
     </style>
 </head>
 <body>
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+
     <!-- Particles.js Container -->
     <div id="particles-js"></div>
 
@@ -5829,19 +6559,24 @@ document.addEventListener('keydown', e => {
         <div class="search-container">
             <div class="collapsible-search glass" id="collapsible-search">
                 <i class="fas fa-search search-icon"></i>
-                <input type="text" class="search-input" placeholder="Search..." id="header-search-input">
+                <input type="search" class="search-input" placeholder="Search games, tools, guides..." id="header-search-input" autocomplete="off" role="searchbox">
             </div>
         </div>
         
         <div id="theme-toggle" class="theme-toggle glass" title="Toggle Theme">
-            <div class="theme-toggle-icons">
-                <div style="font-size:12px;color:var(--muted)">🌙</div>
-                <div style="font-size:12px;color:var(--muted)">☀️</div>
-            </div>
-            <div class="knob" id="theme-knob"></div>
+            <span class="moon-icon">🌙</span>
+            <span class="sun-icon">☀️</span>
         </div>
+
+        <a href="login.html" class="login-btn-header" id="loginBtnHeader" title="Login">
+            <i class="fas fa-sign-in-alt"></i>
+            <span>Login</span>
+        </a>
     </div>
 </header>
+
+<!-- Search Results Dropdown - Outside Header -->
+<div class="search-results-dropdown" id="search-results-dropdown"></div>
 
     
     <!-- Hero Section - Balanced Glass Design -->
@@ -5852,12 +6587,9 @@ document.addEventListener('keydown', e => {
             <div class="hero-card glass">
                 <!-- Profile & Info -->
                 <div class="hero-profile">
-                    <div class="profile-container">
-                        <img src="https://i.postimg.cc/vTx3kpR8/photo-2025-10-30-00-14-32.jpg" loading="lazy"
+                    <img src="https://i.postimg.cc/vTx3kpR8/photo-2025-10-30-00-14-32.jpg" loading="lazy"
                              alt="Bari Plux" class="profile-img">
-                    </div>
-                    
-                    <div class="hero-info">
+                             <div class="hero-info">
                         <h1 class="hero-title">
                             <span class="name-gradient">Bari Plux</span>
                             <span class="pro-badge">BETA</span>
@@ -5873,7 +6605,7 @@ document.addEventListener('keydown', e => {
                             <i class="fas fa-tachometer-alt"></i>
                         </div>
                         <div class="spec-content">
-                            <h4>Performance Optimization</h4>
+                            <h5>Performance Optimization</h5>
                         </div>
                     </div>
                     
@@ -5882,7 +6614,7 @@ document.addEventListener('keydown', e => {
                             <i class="fas fa-desktop"></i>
                         </div>
                         <div class="spec-content">
-                            <h4>Emulator Setup</h4>
+                            <h5>Emulator Setup</h5>
                         </div>
                     </div>
                     
@@ -5891,7 +6623,7 @@ document.addEventListener('keydown', e => {
                             <i class="fas fa-cogs"></i>
                         </div>
                         <div class="spec-content">
-                            <h4>Windows Optimization</h4>
+                            <h5>Windows Optimization</h5>
                         </div>
                     </div>
                 </div>
@@ -7300,19 +8032,64 @@ document.addEventListener('keydown', e => {
     </div>
 
     <!-- Chat Toggle Button -->
-    <button class="chat-toggle professional" id="chat-toggle">
-        <div class="toggle-icon">
-            <i class="fas fa-robot"></i>
-            <div class="pulse-ring"></div>
-        </div>
-        <span class="toggle-text">AI Assistant</span>
-        <div class="notification-dot"></div>
+    <button class="ai-assistant-btn" id="chat-toggle" title="Chat with AI">
+        <span class="ai-btn-icon">
+            <i class="fas fa-headset"></i>
+        </span>
+        <span class="ai-btn-text">Assistant</span>
+        <span class="ai-btn-glow"></span>
     </button>
 
     <!-- Scroll to top -->
     <div id="scroll-top" class="scroll-top" title="Back to top"><i class="fas fa-arrow-up"></i></div>
 
     <script>
+    // Scroll Progress Bar
+    const scrollProgress = document.getElementById('scrollProgress');
+    if (scrollProgress) {
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = (scrollTop / docHeight) * 100;
+            scrollProgress.style.width = scrollPercent + '%';
+        }, { passive: true });
+    }
+
+    // Login Status - Update Header Button
+    function updateLoginButton() {
+        const loginBtn = document.getElementById('loginBtnHeader');
+        if (!loginBtn) return;
+        
+        const storedUser = localStorage.getItem('bariplux_user');
+        
+        if (storedUser) {
+            try {
+                const user = JSON.parse(storedUser);
+                const userName = user.name || user.email.split('@')[0];
+                const initial = userName.charAt(0).toUpperCase();
+                
+                loginBtn.innerHTML = `<span style="display:flex;align-items:center;gap:6px;"><span style="width:24px;height:24px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--text-dark);">${initial}</span><span>${userName.substring(0, 10)}${userName.length > 10 ? '...' : ''}</span></span>`;
+                loginBtn.title = 'Click to logout';
+                loginBtn.href = 'javascript:void(0)';
+                loginBtn.onclick = function(e) {
+                    e.preventDefault();
+                    if (confirm('Logout from Bari Plux?')) {
+                        localStorage.removeItem('bariplux_user');
+                        localStorage.removeItem('bariplux_login_token');
+                        location.reload();
+                    }
+                };
+            } catch (e) {
+                console.error('Error parsing user:', e);
+            }
+        }
+    }
+    
+    // Run on page load
+    updateLoginButton();
+    setTimeout(updateLoginButton, 500);
+    setTimeout(updateLoginButton, 1000);
+
     // Header Scroll Effect
     const header = document.querySelector('.header');
     if (header) {
@@ -7501,33 +8278,7 @@ function sanitizeInput(input) {
     // محدودیت طول
     return sanitized.substring(0, 500);
 }
-
-// اصلاح تابع چت بات
-function sendChatMessage() {
-    const chatInput = document.getElementById('chat-input');
-    let message = chatInput.value.trim();
-    
-    if (message) {
-        // سانیتایز ورودی
-        message = sanitizeInput(message);
-        
-        // اعتبارسنجی اضافی
-        if (message.length < 2) {
-            addAIMessage("لطفاً پیام معتبرتری وارد کنید (حداقل ۲ کاراکتر)");
-            return;
-        }
-        
-        addUserMessage(message);
-        chatInput.value = '';
-        
-        // پاسخ ایمن
-        setTimeout(() => {
-            const safeResponse = "متوجه شدم! من دستیار هوش مصنوعی Bari Plux هستم. فعلاً در حال توسعه هستم، اما به زودی می‌تونم در بهینه‌سازی بازی بهت کمک کنم!";
-            addAIMessage(safeResponse);
-        }, 1000);
-    }
-}
-
+ 
     // اعتبارسنجی لینک‌های دانلود
 function validateDownloadLink(url, filename) {
     const allowedFiles = [
@@ -7568,55 +8319,7 @@ function sanitizeInput(input) {
     div.textContent = input;
     return div.innerHTML;
 }
-
-// اصلاح تابع sendChatMessage
-function sendChatMessage() {
-    const chatInput = document.getElementById('chat-input');
-    let message = chatInput.value.trim();
-    
-    if (message) {
-        // سانیتایز ورودی کاربر
-        message = sanitizeInput(message);
-        addUserMessage(message);
-        chatInput.value = '';
-        
-        setTimeout(() => {
-            addAIMessage("متوجه شدم! من دستیار هوش مصنوعی Bari Plux هستم. فعلاً در حال توسعه هستم، اما به زودی می‌تونم در بهینه‌سازی بازی بهت کمک کنم!");
-        }, 1000);
-    }
-}
-
-// جلوگیری از inspect ساده
-(function() {
-    // Block F12, Ctrl+Shift+I, Ctrl+U
-    const blockKeys = [123, 73, 85]; // F12, I, U
-    
-    document.addEventListener('keydown', function(e) {
-        if (blockKeys.includes(e.keyCode) || 
-            (e.ctrlKey && e.shiftKey && e.keyCode === 73) ||
-            (e.ctrlKey && e.keyCode === 85)) {
-            e.preventDefault();
-            return false;
-        }
-    });
-    
-    // Block right click
-    document.addEventListener('contextmenu', function(e) {
-        e.preventDefault();
-        return false;
-    });
-    
-    // Detect dev tools
-    setInterval(function() {
-        const before = new Date().getTime();
-        debugger;
-        const after = new Date().getTime();
-        if (after - before > 100) {
-            document.body.innerHTML = '<div style="padding: 20px; text-align: center;">Developer tools detected!</div>';
-        }
-    }, 1000);
-})();
-
+ 
     // Rules Modal
 function setupRulesModal() {
     const rulesModal = document.querySelector('.rules-modal');
@@ -8123,148 +8826,157 @@ document.addEventListener('DOMContentLoaded', function() {
     initQuiz();
 });
 
-    // Search Functions - UPDATED VERSION
-    function setupCollapsibleSearch() {
-        const searchContainer = document.getElementById('collapsible-search');
-        const searchInput = document.getElementById('header-search-input');
+    // Simple Search Function - Opens on click
+    var dropdown, searchBox;
+    function setupSearch() {
+        searchBox = document.getElementById('header-search-input');
+        dropdown = document.getElementById('search-results-dropdown');
+        var container = document.getElementById('collapsible-search');
         
-        if (searchContainer && searchInput) {
-            // Click to expand
-            searchContainer.addEventListener('click', function(e) {
-                if (!searchContainer.classList.contains('active')) {
-                    searchContainer.classList.add('active');
-                    searchInput.focus();
-                    e.stopPropagation();
+        if (!searchBox || !dropdown) return;
+        
+        // Click to expand
+        container.addEventListener('click', function() {
+            container.classList.add('active');
+            setTimeout(function() { searchBox.focus(); }, 100);
+        });
+        
+        searchBox.addEventListener('input', function() {
+            var term = this.value.toLowerCase().trim();
+            if (term.length < 1) {
+                dropdown.style.display = 'none';
+                return;
+            }
+            
+            // Search page content
+            var results = [];
+            
+            // Find matching sections
+            document.querySelectorAll('section, .section').forEach(function(sec) {
+                var id = sec.id;
+                var title = sec.querySelector('h1, h2, h3, .section-title');
+                var text = sec.innerText.toLowerCase();
+                
+                if (text.includes(term)) {
+                    results.push({
+                        title: title ? title.innerText : (id || 'Section'),
+                        type: 'Section',
+                        id: id || 'home'
+                    });
                 }
             });
             
-            // Close when clicking outside
-            document.addEventListener('click', function(e) {
-                if (searchContainer.classList.contains('active') && 
-                    !searchContainer.contains(e.target)) {
-                    searchContainer.classList.remove('active');
-                    searchInput.value = '';
-                    filterContent('');
-                    resetSearchHighlights();
-                    hideNoResultsMessage();
-                    hideSearchResultsHeader();
+            // Search cards
+            document.querySelectorAll('.download-card, .video-card, .pubg-card').forEach(function(card) {
+                var text = card.innerText.toLowerCase();
+                if (text.includes(term)) {
+                    var title = card.querySelector('h3, h4, .download-title, .video-title');
+                    var section = card.closest('section, .section');
+                    results.push({
+                        title: title ? title.innerText.substring(0, 40) : 'Item',
+                        type: 'Content',
+                        id: section ? section.id : 'home'
+                    });
                 }
             });
             
-            // Search functionality
-            searchInput.addEventListener('input', function(e) {
-                const searchTerm = e.target.value.toLowerCase().trim();
-                resetSearchHighlights();
-                filterContent(searchTerm);
-            });
+            // Remove duplicates
+            var unique = results.filter(function(v,i,a){return a.findIndex(function(t){return t.title===v.title})===i;}).slice(0, 8);
             
-            // Close on escape key
-            searchInput.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape') {
-                    searchContainer.classList.remove('active');
-                    searchInput.value = '';
-                    filterContent('');
-                    resetSearchHighlights();
-                    hideNoResultsMessage();
-                    hideSearchResultsHeader();
-                    searchInput.blur();
-                }
-            });
+            if (unique.length === 0) {
+                dropdown.innerHTML = '<div style="padding:15px;text-align:center;color:#888">No results found</div>';
+            } else {
+                dropdown.innerHTML = '';
+                unique.forEach(function(item) {
+                    var div = document.createElement('div');
+                    div.className = 'search-result-item';
+                    div.innerHTML = '<div class="search-result-icon"><i class="fas fa-search"></i></div><div class="search-result-content"><div class="search-result-title">'+item.title+'</div><div class="search-result-type">'+item.type+'</div></div>';
+                    div.onclick = function() {
+                        var target = document.getElementById(item.id);
+                        if (target) target.scrollIntoView({behavior:'smooth'});
+                        dropdown.style.display = 'none';
+                        searchBox.value = '';
+                    };
+                    dropdown.appendChild(div);
+                });
+            }
+            
+            dropdown.style.display = 'block';
+        });
+        
+        // Close on escape
+        searchBox.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                dropdown.style.display = 'none';
+                container.classList.remove('active');
+            }
+        });
+        
+        // Close on click outside
+        document.addEventListener('click', function(e) {
+            if (!container.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.style.display = 'none';
+                container.classList.remove('active');
+            }
+        });
+    }
+
+    function scrollToSection(sectionId) {
+        const dropdown = document.getElementById('search-results-dropdown');
+        const searchInput = document.getElementById('header-search-input');
+        const searchContainer = document.getElementById('collapsible-search');
+        
+        if (searchInput) searchInput.value = '';
+        if (dropdown) dropdown.innerHTML = '';
+        if (searchContainer) searchContainer.classList.remove('active');
+        
+        const section = document.getElementById(sectionId);
+        if (section) {
+            section.scrollIntoView({ behavior: 'smooth' });
         }
     }
 
     function filterContent(searchTerm) {
-        console.log('Searching for:', searchTerm);
-        
         const allItems = document.querySelectorAll('.download-card, .video-card, .pubg-card, .plux-article');
-        let foundAny = false;
         let resultCount = 0;
 
-        // Hide all sections initially when searching
         if (searchTerm !== '') {
             document.querySelectorAll('.section').forEach(section => {
                 if (!section.classList.contains('hero')) {
                     section.style.display = 'none';
                 }
             });
-        }
 
-        allItems.forEach(item => {
-            let title, description;
-            
-            if (item.classList.contains('download-card')) {
-                title = item.querySelector('.download-title');
-                description = item.querySelector('.download-description');
-            } else if (item.classList.contains('video-card')) {
-                title = item.querySelector('.video-title');
-                description = item.querySelector('.video-info p');
-            } else if (item.classList.contains('pubg-card')) {
-                title = item.querySelector('.pubg-title');
-                description = item.querySelector('.pubg-card p');
-            } else if (item.classList.contains('plux-article')) {
-                title = item.querySelector('.plux-article-title');
-                description = item.querySelector('.plux-article-excerpt');
-            }
-            
-            const titleText = title ? title.textContent.toLowerCase() : '';
-            const descText = description ? description.textContent.toLowerCase() : '';
-            
-            if (searchTerm === '' || titleText.includes(searchTerm) || descText.includes(searchTerm)) {
-                // Show parent section
-                const parentSection = item.closest('.section');
-                if (parentSection) {
-                    parentSection.style.display = 'block';
-                }
+            allItems.forEach(item => {
+                const title = item.querySelector('.download-title, .video-title, .pubg-title, .plux-article-title');
+                const desc = item.querySelector('.download-description, .video-info p, .pubg-card p, .plux-article-excerpt');
                 
-                item.style.display = 'block';
-                foundAny = true;
-                resultCount++;
-
-                if (searchTerm !== '') {
-                    highlightText(title, searchTerm);
-                    highlightText(description, searchTerm);
-                }
-            } else {
-                item.style.display = 'none';
-            }
-        });
-
-        if (searchTerm !== '') {
-            if (foundAny) {
-                showSearchResultsHeader(searchTerm, resultCount);
-                hideNoResultsMessage();
+                const titleText = title ? title.textContent.toLowerCase() : '';
+                const descText = desc ? desc.textContent.toLowerCase() : '';
                 
-                // Scroll to top of results
-                setTimeout(() => {
-                    window.scrollTo({
-                        top: 0,
-                        behavior: 'smooth'
-                    });
-                }, 100);
-            } else {
-                showNoResultsMessage(searchTerm);
-                hideSearchResultsHeader();
-            }
+                if (titleText.includes(searchTerm) || descText.includes(searchTerm)) {
+                    const parentSection = item.closest('.section');
+                    if (parentSection) parentSection.style.display = 'block';
+                    item.style.display = 'block';
+                    resultCount++;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
         } else {
-            // Show all sections when search is empty
             document.querySelectorAll('.section').forEach(section => {
                 section.style.display = 'block';
             });
-            hideNoResultsMessage();
-            hideSearchResultsHeader();
-            resetSearchHighlights();
+            allItems.forEach(item => item.style.display = '');
         }
     }
 
     function highlightText(element, searchTerm) {
         if (!element || !searchTerm) return;
-        
         const originalText = element.getAttribute('data-original-text') || element.textContent;
         element.setAttribute('data-original-text', originalText);
-        
         const regex = new RegExp(`(${searchTerm})`, 'gi');
-        const highlightedText = originalText.replace(regex, '<mark class="search-highlight">$1</mark>');
-        element.innerHTML = highlightedText;
+        element.innerHTML = originalText.replace(regex, '<mark class="search-highlight">$1</mark>');
     }
 
     function resetSearchHighlights() {
@@ -8273,97 +8985,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    function showSearchResultsHeader(searchTerm, resultCount) {
-    let header = document.getElementById('search-results-header');
-    
-    if (!header) {
-        header = document.createElement('div');
-        header.id = 'search-results-header';
-        header.className = 'search-results-header glass';
-        
-        // اضافه کردن به بالاترین نقطه در container
-        const container = document.querySelector('.container');
-        const firstElement = container.firstElementChild;
-        
-        if (firstElement) {
-            container.insertBefore(header, firstElement);
-        } else {
-            container.prepend(header);
-        }
-    }
-    
-    header.innerHTML = `
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
-            <div style="text-align: left;">
-                <h3 style="color: var(--text); margin: 0 0 5px 0; font-size: 1.3rem;">
-                    🔍 Search Results
-                </h3>
-                <p style="color: var(--muted); margin: 0; font-size: 0.9rem;">
-                    Found ${resultCount} results for "<strong style="color: var(--accent);">${searchTerm}</strong>"
-                </p>
-            </div>
-            <button id="clear-search-btn" class="btn btn-secondary" style="padding: 8px 16px; font-size: 0.9rem;">
-                <i class="fas fa-times"></i> Clear Search
-            </button>
-        </div>
-    `;
-    
-    document.getElementById('clear-search-btn').addEventListener('click', function() {
-        const searchInput = document.getElementById('header-search-input');
-        const searchContainer = document.getElementById('collapsible-search');
-        
-        if (searchInput) searchInput.value = '';
-        if (searchContainer) searchContainer.classList.remove('active');
-        
-        filterContent('');
-    });
-}
-
-    function hideSearchResultsHeader() {
-        const header = document.getElementById('search-results-header');
-        if (header) header.remove();
-    }
-
-    function showNoResultsMessage(searchTerm) {
-        let message = document.getElementById('no-results-message');
-        if (!message) {
-            message = document.createElement('div');
-            message.id = 'no-results-message';
-            message.className = 'no-results-message glass';
-            document.querySelector('.container').prepend(message);
-        }
-        
-        message.innerHTML = `
-            <div style="text-align: center; padding: 40px;">
-                <div style="font-size: 3rem; margin-bottom: 20px; color: var(--muted);">🔍</div>
-                <h3 style="color: var(--text); margin-bottom: 10px;">No results found for "${searchTerm}"</h3>
-                <p style="color: var(--muted); margin-bottom: 20px;">Try searching for:</p>
-                <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
-                    <span class="search-suggestion">PUBG</span>
-                    <span class="search-suggestion">GameLoop</span>
-                    <span class="search-suggestion">Optimization</span>
-                    <span class="search-suggestion">Windows</span>
-                </div>
-            </div>
-        `;
-        
-        message.querySelectorAll('.search-suggestion').forEach(suggestion => {
-            suggestion.addEventListener('click', function() {
-                const searchInput = document.getElementById('header-search-input');
-                if (searchInput) {
-                    searchInput.value = this.textContent;
-                    filterContent(this.textContent);
-                }
-            });
-        });
-    }
-
-    function hideNoResultsMessage() {
-        const message = document.getElementById('no-results-message');
-        if (message) message.remove();
-    }
-
-    // Professional AI Chat Bot - Optimized Version
+    // Professional AI Chat Bot - Simplified Stable Version
 function initializeChatBot() {
     const chatToggle = document.getElementById('chat-toggle');
     const chatWidget = document.getElementById('ai-chat-widget');
@@ -8373,221 +8995,178 @@ function initializeChatBot() {
     const chatInput = document.getElementById('chat-input');
     const charCount = document.querySelector('.char-count');
     
-    // AI Responses Database - Enhanced from old code
+    // Simple AI Responses Database
     const aiResponses = {
-        'greeting': {
-            message: "👋 Hello! I'm Bari Plux AI Assistant, your professional gaming optimization expert!\n\nI specialize in:\n\n🎮 **PUBG Mobile Performance**\n• FPS optimization strategies\n• Graphics settings tuning\n• Performance monitoring\n\n⚡ **GameLoop Mastery**\n• Optimal configuration setup\n• Version recommendations\n• Troubleshooting guides\n\n🖥️ **System Optimization**\n• Windows performance tuning\n• Hardware-specific optimizations\n• Network optimization\n\nWhat aspect would you like to optimize today?",
-            quickReplies: ['FPS optimization', 'GameLoop setup', 'Windows tuning', 'Download help']
-        },
-        'optimization': {
-            message: "🎯 **Performance Optimization Guide**\n\n**Immediate Actions:**\n1. Set graphics to 'Smooth' + 90 FPS\n2. Disable anti-aliasing and shadows\n3. Close background applications\n4. Set power plan to 'High performance'\n\n**Advanced Tweaks:**\n• Use GameLoop Chinese version for +15% performance\n• Allocate 4GB RAM to GameLoop\n• Enable VT in BIOS\n• Update graphics drivers",
-            quickReplies: ['GameLoop download', 'Performance tools', 'Driver updates', 'Back to main']
-        },
-        'gameloop': {
-            message: "⚡ **GameLoop Professional Setup**\n\n**Version Recommendation:**\n• **Chinese Version:** Best performance, +20% FPS\n• **Global Version:** Stable, good for beginners\n\n**Optimal Settings:**\n• Graphics: Smooth\n• FPS: 90 or 120 (if supported)\n• Resolution: 1920x1080\n• DPI: 240\n• RAM: 4096MB\n• CPU: 4 cores",
-            quickReplies: ['Download GameLoop', 'VT enabling guide', 'Settings export', 'Troubleshooting']
-        },
-        'fps': {
-            message: "🚀 **FPS Optimization Master Guide**\n\n**Quick Wins (5-15 FPS):**\n• Set graphics to 'Smooth'\n• Disable replay recording\n• Close Discord/Chrome\n• Use game boosters\n\n**Advanced (15-30 FPS):**\n• GameLoop Chinese version\n• Windows gaming optimizations\n• Driver updates\n• RAM optimization",
-            quickReplies: ['FPS tools download', 'Config files', 'Windows optimizations', 'Back to main']
-        },
-        'windows': {
-            message: "🖥️ **Windows Gaming Optimization**\n\n**Essential Tweaks:**\n1. **Power Plan:** High performance\n2. **Game Mode:** Disable\n3. **Game Bar:** Disable\n4. **Visual Effects:** Adjust for best performance",
-            quickReplies: ['Optimization tools', 'Driver updates', 'System maintenance', 'Back to main']
-        },
-        'downloads': {
-            message: "📦 **Download Recommendations**\n\nBased on your needs, I recommend:\n\n**🎮 GameLoop Versions:**\n• Chinese Version (Best performance)\n• Global Version (Stable)\n• Optimized Mods\n\n**⚡ Performance Tools:**\n• FPS monitoring suite\n• System optimization toolkit\n• Driver update utility\n• Network optimizer",
-            quickReplies: ['GameLoop download', 'Performance tools', 'Utilities', 'Back to main']
-        }
+        'greeting': { message: "👋 Hello! I'm Bari Plux AI Assistant! I specialize in PUBG optimization, GameLoop setup, and Windows tuning. How can I help you today?", quickReplies: ['FPS optimization', 'GameLoop setup', 'Windows tuning'] },
+        'optimization': { message: "🎯 **Performance Tips:**\n\n1. Set graphics to 'Smooth' + 90 FPS\n2. Disable anti-aliasing and shadows\n3. Close background apps\n4. Use high performance power plan\n\n**Advanced:** GameLoop Chinese version gives +20% FPS!", quickReplies: ['GameLoop download', 'More tips', 'Back to main'] },
+        'gameloop': { message: "⚡ **GameLoop Setup:**\n\n• Chinese Version: Best performance\n• Global Version: More stable\n\n**Settings:** Graphics: Smooth, FPS: 90, RAM: 4GB, CPU: 4 cores", quickReplies: ['Download GameLoop', 'VT guide', 'Troubleshooting'] },
+        'fps': { message: "🚀 **FPS Boost:**\n\n• Set graphics to Smooth\n• Close Discord/Chrome\n• Enable VT in BIOS\n• Use GameLoop Chinese version\n\nThis can give you 15-30 more FPS!", quickReplies: ['Download tools', 'More optimizations', 'Back to main'] },
+        'windows': { message: "🖥️ **Windows Tuning:**\n\n1. Power Plan: High performance\n2. Game Mode: Disable\n3. Game Bar: Disable\n4. Update graphics drivers", quickReplies: ['Optimization tools', 'Driver updates', 'Back to main'] },
+        'downloads': { message: "📦 **Downloads:**\n\n• GameLoop Chinese (Best)\n• GameLoop Global (Stable)\n• FPS monitoring tools\n• Driver updater", quickReplies: ['GameLoop download', 'Tools', 'Back to main'] },
+        'vt': { message: "🔧 **Enable VT:**\n\n1. Restart PC, enter BIOS (Del/F2)\n2. Find 'Intel VT-x' or 'AMD-V'\n3. Enable and save\n4. Restart\n\n**Important:** Gives 30-50% better performance!", quickReplies: ['GameLoop download', 'More help', 'Back to main'] },
+        'lag': { message: "🐌 **Fix Lag:**\n\n1. Enable VT in BIOS\n2. Allocate more RAM (4GB+)\n3. Close background apps\n4. Use high performance power plan\n5. Switch to Chinese version", quickReplies: ['VT guide', 'More tips', 'Back to main'] },
+        'crash': { message: "💥 **Fix Crashes:**\n\n1. Run as Administrator\n2. Update graphics drivers\n3. Enable VT\n4. Clear shader cache\n\n**Clean Reinstall:** Uninstall, delete TxGameAssistant folders, reinstall", quickReplies: ['Download GameLoop', 'VT guide', 'Driver updates'] },
+        'network': { message: "🌐 **Network Tips:**\n\n• Use wired connection\n• Change DNS: 1.1.1.1 or 8.8.8.8\n• Close bandwidth apps\n• Select nearest server in GameLoop", quickReplies: ['DNS setup', 'VPN tips', 'Back to main'] },
+        'graphics': { message: "🎨 **Best Graphics:**\n\n• Graphics: Smooth\n• FPS: 90/120\n• Style: Movie\n• Shadows: Off\n• Anti-aliasing: Off", quickReplies: ['FPS guide', 'More settings', 'Back to main'] }
     };
 
-    // Initialize chat
+    // Disable real AI for stability - use keyword matching only
+    let useRealAI = false; // Set to true only when API is confirmed working
+
+    // Simplified response generator
+    function getAIResponse(userMessage) {
+        const msg = userMessage.toLowerCase();
+        
+        // Greeting check
+        if (msg.includes('hello') || msg.includes('hi') || msg.includes('hey') || msg.includes('salam') || msg.includes('درود') || msg === 'start') {
+            return aiResponses.greeting;
+        }
+        
+        // Keyword matching
+        const keywords = {
+            'optimiz': 'optimization', 'performance': 'optimization', 'بهینه': 'optimization',
+            'gameloop': 'gameloop', 'emulator': 'gameloop', 'امولاتور': 'gameloop',
+            'fps': 'fps', 'فریم': 'fps', 'frame': 'fps',
+            'windows': 'windows', 'ویندوز': 'windows', 'system': 'windows',
+            'دانلود': 'downloads', 'download': 'downloads', 'tool': 'downloads',
+            'vt': 'vt', 'virtual': 'vt',
+            'lag': 'lag', 'کند': 'lag', 'لگ': 'lag',
+            'crash': 'crash', 'کرش': 'crash', 'بسته': 'crash',
+            'network': 'network', 'ping': 'network', 'اینترنت': 'network',
+            'graphics': 'graphics', 'گرافیک': 'graphics', 'تنظیمات': 'graphics'
+        };
+        
+        for (const [keyword, responseKey] of Object.entries(keywords)) {
+            if (msg.includes(keyword) && aiResponses[responseKey]) {
+                return aiResponses[responseKey];
+            }
+        }
+        
+        // Default
+        return { message: "🤖 Thanks for your question! I can help with:\n\n🎮 PUBG FPS & Graphics\n⚡ GameLoop Setup\n🖥️ Windows Tuning\n📥 Downloads & Tools\n\nWhat would you like to know?", quickReplies: ['FPS optimization', 'GameLoop setup', 'Windows tuning'] };
+    }
+
+    // Simple chat toggle
     if (chatToggle && chatWidget) {
         chatToggle.addEventListener('click', () => {
             chatWidget.classList.toggle('active');
         });
     }
     
-    if (chatClose && chatWidget) {
-        chatClose.addEventListener('click', () => {
-            chatWidget.classList.remove('active');
-        });
-    }
-
-    if (chatMinimize && chatWidget) {
-        chatMinimize.addEventListener('click', () => {
-            chatWidget.classList.remove('active');
-        });
+    if (chatClose) {
+        chatClose.addEventListener('click', () => chatWidget.classList.remove('active'));
     }
     
-    // Send message functionality - Enhanced
-    if (chatSend && chatInput) {
-        chatSend.addEventListener('click', sendChatMessage);
-        chatInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                sendChatMessage();
-            }
-        });
-        
-        // Character count
-        chatInput.addEventListener('input', updateCharCount);
+    if (chatMinimize) {
+        chatMinimize.addEventListener('click', () => chatWidget.classList.remove('active'));
     }
     
-    // Collapsible sections - From current code
-    const quickActionsSection = document.getElementById('quick-actions-section');
-    const suggestedQuestionsSection = document.getElementById('suggested-questions-section');
+    // Simple collapsible toggle
+    const collapsibleSections = document.querySelectorAll('.collapsible-section');
+    collapsibleSections.forEach(section => {
+        const header = section.querySelector('.collapsible-header');
+        if (header) {
+            header.addEventListener('click', () => {
+                section.classList.toggle('active');
+            });
+        }
+    });
     
-    if (quickActionsSection) {
-        quickActionsSection.querySelector('.collapsible-header').addEventListener('click', (e) => {
-            e.stopPropagation();
-            quickActionsSection.classList.toggle('active');
-            suggestedQuestionsSection.classList.remove('active');
-        });
-    }
-    
-    if (suggestedQuestionsSection) {
-        suggestedQuestionsSection.querySelector('.collapsible-header').addEventListener('click', (e) => {
-            e.stopPropagation();
-            suggestedQuestionsSection.classList.toggle('active');
-            quickActionsSection.classList.remove('active');
-        });
-    }
-    
-    // Quick Actions - Enhanced with better responses
-    document.querySelectorAll('.action-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.stopPropagation();
+    // Quick action buttons
+    const actionBtns = document.querySelectorAll('.action-btn');
+    actionBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
             const action = btn.dataset.action;
-            handleQuickAction(action);
+            const messages = {
+                'optimization': 'How to optimize PUBG?',
+                'gameloop': 'Best GameLoop settings?',
+                'downloads': 'What to download?',
+                'settings': 'Best graphics settings?',
+                'fps': 'How to increase FPS?',
+                'windows': 'Windows optimization tips?',
+                'troubleshoot': 'Fix lag and crashes?',
+                'system': 'System requirements?'
+            };
+            const msg = messages[action] || 'Help me';
+            if (chatInput) chatInput.value = msg;
+            sendMessage();
         });
     });
     
-    // Suggested Questions - Enhanced
-    document.querySelectorAll('.suggestion-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const question = btn.dataset.question;
-            handleSuggestedQuestion(question);
+    // Suggestion buttons
+    const suggestionBtns = document.querySelectorAll('.suggestion-btn');
+    suggestionBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            if (chatInput) chatInput.value = btn.dataset.question;
+            sendMessage();
         });
     });
-
-    // Character count function
-    function updateCharCount() {
-        const count = chatInput.value.length;
-        if (charCount) {
-            charCount.textContent = `${count}/500`;
-            
-            if (count > 450) {
-                charCount.style.color = '#ff4757';
-            } else if (count > 400) {
-                charCount.style.color = '#ffa502';
-            } else {
-                charCount.style.color = '';
+    
+    // Character count
+    if (chatInput && charCount) {
+        chatInput.addEventListener('input', () => {
+            charCount.textContent = `${chatInput.value.length}/500`;
+        });
+    }
+    
+    // Send message
+    function sendMessage() {
+        const message = chatInput ? chatInput.value.trim() : '';
+        if (!message) return;
+        
+        // Add user message
+        addUserMessage(message);
+        if (chatInput) chatInput.value = '';
+        
+        // Show typing
+        showTypingIndicator();
+        
+        // Get response after short delay
+        setTimeout(() => {
+            hideTypingIndicator();
+            const response = getAIResponse(message);
+            addAIMessage(response.message);
+        }, 800 + Math.random() * 400);
+    }
+    
+    // Send button click
+    if (chatSend) {
+        chatSend.addEventListener('click', sendMessage);
+    }
+    
+    // Enter key
+    if (chatInput) {
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                sendMessage();
             }
-        }
+        });
     }
-
-    // Enhanced send message function
-    function sendChatMessage() {
-        const message = chatInput.value.trim();
-        
-        if (message) {
-            // Sanitize input
-            const sanitizedMessage = sanitizeInput(message);
-            addUserMessage(sanitizedMessage);
-            chatInput.value = '';
-            updateCharCount();
-            
-            // Close collapsible sections
-            closeAllCollapsibleSections();
-            
-            // Show typing indicator
-            showTypingIndicator();
-            
-            // Generate AI response
-            setTimeout(() => {
-                hideTypingIndicator();
-                const aiResponse = generateAIResponse(sanitizedMessage);
-                addAIMessage(aiResponse.message);
-            }, 1000 + Math.random() * 500);
-        }
-    }
-
-    // Enhanced AI response generation
-    function generateAIResponse(userMessage) {
-        const message = userMessage.toLowerCase();
-        
-        if (message.includes('hello') || message.includes('hi') || message.includes('hey') || message.includes('start')) {
-            return aiResponses.greeting;
-        } else if (message.includes('optimiz') || message.includes('performance')) {
-            return aiResponses.optimization;
-        } else if (message.includes('gameloop') || message.includes('emulator')) {
-            return aiResponses.gameloop;
-        } else if (message.includes('fps') || message.includes('frame')) {
-            return aiResponses.fps;
-        } else if (message.includes('windows') || message.includes('system') || message.includes('tuning')) {
-            return aiResponses.windows;
-        } else if (message.includes('download') || message.includes('tool') || message.includes('software')) {
-            return aiResponses.downloads;
-        } else {
-            return {
-                message: "متوجه شدم! من دستیار هوش مصنوعی Bari Plux هستم. فعلاً در حال توسعه هستم، اما به زودی می‌تونم در بهینه‌سازی بازی بهت کمک کنم!",
-                quickReplies: ['FPS optimization', 'GameLoop setup', 'Windows tuning', 'Download help']
-            };
-        }
-    }
-
-    function handleQuickAction(action) {
-        const messages = {
-            'optimization': "How to optimize PUBG Mobile performance for maximum FPS?",
-            'gameloop': "Best GameLoop settings and configuration guide", 
-            'downloads': "What are the best downloads for gaming optimization?",
-            'settings': "Optimal PUBG Mobile graphics and control settings",
-            'fps': "How to increase FPS in PUBG Mobile?",
-            'windows': "Windows optimization for gaming performance",
-            'troubleshoot': "How to fix GameLoop lag and crashes?",
-            'system': "System requirements and hardware recommendations"
-        };
-        
-        const message = messages[action] || "I need help with gaming optimization";
-        chatInput.value = message;
-        sendChatMessage();
-    }
-
-    function handleSuggestedQuestion(question) {
-        chatInput.value = question;
-        sendChatMessage();
-    }
-
-    function closeAllCollapsibleSections() {
-        if (quickActionsSection) quickActionsSection.classList.remove('active');
-        if (suggestedQuestionsSection) suggestedQuestionsSection.classList.remove('active');
-    }
-
+    
+    // Typing indicator functions
     function showTypingIndicator() {
+        const messagesDiv = document.getElementById('chat-messages');
+        if (!messagesDiv) return;
         const typingDiv = document.createElement('div');
-        typingDiv.className = 'typing-indicator active';
-        typingDiv.id = 'typing-indicator';
-        typingDiv.innerHTML = `
-            <div class="typing-dot"></div>
-            <div class="typing-dot"></div>
-            <div class="typing-dot"></div>
-        `;
-        document.getElementById('chat-messages').appendChild(typingDiv);
-        scrollChatToBottom();
+        typingDiv.className = 'typing-indicator';
+        typingDiv.id = 'temp-typing';
+        typingDiv.innerHTML = '<span></span><span></span><span></span>';
+        messagesDiv.appendChild(typingDiv);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }
-
+    
     function hideTypingIndicator() {
-        const typingIndicator = document.getElementById('typing-indicator');
-        if (typingIndicator) {
-            typingIndicator.remove();
-        }
+        const typing = document.getElementById('temp-typing');
+        if (typing) typing.remove();
     }
 }
 
 // Enhanced message functions with better formatting
 function addUserMessage(text) {
+    const messagesDiv = document.getElementById('chat-messages');
+    if (!messagesDiv) return;
+    
     const messageDiv = document.createElement('div');
     messageDiv.className = 'message user-message';
     messageDiv.innerHTML = `
@@ -8604,16 +9183,19 @@ function addUserMessage(text) {
             </div>
         </div>
     `;
-    document.getElementById('chat-messages').appendChild(messageDiv);
-    scrollChatToBottom();
+    messagesDiv.appendChild(messageDiv);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
 }
 
 function addAIMessage(text) {
+    const messagesDiv = document.getElementById('chat-messages');
+    if (!messagesDiv) return;
+    
     const messageDiv = document.createElement('div');
     messageDiv.className = 'message ai-message';
     messageDiv.innerHTML = `
         <div class="message-avatar">
-            <img src="https://i.pinimg.com/236x/78/49/d2/7849d2c3a70f94b81eaf325065a38ded.jpg" alt="AI Assistant">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2300BFA6'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z'/%3E%3C/svg%3E" alt="AI">
         </div>
         <div class="message-content">
             <div class="message-header">
@@ -8621,25 +9203,64 @@ function addAIMessage(text) {
                 <span class="message-time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
             </div>
             <div class="message-text">
-                ${formatMessage(text)}
+                <p>${text}</p>
             </div>
         </div>
     `;
-    document.getElementById('chat-messages').appendChild(messageDiv);
-    scrollChatToBottom();
+    messagesDiv.appendChild(messageDiv);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
 }
 
-// Enhanced message formatting from old code
+// Professional message formatting like ChatGPT
 function formatMessage(text) {
-    // Convert line breaks to proper HTML formatting
-    let formatted = text
-        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-        .replace(/\n/g, '<br>');
+    if (!text) return '';
     
-    // Format lists
-    if (text.includes('•')) {
-        formatted = formatted.replace(/•(.*?)(?=•|<br>|$)/g, '<li>$1</li>');
-        formatted = formatted.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+    let formatted = text;
+    
+    // Escape HTML first for security
+    formatted = formatted.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    
+    // Bold: **text** or __text__
+    formatted = formatted.replace(/\*\*(.+?)\*\*/g, '<strong style="color: #00BFA6; font-weight: 700;">$1</strong>');
+    formatted = formatted.replace(/__(.+?)__/g, '<strong style="color: #00BFA6; font-weight: 700;">$1</strong>');
+    
+    // Italic: *text* or _text_
+    formatted = formatted.replace(/\*(.+?)\*/g, '<em style="color: #e8eef8;">$1</em>');
+    formatted = formatted.replace(/_(.+?)_/g, '<em style="color: #e8eef8;">$1</em>');
+    
+    // Underline: ~~text~~
+    formatted = formatted.replace(/~~(.+?)~~/g, '<u style="text-decoration: underline;">$1</u>');
+    
+    // Links: [text](url)
+    formatted = formatted.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" style="color: #6C63FF; text-decoration: underline; font-weight: 500;">$1 <i class="fas fa-external-link-alt" style="font-size: 0.7em;"></i></a>');
+    
+    // Inline code: `code`
+    formatted = formatted.replace(/`(.+?)`/g, '<code style="background: rgba(108, 99, 255, 0.2); padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 0.9em; color: #00BFA6;">$1</code>');
+    
+    // Code blocks: ```code```
+    formatted = formatted.replace(/```([\s\S]*?)```/g, '<pre style="background: rgba(0,0,0,0.4); padding: 12px; border-radius: 8px; overflow-x: auto; border: 1px solid rgba(108, 99, 255, 0.2);"><code style="font-family: monospace; font-size: 0.85em; color: #00BFA6;">$1</code></pre>');
+    
+    // Headers: ### Header
+    formatted = formatted.replace(/^### (.+)$/gm, '<h4 style="margin: 12px 0 8px 0; color: #00BFA6; font-size: 1em; font-weight: 700;">$1</h4>');
+    formatted = formatted.replace(/^## (.+)$/gm, '<h3 style="margin: 14px 0 10px 0; color: #00BFA6; font-size: 1.1em; font-weight: 700;">$1</h3>');
+    formatted = formatted.replace(/^# (.+)$/gm, '<h2 style="margin: 16px 0 12px 0; color: #00BFA6; font-size: 1.2em; font-weight: 700;">$1</h2>');
+    
+    // Numbered lists: 1. item
+    formatted = formatted.replace(/^(\d+)\.\s+(.+)$/gm, '<li style="margin: 4px 0; padding-left: 8px;"><span style="color: #8B5CF6; font-weight: 600;">$1.</span> $2</li>');
+    
+    // Bullet lists: • item or - item
+    formatted = formatted.replace(/^[-•]\s+(.+)$/gm, '<li style="margin: 4px 0; padding-left: 8px;"><span style="color: #00BFA6;">•</span> $1</li>');
+    
+    // Wrap consecutive li elements in ul
+    formatted = formatted.replace(/(<li[^>]*>.*?<\/li>\s*)+/gs, '<ul style="margin: 8px 0; padding-left: 20px;">$&</ul>');
+    
+    // Line breaks
+    formatted = formatted.replace(/\n\n/g, '</p><p style="margin: 8px 0;">');
+    formatted = formatted.replace(/\n/g, '<br>');
+    
+    // Wrap in paragraph if not already wrapped
+    if (!formatted.startsWith('<')) {
+        formatted = '<p style="margin: 0; line-height: 1.6;">' + formatted + '</p>';
     }
     
     return formatted;
@@ -8791,13 +9412,61 @@ function sanitizeInput(input) {
         setupScrollTop();
         setupRippleEffect();
         initParticles();
-        setupCollapsibleSearch();
+        setupSearch();
         initializeChatBot();
         initializeFAQ();
         new WorkingHoursManager();
+        checkLoginStatus();
         
         console.log('🎯 All features initialized successfully!');
     });
+
+    // Check login status and update header button
+    function checkLoginStatus() {
+        const storedUser = localStorage.getItem('bariplux_user');
+        const loginBtn = document.getElementById('loginBtnHeader');
+        
+        if (!loginBtn) return;
+        
+        if (storedUser) {
+            try {
+                const user = JSON.parse(storedUser);
+                loginBtn.classList.add('logged-in');
+                loginBtn.innerHTML = '<i class="fas fa-user-circle"></i><span>' + user.name + '</span>';
+                loginBtn.title = 'Logged in - Click to logout';
+                loginBtn.onclick = function(e) {
+                    e.preventDefault();
+                    logout();
+                };
+            } catch(e) {
+                localStorage.removeItem('bariplux_user');
+            }
+        } else {
+            loginBtn.classList.remove('logged-in');
+            loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i><span>Login</span>';
+            loginBtn.title = 'Login';
+            loginBtn.onclick = null;
+        }
+    }
+
+    function logout() {
+        if (confirm('Are you sure you want to logout?')) {
+            localStorage.removeItem('bariplux_user');
+            localStorage.removeItem('bariplux_user_new');
+            checkLoginStatus();
+            window.location.href = 'login.html';
+        }
+    }
+
+    // Check for app sync periodically
+    setInterval(() => {
+        const appUser = localStorage.getItem('bariplux_user_new');
+        if (appUser) {
+            localStorage.setItem('bariplux_user', appUser);
+            localStorage.removeItem('bariplux_user_new');
+            checkLoginStatus();
+        }
+    }, 5000);
 </script>
 </body>
 </html>

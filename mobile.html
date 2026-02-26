@@ -2,7 +2,10 @@
 <html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#6C63FF">
     <title>Bari Plux | Gaming & Tech Content Creator</title>
     <meta name="description" content="Professional gaming content creator specializing in PUBG optimizations, emulator setups, and tech solutions">
     
@@ -11,12 +14,23 @@
     <link rel="apple-touch-icon" sizes="180x180" href="https://i.postimg.cc/65cjsvfQ/imglogo.png">
 
     <script>
-// اگر کاربر با دسکتاپ وارد نسخه موبایل شد
-if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) &&
-    window.innerWidth > 768) {
-    window.location.href = 'index';
-}
-</script>
+    // Mobile device detection - redirect desktop users
+    (function() {
+        var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        var isTablet = /iPad|Android/i.test(navigator.userAgent) && window.innerWidth > 768;
+        var isSmallScreen = window.innerWidth < 992;
+        
+        if (!isMobile && !isTablet && window.innerWidth > 768) {
+            window.location.href = 'index.html';
+            return;
+        }
+        
+        // Also redirect if on desktop but screen is too small (tablet mode off)
+        if (window.innerWidth > 768 && !/Android|webOS|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+            window.location.href = 'index.html';
+        }
+    })();
+    </script>
     
     <!-- Open Graph Meta Tags -->
     <meta property="og:title" content="Bari Plux | Gaming & Tech Content Creator">
@@ -74,12 +88,15 @@ if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navig
 </script>
 
 <!-- در <head> -->
+<!-- Security: Disable right-click and keyboard shortcuts -->
 <script>
-// کد امنیتی ساده
-document.addEventListener('contextmenu', e => e.preventDefault());
-document.addEventListener('keydown', e => {
-    if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) e.preventDefault();
-});
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('keydown', e => {
+        if (e.key === 'F12' || (e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S')) || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'C' || e.key === 'c'))) {
+            e.preventDefault();
+        }
+    });
+    document.ondragstart = function() { return false; };
 </script>
 
 <!-- در انتهای <body> -->
@@ -91,24 +108,19 @@ document.addEventListener('keydown', e => {
 <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
 <link rel="dns-prefetch" href="https://www.gstatic.com">
 
-<!-- اضافه به <head> -->
-<meta name="theme-color" content="#6C63FF">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
-<!-- Manifest -->
+<!-- Mobile optimization: Manifest and app title for iOS/Android -->
 <link rel="manifest" href="/manifest.json">
+<meta name="format-detection" content="telephone=no">
+<meta name="format-detection" content="email=no">
+<meta name="app-mobile-web-app-title" content="Bari Plux">
 
 <!-- Preload critical resources -->
 <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Montserrat:wght@700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
 
-<!-- PWA Meta Tags -->
-    <meta name="theme-color" content="#6C63FF">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="manifest" href="/manifest.json">
+<!-- Mobile optimization consolidated -->
 
-    <!-- اضافه کردن این متا تگ‌ها در <head> -->
+
+    <!-- Security: Strict transport security and frame options -->
 <meta http-equiv="Strict-Transport-Security" content="max-age=31536000; includeSubDomains">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta http-equiv="X-Frame-Options" content="DENY">
@@ -117,7 +129,8 @@ document.addEventListener('keydown', e => {
 
     <!-- Fonts and Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Montserrat:wght@700;800&family=Oxanium:wght@400;600;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/all-styles.css">
 
     <!-- Preload critical resources -->
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -131,8 +144,15 @@ document.addEventListener('keydown', e => {
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js" defer></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js" defer></script>
     
-    <!-- Particles.js -->
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <!-- Particles.js - Lazy loaded for mobile performance -->
+    <script>
+        if (window.innerWidth >= 1024) {
+            var script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js';
+            script.async = true;
+            document.head.appendChild(script);
+        }
+    </script>
 
     <style>
         :root {
@@ -184,14 +204,20 @@ document.addEventListener('keydown', e => {
             color:var(--text);
             -webkit-font-smoothing:antialiased;
             -moz-osx-font-smoothing:grayscale;
+            -webkit-touch-callout:none;
+            -webkit-user-select:none;
             transition: color var(--transition);
             padding-bottom:80px;
+            padding-top: max(0px, env(safe-area-inset-top));
+            padding-left: max(0px, env(safe-area-inset-left));
+            padding-right: max(0px, env(safe-area-inset-right));
             background-attachment: fixed;
             position: relative;
             overflow-x: hidden;
+            user-select: none;
         }
 
-        /* Particles.js Container */
+        /* Particles.js Container - Disabled on mobile for better performance */
         #particles-js {
             position: fixed;
             width: 100%;
@@ -200,6 +226,13 @@ document.addEventListener('keydown', e => {
             left: 0;
             z-index: -1;
             pointer-events: none;
+            display: none;
+        }
+        
+        @media (min-width: 1024px) {
+            #particles-js {
+                display: block;
+            }
         }
 
         /* Animated background elements */
@@ -687,7 +720,8 @@ document.addEventListener('keydown', e => {
     background: var(--glass-bg);
     border: 1px solid var(--glass-border);
     border-radius: 12px;
-    padding: 10px 8px;
+    padding: 12px 10px;
+    min-height: 48px;
     cursor: pointer;
     transition: all 0.2s ease;
     display: flex;
@@ -696,6 +730,8 @@ document.addEventListener('keydown', e => {
     gap: 6px;
     color: var(--text);
     font-size: 0.75rem;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
 }
 
 .action-btn:hover {
@@ -2522,45 +2558,6 @@ input:checked + .slider:before {
     transform: translateY(-2px);
 }
 
-        /* Theme Toggle */
-        .theme-toggle {
-            width: 60px;
-            height: 30px;
-            border-radius: 999px;
-            padding: 4px;
-            display: flex;
-            align-items: center;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--glass-border);
-            cursor: pointer;
-            position: relative;
-            backdrop-filter: blur(20px);
-        }
-
-        .theme-toggle .knob {
-            width: 22px;
-            height: 22px;
-            border-radius: 999px;
-            background: var(--accent);
-            position: absolute;
-            left: 4px;
-            transition: transform var(--transition);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        }
-
-        [data-theme="light"] .theme-toggle .knob {
-            transform: translateX(30px);
-            background: var(--accent-2);
-        }
-
-        .theme-toggle-icons {
-            display: flex;
-            width: 100%;
-            justify-content: space-between;
-            padding: 0 6px;
-            font-size: 12px;
-        }
-
         /* Contact Section - Glass Morphism */
 .contact-content {
     display: flex;
@@ -4345,7 +4342,8 @@ input:checked + .slider:before {
     align-items: center;
     justify-content: center;
     gap: 10px;
-    padding: 12px 20px;
+    padding: 14px 24px;
+    min-height: 48px;
     background: linear-gradient(135deg, 
         rgba(108, 99, 255, 0.8),
         rgba(0, 191, 166, 0.8));
@@ -4365,6 +4363,8 @@ input:checked + .slider:before {
         inset 0 1px 0 rgba(255, 255, 255, 0.3),
         inset 0 -1px 0 rgba(0, 0, 0, 0.2);
     text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
 }
 
 .download-btn::before {
@@ -6270,9 +6270,76 @@ input:checked + .slider:before {
                 grid-template-columns: 1fr;
             }
         }
+        
+        /* Mobile Optimization: Performance and Touch Enhancement */
+        @media (max-width: 768px) {
+            /* Disable animations on low-end mobile devices */
+            @media (prefers-reduced-motion: reduce) {
+                *,
+                *::before,
+                *::after {
+                    animation-duration: 0.01ms !important;
+                    animation-iteration-count: 1 !important;
+                    transition-duration: 0.01ms !important;
+                }
+            }
+            
+            /* Optimize scrolling for mobile */
+            html {
+                scroll-behavior: auto;
+            }
+            
+            /* Remove all transforms on low memory devices */
+            @supports (--webkit: true) {
+                body {
+                    -webkit-font-feature-settings: "kerning" 0;
+                    font-feature-settings: "kerning" 0;
+                }
+            }
+            
+            /* Optimize touch interactions */
+            a, button, input[type="button"], input[type="submit"] {
+                -webkit-user-select: none;
+                user-select: none;
+                -webkit-tap-highlight-color: transparent;
+            }
+            
+            /* Improve legibility on small screens */
+            body {
+                font-size: 16px;
+                line-height: 1.6;
+            }
+            
+            /* Fix viewport scaling issues */
+            input, textarea, select {
+                font-size: 16px;
+            }
+        }
+        
+        /* Optimize for iOS devices */
+        @supports (-webkit-appearance: none) {
+            input, textarea, select {
+                font-size: 16px;
+            }
+            
+            textarea {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                resize: vertical;
+            }
+        }
+        
+        /* Android specific optimizations */
+        @media (prefers-color-scheme: dark) {
+            img {
+                background-color: var(--bg-2);
+            }
+        }
     </style>
 </head>
 <body>
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+
     <!-- Particles.js Container -->
     <div id="particles-js"></div>
 
@@ -6284,21 +6351,45 @@ input:checked + .slider:before {
     </div>
 
     <!-- Header -->
-<header class="header glass">
-    <div class="left">
-        <a href="#home" class="logo" style="display:flex;align-items:center;gap:12px;text-decoration:none">
-            <img class="logo-img" src="https://yt3.googleusercontent.com/RPW5Z_kcoEu0ES_VpL4-7ZqI4eI1OQfuVL-DbuCYWmRhXono9hA5NOCSGGMDLzJqNcHUlhOg=s160-c-k-c0x00ffffff-no-rj" alt="Bari Plux">
-            <span class="logo-text">Bari Plux</span>
-        </a>
-    </div>
-    <div id="theme-toggle" class="theme-toggle glass" title="Toggle Theme">
-            <div class="theme-toggle-icons">
-                <div style="font-size:12px;color:var(--muted)">🌙</div>
-                <div style="font-size:12px;color:var(--muted)">☀️</div>
-            </div>
-            <div class="knob" id="theme-knob"></div>
+    <header class="header glass">
+        <div class="left">
+            <a href="index.html" class="logo" style="display:flex;align-items:center;gap:12px;text-decoration:none">
+                <img class="logo-img" src="https://yt3.googleusercontent.com/RPW5Z_kcoEu0ES_VpL4-7ZqI4eI1OQfuVL-DbuCYWmRhXono9hA5NOCSGGMDLzJqNcHUlhOg=s160-c-k-c0x00ffffff-no-rj" alt="Bari Plux">
+                <span class="logo-text">Bari Plux</span>
+            </a>
         </div>
-</header>
+        
+        <nav class="nav">
+            <ul class="nav-links">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="index.html#downloads" class="nav-link">Downloads</a></li>
+                <li><a href="index.html#videos" class="nav-link">Videos</a></li>
+                <li><a href="mapspubg.html" class="nav-link">Maps</a></li>
+                <li><a href="weaponorg.html" class="nav-link">Weapons</a></li>
+                <li><a href="news.html" class="nav-link">News</a></li>
+                <li><a href="updates.html" class="nav-link">Updates</a></li>
+            </ul>
+        </nav>
+        
+        <div style="display:flex;align-items:center;gap:12px">
+            <div class="search-container">
+                <div class="collapsible-search glass" id="collapsible-search">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="search" class="search-input" placeholder="Search..." id="header-search-input" autocomplete="off">
+                </div>
+            </div>
+            
+            <div id="theme-toggle" class="theme-toggle" title="Toggle Theme">
+                <span class="moon-icon">🌙</span>
+                <span class="sun-icon">☀️</span>
+            </div>
+
+            <a href="login.html" class="login-btn-header" id="loginBtnHeader" title="Login">
+                <i class="fas fa-sign-in-alt"></i>
+                <span>Login</span>
+            </a>
+        </div>
+    </header>
 
 <!-- Mobile Menu Button -->
 <div class="mobile-menu-btn glass" id="mobile-menu-btn">
@@ -8104,55 +8195,7 @@ function sanitizeInput(input) {
     div.textContent = input;
     return div.innerHTML;
 }
-
-// اصلاح تابع sendChatMessage
-function sendChatMessage() {
-    const chatInput = document.getElementById('chat-input');
-    let message = chatInput.value.trim();
-    
-    if (message) {
-        // سانیتایز ورودی کاربر
-        message = sanitizeInput(message);
-        addUserMessage(message);
-        chatInput.value = '';
-        
-        setTimeout(() => {
-            addAIMessage("متوجه شدم! من دستیار هوش مصنوعی Bari Plux هستم. فعلاً در حال توسعه هستم، اما به زودی می‌تونم در بهینه‌سازی بازی بهت کمک کنم!");
-        }, 1000);
-    }
-}
-
-// جلوگیری از inspect ساده
-(function() {
-    // Block F12, Ctrl+Shift+I, Ctrl+U
-    const blockKeys = [123, 73, 85]; // F12, I, U
-    
-    document.addEventListener('keydown', function(e) {
-        if (blockKeys.includes(e.keyCode) || 
-            (e.ctrlKey && e.shiftKey && e.keyCode === 73) ||
-            (e.ctrlKey && e.keyCode === 85)) {
-            e.preventDefault();
-            return false;
-        }
-    });
-    
-    // Block right click
-    document.addEventListener('contextmenu', function(e) {
-        e.preventDefault();
-        return false;
-    });
-    
-    // Detect dev tools
-    setInterval(function() {
-        const before = new Date().getTime();
-        debugger;
-        const after = new Date().getTime();
-        if (after - before > 100) {
-            document.body.innerHTML = '<div style="padding: 20px; text-align: center;">Developer tools detected!</div>';
-        }
-    }, 1000);
-})();
-
+ 
     // Rules Modal
 function setupRulesModal() {
     const rulesModal = document.querySelector('.rules-modal');
@@ -9761,6 +9804,55 @@ document.addEventListener('touchend', function(event) {
         
         console.log('🎯 All features initialized successfully!');
     });
-</script>
+    </script>
+
+    <!-- Scroll Progress Bar -->
+    <script>
+        const scrollProgress = document.getElementById('scrollProgress');
+        if (scrollProgress) {
+            window.addEventListener('scroll', () => {
+                const scrollTop = window.scrollY;
+                const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const scrollPercent = (scrollTop / docHeight) * 100;
+                scrollProgress.style.width = scrollPercent + '%';
+            }, { passive: true });
+        }
+    </script>
+
+    <!-- Login Status - Update Header Button -->
+    <script>
+    function updateLoginButton() {
+        const loginBtn = document.getElementById('loginBtnHeader');
+        if (!loginBtn) return;
+        
+        const storedUser = localStorage.getItem('bariplux_user');
+        
+        if (storedUser) {
+            try {
+                const user = JSON.parse(storedUser);
+                const userName = user.name || user.email.split('@')[0];
+                const initial = userName.charAt(0).toUpperCase();
+                
+                loginBtn.innerHTML = '<span style="display:flex;align-items:center;gap:6px;"><span style="width:24px;height:24px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--text-dark);">' + initial + '</span><span>' + userName.substring(0, 10) + (userName.length > 10 ? '...' : '') + '</span></span>';
+                loginBtn.title = 'Click to logout';
+                loginBtn.href = 'javascript:void(0)';
+                loginBtn.onclick = function(e) {
+                    e.preventDefault();
+                    if (confirm('Logout from Bari Plux?')) {
+                        localStorage.removeItem('bariplux_user');
+                        localStorage.removeItem('bariplux_login_token');
+                        location.reload();
+                    }
+                };
+            } catch (e) {
+                console.error('Error parsing user:', e);
+            }
+        }
+    }
+    
+    updateLoginButton();
+    setTimeout(updateLoginButton, 500);
+    setTimeout(updateLoginButton, 1000);
+    </script>
 </body>
 </html>

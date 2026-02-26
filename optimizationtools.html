@@ -3,7 +3,7 @@
 <head>
     <!-- بهبود Meta Tags برای سئو -->
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
     <title>Bari Plux | Optimization Apps & Keymappings - Performance Tools</title>
     <meta name="description" content="Download optimization apps and keymappings for PUBG Mobile. Park Control, Revo Uninstaller, IObit Driver Booster, and resolution-specific keymappings">
     <meta name="keywords" content="optimization apps, keymappings, pubg mobile, park control, revo uninstaller, iobit driver booster, advanced systemcare">
@@ -15,7 +15,8 @@
     <meta http-equiv="Expires" content="0">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Montserrat:wght@700;800&family=Oxanium:wght@400;600;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/all-styles.css">
     
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="https://i.postimg.cc/65cjsvfQ/imglogo.png">
@@ -69,6 +70,19 @@
             --danger: #F44336;
             --shadow: 0 8px 30px rgba(0,0,0,0.35);
             --shadow-hover: 0 24px 50px rgba(0,0,0,0.45);
+        }
+
+        /* Scroll Progress Bar */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            z-index: 10001;
+            transition: width 0.1s ease-out;
+            box-shadow: 0 0 10px var(--accent);
         }
 
         [data-theme="light"]{
@@ -272,44 +286,6 @@
         .header .left{display:flex;align-items:center;gap:14px}
         .logo-img{width:54px;height:54px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,0.12)}
         .logo-text{font-weight:800;font-size:1.2rem;background:linear-gradient(90deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent}
-
-        /* Theme Toggle */
-        .theme-toggle {
-            width: 60px;
-            height: 30px;
-            border-radius: 999px;
-            padding: 4px;
-            display: flex;
-            align-items: center;
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            cursor: pointer;
-            position: relative;
-        }
-
-        .theme-toggle .knob {
-            width: 22px;
-            height: 22px;
-            border-radius: 999px;
-            background: var(--accent);
-            position: absolute;
-            left: 4px;
-            transition: transform var(--transition);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        }
-
-        [data-theme="light"] .theme-toggle .knob {
-            transform: translateX(30px);
-            background: var(--accent-2);
-        }
-
-        .theme-toggle-icons {
-            display: flex;
-            width: 100%;
-            justify-content: space-between;
-            padding: 0 6px;
-            font-size: 12px;
-        }
 
         /* Navigation */
         .nav-links {
@@ -1255,6 +1231,15 @@
             color: var(--accent);
             margin-bottom: 20px;
             transition: var(--transition);
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .download-icon img {
+            background: transparent;
+            border: none;
         }
 
         .download-card:hover .download-icon {
@@ -1760,6 +1745,19 @@
     </style>
 </head>
 <body>
+    <!-- Security: Disable right-click and keyboard shortcuts -->
+    <script>
+        document.addEventListener('contextmenu', function(e) { e.preventDefault(); }, false);
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'F12' || (e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S')) || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'C' || e.key === 'c'))) {
+                e.preventDefault();
+            }
+        }, false);
+        document.ondragstart = function() { return false; };
+    </script>
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+
     <!-- Particles.js Container -->
     <div id="particles-js"></div>
 
@@ -1773,7 +1771,7 @@
     <!-- Header -->
     <header class="header glass">
         <div class="left">
-            <a href="index" class="logo" style="display:flex;align-items:center;gap:12px;text-decoration:none">
+            <a href="index.html" class="logo" style="display:flex;align-items:center;gap:12px;text-decoration:none">
                 <img class="logo-img" src="https://yt3.googleusercontent.com/RPW5Z_kcoEu0ES_VpL4-7ZqI4eI1OQfuVL-DbuCYWmRhXono9hA5NOCSGGMDLzJqNcHUlhOg=s160-c-k-c0x00ffffff-no-rj" alt="Bari Plux">
                 <span class="logo-text">Bari Plux</span>
             </a>
@@ -1781,26 +1779,26 @@
         
         <nav class="nav">
             <ul class="nav-links">
-                <li><a href="index" class="nav-link">Home</a></li>
-                <li><a href="index#downloads" class="nav-link">Downloads</a></li>
-                <li><a href="index#videos" class="nav-link">Videos</a></li>
-                <li><a href="index#pubg" class="nav-link">Content</a></li>
-                <li><a href="index#plux-times" class="nav-link">Plux Times</a></li>
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="index.html#downloads" class="nav-link">Downloads</a></li>
+                <li><a href="index.html#videos" class="nav-link">Videos</a></li>
+                <li><a href="mapspubg.html" class="nav-link">Maps</a></li>
+                <li><a href="weaponorg.html" class="nav-link">Weapons</a></li>
+                <li><a href="news.html" class="nav-link">News</a></li>
+                <li><a href="updates.html" class="nav-link">Updates</a></li>
             </ul>
         </nav>
         
         <div style="display:flex;align-items:center;gap:12px">
-            <div id="theme-toggle" class="theme-toggle glass" title="Toggle Theme">
-                <div class="theme-toggle-icons">
-                    <div style="font-size:12px;color:var(--muted)">🌙</div>
-                    <div style="font-size:12px;color:var(--muted)">☀️</div>
-                </div>
-                <div class="knob" id="theme-knob"></div>
+            <div id="theme-toggle" class="theme-toggle" title="Toggle Theme">
+                <span class="moon-icon">🌙</span>
+                <span class="sun-icon">☀️</span>
             </div>
-            
-            <button class="mobile-menu-btn glass">
-                <i class="fas fa-bars"></i>
-            </button>
+
+            <a href="login.html" class="login-btn-header" id="loginBtnHeader" title="Login">
+                <i class="fas fa-sign-in-alt"></i>
+                <span>Login</span>
+            </a>
         </div>
     </header>
     
@@ -1980,7 +1978,7 @@
                 </button>
             </div>
             <div class="password-hint">
-                <small>Hint: The name of this website</small>
+                <small>Hint: The name of this website (BariPlux)</small>
             </div>
             <div id="password-error" class="error-message" style="display: none;">
                 <i class="fas fa-exclamation-circle"></i> Incorrect password!
@@ -2014,11 +2012,6 @@
                             </i>
                         </a>
                         <p style="margin: 1px 0; font-size: 0.9rem; opacity: 0.8;">120 FPS</p>
-                        <a href="https://pub-027e6a13a310412885aa9ee61c06fa89.r2.dev/BALANCED165FPS.zip" class="download">
-                            <img src="https://i.postimg.cc/RFmX3qdD/temp-16-22-34-image-upscayl-5x-ultramix-balanced-4x.png" loading="lazy" alt="ParkControl" width="250" height="50">
-                            </i>
-                        </a>
-                        <p style="margin: 1px 0; font-size: 0.9rem; opacity: 0.8;">144 - 165 FPS</p>
                     </div>
                 </div>
                 
@@ -2040,11 +2033,6 @@
                             </i>
                         </a>
                         <p style="margin: 1px 0; font-size: 0.9rem; opacity: 0.8;">120 FPS</p>
-                        <a href="https://pub-d14eb0618b5447beb4558d6572addc76.r2.dev/HD165FPS.zip" class="download">
-                            <img src="https://i.postimg.cc/RFmX3qdD/temp-16-22-34-image-upscayl-5x-ultramix-balanced-4x.png" loading="lazy" alt="ParkControl" width="250" height="50">
-                            </i>
-                        </a>
-                        <p style="margin: 1px 0; font-size: 0.9rem; opacity: 0.8;">144 - 165 FPS</p>
                     </div>
                 </div>
 
@@ -2066,11 +2054,6 @@
                             </i>
                         </a>
                         <p style="margin: 1px 0; font-size: 0.9rem; opacity: 0.8;">120 FPS</p>
-                        <a href="https://pub-5fc770052e374830b752ef1d4e974170.r2.dev/HDR165FPS.zip" class="download">
-                            <img src="https://i.postimg.cc/RFmX3qdD/temp-16-22-34-image-upscayl-5x-ultramix-balanced-4x.png" loading="lazy" alt="ParkControl" width="250" height="50">
-                            </i>
-                        </a>
-                        <p style="margin: 1px 0; font-size: 0.9rem; opacity: 0.8;">144 - 165 FPS</p>
                     </div>
                 </div>
                 
@@ -2092,11 +2075,6 @@
                             </i>
                         </a>
                         <p style="margin: 1px 0; font-size: 0.9rem; opacity: 0.8;">120 FPS</p>
-                        <a href="https://pub-f0c8570446304c87aeefdb93a334f5e2.r2.dev/UltraHDR165FPS.zip" class="download">
-                            <img src="https://i.postimg.cc/RFmX3qdD/temp-16-22-34-image-upscayl-5x-ultramix-balanced-4x.png" loading="lazy" alt="ParkControl" width="250" height="50">
-                            </i>
-                        </a>
-                        <p style="margin: 1px 0; font-size: 0.9rem; opacity: 0.8;">144 - 165 FPS</p>
                     </div>
                 </div>
             </div>
@@ -2830,6 +2808,55 @@ setInterval(checkForPageUpdate, 45000);
             setupAdvancedImageReload(); // NEW: Advanced auto-reload system
             initParticles();
         });
+    </script>
+
+    <!-- Scroll Progress Bar -->
+    <script>
+        const scrollProgress = document.getElementById('scrollProgress');
+        if (scrollProgress) {
+            window.addEventListener('scroll', () => {
+                const scrollTop = window.scrollY;
+                const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const scrollPercent = (scrollTop / docHeight) * 100;
+                scrollProgress.style.width = scrollPercent + '%';
+            }, { passive: true });
+        }
+    </script>
+
+    <!-- Login Status - Update Header Button -->
+    <script>
+    function updateLoginButton() {
+        const loginBtn = document.getElementById('loginBtnHeader');
+        if (!loginBtn) return;
+        
+        const storedUser = localStorage.getItem('bariplux_user');
+        
+        if (storedUser) {
+            try {
+                const user = JSON.parse(storedUser);
+                const userName = user.name || user.email.split('@')[0];
+                const initial = userName.charAt(0).toUpperCase();
+                
+                loginBtn.innerHTML = '<span style="display:flex;align-items:center;gap:6px;"><span style="width:24px;height:24px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--text-dark);">' + initial + '</span><span>' + userName.substring(0, 10) + (userName.length > 10 ? '...' : '') + '</span></span>';
+                loginBtn.title = 'Click to logout';
+                loginBtn.href = 'javascript:void(0)';
+                loginBtn.onclick = function(e) {
+                    e.preventDefault();
+                    if (confirm('Logout from Bari Plux?')) {
+                        localStorage.removeItem('bariplux_user');
+                        localStorage.removeItem('bariplux_login_token');
+                        location.reload();
+                    }
+                };
+            } catch (e) {
+                console.error('Error parsing user:', e);
+            }
+        }
+    }
+    
+    updateLoginButton();
+    setTimeout(updateLoginButton, 500);
+    setTimeout(updateLoginButton, 1000);
     </script>
 </body>
 </html>

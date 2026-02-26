@@ -1,0 +1,17 @@
+export default {
+  async fetch(request, env) {
+    const url = new URL(request.url);
+    
+    // اگر آدرس /download/BariPluxTool.7z بود
+    if (url.pathname === '/download/BariPluxTool.7z') {
+      // ریدایرکت به R2
+      return Response.redirect(
+        'https://pub-5ecc21a6096141fcab976add15233848.r2.dev/BariPluxTool.7z',
+        302
+      );
+    }
+
+    // اگر آدرس دیگری بود
+    return new Response('Not Found', { status: 404 });
+  }
+};
