@@ -2,11 +2,12 @@
 <html lang="en" dir="ltr">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5,user-scalable=yes,viewport-fit=cover" />
 <title>PUBG Mobile 4.0 Events - Bari Plux</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Montserrat:wght@700;800&family=Oxanium:wght@400;600;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/all-styles.css">
 <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 
 <style>
@@ -144,42 +145,103 @@ body{
   letter-spacing: -0.5px;
 }
 
+/* Search Container */
+.search-container {
+    position: relative;
+}
+
+.collapsible-search {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 25px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--glass-border);
+    transition: all 0.3s;
+}
+
+.collapsible-search:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 15px rgba(108,99,255,0.2);
+}
+
+.search-icon {
+    color: rgba(232,238,248,0.5);
+}
+
+.search-input {
+    background: transparent;
+    border: none;
+    color: var(--text);
+    font-size: 0.85rem;
+    width: 150px;
+    outline: none;
+}
+
+.search-input::placeholder {
+    color: rgba(232,238,248,0.4);
+}
+
+/* Login Button */
+.login-btn-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    color: var(--text);
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.login-btn-header:hover {
+    background: rgba(255,255,255,0.1);
+    transform: translateY(-2px);
+    color: var(--text);
+}
+
 /* Theme Toggle */
         .theme-toggle {
-            width: 60px;
-            height: 30px;
-            border-radius: 999px;
-            padding: 4px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
+            justify-content: center;
             cursor: pointer;
-            position: relative;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s;
+            font-size: 1.1rem;
+            text-align: center;
         }
 
-        .theme-toggle .knob {
-            width: 22px;
-            height: 22px;
-            border-radius: 999px;
-            background: var(--accent);
-            position: absolute;
-            left: 4px;
-            transition: transform var(--transition);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        .theme-toggle:hover {
+            background: rgba(108,99,255,0.2);
+            transform: scale(1.1);
         }
 
-        [data-theme="light"] .theme-toggle .knob {
-            transform: translateX(30px);
-            background: var(--accent-2);
+        .theme-toggle .moon-icon {
+            display: block;
+            font-size: 1.2rem;
         }
 
-        .theme-toggle-icons {
-            display: flex;
-            width: 100%;
-            justify-content: space-between;
-            padding: 0 6px;
-            font-size: 12px;
+        .theme-toggle .sun-icon {
+            display: none;
+            font-size: 1.2rem;
+        }
+
+        [data-theme="light"] .theme-toggle .moon-icon {
+            display: none;
+        }
+
+        [data-theme="light"] .theme-toggle .sun-icon {
+            display: block;
         }
 
 /* Hero */
@@ -613,6 +675,19 @@ body{
 </style>
 </head>
 <body>
+  <!-- Security: Disable right-click and keyboard shortcuts -->
+  <script>
+      document.addEventListener('contextmenu', function(e) { e.preventDefault(); }, false);
+      document.addEventListener('keydown', function(e) {
+          if (e.key === 'F12' || (e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S')) || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'C' || e.key === 'c'))) {
+              e.preventDefault();
+          }
+      }, false);
+      document.ondragstart = function() { return false; };
+  </script>
+  <!-- Scroll Progress Bar -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+
   <!-- Particles Container -->
   <div id="particles-js"></div>
 
@@ -620,25 +695,56 @@ body{
     <!-- Header -->
     <header class="header glass" role="banner">
       <div class="left">
-        <a href="#" class="logo" style="display:flex;align-items:center;gap:12px;text-decoration:none">
+        <a href="index.html" class="logo" style="display:flex;align-items:center;gap:12px;text-decoration:none">
           <img class="logo-img" src="https://yt3.googleusercontent.com/RPW5Z_kcoEu0ES_VpL4-7ZqI4eI1OQfuVL-DbuCYWmRhXono9hA5NOCSGGMDLzJqNcHUlhOg=s160-c-k-c0x00ffffff-no-rj" alt="Bari Plux">
           <span class="logo-text">Bari Plux</span>
         </a>
       </div>
-
+      
+      <nav class="nav">
+        <ul class="nav-links">
+            <li><a href="index.html" class="nav-link">Home</a></li>
+            <li><a href="index.html#downloads" class="nav-link">Downloads</a></li>
+            <li><a href="index.html#videos" class="nav-link">Videos</a></li>
+            <li><a href="mapspubg.html" class="nav-link">Maps</a></li>
+            <li><a href="weaponorg.html" class="nav-link">Weapons</a></li>
+            <li><a href="news.html" class="nav-link">News</a></li>
+            <li><a href="updates.html" class="nav-link">Updates</a></li>
+        </ul>
+    </nav>
+      
       <div style="display:flex;align-items:center;gap:12px">
-        <div id="theme-toggle" class="theme-toggle glass" aria-hidden="true" title="Toggle Theme">
-          <div class="theme-toggle-icons">
-            <div style="font-size:12px;color:var(--muted)">🌙</div>
-            <div style="font-size:12px;color:var(--muted)">☀️</div>
-          </div>
-          <div class="knob" id="theme-knob"></div>
+        <div id="theme-toggle" class="theme-toggle" title="Toggle Theme">
+          <span class="moon-icon">🌙</span>
+          <span class="sun-icon">☀️</span>
         </div>
 
-        <a href="index" class="glass back-btn" style="padding:10px 20px;border-radius:999px;text-decoration:none;color:var(--text);font-weight:600;display:flex;align-items:center;gap:8px">
-          <i class="fas fa-arrow-left"></i>
-          Home
-        </a>
+        <div class="user-menu-container">
+            <button id="loginBtnHeader" class="login-btn-header" title="Login">
+                <i class="fas fa-sign-in-alt"></i>
+                <span>Login</span>
+            </button>
+            <div id="userDropdown" class="user-dropdown glass">
+                <div class="dropdown-header">
+                    <div class="user-avatar-small" id="userAvatar">U</div>
+                    <div>
+                        <div class="user-name-dropdown" id="userName">User</div>
+                        <div class="user-email-dropdown" id="userEmail">user@example.com</div>
+                    </div>
+                </div>
+                <div class="dropdown-divider"></div>
+                <div class="dropdown-actions">
+                    <button id="viewProfileBtn" class="dropdown-btn">
+                        <i class="fas fa-user-circle"></i>
+                        <span>View Profile</span>
+                    </button>
+                    <button id="logoutBtn" class="dropdown-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </button>
+                </div>
+            </div>
+        </div>
       </div>
     </header>
 
@@ -1242,6 +1348,55 @@ document.addEventListener('DOMContentLoaded', function(){
   setupScrollTop();
   initParticles();
 });
+</script>
+
+<!-- Scroll Progress Bar -->
+<script>
+    const scrollProgress = document.getElementById('scrollProgress');
+    if (scrollProgress) {
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = (scrollTop / docHeight) * 100;
+            scrollProgress.style.width = scrollPercent + '%';
+        }, { passive: true });
+    }
+</script>
+
+<!-- Login Status - Update Header Button -->
+<script>
+function updateLoginButton() {
+    const loginBtn = document.getElementById('loginBtnHeader');
+    if (!loginBtn) return;
+    
+    const storedUser = localStorage.getItem('bariplux_user');
+    
+    if (storedUser) {
+        try {
+            const user = JSON.parse(storedUser);
+            const userName = user.name || user.email.split('@')[0];
+            const initial = userName.charAt(0).toUpperCase();
+            
+            loginBtn.innerHTML = '<span style="display:flex;align-items:center;gap:6px;"><span style="width:24px;height:24px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--text-dark);">' + initial + '</span><span>' + userName.substring(0, 10) + (userName.length > 10 ? '...' : '') + '</span></span>';
+            loginBtn.title = 'Click to logout';
+            loginBtn.href = 'javascript:void(0)';
+            loginBtn.onclick = function(e) {
+                e.preventDefault();
+                if (confirm('Logout from Bari Plux?')) {
+                    localStorage.removeItem('bariplux_user');
+                    localStorage.removeItem('bariplux_login_token');
+                    location.reload();
+                }
+            };
+        } catch (e) {
+            console.error('Error parsing user:', e);
+        }
+    }
+}
+
+updateLoginButton();
+setTimeout(updateLoginButton, 500);
+setTimeout(updateLoginButton, 1000);
 </script>
 </body>
 </html>

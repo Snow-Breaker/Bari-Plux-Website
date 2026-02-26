@@ -2,10 +2,11 @@
 <html lang="fa">
 <head></script>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
     <title>PUBG Mobile New UI - Bari Plux</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700;800&family=Oxanium:wght@400;600;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/all-styles.css">
 
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="https://i.postimg.cc/65cjsvfQ/imglogo.png">
@@ -211,17 +212,72 @@
     </style>
 </head>
 <body>
+    <!-- Security: Disable right-click and keyboard shortcuts -->
+    <script>
+        document.addEventListener('contextmenu', function(e) { e.preventDefault(); }, false);
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'F12' || (e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S')) || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'C' || e.key === 'c'))) {
+                e.preventDefault();
+            }
+        }, false);
+        document.ondragstart = function() { return false; };
+    </script>
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+
     <!-- Header -->
-    <header class="header">
-        <div class="container header-container">
-            <a href="index.html" class="logo">
-                <img src="https://yt3.googleusercontent.com/RPW5Z_kcoEu0ES_VpL4-7ZqI4eI1OQfuVL-DbuCYWmRhXono9hA5NOCSGGMDLzJqNcHUlhOg=s160-c-k-c0x00ffffff-no-rj" alt="Bari Plux Logo" class="logo-img">
+    <header class="header glass">
+        <div class="left">
+            <a href="index.html" class="logo" style="display:flex;align-items:center;gap:12px;text-decoration:none">
+                <img class="logo-img" src="https://yt3.googleusercontent.com/RPW5Z_kcoEu0ES_VpL4-7ZqI4eI1OQfuVL-DbuCYWmRhXono9hA5NOCSGGMDLzJqNcHUlhOg=s160-c-k-c0x00ffffff-no-rj" alt="Bari Plux">
                 <span class="logo-text">Bari Plux</span>
             </a>
-            <a href="bariplux.com" class="back-btn">
-                <i class="fas fa-arrow-left"></i>
-                Back to Home
-            </a>
+        </div>
+        
+        <nav class="nav">
+            <ul class="nav-links">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="index.html#downloads" class="nav-link">Downloads</a></li>
+                <li><a href="index.html#videos" class="nav-link">Videos</a></li>
+                <li><a href="mapspubg.html" class="nav-link">Maps</a></li>
+                <li><a href="weaponorg.html" class="nav-link">Weapons</a></li>
+                <li><a href="news.html" class="nav-link">News</a></li>
+                <li><a href="updates.html" class="nav-link">Updates</a></li>
+            </ul>
+        </nav>
+        
+        <div style="display:flex;align-items:center;gap:12px">
+            <div id="theme-toggle" class="theme-toggle" title="Toggle Theme">
+                <span class="moon-icon">🌙</span>
+                <span class="sun-icon">☀️</span>
+            </div>
+
+            <div class="user-menu-container">
+                <button id="loginBtnHeader" class="login-btn-header" title="Login">
+                    <i class="fas fa-sign-in-alt"></i>
+                    <span>Login</span>
+                </button>
+                <div id="userDropdown" class="user-dropdown glass">
+                    <div class="dropdown-header">
+                        <div class="user-avatar-small" id="userAvatar">U</div>
+                        <div>
+                            <div class="user-name-dropdown" id="userName">User</div>
+                            <div class="user-email-dropdown" id="userEmail">user@example.com</div>
+                        </div>
+                    </div>
+                    <div class="dropdown-divider"></div>
+                    <div class="dropdown-actions">
+                        <button id="viewProfileBtn" class="dropdown-btn">
+                            <i class="fas fa-user-circle"></i>
+                            <span>View Profile</span>
+                        </button>
+                        <button id="logoutBtn" class="dropdown-btn">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Logout</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </header>
 
@@ -293,6 +349,55 @@
             // تنظیم مجدد اندازه هنگام تغییر سایز پنجره
             window.addEventListener('resize', setupVideoPlayer);
         });
+    </script>
+
+    <!-- Scroll Progress Bar -->
+    <script>
+        const scrollProgress = document.getElementById('scrollProgress');
+        if (scrollProgress) {
+            window.addEventListener('scroll', () => {
+                const scrollTop = window.scrollY;
+                const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const scrollPercent = (scrollTop / docHeight) * 100;
+                scrollProgress.style.width = scrollPercent + '%';
+            }, { passive: true });
+        }
+    </script>
+
+    <!-- Login Status - Update Header Button -->
+    <script>
+    function updateLoginButton() {
+        const loginBtn = document.getElementById('loginBtnHeader');
+        if (!loginBtn) return;
+        
+        const storedUser = localStorage.getItem('bariplux_user');
+        
+        if (storedUser) {
+            try {
+                const user = JSON.parse(storedUser);
+                const userName = user.name || user.email.split('@')[0];
+                const initial = userName.charAt(0).toUpperCase();
+                
+                loginBtn.innerHTML = '<span style="display:flex;align-items:center;gap:6px;"><span style="width:24px;height:24px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--text-dark);">' + initial + '</span><span>' + userName.substring(0, 10) + (userName.length > 10 ? '...' : '') + '</span></span>';
+                loginBtn.title = 'Click to logout';
+                loginBtn.href = 'javascript:void(0)';
+                loginBtn.onclick = function(e) {
+                    e.preventDefault();
+                    if (confirm('Logout from Bari Plux?')) {
+                        localStorage.removeItem('bariplux_user');
+                        localStorage.removeItem('bariplux_login_token');
+                        location.reload();
+                    }
+                };
+            } catch (e) {
+                console.error('Error parsing user:', e);
+            }
+        }
+    }
+    
+    updateLoginButton();
+    setTimeout(updateLoginButton, 500);
+    setTimeout(updateLoginButton, 1000);
     </script>
 </body>
 </html>

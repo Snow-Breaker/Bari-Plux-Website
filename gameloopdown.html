@@ -1146,6 +1146,118 @@
             opacity: 0.7;
         }
 
+        /* User Menu Dropdown */
+        .user-menu-container {
+            position: relative;
+        }
+
+        .user-dropdown {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            min-width: 280px;
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            background: var(--bg-2);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px) scale(0.95);
+            transition: all var(--transition);
+            z-index: 1000;
+        }
+
+        .user-dropdown.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+        }
+
+        .dropdown-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .user-avatar-small {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 20px;
+        }
+
+        .user-quick-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .user-name-dropdown {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .user-email-dropdown {
+            font-size: 0.8rem;
+            color: var(--muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: var(--glass-border);
+            margin: 12px 0;
+        }
+
+        .dropdown-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .dropdown-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            color: var(--text);
+            cursor: pointer;
+            transition: all var(--transition);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .dropdown-btn:hover {
+            background: var(--glass-bg-hover);
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateX(4px);
+        }
+
+        .dropdown-btn.logout-btn:hover {
+            background: rgba(244, 67, 54, 0.1);
+            border-color: #f44336;
+            color: #f44336;
+        }
+
         /* scroll top */
         .scroll-top{position:fixed;bottom:26px;right:26px;width:52px;height:52px;border-radius:999px;display:flex;align-items:center;justify-content:center;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:white;box-shadow:0 18px 40px rgba(0,0,0,0.45);cursor:pointer;transform:translateY(20px);opacity:0;visibility:hidden;transition:all var(--transition);z-index: 100; border: none;}
         .scroll-top.visible{transform:translateY(0);opacity:1;visibility:visible}
@@ -1258,10 +1370,30 @@
                 <span class="sun-icon">☀️</span>
             </div>
 
-            <a href="login.html" class="login-btn-header" id="loginBtnHeader" title="Login">
-                <i class="fas fa-sign-in-alt"></i>
-                <span>Login</span>
-            </a>
+            <div class="user-menu-container">
+                <button id="loginBtnHeader" class="login-btn-header" title="Login">
+                    <i class="fas fa-sign-in-alt"></i>
+                    <span>Login</span>
+                </button>
+                <div id="userDropdown" class="user-dropdown glass">
+                    <div class="dropdown-header">
+                        <div id="userAvatar" class="user-avatar-small"></div>
+                        <div class="user-quick-info">
+                            <div id="userName" class="user-name-dropdown"></div>
+                            <div id="userEmail" class="user-email-dropdown"></div>
+                        </div>
+                    </div>
+                    <div class="dropdown-divider"></div>
+                    <div class="dropdown-actions">
+                        <button id="viewProfileBtn" class="dropdown-btn">
+                            <i class="fas fa-user-circle"></i> View Profile
+                        </button>
+                        <button id="logoutBtn" class="dropdown-btn logout-btn">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </header>
     
@@ -1789,7 +1921,8 @@ setInterval(checkForPageUpdate, 45000);
     <script>
     function updateLoginButton() {
         const loginBtn = document.getElementById('loginBtnHeader');
-        if (!loginBtn) return;
+        const dropdown = document.getElementById('userDropdown');
+        if (!loginBtn || !dropdown) return;
         
         const storedUser = localStorage.getItem('bariplux_user');
         
@@ -1797,13 +1930,26 @@ setInterval(checkForPageUpdate, 45000);
             try {
                 const user = JSON.parse(storedUser);
                 const userName = user.name || user.email.split('@')[0];
+                const userEmail = user.email || '';
                 const initial = userName.charAt(0).toUpperCase();
                 
-                loginBtn.innerHTML = '<span style="display:flex;align-items:center;gap:6px;"><span style="width:24px;height:24px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--text-dark);">' + initial + '</span><span>' + userName.substring(0, 10) + (userName.length > 10 ? '...' : '') + '</span></span>';
-                loginBtn.title = 'Click to logout';
-                loginBtn.href = 'javascript:void(0)';
+                loginBtn.innerHTML = '<span style="display:flex;align-items:center;gap:8px;"><span style="width:28px;height:28px;background:linear-gradient(135deg,var(--accent),var(--accent-2));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:white;">' + initial + '</span><span style="font-size:0.9rem;">' + userName.substring(0, 12) + (userName.length > 12 ? '...' : '') + '</span></span>';
+                loginBtn.style.cursor = 'pointer';
                 loginBtn.onclick = function(e) {
                     e.preventDefault();
+                    e.stopPropagation();
+                    toggleDropdown();
+                };
+                
+                document.getElementById('userAvatar').innerHTML = initial;
+                document.getElementById('userName').textContent = userName;
+                document.getElementById('userEmail').textContent = userEmail;
+                
+                document.getElementById('viewProfileBtn').onclick = function() {
+                    window.location.href = 'login.html';
+                };
+                
+                document.getElementById('logoutBtn').onclick = function() {
                     if (confirm('Logout from Bari Plux?')) {
                         localStorage.removeItem('bariplux_user');
                         localStorage.removeItem('bariplux_login_token');
@@ -1813,8 +1959,27 @@ setInterval(checkForPageUpdate, 45000);
             } catch (e) {
                 console.error('Error parsing user:', e);
             }
+        } else {
+            loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i><span>Login</span>';
+            loginBtn.href = 'login.html';
+            loginBtn.onclick = null;
+            dropdown.classList.remove('active');
         }
     }
+    
+    function toggleDropdown() {
+        const dropdown = document.getElementById('userDropdown');
+        dropdown.classList.toggle('active');
+    }
+    
+    document.addEventListener('click', function(e) {
+        const dropdown = document.getElementById('userDropdown');
+        const container = document.querySelector('.user-menu-container');
+        
+        if (container && !container.contains(e.target)) {
+            dropdown.classList.remove('active');
+        }
+    });
     
     updateLoginButton();
     setTimeout(updateLoginButton, 500);
