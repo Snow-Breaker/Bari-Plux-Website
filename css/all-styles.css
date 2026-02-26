@@ -133,6 +133,8 @@ ul { list-style: none; padding: 0; margin: 0; }
     overflow: hidden;
 }
 
+/* User Dropdown Fix - ID selector for higher specificity */
+#userDropdown,
 .glass.user-dropdown,
 .user-dropdown.glass {
     overflow: visible !important;

@@ -2,10 +2,7 @@
 <html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1.0">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#6C63FF">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bari Plux | Gaming & Tech Content Creator</title>
     <meta name="description" content="Professional gaming content creator specializing in PUBG optimizations, emulator setups, and tech solutions">
     
@@ -13,24 +10,15 @@
     <link rel="icon" type="image/x-icon" href="https://i.postimg.cc/65cjsvfQ/imglogo.png">
     <link rel="apple-touch-icon" sizes="180x180" href="https://i.postimg.cc/65cjsvfQ/imglogo.png">
 
-    <script>
-    // Mobile device detection - redirect desktop users
-    (function() {
-        var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        var isTablet = /iPad|Android/i.test(navigator.userAgent) && window.innerWidth > 768;
-        var isSmallScreen = window.innerWidth < 992;
-        
-        if (!isMobile && !isTablet && window.innerWidth > 768) {
-            window.location.href = 'index.html';
-            return;
-        }
-        
-        // Also redirect if on desktop but screen is too small (tablet mode off)
-        if (window.innerWidth > 768 && !/Android|webOS|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-            window.location.href = 'index.html';
-        }
-    })();
-    </script>
+    <!-- در <head> قرار دهید -->
+<script>
+// انتقال اجباری به نسخه موبایل
+if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) &&
+    window.innerWidth <= 768 &&
+    !window.location.href.includes('mobile')) {
+    window.location.href = 'mobile';
+}
+</script>
     
     <!-- Open Graph Meta Tags -->
     <meta property="og:title" content="Bari Plux | Gaming & Tech Content Creator">
@@ -55,13 +43,6 @@
 <meta name="robots" content="index, follow">
 <meta property="og:url" content="https://bariplux.com">
 <meta property="og:site_name" content="Bari Plux">
-
-<!-- در بخش head جایگزین کن -->
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#6C63FF">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
 <!-- Schema Markup -->
 <script type="application/ld+json">
@@ -88,15 +69,12 @@
 </script>
 
 <!-- در <head> -->
-<!-- Security: Disable right-click and keyboard shortcuts -->
 <script>
-    document.addEventListener('contextmenu', e => e.preventDefault());
-    document.addEventListener('keydown', e => {
-        if (e.key === 'F12' || (e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S')) || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'C' || e.key === 'c'))) {
-            e.preventDefault();
-        }
-    });
-    document.ondragstart = function() { return false; };
+// کد امنیتی ساده
+document.addEventListener('contextmenu', e => e.preventDefault());
+document.addEventListener('keydown', e => {
+    if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) e.preventDefault();
+});
 </script>
 
 <!-- در انتهای <body> -->
@@ -108,19 +86,24 @@
 <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
 <link rel="dns-prefetch" href="https://www.gstatic.com">
 
-<!-- Mobile optimization: Manifest and app title for iOS/Android -->
+<!-- اضافه به <head> -->
+<meta name="theme-color" content="#6C63FF">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+<!-- Manifest -->
 <link rel="manifest" href="/manifest.json">
-<meta name="format-detection" content="telephone=no">
-<meta name="format-detection" content="email=no">
-<meta name="app-mobile-web-app-title" content="Bari Plux">
 
 <!-- Preload critical resources -->
 <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Montserrat:wght@700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
 
-<!-- Mobile optimization consolidated -->
+<!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#6C63FF">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="/manifest.json">
 
-
-    <!-- Security: Strict transport security and frame options -->
+    <!-- اضافه کردن این متا تگ‌ها در <head> -->
 <meta http-equiv="Strict-Transport-Security" content="max-age=31536000; includeSubDomains">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta http-equiv="X-Frame-Options" content="DENY">
@@ -129,8 +112,7 @@
 
     <!-- Fonts and Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Montserrat:wght@700;800&family=Oxanium:wght@400;600;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/all-styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
 
     <!-- Preload critical resources -->
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -144,15 +126,8 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js" defer></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js" defer></script>
     
-    <!-- Particles.js - Lazy loaded for mobile performance -->
-    <script>
-        if (window.innerWidth >= 1024) {
-            var script = document.createElement('script');
-            script.src = 'https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js';
-            script.async = true;
-            document.head.appendChild(script);
-        }
-    </script>
+    <!-- Particles.js -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 
     <style>
         :root {
@@ -204,20 +179,14 @@
             color:var(--text);
             -webkit-font-smoothing:antialiased;
             -moz-osx-font-smoothing:grayscale;
-            -webkit-touch-callout:none;
-            -webkit-user-select:none;
             transition: color var(--transition);
             padding-bottom:80px;
-            padding-top: max(0px, env(safe-area-inset-top));
-            padding-left: max(0px, env(safe-area-inset-left));
-            padding-right: max(0px, env(safe-area-inset-right));
             background-attachment: fixed;
             position: relative;
             overflow-x: hidden;
-            user-select: none;
         }
 
-        /* Particles.js Container - Disabled on mobile for better performance */
+        /* Particles.js Container */
         #particles-js {
             position: fixed;
             width: 100%;
@@ -226,13 +195,6 @@
             left: 0;
             z-index: -1;
             pointer-events: none;
-            display: none;
-        }
-        
-        @media (min-width: 1024px) {
-            #particles-js {
-                display: block;
-            }
         }
 
         /* Animated background elements */
@@ -720,8 +682,7 @@
     background: var(--glass-bg);
     border: 1px solid var(--glass-border);
     border-radius: 12px;
-    padding: 12px 10px;
-    min-height: 48px;
+    padding: 10px 8px;
     cursor: pointer;
     transition: all 0.2s ease;
     display: flex;
@@ -730,8 +691,6 @@
     gap: 6px;
     color: var(--text);
     font-size: 0.75rem;
-    -webkit-tap-highlight-color: transparent;
-    touch-action: manipulation;
 }
 
 .action-btn:hover {
@@ -789,481 +748,6 @@
     color: var(--accent);
     font-size: 0.9rem;
     width: 16px;
-}
-
-.mobile-menu-btn {
-    display: none;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
-    cursor: pointer;
-    padding: 10px;
-    position: fixed;
-    top: 20px;
-    right: 90px; /* فاصله از دکمه تغییر تم */
-    z-index: 1001;
-    backdrop-filter: blur(20px);
-    border: 1px solid var(--glass-border);
-}
-
-.mobile-menu-btn span {
-    width: 20px;
-    height: 2px;
-    background: var(--text);
-    margin: 2px 0;
-    transition: var(--transition);
-    border-radius: 2px;
-}
-
-.mobile-menu-btn.active span:nth-child(1) {
-    transform: rotate(45deg) translate(6px, 6px);
-}
-
-.mobile-menu-btn.active span:nth-child(2) {
-    opacity: 0;
-}
-
-.mobile-menu-btn.active span:nth-child(3) {
-    transform: rotate(-45deg) translate(6px, -6px);
-}
-
-.mobile-menu-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(5px);
-    z-index: 999;
-    opacity: 0;
-    visibility: hidden;
-    transition: var(--transition);
-}
-
-.mobile-menu-overlay.active {
-    opacity: 1;
-    visibility: visible;
-}
-
-.mobile-menu-sidebar {
-    position: fixed;
-    top: 0;
-    left: -100%;
-    width: 85%;
-    max-width: 320px;
-    height: 100vh;
-    background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06));
-    backdrop-filter: blur(30px) saturate(180%);
-    border-right: 1px solid var(--glass-border);
-    z-index: 1000;
-    transition: var(--transition);
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-}
-
-.mobile-menu-sidebar.active {
-    left: 0;
-}
-
-.mobile-menu-header {
-    padding: 25px 20px;
-    border-bottom: 1px solid var(--glass-border);
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
-}
-
-.mobile-menu-profile {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.mobile-menu-avatar {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    border: 3px solid var(--accent);
-    object-fit: cover;
-    box-shadow: 0 8px 25px rgba(108, 99, 255, 0.3);
-}
-
-.mobile-menu-user-info h3 {
-    font-size: 1.2rem;
-    margin-bottom: 5px;
-    color: var(--text);
-    font-weight: 700;
-}
-
-.mobile-menu-user-info p {
-    font-size: 0.85rem;
-    color: var(--muted);
-    margin-bottom: 8px;
-}
-
-.mobile-menu-close {
-    background: rgba(255,255,255,0.1);
-    border: 1px solid var(--glass-border);
-    border-radius: 10px;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text);
-    cursor: pointer;
-    transition: var(--transition);
-    backdrop-filter: blur(10px);
-}
-
-.mobile-menu-close:hover {
-    background: rgba(255,255,255,0.15);
-    transform: rotate(90deg);
-}
-
-.mobile-menu-links {
-    flex: 1;
-    padding: 20px 0;
-    list-style: none;
-}
-
-.mobile-menu-link {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    padding: 18px 25px;
-    color: var(--text);
-    text-decoration: none;
-    transition: var(--transition);
-    position: relative;
-    border-left: 3px solid transparent;
-}
-
-.mobile-menu-link:hover,
-.mobile-menu-link.active {
-    background: linear-gradient(135deg, rgba(108,99,255,0.1), rgba(0,191,166,0.05));
-    border-left-color: var(--accent);
-    color: var(--accent);
-}
-
-.mobile-menu-link i {
-    width: 20px;
-    text-align: center;
-    font-size: 1.1rem;
-}
-
-.mobile-menu-link span {
-    font-weight: 500;
-    font-size: 0.95rem;
-}
-
-.menu-indicator {
-    margin-left: auto;
-    width: 6px;
-    height: 6px;
-    background: var(--accent);
-    border-radius: 50%;
-    opacity: 0;
-    transition: var(--transition);
-}
-
-.mobile-menu-link.active .menu-indicator {
-    opacity: 1;
-}
-
-.mobile-menu-actions {
-    padding: 20px;
-    border-top: 1px solid var(--glass-border);
-    border-bottom: 1px solid var(--glass-border);
-    background: rgba(255,255,255,0.03);
-}
-
-.mobile-menu-actions h4 {
-    font-size: 0.9rem;
-    margin-bottom: 15px;
-    color: var(--muted);
-    font-weight: 600;
-}
-
-/* استایل‌های جدید برای جستجو و تغییر تم موبایل */
-
-/* جستجو در منوی موبایل */
-.mobile-search-container {
-    padding: 0 20px 15px;
-    border-bottom: 1px solid var(--glass-border);
-}
-
-.mobile-search {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 12px 15px;
-    background: rgba(255,255,255,0.06);
-    border: 1px solid var(--glass-border);
-    border-radius: 12px;
-    backdrop-filter: blur(15px);
-}
-
-.mobile-search-input {
-    background: transparent;
-    border: none;
-    outline: none;
-    color: var(--text);
-    font-size: 0.9rem;
-    width: 100%;
-    font-family: 'Poppins', sans-serif;
-}
-
-.mobile-search-input::placeholder {
-    color: var(--muted);
-}
-
-.search-icon {
-    color: var(--muted);
-    font-size: 0.9rem;
-}
-
-/* تغییر تم در منوی موبایل */
-.mobile-theme-section {
-    margin-bottom: 20px;
-}
-
-.mobile-theme-toggle {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 15px;
-    background: rgba(255,255,255,0.05);
-    border-radius: 12px;
-    border: 1px solid var(--glass-border);
-}
-
-.mobile-theme-toggle i {
-    color: var(--accent);
-    font-size: 1.1rem;
-}
-
-.mobile-theme-toggle span {
-    flex: 1;
-    font-size: 0.9rem;
-    color: var(--text);
-    font-weight: 500;
-}
-
-.mobile-theme-switch {
-    position: relative;
-    display: inline-block;
-    width: 44px;
-    height: 24px;
-}
-
-.mobile-theme-switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-
-.mobile-slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(255,255,255,0.1);
-    transition: var(--transition);
-    border-radius: 34px;
-    border: 1px solid var(--glass-border);
-}
-
-.mobile-slider:before {
-    position: absolute;
-    content: "";
-    height: 16px;
-    width: 16px;
-    left: 4px;
-    bottom: 3px;
-    background: var(--accent);
-    transition: var(--transition);
-    border-radius: 50%;
-}
-
-.mobile-theme-switch input:checked + .mobile-slider {
-    background: rgba(108,99,255,0.3);
-}
-
-.mobile-theme-switch input:checked + .mobile-slider:before {
-    transform: translateX(20px);
-}
-
-.action-buttons {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-}
-
-.action-btn {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    padding: 12px;
-    background: rgba(255,255,255,0.06);
-    border: 1px solid var(--glass-border);
-    border-radius: 12px;
-    text-decoration: none;
-    color: var(--text);
-    transition: var(--transition);
-    text-align: center;
-    backdrop-filter: blur(10px);
-}
-
-.action-btn:hover {
-    transform: translateY(-2px);
-    background: rgba(255,255,255,0.1);
-}
-
-.action-btn.telegram:hover {
-    background: linear-gradient(135deg, rgba(0,136,204,0.2), rgba(0,136,204,0.1));
-    border-color: #0088cc;
-}
-
-.action-btn.youtube:hover {
-    background: linear-gradient(135deg, rgba(255,0,0,0.2), rgba(255,0,0,0.1));
-    border-color: #ff0000;
-}
-
-.action-btn.downloads:hover {
-    background: linear-gradient(135deg, rgba(108,99,255,0.2), rgba(108,99,255,0.1));
-    border-color: var(--accent);
-}
-
-.action-btn i {
-    font-size: 1.2rem;
-}
-
-.action-btn span {
-    font-size: 0.75rem;
-    font-weight: 500;
-}
-
-.mobile-menu-footer {
-    padding: 20px;
-    background: rgba(255,255,255,0.02);
-}
-
-.theme-toggle-mobile {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    padding: 15px;
-    background: rgba(255,255,255,0.05);
-    border-radius: 12px;
-    border: 1px solid var(--glass-border);
-}
-
-.theme-switch {
-    position: relative;
-    display: inline-block;
-    width: 50px;
-    height: 24px;
-}
-
-.theme-switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-
-.slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(255,255,255,0.1);
-    transition: var(--transition);
-    border-radius: 34px;
-    border: 1px solid var(--glass-border);
-}
-
-.slider:before {
-    position: absolute;
-    content: "";
-    height: 16px;
-    width: 16px;
-    left: 4px;
-    bottom: 3px;
-    background: var(--accent);
-    transition: var(--transition);
-    border-radius: 50%;
-}
-
-input:checked + .slider {
-    background: rgba(108,99,255,0.3);
-}
-
-input:checked + .slider:before {
-    transform: translateX(26px);
-}
-
-.mobile-menu-stats {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-}
-
-.stat {
-    text-align: center;
-    padding: 12px 8px;
-    background: rgba(255,255,255,0.05);
-    border-radius: 10px;
-    border: 1px solid var(--glass-border);
-}
-
-.stat strong {
-    display: block;
-    font-size: 1.1rem;
-    color: var(--accent);
-    margin-bottom: 4px;
-}
-
-.stat span {
-    font-size: 0.7rem;
-    color: var(--muted);
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .mobile-menu-btn {
-        display: flex;
-    }
-    
-    .nav-links {
-        display: none;
-    }
-}
-
-/* Scrollbar for mobile menu */
-.mobile-menu-sidebar::-webkit-scrollbar {
-    width: 4px;
-}
-
-.mobile-menu-sidebar::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.mobile-menu-sidebar::-webkit-scrollbar-thumb {
-    background: var(--accent);
-    border-radius: 10px;
 }
 
         /* Chat Input */
@@ -1713,19 +1197,19 @@ input:checked + .slider:before {
             
             /* Chat Responsive */
             .ai-chat-widget.professional {
-    width: 100% !important;
-    height: 80vh !important;
-    bottom: 0 !important;
-    right: 0 !important;
-    border-radius: 20px 20px 0 0 !important;
-}
+                width: 100%;
+                height: 100%;
+                bottom: 0;
+                right: 0;
+                border-radius: 0;
+            }
             
             .chat-toggle.professional {
-    bottom: 20px !important;
-    right: 20px !important;
-    padding: 12px 16px !important;
-    font-size: 0.8rem !important;
-}
+                bottom: 20px;
+                right: 20px;
+                padding: 12px 16px;
+                font-size: 0.8rem;
+            }
             
             .ai-chat-minimized {
                 width: calc(100% - 40px);
@@ -2557,6 +2041,45 @@ input:checked + .slider:before {
     color: white;
     transform: translateY(-2px);
 }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            width: 60px;
+            height: 30px;
+            border-radius: 999px;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            cursor: pointer;
+            position: relative;
+            backdrop-filter: blur(20px);
+        }
+
+        .theme-toggle .knob {
+            width: 22px;
+            height: 22px;
+            border-radius: 999px;
+            background: var(--accent);
+            position: absolute;
+            left: 4px;
+            transition: transform var(--transition);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        [data-theme="light"] .theme-toggle .knob {
+            transform: translateX(30px);
+            background: var(--accent-2);
+        }
+
+        .theme-toggle-icons {
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+            padding: 0 6px;
+            font-size: 12px;
+        }
 
         /* Contact Section - Glass Morphism */
 .contact-content {
@@ -4284,20 +3807,9 @@ input:checked + .slider:before {
 }
 
 .download-icon {
-            font-size: 3rem;
-            color: var(--accent);
-            margin-bottom: 20px;
-            transition: var(--transition);
-            background: transparent;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .download-icon img {
-            background: transparent;
-            border: none;
-        }
+    margin-bottom: 20px;
+    transition: var(--transition);
+}
 
 .download-img {
     width: 80px;
@@ -4353,8 +3865,7 @@ input:checked + .slider:before {
     align-items: center;
     justify-content: center;
     gap: 10px;
-    padding: 14px 24px;
-    min-height: 48px;
+    padding: 12px 20px;
     background: linear-gradient(135deg, 
         rgba(108, 99, 255, 0.8),
         rgba(0, 191, 166, 0.8));
@@ -4374,8 +3885,6 @@ input:checked + .slider:before {
         inset 0 1px 0 rgba(255, 255, 255, 0.3),
         inset 0 -1px 0 rgba(0, 0, 0, 0.2);
     text-decoration: none;
-    -webkit-tap-highlight-color: transparent;
-    touch-action: manipulation;
 }
 
 .download-btn::before {
@@ -6214,119 +5723,6 @@ input:checked + .slider:before {
     border-color: rgba(108,99,255,0.3);
 }
 
-        /* User Menu Dropdown */
-        .user-menu-container {
-            position: relative;
-        }
-
-        .user-dropdown {
-            position: fixed;
-            top: 80px !important;
-            right: 20px !important;
-            min-width: 280px;
-            border-radius: var(--radius-lg);
-            padding: 16px;
-            background: var(--bg-2);
-            border: 1px solid var(--glass-border);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-10px) scale(0.95);
-            transition: all var(--transition);
-            z-index: 10001 !important;
-            overflow: visible !important;
-        }
-
-        .user-dropdown.active {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0) scale(1);
-        }
-
-        .dropdown-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 12px;
-        }
-
-        .user-avatar-small {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent), var(--accent-2));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 700;
-            font-size: 20px;
-        }
-
-        .user-quick-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .user-name-dropdown {
-            font-weight: 600;
-            font-size: 0.95rem;
-            color: var(--text);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .user-email-dropdown {
-            font-size: 0.8rem;
-            color: var(--muted);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .dropdown-divider {
-            height: 1px;
-            background: var(--glass-border);
-            margin: 12px 0;
-        }
-
-        .dropdown-actions {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .dropdown-btn {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 14px;
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius);
-            color: var(--text);
-            cursor: pointer;
-            transition: all var(--transition);
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-
-        .dropdown-btn:hover {
-            background: var(--glass-bg-hover);
-            border-color: var(--accent);
-            color: var(--accent);
-            transform: translateX(4px);
-        }
-
-        .dropdown-btn.logout-btn:hover {
-            background: rgba(244, 67, 54, 0.1);
-            border-color: #f44336;
-            color: #f44336;
-        }
-
         /* Scroll to top */
         .scroll-top{position:fixed;bottom:120px;right:26px;width:52px;height:52px;border-radius:999px;display:flex;align-items:center;justify-content:center;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:white;box-shadow:0 18px 40px rgba(0,0,0,0.45);cursor:pointer;transform:translateY(20px);opacity:0;visibility:hidden;transition:all var(--transition);z-index: 100; border: none;}
         .scroll-top.visible{transform:translateY(0);opacity:1;visibility:visible}
@@ -6394,76 +5790,9 @@ input:checked + .slider:before {
                 grid-template-columns: 1fr;
             }
         }
-        
-        /* Mobile Optimization: Performance and Touch Enhancement */
-        @media (max-width: 768px) {
-            /* Disable animations on low-end mobile devices */
-            @media (prefers-reduced-motion: reduce) {
-                *,
-                *::before,
-                *::after {
-                    animation-duration: 0.01ms !important;
-                    animation-iteration-count: 1 !important;
-                    transition-duration: 0.01ms !important;
-                }
-            }
-            
-            /* Optimize scrolling for mobile */
-            html {
-                scroll-behavior: auto;
-            }
-            
-            /* Remove all transforms on low memory devices */
-            @supports (--webkit: true) {
-                body {
-                    -webkit-font-feature-settings: "kerning" 0;
-                    font-feature-settings: "kerning" 0;
-                }
-            }
-            
-            /* Optimize touch interactions */
-            a, button, input[type="button"], input[type="submit"] {
-                -webkit-user-select: none;
-                user-select: none;
-                -webkit-tap-highlight-color: transparent;
-            }
-            
-            /* Improve legibility on small screens */
-            body {
-                font-size: 16px;
-                line-height: 1.6;
-            }
-            
-            /* Fix viewport scaling issues */
-            input, textarea, select {
-                font-size: 16px;
-            }
-        }
-        
-        /* Optimize for iOS devices */
-        @supports (-webkit-appearance: none) {
-            input, textarea, select {
-                font-size: 16px;
-            }
-            
-            textarea {
-                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-                resize: vertical;
-            }
-        }
-        
-        /* Android specific optimizations */
-        @media (prefers-color-scheme: dark) {
-            img {
-                background-color: var(--bg-2);
-            }
-        }
     </style>
 </head>
 <body>
-    <!-- Scroll Progress Bar -->
-    <div class="scroll-progress" id="scrollProgress"></div>
-
     <!-- Particles.js Container -->
     <div id="particles-js"></div>
 
@@ -6475,145 +5804,45 @@ input:checked + .slider:before {
     </div>
 
     <!-- Header -->
-    <header class="header glass">
-        <div class="left">
-            <a href="index.html" class="logo" style="display:flex;align-items:center;gap:12px;text-decoration:none">
-                <img class="logo-img" src="https://yt3.googleusercontent.com/RPW5Z_kcoEu0ES_VpL4-7ZqI4eI1OQfuVL-DbuCYWmRhXono9hA5NOCSGGMDLzJqNcHUlhOg=s160-c-k-c0x00ffffff-no-rj" alt="Bari Plux">
-                <span class="logo-text">Bari Plux</span>
-            </a>
-        </div>
-        
-        <nav class="nav">
-            <ul class="nav-links">
-                <li><a href="index.html" class="nav-link">Home</a></li>
-                <li><a href="index.html#downloads" class="nav-link">Downloads</a></li>
-                <li><a href="index.html#videos" class="nav-link">Videos</a></li>
-                <li><a href="mapspubg.html" class="nav-link">Maps</a></li>
-                <li><a href="weaponorg.html" class="nav-link">Weapons</a></li>
-                <li><a href="news.html" class="nav-link">News</a></li>
-                <li><a href="updates.html" class="nav-link">Updates</a></li>
-            </ul>
-        </nav>
-        
-        <div style="display:flex;align-items:center;gap:12px">
-            <div class="search-container">
-                <div class="collapsible-search glass" id="collapsible-search">
-                    <i class="fas fa-search search-icon"></i>
-                    <input type="search" class="search-input" placeholder="Search..." id="header-search-input" autocomplete="off">
-                </div>
-            </div>
-            
-            <div id="theme-toggle" class="theme-toggle" title="Toggle Theme">
-                <span class="moon-icon">🌙</span>
-                <span class="sun-icon">☀️</span>
-            </div>
-
-            <div class="user-menu-container">
-                <button id="loginBtnHeader" class="login-btn-header" title="Login">
-                    <i class="fas fa-sign-in-alt"></i>
-                    <span>Login</span>
-                </button>
-                <div id="userDropdown" class="user-dropdown glass">
-                    <div class="dropdown-header">
-                        <div id="userAvatar" class="user-avatar-small"></div>
-                        <div class="user-quick-info">
-                            <div id="userName" class="user-name-dropdown"></div>
-                            <div id="userEmail" class="user-email-dropdown"></div>
-                        </div>
-                    </div>
-                    <div class="dropdown-divider"></div>
-                    <div class="dropdown-actions">
-                        <button type="button" id="viewProfileBtn" class="dropdown-btn">
-                            <i class="fas fa-user-circle"></i> View Profile
-                        </button>
-                        <button type="button" id="logoutBtn" class="dropdown-btn logout-btn">
-                            <i class="fas fa-sign-out-alt"></i> Logout
-                        </button>
-                    </div>
-                </div>
+<header class="header glass">
+    <div class="left">
+        <a href="#home" class="logo" style="display:flex;align-items:center;gap:12px;text-decoration:none">
+            <img class="logo-img" src="https://yt3.googleusercontent.com/RPW5Z_kcoEu0ES_VpL4-7ZqI4eI1OQfuVL-DbuCYWmRhXono9hA5NOCSGGMDLzJqNcHUlhOg=s160-c-k-c0x00ffffff-no-rj" alt="Bari Plux">
+            <span class="logo-text">Bari Plux</span>
+        </a>
+    </div>
+    
+    <nav class="nav">
+        <ul class="nav-links">
+            <li><a href="#home" class="nav-link active">Home</a></li>
+            <li><a href="#downloads" class="nav-link">Downloads</a></li>
+            <li><a href="#videos" class="nav-link">Videos</a></li>
+            <li><a href="#optimization-quiz" class="nav-link">Optimization Quiz</a></li>
+            <li><a href="#pubg" class="nav-link">Content</a></li>
+            <li><a href="#plux-times" class="nav-link">Plux Times</a></li>
+            <li><a href="#contact" class="nav-link">Contact</a></li>
+        </ul>
+    </nav>
+    
+    <div style="display:flex;align-items:center;gap:12px">
+        <!-- Collapsible Search Box -->
+        <div class="search-container">
+            <div class="collapsible-search glass" id="collapsible-search">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" class="search-input" placeholder="Search..." id="header-search-input">
             </div>
         </div>
-    </header>
-
-<!-- Mobile Menu Button -->
-<div class="mobile-menu-btn glass" id="mobile-menu-btn">
-    <span></span>
-    <span></span>
-    <span></span>
-</div>
-
-<!-- Mobile Menu Overlay -->
-<div class="mobile-menu-overlay" id="mobile-menu-overlay"></div>
-
-<!-- Mobile Menu Sidebar -->
-<nav class="mobile-menu-sidebar glass" id="mobile-menu-sidebar">
-    <!-- Navigation Links -->
-    <ul class="mobile-menu-links">
-        <li>
-            <a href="#home" class="mobile-menu-link active">
-                <i class="fas fa-home"></i>
-                <span>Home</span>
-                <div class="menu-indicator"></div>
-            </a>
-        </li>
-        <li>
-            <a href="#downloads" class="mobile-menu-link">
-                <i class="fas fa-download"></i>
-                <span>Downloads</span>
-                <div class="menu-indicator"></div>
-            </a>
-        </li>
-        <li>
-            <a href="#videos-content" class="mobile-menu-link">
-                <i class="fas fa-play-circle"></i>
-                <span>Videos</span>
-                <div class="menu-indicator"></div>
-            </a>
-        </li>
-        <li>
-            <a href="#optimization-quiz" class="mobile-menu-link">
-                <i class="fas fa-chart-line"></i>
-                <span>Optimization Quiz</span>
-                <div class="menu-indicator"></div>
-            </a>
-        </li>
-        <li>
-            <a href="#content" class="mobile-menu-link">
-                <i class="fas fa-gamepad"></i>
-                <span>Gaming Content</span>
-                <div class="menu-indicator"></div>
-            </a>
-        </li>
-        <li>
-            <a href="#blog" class="mobile-menu-link">
-                <i class="fas fa-newspaper"></i>
-                <span>Blog & Articles</span>
-                <div class="menu-indicator"></div>
-            </a>
-        </li>
-        <li>
-            <a href="#support" class="mobile-menu-link">
-                <i class="fas fa-headset"></i>
-                <span>Support Hours</span>
-                <div class="menu-indicator"></div>
-            </a>
-        </li>
-        <li>
-            <a href="#contact" class="mobile-menu-link">
-                <i class="fas fa-envelope"></i>
-                <span>Contact</span>
-                <div class="menu-indicator"></div>
-            </a>
-        </li>
-        <!-- اینجا جستجو رو اضافه کنید -->
-    <div class="mobile-search-container">
-        <div class="mobile-search glass">
-            <i class="fas fa-search search-icon"></i>
-            <input type="text" class="mobile-search-input" placeholder="Search..." id="mobile-search-input">
+        
+        <div id="theme-toggle" class="theme-toggle glass" title="Toggle Theme">
+            <div class="theme-toggle-icons">
+                <div style="font-size:12px;color:var(--muted)">🌙</div>
+                <div style="font-size:12px;color:var(--muted)">☀️</div>
+            </div>
+            <div class="knob" id="theme-knob"></div>
         </div>
     </div>
-    </ul>
-</nav>
+</header>
+
     
     <!-- Hero Section - Balanced Glass Design -->
 <section id="home" class="hero">
@@ -6958,7 +6187,7 @@ input:checked + .slider:before {
                 <p class="download-description">Latest version with optimizations and enhanced performance for all devices.</p>
                 
                 <div class="download-meta">
-                    <span class="version">v4.0</span>
+                    <span class="version">v4.2</span>
                     <span class="size">1.2 GB</span>
                 </div>
                 
@@ -8339,7 +7568,55 @@ function sanitizeInput(input) {
     div.textContent = input;
     return div.innerHTML;
 }
- 
+
+// اصلاح تابع sendChatMessage
+function sendChatMessage() {
+    const chatInput = document.getElementById('chat-input');
+    let message = chatInput.value.trim();
+    
+    if (message) {
+        // سانیتایز ورودی کاربر
+        message = sanitizeInput(message);
+        addUserMessage(message);
+        chatInput.value = '';
+        
+        setTimeout(() => {
+            addAIMessage("متوجه شدم! من دستیار هوش مصنوعی Bari Plux هستم. فعلاً در حال توسعه هستم، اما به زودی می‌تونم در بهینه‌سازی بازی بهت کمک کنم!");
+        }, 1000);
+    }
+}
+
+// جلوگیری از inspect ساده
+(function() {
+    // Block F12, Ctrl+Shift+I, Ctrl+U
+    const blockKeys = [123, 73, 85]; // F12, I, U
+    
+    document.addEventListener('keydown', function(e) {
+        if (blockKeys.includes(e.keyCode) || 
+            (e.ctrlKey && e.shiftKey && e.keyCode === 73) ||
+            (e.ctrlKey && e.keyCode === 85)) {
+            e.preventDefault();
+            return false;
+        }
+    });
+    
+    // Block right click
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        return false;
+    });
+    
+    // Detect dev tools
+    setInterval(function() {
+        const before = new Date().getTime();
+        debugger;
+        const after = new Date().getTime();
+        if (after - before > 100) {
+            document.body.innerHTML = '<div style="padding: 20px; text-align: center;">Developer tools detected!</div>';
+        }
+    }, 1000);
+})();
+
     // Rules Modal
 function setupRulesModal() {
     const rulesModal = document.querySelector('.rules-modal');
@@ -8845,405 +8122,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Start the quiz
     initQuiz();
 });
-
-// Mobile Menu Functionality - Complete Version
-function initializeMobileMenu() {
-    const menuBtn = document.getElementById('mobile-menu-btn');
-    const menuSidebar = document.getElementById('mobile-menu-sidebar');
-    const menuOverlay = document.getElementById('mobile-menu-overlay');
-    const menuClose = document.getElementById('mobile-menu-close');
-    const menuLinks = document.querySelectorAll('.mobile-menu-link');
-    const mobileSearchInput = document.getElementById('mobile-search-input');
-    const mobileSearch = document.querySelector('.mobile-search');
-    const mobileThemeToggle = document.getElementById('mobile-theme-toggle');
-    const actionButtons = document.querySelectorAll('.action-btn');
-
-    // State management
-    let isMenuOpen = false;
-
-    // Toggle menu function
-    function toggleMenu() {
-        isMenuOpen = !isMenuOpen;
-        menuBtn.classList.toggle('active', isMenuOpen);
-        menuSidebar.classList.toggle('active', isMenuOpen);
-        menuOverlay.classList.toggle('active', isMenuOpen);
-        document.body.style.overflow = isMenuOpen ? 'hidden' : '';
-        
-        // Reset search when opening menu
-        if (isMenuOpen && mobileSearchInput) {
-            mobileSearchInput.value = '';
-            mobileSearchInput.blur();
-        }
-    }
-
-    // Close menu function
-    function closeMenu() {
-        isMenuOpen = false;
-        menuBtn.classList.remove('active');
-        menuSidebar.classList.remove('active');
-        menuOverlay.classList.remove('active');
-        document.body.style.overflow = '';
-        
-        // Close search if open
-        if (mobileSearchInput) {
-            mobileSearchInput.blur();
-        }
-    }
-
-    // Mobile Search Functionality
-    function setupMobileSearch() {
-        if (!mobileSearchInput || !mobileSearch) return;
-
-        // Focus search when clicking on search container
-        mobileSearch.addEventListener('click', function(e) {
-            e.stopPropagation();
-            mobileSearchInput.focus();
-        });
-
-        // Search functionality
-        mobileSearchInput.addEventListener('input', function(e) {
-            const searchTerm = e.target.value.toLowerCase().trim();
-            highlightSearchTerm(searchTerm);
-        });
-
-        // Enter key to search and close menu
-        mobileSearchInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                const searchTerm = e.target.value.trim();
-                if (searchTerm) {
-                    closeMenu();
-                    executeSearch(searchTerm);
-                }
-            }
-        });
-
-        // Close search when clicking outside
-        document.addEventListener('click', function(e) {
-            if (!mobileSearch.contains(e.target)) {
-                mobileSearchInput.blur();
-            }
-        });
-
-        // Clear search on escape
-        mobileSearchInput.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                mobileSearchInput.value = '';
-                mobileSearchInput.blur();
-                clearSearchHighlights();
-            }
-        });
-    }
-
-    // Mobile Theme Toggle Functionality
-    function setupMobileThemeToggle() {
-        if (!mobileThemeToggle) return;
-
-        // Sync with current theme
-        function syncTheme() {
-            const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
-            mobileThemeToggle.checked = currentTheme === 'dark';
-        }
-
-        // Theme change handler
-        mobileThemeToggle.addEventListener('change', function() {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-            
-            // Apply new theme
-            document.documentElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-            
-            // Sync with main theme toggle if exists
-            const mainThemeToggle = document.getElementById('theme-toggle');
-            if (mainThemeToggle) {
-                const knob = document.getElementById('theme-knob');
-                if (knob) {
-                    knob.style.transform = newTheme === 'light' ? 'translateX(30px)' : 'translateX(0)';
-                }
-            }
-            
-            // Update icon
-            updateThemeIcon(newTheme);
-        });
-
-        // Update theme icon based on current theme
-        function updateThemeIcon(theme) {
-            const themeIcon = document.querySelector('.mobile-theme-toggle i');
-            if (themeIcon) {
-                themeIcon.className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
-                themeIcon.style.color = theme === 'dark' ? '#6C63FF' : '#FFB74D';
-            }
-        }
-
-        // Initialize
-        syncTheme();
-        updateThemeIcon(document.documentElement.getAttribute('data-theme') || 'dark');
-        
-        // Listen for theme changes from other components
-        document.addEventListener('themeChanged', function() {
-            syncTheme();
-        });
-    }
-
-    // Action Buttons Functionality
-    function setupActionButtons() {
-        actionButtons.forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                e.preventDefault();
-                const buttonType = this.classList[1]; // telegram, youtube, downloads
-                
-                switch(buttonType) {
-                    case 'telegram':
-                        closeMenu();
-                        setTimeout(() => {
-                            window.open('https://t.me/BariPlux', '_blank');
-                        }, 300);
-                        break;
-                        
-                    case 'youtube':
-                        closeMenu();
-                        setTimeout(() => {
-                            window.open('https://youtube.com/@BariPlux', '_blank');
-                        }, 300);
-                        break;
-                        
-                    case 'downloads':
-                        closeMenu();
-                        setTimeout(() => {
-                            window.location.href = '#downloads';
-                        }, 300);
-                        break;
-                }
-                
-                // Add click animation
-                this.style.transform = 'scale(0.95)';
-                setTimeout(() => {
-                    this.style.transform = '';
-                }, 150);
-            });
-        });
-    }
-
-    // Menu Links Active State Management
-    function setupMenuLinks() {
-        // Close menu when clicking on links
-        menuLinks.forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                const targetSection = this.getAttribute('href');
-                
-                // Smooth scroll to section
-                closeMenu();
-                setTimeout(() => {
-                    const targetElement = document.querySelector(targetSection);
-                    if (targetElement) {
-                        targetElement.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
-                    }
-                }, 400);
-            });
-        });
-
-        // Update active link on scroll
-        function updateActiveMenuLink() {
-            const sections = document.querySelectorAll('section');
-            let current = '';
-            
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                const sectionHeight = section.offsetHeight;
-                if (window.pageYOffset >= (sectionTop - 100) && 
-                    window.pageYOffset < (sectionTop + sectionHeight - 100)) {
-                    current = section.getAttribute('id');
-                }
-            });
-
-            menuLinks.forEach(link => {
-                link.classList.remove('active');
-                const linkHref = link.getAttribute('href').replace('#', '');
-                if (linkHref === current) {
-                    link.classList.add('active');
-                }
-            });
-        }
-
-        window.addEventListener('scroll', updateActiveMenuLink);
-        updateActiveMenuLink(); // Initialize on load
-    }
-
-    // Search Helper Functions
-    function highlightSearchTerm(term) {
-        // Implementation depends on your search functionality
-        console.log('Searching for:', term);
-        // You can integrate this with your existing search system
-    }
-
-    function executeSearch(term) {
-        // Use your existing search function
-        if (typeof filterContent === 'function') {
-            filterContent(term);
-        }
-        
-        // Show search results
-        const searchInput = document.getElementById('header-search-input');
-        if (searchInput) {
-            searchInput.value = term;
-        }
-    }
-
-    function clearSearchHighlights() {
-        // Clear any search highlights
-        if (typeof filterContent === 'function') {
-            filterContent('');
-        }
-    }
-
-    // Swipe Gestures for Mobile
-    function setupSwipeGestures() {
-        let startX = 0;
-        let currentX = 0;
-
-        menuSidebar.addEventListener('touchstart', function(e) {
-            startX = e.touches[0].clientX;
-        }, { passive: true });
-
-        menuSidebar.addEventListener('touchmove', function(e) {
-            currentX = e.touches[0].clientX;
-        }, { passive: true });
-
-        menuSidebar.addEventListener('touchend', function(e) {
-            const diff = startX - currentX;
-            if (diff > 50 && isMenuOpen) { // Swipe left to close
-                closeMenu();
-            }
-        }, { passive: true });
-
-        // Swipe from edge to open
-        menuOverlay.addEventListener('touchstart', function(e) {
-            startX = e.touches[0].clientX;
-        }, { passive: true });
-
-        menuOverlay.addEventListener('touchend', function(e) {
-            const diff = currentX - startX;
-            if (diff > 50 && !isMenuOpen && startX < 50) { // Swipe from left edge
-                toggleMenu();
-            }
-        }, { passive: true });
-    }
-
-    // Keyboard Navigation
-    function setupKeyboardNavigation() {
-        document.addEventListener('keydown', function(e) {
-            if (!isMenuOpen) return;
-
-            switch(e.key) {
-                case 'Escape':
-                    closeMenu();
-                    break;
-                    
-                case 'ArrowDown':
-                    e.preventDefault();
-                    focusNextMenuItem();
-                    break;
-                    
-                case 'ArrowUp':
-                    e.preventDefault();
-                    focusPreviousMenuItem();
-                    break;
-            }
-        });
-    }
-
-    function focusNextMenuItem() {
-        const focusedElement = document.activeElement;
-        const menuItems = Array.from(menuLinks);
-        const currentIndex = menuItems.indexOf(focusedElement);
-        
-        if (currentIndex < menuItems.length - 1) {
-            menuItems[currentIndex + 1].focus();
-        }
-    }
-
-    function focusPreviousMenuItem() {
-        const focusedElement = document.activeElement;
-        const menuItems = Array.from(menuLinks);
-        const currentIndex = menuItems.indexOf(focusedElement);
-        
-        if (currentIndex > 0) {
-            menuItems[currentIndex - 1].focus();
-        }
-    }
-
-    // Performance Optimization
-    function setupPerformanceOptimizations() {
-        // Debounce scroll events
-        let scrollTimeout;
-        window.addEventListener('scroll', function() {
-            clearTimeout(scrollTimeout);
-            scrollTimeout = setTimeout(updateActiveMenuLink, 100);
-        });
-
-        // Lazy load menu images
-        const menuImages = menuSidebar.querySelectorAll('img');
-        menuImages.forEach(img => {
-            img.loading = 'lazy';
-        });
-    }
-
-    // Event Listeners Setup
-    function setupEventListeners() {
-        // Menu toggle
-        menuBtn.addEventListener('click', toggleMenu);
-        menuClose.addEventListener('click', closeMenu);
-        menuOverlay.addEventListener('click', closeMenu);
-
-        // Prevent overlay click from propagating to menu
-        menuSidebar.addEventListener('click', function(e) {
-            e.stopPropagation();
-        });
-
-        // Initialize all functionalities
-        setupMobileSearch();
-        setupMobileThemeToggle();
-        setupActionButtons();
-        setupMenuLinks();
-        setupSwipeGestures();
-        setupKeyboardNavigation();
-        setupPerformanceOptimizations();
-    }
-
-    // Public methods
-    function openMenu() {
-        if (!isMenuOpen) toggleMenu();
-    }
-
-    function closeMenuProgrammatically() {
-        if (isMenuOpen) closeMenu();
-    }
-
-    // Initialize
-    setupEventListeners();
-
-    // Return public methods
-    return {
-        open: openMenu,
-        close: closeMenuProgrammatically,
-        toggle: toggleMenu
-    };
-}
-
-// Initialize mobile menu when DOM is loaded
-let mobileMenu;
-document.addEventListener('DOMContentLoaded', function() {
-    mobileMenu = initializeMobileMenu();
-    
-    // You can now use mobileMenu.open(), mobileMenu.close(), mobileMenu.toggle() from anywhere
-});
-
-// Optional: Global access for other components
-window.mobileMenu = mobileMenu;
 
     // Search Functions - UPDATED VERSION
     function setupCollapsibleSearch() {
@@ -9794,34 +8672,6 @@ function sanitizeInput(input) {
         });
     }
 
-    // تابع بهینه‌شده برای اسکرول نرم
-function smoothScrollMobile(target) {
-    const element = document.querySelector(target);
-    if (element) {
-        const offset = 80; // ارتفاع هدر
-        const elementPosition = element.getBoundingClientRect().top;
-        const offsetPosition = elementPosition + window.pageYOffset - offset;
-
-        window.scrollTo({
-            top: offsetPosition,
-            behavior: 'smooth'
-        });
-    }
-}
-
-// بهینه‌سازی لمسی
-document.addEventListener('touchstart', function() {}, { passive: true });
-
-// جلوگیری از زوم دوبل
-let lastTouchEnd = 0;
-document.addEventListener('touchend', function(event) {
-    const now = (new Date()).getTime();
-    if (now - lastTouchEnd <= 300) {
-        event.preventDefault();
-    }
-    lastTouchEnd = now;
-}, false);
-
     // Working Hours Manager
     class WorkingHoursManager {
         constructor() {
@@ -9948,90 +8798,6 @@ document.addEventListener('touchend', function(event) {
         
         console.log('🎯 All features initialized successfully!');
     });
-    </script>
-
-    <!-- Scroll Progress Bar -->
-    <script>
-        const scrollProgress = document.getElementById('scrollProgress');
-        if (scrollProgress) {
-            window.addEventListener('scroll', () => {
-                const scrollTop = window.scrollY;
-                const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-                const scrollPercent = (scrollTop / docHeight) * 100;
-                scrollProgress.style.width = scrollPercent + '%';
-            }, { passive: true });
-        }
-    </script>
-
-    <!-- Login Status - Update Header Button -->
-    <script>
-    function updateLoginButton() {
-        const loginBtn = document.getElementById('loginBtnHeader');
-        const dropdown = document.getElementById('userDropdown');
-        if (!loginBtn || !dropdown) return;
-        
-        const storedUser = localStorage.getItem('bariplux_user');
-        
-        if (storedUser) {
-            try {
-                const user = JSON.parse(storedUser);
-                const userName = user.name || user.email.split('@')[0];
-                const userEmail = user.email || '';
-                const initial = userName.charAt(0).toUpperCase();
-                
-                loginBtn.innerHTML = '<span style="display:flex;align-items:center;gap:8px;"><span style="width:28px;height:28px;background:linear-gradient(135deg,var(--accent),var(--accent-2));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:white;">' + initial + '</span><span style="font-size:0.9rem;">' + userName.substring(0, 12) + (userName.length > 12 ? '...' : '') + '</span></span>';
-                loginBtn.style.cursor = 'pointer';
-                loginBtn.onclick = function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    toggleDropdown();
-                };
-                
-                document.getElementById('userAvatar').innerHTML = initial;
-                document.getElementById('userName').textContent = userName;
-                document.getElementById('userEmail').textContent = userEmail;
-                
-                document.getElementById('viewProfileBtn').onclick = function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    toggleDropdown();
-                };
-                
-                document.getElementById('logoutBtn').onclick = function() {
-                    if (confirm('Logout from Bari Plux?')) {
-                        localStorage.removeItem('bariplux_user');
-                        localStorage.removeItem('bariplux_login_token');
-                        location.reload();
-                    }
-                };
-            } catch (e) {
-                console.error('Error parsing user:', e);
-            }
-        } else {
-            loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i><span>Login</span>';
-            loginBtn.onclick = function() { window.location.href = 'login.html'; };
-            loginBtn.onclick = null;
-            dropdown.classList.remove('active');
-        }
-    }
-    
-    function toggleDropdown() {
-        const dropdown = document.getElementById('userDropdown');
-        dropdown.classList.toggle('active');
-    }
-    
-    document.addEventListener('click', function(e) {
-        const dropdown = document.getElementById('userDropdown');
-        const container = document.querySelector('.user-menu-container');
-        
-        if (container && !container.contains(e.target)) {
-            dropdown.classList.remove('active');
-        }
-    });
-    
-    updateLoginButton();
-    setTimeout(updateLoginButton, 500);
-    setTimeout(updateLoginButton, 1000);
-    </script>
+</script>
 </body>
 </html>

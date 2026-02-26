@@ -200,6 +200,8 @@ ul {
     overflow: hidden;
 }
 
+/* User Dropdown Fix - ID selector for higher specificity */
+#userDropdown,
 .glass.user-dropdown,
 .user-dropdown.glass {
     overflow: visible !important;
