@@ -202,7 +202,7 @@ ul {
 
 .glass.user-dropdown,
 .user-dropdown.glass {
-    overflow: visible;
+    overflow: visible !important;
 }
 
 /* ========================

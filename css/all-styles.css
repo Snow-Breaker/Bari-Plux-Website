@@ -135,7 +135,7 @@ ul { list-style: none; padding: 0; margin: 0; }
 
 .glass.user-dropdown,
 .user-dropdown.glass {
-    overflow: visible;
+    overflow: visible !important;
 }
 
 /* ========================

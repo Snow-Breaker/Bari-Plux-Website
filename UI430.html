@@ -214,8 +214,8 @@
         .user-menu-container { position: relative; }
         .user-dropdown {
             position: fixed;
-            top: auto;
-            right: auto;
+            top: 80px !important;
+            right: 20px !important;
             min-width: 250px;
             background: var(--card-bg);
             border: 1px solid var(--card-border);
@@ -225,10 +225,10 @@
             visibility: hidden;
             transform: scale(0.95) translateY(-10px);
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            z-index: 10001;
+            z-index: 10001 !important;
             backdrop-filter: blur(10px);
             box-shadow: var(--shadow);
-            overflow: visible;
+            overflow: visible !important;
         }
         .user-dropdown.active {
             opacity: 1;
