@@ -2,12 +2,13 @@
 <html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
     <title>Login | Bari Plux</title>
     <meta name="description" content="Login to your Bari Plux account">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Montserrat:wght@700;800&family=Oxanium:wght@400;600;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/all-styles.css">
     
     <link rel="icon" type="image/x-icon" href="https://i.postimg.cc/65cjsvfQ/imglogo.png">
     
@@ -38,6 +39,33 @@
             --danger: #F44336;
             --shadow: 0 8px 30px rgba(0,0,0,0.35);
             --shadow-hover: 0 24px 50px rgba(0,0,0,0.45);
+        }
+
+        /* Scroll Progress Bar */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            z-index: 10001;
+            transition: width 0.1s ease-out;
+            box-shadow: 0 0 10px var(--accent);
+        }
+
+        [data-theme="light"] {
+            --bg-1: #f6f8fb;
+            --bg-2: #eef2f7;
+            --glass-bg: rgba(255,255,255,0.85);
+            --glass-strong: rgba(255,255,255,0.95);
+            --glass-accent: rgba(108,99,255,08);
+            --accent: #5748E8;
+            --accent-2: #07bfa0;
+            --text: #111827;
+            --muted: rgba(17,24,39,0.6);
+            --glass-border: rgba(0,0,0,0.04);
+            --glass-inner-shadow: rgba(255,255,255,0.6);
         }
 
         *{box-sizing:border-box; margin:0; padding:0;}
@@ -135,11 +163,13 @@
         }
 
         .login-logo {
-            width: 80px;
-            height: 80px;
+            width: 150px;
+            height: 150px;
             margin-bottom: 20px;
-            border: 3px solid var(--accent);
-            box-shadow: 0 10px 30px rgba(108, 99, 255, 0.3);
+            object-fit: contain;
+            border: none;
+            border-radius: 0 !important;
+            box-shadow: none;
         }
 
         .login-title {
@@ -364,14 +394,22 @@
             width: 80px;
             height: 80px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            background: var(--glass-bg);
+            border: 2px solid var(--glass-border);
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 20px;
             font-size: 2rem;
             font-weight: 700;
-            color: white;
+            color: var(--text);
+            overflow: hidden;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .user-info {
@@ -539,14 +577,689 @@
                 font-size: 1.5rem;
             }
         }
+
+        /* ========== ENHANCED STYLES ========== */
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            cursor: pointer;
+            z-index: 100;
+            transition: all var(--transition);
+        }
+
+        .theme-toggle:hover {
+            background: var(--glass-strong);
+            transform: scale(1.1);
+        }
+
+        .theme-toggle .moon-icon,
+        .theme-toggle .sun-icon {
+            position: absolute;
+            font-size: 18px;
+            transition: opacity var(--transition);
+        }
+
+        .theme-toggle .moon-icon { opacity: 1; }
+        .theme-toggle .sun-icon { opacity: 0; }
+        [data-theme="light"] .theme-toggle .moon-icon { opacity: 0; }
+        [data-theme="light"] .theme-toggle .sun-icon { opacity: 1; }
+
+        /* Back Button */
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text);
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            z-index: 100;
+            transition: all var(--transition);
+        }
+
+        .back-btn:hover {
+            background: var(--glass-strong);
+            transform: translateX(-3px);
+            color: var(--accent);
+        }
+
+        /* Enhanced Background */
+        .bg-glow {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: -2;
+        }
+
+        .bg-glow-1 {
+            top: -200px;
+            left: -200px;
+            background: var(--accent);
+            animation: glowPulse 8s ease-in-out infinite;
+        }
+
+        .bg-glow-2 {
+            bottom: -200px;
+            right: -200px;
+            background: var(--accent-2);
+            animation: glowPulse 8s ease-in-out infinite 4s;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { transform: scale(1); opacity: 0.15; }
+            50% { transform: scale(1.2); opacity: 0.25; }
+        }
+
+        /* Enhanced Form Inputs */
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--muted);
+            font-size: 1rem;
+            transition: color var(--transition);
+        }
+
+        .form-input:focus + i,
+        .form-input:focus ~ i {
+            color: var(--accent);
+        }
+
+        .form-input.with-icon {
+            padding-left: 45px;
+        }
+
+        /* Password Toggle */
+        .password-toggle {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--muted);
+            cursor: pointer;
+            padding: 0;
+            font-size: 1rem;
+            transition: color var(--transition);
+        }
+
+        .password-toggle:hover {
+            color: var(--accent);
+        }
+
+        /* Remember Me & Forgot Password */
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--muted);
+            cursor: pointer;
+        }
+
+        .remember-me input {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--accent);
+            cursor: pointer;
+        }
+
+        .forgot-password {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color var(--transition);
+        }
+
+        .forgot-password:hover {
+            color: var(--accent-2);
+        }
+
+        /* Enhanced Buttons */
+        .btn-primary {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-google {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-google::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0,0,0,0.05), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-google:hover::before {
+            left: 100%;
+        }
+
+        /* Enhanced Tabs */
+        .login-tab {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-tab::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--accent-2);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .login-tab.active::after {
+            width: 80%;
+        }
+
+        /* Enhanced Cards */
+        .login-container {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2), var(--accent));
+            background-size: 200% 100%;
+            animation: gradientSlide 3s linear infinite;
+        }
+
+        @keyframes gradientSlide {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 200% 0%; }
+        }
+
+        /* Feature Pills */
+        .feature-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .feature-pill {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: var(--glass-bg);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: var(--muted);
+        }
+
+        .feature-pill i {
+            color: var(--accent);
+            font-size: 0.75rem;
+        }
+
+        /* Better Loading Animation */
+        .btn-loading {
+            pointer-events: none;
+        }
+
+        /* Smooth transitions for all interactive elements */
+        a, button, input {
+            transition: all 0.2s ease;
+        }
+
+        /* Notification Toast Improvements */
+        .notification {
+            padding: 16px 24px;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            z-index: 10000;
+            animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .notification.success {
+            background: linear-gradient(135deg, #10B981, #059669);
+        }
+
+        .notification.error {
+            background: linear-gradient(135deg, #EF4444, #DC2626);
+        }
+
+        .notification i {
+            font-size: 1.2rem;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        /* Input focus ring animation */
+        .form-input {
+            animation: inputFocus 0.3s ease;
+        }
+
+        @keyframes inputFocus {
+            0% { transform: scale(0.98); }
+            50% { transform: scale(1.01); }
+            100% { transform: scale(1); }
+        }
+
+        /* Better error animation */
+        .error-message {
+            position: relative;
+            padding-left: 40px;
+        }
+
+        .error-message::before {
+            content: '\f071';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        /* Success state */
+        .success-message {
+            position: relative;
+            padding-left: 40px;
+        }
+
+        .success-message::before {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        /* Enhanced logout button */
+        .btn-logout {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-logout::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(244, 67, 54, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-logout:hover::before {
+            left: 100%;
+        }
+
+        /* Better mobile responsive */
+        @media (max-width: 480px) {
+            .theme-toggle {
+                top: 10px;
+                right: 10px;
+                width: 38px;
+                height: 38px;
+            }
+            
+            .back-btn {
+                top: 10px;
+                left: 10px;
+                padding: 8px 14px;
+                font-size: 0.85rem;
+            }
+            
+            .back-btn span {
+                display: none;
+            }
+        }
+
+        /* Extra Responsive Improvements */
+        @media (max-width: 768px) {
+            .login-container {
+                max-width: 90%;
+                padding: 25px;
+            }
+            
+            .login-logo {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .login-title {
+                font-size: 1.5rem;
+            }
+            
+            .form-input {
+                padding: 12px 16px;
+                font-size: 0.9rem;
+            }
+            
+            .btn-primary,
+            .btn-google {
+                padding: 12px 20px;
+                font-size: 0.95rem;
+            }
+            
+            .theme-toggle {
+                top: 15px;
+                right: 15px;
+                width: 40px;
+                height: 40px;
+            }
+            
+            .back-btn {
+                top: 15px;
+                left: 15px;
+                padding: 8px 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                max-width: 95%;
+                padding: 20px 15px;
+                margin-top: 60px;
+            }
+            
+            .login-logo {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .login-title {
+                font-size: 1.3rem;
+            }
+            
+            .login-subtitle {
+                font-size: 0.85rem;
+            }
+            
+            .form-input {
+                padding: 10px 14px;
+                font-size: 0.85rem;
+            }
+            
+            .btn-primary,
+            .btn-google {
+                padding: 10px 16px;
+                font-size: 0.9rem;
+            }
+            
+            .theme-toggle {
+                top: 10px;
+                right: 10px;
+                width: 36px;
+                height: 36px;
+            }
+            
+            .theme-toggle .moon-icon,
+            .theme-toggle .sun-icon {
+                font-size: 14px;
+            }
+            
+            .back-btn {
+                top: 10px;
+                left: 10px;
+                padding: 6px 10px;
+            }
+            
+            .user-avatar {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+            }
+            
+            .user-name {
+                font-size: 1.2rem;
+            }
+            
+            .feature-pills {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        /* Safe area for notched phones */
+        @supports (padding: max(0px)) {
+            .theme-toggle {
+                top: max(15px, env(safe-area-inset-top));
+                right: max(15px, env(safe-area-inset-right));
+            }
+            
+            .back-btn {
+                top: max(15px, env(safe-area-inset-top));
+                left: max(15px, env(safe-area-inset-left));
+            }
+        }
+
+        /* Copyright Section - Glass Style */
+        .copyright {
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--text);
+            padding: 12px 24px;
+            border-radius: 50px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(12px) saturate(180%);
+            -webkit-backdrop-filter: blur(12px) saturate(180%);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2), inset 0 1px 0 var(--glass-inner-shadow);
+            transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .copyright:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.3), inset 0 1px 0 var(--glass-inner-shadow);
+            border-color: var(--accent);
+        }
+
+        /* Login Page Footer - Override for smaller login page */
+        .login-page-footer {
+            margin-top: auto;
+            padding: 40px 20px;
+            background: linear-gradient(180deg, transparent, rgba(108,99,255,0.05));
+        }
+
+        /* Footer override for login page - simple copyright only */
+        body .footer {
+            margin-top: auto;
+            padding: 30px 0;
+        }
+
+        body .footer .footer-bottom {
+            padding-top: 0;
+            border-top: none;
+        }
+
+        @media (max-width: 768px) {
+            .login-page-footer {
+                padding: 30px 15px;
+            }
+        }
     </style>
 </head>
 <body>
+    <!-- Security: Disable right-click -->
+    <script>
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        }, false);
+        
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'F12' || 
+                (e.ctrlKey && e.key === 'u') || 
+                (e.ctrlKey && e.key === 'U') ||
+                (e.ctrlKey && e.shiftKey && e.key === 'I') ||
+                (e.ctrlKey && e.shiftKey && e.key === 'i') ||
+                (e.ctrlKey && e.key === 's') || 
+                (e.ctrlKey && e.key === 'S') ||
+                (e.ctrlKey && e.key === 'p') ||
+                (e.ctrlKey && e.key === 'P') ||
+                (e.ctrlKey && e.shiftKey && e.key === 'C') ||
+                (e.ctrlKey && e.shiftKey && e.key === 'c')) {
+                e.preventDefault();
+                return false;
+            }
+        }, false);
+        
+        // Block developer tools detection
+        (function() {
+            const devTools = function() {};
+            devTools.toString = function() {
+                if (window.innerWidth > 100 && window.innerHeight > 100) {
+                    window.location.href = 'about:blank';
+                }
+            };
+            console.log('%c', devTools);
+            
+            setInterval(function() {
+                const before = window.innerWidth;
+                window.dispatchEvent(new Event('resize'));
+                if (window.innerWidth !== before) {
+                    window.location.href = 'about:blank';
+                }
+            }, 1000);
+        })();
+        
+        // Disable text selection
+        document.ondragstart = function() { return false; };
+        document.oncontextmenu = function() { return false; };
+    </script>
+    
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+
+    <!-- Header -->
+    <header class="header glass">
+        <div class="left">
+            <a href="index.html" class="logo" style="display:flex;align-items:center;gap:12px;text-decoration:none">
+                <img class="logo-img" src="https://yt3.googleusercontent.com/RPW5Z_kcoEu0ES_VpL4-7ZqI4eI1OQfuVL-DbuCYWmRhXono9hA5NOCSGGMDLzJqNcHUlhOg=s160-c-k-c0x00ffffff-no-rj" alt="Bari Plux">
+                <span class="logo-text">Bari Plux</span>
+            </a>
+        </div>
+        
+        <nav class="nav">
+            <ul class="nav-links">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="index.html#downloads" class="nav-link">Downloads</a></li>
+                <li><a href="index.html#videos" class="nav-link">Videos</a></li>
+                <li><a href="mapspubg.html" class="nav-link">Maps</a></li>
+                <li><a href="weaponorg.html" class="nav-link">Weapons</a></li>
+                <li><a href="news.html" class="nav-link">News</a></li>
+                <li><a href="updates.html" class="nav-link">Updates</a></li>
+            </ul>
+        </nav>
+        
+        <div style="display:flex;align-items:center;gap:12px">
+            <a href="login.html" class="login-btn-header active" id="loginBtnHeader" title="Login">
+                <i class="fas fa-sign-in-alt"></i>
+                <span>Login</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- Theme Toggle -->
+    <div id="theme-toggle" class="theme-toggle" title="Toggle Theme">
+        <span class="moon-icon">🌙</span>
+        <span class="sun-icon">☀️</span>
+    </div>
+
+    <!-- Back Button -->
+    <a href="index.html" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+        <span>Back to Home</span>
+    </a>
+
     <div id="particles-js"></div>
 
     <div class="bg-animation">
         <div class="floating-circle circle-1"></div>
         <div class="floating-circle circle-2"></div>
+        <div class="bg-glow bg-glow-1"></div>
+        <div class="bg-glow bg-glow-2"></div>
     </div>
 
     <div class="container">
@@ -579,12 +1292,29 @@
                     
                     <div class="form-group">
                         <label class="form-label">Email Address</label>
-                        <input type="email" id="emailInput" class="form-input" placeholder="your@email.com">
+                        <div class="input-wrapper">
+                            <input type="email" id="emailInput" class="form-input with-icon" placeholder="your@email.com" autocomplete="email">
+                            <i class="fas fa-envelope"></i>
+                        </div>
                     </div>
                     
                     <div class="form-group">
                         <label class="form-label">Password</label>
-                        <input type="password" id="passwordInput" class="form-input" placeholder="Enter your password">
+                        <div class="input-wrapper">
+                            <input type="password" id="passwordInput" class="form-input with-icon" placeholder="Enter your password" autocomplete="current-password">
+                            <i class="fas fa-lock"></i>
+                            <button type="button" class="password-toggle" id="passwordToggle">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-options">
+                        <label class="remember-me">
+                            <input type="checkbox" id="rememberMe">
+                            <span>Remember me</span>
+                        </label>
+                        <a href="#" class="forgot-password">Forgot password?</a>
                     </div>
                     
                     <button id="btnLoginEmail" class="btn-primary">
@@ -609,13 +1339,21 @@
                     <p style="text-align: center; color: var(--muted); font-size: 0.85rem; margin-top: 15px;">
                         You'll be redirected to Google to sign in securely.
                     </p>
+
+                    <div class="feature-pills">
+                        <span class="feature-pill"><i class="fas fa-shield-alt"></i> Secure</span>
+                        <span class="feature-pill"><i class="fas fa-bolt"></i> Fast</span>
+                        <span class="feature-pill"><i class="fas fa-sync"></i> Sync</span>
+                    </div>
                 </div>
             </div>
 
             <!-- Logged In View -->
             <div id="loggedInView" class="logged-in-view">
                 <div class="login-header">
-                    <div class="user-avatar" id="userAvatar">U</div>
+                    <div class="user-avatar" id="userAvatar">
+                        <img id="userAvatarImg" src="" alt="Profile" style="display: none;">
+                    </div>
                     <h1 class="login-title">You're Logged In!</h1>
                 </div>
                 
@@ -742,19 +1480,11 @@
         // Show notification
         function showNotification(message, type) {
             const notification = document.createElement('div');
-            notification.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                padding: 15px 25px;
-                border-radius: 8px;
-                color: white;
-                font-weight: 600;
-                z-index: 10000;
-                animation: fadeIn 0.3s ease;
-                ${type === 'success' ? 'background: #10B981;' : 'background: #EF4444;'}
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                <span>${message}</span>
             `;
-            notification.textContent = message;
             document.body.appendChild(notification);
             
             setTimeout(() => {
@@ -815,8 +1545,19 @@
             document.getElementById('userEmail').textContent = user.email;
             document.getElementById('userId').textContent = user.id;
             
-            const initial = user.name ? user.name.charAt(0).toUpperCase() : 'U';
-            document.getElementById('userAvatar').textContent = initial;
+            const avatarEl = document.getElementById('userAvatar');
+            const avatarImg = document.getElementById('userAvatarImg');
+            
+            // Handle avatar - show image if available, otherwise show initial
+            if (user.photoURL) {
+                avatarImg.src = user.photoURL;
+                avatarImg.style.display = 'block';
+                avatarEl.textContent = '';
+            } else {
+                avatarImg.style.display = 'none';
+                const initial = user.name ? user.name.charAt(0).toUpperCase() : 'U';
+                avatarEl.textContent = initial;
+            }
             
             // Generate login token for app
             const token = btoa(JSON.stringify({
@@ -1295,13 +2036,39 @@
 
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
+            // Initialize Firebase
             initFirebase();
             checkLoginStatus();
             initParticles();
 
+            // Theme Toggle
+            const themeToggle = document.getElementById('theme-toggle');
+            if (themeToggle) {
+                const storedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+                document.documentElement.setAttribute('data-theme', storedTheme);
+                
+                themeToggle.addEventListener('click', () => {
+                    const current = document.documentElement.getAttribute('data-theme');
+                    const next = current === 'light' ? 'dark' : 'light';
+                    document.documentElement.setAttribute('data-theme', next);
+                    localStorage.setItem('theme', next);
+                });
+            }
+
+            // Password Visibility Toggle
+            const passwordToggle = document.getElementById('passwordToggle');
+            const passwordInput = document.getElementById('passwordInput');
+            if (passwordToggle && passwordInput) {
+                passwordToggle.addEventListener('click', () => {
+                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordInput.setAttribute('type', type);
+                    passwordToggle.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+                });
+            }
+
             // Check for app sync periodically
             setInterval(() => {
-                const storedUser = localStorage.getElement('bariplux_user');
+                const storedUser = localStorage.getItem('bariplux_user');
                 if (storedUser) {
                     // Sync with potential app
                     localStorage.setItem('bariplux_user_new', storedUser);
@@ -1309,5 +2076,29 @@
             }, 3000);
         });
     </script>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <a href="#" class="copyright">&copy; 2026 Bari Plux. All rights reserved.</a>
+            </div>
+        </div>
+    </footer>
+
+</div>
+
+<!-- Scroll Progress Bar -->
+<script>
+    const scrollProgress = document.getElementById('scrollProgress');
+    if (scrollProgress) {
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = (scrollTop / docHeight) * 100;
+            scrollProgress.style.width = scrollPercent + '%';
+        }, { passive: true });
+    }
+</script>
 </body>
 </html>
