@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
-    <!-- بهبود Meta Tags برای سئو -->
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#6C63FF">
     <title>Bari Plux | Optimization Apps & Keymappings - Performance Tools</title>
     <meta name="description" content="Download optimization apps and keymappings for PUBG Mobile. Park Control, Revo Uninstaller, IObit Driver Booster, and resolution-specific keymappings">
     <meta name="keywords" content="optimization apps, keymappings, pubg mobile, park control, revo uninstaller, iobit driver booster, advanced systemcare">
     <meta name="author" content="Bari Plux">
 
-    <!-- کنترل کش مرورگر -->
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
+    <!-- Cache control - Allow browser caching for static content -->
+    <meta http-equiv="Cache-Control" content="public, max-age=31536000">
+    <meta http-equiv="Pragma" content="cache">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Montserrat:wght@700;800&family=Oxanium:wght@400;600;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
@@ -22,33 +23,15 @@
     <link rel="icon" type="image/x-icon" href="https://i.postimg.cc/65cjsvfQ/imglogo.png">
     <link rel="apple-touch-icon" sizes="180x180" href="https://i.postimg.cc/65cjsvfQ/imglogo.png">
     
-    <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="Bari Plux | Optimization Apps & Keymappings">
-    <meta property="og:description" content="Download optimization apps and keymappings for PUBG Mobile - Performance tuning tools and resolution-specific configurations">
-    <meta property="og:type" content="website">
-    <meta property="og:image" content="https://yt3.googleusercontent.com/RPW5Z_kcoEu0ES_VpL4-7ZqI4eI1OQfuVL-DbuCYWmRhXono9hA5NOCSGGMDLzJqNcHUlhOg=s160-c-k-c0x00ffffff-no-rj">
-    
-    <!-- Schema.org Structured Data -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "WebSite",
-        "name": "Bari Plux Optimization Apps & Keymappings",
-        "description": "Download optimization apps and keymappings for PUBG Mobile - Performance tuning tools and resolution-specific configurations",
-        "url": "https://bariplux.com",
-        "publisher": {
-            "@type": "Organization",
-            "name": "Bari Plux",
-            "logo": {
-                "@type": "ImageObject",
-                "url": "https://yt3.googleusercontent.com/RPW5Z_kcoEu0ES_VpL4-7ZqI4eI1OQfuVL-DbuCYWmRhXono9hA5NOCSGGMDLzJqNcHUlhOg=s160-c-k-c0x00ffffff-no-rj"
-            }
+    <!-- Particles.js - Lazy loaded for better performance -->
+    <script>
+        if (window.innerWidth >= 1024) {
+            var script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js';
+            script.async = true;
+            document.head.appendChild(script);
         }
-    }
     </script>
-
-    <!-- Particles.js Library -->
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <style>
         :root {
             --bg-1: #0f1115;
@@ -119,7 +102,7 @@
             overflow-x: hidden;
         }
 
-        /* Particles.js Container */
+        /* Particles.js Container - Disabled on mobile for better performance */
         #particles-js {
             position: fixed;
             width: 100%;
@@ -128,6 +111,13 @@
             left: 0;
             z-index: -1;
             pointer-events: none;
+            display: none;
+        }
+        
+        @media (min-width: 1024px) {
+            #particles-js {
+                display: block;
+            }
         }
 
         /* Animated background elements */
