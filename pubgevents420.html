@@ -763,6 +763,96 @@ body{
   color: var(--muted);
   font-size: 1.1rem;
 }
+
+/* User Menu Dropdown */
+.user-menu-container { position: relative; }
+.user-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    min-width: 250px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 12px;
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0.95) translateY(-10px);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+.user-dropdown.active {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1) translateY(0);
+}
+.dropdown-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+.user-avatar-small {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+}
+.user-name-dropdown {
+    font-weight: 600;
+    color: var(--text);
+    font-size: 0.9rem;
+}
+.user-email-dropdown {
+    color: var(--muted);
+    font-size: 0.8rem;
+    margin-top: 2px;
+}
+.dropdown-divider {
+    height: 1px;
+    background: var(--glass-border);
+    margin: 8px 0;
+    opacity: 0.5;
+}
+.dropdown-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.dropdown-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 10px 12px;
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--text);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+.dropdown-btn:hover {
+    background: rgba(108, 99, 255, 0.1);
+    border-color: rgba(108, 99, 255, 0.3);
+    transform: translateX(4px);
+}
+.dropdown-btn i {
+    width: 18px;
+    text-align: center;
+    color: var(--accent);
+}
 </style>
 </head>
 <body>
@@ -825,11 +915,11 @@ body{
                 </div>
                 <div class="dropdown-divider"></div>
                 <div class="dropdown-actions">
-                    <button id="viewProfileBtn" class="dropdown-btn">
+                    <button type="button" id="viewProfileBtn" class="dropdown-btn">
                         <i class="fas fa-user-circle"></i>
                         <span>View Profile</span>
                     </button>
-                    <button id="logoutBtn" class="dropdown-btn">
+                    <button type="button" id="logoutBtn" class="dropdown-btn">
                         <i class="fas fa-sign-out-alt"></i>
                         <span>Logout</span>
                     </button>
@@ -1499,7 +1589,8 @@ document.addEventListener('DOMContentLoaded', function(){
 <script>
 function updateLoginButton() {
     const loginBtn = document.getElementById('loginBtnHeader');
-    if (!loginBtn) return;
+    const dropdown = document.getElementById('userDropdown');
+    if (!loginBtn || !dropdown) return;
     
     const storedUser = localStorage.getItem('bariplux_user');
     
@@ -1507,13 +1598,25 @@ function updateLoginButton() {
         try {
             const user = JSON.parse(storedUser);
             const userName = user.name || user.email.split('@')[0];
+            const userEmail = user.email || '';
             const initial = userName.charAt(0).toUpperCase();
             
-            loginBtn.innerHTML = '<span style="display:flex;align-items:center;gap:6px;"><span style="width:24px;height:24px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--text-dark);">' + initial + '</span><span>' + userName.substring(0, 10) + (userName.length > 10 ? '...' : '') + '</span></span>';
-            loginBtn.title = 'Click to logout';
-            loginBtn.href = 'javascript:void(0)';
+            loginBtn.innerHTML = '<span style="display:flex;align-items:center;gap:8px;"><span style="width:28px;height:28px;background:linear-gradient(135deg,var(--accent),var(--accent-2));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:white;">' + initial + '</span><span style="font-size:0.9rem;">' + userName.substring(0, 12) + (userName.length > 12 ? '...' : '') + '</span></span>';
+            loginBtn.style.cursor = 'pointer';
             loginBtn.onclick = function(e) {
                 e.preventDefault();
+                e.stopPropagation();
+                toggleDropdown();
+            };
+            
+            document.getElementById('userAvatar').innerHTML = initial;
+            document.getElementById('userName').textContent = userName;
+            document.getElementById('userEmail').textContent = userEmail;
+            
+document.getElementById('viewProfileBtn').onclick = function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggleDropdown();
                 if (confirm('Logout from Bari Plux?')) {
                     localStorage.removeItem('bariplux_user');
                     localStorage.removeItem('bariplux_login_token');
@@ -1523,10 +1626,27 @@ function updateLoginButton() {
         } catch (e) {
             console.error('Error parsing user:', e);
         }
+    } else {
+        loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i><span>Login</span>';
+        loginBtn.href = 'login.html';
+        loginBtn.onclick = null;
+        dropdown.classList.remove('active');
     }
-}
-
-updateLoginButton();
+  }
+  
+  function toggleDropdown() {
+    const dropdown = document.getElementById('userDropdown');
+    dropdown.classList.toggle('active');
+  }
+  
+  document.addEventListener('click', function(e) {
+    const dropdown = document.getElementById('userDropdown');
+    const container = document.querySelector('.user-menu-container');
+    
+    if (container && !container.contains(e.target)) {
+        dropdown.classList.remove('active');
+    }
+  });
 setTimeout(updateLoginButton, 500);
 setTimeout(updateLoginButton, 1000);
 </script>

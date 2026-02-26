@@ -1945,8 +1945,10 @@ setInterval(checkForPageUpdate, 45000);
                 document.getElementById('userName').textContent = userName;
                 document.getElementById('userEmail').textContent = userEmail;
                 
-                document.getElementById('viewProfileBtn').onclick = function() {
-                    window.location.href = 'login.html';
+                document.getElementById('viewProfileBtn').onclick = function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggleDropdown();
                 };
                 
                 document.getElementById('logoutBtn').onclick = function() {

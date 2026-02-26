@@ -1999,7 +1999,7 @@
         }
 
         .dropdown-btn:hover {
-            background: var(--glass-bg-hover);
+            background: rgba(108, 99, 255, 0.1);
             border-color: var(--accent);
             color: var(--accent);
             transform: translateX(4px);
@@ -2138,10 +2138,10 @@
                     </div>
                     <div class="dropdown-divider"></div>
                     <div class="dropdown-actions">
-                        <button id="viewProfileBtn" class="dropdown-btn">
+                        <button type="button" id="viewProfileBtn" class="dropdown-btn">
                             <i class="fas fa-user-circle"></i> View Profile
                         </button>
-                        <button id="logoutBtn" class="dropdown-btn logout-btn">
+                        <button type="button" id="logoutBtn" class="dropdown-btn logout-btn">
                             <i class="fas fa-sign-out-alt"></i> Logout
                         </button>
                     </div>
@@ -3228,8 +3228,10 @@ setInterval(checkForPageUpdate, 45000);
                 document.getElementById('userName').textContent = userName;
                 document.getElementById('userEmail').textContent = userEmail;
                 
-                document.getElementById('viewProfileBtn').onclick = function() {
-                    window.location.href = 'login.html';
+                document.getElementById('viewProfileBtn').onclick = function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggleDropdown();
                 };
                 
                 document.getElementById('logoutBtn').onclick = function() {
