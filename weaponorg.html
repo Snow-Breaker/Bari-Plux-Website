@@ -1120,7 +1120,7 @@
             </div>
 
             <div class="user-menu-container">
-                <button id="loginBtnHeader" class="login-btn-header" title="Login" onclick="toggleUserDropdown()">
+                <button id="loginBtnHeader" class="login-btn-header" title="Login" onclick="toggleUserDropdown(); event.stopPropagation();">
                     <i class="fas fa-sign-in-alt"></i>
                     <span>Login</span>
                 </button>
@@ -4690,17 +4690,17 @@
                 loginBtn.onclick = function(e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    toggleDropdown();
+                    toggleUserDropdown();
                 };
                 
                 document.getElementById('userAvatar').innerHTML = initial;
                 document.getElementById('userName').textContent = userName;
                 document.getElementById('userEmail').textContent = userEmail;
                 
-document.getElementById('viewProfileBtn').onclick = function(e) {
+                document.getElementById('viewProfileBtn').onclick = function(e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    toggleDropdown();
+                    toggleUserDropdown();
                 };
                 
                 document.getElementById('goToLoginBtn').onclick = function(e) {
@@ -4716,26 +4716,37 @@ document.getElementById('viewProfileBtn').onclick = function(e) {
                         location.reload();
                     }
                 };
+                
+                document.getElementById('viewProfileBtn').style.display = '';
+                document.getElementById('goToLoginBtn').style.display = '';
+                document.getElementById('logoutBtn').style.display = '';
             } catch (e) {
                 console.error('Error parsing user:', e);
             }
 } else {
             loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i><span>Login</span>';
-            loginBtn.onclick = function() { window.location.href = 'login.html'; };
-            dropdown.classList.remove('active');
+            loginBtn.onclick = function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleUserDropdown();
+            };
+            document.getElementById('userAvatar').innerHTML = '<i class="fas fa-user"></i>';
+            document.getElementById('userName').textContent = 'Guest User';
+            document.getElementById('userEmail').textContent = 'Click below to login';
+            
+            document.getElementById('viewProfileBtn').style.display = 'none';
+            document.getElementById('goToLoginBtn').onclick = function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                window.location.href = 'login.html';
+            };
+            document.getElementById('logoutBtn').style.display = 'none';
+            if (dropdown) dropdown.classList.remove('active');
         }
     }
     
 function toggleUserDropdown() {
-        const loginBtn = document.getElementById('loginBtnHeader');
         const dropdown = document.getElementById('userDropdown');
-        const storedUser = localStorage.getItem('bariplux_user');
-        
-        if (!storedUser) {
-            window.location.href = 'login.html';
-            return;
-        }
-        
         if (dropdown) {
             dropdown.classList.toggle('active');
         }
@@ -4752,7 +4763,7 @@ function toggleUserDropdown() {
         const dropdown = document.getElementById('userDropdown');
         const container = document.querySelector('.user-menu-container');
         
-        if (container && !container.contains(e.target)) {
+        if (dropdown && container && !container.contains(e.target)) {
             dropdown.classList.remove('active');
         }
     });
@@ -4761,5 +4772,6 @@ function toggleUserDropdown() {
     setTimeout(updateLoginButton, 500);
     setTimeout(updateLoginButton, 1000);
     </script>
+<script src="js/main.js" defer></script>
 </body>
 </html>
