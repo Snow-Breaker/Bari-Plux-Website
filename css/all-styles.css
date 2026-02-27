@@ -142,18 +142,23 @@ ul { list-style: none; padding: 0; margin: 0; }
     right: 20px !important;
     overflow: visible !important;
     z-index: 99999 !important;
-    display: none;
     min-width: 220px;
     background: var(--bg-1) !important;
     border: 1px solid var(--glass-border) !important;
     border-radius: 12px !important;
     box-shadow: 0 10px 40px rgba(0,0,0,0.5) !important;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px) scale(0.95);
+    transition: all 0.3s ease;
 }
 
 #userDropdown.active,
 .glass.user-dropdown.active,
 .user-dropdown.glass.active {
-    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(0) scale(1);
 }
 
 /* User Menu Container */
