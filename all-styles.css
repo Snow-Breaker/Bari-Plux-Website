@@ -133,17 +133,21 @@ ul { list-style: none; padding: 0; margin: 0; }
     overflow: hidden;
 }
 
-/* User Dropdown Fix - ID selector for higher specificity */
+/* User Dropdown - Fixed position outside header */
 #userDropdown,
 .glass.user-dropdown,
 .user-dropdown.glass {
     position: fixed !important;
-    top: 85px !important;
-    right: 30px !important;
+    top: 90px !important;
+    right: 20px !important;
     overflow: visible !important;
-    z-index: 10001 !important;
-    display: none !important;
+    z-index: 99999 !important;
+    display: none;
     min-width: 220px;
+    background: var(--bg-1) !important;
+    border: 1px solid var(--glass-border) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5) !important;
 }
 
 #userDropdown.active,
