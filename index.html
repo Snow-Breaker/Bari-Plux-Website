@@ -6439,7 +6439,32 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
             position: relative;
         }
 
-        /* User dropdown styles moved to external CSS */
+        .user-dropdown {
+            position: fixed !important;
+            top: 85px !important;
+            right: 30px !important;
+            min-width: 280px;
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            background: var(--bg-2);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px) scale(0.95);
+            transition: all var(--transition);
+            z-index: 10001 !important;
+            overflow: visible !important;
+        }
+
+        .user-dropdown.active {
+            opacity: 1 !important;
+            visibility: visible !important;
+            transform: translateY(0) scale(1);
+            display: block !important;
+        }
 
         .dropdown-header {
             display: flex;
@@ -6657,236 +6682,38 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
             <span class="sun-icon">☀️</span>
         </div>
 
-        <div class="user-menu-container" style="display:none;">
-            <a href="javascript:void(0);" id="loginBtnHeader" class="login-btn-header" title="Login"></a>
+        <div class="user-menu-container">
+            <button id="loginBtnHeader" class="login-btn-header" title="Login" onclick="toggleUserDropdown(); event.stopPropagation();">
+                <i class="fas fa-sign-in-alt"></i>
+                <span>Login</span>
+            </button>
+            <div id="userDropdown" class="user-dropdown glass">
+                <div class="dropdown-header">
+                    <div id="userAvatar" class="user-avatar-small"></div>
+                    <div class="user-quick-info">
+                        <div id="userName" class="user-name-dropdown"></div>
+                        <div id="userEmail" class="user-email-dropdown"></div>
+                    </div>
+                </div>
+                <div class="dropdown-divider"></div>
+                <div class="dropdown-actions">
+                    <button type="button" id="viewProfileBtn" class="dropdown-btn">
+                        <i class="fas fa-user-circle"></i> Account Info
+                    </button>
+                    <button type="button" id="goToLoginBtn" class="dropdown-btn">
+                        <i class="fas fa-sign-in-alt"></i> Login Page
+                    </button>
+                    <button type="button" id="logoutBtn" class="dropdown-btn logout-btn">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 </header>
 
-<!-- User Dropdown - Outside Header -->
-<div id="userDropdown" class="user-dropdown glass">
-    <div class="dropdown-header">
-        <div id="userAvatar" class="user-avatar-small"></div>
-        <div class="user-quick-info">
-            <div id="userName" class="user-name-dropdown"></div>
-            <div id="userEmail" class="user-email-dropdown"></div>
-        </div>
-    </div>
-    <div class="dropdown-divider"></div>
-    <div class="dropdown-actions">
-        <button type="button" id="viewProfileBtn" class="dropdown-btn">
-            <i class="fas fa-user-circle"></i> View Profile
-        </button>
-        <button type="button" id="goToLoginBtn" class="dropdown-btn">
-            <i class="fas fa-sign-in-alt"></i> Login Page
-        </button>
-        <button type="button" id="logoutBtn" class="dropdown-btn logout-btn">
-            <i class="fas fa-sign-out-alt"></i> Logout
-        </button>
-    </div>
-</div>
-
 <!-- Search Results Dropdown - Outside Header -->
 <div class="search-results-dropdown" id="search-results-dropdown"></div>
-
-<!-- Floating Login Button -->
-<div id="floatingLogin" style="position:fixed;top:20px;right:20px;z-index:9999;">
-    <a href="#" id="floatingLoginBtn" style="display:flex;align-items:center;gap:10px;padding:12px 20px;background:linear-gradient(135deg,#6C63FF,#00BFA6);border:none;border-radius:50px;color:white;font-weight:600;font-size:14px;cursor:pointer;text-decoration:none;box-shadow:0 4px 15px rgba(108,99,255,0.4);">
-        <i class="fas fa-user-circle"></i>
-        <span id="floatingLoginText">Login</span>
-    </a>
-</div>
-
-<!-- User Dropdown -->
-<div id="userDropdown" style="display:none;position:fixed;top:70px;right:20px;min-width:220px;background:#15171b;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:15px;z-index:99999;box-shadow:0 10px 40px rgba(0,0,0,0.5);">
-    <div style="display:flex;align-items:center;gap:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.1);">
-        <div id="userAvatar" style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#6C63FF,#00BFA6);display:flex;align-items:center;justify-content:center;font-weight:bold;color:white;">U</div>
-        <div>
-            <div id="userName" style="font-weight:600;font-size:14px;color:#e8eef8;">User</div>
-            <div id="userEmail" style="font-size:12px;color:rgba(232,238,248,0.6);">email@example.com</div>
-        </div>
-    </div>
-    <div style="margin-top:12px;display:flex;flex-direction:column;gap:5px;">
-        <button id="viewProfileBtn" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:none;background:transparent;color:#e8eef8;font-size:14px;cursor:pointer;border-radius:8px;text-align:left;">
-            <i class="fas fa-user-circle"></i> Account Info
-        </button>
-        <button id="goToLoginBtn" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:none;background:transparent;color:#e8eef8;font-size:14px;cursor:pointer;border-radius:8px;text-align:left;">
-            <i class="fas fa-sign-in-alt"></i> Login Page
-        </button>
-        <button id="logoutBtn" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:none;background:transparent;color:#ff6b6b;font-size:14px;cursor:pointer;border-radius:8px;text-align:left;">
-            <i class="fas fa-sign-out-alt"></i> Logout
-        </button>
-    </div>
-</div>
-
-<script>
-var dropdownVisible = false;
-
-document.getElementById('floatingLoginBtn').addEventListener('click', function(e) {
-    e.preventDefault();
-    var dropdown = document.getElementById('userDropdown');
-    if (dropdown) {
-        dropdownVisible = !dropdownVisible;
-        dropdown.style.display = dropdownVisible ? 'block' : 'none';
-    }
-});
-
-// Handle logout button
-var logoutBtn = document.getElementById('logoutBtn');
-if (logoutBtn) {
-    logoutBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        if (confirm('Are you sure you want to logout?')) {
-            localStorage.removeItem('bariplux_user');
-            localStorage.removeItem('bariplux_user_new');
-            localStorage.removeItem('bariplux_login_token');
-            location.reload();
-        }
-    });
-}
-
-// Handle login page button
-var goToLoginBtn = document.getElementById('goToLoginBtn');
-if (goToLoginBtn) {
-    goToLoginBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        window.location.href = 'login.html';
-    });
-}
-
-// Handle view profile button
-var viewProfileBtn = document.getElementById('viewProfileBtn');
-if (viewProfileBtn) {
-    viewProfileBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        var user = JSON.parse(localStorage.getItem('bariplux_user') || '{}');
-        alert('Account Info:\nName: ' + (user.name || 'N/A') + '\nEmail: ' + (user.email || 'N/A'));
-    });
-}
-
-// Check login status and update button
-function updateFloatingLogin() {
-    var storedUser = localStorage.getItem('bariplux_user');
-    var floatingBtn = document.getElementById('floatingLoginBtn');
-    var userName = document.getElementById('userName');
-    var userEmail = document.getElementById('userEmail');
-    var userAvatar = document.getElementById('userAvatar');
-    var logoutBtn = document.getElementById('logoutBtn');
-    var goToLoginBtn = document.getElementById('goToLoginBtn');
-    var viewProfileBtn = document.getElementById('viewProfileBtn');
-    
-    if (storedUser && floatingBtn) {
-        try {
-            var user = JSON.parse(storedUser);
-            var name = user.name || 'User';
-            var initial = name.charAt(0).toUpperCase();
-            floatingBtn.innerHTML = '<i class="fas fa-user-circle"></i><span>' + name.substring(0, 10) + '</span>';
-            if (userName) userName.textContent = name;
-            if (userEmail) userEmail.textContent = user.email || '';
-            if (userAvatar) userAvatar.textContent = initial;
-            if (logoutBtn) logoutBtn.style.display = 'flex';
-            if (goToLoginBtn) goToLoginBtn.style.display = 'flex';
-            if (viewProfileBtn) viewProfileBtn.style.display = 'flex';
-        } catch(e) {
-            console.error('Error:', e);
-        }
-    }
-}
-
-// Run on page load
-updateFloatingLogin();
-setTimeout(updateFloatingLogin, 500);
-setTimeout(updateFloatingLogin, 1000);
-
-// Close dropdown when clicking outside
-document.addEventListener('click', function(e) {
-    var dropdown = document.getElementById('userDropdown');
-    var container = document.getElementById('floatingLogin');
-    if (dropdown && container && !container.contains(e.target) && !dropdown.contains(e.target)) {
-        dropdown.style.display = 'none';
-        dropdownVisible = false;
-    }
-});
-</script>
-
-// Handle logout button
-var logoutBtn = document.getElementById('logoutBtn');
-if (logoutBtn) {
-    logoutBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        if (confirm('Are you sure you want to logout?')) {
-            localStorage.removeItem('bariplux_user');
-            localStorage.removeItem('bariplux_user_new');
-            localStorage.removeItem('bariplux_login_token');
-            location.reload();
-        }
-    });
-}
-
-// Handle login page button
-var goToLoginBtn = document.getElementById('goToLoginBtn');
-if (goToLoginBtn) {
-    goToLoginBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        window.location.href = 'login.html';
-    });
-}
-
-// Handle view profile button
-var viewProfileBtn = document.getElementById('viewProfileBtn');
-if (viewProfileBtn) {
-    viewProfileBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        var user = JSON.parse(localStorage.getItem('bariplux_user') || '{}');
-        alert('Account Info:\nName: ' + (user.name || 'N/A') + '\nEmail: ' + (user.email || 'N/A'));
-    });
-}
-
-// Check login status and update button
-function updateFloatingLogin() {
-    var storedUser = localStorage.getItem('bariplux_user');
-    var floatingBtn = document.getElementById('floatingLoginBtn');
-    var floatingText = document.getElementById('floatingLoginText');
-    var userName = document.getElementById('userName');
-    var userEmail = document.getElementById('userEmail');
-    var userAvatar = document.getElementById('userAvatar');
-    var logoutBtn = document.getElementById('logoutBtn');
-    var goToLoginBtn = document.getElementById('goToLoginBtn');
-    var viewProfileBtn = document.getElementById('viewProfileBtn');
-    
-    if (storedUser && floatingBtn) {
-        try {
-            var user = JSON.parse(storedUser);
-            var name = user.name || 'User';
-            var initial = name.charAt(0).toUpperCase();
-            floatingBtn.innerHTML = '<i class="fas fa-user-circle"></i><span>' + name.substring(0, 10) + '</span>';
-            if (userName) userName.textContent = name;
-            if (userEmail) userEmail.textContent = user.email || '';
-            if (userAvatar) userAvatar.textContent = initial;
-            if (logoutBtn) logoutBtn.style.display = 'flex';
-            if (goToLoginBtn) goToLoginBtn.style.display = 'flex';
-            if (viewProfileBtn) viewProfileBtn.style.display = 'flex';
-        } catch(e) {
-            console.error('Error:', e);
-        }
-    }
-}
-
-// Run on page load
-updateFloatingLogin();
-setTimeout(updateFloatingLogin, 500);
-setTimeout(updateFloatingLogin, 1000);
-
-// Close dropdown when clicking outside
-document.addEventListener('click', function(e) {
-    var dropdown = document.getElementById('userDropdown');
-    var container = document.getElementById('floatingLogin');
-    if (dropdown && container && !container.contains(e.target) && !dropdown.contains(e.target)) {
-        dropdown.style.display = 'none';
-        dropdownVisible = false;
-    }
-});
-</script>
 
     
     <!-- Hero Section - Balanced Glass Design -->
@@ -8385,7 +8212,7 @@ document.addEventListener('click', function(e) {
                 loginBtn.onclick = function(e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    toggleDropdown();
+                    toggleUserDropdown();
                 };
                 
                 document.getElementById('userAvatar').innerHTML = initial;
@@ -8395,7 +8222,7 @@ document.addEventListener('click', function(e) {
                 document.getElementById('viewProfileBtn').onclick = function(e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    toggleDropdown();
+                    toggleUserDropdown();
                 };
                 
                 document.getElementById('goToLoginBtn').onclick = function(e) {
@@ -8416,27 +8243,27 @@ document.addEventListener('click', function(e) {
             }
         } else {
             loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i><span>Login</span>';
-            loginBtn.onclick = function() { window.location.href = 'login.html'; };
-            dropdown.classList.remove('active');
+            loginBtn.onclick = function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleUserDropdown();
+            };
+            document.getElementById('userAvatar').innerHTML = '<i class="fas fa-user"></i>';
+            document.getElementById('userName').textContent = 'Guest User';
+            document.getElementById('userEmail').textContent = 'Click below to login';
+            
+            document.getElementById('viewProfileBtn').style.display = 'none';
+            document.getElementById('goToLoginBtn').onclick = function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                window.location.href = 'login.html';
+            };
+            document.getElementById('logoutBtn').style.display = 'none';
+            if (dropdown) dropdown.classList.remove('active');
         }
     }
     
     function toggleUserDropdown() {
-        const loginBtn = document.getElementById('loginBtnHeader');
-        const dropdown = document.getElementById('userDropdown');
-        const storedUser = localStorage.getItem('bariplux_user');
-        
-        if (!storedUser) {
-            window.location.href = 'login.html';
-            return;
-        }
-        
-        if (dropdown) {
-            dropdown.classList.toggle('active');
-        }
-    }
-    
-    function toggleDropdown() {
         const dropdown = document.getElementById('userDropdown');
         if (dropdown) {
             dropdown.classList.toggle('active');
@@ -8447,7 +8274,7 @@ document.addEventListener('click', function(e) {
         const dropdown = document.getElementById('userDropdown');
         const container = document.querySelector('.user-menu-container');
         
-        if (container && !container.contains(e.target)) {
+        if (dropdown && container && !container.contains(e.target)) {
             dropdown.classList.remove('active');
         }
     });
@@ -9835,6 +9662,5 @@ function sanitizeInput(input) {
         }
     }, 5000);
 </script>
-
 </body>
 </html>
