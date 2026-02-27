@@ -6683,7 +6683,7 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
         </div>
 
         <div class="user-menu-container">
-            <button id="loginBtnHeader" class="login-btn-header" title="Login" onclick="toggleUserDropdown(); event.stopPropagation();">
+            <button id="loginBtnHeader" class="login-btn-header" title="Login" style="pointer-events: auto !important; cursor: pointer;" onclick="alert('Clicked!'); toggleUserDropdown(); event.stopPropagation();">
                 <i class="fas fa-sign-in-alt"></i>
                 <span>Login</span>
             </button>
@@ -9662,6 +9662,6 @@ function sanitizeInput(input) {
         }
     }, 5000);
 </script>
-<script src="js/main.js" defer></script>
+
 </body>
 </html>
