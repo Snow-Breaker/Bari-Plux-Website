@@ -211,6 +211,14 @@ ul {
     z-index: 10001 !important;
 }
 
+#userDropdown.active,
+.glass.user-dropdown.active,
+.user-dropdown.glass.active {
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: block !important;
+}
+
 /* ========================
    HEADER STYLES
    ======================== */

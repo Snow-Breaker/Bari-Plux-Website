@@ -6460,9 +6460,10 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
         }
 
         .user-dropdown.active {
-            opacity: 1;
-            visibility: visible;
+            opacity: 1 !important;
+            visibility: visible !important;
             transform: translateY(0) scale(1);
+            display: block !important;
         }
 
         .dropdown-header {
