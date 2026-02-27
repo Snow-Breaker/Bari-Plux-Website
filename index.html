@@ -6720,20 +6720,94 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
 </div>
 
 <script>
-alert('Script loaded!');
-
 var dropdownVisible = false;
 
 document.getElementById('floatingLoginBtn').addEventListener('click', function(e) {
     e.preventDefault();
-    alert('Button clicked!');
     var dropdown = document.getElementById('userDropdown');
     if (dropdown) {
         dropdownVisible = !dropdownVisible;
-        dropdown.style.display = dropdownVisible ? 'block' : 'block';
-        dropdown.style.backgroundColor = 'red';
+        dropdown.style.display = dropdownVisible ? 'block' : 'none';
     }
 });
+
+// Handle logout button
+var logoutBtn = document.getElementById('logoutBtn');
+if (logoutBtn) {
+    logoutBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (confirm('Are you sure you want to logout?')) {
+            localStorage.removeItem('bariplux_user');
+            localStorage.removeItem('bariplux_user_new');
+            localStorage.removeItem('bariplux_login_token');
+            location.reload();
+        }
+    });
+}
+
+// Handle login page button
+var goToLoginBtn = document.getElementById('goToLoginBtn');
+if (goToLoginBtn) {
+    goToLoginBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        window.location.href = 'login.html';
+    });
+}
+
+// Handle view profile button
+var viewProfileBtn = document.getElementById('viewProfileBtn');
+if (viewProfileBtn) {
+    viewProfileBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        var user = JSON.parse(localStorage.getItem('bariplux_user') || '{}');
+        alert('Account Info:\nName: ' + (user.name || 'N/A') + '\nEmail: ' + (user.email || 'N/A'));
+    });
+}
+
+// Check login status and update button
+function updateFloatingLogin() {
+    var storedUser = localStorage.getItem('bariplux_user');
+    var floatingBtn = document.getElementById('floatingLoginBtn');
+    var userName = document.getElementById('userName');
+    var userEmail = document.getElementById('userEmail');
+    var userAvatar = document.getElementById('userAvatar');
+    var logoutBtn = document.getElementById('logoutBtn');
+    var goToLoginBtn = document.getElementById('goToLoginBtn');
+    var viewProfileBtn = document.getElementById('viewProfileBtn');
+    
+    if (storedUser && floatingBtn) {
+        try {
+            var user = JSON.parse(storedUser);
+            var name = user.name || 'User';
+            var initial = name.charAt(0).toUpperCase();
+            floatingBtn.innerHTML = '<i class="fas fa-user-circle"></i><span>' + name.substring(0, 10) + '</span>';
+            if (userName) userName.textContent = name;
+            if (userEmail) userEmail.textContent = user.email || '';
+            if (userAvatar) userAvatar.textContent = initial;
+            if (logoutBtn) logoutBtn.style.display = 'flex';
+            if (goToLoginBtn) goToLoginBtn.style.display = 'flex';
+            if (viewProfileBtn) viewProfileBtn.style.display = 'flex';
+        } catch(e) {
+            console.error('Error:', e);
+        }
+    }
+}
+
+// Run on page load
+updateFloatingLogin();
+setTimeout(updateFloatingLogin, 500);
+setTimeout(updateFloatingLogin, 1000);
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function(e) {
+    var dropdown = document.getElementById('userDropdown');
+    var container = document.getElementById('floatingLogin');
+    if (dropdown && container && !container.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.style.display = 'none';
+        dropdownVisible = false;
+    }
+});
+</script>
 
 // Handle logout button
 var logoutBtn = document.getElementById('logoutBtn');
@@ -8314,36 +8388,10 @@ document.addEventListener('click', function(e) {
                     toggleUserDropdown();
                 };
                 
-                // Update floating login button
-                const floatingLoginBtn = document.getElementById('floatingLoginBtn');
-                const floatingLoginText = document.getElementById('floatingLoginText');
-                if (floatingLoginBtn) {
-                    floatingLoginBtn.innerHTML = '<i class="fas fa-user-circle"></i><span>' + userName.substring(0, 10) + '</span>';
-                }
-                
+                // Update user info in dropdown
                 document.getElementById('userAvatar').innerHTML = initial;
                 document.getElementById('userName').textContent = userName;
                 document.getElementById('userEmail').textContent = userEmail;
-                
-                document.getElementById('viewProfileBtn').onclick = function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    toggleUserDropdown();
-                };
-                
-                document.getElementById('goToLoginBtn').onclick = function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    window.location.href = 'login.html';
-                };
-                
-                document.getElementById('logoutBtn').onclick = function() {
-                    if (confirm('Logout from Bari Plux?')) {
-                        localStorage.removeItem('bariplux_user');
-                        localStorage.removeItem('bariplux_login_token');
-                        location.reload();
-                    }
-                };
             } catch (e) {
                 console.error('Error parsing user:', e);
             }
@@ -8366,13 +8414,6 @@ document.addEventListener('click', function(e) {
             };
             document.getElementById('logoutBtn').style.display = 'none';
             if (dropdown) dropdown.classList.remove('active');
-            
-            // Reset floating login button
-            const floatingLoginBtn = document.getElementById('floatingLoginBtn');
-            const floatingLoginText = document.getElementById('floatingLoginText');
-            if (floatingLoginBtn) {
-                floatingLoginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i><span>Login</span>';
-            }
         }
     }
     
