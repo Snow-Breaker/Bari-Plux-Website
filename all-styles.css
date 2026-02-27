@@ -570,7 +570,7 @@ ul { list-style: none; padding: 0; margin: 0; }
 /* Floating Login Button */
 .floating-login-container {
     position: fixed;
-    top: 100px;
+    top: 20px;
     right: 20px;
     z-index: 9999;
 }
@@ -606,7 +606,7 @@ ul { list-style: none; padding: 0; margin: 0; }
 .glass.user-dropdown,
 .user-dropdown.glass {
     position: fixed !important;
-    top: 160px !important;
+    top: 70px !important;
     right: 20px !important;
     overflow: visible !important;
     z-index: 99998 !important;
