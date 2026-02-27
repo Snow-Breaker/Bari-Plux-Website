@@ -811,7 +811,7 @@ body{
         </div>
 
         <div class="user-menu-container">
-            <button id="loginBtnHeader" class="login-btn-header" title="Login" onclick="toggleUserDropdown()">
+            <button id="loginBtnHeader" class="login-btn-header" title="Login" onclick="toggleUserDropdown(); event.stopPropagation();">
                 <i class="fas fa-sign-in-alt"></i>
                 <span>Login</span>
             </button>
