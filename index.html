@@ -6708,6 +6708,76 @@ document.getElementById('floatingLoginBtn').addEventListener('click', function(e
         dropdown.classList.toggle('active');
     }
 });
+
+// Handle logout button
+var logoutBtn = document.getElementById('logoutBtn');
+if (logoutBtn) {
+    logoutBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (confirm('Are you sure you want to logout?')) {
+            localStorage.removeItem('bariplux_user');
+            localStorage.removeItem('bariplux_user_new');
+            localStorage.removeItem('bariplux_login_token');
+            location.reload();
+        }
+    });
+}
+
+// Handle login page button
+var goToLoginBtn = document.getElementById('goToLoginBtn');
+if (goToLoginBtn) {
+    goToLoginBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        window.location.href = 'login.html';
+    });
+}
+
+// Handle view profile button
+var viewProfileBtn = document.getElementById('viewProfileBtn');
+if (viewProfileBtn) {
+    viewProfileBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        var user = JSON.parse(localStorage.getItem('bariplux_user') || '{}');
+        alert('Account Info:\nName: ' + (user.name || 'N/A') + '\nEmail: ' + (user.email || 'N/A'));
+    });
+}
+
+// Check login status and update floating button
+function updateFloatingLogin() {
+    var storedUser = localStorage.getItem('bariplux_user');
+    var floatingBtn = document.getElementById('floatingLoginBtn');
+    var floatingText = document.getElementById('floatingLoginText');
+    var userName = document.getElementById('userName');
+    var userEmail = document.getElementById('userEmail');
+    var userAvatar = document.getElementById('userAvatar');
+    
+    if (storedUser && floatingBtn) {
+        try {
+            var user = JSON.parse(storedUser);
+            var initial = user.name ? user.name.charAt(0).toUpperCase() : 'U';
+            floatingBtn.innerHTML = '<i class="fas fa-user-circle"></i><span>' + (user.name || 'User').substring(0, 10) + '</span>';
+            if (userName) userName.textContent = user.name || 'User';
+            if (userEmail) userEmail.textContent = user.email || '';
+            if (userAvatar) userAvatar.innerHTML = initial;
+        } catch(e) {
+            console.error('Error:', e);
+        }
+    }
+}
+
+// Run on page load
+updateFloatingLogin();
+setTimeout(updateFloatingLogin, 500);
+setTimeout(updateFloatingLogin, 1000);
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function(e) {
+    var dropdown = document.getElementById('userDropdown');
+    var container = document.getElementById('floatingLogin');
+    if (dropdown && container && !container.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.classList.remove('active');
+    }
+});
 </script>
 
     
