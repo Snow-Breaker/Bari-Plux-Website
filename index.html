@@ -6720,14 +6720,18 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
 </div>
 
 <script>
+alert('Script loaded!');
+
 var dropdownVisible = false;
 
 document.getElementById('floatingLoginBtn').addEventListener('click', function(e) {
     e.preventDefault();
+    alert('Button clicked!');
     var dropdown = document.getElementById('userDropdown');
     if (dropdown) {
         dropdownVisible = !dropdownVisible;
-        dropdown.style.display = dropdownVisible ? 'block' : 'none';
+        dropdown.style.display = dropdownVisible ? 'block' : 'block';
+        dropdown.style.backgroundColor = 'red';
     }
 });
 
