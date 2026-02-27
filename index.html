@@ -6682,8 +6682,8 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
             <span class="sun-icon">☀️</span>
         </div>
 
-        <div class="user-menu-container">
-            <button id="loginBtnHeader" class="login-btn-header" title="Login" style="pointer-events: auto !important; cursor: pointer;" onclick="alert('Clicked!'); toggleUserDropdown(); event.stopPropagation();">
+        <div class="user-menu-container" style="display:none;">
+            <a href="javascript:void(0);" id="loginBtnHeader" class="login-btn-header" title="Login">
                 <i class="fas fa-sign-in-alt"></i>
                 <span>Login</span>
             </button>
@@ -6712,8 +6712,39 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
     </div>
 </header>
 
+<!-- User Dropdown - Outside Header -->
+<div id="userDropdown" class="user-dropdown glass">
+    <div class="dropdown-header">
+        <div id="userAvatar" class="user-avatar-small"></div>
+        <div class="user-quick-info">
+            <div id="userName" class="user-name-dropdown"></div>
+            <div id="userEmail" class="user-email-dropdown"></div>
+        </div>
+    </div>
+    <div class="dropdown-divider"></div>
+    <div class="dropdown-actions">
+        <button type="button" id="viewProfileBtn" class="dropdown-btn">
+            <i class="fas fa-user-circle"></i> Account Info
+        </button>
+        <button type="button" id="goToLoginBtn" class="dropdown-btn">
+            <i class="fas fa-sign-in-alt"></i> Login Page
+        </button>
+        <button type="button" id="logoutBtn" class="dropdown-btn logout-btn">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+    </div>
+</div>
+
 <!-- Search Results Dropdown - Outside Header -->
 <div class="search-results-dropdown" id="search-results-dropdown"></div>
+
+<!-- Floating Login Button -->
+<div class="floating-login-container" id="floatingLogin">
+    <a href="javascript:void(0);" class="floating-login-btn" id="floatingLoginBtn" onclick="document.getElementById('userDropdown').classList.toggle('active'); event.preventDefault(); event.stopPropagation();">
+        <i class="fas fa-user-circle"></i>
+        <span id="floatingLoginText">Login</span>
+    </a>
+</div>
 
     
     <!-- Hero Section - Balanced Glass Design -->
@@ -8215,6 +8246,13 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
                     toggleUserDropdown();
                 };
                 
+                // Update floating login button
+                const floatingLoginBtn = document.getElementById('floatingLoginBtn');
+                const floatingLoginText = document.getElementById('floatingLoginText');
+                if (floatingLoginBtn) {
+                    floatingLoginBtn.innerHTML = '<i class="fas fa-user-circle"></i><span>' + userName.substring(0, 10) + '</span>';
+                }
+                
                 document.getElementById('userAvatar').innerHTML = initial;
                 document.getElementById('userName').textContent = userName;
                 document.getElementById('userEmail').textContent = userEmail;
@@ -8260,6 +8298,13 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
             };
             document.getElementById('logoutBtn').style.display = 'none';
             if (dropdown) dropdown.classList.remove('active');
+            
+            // Reset floating login button
+            const floatingLoginBtn = document.getElementById('floatingLoginBtn');
+            const floatingLoginText = document.getElementById('floatingLoginText');
+            if (floatingLoginBtn) {
+                floatingLoginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i><span>Login</span>';
+            }
         }
     }
     
