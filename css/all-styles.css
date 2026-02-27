@@ -570,8 +570,8 @@ ul { list-style: none; padding: 0; margin: 0; }
 /* Floating Login Button */
 .floating-login-container {
     position: fixed;
-    bottom: 30px;
-    right: 30px;
+    top: 100px;
+    right: 20px;
     z-index: 9999;
 }
 
@@ -606,9 +606,8 @@ ul { list-style: none; padding: 0; margin: 0; }
 .glass.user-dropdown,
 .user-dropdown.glass {
     position: fixed !important;
-    bottom: 90px !important;
-    right: 30px !important;
-    top: auto !important;
+    top: 160px !important;
+    right: 20px !important;
     overflow: visible !important;
     z-index: 99998 !important;
     min-width: 250px;
@@ -628,4 +627,87 @@ ul { list-style: none; padding: 0; margin: 0; }
     opacity: 1 !important;
     visibility: visible !important;
     transform: translateY(0) scale(1);
+}
+
+/* Dropdown Elements */
+.dropdown-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.user-avatar-small {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 700;
+    color: white;
+}
+
+.user-quick-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.user-name-dropdown {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--text);
+}
+
+.user-email-dropdown {
+    font-size: 0.75rem;
+    color: var(--muted);
+}
+
+.dropdown-divider {
+    height: 1px;
+    background: var(--glass-border);
+    margin: 5px 0;
+}
+
+.dropdown-actions {
+    padding: 10px;
+}
+
+.dropdown-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 12px 15px;
+    border: none;
+    background: transparent;
+    color: var(--text);
+    font-size: 0.9rem;
+    font-family: inherit;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.2s;
+    text-align: left;
+}
+
+.dropdown-btn:hover {
+    background: rgba(108, 99, 255, 0.15);
+    color: var(--accent);
+}
+
+.dropdown-btn i {
+    width: 18px;
+    text-align: center;
+}
+
+.dropdown-btn.logout-btn {
+    color: #ff6b6b;
+}
+
+.dropdown-btn.logout-btn:hover {
+    background: rgba(255, 107, 107, 0.15);
 }
