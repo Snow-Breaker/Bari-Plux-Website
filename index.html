@@ -6440,10 +6440,9 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
         }
 
         .user-dropdown {
-            position: absolute;
-            top: 100% !important;
-            right: 0 !important;
-            margin-top: 8px !important;
+            position: fixed !important;
+            top: 85px !important;
+            right: 30px !important;
             min-width: 280px;
             border-radius: var(--radius-lg);
             padding: 16px;
@@ -6698,7 +6697,10 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
                 <div class="dropdown-divider"></div>
                 <div class="dropdown-actions">
                     <button type="button" id="viewProfileBtn" class="dropdown-btn">
-                        <i class="fas fa-user-circle"></i> View Profile
+                        <i class="fas fa-user-circle"></i> Account Info
+                    </button>
+                    <button type="button" id="goToLoginBtn" class="dropdown-btn">
+                        <i class="fas fa-sign-in-alt"></i> Login Page
                     </button>
                     <button type="button" id="logoutBtn" class="dropdown-btn logout-btn">
                         <i class="fas fa-sign-out-alt"></i> Logout
@@ -8220,6 +8222,12 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
                     e.preventDefault();
                     e.stopPropagation();
                     toggleDropdown();
+                };
+                
+                document.getElementById('goToLoginBtn').onclick = function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    window.location.href = 'login.html';
                 };
                 
                 document.getElementById('logoutBtn').onclick = function() {

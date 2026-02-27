@@ -223,9 +223,9 @@
         /* User Menu Dropdown */
         .user-menu-container { position: relative; }
         .user-dropdown {
-            position: absolute;
-            top: calc(100% + 8px);
-            right: 0;
+            position: fixed !important;
+            top: 85px !important;
+            right: 30px !important;
             min-width: 250px;
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
@@ -1193,6 +1193,10 @@
                             <i class="fas fa-user-circle"></i>
                             <span>View Profile</span>
                         </button>
+                        <button type="button" id="goToLoginBtn" class="dropdown-btn">
+                            <i class="fas fa-sign-in-alt"></i>
+                            <span>Login Page</span>
+                        </button>
                         <button type="button" id="logoutBtn" class="dropdown-btn">
                             <i class="fas fa-sign-out-alt"></i>
                             <span>Logout</span>
@@ -1774,7 +1778,12 @@
                 document.getElementById('userName').textContent = userName;
                 document.getElementById('userEmail').textContent = userEmail;
                 
-                document.getElementById('viewProfileBtn').onclick = function(e) { e.preventDefault(); e.stopPropagation(); toggleDropdown(); };
+document.getElementById('viewProfileBtn').onclick = function(e) { e.preventDefault(); e.stopPropagation(); toggleDropdown(); };
+                document.getElementById('goToLoginBtn').onclick = function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    window.location.href = 'login.html';
+                };
                 document.getElementById('logoutBtn').onclick = function() {
                     if (confirm('Logout from Bari Plux?')) {
                         localStorage.removeItem('bariplux_user');
@@ -1785,10 +1794,9 @@
             } catch (e) {
                 console.error('Error parsing user:', e);
             }
-        } else {
+} else {
             loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i><span>Login</span>';
             loginBtn.onclick = function() { window.location.href = 'login.html'; };
-            loginBtn.onclick = null;
             dropdown.classList.remove('active');
         }
     }

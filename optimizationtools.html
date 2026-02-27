@@ -2142,6 +2142,9 @@
                         <button type="button" id="viewProfileBtn" class="dropdown-btn">
                             <i class="fas fa-user-circle"></i> View Profile
                         </button>
+                        <button type="button" id="goToLoginBtn" class="dropdown-btn">
+                            <i class="fas fa-sign-in-alt"></i> Login Page
+                        </button>
                         <button type="button" id="logoutBtn" class="dropdown-btn logout-btn">
                             <i class="fas fa-sign-out-alt"></i> Logout
                         </button>
@@ -3235,6 +3238,12 @@ setInterval(checkForPageUpdate, 45000);
                     toggleDropdown();
                 };
                 
+                document.getElementById('goToLoginBtn').onclick = function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    window.location.href = 'login.html';
+                };
+                
                 document.getElementById('logoutBtn').onclick = function() {
                     if (confirm('Logout from Bari Plux?')) {
                         localStorage.removeItem('bariplux_user');
@@ -3248,7 +3257,6 @@ setInterval(checkForPageUpdate, 45000);
         } else {
             loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i><span>Login</span>';
             loginBtn.onclick = function() { window.location.href = 'login.html'; };
-            loginBtn.onclick = null;
             dropdown.classList.remove('active');
         }
     }

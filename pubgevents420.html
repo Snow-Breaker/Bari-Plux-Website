@@ -767,9 +767,9 @@ body{
 /* User Menu Dropdown */
 .user-menu-container { position: relative; }
 .user-dropdown {
-    position: absolute;
-    top: calc(100% + 8px);
-    right: 0;
+    position: fixed !important;
+    top: 85px !important;
+    right: 30px !important;
     min-width: 250px;
     background: var(--glass-bg);
     border: 1px solid var(--glass-border);
@@ -919,6 +919,10 @@ body{
                     <button type="button" id="viewProfileBtn" class="dropdown-btn">
                         <i class="fas fa-user-circle"></i>
                         <span>View Profile</span>
+                    </button>
+                    <button type="button" id="goToLoginBtn" class="dropdown-btn">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <span>Login Page</span>
                     </button>
                     <button type="button" id="logoutBtn" class="dropdown-btn">
                         <i class="fas fa-sign-out-alt"></i>
@@ -1618,19 +1622,27 @@ document.getElementById('viewProfileBtn').onclick = function(e) {
                     e.preventDefault();
                     e.stopPropagation();
                     toggleDropdown();
-                if (confirm('Logout from Bari Plux?')) {
-                    localStorage.removeItem('bariplux_user');
-                    localStorage.removeItem('bariplux_login_token');
-                    location.reload();
-                }
-            };
+                };
+                
+                document.getElementById('goToLoginBtn').onclick = function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    window.location.href = 'login.html';
+                };
+                
+                document.getElementById('logoutBtn').onclick = function() {
+                    if (confirm('Logout from Bari Plux?')) {
+                        localStorage.removeItem('bariplux_user');
+                        localStorage.removeItem('bariplux_login_token');
+                        location.reload();
+                    }
+                };
         } catch (e) {
             console.error('Error parsing user:', e);
         }
     } else {
         loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i><span>Login</span>';
-            loginBtn.onclick = function() { window.location.href = 'login.html'; };
-        loginBtn.onclick = null;
+        loginBtn.onclick = function() { window.location.href = 'login.html'; };
         dropdown.classList.remove('active');
     }
   }

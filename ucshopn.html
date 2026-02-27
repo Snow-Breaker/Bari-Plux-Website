@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
     <meta name="description" content="Sell UC at the lowest price and best quality at Elite UC Shop.">
     <meta name="keywords" content="UC, PUBG, Elite UC Shop, Buy UC, UC Discount">
     <title>Elite UC Shop - Buy UC with Special Discount</title>
@@ -406,6 +406,19 @@
     </style>
 </head>
 <body>
+    <!-- Security: Disable right-click and keyboard shortcuts -->
+    <script>
+        document.addEventListener('contextmenu', function(e) { e.preventDefault(); }, false);
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'F12' || (e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S')) || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'C' || e.key === 'c'))) {
+                e.preventDefault();
+            }
+        }, false);
+        document.ondragstart = function() { return false; };
+    </script>
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+
     <!-- Audio file -->
     <audio id="background-music" loop>
         <source src="https://cdn.pixabay.com/audio/2023/05/16/audio_1282eb1c8c.mp3" type="audio/mpeg">
@@ -841,6 +854,19 @@
             document.getElementById('popup').style.display = 'none';
         }
     });
-</script>
+    </script>
+
+    <!-- Scroll Progress Bar -->
+    <script>
+        const scrollProgress = document.getElementById('scrollProgress');
+        if (scrollProgress) {
+            window.addEventListener('scroll', () => {
+                const scrollTop = window.scrollY;
+                const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const scrollPercent = (scrollTop / docHeight) * 100;
+                scrollProgress.style.width = scrollPercent + '%';
+            }, { passive: true });
+        }
+    </script>
 </body>
 </html>
