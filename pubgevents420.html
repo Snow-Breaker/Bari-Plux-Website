@@ -902,7 +902,7 @@ body{
         </div>
 
         <div class="user-menu-container">
-            <button id="loginBtnHeader" class="login-btn-header" title="Login">
+            <button id="loginBtnHeader" class="login-btn-header" title="Login" onclick="toggleUserDropdown()">
                 <i class="fas fa-sign-in-alt"></i>
                 <span>Login</span>
             </button>
@@ -1647,10 +1647,27 @@ document.getElementById('viewProfileBtn').onclick = function(e) {
     }
   }
   
-  function toggleDropdown() {
-    const dropdown = document.getElementById('userDropdown');
-    dropdown.classList.toggle('active');
-  }
+  function toggleUserDropdown() {
+        const loginBtn = document.getElementById('loginBtnHeader');
+        const dropdown = document.getElementById('userDropdown');
+        const storedUser = localStorage.getItem('bariplux_user');
+        
+        if (!storedUser) {
+            window.location.href = 'login.html';
+            return;
+        }
+        
+        if (dropdown) {
+            dropdown.classList.toggle('active');
+        }
+    }
+    
+    function toggleDropdown() {
+        const dropdown = document.getElementById('userDropdown');
+        if (dropdown) {
+            dropdown.classList.toggle('active');
+        }
+    }
   
   document.addEventListener('click', function(e) {
     const dropdown = document.getElementById('userDropdown');

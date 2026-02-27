@@ -204,7 +204,11 @@ ul {
 #userDropdown,
 .glass.user-dropdown,
 .user-dropdown.glass {
+    position: fixed !important;
+    top: 85px !important;
+    right: 30px !important;
     overflow: visible !important;
+    z-index: 10001 !important;
 }
 
 /* ========================
