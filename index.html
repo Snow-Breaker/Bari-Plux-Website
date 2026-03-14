@@ -8502,7 +8502,7 @@ document.querySelectorAll('a[href*="down"], a[download]').forEach(link => {
     link.addEventListener('click', function(e) {
         if (!validateDownloadLink(this.href, this.download)) {
             e.preventDefault();
-            addAIMessage("این لینک دانلود برای امنیت شما بررسی شده است. در صورت مشکل با پشتیبانی تماس بگیرید.");
+            addAIMessage("This download link has been checked for your security. If you have any problems, please contact support.");
         }
     });
 });
