@@ -1347,7 +1347,6 @@
         function syncLoginToFirebase(user) {
             if (!firebaseInitialized || !database) {
                 console.log("Firebase not initialized, skipping sync");
-                showNotification('Firebase not configured - cannot sync to app', 'error');
                 return;
             }
             
@@ -1365,14 +1364,15 @@
                     platform: 'website'
                 }).then(() => {
                     console.log('Login synced to Firebase successfully!');
-                    showNotification('Login synced to app!', 'success');
                 }).catch(err => {
-                    console.error('Error syncing to Firebase:', err.code, err.message);
-                    showNotification('Could not sync to app: ' + err.message, 'error');
+                    if (err.code === 'PERMISSION_DENIED') {
+                        console.log('Firebase sync skipped - database rules prevent writing');
+                    } else {
+                        console.error('Error syncing to Firebase:', err.code, err.message);
+                    }
                 });
             } catch (error) {
                 console.error("Sync error:", error);
-                showNotification('Sync error: ' + error.message, 'error');
             }
         }
 
@@ -1441,12 +1441,17 @@
             document.getElementById('loginFormView').style.display = 'none';
             document.getElementById('loggedInView').classList.add('active');
             
-            document.getElementById('userName').textContent = user.name;
-            document.getElementById('userEmail').textContent = user.email;
-            document.getElementById('userId').textContent = user.id;
+            console.log('User data:', user);
+            
+            document.getElementById('userName').textContent = user.name || 'User';
+            document.getElementById('userEmail').textContent = user.email || '';
+            document.getElementById('userId').textContent = user.id || '';
             
             const avatarEl = document.getElementById('userAvatar');
             const avatarImg = document.getElementById('userAvatarImg');
+            
+            console.log('Avatar elements:', avatarEl, avatarImg);
+            console.log('PhotoURL:', user.photoURL);
             
             // Handle avatar - show image if available, otherwise show initial
             if (avatarEl) {
