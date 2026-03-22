@@ -721,9 +721,14 @@
                     <p class="user-email" id="userEmail">email@example.com</p>
                 </div>
                 
+                <!-- User Info -->
+                <div class="user-id" style="background: var(--glass-bg); padding: 12px; border-radius: var(--radius); margin: 20px 0; font-size: 0.85rem;">
+                    <strong>User ID:</strong> <span id="userId">---</span>
+                </div>
+
                 <!-- Bari Plux Tool Token Section -->
                 <div class="app-token-section">
-                    <h4><i class="fas fa-mobile-alt"></i> Use in Bari Plux Tool</h4>
+                    <h4><i class="fas fa-mobile-alt"></i> Use in Bari Plux App</h4>
                     <div class="token-display">
                         <input type="text" class="token-input" id="loginToken" readonly placeholder="Login token will appear here">
                         <button class="copy-token-btn" id="copyTokenBtn">
@@ -802,9 +807,8 @@
                 id: user.id,
                 name: user.name,
                 email: user.email,
-                loginMethod: user.loginMethod,
-                loginTime: Date.now(),
-                exp: Date.now() + (7 * 24 * 60 * 60 * 1000) // 7 days
+                method: user.loginMethod,
+                time: Date.now()
             };
             return btoa(JSON.stringify(tokenData));
         }
@@ -845,6 +849,7 @@
             
             document.getElementById('userName').textContent = user.name || 'User';
             document.getElementById('userEmail').textContent = user.email || '';
+            document.getElementById('userId').textContent = user.id || '---';
             
             // Generate and display token
             const token = generateToken(user);
@@ -882,7 +887,7 @@
                     
                     const userData = {
                         id: user.uid,
-                        name: user.displayName || 'User',
+                        name: user.displayName || user.email.split('@')[0],
                         email: user.email,
                         photoURL: user.photoURL || null,
                         loginMethod: 'google',
@@ -974,7 +979,26 @@
         // Check if already logged in
         function checkLoginStatus() {
             const storedUser = localStorage.getItem('bariplux_user');
-            if (storedUser) {
+            
+            // Also check Firebase auth state
+            if (firebaseInitialized && auth) {
+                auth.onAuthStateChanged((user) => {
+                    if (user) {
+                        const firebaseUser = {
+                            id: user.uid,
+                            name: user.displayName || user.email.split('@')[0],
+                            email: user.email,
+                            photoURL: user.photoURL || null,
+                            loginMethod: 'google',
+                            loginTime: new Date().toISOString()
+                        };
+                        localStorage.setItem('bariplux_user', JSON.stringify(firebaseUser));
+                        showLoggedInView(firebaseUser);
+                    } else if (!storedUser) {
+                        showLoginFormView();
+                    }
+                });
+            } else if (storedUser) {
                 try {
                     const user = JSON.parse(storedUser);
                     showLoggedInView(user);
