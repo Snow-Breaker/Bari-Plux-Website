@@ -263,7 +263,7 @@
 
         /* Main Container */
         .container {
-            max-width: 450px;
+            max-width: 500px;
             margin: 0 auto;
             padding: 140px 20px 60px;
             position: relative;
@@ -295,10 +295,6 @@
             border-radius: 0 !important;
             box-shadow: none !important;
             background: transparent !important;
-        }
-
-        .login-logo img {
-            border-radius: 0 !important;
         }
 
         .login-title {
@@ -427,6 +423,7 @@
             font-size: 32px;
             font-weight: 700;
             color: white;
+            overflow: hidden;
         }
 
         .user-avatar img {
@@ -448,6 +445,102 @@
             margin-bottom: 25px;
         }
 
+        /* App Token Section */
+        .app-token-section {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .app-token-section h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .app-token-section h4 i {
+            color: var(--accent);
+        }
+
+        .token-display {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .token-input {
+            flex: 1;
+            padding: 10px 12px;
+            background: var(--bg-1);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            color: var(--accent);
+            font-family: monospace;
+            font-size: 0.8rem;
+            word-break: break-all;
+        }
+
+        .copy-token-btn {
+            padding: 10px 14px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+        }
+
+        .copy-token-btn:hover {
+            background: #7a72ff;
+        }
+
+        .copied-msg {
+            display: none;
+            padding: 8px 12px;
+            background: rgba(76, 175, 80, 0.15);
+            border-radius: var(--radius);
+            color: var(--success);
+            font-size: 0.8rem;
+            text-align: center;
+        }
+
+        .copied-msg.show {
+            display: block;
+        }
+
+        .open-app-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .open-app-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(108, 99, 255, 0.4);
+        }
+
         .btn-logout {
             width: 100%;
             padding: 14px;
@@ -464,6 +557,7 @@
             align-items: center;
             justify-content: center;
             gap: 10px;
+            margin-top: 15px;
         }
 
         .btn-logout:hover {
@@ -541,6 +635,10 @@
 
             .header {
                 padding: 10px 16px;
+            }
+
+            .token-display {
+                flex-direction: column;
             }
         }
     </style>
@@ -623,6 +721,23 @@
                     <p class="user-email" id="userEmail">email@example.com</p>
                 </div>
                 
+                <!-- Bari Plux Tool Token Section -->
+                <div class="app-token-section">
+                    <h4><i class="fas fa-mobile-alt"></i> Use in Bari Plux Tool</h4>
+                    <div class="token-display">
+                        <input type="text" class="token-input" id="loginToken" readonly placeholder="Login token will appear here">
+                        <button class="copy-token-btn" id="copyTokenBtn">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <div class="copied-msg" id="copiedMsg">
+                        <i class="fas fa-check"></i> Token copied! Paste it in the app to login.
+                    </div>
+                    <button class="open-app-btn" id="openAppBtn">
+                        <i class="fas fa-external-link-alt"></i> Open Bari Plux Tool
+                    </button>
+                </div>
+                
                 <button id="btnLogout" class="btn-logout">
                     <i class="fas fa-sign-out-alt"></i>
                     Logout
@@ -682,6 +797,18 @@
             setTimeout(() => notification.remove(), 3000);
         }
 
+        function generateToken(user) {
+            const tokenData = {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                loginMethod: user.loginMethod,
+                loginTime: Date.now(),
+                exp: Date.now() + (7 * 24 * 60 * 60 * 1000) // 7 days
+            };
+            return btoa(JSON.stringify(tokenData));
+        }
+
         function syncLoginToFirebase(user) {
             if (!firebaseInitialized || !database) return;
             try {
@@ -708,12 +835,24 @@
             document.getElementById('loggedInView').style.display = 'block';
             
             const initial = (user.name || 'U').charAt(0).toUpperCase();
-            document.getElementById('userAvatar').textContent = initial;
+            const userAvatar = document.getElementById('userAvatar');
+            
+            if (user.photoURL) {
+                userAvatar.innerHTML = `<img src="${user.photoURL}" alt="Profile">`;
+            } else {
+                userAvatar.textContent = initial;
+            }
+            
             document.getElementById('userName').textContent = user.name || 'User';
             document.getElementById('userEmail').textContent = user.email || '';
             
+            // Generate and display token
+            const token = generateToken(user);
+            document.getElementById('loginToken').value = token;
+            
             localStorage.setItem('bariplux_user', JSON.stringify(user));
             localStorage.setItem('bariplux_user_new', JSON.stringify(user));
+            localStorage.setItem('bariplux_login_token', token);
         }
 
         function showLoginFormView() {
@@ -721,6 +860,7 @@
             document.getElementById('loggedInView').style.display = 'none';
             document.getElementById('btnGoogleLogin').disabled = false;
             document.getElementById('btnGoogleLogin').classList.remove('loading');
+            document.getElementById('loginToken').value = '';
         }
 
         // Google Login
@@ -744,6 +884,7 @@
                         id: user.uid,
                         name: user.displayName || 'User',
                         email: user.email,
+                        photoURL: user.photoURL || null,
                         loginMethod: 'google',
                         loginTime: new Date().toISOString()
                     };
@@ -768,6 +909,52 @@
             }
         });
 
+        // Copy Token
+        document.getElementById('copyTokenBtn').addEventListener('click', function() {
+            const tokenInput = document.getElementById('loginToken');
+            tokenInput.select();
+            tokenInput.setSelectionRange(0, 99999);
+            
+            navigator.clipboard.writeText(tokenInput.value).then(() => {
+                document.getElementById('copiedMsg').classList.add('show');
+                setTimeout(() => {
+                    document.getElementById('copiedMsg').classList.remove('show');
+                }, 3000);
+            });
+        });
+
+        // Open App
+        document.getElementById('openAppBtn').addEventListener('click', function() {
+            const token = document.getElementById('loginToken').value;
+            if (!token) {
+                showNotification('No token available', 'error');
+                return;
+            }
+            
+            // Copy token to clipboard
+            navigator.clipboard.writeText(token).then(() => {
+                // Try app URL schemes
+                const appUrls = [
+                    'baripluxtool://login?token=' + token,
+                    'bptv2://login?token=' + token
+                ];
+                
+                let tried = 0;
+                function tryNextUrl() {
+                    if (tried >= appUrls.length) {
+                        showNotification('Token copied! Open the app manually.', 'success');
+                        return;
+                    }
+                    window.location.href = appUrls[tried];
+                    tried++;
+                    setTimeout(tryNextUrl, 1000);
+                }
+                tryNextUrl();
+            }).catch(() => {
+                showNotification('Failed to copy token', 'error');
+            });
+        });
+
         // Logout
         document.getElementById('btnLogout').addEventListener('click', async function() {
             if (firebaseInitialized && auth) {
@@ -779,6 +966,7 @@
             }
             localStorage.removeItem('bariplux_user');
             localStorage.removeItem('bariplux_user_new');
+            localStorage.removeItem('bariplux_login_token');
             showLoginFormView();
             showNotification('Logged out successfully', 'success');
         });
