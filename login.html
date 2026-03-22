@@ -1449,14 +1449,16 @@
             const avatarImg = document.getElementById('userAvatarImg');
             
             // Handle avatar - show image if available, otherwise show initial
-            if (user.photoURL) {
-                avatarImg.src = user.photoURL;
-                avatarImg.style.display = 'block';
-                avatarEl.textContent = '';
-            } else {
-                avatarImg.style.display = 'none';
-                const initial = user.name ? user.name.charAt(0).toUpperCase() : 'U';
-                avatarEl.textContent = initial;
+            if (avatarEl) {
+                if (user.photoURL && avatarImg) {
+                    avatarImg.src = user.photoURL;
+                    avatarImg.style.display = 'block';
+                    avatarEl.textContent = '';
+                } else {
+                    if (avatarImg) avatarImg.style.display = 'none';
+                    const initial = user.name ? user.name.charAt(0).toUpperCase() : 'U';
+                    avatarEl.textContent = initial;
+                }
             }
             
             // Generate login token for app
