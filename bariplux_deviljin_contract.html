@@ -4,24 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Service Agreement - Bari Plux</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+    
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="https://i.postimg.cc/65cjsvfQ/imglogo.png">
     <link rel="apple-touch-icon" sizes="180x180" href="https://i.postimg.cc/65cjsvfQ/imglogo.png">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --bg-1: #0f1115;
-            --bg-2: #15171b;
+            --bg-1: #0a0b0f;
+            --bg-2: #0f1015;
+            --bg-3: #14161c;
             --accent: #6C63FF;
             --accent-2: #00BFA6;
             --accent-3: #FF6B9D;
+            --accent-4: #FFD93D;
             --text: #e8eef8;
-            --muted: rgba(232,238,248,0.65);
-            --glass-bg: rgba(255,255,255,0.03);
-            --glass-border: rgba(255,255,255,0.06);
+            --text-dim: rgba(232,238,248,0.7);
+            --muted: rgba(232,238,248,0.5);
+            --glass: rgba(255,255,255,0.03);
+            --glass-hover: rgba(255,255,255,0.06);
+            --border: rgba(255,255,255,0.06);
+            --glow: rgba(108,99,255,0.3);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -30,78 +36,99 @@
 
         body {
             font-family: 'Poppins', sans-serif;
-            background:
-                radial-gradient(800px 400px at 10% 20%, rgba(108,99,255,0.12), transparent 10%),
-                radial-gradient(600px 300px at 90% 80%, rgba(0,191,166,0.08), transparent 12%),
-                radial-gradient(400px 400px at 50% 50%, rgba(255,107,157,0.05), transparent 15%),
-                linear-gradient(180deg, var(--bg-1), var(--bg-2));
+            background: var(--bg-1);
             color: var(--text);
-            -webkit-font-smoothing: antialiased;
             min-height: 100vh;
             position: relative;
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* Scrollbar */
+        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: var(--bg-1); }
-        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--accent), var(--accent-2)); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--accent), var(--accent-2)); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, var(--accent-2), var(--accent)); }
 
-        /* Background Effects */
-        .bg-effects {
+        /* Selection */
+        ::selection { background: var(--accent); color: white; }
+
+        /* Advanced Background */
+        .bg-layer {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: none;
-            z-index: -1;
-            overflow: hidden;
+            z-index: -2;
+            background: 
+                radial-gradient(ellipse 80% 50% at 20% 20%, rgba(108,99,255,0.15), transparent 50%),
+                radial-gradient(ellipse 60% 40% at 80% 80%, rgba(0,191,166,0.1), transparent 50%),
+                radial-gradient(ellipse 50% 30% at 50% 50%, rgba(255,107,157,0.08), transparent 50%),
+                linear-gradient(180deg, var(--bg-1), var(--bg-2), var(--bg-3));
         }
 
-        .bg-orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.4;
-            animation: orbFloat 20s ease-in-out infinite;
-        }
-
-        .orb-1 { width: 500px; height: 500px; background: var(--accent); top: -150px; left: -100px; animation-delay: 0s; }
-        .orb-2 { width: 400px; height: 400px; background: var(--accent-2); bottom: -100px; right: -100px; animation-delay: -5s; }
-        .orb-3 { width: 300px; height: 300px; background: var(--accent-3); top: 50%; left: 60%; animation-delay: -10s; opacity: 0.3; }
-
-        @keyframes orbFloat {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(50px, -50px) scale(1.1); }
-            66% { transform: translate(-30px, 30px) scale(0.95); }
-        }
-
-        #particles-js { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: -1; }
-
-        /* Header */
-        .header {
+        .grid-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 60px 60px;
+            mask-image: radial-gradient(ellipse at center, black 20%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .floating-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .orb-1 { width: 600px; height: 600px; background: var(--accent); top: -200px; left: -200px; opacity: 0.12; animation: orbFloat1 30s ease-in-out infinite; }
+        .orb-2 { width: 500px; height: 500px; background: var(--accent-2); bottom: -150px; right: -150px; opacity: 0.1; animation: orbFloat2 25s ease-in-out infinite; }
+        .orb-3 { width: 400px; height: 400px; background: var(--accent-3); top: 40%; left: 60%; opacity: 0.08; animation: orbFloat3 20s ease-in-out infinite; }
+
+        @keyframes orbFloat1 { 0%, 100% { transform: translate(0, 0) rotate(0deg); } 50% { transform: translate(100px, 50px) rotate(180deg); } }
+        @keyframes orbFloat2 { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(-80px, -60px) scale(1.1); } }
+        @keyframes orbFloat3 { 0%, 100% { transform: translate(0, 0); } 33% { transform: translate(60px, -40px); } 66% { transform: translate(-40px, 60px); } }
+
+        #particles-js { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: -1; }
+
+        /* Premium Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: calc(100% - 40px);
             z-index: 1000;
-            margin: 12px auto;
-            padding: 14px 28px;
-            border-radius: 35px;
+            margin: 15px auto;
+            padding: 16px 32px;
+            border-radius: 40px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 20px;
-            max-width: 1400px;
+            gap: 30px;
+            max-width: 1500px;
             left: 50%;
             transform: translateX(-50%);
-            background: linear-gradient(135deg, rgba(15, 17, 23, 0.85), rgba(21, 23, 30, 0.7));
+            background: linear-gradient(135deg, rgba(15, 16, 22, 0.9), rgba(20, 22, 30, 0.85));
+            backdrop-filter: blur(30px) saturate(200%);
+            -webkit-backdrop-filter: blur(30px) saturate(200%);
             border: 1px solid rgba(255,255,255,0.08);
-            backdrop-filter: blur(25px) saturate(200%);
-            -webkit-backdrop-filter: blur(25px) saturate(200%);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.05) inset, 0 1px 0 rgba(255,255,255,0.1) inset;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 
+                0 20px 60px rgba(0,0,0,0.4),
+                0 0 0 1px rgba(255,255,255,0.03) inset,
+                0 1px 0 rgba(255,255,255,0.1) inset,
+                0 0 80px rgba(108,99,255,0.1);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
         }
 
         .header::before {
@@ -114,58 +141,72 @@
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
         }
 
-        .header:hover {
-            box-shadow: 0 15px 50px rgba(0,0,0,0.45), 0 0 30px rgba(108,99,255,0.15), 0 1px 0 rgba(255,255,255,0.1) inset;
-            transform: translateX(-50%) translateY(-2px);
+        .header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 100%;
+            background: radial-gradient(ellipse at top, rgba(108,99,255,0.15), transparent 60%);
+            pointer-events: none;
         }
 
-        .header .left { display: flex; align-items: center; gap: 20px; }
+        .header:hover {
+            transform: translateX(-50%) translateY(-3px);
+            box-shadow: 
+                0 30px 80px rgba(0,0,0,0.5),
+                0 0 0 1px rgba(108,99,255,0.15) inset,
+                0 1px 0 rgba(255,255,255,0.15) inset,
+                0 0 100px rgba(108,99,255,0.15);
+        }
+
+        .header .left { display: flex; align-items: center; gap: 24px; }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 16px;
             text-decoration: none;
+            position: relative;
         }
 
         .logo-img {
-            width: 50px;
-            height: 50px;
+            width: 52px;
+            height: 52px;
             border-radius: 50%;
             object-fit: cover;
-            border: 3px solid transparent;
-            background: linear-gradient(var(--bg-1), var(--bg-1)) padding-box, linear-gradient(135deg, var(--accent), var(--accent-2), var(--accent-3)) border-box;
+            padding: 3px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2), var(--accent-3)) padding-box;
+            border: none;
+            box-shadow: 0 0 30px rgba(108,99,255,0.4);
             transition: all 0.4s ease;
-            box-shadow: 0 0 20px rgba(108,99,255,0.3);
         }
 
         .logo:hover .logo-img {
-            transform: scale(1.08) rotate(5deg);
-            box-shadow: 0 0 30px rgba(108,99,255,0.5);
+            transform: scale(1.1) rotate(8deg);
+            box-shadow: 0 0 50px rgba(108,99,255,0.6);
         }
 
         .logo-text {
+            font-size: 1.5rem;
             font-weight: 800;
-            font-size: 1.4rem;
             background: linear-gradient(135deg, var(--accent), var(--accent-2));
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
-            letter-spacing: -0.02em;
-            text-shadow: 0 0 30px rgba(108,99,255,0.3);
+            letter-spacing: -0.03em;
+            text-shadow: 0 0 40px rgba(108,99,255,0.3);
         }
 
-        .nav-links {
-            display: flex;
-            gap: 35px;
-            list-style: none;
-        }
+        .nav-links { display: flex; gap: 40px; list-style: none; }
 
         .nav-link {
             position: relative;
             font-weight: 500;
             font-size: 0.9rem;
-            color: rgba(255,255,255,0.75);
+            color: var(--text-dim);
             text-decoration: none;
             padding: 8px 0;
             transition: all 0.3s ease;
@@ -187,18 +228,18 @@
         .nav-link:hover { color: white; }
         .nav-link:hover::before { width: 100%; }
 
-        .header-actions { display: flex; align-items: center; gap: 12px; }
+        .header-actions { display: flex; align-items: center; gap: 16px; }
 
         .btn {
-            padding: 12px 24px;
-            border-radius: 30px;
+            padding: 14px 28px;
+            border-radius: 35px;
             font-weight: 600;
             font-size: 0.85rem;
             text-decoration: none;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             border: none;
             cursor: pointer;
         }
@@ -206,64 +247,68 @@
         .btn-primary {
             background: linear-gradient(135deg, var(--accent), var(--accent-2));
             color: white;
-            box-shadow: 0 5px 20px rgba(108,99,255,0.4);
+            box-shadow: 0 8px 30px rgba(108,99,255,0.4);
         }
 
         .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(108,99,255,0.5);
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(108,99,255,0.5);
         }
 
         .btn-primary i { font-size: 0.9rem; }
 
         /* Contract Container */
         .contract-container {
-            max-width: 900px;
-            margin: 130px auto 80px;
-            padding: 0 25px;
+            max-width: 950px;
+            margin: 140px auto 100px;
+            padding: 0 30px;
             position: relative;
             z-index: 1;
         }
 
-        /* Status Badge */
-        .status-badge {
+        /* Document Badge */
+        .doc-badge {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            padding: 8px 18px;
-            border-radius: 30px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 20px;
-            background: linear-gradient(135deg, rgba(76,175,80,0.2), rgba(76,175,80,0.1));
+            gap: 12px;
+            padding: 12px 24px;
+            border-radius: 50px;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, rgba(76,175,80,0.15), rgba(76,175,80,0.08));
             border: 1px solid rgba(76,175,80,0.3);
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
             color: #4CAF50;
         }
 
-        .status-dot {
-            width: 8px;
-            height: 8px;
+        .doc-badge .dot {
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
             background: #4CAF50;
-            animation: statusPulse 2s ease-in-out infinite;
+            animation: badgePulse 2s ease-in-out infinite;
+            box-shadow: 0 0 10px #4CAF50;
         }
 
-        @keyframes statusPulse {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(76,175,80,0.5); }
-            50% { box-shadow: 0 0 0 8px rgba(76,175,80,0); }
+        @keyframes badgePulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.7; }
         }
 
-        /* Contract Card */
+        /* Main Contract Card */
         .contract-card {
-            background: linear-gradient(135deg, rgba(20, 22, 30, 0.9), rgba(25, 27, 35, 0.8));
+            background: linear-gradient(145deg, rgba(18, 20, 28, 0.95), rgba(22, 24, 35, 0.9));
             border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 30px;
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
-            padding: 50px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.05) inset;
+            border-radius: 40px;
+            backdrop-filter: blur(30px) saturate(200%);
+            -webkit-backdrop-filter: blur(30px) saturate(200%);
+            padding: 60px;
+            box-shadow: 
+                0 30px 80px rgba(0,0,0,0.4),
+                0 0 0 1px rgba(255,255,255,0.03) inset,
+                inset 0 1px 0 rgba(255,255,255,0.05);
             position: relative;
             overflow: hidden;
         }
@@ -274,84 +319,85 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(108,99,255,0.5), rgba(0,191,166,0.5), transparent);
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent), var(--accent-2), var(--accent-3), transparent);
         }
 
-        /* Contract Header */
+        .contract-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 400px;
+            height: 200px;
+            background: radial-gradient(ellipse at top, rgba(108,99,255,0.1), transparent 60%);
+            pointer-events: none;
+        }
+
+        /* Header Section */
         .contract-header {
             text-align: center;
-            padding-bottom: 35px;
-            margin-bottom: 35px;
+            padding-bottom: 40px;
+            margin-bottom: 40px;
             border-bottom: 1px solid rgba(255,255,255,0.06);
             position: relative;
         }
 
-        .contract-header::after {
-            content: '';
-            position: absolute;
-            bottom: -1px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
-            height: 3px;
-            background: linear-gradient(90deg, var(--accent), var(--accent-2));
-            border-radius: 3px;
-        }
-
-        .seal-container {
+        .seal-wrapper {
             position: relative;
             display: inline-block;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
         }
 
         .seal {
-            width: 90px;
-            height: 90px;
+            width: 100px;
+            height: 100px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 36px;
+            font-size: 42px;
             background: linear-gradient(135deg, var(--accent), var(--accent-2));
             color: white;
-            box-shadow: 0 10px 40px rgba(108,99,255,0.4), 0 0 60px rgba(108,99,255,0.2);
+            box-shadow: 
+                0 15px 50px rgba(108,99,255,0.5),
+                0 0 80px rgba(108,99,255,0.3),
+                inset 0 -5px 20px rgba(0,0,0,0.2);
             position: relative;
             z-index: 1;
         }
 
         .seal-ring {
             position: absolute;
-            top: -8px;
-            left: -8px;
-            right: -8px;
-            bottom: -8px;
-            border: 2px solid rgba(108,99,255,0.3);
+            top: -12px;
+            left: -12px;
+            right: -12px;
+            bottom: -12px;
+            border: 2px dashed rgba(108,99,255,0.3);
             border-radius: 50%;
-            animation: sealRotate 20s linear infinite;
+            animation: sealSpin 30s linear infinite;
         }
 
         .seal-ring::before, .seal-ring::after {
             content: '';
             position: absolute;
-            width: 12px;
-            height: 12px;
+            width: 14px;
+            height: 14px;
             background: var(--accent);
             border-radius: 50%;
-            top: -6px;
+            top: -7px;
             left: 50%;
             transform: translateX(-50%);
+            box-shadow: 0 0 15px var(--accent);
         }
 
-        .seal-ring::after { top: auto; bottom: -6px; }
+        .seal-ring::after { top: auto; bottom: -7px; }
 
-        @keyframes sealRotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
+        @keyframes sealSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
         .contract-header h1 {
-            font-size: 32px;
+            font-size: 36px;
             font-weight: 800;
             letter-spacing: -0.02em;
             margin-bottom: 12px;
@@ -363,47 +409,50 @@
 
         .contract-header .subtitle {
             font-size: 13px;
-            letter-spacing: 0.15em;
+            letter-spacing: 0.2em;
             text-transform: uppercase;
             color: var(--muted);
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
-        .doc-meta {
+        .doc-info {
             display: inline-flex;
             align-items: center;
-            gap: 15px;
-            padding: 12px 24px;
+            gap: 20px;
+            padding: 16px 30px;
             background: rgba(108,99,255,0.08);
             border: 1px solid rgba(108,99,255,0.15);
-            border-radius: 15px;
+            border-radius: 20px;
         }
 
-        .doc-meta span {
+        .doc-info span {
             font-size: 12px;
             color: var(--muted);
         }
 
-        .doc-meta .separator { color: rgba(255,255,255,0.2); }
+        .doc-info .sep { color: rgba(255,255,255,0.15); }
 
-        .doc-number { color: var(--accent) !important; font-weight: 600; }
+        .doc-info .num {
+            color: var(--accent);
+            font-weight: 700;
+        }
 
-        /* Parties */
+        /* Parties Grid */
         .parties-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 25px;
-            margin: 40px 0;
+            gap: 30px;
+            margin: 50px 0;
         }
 
         .party-card {
-            background: rgba(255,255,255,0.02);
-            border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 20px;
-            padding: 28px;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 25px;
+            padding: 35px 30px;
             text-align: center;
             position: relative;
-            transition: all 0.4s ease;
+            transition: all 0.5s ease;
             overflow: hidden;
         }
 
@@ -413,86 +462,86 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 3px;
+            height: 4px;
             background: linear-gradient(90deg, var(--accent), var(--accent-2));
-            opacity: 0;
-            transition: opacity 0.3s ease;
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
         }
 
         .party-card:hover {
-            background: rgba(255,255,255,0.04);
+            background: var(--glass-hover);
             border-color: rgba(108,99,255,0.2);
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            transform: translateY(-8px);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.3);
         }
 
-        .party-card:hover::before { opacity: 1; }
+        .party-card:hover::before { transform: scaleX(1); }
 
         .role-badge {
             display: inline-block;
-            padding: 6px 16px;
-            border-radius: 20px;
+            padding: 8px 20px;
+            border-radius: 25px;
             font-size: 10px;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-bottom: 18px;
+            letter-spacing: 0.12em;
+            margin-bottom: 20px;
             background: linear-gradient(135deg, var(--accent), var(--accent-2));
             color: white;
-            box-shadow: 0 4px 15px rgba(108,99,255,0.3);
+            box-shadow: 0 5px 20px rgba(108,99,255,0.4);
         }
 
         .party-card h3 {
-            font-size: 22px;
+            font-size: 24px;
             font-weight: 700;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             color: white;
         }
 
         .party-card p {
             font-size: 13px;
             color: var(--muted);
-            line-height: 1.6;
+            line-height: 1.7;
         }
 
-        /* Sections */
-        .section {
-            margin-bottom: 40px;
-            padding: 30px;
-            background: rgba(255,255,255,0.01);
-            border: 1px solid rgba(255,255,255,0.04);
-            border-radius: 20px;
-            transition: all 0.3s ease;
+        /* Article Sections */
+        .article {
+            margin-bottom: 35px;
+            padding: 35px;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 25px;
+            transition: all 0.4s ease;
         }
 
-        .section:hover {
-            background: rgba(255,255,255,0.02);
-            border-color: rgba(255,255,255,0.06);
+        .article:hover {
+            background: var(--glass-hover);
+            border-color: rgba(255,255,255,0.08);
         }
 
-        .section h2 {
-            font-size: 14px;
+        .article h2 {
+            font-size: 13px;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-bottom: 20px;
-            padding-bottom: 12px;
+            letter-spacing: 0.12em;
+            color: var(--accent);
+            margin-bottom: 25px;
+            padding-bottom: 15px;
             border-bottom: 1px solid rgba(255,255,255,0.06);
             display: flex;
             align-items: center;
-            gap: 12px;
-            color: var(--accent);
+            gap: 15px;
         }
 
-        .section h2::before {
+        .article h2::before {
             content: '';
-            width: 4px;
-            height: 20px;
+            width: 5px;
+            height: 24px;
             background: linear-gradient(180deg, var(--accent), var(--accent-2));
-            border-radius: 2px;
+            border-radius: 3px;
         }
 
-        .section p {
+        .article p {
             font-size: 14.5px;
             line-height: 1.9;
             color: var(--text);
@@ -500,14 +549,12 @@
         }
 
         .highlight-box {
-            background: linear-gradient(135deg, rgba(108,99,255,0.1), rgba(0,191,166,0.05));
+            background: linear-gradient(135deg, rgba(108,99,255,0.12), rgba(0,191,166,0.08));
             border: 1px solid rgba(108,99,255,0.2);
-            border-left: 4px solid var(--accent);
-            border-radius: 15px;
-            padding: 22px 25px;
+            border-left: 5px solid var(--accent);
+            border-radius: 18px;
+            padding: 25px 30px;
             margin: 20px 0;
-            font-size: 14px;
-            line-height: 1.8;
             position: relative;
             overflow: hidden;
         }
@@ -517,17 +564,16 @@
             position: absolute;
             top: 0;
             right: 0;
-            width: 150px;
-            height: 150px;
-            background: radial-gradient(circle, rgba(108,99,255,0.1), transparent 70%);
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(108,99,255,0.1), transparent 60%);
         }
 
         .clause {
-            padding: 18px 22px;
-            padding-left: 25px;
-            border-left: 3px solid var(--accent-2);
-            background: rgba(0,191,166,0.03);
-            border-radius: 0 12px 12px 0;
+            padding: 18px 25px;
+            border-left: 4px solid var(--accent-2);
+            background: rgba(0,191,166,0.04);
+            border-radius: 0 15px 15px 0;
             margin: 15px 0;
             font-size: 14px;
             line-height: 1.8;
@@ -536,109 +582,102 @@
         ol {
             margin: 15px 0;
             padding-left: 25px;
-            counter-reset: item;
         }
 
         ol li {
             margin-bottom: 12px;
             font-size: 14px;
             line-height: 1.8;
-            padding-left: 10px;
             position: relative;
         }
 
-        ol li::marker {
-            color: var(--accent);
-            font-weight: 700;
-        }
+        ol li::marker { color: var(--accent); font-weight: 700; }
 
         /* Signature Section */
         .signature-section {
-            margin-top: 50px;
-            padding-top: 40px;
+            margin-top: 60px;
+            padding-top: 50px;
             border-top: 1px solid rgba(255,255,255,0.06);
             position: relative;
+            text-align: center;
         }
 
         .signature-section::before {
             content: '§';
             position: absolute;
-            top: -15px;
+            top: -18px;
             left: 50%;
             transform: translateX(-50%);
-            width: 30px;
-            height: 30px;
+            width: 36px;
+            height: 36px;
             background: var(--bg-2);
             border: 1px solid rgba(255,255,255,0.1);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
+            font-size: 16px;
             color: var(--accent);
         }
 
         .signature-section h2 {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
-            text-align: center;
+            letter-spacing: 0.12em;
             color: var(--accent);
             margin-bottom: 10px;
         }
 
         .signature-section > p {
-            text-align: center;
             font-size: 13px;
             color: var(--muted);
-            margin-bottom: 30px;
+            margin-bottom: 40px;
         }
 
         .sig-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 50px;
+            gap: 60px;
         }
 
         .sig-block {
             text-align: center;
-            padding: 25px;
-            background: rgba(255,255,255,0.02);
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 20px;
+            padding: 30px;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 25px;
         }
 
         .sig-block h4 {
-            font-size: 11px;
+            font-size: 10px;
             text-transform: uppercase;
-            letter-spacing: 0.15em;
+            letter-spacing: 0.2em;
             color: var(--muted);
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         .sig-line {
-            height: 60px;
+            height: 70px;
             margin-bottom: 15px;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-            border-radius: 8px;
-            border-bottom: 1px solid rgba(255,255,255,0.15);
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
         .sig-img {
-            max-height: 50px;
-            max-width: 150px;
+            max-height: 55px;
+            max-width: 160px;
             object-fit: contain;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
         }
 
         .sig-name {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 700;
-            margin: 15px 0 5px;
+            margin: 18px 0 5px;
             background: linear-gradient(135deg, var(--accent), var(--accent-2));
             -webkit-background-clip: text;
             background-clip: text;
@@ -648,13 +687,13 @@
         .sig-role {
             font-size: 12px;
             color: var(--muted);
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .sig-date {
             font-size: 12px;
             color: var(--accent);
-            font-weight: 500;
+            font-weight: 600;
         }
 
         /* Footer */
@@ -662,33 +701,34 @@
             margin-top: 50px;
             text-align: center;
             padding: 25px;
-            background: rgba(255,255,255,0.02);
-            border: 1px solid rgba(255,255,255,0.04);
-            border-radius: 15px;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 20px;
             font-size: 12px;
             color: var(--muted);
         }
 
-        .footer-note i { color: var(--accent); margin: 0 5px; }
+        .footer-note i { color: var(--accent); margin: 0 6px; }
 
         /* Responsive */
         @media (max-width: 900px) {
             .nav-links { display: none; }
             .logo-text { font-size: 1.2rem; }
-            .contract-container { margin: 100px auto 50px; }
-            .contract-card { padding: 30px 25px; }
-            .parties-grid { grid-template-columns: 1fr; }
-            .sig-grid { grid-template-columns: 1fr; gap: 25px; }
-            .contract-header h1 { font-size: 24px; }
+            .header { width: 100%; margin: 0; border-radius: 0; padding: 14px 20px; }
+            .contract-container { margin: 100px auto 60px; padding: 0 20px; }
+            .contract-card { padding: 35px 25px; }
+            .parties-grid, .sig-grid { grid-template-columns: 1fr; gap: 20px; }
+            .contract-header h1 { font-size: 26px; }
+            .doc-info { flex-wrap: wrap; justify-content: center; gap: 12px; padding: 12px 20px; }
         }
     </style>
 </head>
 <body>
-    <div class="bg-effects">
-        <div class="bg-orb orb-1"></div>
-        <div class="bg-orb orb-2"></div>
-        <div class="bg-orb orb-3"></div>
-    </div>
+    <div class="bg-layer"></div>
+    <div class="grid-overlay"></div>
+    <div class="floating-orb orb-1"></div>
+    <div class="floating-orb orb-2"></div>
+    <div class="floating-orb orb-3"></div>
     <div id="particles-js"></div>
 
     <header class="header">
@@ -712,23 +752,24 @@
     </header>
 
     <div class="contract-container">
+        <div class="doc-badge">
+            <span class="dot"></span>
+            Active Agreement
+        </div>
+
         <div class="contract-card">
             <div class="contract-header">
-                <div class="status-badge">
-                    <span class="status-dot"></span>
-                    Active Agreement
-                </div>
-                <div class="seal-container">
+                <div class="seal-wrapper">
                     <div class="seal-ring"></div>
                     <div class="seal">⚖</div>
                 </div>
                 <h1>Service & Collaboration Agreement</h1>
                 <p class="subtitle">Discord Gaming Assistance Community</p>
-                <div class="doc-meta">
-                    <span class="doc-number">BGX-2026</span>
-                    <span class="separator">•</span>
+                <div class="doc-info">
+                    <span class="num">BGX-2026</span>
+                    <span class="sep">•</span>
                     <span>27 March 2026</span>
-                    <span class="separator">•</span>
+                    <span class="sep">•</span>
                     <span>Official Contract</span>
                 </div>
             </div>
@@ -746,7 +787,7 @@
                 </div>
             </div>
 
-            <div class="section">
+            <div class="article">
                 <h2>Article I — Purpose & Scope</h2>
                 <p>This Agreement is entered into between <strong>Bari Plux</strong> (hereinafter "Server Provider") and <strong>DevilJin</strong> (hereinafter "Manager"), collectively referred to as "the Parties," for the purpose of establishing a Discord-based community service dedicated to assisting users with Steam games.</p>
                 <div class="highlight-box">
@@ -754,7 +795,7 @@
                 </div>
             </div>
 
-            <div class="section">
+            <div class="article">
                 <h2>Article II — Roles & Responsibilities</h2>
                 <p><strong>2.1 — Bari Plux (Server Provider)</strong></p>
                 <div class="clause">Bari Plux agrees to provide and maintain access to the Discord server infrastructure for the duration of this Agreement. The Server Provider's sole obligation is the technical availability of the server environment. Bari Plux bears no responsibility for any content, actions, events, or incidents occurring within the server.</div>
@@ -772,7 +813,7 @@
                 </ol>
             </div>
 
-            <div class="section">
+            <div class="article">
                 <h2>Article III — Liability & Accountability</h2>
                 <div class="highlight-box">
                     <strong>DevilJin shall bear sole and complete liability for all actions, events, incidents, and consequences arising within or from the operation of the Discord server.</strong>
@@ -785,7 +826,7 @@
                 <p>Bari Plux is fully indemnified and held harmless from any claims, damages, or liabilities arising from the server's operation.</p>
             </div>
 
-            <div class="section">
+            <div class="article">
                 <h2>Article IV — Steam Gaming Assistance Service</h2>
                 <p>The primary service provided through this server shall include:</p>
                 <ol>
@@ -797,7 +838,7 @@
                 <p>DevilJin is responsible for ensuring the quality, accuracy, and appropriateness of all assistance and content provided.</p>
             </div>
 
-            <div class="section">
+            <div class="article">
                 <h2>Article V — Term & Termination</h2>
                 <p>This Agreement shall commence on the effective date above and shall remain in force indefinitely unless terminated by either Party.</p>
                 <div class="clause">Either Party may terminate this Agreement by providing <strong>14 days</strong> written notice to the other Party via Discord direct message or another agreed-upon channel.</div>
@@ -805,7 +846,7 @@
                 <div class="clause">Upon termination, Bari Plux reserves the right to revoke server access immediately if deemed necessary.</div>
             </div>
 
-            <div class="section">
+            <div class="article">
                 <h2>Article VI — Amendments</h2>
                 <p>Any amendments or modifications to this Agreement must be mutually agreed upon in writing by both Parties. Verbal agreements shall not be considered binding modifications to this contract.</p>
             </div>
@@ -817,14 +858,18 @@
                 <div class="sig-grid">
                     <div class="sig-block">
                         <h4>Server Provider</h4>
-                        <div class="sig-line"><img src="https://i.postimg.cc/0j749sL9/Bari-Plux-Logo.png" alt="Bari Plux Signature" class="sig-img"></div>
+                        <div class="sig-line">
+                            <img src="https://i.postimg.cc/0j749sL9/Bari-Plux-Logo.png" alt="Bari Plux Signature" class="sig-img">
+                        </div>
                         <p class="sig-name">Bari Plux</p>
                         <p class="sig-role">Discord Server Provider</p>
                         <p class="sig-date">27 March 2026</p>
                     </div>
                     <div class="sig-block">
                         <h4>Manager & Operator</h4>
-                        <div class="sig-line"><img src="https://i.postimg.cc/mrbGLDJh/deviljinlogo.png" alt="DevilJin Signature" class="sig-img"></div>
+                        <div class="sig-line">
+                            <img src="https://i.postimg.cc/mrbGLDJh/deviljinlogo.png" alt="DevilJin Signature" class="sig-img">
+                        </div>
                         <p class="sig-name">DevilJin</p>
                         <p class="sig-role">Discord Server Manager</p>
                         <p class="sig-date">27 March 2026</p>
@@ -843,7 +888,7 @@
     <script>
         particlesJS('particles-js', {
             particles: {
-                number: { value: 40, density: { enable: true, value_area: 800 } },
+                number: { value: 50, density: { enable: true, value_area: 800 } },
                 color: { value: '#6C63FF' },
                 shape: { type: 'circle' },
                 opacity: { value: 0.4, random: true },
