@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Agreement - Bari Plux</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-1: #0f1115;
+            --bg-2: #15171b;
+            --accent: #6C63FF;
+            --accent-2: #00BFA6;
+            --accent-3: #FF6B9D;
+            --text: #e8eef8;
+            --muted: rgba(232,238,248,0.65);
+            --glass-bg: rgba(255,255,255,0.03);
+            --glass-border: rgba(255,255,255,0.06);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { scroll-behavior: smooth; scroll-padding-top: 120px; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background:
+                radial-gradient(800px 400px at 10% 20%, rgba(108,99,255,0.12), transparent 10%),
+                radial-gradient(600px 300px at 90% 80%, rgba(0,191,166,0.08), transparent 12%),
+                radial-gradient(400px 400px at 50% 50%, rgba(255,107,157,0.05), transparent 15%),
+                linear-gradient(180deg, var(--bg-1), var(--bg-2));
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-1); }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--accent), var(--accent-2)); border-radius: 4px; }
+
+        /* Background Effects */
+        .bg-effects {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            animation: orbFloat 20s ease-in-out infinite;
+        }
+
+        .orb-1 { width: 500px; height: 500px; background: var(--accent); top: -150px; left: -100px; animation-delay: 0s; }
+        .orb-2 { width: 400px; height: 400px; background: var(--accent-2); bottom: -100px; right: -100px; animation-delay: -5s; }
+        .orb-3 { width: 300px; height: 300px; background: var(--accent-3); top: 50%; left: 60%; animation-delay: -10s; opacity: 0.3; }
+
+        @keyframes orbFloat {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(50px, -50px) scale(1.1); }
+            66% { transform: translate(-30px, 30px) scale(0.95); }
+        }
+
+        #particles-js { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: -1; }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            margin: 12px auto;
+            padding: 14px 28px;
+            border-radius: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            max-width: 1400px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, rgba(15, 17, 23, 0.85), rgba(21, 23, 30, 0.7));
+            border: 1px solid rgba(255,255,255,0.08);
+            backdrop-filter: blur(25px) saturate(200%);
+            -webkit-backdrop-filter: blur(25px) saturate(200%);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.05) inset, 0 1px 0 rgba(255,255,255,0.1) inset;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+        }
+
+        .header:hover {
+            box-shadow: 0 15px 50px rgba(0,0,0,0.45), 0 0 30px rgba(108,99,255,0.15), 0 1px 0 rgba(255,255,255,0.1) inset;
+            transform: translateX(-50%) translateY(-2px);
+        }
+
+        .header .left { display: flex; align-items: center; gap: 20px; }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-decoration: none;
+        }
+
+        .logo-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid transparent;
+            background: linear-gradient(var(--bg-1), var(--bg-1)) padding-box, linear-gradient(135deg, var(--accent), var(--accent-2), var(--accent-3)) border-box;
+            transition: all 0.4s ease;
+            box-shadow: 0 0 20px rgba(108,99,255,0.3);
+        }
+
+        .logo:hover .logo-img {
+            transform: scale(1.08) rotate(5deg);
+            box-shadow: 0 0 30px rgba(108,99,255,0.5);
+        }
+
+        .logo-text {
+            font-weight: 800;
+            font-size: 1.4rem;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.02em;
+            text-shadow: 0 0 30px rgba(108,99,255,0.3);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 35px;
+            list-style: none;
+        }
+
+        .nav-link {
+            position: relative;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.75);
+            text-decoration: none;
+            padding: 8px 0;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        .nav-link:hover { color: white; }
+        .nav-link:hover::before { width: 100%; }
+
+        .header-actions { display: flex; align-items: center; gap: 12px; }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: white;
+            box-shadow: 0 5px 20px rgba(108,99,255,0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(108,99,255,0.5);
+        }
+
+        .btn-primary i { font-size: 0.9rem; }
+
+        /* Contract Container */
+        .contract-container {
+            max-width: 900px;
+            margin: 130px auto 80px;
+            padding: 0 25px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Status Badge */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 18px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, rgba(76,175,80,0.2), rgba(76,175,80,0.1));
+            border: 1px solid rgba(76,175,80,0.3);
+            color: #4CAF50;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #4CAF50;
+            animation: statusPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes statusPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(76,175,80,0.5); }
+            50% { box-shadow: 0 0 0 8px rgba(76,175,80,0); }
+        }
+
+        /* Contract Card */
+        .contract-card {
+            background: linear-gradient(135deg, rgba(20, 22, 30, 0.9), rgba(25, 27, 35, 0.8));
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 30px;
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            padding: 50px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.05) inset;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contract-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(108,99,255,0.5), rgba(0,191,166,0.5), transparent);
+        }
+
+        /* Contract Header */
+        .contract-header {
+            text-align: center;
+            padding-bottom: 35px;
+            margin-bottom: 35px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            position: relative;
+        }
+
+        .contract-header::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            border-radius: 3px;
+        }
+
+        .seal-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 25px;
+        }
+
+        .seal {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: white;
+            box-shadow: 0 10px 40px rgba(108,99,255,0.4), 0 0 60px rgba(108,99,255,0.2);
+            position: relative;
+            z-index: 1;
+        }
+
+        .seal-ring {
+            position: absolute;
+            top: -8px;
+            left: -8px;
+            right: -8px;
+            bottom: -8px;
+            border: 2px solid rgba(108,99,255,0.3);
+            border-radius: 50%;
+            animation: sealRotate 20s linear infinite;
+        }
+
+        .seal-ring::before, .seal-ring::after {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: var(--accent);
+            border-radius: 50%;
+            top: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .seal-ring::after { top: auto; bottom: -6px; }
+
+        @keyframes sealRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .contract-header h1 {
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2), var(--accent-3));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .contract-header .subtitle {
+            font-size: 13px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 20px;
+        }
+
+        .doc-meta {
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 24px;
+            background: rgba(108,99,255,0.08);
+            border: 1px solid rgba(108,99,255,0.15);
+            border-radius: 15px;
+        }
+
+        .doc-meta span {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .doc-meta .separator { color: rgba(255,255,255,0.2); }
+
+        .doc-number { color: var(--accent) !important; font-weight: 600; }
+
+        /* Parties */
+        .parties-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .party-card {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 20px;
+            padding: 28px;
+            text-align: center;
+            position: relative;
+            transition: all 0.4s ease;
+            overflow: hidden;
+        }
+
+        .party-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .party-card:hover {
+            background: rgba(255,255,255,0.04);
+            border-color: rgba(108,99,255,0.2);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+
+        .party-card:hover::before { opacity: 1; }
+
+        .role-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 18px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: white;
+            box-shadow: 0 4px 15px rgba(108,99,255,0.3);
+        }
+
+        .party-card h3 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .party-card p {
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        /* Sections */
+        .section {
+            margin-bottom: 40px;
+            padding: 30px;
+            background: rgba(255,255,255,0.01);
+            border: 1px solid rgba(255,255,255,0.04);
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .section:hover {
+            background: rgba(255,255,255,0.02);
+            border-color: rgba(255,255,255,0.06);
+        }
+
+        .section h2 {
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--accent);
+        }
+
+        .section h2::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: linear-gradient(180deg, var(--accent), var(--accent-2));
+            border-radius: 2px;
+        }
+
+        .section p {
+            font-size: 14.5px;
+            line-height: 1.9;
+            color: var(--text);
+            margin-bottom: 15px;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(108,99,255,0.1), rgba(0,191,166,0.05));
+            border: 1px solid rgba(108,99,255,0.2);
+            border-left: 4px solid var(--accent);
+            border-radius: 15px;
+            padding: 22px 25px;
+            margin: 20px 0;
+            font-size: 14px;
+            line-height: 1.8;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .highlight-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, rgba(108,99,255,0.1), transparent 70%);
+        }
+
+        .clause {
+            padding: 18px 22px;
+            padding-left: 25px;
+            border-left: 3px solid var(--accent-2);
+            background: rgba(0,191,166,0.03);
+            border-radius: 0 12px 12px 0;
+            margin: 15px 0;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        ol {
+            margin: 15px 0;
+            padding-left: 25px;
+            counter-reset: item;
+        }
+
+        ol li {
+            margin-bottom: 12px;
+            font-size: 14px;
+            line-height: 1.8;
+            padding-left: 10px;
+            position: relative;
+        }
+
+        ol li::marker {
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        /* Signature Section */
+        .signature-section {
+            margin-top: 50px;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            position: relative;
+        }
+
+        .signature-section::before {
+            content: '§';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 30px;
+            background: var(--bg-2);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: var(--accent);
+        }
+
+        .signature-section h2 {
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            text-align: center;
+            color: var(--accent);
+            margin-bottom: 10px;
+        }
+
+        .signature-section > p {
+            text-align: center;
+            font-size: 13px;
+            color: var(--muted);
+            margin-bottom: 30px;
+        }
+
+        .sig-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+        }
+
+        .sig-block {
+            text-align: center;
+            padding: 25px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 20px;
+        }
+
+        .sig-block h4 {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--muted);
+            margin-bottom: 20px;
+        }
+
+        .sig-line {
+            height: 60px;
+            margin-bottom: 15px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            border-radius: 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sig-img {
+            max-height: 50px;
+            max-width: 150px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        }
+
+        .sig-name {
+            font-size: 18px;
+            font-weight: 700;
+            margin: 15px 0 5px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .sig-role {
+            font-size: 12px;
+            color: var(--muted);
+            margin-bottom: 10px;
+        }
+
+        .sig-date {
+            font-size: 12px;
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        /* Footer */
+        .footer-note {
+            margin-top: 50px;
+            text-align: center;
+            padding: 25px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.04);
+            border-radius: 15px;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .footer-note i { color: var(--accent); margin: 0 5px; }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .nav-links { display: none; }
+            .logo-text { font-size: 1.2rem; }
+            .contract-container { margin: 100px auto 50px; }
+            .contract-card { padding: 30px 25px; }
+            .parties-grid { grid-template-columns: 1fr; }
+            .sig-grid { grid-template-columns: 1fr; gap: 25px; }
+            .contract-header h1 { font-size: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-effects">
+        <div class="bg-orb orb-1"></div>
+        <div class="bg-orb orb-2"></div>
+        <div class="bg-orb orb-3"></div>
+    </div>
+    <div id="particles-js"></div>
+
+    <header class="header">
+        <div class="left">
+            <a href="index.html" class="logo">
+                <img class="logo-img" src="https://yt3.googleusercontent.com/RPW5Z_kcoEu0ES_VpL4-7ZqI4eI1OQfuVL-DbuCYWmRhXono9hA5NOCSGGMDLzJqNcHUlhOg=s160-c-k-c0x00ffffff-no-rj" alt="Bari Plux">
+                <span class="logo-text">Bari Plux</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="index.html#downloads" class="nav-link">Downloads</a></li>
+                <li><a href="index.html#videos" class="nav-link">Videos</a></li>
+                <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+            </ul>
+        </div>
+        <div class="header-actions">
+            <a href="index.html" class="btn btn-primary">
+                <i class="fas fa-arrow-left"></i> Back to Home
+            </a>
+        </div>
+    </header>
+
+    <div class="contract-container">
+        <div class="contract-card">
+            <div class="contract-header">
+                <div class="status-badge">
+                    <span class="status-dot"></span>
+                    Active Agreement
+                </div>
+                <div class="seal-container">
+                    <div class="seal-ring"></div>
+                    <div class="seal">⚖</div>
+                </div>
+                <h1>Service & Collaboration Agreement</h1>
+                <p class="subtitle">Discord Gaming Assistance Community</p>
+                <div class="doc-meta">
+                    <span class="doc-number">BGX-2026</span>
+                    <span class="separator">•</span>
+                    <span>27 March 2026</span>
+                    <span class="separator">•</span>
+                    <span>Official Contract</span>
+                </div>
+            </div>
+
+            <div class="parties-grid">
+                <div class="party-card">
+                    <span class="role-badge">Server Provider</span>
+                    <h3>Bari Plux</h3>
+                    <p>Discord server owner and infrastructure provider for the gaming assistance community.</p>
+                </div>
+                <div class="party-card">
+                    <span class="role-badge">Manager & Operator</span>
+                    <h3>DevilJin</h3>
+                    <p>Discord server manager, fully responsible for all operations, events, and liabilities therein.</p>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Article I — Purpose & Scope</h2>
+                <p>This Agreement is entered into between <strong>Bari Plux</strong> (hereinafter "Server Provider") and <strong>DevilJin</strong> (hereinafter "Manager"), collectively referred to as "the Parties," for the purpose of establishing a Discord-based community service dedicated to assisting users with Steam games.</p>
+                <div class="highlight-box">
+                    The core objective of this collaboration is to operate a Discord server that provides help, guidance, troubleshooting, and community support for Steam game-related inquiries to its members.
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Article II — Roles & Responsibilities</h2>
+                <p><strong>2.1 — Bari Plux (Server Provider)</strong></p>
+                <div class="clause">Bari Plux agrees to provide and maintain access to the Discord server infrastructure for the duration of this Agreement. The Server Provider's sole obligation is the technical availability of the server environment. Bari Plux bears no responsibility for any content, actions, events, or incidents occurring within the server.</div>
+
+                <p style="margin-top: 20px;"><strong>2.2 — DevilJin (Manager)</strong></p>
+                <p>DevilJin assumes full and exclusive managerial authority over the Discord server and takes on all responsibilities, including but not limited to:</p>
+                <ol>
+                    <li>Day-to-day management, moderation, and operation of the Discord server.</li>
+                    <li>Recruiting, managing, and overseeing any staff or moderators.</li>
+                    <li>Organizing and executing all events, giveaways, or community activities.</li>
+                    <li>Ensuring all server content complies with Discord's Terms of Service and applicable laws.</li>
+                    <li>Handling all member disputes, complaints, or misconduct.</li>
+                    <li>Managing all announcements, channels, roles, and bot integrations.</li>
+                    <li>Responding to and resolving any issues raised by community members.</li>
+                </ol>
+            </div>
+
+            <div class="section">
+                <h2>Article III — Liability & Accountability</h2>
+                <div class="highlight-box">
+                    <strong>DevilJin shall bear sole and complete liability for all actions, events, incidents, and consequences arising within or from the operation of the Discord server.</strong>
+                </div>
+                <p>This includes, without limitation:</p>
+                <div class="clause">Any disputes, damages, or claims arising from user interactions within the server.</div>
+                <div class="clause">Any violations of Discord's Terms of Service or community guidelines.</div>
+                <div class="clause">Any financial obligations resulting from server activities, events, or promotions.</div>
+                <div class="clause">Any legal liability arising from content posted or activities conducted in the server.</div>
+                <p>Bari Plux is fully indemnified and held harmless from any claims, damages, or liabilities arising from the server's operation.</p>
+            </div>
+
+            <div class="section">
+                <h2>Article IV — Steam Gaming Assistance Service</h2>
+                <p>The primary service provided through this server shall include:</p>
+                <ol>
+                    <li>Technical assistance and troubleshooting for Steam games.</li>
+                    <li>Game recommendations, tips, guides, and walkthroughs.</li>
+                    <li>Community discussion and support channels dedicated to specific games.</li>
+                    <li>Facilitation of cooperative play, game sessions, and community events.</li>
+                </ol>
+                <p>DevilJin is responsible for ensuring the quality, accuracy, and appropriateness of all assistance and content provided.</p>
+            </div>
+
+            <div class="section">
+                <h2>Article V — Term & Termination</h2>
+                <p>This Agreement shall commence on the effective date above and shall remain in force indefinitely unless terminated by either Party.</p>
+                <div class="clause">Either Party may terminate this Agreement by providing <strong>14 days</strong> written notice to the other Party via Discord direct message or another agreed-upon channel.</div>
+                <div class="clause">In the event of termination, DevilJin remains liable for all obligations and incidents that occurred prior to the termination date.</div>
+                <div class="clause">Upon termination, Bari Plux reserves the right to revoke server access immediately if deemed necessary.</div>
+            </div>
+
+            <div class="section">
+                <h2>Article VI — Amendments</h2>
+                <p>Any amendments or modifications to this Agreement must be mutually agreed upon in writing by both Parties. Verbal agreements shall not be considered binding modifications to this contract.</p>
+            </div>
+
+            <div class="signature-section">
+                <h2>Signatures</h2>
+                <p>By signing below, both Parties acknowledge that they have read, understood, and agree to the terms and conditions set forth in this Agreement.</p>
+
+                <div class="sig-grid">
+                    <div class="sig-block">
+                        <h4>Server Provider</h4>
+                        <div class="sig-line"><img src="https://i.postimg.cc/0j749sL9/Bari-Plux-Logo.png" alt="Bari Plux Signature" class="sig-img"></div>
+                        <p class="sig-name">Bari Plux</p>
+                        <p class="sig-role">Discord Server Provider</p>
+                        <p class="sig-date">27 March 2026</p>
+                    </div>
+                    <div class="sig-block">
+                        <h4>Manager & Operator</h4>
+                        <div class="sig-line"><img src="https://i.postimg.cc/mrbGLDJh/deviljinlogo.png" alt="DevilJin Signature" class="sig-img"></div>
+                        <p class="sig-name">DevilJin</p>
+                        <p class="sig-role">Discord Server Manager</p>
+                        <p class="sig-date">27 March 2026</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-note">
+                <i class="fas fa-certificate"></i>
+                Contract No. BGX-2026 &bull; 27 March 2026 &bull; This document constitutes the entire agreement between the Parties.
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        particlesJS('particles-js', {
+            particles: {
+                number: { value: 40, density: { enable: true, value_area: 800 } },
+                color: { value: '#6C63FF' },
+                shape: { type: 'circle' },
+                opacity: { value: 0.4, random: true },
+                size: { value: 3, random: true },
+                line_linked: { enable: true, distance: 150, color: '#6C63FF', opacity: 0.2 },
+                move: { enable: true, speed: 1.5, random: true, out_mode: 'bounce' }
+            },
+            interactivity: {
+                events: { onhover: { enable: true, mode: 'grab' } },
+                modes: { grab: { distance: 140, line_linked: { opacity: 0.5 } } }
+            },
+            retina_detect: true
+        });
+    </script>
+</body>
+</html>
