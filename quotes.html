@@ -18,10 +18,13 @@
     --accent: #8b3a2a;
     --border: rgba(201,168,76,0.18);
     --border-strong: rgba(201,168,76,0.4);
+    --cote-blue: #4a9eda;
+    --cote-blue-bg: rgba(74,158,218,0.08);
+    --cote-blue-border: rgba(74,158,218,0.25);
+    --green: #5cb87a;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
   html { scroll-behavior: smooth; }
 
   body {
@@ -32,323 +35,259 @@
     overflow-x: hidden;
   }
 
-  /* Noise texture overlay */
   body::before {
     content: '';
-    position: fixed;
-    inset: 0;
+    position: fixed; inset: 0;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 0;
-    opacity: 0.6;
+    pointer-events: none; z-index: 0; opacity: 0.6;
   }
 
-  /* Header */
+  /* ── HEADER ── */
   header {
-    position: relative;
-    text-align: center;
+    position: relative; text-align: center;
     padding: 80px 20px 60px;
-    border-bottom: 1px solid var(--border);
-    overflow: hidden;
+    border-bottom: 1px solid var(--border); overflow: hidden;
   }
-
   header::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 50%;
-    transform: translateX(-50%);
+    content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
     width: 120px; height: 1px;
     background: linear-gradient(90deg, transparent, var(--gold), transparent);
   }
-
   .header-ornament {
-    display: block;
-    font-size: 28px;
-    color: var(--gold);
-    letter-spacing: 12px;
-    margin-bottom: 28px;
-    opacity: 0.7;
+    display: block; font-size: 28px; color: var(--gold);
+    letter-spacing: 12px; margin-bottom: 28px; opacity: 0.7;
     animation: fadeDown 1s ease both;
   }
-
   h1 {
     font-family: 'Playfair Display', serif;
-    font-size: clamp(2rem, 6vw, 4rem);
-    font-weight: 400;
-    color: var(--gold-light);
-    letter-spacing: 3px;
-    line-height: 1.1;
-    animation: fadeDown 1s 0.2s ease both;
-    opacity: 0;
+    font-size: clamp(2rem, 6vw, 4rem); font-weight: 400;
+    color: var(--gold-light); letter-spacing: 3px; line-height: 1.1;
+    animation: fadeDown 1s 0.2s ease both; opacity: 0;
   }
-
   .header-sub {
-    margin-top: 16px;
-    font-family: 'Amiri', serif;
-    font-size: 1.5rem;
-    color: var(--text-dim);
-    font-style: italic;
-    animation: fadeDown 1s 0.4s ease both;
-    opacity: 0;
+    margin-top: 16px; font-family: 'Amiri', serif; font-size: 1.5rem;
+    color: var(--text-dim); font-style: italic;
+    animation: fadeDown 1s 0.4s ease both; opacity: 0;
   }
 
-  /* Language Toggle */
+  /* ── LANG BAR ── */
   .lang-bar {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: rgba(13,11,8,0.92);
-    backdrop-filter: blur(16px);
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(13,11,8,0.92); backdrop-filter: blur(16px);
     border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0;
-    padding: 12px 0;
-    animation: fadeDown 0.8s 0.6s ease both;
-    opacity: 0;
+    display: flex; align-items: center; justify-content: center;
+    gap: 0; padding: 12px 0;
+    animation: fadeDown 0.8s 0.6s ease both; opacity: 0;
   }
-
   .lang-btn {
-    background: none;
-    border: 1px solid var(--border);
-    color: var(--text-dim);
-    font-family: 'EB Garamond', serif;
-    font-size: 0.95rem;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    padding: 8px 32px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    position: relative;
+    background: none; border: 1px solid var(--border); color: var(--text-dim);
+    font-family: 'EB Garamond', serif; font-size: 0.95rem;
+    letter-spacing: 3px; text-transform: uppercase;
+    padding: 8px 32px; cursor: pointer; transition: all 0.3s ease;
   }
-
   .lang-btn:first-child { border-radius: 2px 0 0 2px; border-right: none; }
   .lang-btn:last-child  { border-radius: 0 2px 2px 0; border-left: none; }
+  .lang-btn.active { background: var(--gold); color: var(--bg); border-color: var(--gold); font-weight: 600; }
+  .lang-btn:not(.active):hover { color: var(--gold); border-color: var(--gold-dim); }
 
-  .lang-btn.active {
-    background: var(--gold);
-    color: var(--bg);
-    border-color: var(--gold);
-    font-weight: 600;
-  }
-
-  .lang-btn:not(.active):hover {
-    color: var(--gold);
-    border-color: var(--gold-dim);
-  }
-
-  /* Count badge */
+  /* ── COUNT BAR ── */
   .count-bar {
-    text-align: center;
-    padding: 32px 20px 8px;
-    color: var(--gold-dim);
-    font-size: 0.8rem;
-    letter-spacing: 4px;
-    text-transform: uppercase;
+    text-align: center; padding: 32px 20px 8px;
+    color: var(--gold-dim); font-size: 0.8rem; letter-spacing: 4px; text-transform: uppercase;
   }
 
-  /* Grid */
+  /* ── GRID ── */
   .quotes-grid {
-    max-width: 1280px;
-    margin: 0 auto;
+    max-width: 1280px; margin: 0 auto;
     padding: 40px 24px 100px;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-    gap: 24px;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 24px;
   }
 
-  /* Quote Card */
+  /* ── CARD ── */
   .q-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 2px;
-    padding: 36px 32px 28px;
-    position: relative;
-    overflow: hidden;
-    cursor: default;
+    background: var(--card); border: 1px solid var(--border); border-radius: 2px;
+    padding: 36px 32px 28px; position: relative; overflow: hidden; cursor: default;
     transition: transform 0.35s cubic-bezier(.2,.8,.2,1), border-color 0.35s, box-shadow 0.35s;
     animation: cardReveal 0.6s ease both;
   }
-
   .q-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
     background: linear-gradient(90deg, transparent, var(--gold), transparent);
-    opacity: 0;
-    transition: opacity 0.35s;
+    opacity: 0; transition: opacity 0.35s;
   }
-
-  .q-card:hover {
-    transform: translateY(-4px);
-    border-color: var(--border-strong);
-    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(201,168,76,0.04);
-  }
-
+  .q-card:hover { transform: translateY(-4px); border-color: var(--border-strong); box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(201,168,76,0.04); }
   .q-card:hover::before { opacity: 1; }
 
-  /* Big quotation mark */
   .q-mark {
-    position: absolute;
-    top: 16px; right: 22px;
-    font-family: 'Playfair Display', serif;
-    font-size: 7rem;
-    line-height: 1;
-    color: var(--gold);
-    opacity: 0.06;
-    pointer-events: none;
-    user-select: none;
+    position: absolute; top: 16px; right: 22px;
+    font-family: 'Playfair Display', serif; font-size: 7rem; line-height: 1;
+    color: var(--gold); opacity: 0.06; pointer-events: none; user-select: none;
+  }
+  .q-num {
+    position: absolute; top: 20px; left: 20px;
+    font-size: 0.65rem; letter-spacing: 2px; color: var(--gold-dim); font-family: 'EB Garamond', serif;
   }
 
-  /* Number badge */
-  .q-num {
-    position: absolute;
-    top: 20px; left: 20px;
-    font-size: 0.65rem;
-    letter-spacing: 2px;
-    color: var(--gold-dim);
+  /* copy button — floats top-right of card, shown on hover */
+  .q-copy-btn {
+    position: absolute; top: 14px; right: 14px;
+    background: none; border: 1px solid var(--border);
+    color: var(--text-dim); border-radius: 2px;
+    padding: 4px 10px; font-size: 0.58rem; letter-spacing: 1.5px;
+    text-transform: uppercase; cursor: pointer;
     font-family: 'EB Garamond', serif;
+    display: flex; align-items: center; gap: 5px;
+    opacity: 0; transition: opacity 0.25s, border-color 0.25s, color 0.25s, background 0.25s;
+    z-index: 2;
   }
+  .q-card:hover .q-copy-btn { opacity: 1; }
+  .q-copy-btn:hover { border-color: var(--gold-dim); color: var(--gold); }
+  .q-copy-btn.copied {
+    border-color: var(--green); color: var(--green);
+    background: rgba(92,184,122,0.08);
+  }
+  .q-copy-btn svg { width: 9px; height: 9px; flex-shrink: 0; }
 
   .q-text {
-    margin-top: 12px;
-    font-size: 1.18rem;
-    line-height: 1.8;
-    color: var(--text);
-    font-style: italic;
+    margin-top: 12px; font-size: 1.18rem; line-height: 1.8; color: var(--text); font-style: italic;
   }
+  .q-text.rtl { font-family: 'Amiri', serif; font-size: 1.22rem; direction: rtl; text-align: right; }
+  .q-text.ltr { font-family: 'EB Garamond', serif; direction: ltr; text-align: left; }
 
-  /* RTL text */
-  .q-text.rtl {
-    font-family: 'Amiri', serif;
-    font-size: 1.22rem;
-    direction: rtl;
-    text-align: right;
-  }
-
-  /* LTR text */
-  .q-text.ltr {
-    font-family: 'EB Garamond', serif;
-    direction: ltr;
-    text-align: left;
-  }
-
-  /* Author */
   .q-author {
-    margin-top: 24px;
-    padding-top: 16px;
-    border-top: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
   }
+  .q-author-dash { width: 20px; height: 1px; background: var(--gold); flex-shrink: 0; }
+  .q-author-name { font-size: 0.82rem; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; font-style: normal; font-family: 'EB Garamond', serif; }
+  .q-author-name.rtl { font-family: 'Amiri', serif; font-size: 0.95rem; letter-spacing: 1px; text-transform: none; direction: rtl; }
 
-  .q-author-dash {
-    width: 20px; height: 1px;
-    background: var(--gold);
-    flex-shrink: 0;
+  /* bottom row: tag + cote badge */
+  .q-bottom {
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 8px; margin-top: 14px;
   }
-
-  .q-author-name {
-    font-size: 0.82rem;
-    color: var(--gold);
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    font-style: normal;
-    font-family: 'EB Garamond', serif;
-  }
-
-  .q-author-name.rtl {
-    font-family: 'Amiri', serif;
-    font-size: 0.95rem;
-    letter-spacing: 1px;
-    text-transform: none;
-    direction: rtl;
-  }
-
-  /* Tag/category */
   .q-tag {
-    display: inline-block;
-    margin-top: 14px;
-    font-size: 0.65rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    padding: 3px 10px;
-    border: 1px solid var(--border);
-    color: var(--text-dim);
-    border-radius: 1px;
+    display: inline-block; font-size: 0.65rem; letter-spacing: 2px;
+    text-transform: uppercase; padding: 3px 10px;
+    border: 1px solid var(--border); color: var(--text-dim); border-radius: 1px;
   }
 
-  /* Featured card */
-  .q-card.featured {
-    grid-column: span 2;
-    border-color: var(--gold-dim);
-    background: linear-gradient(135deg, #1a1712, #12100d);
+  /* ── COTE SOURCE BADGE (hidden until toggle) ── */
+  .q-cote-badge {
+    display: none; /* shown via JS when coteOn */
+    align-items: center; gap: 5px;
+    font-size: 0.6rem; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--cote-blue); border: 1px solid var(--cote-blue-border);
+    background: var(--cote-blue-bg); border-radius: 1px;
+    padding: 3px 9px; cursor: pointer; white-space: nowrap;
+    transition: background 0.2s, border-color 0.2s;
+    position: relative;
+  }
+  .q-cote-badge.visible { display: flex; }
+  .q-cote-badge:hover { background: rgba(74,158,218,0.14); border-color: rgba(74,158,218,0.5); }
+  .q-cote-badge .cote-dot { width: 5px; height: 5px; background: var(--cote-blue); border-radius: 50%; flex-shrink: 0; }
+
+  /* cote tooltip */
+  .q-cote-tooltip {
+    display: none;
+    position: absolute; bottom: calc(100% + 8px); right: 0;
+    background: #1c1916; border: 1px solid var(--cote-blue-border);
+    color: var(--cote-blue); border-radius: 2px;
+    padding: 10px 13px; font-size: 0.75rem; line-height: 1.5;
+    font-style: italic; font-family: 'EB Garamond', serif;
+    white-space: nowrap; z-index: 200;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    letter-spacing: 0; text-transform: none;
+    animation: fadeDown 0.2s ease both;
+    min-width: 200px; max-width: 320px; white-space: normal;
+  }
+  .q-cote-tooltip::after {
+    content: ''; position: absolute; top: 100%; right: 14px;
+    border: 5px solid transparent;
+    border-top-color: var(--cote-blue-border);
+  }
+  .q-cote-badge:hover .q-cote-tooltip { display: block; }
+  .q-cote-tooltip-label {
+    font-size: 0.6rem; letter-spacing: 2px; text-transform: uppercase;
+    opacity: 0.55; margin-bottom: 5px; font-style: normal;
   }
 
+  /* ── FEATURED ── */
+  .q-card.featured { grid-column: span 2; border-color: var(--gold-dim); background: linear-gradient(135deg, #1a1712, #12100d); }
   .q-card.featured .q-text { font-size: 1.45rem; }
   .q-card.featured .q-text.rtl { font-size: 1.5rem; }
-
   @media (max-width: 760px) {
     .q-card.featured { grid-column: span 1; }
     .q-card.featured .q-text { font-size: 1.2rem; }
   }
 
-  /* Footer */
-  footer {
-    text-align: center;
-    padding: 40px 20px;
-    border-top: 1px solid var(--border);
-    color: var(--text-dim);
-    font-size: 0.8rem;
-    letter-spacing: 3px;
+  /* ── FLOATING COTE TOGGLE ── */
+  .cote-fab {
+    position: fixed; bottom: 32px; right: 28px; z-index: 500;
+    display: flex; align-items: center; gap: 9px;
+    background: #181512; border: 1px solid var(--border);
+    border-radius: 50px; padding: 10px 18px;
+    cursor: pointer; user-select: none;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+    transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
+    animation: fabIn 0.8s 1.2s ease both; opacity: 0;
   }
-
-  /* Animations */
-  @keyframes fadeDown {
-    from { opacity: 0; transform: translateY(-16px); }
-    to   { opacity: 1; transform: translateY(0); }
+  .cote-fab:hover { box-shadow: 0 6px 32px rgba(0,0,0,0.7); }
+  .cote-fab.active {
+    border-color: var(--cote-blue);
+    background: rgba(74,158,218,0.1);
+    box-shadow: 0 4px 28px rgba(74,158,218,0.15);
   }
-
-  @keyframes cardReveal {
-    from { opacity: 0; transform: translateY(24px); }
-    to   { opacity: 1; transform: translateY(0); }
+  .cote-fab-icon { font-size: 1.1rem; line-height: 1; }
+  .cote-fab-label {
+    font-family: 'EB Garamond', serif; font-size: 0.72rem; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--text-dim); transition: color 0.3s;
+    white-space: nowrap;
   }
+  .cote-fab.active .cote-fab-label { color: var(--cote-blue); }
+  /* pill checkbox */
+  .cote-fab-check {
+    width: 14px; height: 14px; border: 1.5px solid var(--gold-dim); border-radius: 2px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    transition: all 0.25s;
+  }
+  .cote-fab.active .cote-fab-check { background: var(--cote-blue); border-color: var(--cote-blue); }
+  .cote-fab-check svg { display: none; width: 8px; height: 8px; }
+  .cote-fab.active .cote-fab-check svg { display: block; }
 
-  /* stagger cards */
-  .q-card:nth-child(1)  { animation-delay: 0.05s; }
-  .q-card:nth-child(2)  { animation-delay: 0.10s; }
-  .q-card:nth-child(3)  { animation-delay: 0.15s; }
-  .q-card:nth-child(4)  { animation-delay: 0.20s; }
-  .q-card:nth-child(5)  { animation-delay: 0.25s; }
-  .q-card:nth-child(6)  { animation-delay: 0.30s; }
-  .q-card:nth-child(7)  { animation-delay: 0.35s; }
-  .q-card:nth-child(8)  { animation-delay: 0.40s; }
-  .q-card:nth-child(9)  { animation-delay: 0.45s; }
-  .q-card:nth-child(10) { animation-delay: 0.50s; }
-  .q-card:nth-child(11) { animation-delay: 0.55s; }
-  .q-card:nth-child(12) { animation-delay: 0.60s; }
-  .q-card:nth-child(13) { animation-delay: 0.65s; }
-  .q-card:nth-child(14) { animation-delay: 0.70s; }
-  .q-card:nth-child(15) { animation-delay: 0.75s; }
-  .q-card:nth-child(16) { animation-delay: 0.80s; }
-  .q-card:nth-child(17) { animation-delay: 0.85s; }
-  .q-card:nth-child(18) { animation-delay: 0.90s; }
-  .q-card:nth-child(19) { animation-delay: 0.95s; }
-  .q-card:nth-child(20) { animation-delay: 1.00s; }
+  /* ── TOAST ── */
+  #toast {
+    position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(10px);
+    background: #1c1a16; color: var(--green);
+    border: 1px solid rgba(92,184,122,0.35);
+    padding: 8px 20px; border-radius: 2px;
+    font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.25s, transform 0.25s; z-index: 9999; white-space: nowrap;
+  }
+  #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* ── FOOTER ── */
+  footer { text-align: center; padding: 40px 20px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 0.8rem; letter-spacing: 3px; }
+  .ornament-divider { text-align: center; padding: 8px 0 0; color: var(--gold-dim); font-size: 1rem; letter-spacing: 8px; opacity: 0.5; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeDown { from { opacity: 0; transform: translateY(-16px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes cardReveal { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fabIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+  .q-card:nth-child(1)  { animation-delay: 0.05s; } .q-card:nth-child(2)  { animation-delay: 0.10s; }
+  .q-card:nth-child(3)  { animation-delay: 0.15s; } .q-card:nth-child(4)  { animation-delay: 0.20s; }
+  .q-card:nth-child(5)  { animation-delay: 0.25s; } .q-card:nth-child(6)  { animation-delay: 0.30s; }
+  .q-card:nth-child(7)  { animation-delay: 0.35s; } .q-card:nth-child(8)  { animation-delay: 0.40s; }
+  .q-card:nth-child(9)  { animation-delay: 0.45s; } .q-card:nth-child(10) { animation-delay: 0.50s; }
+  .q-card:nth-child(11) { animation-delay: 0.55s; } .q-card:nth-child(12) { animation-delay: 0.60s; }
+  .q-card:nth-child(13) { animation-delay: 0.65s; } .q-card:nth-child(14) { animation-delay: 0.70s; }
+  .q-card:nth-child(15) { animation-delay: 0.75s; } .q-card:nth-child(16) { animation-delay: 0.80s; }
+  .q-card:nth-child(17) { animation-delay: 0.85s; } .q-card:nth-child(18) { animation-delay: 0.90s; }
+  .q-card:nth-child(19) { animation-delay: 0.95s; } .q-card:nth-child(20) { animation-delay: 1.00s; }
   .q-card:nth-child(n+21) { animation-delay: 1.05s; }
-
-  /* Divider ornament */
-  .ornament-divider {
-    text-align: center;
-    padding: 8px 0 0;
-    color: var(--gold-dim);
-    font-size: 1rem;
-    letter-spacing: 8px;
-    opacity: 0.5;
-  }
 </style>
 </head>
 <body>
@@ -364,333 +303,123 @@
   <button class="lang-btn" id="btn-en" onclick="setLang('en')">English</button>
 </nav>
 
-<p class="count-bar" id="count-bar">٤١ نقل قول · 41 Quotes</p>
-
+<p class="count-bar" id="count-bar"></p>
 <main class="quotes-grid" id="quotes-grid"></main>
 
 <footer>
   <div class="ornament-divider">— ✦ —</div>
-  <p style="margin-top:20px">2026 · Snow Breaker Collection</p>
+  <p style="margin-top:20px">Snow Breaker Collection · 2026</p>
 </footer>
 
+<!-- Floating COTE toggle button -->
+<div class="cote-fab" id="coteFab" onclick="toggleCote()">
+  <span class="cote-fab-icon">🎌</span>
+  <span class="cote-fab-label" id="fabLabel">Classroom of the Elite</span>
+  <div class="cote-fab-check">
+    <svg viewBox="0 0 8 8" fill="none"><polyline points="1,4 3,6.5 7,1.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
+</div>
+
+<div id="toast"></div>
+
 <script>
-const quotes = [
-  {
-    fa: "چه چیزی بد است؟ هر چه که از ضعف بر آید.",
-    en: "What is bad? Whatever is born of weakness.",
-    author_fa: "فریدریش نیچه",
-    author_en: "Friedrich Nietzsche",
-    tag: "Ethics",
-    featured: false
-  },
-  {
-    fa: "پنهان کردن استعداد و مهارت‌ها، استعداد و مهارت زیادی می‌خواهد.",
-    en: "Hiding one's talents and skills requires a great deal of talent and skill.",
-    author_fa: "لا روشفوکو",
-    author_en: "La Rochefoucauld",
-    tag: "Human Nature",
-    featured: false
-  },
-  {
-    fa: "انسان حیوانی است که داد و ستد می‌کند: هیچ حیوان دیگری این کار را نمی‌کند. هیچ سگی استخوان را با دیگری عوض نمی‌کند.",
-    en: "Man is an animal that makes bargains: no other animal does this — no dog exchanges bones with another.",
-    author_fa: "آدام اسمیت",
-    author_en: "Adam Smith",
-    tag: "Economics",
-    featured: true
-  },
-  {
-    fa: "نباید از اینکه بقیه حقیقت را از ما پنهان می‌کنند ناراحت بشیم، ما هم خیلی اوقات این کار را با خودمان می‌کنیم.",
-    en: "We should not be upset that others hide the truth from us, when we so often hide it from ourselves.",
-    author_fa: "لا روشفوکو",
-    author_en: "La Rochefoucauld",
-    tag: "Self-Deception",
-    featured: false
-  },
-  {
-    fa: "جهنم، دیگران‌اند.",
-    en: "Hell is other people.",
-    author_fa: "ژان‌پل سارتر",
-    author_en: "Jean-Paul Sartre",
-    tag: "Existentialism",
-    featured: false
-  },
-  {
-    fa: "دو جور دروغ است: یکی در مورد موضوعی انجام شده است، دیگری در مورد تکلیفی در آینده.",
-    en: "There are two kinds of lies: one about something already done, the other about a duty in the future.",
-    author_fa: "آنتوان دوبرتی",
-    author_en: "Antoine de Bertin",
-    tag: "Morality",
-    featured: false
-  },
-  {
-    fa: "هیچ چیز بدتر از دوست احمق نیست، دشمن باهوش بهتر است.",
-    en: "Nothing is worse than a foolish friend; a wise enemy is preferable.",
-    author_fa: "ژان دو لافونتن",
-    author_en: "Jean de La Fontaine",
-    tag: "Friendship",
-    featured: false
-  },
-  {
-    fa: "ای که وارد می‌شوی، تمام امیدت را رها کن.",
-    en: "Abandon all hope, ye who enter here.",
-    author_fa: "دانته آلیگیری",
-    author_en: "Dante Alighieri",
-    tag: "Literature",
-    featured: false
-  },
-  {
-    fa: "انسان محکوم به آزادی است.",
-    en: "Man is condemned to be free.",
-    author_fa: "ژان‌پل سارتر",
-    author_en: "Jean-Paul Sartre",
-    tag: "Existentialism",
-    featured: false
-  },
-  {
-    fa: "تمام انسان‌ها درون خود، خطرناک‌ترین خائن را دارند.",
-    en: "Every man carries within himself the most dangerous traitor of all.",
-    author_fa: "سورن کیرکگارد",
-    author_en: "Søren Kierkegaard",
-    tag: "Psychology",
-    featured: false
-  },
-  {
-    fa: "چیزی که مردم سرنوشت می‌خوانند اغلب حماقت خودشان است.",
-    en: "What people call fate is mostly their own stupidity.",
-    author_fa: "آرتور شوپنهاور",
-    author_en: "Arthur Schopenhauer",
-    tag: "Fate",
-    featured: false
-  },
-  {
-    fa: "نبوغ تنها یک لول بالاتر از دیوانگی است.",
-    en: "Genius is only one step above madness.",
-    author_fa: "آرتور شوپنهاور",
-    author_en: "Arthur Schopenhauer",
-    tag: "Genius",
-    featured: false
-  },
-  {
-    fa: "یادت باشد در زمان‌های سخت همیشه خونسرد باشی.",
-    en: "Remember: in difficult times, always keep your composure.",
-    author_fa: "مارکوس اورلیوس",
-    author_en: "Marcus Aurelius",
-    tag: "Stoicism",
-    featured: false
-  },
-  {
-    fa: "الحق که رفتار همه‌ی انسان‌ها هدف دارد.",
-    en: "Truly, every human behaviour has a purpose.",
-    author_fa: "آریستوتل",
-    author_en: "Aristotle",
-    tag: "Behaviour",
-    featured: false
-  },
-  {
-    fa: "دو گناه اصلی در انسان‌ها وجود دارد که تمام گناهان دیگر از آن نشأت می‌گیرد: بی‌صبری و تنبلی.",
-    en: "There are two main human sins from which all others stem: impatience and laziness.",
-    author_fa: "فرانتس کافکا",
-    author_en: "Franz Kafka",
-    tag: "Human Nature",
-    featured: true
-  },
-  {
-    fa: "افراد با ذات بزرگ به یک اندازه مستعد انجام نیک‌ترین و شرترین کارها هستند.",
-    en: "Great souls are equally capable of the most virtuous and the most wicked deeds.",
-    author_fa: "لا روشفوکو",
-    author_en: "La Rochefoucauld",
-    tag: "Duality",
-    featured: false
-  },
-  {
-    fa: "زمینه را باید فراهم ساخت.",
-    en: "The conditions must be prepared.",
-    author_fa: "نیکولو ماکیاولی",
-    author_en: "Niccolò Machiavelli",
-    tag: "Strategy",
-    featured: false
-  },
-  {
-    fa: "هر شکست قدمی بر سوی پیروزی است.",
-    en: "Every failure is a step toward victory.",
-    author_fa: "توماس کارلایل",
-    author_en: "Thomas Carlyle",
-    tag: "Resilience",
-    featured: false
-  },
-  {
-    fa: "فلاکت اولین مسیر به سمت حقیقت است.",
-    en: "Misery is the first road toward truth.",
-    author_fa: "آنتوان دو ریواروله",
-    author_en: "Antoine de Rivarol",
-    tag: "Truth",
-    featured: false
-  },
-  {
-    fa: "شک کردن به همه چیز یا باور کردن همه چیز هر دو به یک اندازه ساده هستند؛ هر دو با ضرورت تفکر در تضاد هستند.",
-    en: "To doubt everything or to believe everything are equally convenient solutions; both spare us from the necessity of thinking.",
-    author_fa: "هانری پوانکاره",
-    author_en: "Henri Poincaré",
-    tag: "Critical Thinking",
-    featured: true
-  },
-  {
-    fa: "زخم بر قلبش نشسته است.",
-    en: "The wound has settled on his heart.",
-    author_fa: "حافظ",
-    author_en: "Hafez",
-    tag: "Poetry",
-    featured: false
-  },
-  {
-    fa: "اگر اشتباهی کردی ولی اصلاحش نکردی، خود این کار اشتباه است.",
-    en: "If you have made a mistake and do not correct it, that is a second mistake.",
-    author_fa: "کنفوسیوس",
-    author_en: "Confucius",
-    tag: "Wisdom",
-    featured: false
-  },
-  {
-    fa: "افرادی که فریب خوبی واهی را می‌خورند، به سوی نابودی خود روانه هستند.",
-    en: "Those who are deceived by false good are on the path to their own destruction.",
-    author_fa: "نیکولو ماکیاولی",
-    author_en: "Niccolò Machiavelli",
-    tag: "Strategy",
-    featured: false
-  },
-  {
-    fa: "مردی که نتواند بر خود فرمان براند، برده‌ای ابدی خواهد بود.",
-    en: "A man who cannot command himself will forever be a slave.",
-    author_fa: "فریدریش نیچه",
-    author_en: "Friedrich Nietzsche",
-    tag: "Self-Mastery",
-    featured: false
-  },
-  {
-    fa: "زور زیاد بدون دانش به خودش شکست می‌خورد.",
-    en: "Great strength without knowledge defeats itself.",
-    author_fa: "فرانسیس بیکن",
-    author_en: "Francis Bacon",
-    tag: "Knowledge",
-    featured: false
-  },
-  {
-    fa: "بدترین دشمنی که با او رو به رو می‌شوی خودت هستی.",
-    en: "The worst enemy you will ever face is yourself.",
-    author_fa: "مارکوس اورلیوس",
-    author_en: "Marcus Aurelius",
-    tag: "Stoicism",
-    featured: false
-  },
-  {
-    fa: "مهم‌ترین اصل رشد در تصمیم‌گیری انسان نهفته است.",
-    en: "The most important principle of growth lies in human decision-making.",
-    author_fa: "ویلیام جیمز",
-    author_en: "William James",
-    tag: "Growth",
-    featured: false
-  },
-  {
-    fa: "انسان در مقابل دیگری مانند گرگ است.",
-    en: "Man is a wolf to man.",
-    author_fa: "توماس هابز",
-    author_en: "Thomas Hobbes",
-    tag: "Human Nature",
-    featured: false
-  },
-  {
-    fa: "هیچوقت آنچه سعی در فراموشی آن داریم، فراموش نخواهیم کرد.",
-    en: "We never truly forget what we try most to forget.",
-    author_fa: "سیگموند فروید",
-    author_en: "Sigmund Freud",
-    tag: "Psychology",
-    featured: false
-  },
-  {
-    fa: "در انجام یک کار، اراده‌ای بر نتیجه آن کار نداری.",
-    en: "In the doing of a thing, you have no will over its outcome.",
-    author_fa: "بهاگاواد گیتا",
-    author_en: "Bhagavad Gita",
-    tag: "Philosophy",
-    featured: false
-  },
-  {
-    fa: "اقبال به داد افراد جسور می‌رسد.",
-    en: "Fortune favours the bold.",
-    author_fa: "ویرژیل",
-    author_en: "Virgil",
-    tag: "Courage",
-    featured: false
-  },
-  {
-    fa: "صدمه دیدن بهتر از صدمه رساندن است.",
-    en: "It is better to suffer wrong than to do wrong.",
-    author_fa: "سقراط",
-    author_en: "Socrates",
-    tag: "Ethics",
-    featured: false
-  },
-  {
-    fa: "مردم مسخره‌ترین کارها را انجام می‌دهند تا با خود درونی‌شان رو به رو نشوند.",
-    en: "People will do the most ridiculous things to avoid confronting their inner selves.",
-    author_fa: "کارل یونگ",
-    author_en: "Carl Jung",
-    tag: "Psychology",
-    featured: false
-  },
-  {
-    fa: "آنان که گذشته‌ی خود را به یاد نمی‌آورند، محکوم به تکرار آنند.",
-    en: "Those who cannot remember the past are condemned to repeat it.",
-    author_fa: "جورج سانتایانا",
-    author_en: "George Santayana",
-    tag: "History",
-    featured: false
-  },
-  {
-    fa: "عدالت افراطی همانند ناعدالتی افراطی است.",
-    en: "Extreme justice is extreme injustice.",
-    author_fa: "سیسرون",
-    author_en: "Cicero",
-    tag: "Justice",
-    featured: false
-  },
-  {
-    fa: "من اولین دلیل نتیجه‌گیری‌های ناپسند را جویایی روش درست می‌دانم.",
-    en: "I consider the first cause of undesirable conclusions to be the search for a correct method.",
-    author_fa: "رنه دکارت",
-    author_en: "René Descartes",
-    tag: "Epistemology",
-    featured: false
-  },
-  {
-    fa: "در عاشقی فقط یک قانون وجود دارد: برای آنان که دوستشان دارید، شادی را به ارمغان آورید.",
-    en: "In love, there is only one law: bring joy to those you love.",
-    author_fa: "استاندال",
-    author_en: "Stendhal",
-    tag: "Love",
-    featured: false
-  },
-  {
-    fa: "به جای تلاش در تغییر دادن نظم دنیا، خواسته‌هایت را تغییر بده.",
-    en: "Instead of trying to change the order of the world, change your desires.",
-    author_fa: "مارکوس اورلیوس",
-    author_en: "Marcus Aurelius",
-    tag: "Stoicism",
-    featured: false
-  },
-  {
-    fa: "عشق بهترین آموزگار است.",
-    en: "Love is the greatest teacher.",
-    author_fa: "افلاطون",
-    author_en: "Plato",
-    tag: "Love",
-    featured: false
-  }
+// ─── COTE source data ────────────────────────────────────────────────────────
+// Season 1: eps 1-12  →  quotes index 0-11  (1-indexed: 1-12)
+// Season 2: eps 1-13  →  quotes index 12-24 (1-indexed: 13-25)
+// Season 3: eps 1-13  →  quotes index 25-28 (1-indexed: 26-29)
+
+const COTE_SOURCES = [
+  // Season 1 (Q 1-12)
+  { season: 1, ep: 1,  detail: "Ayanokoji Kiyotaka — opening monologue" },
+  { season: 1, ep: 2,  detail: "Ayanokoji Kiyotaka — class observation" },
+  { season: 1, ep: 3,  detail: "Ayanokoji Kiyotaka — inner monologue" },
+  { season: 1, ep: 4,  detail: "Ayanokoji Kiyotaka — after the test" },
+  { season: 1, ep: 5,  detail: "Horikita Suzune — study group scene" },
+  { season: 1, ep: 6,  detail: "Ayanokoji Kiyotaka — midterm reflection" },
+  { season: 1, ep: 7,  detail: "Ayanokoji Kiyotaka — island arc" },
+  { season: 1, ep: 8,  detail: "Ayanokoji Kiyotaka — survival test" },
+  { season: 1, ep: 9,  detail: "Ayanokoji Kiyotaka — confrontation scene" },
+  { season: 1, ep: 10, detail: "Ayanokoji Kiyotaka — class D strategy" },
+  { season: 1, ep: 11, detail: "Ayanokoji Kiyotaka — before the verdict" },
+  { season: 1, ep: 12, detail: "Ayanokoji Kiyotaka — season finale monologue" },
+  // Season 2 (Q 13-25)
+  { season: 2, ep: 1,  detail: "Ayanokoji Kiyotaka — new semester reflection" },
+  { season: 2, ep: 2,  detail: "Ayanokoji Kiyotaka — Paper Shuffle arc" },
+  { season: 2, ep: 3,  detail: "Ayanokoji Kiyotaka — chess analogy" },
+  { season: 2, ep: 4,  detail: "Ayanokoji Kiyotaka — inner monologue" },
+  { season: 2, ep: 5,  detail: "Ayanokoji Kiyotaka — sports festival" },
+  { season: 2, ep: 6,  detail: "Ryuuen Kakeru — confrontation with Class D" },
+  { season: 2, ep: 7,  detail: "Ayanokoji Kiyotaka — Ryuuen showdown aftermath" },
+  { season: 2, ep: 8,  detail: "Ayanokoji Kiyotaka — inner monologue" },
+  { season: 2, ep: 9,  detail: "Ayanokoji Kiyotaka — end-of-term exam arc" },
+  { season: 2, ep: 10, detail: "Ayanokoji Kiyotaka — strategy session" },
+  { season: 2, ep: 11, detail: "Ayanokoji Kiyotaka — class point battle" },
+  { season: 2, ep: 12, detail: "Ayanokoji Kiyotaka — pre-finale monologue" },
+  { season: 2, ep: 13, detail: "Ayanokoji Kiyotaka — season 2 finale" },
+  // Season 3 (Q 26-29)
+  { season: 3, ep: 1,  detail: "Ayanokoji Kiyotaka — year two begins" },
+  { season: 3, ep: 2,  detail: "Ayanokoji Kiyotaka — new class dynamics" },
+  { season: 3, ep: 3,  detail: "Ayanokoji Kiyotaka — group exam arc" },
+  { season: 3, ep: 4,  detail: "Ayanokoji Kiyotaka — rivals converge" },
 ];
 
-let currentLang = 'fa';
+// ─── QUOTE DATA ──────────────────────────────────────────────────────────────
+const quotes = [
+  { fa: "چه چیزی بد است؟ هر چه که از ضعف بر آید.", en: "What is bad? Whatever is born of weakness.", author_fa: "فریدریش نیچه", author_en: "Friedrich Nietzsche", tag: "Ethics", featured: false },
+  { fa: "پنهان کردن استعداد و مهارت‌ها، استعداد و مهارت زیادی می‌خواهد.", en: "Hiding one's talents and skills requires a great deal of talent and skill.", author_fa: "لا روشفوکو", author_en: "La Rochefoucauld", tag: "Human Nature", featured: false },
+  { fa: "انسان حیوانی است که داد و ستد می‌کند: هیچ حیوان دیگری این کار را نمی‌کند. هیچ سگی استخوان را با دیگری عوض نمی‌کند.", en: "Man is an animal that makes bargains: no other animal does this — no dog exchanges bones with another.", author_fa: "آدام اسمیت", author_en: "Adam Smith", tag: "Economics", featured: true },
+  { fa: "نباید از اینکه بقیه حقیقت را از ما پنهان می‌کنند ناراحت بشیم، ما هم خیلی اوقات این کار را با خودمان می‌کنیم.", en: "We should not be upset that others hide the truth from us, when we so often hide it from ourselves.", author_fa: "لا روشفوکو", author_en: "La Rochefoucauld", tag: "Self-Deception", featured: false },
+  { fa: "جهنم، دیگران‌اند.", en: "Hell is other people.", author_fa: "ژان‌پل سارتر", author_en: "Jean-Paul Sartre", tag: "Existentialism", featured: false },
+  { fa: "دو جور دروغ است: یکی در مورد موضوعی انجام شده است، دیگری در مورد تکلیفی در آینده.", en: "There are two kinds of lies: one about something already done, the other about a duty in the future.", author_fa: "آنتوان دوبرتی", author_en: "Antoine de Bertin", tag: "Morality", featured: false },
+  { fa: "هیچ چیز بدتر از دوست احمق نیست، دشمن باهوش بهتر است.", en: "Nothing is worse than a foolish friend; a wise enemy is preferable.", author_fa: "ژان دو لافونتن", author_en: "Jean de La Fontaine", tag: "Friendship", featured: false },
+  { fa: "ای که وارد می‌شوی، تمام امیدت را رها کن.", en: "Abandon all hope, ye who enter here.", author_fa: "دانته آلیگیری", author_en: "Dante Alighieri", tag: "Literature", featured: false },
+  { fa: "انسان محکوم به آزادی است.", en: "Man is condemned to be free.", author_fa: "ژان‌پل سارتر", author_en: "Jean-Paul Sartre", tag: "Existentialism", featured: false },
+  { fa: "تمام انسان‌ها درون خود، خطرناک‌ترین خائن را دارند.", en: "Every man carries within himself the most dangerous traitor of all.", author_fa: "سورن کیرکگارد", author_en: "Søren Kierkegaard", tag: "Psychology", featured: false },
+  { fa: "چیزی که مردم سرنوشت می‌خوانند اغلب حماقت خودشان است.", en: "What people call fate is mostly their own stupidity.", author_fa: "آرتور شوپنهاور", author_en: "Arthur Schopenhauer", tag: "Fate", featured: false },
+  { fa: "نبوغ تنها یک لول بالاتر از دیوانگی است.", en: "Genius is only one step above madness.", author_fa: "آرتور شوپنهاور", author_en: "Arthur Schopenhauer", tag: "Genius", featured: false },
+  { fa: "یادت باشد در زمان‌های سخت همیشه خونسرد باشی.", en: "Remember: in difficult times, always keep your composure.", author_fa: "مارکوس اورلیوس", author_en: "Marcus Aurelius", tag: "Stoicism", featured: false },
+  { fa: "الحق که رفتار همه‌ی انسان‌ها هدف دارد.", en: "Truly, every human behaviour has a purpose.", author_fa: "آریستوتل", author_en: "Aristotle", tag: "Behaviour", featured: false },
+  { fa: "دو گناه اصلی در انسان‌ها وجود دارد که تمام گناهان دیگر از آن نشأت می‌گیرد: بی‌صبری و تنبلی.", en: "There are two main human sins from which all others stem: impatience and laziness.", author_fa: "فرانتس کافکا", author_en: "Franz Kafka", tag: "Human Nature", featured: true },
+  { fa: "افراد با ذات بزرگ به یک اندازه مستعد انجام نیک‌ترین و شرترین کارها هستند.", en: "Great souls are equally capable of the most virtuous and the most wicked deeds.", author_fa: "لا روشفوکو", author_en: "La Rochefoucauld", tag: "Duality", featured: false },
+  { fa: "زمینه را باید فراهم ساخت.", en: "The conditions must be prepared.", author_fa: "نیکولو ماکیاولی", author_en: "Niccolò Machiavelli", tag: "Strategy", featured: false },
+  { fa: "هر شکست قدمی بر سوی پیروزی است.", en: "Every failure is a step toward victory.", author_fa: "توماس کارلایل", author_en: "Thomas Carlyle", tag: "Resilience", featured: false },
+  { fa: "فلاکت اولین مسیر به سمت حقیقت است.", en: "Misery is the first road toward truth.", author_fa: "آنتوان دو ریواروله", author_en: "Antoine de Rivarol", tag: "Truth", featured: false },
+  { fa: "شک کردن به همه چیز یا باور کردن همه چیز هر دو به یک اندازه ساده هستند؛ هر دو با ضرورت تفکر در تضاد هستند.", en: "To doubt everything or to believe everything are equally convenient solutions; both spare us from the necessity of thinking.", author_fa: "هانری پوانکاره", author_en: "Henri Poincaré", tag: "Critical Thinking", featured: true },
+  { fa: "زخم بر قلبش نشسته است.", en: "The wound has settled on his heart.", author_fa: "حافظ", author_en: "Hafez", tag: "Poetry", featured: false },
+  { fa: "اگر اشتباهی کردی ولی اصلاحش نکردی، خود این کار اشتباه است.", en: "If you have made a mistake and do not correct it, that is a second mistake.", author_fa: "کنفوسیوس", author_en: "Confucius", tag: "Wisdom", featured: false },
+  { fa: "افرادی که فریب خوبی واهی را می‌خورند، به سوی نابودی خود روانه هستند.", en: "Those who are deceived by false good are on the path to their own destruction.", author_fa: "نیکولو ماکیاولی", author_en: "Niccolò Machiavelli", tag: "Strategy", featured: false },
+  { fa: "مردی که نتواند بر خود فرمان براند، برده‌ای ابدی خواهد بود.", en: "A man who cannot command himself will forever be a slave.", author_fa: "فریدریش نیچه", author_en: "Friedrich Nietzsche", tag: "Self-Mastery", featured: false },
+  { fa: "زور زیاد بدون دانش به خودش شکست می‌خورد.", en: "Great strength without knowledge defeats itself.", author_fa: "فرانسیس بیکن", author_en: "Francis Bacon", tag: "Knowledge", featured: false },
+  { fa: "بدترین دشمنی که با او رو به رو می‌شوی خودت هستی.", en: "The worst enemy you will ever face is yourself.", author_fa: "مارکوس اورلیوس", author_en: "Marcus Aurelius", tag: "Stoicism", featured: false },
+  { fa: "مهم‌ترین اصل رشد در تصمیم‌گیری انسان نهفته است.", en: "The most important principle of growth lies in human decision-making.", author_fa: "ویلیام جیمز", author_en: "William James", tag: "Growth", featured: false },
+  { fa: "انسان در مقابل دیگری مانند گرگ است.", en: "Man is a wolf to man.", author_fa: "توماس هابز", author_en: "Thomas Hobbes", tag: "Human Nature", featured: false },
+  { fa: "هیچوقت آنچه سعی در فراموشی آن داریم، فراموش نخواهیم کرد.", en: "We never truly forget what we try most to forget.", author_fa: "سیگموند فروید", author_en: "Sigmund Freud", tag: "Psychology", featured: false },
+  { fa: "در انجام یک کار، اراده‌ای بر نتیجه آن کار نداری.", en: "In the doing of a thing, you have no will over its outcome.", author_fa: "بهاگاواد گیتا", author_en: "Bhagavad Gita", tag: "Philosophy", featured: false },
+  { fa: "اقبال به داد افراد جسور می‌رسد.", en: "Fortune favours the bold.", author_fa: "ویرژیل", author_en: "Virgil", tag: "Courage", featured: false },
+  { fa: "صدمه دیدن بهتر از صدمه رساندن است.", en: "It is better to suffer wrong than to do wrong.", author_fa: "سقراط", author_en: "Socrates", tag: "Ethics", featured: false },
+  { fa: "مردم مسخره‌ترین کارها را انجام می‌دهند تا با خود درونی‌شان رو به رو نشوند.", en: "People will do the most ridiculous things to avoid confronting their inner selves.", author_fa: "کارل یونگ", author_en: "Carl Jung", tag: "Psychology", featured: false },
+  { fa: "آنان که گذشته‌ی خود را به یاد نمی‌آورند، محکوم به تکرار آنند.", en: "Those who cannot remember the past are condemned to repeat it.", author_fa: "جورج سانتایانا", author_en: "George Santayana", tag: "History", featured: false },
+  { fa: "عدالت افراطی همانند ناعدالتی افراطی است.", en: "Extreme justice is extreme injustice.", author_fa: "سیسرون", author_en: "Cicero", tag: "Justice", featured: false },
+  { fa: "من اولین دلیل نتیجه‌گیری‌های ناپسند را جویایی روش درست می‌دانم.", en: "I consider the first cause of undesirable conclusions to be the search for a correct method.", author_fa: "رنه دکارت", author_en: "René Descartes", tag: "Epistemology", featured: false },
+  { fa: "در عاشقی فقط یک قانون وجود دارد: برای آنان که دوستشان دارید، شادی را به ارمغان آورید.", en: "In love, there is only one law: bring joy to those you love.", author_fa: "استاندال", author_en: "Stendhal", tag: "Love", featured: false },
+  { fa: "به جای تلاش در تغییر دادن نظم دنیا، خواسته‌هایت را تغییر بده.", en: "Instead of trying to change the order of the world, change your desires.", author_fa: "مارکوس اورلیوس", author_en: "Marcus Aurelius", tag: "Stoicism", featured: false },
+  { fa: "عشق بهترین آموزگار است.", en: "Love is the greatest teacher.", author_fa: "افلاطون", author_en: "Plato", tag: "Love", featured: false }
+];
 
+// ─── STATE ───────────────────────────────────────────────────────────────────
+let currentLang = 'fa';
+let coteOn = false;
+
+// ─── ICONS ───────────────────────────────────────────────────────────────────
+const ICO_COPY = `<svg viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="3.5" y="3.5" width="8" height="8.5" rx="1" stroke="currentColor" stroke-width="1.2"/>
+  <path d="M1.5 9.5V1.5h8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+</svg>`;
+const ICO_CHECK = `<svg viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <polyline points="2,6.5 5,9.5 11,3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>`;
+
+// ─── LANG ─────────────────────────────────────────────────────────────────────
 function setLang(lang) {
   currentLang = lang;
   document.getElementById('btn-fa').classList.toggle('active', lang === 'fa');
@@ -699,26 +428,86 @@ function setLang(lang) {
   renderQuotes();
 }
 
+// ─── COTE TOGGLE ─────────────────────────────────────────────────────────────
+function toggleCote() {
+  coteOn = !coteOn;
+  document.getElementById('coteFab').classList.toggle('active', coteOn);
+  document.querySelectorAll('.q-cote-badge').forEach(b => b.classList.toggle('visible', coteOn));
+  showToast(coteOn
+    ? (currentLang === 'fa' ? '🎌 منبع انیمه نمایش داده شد' : '🎌 Anime sources revealed')
+    : (currentLang === 'fa' ? 'منبع انیمه پنهان شد' : 'Anime sources hidden')
+  );
+}
+
+// ─── COPY ─────────────────────────────────────────────────────────────────────
+function doCopy(text, btn) {
+  const origHTML = btn.innerHTML;
+  const label = currentLang === 'fa' ? 'کپی شد' : 'Copied';
+  navigator.clipboard.writeText(text).then(() => {
+    btn.innerHTML = ICO_CHECK + label;
+    btn.classList.add('copied');
+    showToast(currentLang === 'fa' ? '✓ متن کپی شد' : '✓ Copied to clipboard');
+    setTimeout(() => { btn.innerHTML = origHTML; btn.classList.remove('copied'); }, 1800);
+  }).catch(() => {
+    // fallback for older browsers
+    const ta = document.createElement('textarea');
+    ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+    btn.innerHTML = ICO_CHECK + label; btn.classList.add('copied');
+    showToast('✓ Copied');
+    setTimeout(() => { btn.innerHTML = origHTML; btn.classList.remove('copied'); }, 1800);
+  });
+}
+
+// ─── TOAST ───────────────────────────────────────────────────────────────────
+let _toastTimer;
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
+}
+
+// ─── RENDER ──────────────────────────────────────────────────────────────────
 function renderQuotes() {
   const grid = document.getElementById('quotes-grid');
   grid.innerHTML = '';
 
-  const total = quotes.length;
   document.getElementById('count-bar').textContent =
-    currentLang === 'fa'
-      ? `${total} نقل قول`
-      : `${total} Quotations`;
+    currentLang === 'fa' ? `${quotes.length} نقل قول` : `${quotes.length} Quotations`;
 
   quotes.forEach((q, i) => {
     const card = document.createElement('div');
     card.className = 'q-card' + (q.featured ? ' featured' : '');
     card.style.animationDelay = `${Math.min(i * 0.05, 1.2)}s`;
 
-    const text   = currentLang === 'fa' ? q.fa : q.en;
-    const author = currentLang === 'fa' ? q.author_fa : q.author_en;
+    const text    = currentLang === 'fa' ? q.fa : q.en;
+    const author  = currentLang === 'fa' ? q.author_fa : q.author_en;
     const textDir = currentLang === 'fa' ? 'rtl' : 'ltr';
 
+    // copy button label = just the current language text
+    const copyLabel = currentLang === 'fa' ? 'کپی' : 'Copy';
+
+    // COTE badge
+    const src = COTE_SOURCES[i] || null;
+    let coteBadgeHTML = '';
+    if (src) {
+      const seasonLabel = currentLang === 'fa'
+        ? `فصل ${src.season} · قسمت ${src.ep}`
+        : `S${src.season} · Ep.${src.ep}`;
+      const tooltipLabel = currentLang === 'fa' ? 'منبع در انیمه' : 'Source in anime';
+      coteBadgeHTML = `
+        <div class="q-cote-badge ${coteOn ? 'visible' : ''}">
+          <span class="cote-dot"></span>
+          ${seasonLabel}
+          <div class="q-cote-tooltip">
+            <div class="q-cote-tooltip-label">${tooltipLabel}</div>
+            ${src.detail}
+          </div>
+        </div>`;
+    }
+
     card.innerHTML = `
+      <button class="q-copy-btn" title="${copyLabel}">${ICO_COPY}${copyLabel}</button>
       <div class="q-mark">"</div>
       <div class="q-num">${String(i + 1).padStart(2, '0')}</div>
       <p class="q-text ${textDir}">${text}</p>
@@ -726,13 +515,22 @@ function renderQuotes() {
         <div class="q-author-dash"></div>
         <span class="q-author-name ${textDir}">${author}</span>
       </div>
-      <span class="q-tag">${q.tag}</span>
+      <div class="q-bottom">
+        <span class="q-tag">${q.tag}</span>
+        ${coteBadgeHTML}
+      </div>
     `;
+
+    // wire up copy button to copy current language text
+    card.querySelector('.q-copy-btn').addEventListener('click', e => {
+      e.stopPropagation();
+      doCopy(text, e.currentTarget);
+    });
+
     grid.appendChild(card);
   });
 }
 
-// Initial render
 renderQuotes();
 </script>
 </body>
