@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WISDOM</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Amiri:wght@400;700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{
+  background:#090806;
+  color:#e8e0d0;
+  font-family:'EB Garamond',Georgia,serif;
+  display:flex;align-items:center;justify-content:center;
+  min-height:100vh;overflow:hidden;
+}
+/* noise */
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
+  opacity:.5;
+}
+/* ambient radial */
+body::after{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse 80% 60% at 50% 50%,rgba(201,168,76,.05),transparent 70%);
+}
+.wrap{
+  position:relative;z-index:1;
+  text-align:center;
+  padding:40px 20px;
+  max-width:700px;
+  width:100%;
+}
+/* ornament */
+.orn{
+  font-size:20px;color:#c9a84c;letter-spacing:14px;
+  opacity:.55;display:block;margin-bottom:28px;
+  animation:fd 1s ease both;
+}
+/* title */
+h1{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(3.5rem,10vw,7rem);
+  font-weight:400;letter-spacing:8px;line-height:1;
+  background:linear-gradient(135deg,#c9a84c 0%,#e8c77a 45%,#c9a84c 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  filter:drop-shadow(0 2px 30px rgba(201,168,76,.2));
+  animation:fd 1s .15s ease both;opacity:0;
+  margin-bottom:14px;
+}
+.tagline{
+  font-size:1rem;color:#a09080;letter-spacing:3px;
+  text-transform:uppercase;
+  animation:fd 1s .3s ease both;opacity:0;
+  margin-bottom:52px;
+}
+/* divider */
+.div-line{
+  display:flex;align-items:center;justify-content:center;
+  gap:16px;margin-bottom:52px;
+  animation:fd 1s .42s ease both;opacity:0;
+}
+.div-line span{width:80px;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,.4))}
+.div-line span:last-child{background:linear-gradient(270deg,transparent,rgba(201,168,76,.4))}
+.div-line em{font-size:.6rem;letter-spacing:4px;text-transform:uppercase;color:#7a6330;font-style:normal}
+/* cards */
+.cards{
+  display:grid;grid-template-columns:1fr 1fr;gap:20px;
+  animation:fd 1s .55s ease both;opacity:0;
+}
+@media(max-width:500px){.cards{grid-template-columns:1fr;max-width:320px;margin:0 auto}}
+.card{
+  position:relative;
+  background:#161310;
+  border:1px solid rgba(201,168,76,.16);
+  border-radius:4px;
+  padding:44px 32px 36px;
+  cursor:pointer;overflow:hidden;
+  text-decoration:none;color:inherit;
+  transition:transform .4s cubic-bezier(.16,.84,.24,1),border-color .35s,box-shadow .35s,background .35s;
+  display:block;
+}
+.card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,#c9a84c,transparent);
+  opacity:0;transition:opacity .35s;
+}
+.card:hover{
+  transform:translateY(-6px);
+  border-color:rgba(201,168,76,.4);
+  box-shadow:0 28px 80px rgba(0,0,0,.7),0 0 60px rgba(201,168,76,.05);
+  background:#1c1915;
+}
+.card:hover::before{opacity:1}
+/* shine sweep */
+.card::after{
+  content:'';position:absolute;top:0;left:-100%;width:50%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(201,168,76,.04),transparent);
+  transition:left .6s ease;
+}
+.card:hover::after{left:200%}
+.card-flag{font-size:2.4rem;margin-bottom:18px;display:block;line-height:1}
+.card-lang{
+  font-family:'Playfair Display',serif;
+  font-size:1.9rem;font-weight:400;
+  color:#e8c77a;letter-spacing:3px;
+  margin-bottom:8px;display:block;
+}
+.card-sub{
+  font-size:.68rem;letter-spacing:2.5px;
+  text-transform:uppercase;color:#7a6330;
+  display:block;margin-bottom:22px;
+}
+.card-preview{
+  font-style:italic;font-size:.95rem;
+  color:#a09080;line-height:1.7;
+  border-top:1px solid rgba(201,168,76,.12);
+  padding-top:18px;
+}
+.card-preview.fa-prev{
+  font-family:'Amiri',serif;font-size:1.05rem;
+  direction:rtl;text-align:right;
+}
+.card-arrow{
+  position:absolute;bottom:20px;right:20px;
+  font-size:.65rem;letter-spacing:2px;
+  text-transform:uppercase;color:#c9a84c;
+  opacity:0;transform:translateX(-8px);
+  transition:opacity .28s,transform .28s;
+}
+.card:hover .card-arrow{opacity:1;transform:translateX(0)}
+/* quote count */
+.qcount{
+  margin-top:32px;
+  font-size:.62rem;letter-spacing:3px;
+  text-transform:uppercase;color:#7a6330;
+  animation:fd 1s .68s ease both;opacity:0;
+}
+.qcount span{color:#c9a84c}
+@keyframes fd{from{opacity:0;transform:translateY(-16px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="orn">✦ ✦ ✦</span>
+  <h1>WISDOM</h1>
+  <p class="tagline">نقل قول های خردمندانه · Timeless Quotations</p>
+  <div class="div-line">
+    <span></span>
+    <em>Choose your language</em>
+    <span></span>
+  </div>
+  <div class="cards">
+    <a class="card" href="wisdom-fa.html">
+      <span class="card-flag">🇮🇷</span>
+      <span class="card-lang">فارسی</span>
+      <span class="card-sub">نسخه فارسی</span>
+      <p class="card-preview fa-prev">جهنم، دیگران‌اند.</p>
+      <span class="card-arrow">ورود ←</span>
+    </a>
+    <a class="card" href="wisdom-en.html">
+      <span class="card-flag">🇬🇧</span>
+      <span class="card-lang">English</span>
+      <span class="card-sub">English Version</span>
+      <p class="card-preview">"Hell is other people."</p>
+      <span class="card-arrow">Enter →</span>
+    </a>
+  </div>
+  <p class="qcount"><span>39</span> Quotes · <span>3</span> Anime Seasons · <span>38</span> Authors</p>
+</div>
+</body>
+</html>
