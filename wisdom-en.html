@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WISDOM — Timeless Quotations</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0907;--bg2:#0e0c09;--card:#161310;--card2:#1c1915;
+  --nav:rgba(10,9,7,.96);
+  --gold:#c9a84c;--goldL:#e8c77a;--goldD:#6e5525;
+  --text:#ede4d2;--textD:#9a8a72;
+  --brd:rgba(201,168,76,.16);--brdS:rgba(201,168,76,.38);
+  --cote:#5aacee;--coteBg:rgba(90,172,238,.07);--coteBrd:rgba(90,172,238,.25);
+  --grn:#64c98a;--grnBg:rgba(100,201,138,.09);
+  --shd:rgba(0,0,0,.7);--shd2:rgba(0,0,0,.3);
+  --T:.4s cubic-bezier(.25,.8,.25,1);--Tf:.22s ease;
+}
+[data-theme=light]{
+  --bg:#f4efe4;--bg2:#ece5d5;--card:#faf6ee;--card2:#f0e8d6;
+  --nav:rgba(244,239,228,.97);
+  --gold:#8a5e10;--goldL:#6b4808;--goldD:#c49a45;
+  --text:#251e12;--textD:#7a6840;
+  --brd:rgba(138,94,16,.18);--brdS:rgba(138,94,16,.4);
+  --cote:#1565a8;--coteBg:rgba(21,101,168,.07);--coteBrd:rgba(21,101,168,.22);
+  --grn:#1e7a42;--grnBg:rgba(30,122,66,.09);
+  --shd:rgba(0,0,0,.14);--shd2:rgba(0,0,0,.06);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'EB Garamond',Georgia,serif;min-height:100vh;overflow-x:hidden;transition:background var(--T),color var(--T)}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");opacity:.5;transition:opacity var(--T)}
+[data-theme=light] body::before{opacity:.15}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--goldD);border-radius:2px}
+
+.back{position:fixed;top:0;right:0;z-index:400;padding:14px 20px;display:flex;align-items:center;gap:8px;font-size:.65rem;letter-spacing:2px;text-transform:uppercase;color:var(--textD);text-decoration:none;transition:color var(--Tf)}
+.back:hover{color:var(--gold)}
+.back svg{width:13px;height:13px}
+
+/* HEADER */
+header{position:relative;text-align:center;padding:88px 20px 68px;border-bottom:1px solid var(--brd);overflow:hidden}
+header::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 55% at 50% 50%,rgba(201,168,76,.055),transparent 70%);pointer-events:none;animation:glowP 6s ease-in-out infinite}
+[data-theme=light] header::after{background:radial-gradient(ellipse 70% 55% at 50% 50%,rgba(138,94,16,.06),transparent 70%)}
+.h-rule{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:220px;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,.5),transparent)}
+.h-orn{display:block;font-size:22px;color:var(--gold);letter-spacing:14px;margin-bottom:26px;opacity:.55;animation:fd 1s ease both}
+h1{font-family:'Playfair Display',serif;font-size:clamp(2.6rem,7vw,5.5rem);font-weight:400;letter-spacing:6px;line-height:1;background:linear-gradient(135deg,#c9a84c,#e8c77a,#c9a84c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 2px 28px rgba(201,168,76,.2));animation:fd 1s .15s ease both;opacity:0}
+[data-theme=light] h1{filter:none}
+.h-sub{margin-top:14px;font-size:1.1rem;color:var(--textD);font-style:italic;letter-spacing:3px;animation:fd 1s .3s ease both;opacity:0}
+.h-deco{display:flex;align-items:center;justify-content:center;gap:18px;margin-top:28px;animation:fd 1s .44s ease both;opacity:0}
+.h-deco-line{flex:1;max-width:110px;height:1px;background:linear-gradient(90deg,transparent,var(--brdS))}
+.h-deco-line:last-child{background:linear-gradient(270deg,transparent,var(--brdS))}
+.h-deco-c{font-size:.62rem;letter-spacing:4px;text-transform:uppercase;color:var(--goldD);white-space:nowrap}
+
+/* SPOTLIGHT */
+.sp-wrap{max-width:800px;margin:46px auto 0;padding:0 24px;animation:fd 1s .56s ease both;opacity:0}
+.sp{position:relative;background:var(--card2);border:1px solid var(--brdS);border-radius:4px;padding:44px 50px 34px;text-align:center;cursor:pointer;overflow:hidden;transition:box-shadow var(--T),transform var(--T),background var(--T)}
+.sp::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent 0%,var(--goldD) 20%,var(--goldL) 50%,var(--goldD) 80%,transparent 100%);animation:shimB 4s ease-in-out infinite}
+.sp:hover{box-shadow:0 20px 70px var(--shd),0 0 60px rgba(201,168,76,.05);transform:translateY(-3px)}
+.sp-lbl{font-size:.6rem;letter-spacing:4px;text-transform:uppercase;color:var(--goldD);margin-bottom:22px;display:flex;align-items:center;justify-content:center;gap:14px}
+.sp-lbl::before,.sp-lbl::after{content:'';flex:1;max-width:90px;height:1px;background:linear-gradient(90deg,transparent,var(--brdS))}
+.sp-lbl::after{background:linear-gradient(270deg,transparent,var(--brdS))}
+.sp-text{font-family:'Playfair Display',serif;font-size:1.55rem;line-height:1.8;color:var(--text);font-style:italic;transition:opacity .38s,transform .38s}
+.sp-text.gone{opacity:0;transform:translateY(10px)}
+.sp-auth{margin-top:22px;display:flex;align-items:center;justify-content:center;gap:14px;transition:opacity .38s}
+.sp-auth.gone{opacity:0}
+.sp-dash{width:28px;height:1px;background:var(--gold)}
+.sp-name{font-size:.8rem;color:var(--gold);letter-spacing:2.5px;text-transform:uppercase}
+.sp-hint{margin-top:16px;font-size:.58rem;letter-spacing:3px;text-transform:uppercase;color:var(--textD);opacity:.4;pointer-events:none}
+.sp-ctr{position:absolute;bottom:13px;right:16px;font-size:.58rem;letter-spacing:2px;color:var(--goldD)}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:300;background:var(--nav);backdrop-filter:blur(24px);border-bottom:1px solid var(--brd);display:flex;align-items:center;justify-content:center;gap:12px;padding:10px 20px;flex-wrap:wrap;animation:fd .8s .7s ease both;opacity:0;transition:background var(--T),border-color var(--T)}
+.nav-ibtn{background:none;border:1px solid var(--brd);color:var(--textD);width:34px;height:34px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all var(--Tf);flex-shrink:0}
+.nav-ibtn:hover{border-color:var(--goldD);color:var(--gold)}
+.nav-ibtn svg{width:14px;height:14px}
+.rnd-btn{background:none;border:1px solid var(--brd);color:var(--textD);font-family:'EB Garamond',serif;font-size:.78rem;letter-spacing:2px;text-transform:uppercase;padding:7px 16px;border-radius:2px;cursor:pointer;display:flex;align-items:center;gap:7px;transition:all var(--Tf)}
+.rnd-btn:hover{border-color:var(--goldD);color:var(--gold)}
+.rnd-btn svg{width:13px;height:13px;transition:transform .5s}
+.rnd-btn:hover svg{transform:rotate(180deg)}
+.nsep{width:1px;height:24px;background:var(--brd)}
+.ico-moon,.ico-sun{transition:opacity .3s}
+[data-theme=light] .ico-moon{display:none}[data-theme=dark] .ico-sun{display:none}
+[data-theme=light] .ico-sun{display:block}[data-theme=dark] .ico-moon{display:block}
+
+/* GRID */
+.ctr-lbl{text-align:center;padding:30px 20px 8px;font-size:.65rem;letter-spacing:4px;text-transform:uppercase;color:var(--goldD)}
+.grid{max-width:1320px;margin:0 auto;padding:16px 22px 160px;display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:20px}
+
+/* CARD */
+.qc{background:var(--card);border:1px solid var(--brd);border-radius:4px;padding:38px 28px 22px;position:relative;overflow:visible;cursor:default;opacity:0;transform:translateY(26px);transition:opacity .6s ease,transform .6s cubic-bezier(.16,.84,.24,1),border-color var(--T),box-shadow var(--T),background var(--T);will-change:transform,opacity}
+.qc.visible{opacity:1;transform:translateY(0)}
+.qc:hover{border-color:var(--brdS);box-shadow:0 26px 80px var(--shd);background:var(--card2)}
+.qc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:0;transition:opacity .35s;border-radius:4px 4px 0 0}
+.qc:hover::before{opacity:1}
+.qc.feat{grid-column:span 2;background:linear-gradient(145deg,var(--card2),var(--bg2));border-color:var(--goldD)}
+.qc.feat .qt{font-size:1.44rem}
+@media(max-width:740px){.qc.feat{grid-column:span 1}.qc.feat .qt{font-size:1.18rem}}
+.qmark{position:absolute;top:8px;right:18px;font-family:'Playfair Display',serif;font-size:7rem;line-height:1;color:var(--gold);opacity:.05;pointer-events:none;user-select:none}
+.qnum{position:absolute;top:14px;left:15px;font-size:.56rem;letter-spacing:3px;color:var(--goldD)}
+.qacts{position:absolute;top:11px;right:11px;display:flex;gap:5px;opacity:0;transition:opacity var(--Tf);z-index:4}
+.qc:hover .qacts{opacity:1}
+.qabtn{background:none;border:1px solid var(--brd);color:var(--textD);border-radius:2px;padding:4px 9px;font-size:.54rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;font-family:'EB Garamond',serif;display:flex;align-items:center;gap:4px;transition:border-color var(--Tf),color var(--Tf),background var(--Tf);white-space:nowrap}
+.qabtn:hover{border-color:var(--goldD);color:var(--gold)}
+.qabtn.ok{border-color:var(--grn);color:var(--grn);background:var(--grnBg)}
+.qabtn svg{width:9px;height:9px;flex-shrink:0}
+.qt{margin-top:16px;font-family:'Playfair Display',serif;font-size:1.2rem;line-height:1.85;color:var(--text);font-style:italic}
+.qa{margin-top:20px;padding-top:13px;border-top:1px solid var(--brd);display:flex;align-items:center;gap:10px}
+.qa-dash{width:18px;height:1px;background:var(--gold);flex-shrink:0}
+.qa-name{font-size:.78rem;color:var(--gold);letter-spacing:2.5px;text-transform:uppercase;font-style:normal}
+.qbot{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:7px;margin-top:11px}
+.qtag{font-size:.58rem;letter-spacing:2px;text-transform:uppercase;padding:3px 9px;border:1px solid var(--brd);color:var(--textD);border-radius:1px}
+
+/* COTE BADGE */
+.cotebadge{display:none;align-items:center;gap:5px;font-size:.56rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--cote);border:1px solid var(--coteBrd);background:var(--coteBg);border-radius:1px;padding:3px 9px;cursor:pointer;white-space:nowrap;position:relative;user-select:none;transition:background var(--Tf)}
+.cotebadge:hover{background:rgba(90,172,238,.14)}
+.cotebadge.vis{display:flex}
+.cdot{width:5px;height:5px;background:var(--cote);border-radius:50%;flex-shrink:0;animation:cdotP 2.6s ease-in-out infinite}
+.cpanel{display:none;position:absolute;bottom:calc(100% + 10px);right:0;min-width:250px;max-width:330px;background:var(--card2);border:1px solid var(--coteBrd);border-radius:3px;padding:14px 16px;z-index:500;box-shadow:0 16px 48px var(--shd);animation:panelP .22s cubic-bezier(.16,.84,.24,1) both}
+.cpanel::after{content:'';position:absolute;top:100%;right:14px;border:6px solid transparent;border-top-color:var(--coteBrd)}
+.cpanel.open{display:block}
+.cp-hdr{display:flex;align-items:center;gap:7px;margin-bottom:9px;padding-bottom:9px;border-bottom:1px solid var(--coteBrd)}
+.cp-hdr svg{width:13px;height:13px;color:var(--cote);flex-shrink:0}
+.cp-title{font-size:.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--cote);opacity:.65}
+.cp-body{font-style:italic;font-size:.9rem;line-height:1.6;color:var(--cote);opacity:.88}
+.cp-ep{display:inline-block;margin-top:8px;font-size:.56rem;letter-spacing:2px;text-transform:uppercase;padding:2px 8px;background:rgba(90,172,238,.1);border:1px solid var(--coteBrd);border-radius:1px;font-style:normal;opacity:.8}
+
+/* FAB */
+.fabs{position:fixed;bottom:28px;right:26px;z-index:600;display:flex;flex-direction:column;gap:10px;align-items:flex-end;animation:fabR .9s 1.4s ease both;opacity:0}
+.fab{display:flex;align-items:center;gap:9px;background:var(--card2);border:1px solid var(--brd);border-radius:50px;padding:10px 18px;cursor:pointer;user-select:none;box-shadow:0 4px 24px var(--shd);transition:border-color var(--T),background var(--T),box-shadow var(--T),transform var(--Tf)}
+.fab:hover{transform:translateY(-2px);box-shadow:0 8px 32px var(--shd)}
+.fab.on{border-color:var(--cote);background:var(--coteBg);box-shadow:0 4px 28px rgba(90,172,238,.2)}
+.fab-ico{font-size:1rem;line-height:1}
+.fab-lbl{font-size:.66rem;letter-spacing:2px;text-transform:uppercase;color:var(--textD);white-space:nowrap;transition:color var(--T)}
+.fab.on .fab-lbl{color:var(--cote)}
+.fab-chk{width:14px;height:14px;border:1.5px solid var(--goldD);border-radius:2px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .25s}
+.fab.on .fab-chk{background:var(--cote);border-color:var(--cote)}
+.fab-chk svg{display:none;width:8px;height:8px}
+.fab.on .fab-chk svg{display:block}
+
+/* MODAL */
+#modal{position:fixed;inset:0;z-index:900;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .32s}
+#modal.open{opacity:1;pointer-events:all}
+.mbk{position:absolute;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(10px);cursor:pointer}
+.mbox{position:relative;background:var(--card2);border:1px solid var(--brdS);border-radius:5px;max-width:520px;width:100%;box-shadow:0 40px 100px var(--shd);overflow:hidden;animation:mIn .36s cubic-bezier(.16,.84,.24,1) both}
+.mbox-top{background:linear-gradient(135deg,var(--card2),var(--bg2));padding:28px 32px 22px;border-bottom:1px solid var(--brd);position:relative}
+.mbox-top::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),var(--goldL),var(--gold),transparent)}
+.m-close{position:absolute;top:14px;right:16px;background:none;border:none;color:var(--textD);font-size:1.1rem;cursor:pointer;line-height:1;padding:5px 8px;border-radius:2px;transition:color var(--Tf)}
+.m-close:hover{color:var(--text)}
+.m-lbl{font-size:.58rem;letter-spacing:4px;text-transform:uppercase;color:var(--goldD);margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.m-lbl::before{content:'✦';color:var(--gold);font-size:.7rem}
+.m-quote{font-family:'Playfair Display',serif;font-size:1.2rem;line-height:1.78;color:var(--text);font-style:italic}
+.m-author{margin-top:14px;font-size:.8rem;color:var(--gold);letter-spacing:2.5px;text-transform:uppercase;display:flex;align-items:center;gap:9px}
+.m-author::before{content:'';width:18px;height:1px;background:var(--gold);flex-shrink:0}
+.mbox-btns{padding:20px 32px;display:flex;gap:10px;flex-wrap:wrap;background:var(--card)}
+.mbtn{flex:1;min-width:120px;background:none;border:1px solid var(--brd);color:var(--textD);font-size:.7rem;letter-spacing:2px;text-transform:uppercase;padding:9px 14px;border-radius:2px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:all var(--Tf)}
+.mbtn:hover{border-color:var(--goldD);color:var(--gold)}
+.mbtn.pri{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.05)}
+.mbtn.pri:hover{background:rgba(201,168,76,.12)}
+.mbtn.ok{border-color:var(--grn);color:var(--grn);background:var(--grnBg)}
+.mbtn svg{width:11px;height:11px;flex-shrink:0}
+
+#toast{position:fixed;bottom:94px;left:50%;transform:translateX(-50%) translateY(14px);background:var(--card2);color:var(--grn);border:1px solid rgba(100,201,138,.3);padding:8px 22px;border-radius:2px;font-size:.7rem;letter-spacing:2px;text-transform:uppercase;opacity:0;pointer-events:none;transition:opacity .24s,transform .24s;z-index:9999;white-space:nowrap;box-shadow:0 4px 20px var(--shd2)}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+footer{text-align:center;padding:38px 20px;border-top:1px solid var(--brd);color:var(--textD);font-size:.75rem;letter-spacing:4px}
+.f-orn{color:var(--goldD);font-size:.9rem;letter-spacing:10px;opacity:.4;margin-bottom:14px}
+
+@keyframes fd{from{opacity:0;transform:translateY(-16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fabR{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes panelP{from{opacity:0;transform:translateY(8px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes mIn{from{opacity:0;transform:scale(.92) translateY(18px)}to{opacity:1;transform:scale(1) translateY(0)}}
+@keyframes glowP{0%,100%{opacity:.7}50%{opacity:1}}
+@keyframes shimB{0%,100%{opacity:.6}50%{opacity:1}}
+@keyframes cdotP{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.7)}}
+</style>
+</head>
+<body>
+
+<a class="back" href="wisdom.html">
+  <svg viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><polyline points="5,2 10,6.5 5,11"/><line x1="10" y1="6.5" x2="2" y2="6.5"/></svg>
+  Back
+</a>
+
+<header>
+  <span class="h-orn">✦ ✦ ✦</span>
+  <h1>WISDOM</h1>
+  <p class="h-sub">Timeless Quotations</p>
+  <div class="h-deco">
+    <div class="h-deco-line"></div>
+    <span class="h-deco-c">39 Quotes · 3 Anime Seasons · 38 Authors</span>
+    <div class="h-deco-line"></div>
+  </div>
+  <div class="h-rule"></div>
+</header>
+
+<div class="sp-wrap">
+  <div class="sp" id="sp" onclick="nextRnd()">
+    <div class="sp-lbl"><span>Random Quote</span></div>
+    <p class="sp-text" id="sptext"></p>
+    <div class="sp-auth" id="spauth">
+      <div class="sp-dash"></div><span class="sp-name" id="spname"></span><div class="sp-dash"></div>
+    </div>
+    <p class="sp-hint">Click to shuffle</p>
+    <span class="sp-ctr" id="spctr"></span>
+  </div>
+</div>
+
+<nav class="nav">
+  <button class="rnd-btn" onclick="nextRnd()">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="14,3 11,3 5,13 2,13"/><polyline points="14,13 11,13"/><polyline points="11,1 14,3 11,5"/><polyline points="5,11 2,13 5,15"/></svg>
+    Random Quote
+  </button>
+  <div class="nsep"></div>
+  <button class="nav-ibtn" onclick="toggleTheme()">
+    <svg class="ico-moon" viewBox="0 0 16 16" fill="currentColor"><path d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278z"/></svg>
+    <svg class="ico-sun" viewBox="0 0 16 16" fill="currentColor"><path d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707z"/></svg>
+  </button>
+</nav>
+
+<p class="ctr-lbl">39 Quotations</p>
+<main class="grid" id="grid"></main>
+<footer><p class="f-orn">— ✦ —</p><p>Snow Breaker Collection · 2024</p></footer>
+
+<div class="fabs">
+  <div class="fab" id="coteFab" onclick="toggleCote()">
+    <span class="fab-ico">🎌</span>
+    <span class="fab-lbl">Classroom of the Elite</span>
+    <div class="fab-chk"><svg viewBox="0 0 8 8" fill="none"><polyline points="1,4 3,6.5 7,1.5" stroke="white" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  </div>
+</div>
+
+<div id="modal">
+  <div class="mbk" onclick="closeModal()"></div>
+  <div class="mbox">
+    <div class="mbox-top">
+      <button class="m-close" onclick="closeModal()">✕</button>
+      <div class="m-lbl">Share this Quote</div>
+      <p class="m-quote" id="mq"></p>
+      <div class="m-author" id="ma"></div>
+    </div>
+    <div class="mbox-btns">
+      <button class="mbtn pri" id="mb1" onclick="mCopy()">
+        <svg viewBox="0 0 13 13" fill="none"><rect x="3.5" y="3.5" width="8" height="8.5" rx="1" stroke="currentColor" stroke-width="1.2"/><path d="M1.5 9.5V1.5h8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        Copy Text
+      </button>
+      <button class="mbtn" id="mb2" onclick="mCopyFull()">
+        <svg viewBox="0 0 13 13" fill="none"><rect x="3.5" y="3.5" width="8" height="8.5" rx="1" stroke="currentColor" stroke-width="1.2"/><path d="M1.5 9.5V1.5h8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        Copy with Author
+      </button>
+    </div>
+  </div>
+</div>
+<div id="toast"></div>
+
+<script>
+const COTE=[
+  {s:1,ep:1,who:"Ayanokoji Kiyotaka",scene:"Opening monologue — first day of school"},
+  {s:1,ep:2,who:"Ayanokoji Kiyotaka",scene:"Observing classmates in the cafeteria"},
+  {s:1,ep:3,who:"Ayanokoji Kiyotaka",scene:"Inner monologue during exam prep"},
+  {s:1,ep:4,who:"Ayanokoji Kiyotaka",scene:"Reflection after the midterm results"},
+  {s:1,ep:5,who:"Horikita Suzune",   scene:"Study group confrontation"},
+  {s:1,ep:6,who:"Ayanokoji Kiyotaka",scene:"Midterm strategy session"},
+  {s:1,ep:7,who:"Ayanokoji Kiyotaka",scene:"Uninhabited island survival arc"},
+  {s:1,ep:8,who:"Ayanokoji Kiyotaka",scene:"Survival test — night watch monologue"},
+  {s:1,ep:9,who:"Ayanokoji Kiyotaka",scene:"Confrontation with Ryuuen's informant"},
+  {s:1,ep:10,who:"Ayanokoji Kiyotaka",scene:"Class D — secret strategy revealed"},
+  {s:1,ep:11,who:"Ayanokoji Kiyotaka",scene:"Before the final island verdict"},
+  {s:1,ep:12,who:"Ayanokoji Kiyotaka",scene:"Season 1 finale — closing monologue"},
+  {s:2,ep:1,who:"Ayanokoji Kiyotaka",scene:"New semester — opening reflection"},
+  {s:2,ep:2,who:"Ayanokoji Kiyotaka",scene:"Paper Shuffle special exam arc"},
+  {s:2,ep:3,who:"Ayanokoji Kiyotaka",scene:"Chess analogy — class rivalry"},
+  {s:2,ep:4,who:"Ayanokoji Kiyotaka",scene:"Inner monologue — true intentions"},
+  {s:2,ep:5,who:"Ayanokoji Kiyotaka",scene:"Sports festival — pre-event analysis"},
+  {s:2,ep:6,who:"Ryuuen Kakeru",     scene:"Confrontation with Class D leadership"},
+  {s:2,ep:7,who:"Ayanokoji Kiyotaka",scene:"Aftermath of the Ryuuen showdown"},
+  {s:2,ep:8,who:"Ayanokoji Kiyotaka",scene:"Late-night inner monologue"},
+  {s:2,ep:9,who:"Ayanokoji Kiyotaka",scene:"End-of-term exam — calculated risk"},
+  {s:2,ep:10,who:"Ayanokoji Kiyotaka",scene:"Strategy session with Horikita"},
+  {s:2,ep:11,who:"Ayanokoji Kiyotaka",scene:"Class point battle — turning point"},
+  {s:2,ep:12,who:"Ayanokoji Kiyotaka",scene:"Pre-finale reflection monologue"},
+  {s:2,ep:13,who:"Ayanokoji Kiyotaka",scene:"Season 2 finale — true nature revealed"},
+  {s:3,ep:1,who:"Ayanokoji Kiyotaka",scene:"Second year begins — new challenges"},
+  {s:3,ep:2,who:"Ayanokoji Kiyotaka",scene:"New class dynamics — observing rivals"},
+  {s:3,ep:3,who:"Ayanokoji Kiyotaka",scene:"Group exam arc — hidden coordination"},
+  {s:3,ep:4,who:"Ayanokoji Kiyotaka",scene:"Rivals converge — three-way standoff"},
+  {s:3,ep:5,who:"Ayanokoji Kiyotaka",scene:"Solo training exam — isolation strategy"},
+  {s:3,ep:6,who:"Ayanokoji Kiyotaka",scene:"Nagumo vs Ayanokoji — power play"},
+  {s:3,ep:7,who:"Ayanokoji Kiyotaka",scene:"Unexpected alliance — calculated trust"},
+  {s:3,ep:8,who:"Ayanokoji Kiyotaka",scene:"Betrayal arc — reading intent"},
+  {s:3,ep:9,who:"Horikita Suzune",   scene:"Leadership test — growth moment"},
+  {s:3,ep:10,who:"Ayanokoji Kiyotaka",scene:"High-stakes exam — final pieces fall"},
+  {s:3,ep:11,who:"Ayanokoji Kiyotaka",scene:"Endgame positioning — silent chess"},
+  {s:3,ep:12,who:"Ayanokoji Kiyotaka",scene:"Pre-finale monologue — ultimate truth"},
+  {s:3,ep:13,who:"Ayanokoji Kiyotaka",scene:"Season 3 finale — final declaration"},
+];
+const Q=[
+  {en:"What is bad? Whatever is born of weakness.",aE:"Friedrich Nietzsche",tag:"Ethics",feat:false},
+  {en:"Hiding one's talents and skills requires a great deal of talent and skill.",aE:"La Rochefoucauld",tag:"Human Nature",feat:false},
+  {en:"Man is an animal that makes bargains: no other animal does this — no dog exchanges bones with another.",aE:"Adam Smith",tag:"Economics",feat:true},
+  {en:"We should not be upset that others hide the truth from us, when we so often hide it from ourselves.",aE:"La Rochefoucauld",tag:"Self-Deception",feat:false},
+  {en:"Hell is other people.",aE:"Jean-Paul Sartre",tag:"Existentialism",feat:false},
+  {en:"There are two kinds of lies: one about something already done, the other about a duty in the future.",aE:"Antoine de Bertin",tag:"Morality",feat:false},
+  {en:"Nothing is worse than a foolish friend; a wise enemy is preferable.",aE:"Jean de La Fontaine",tag:"Friendship",feat:false},
+  {en:"Abandon all hope, ye who enter here.",aE:"Dante Alighieri",tag:"Literature",feat:false},
+  {en:"Man is condemned to be free.",aE:"Jean-Paul Sartre",tag:"Existentialism",feat:false},
+  {en:"Every man carries within himself the most dangerous traitor of all.",aE:"Søren Kierkegaard",tag:"Psychology",feat:false},
+  {en:"What people call fate is mostly their own stupidity.",aE:"Arthur Schopenhauer",tag:"Fate",feat:false},
+  {en:"Genius is only one step above madness.",aE:"Arthur Schopenhauer",tag:"Genius",feat:false},
+  {en:"Remember: in difficult times, always keep your composure.",aE:"Marcus Aurelius",tag:"Stoicism",feat:false},
+  {en:"Truly, every human behaviour has a purpose.",aE:"Aristotle",tag:"Behaviour",feat:false},
+  {en:"There are two main human sins from which all others stem: impatience and laziness.",aE:"Franz Kafka",tag:"Human Nature",feat:true},
+  {en:"Great souls are equally capable of the most virtuous and the most wicked deeds.",aE:"La Rochefoucauld",tag:"Duality",feat:false},
+  {en:"The conditions must be prepared.",aE:"Niccolò Machiavelli",tag:"Strategy",feat:false},
+  {en:"Every failure is a step toward victory.",aE:"Thomas Carlyle",tag:"Resilience",feat:false},
+  {en:"Misery is the first road toward truth.",aE:"Antoine de Rivarol",tag:"Truth",feat:false},
+  {en:"To doubt everything or to believe everything are equally convenient solutions; both spare us from the necessity of thinking.",aE:"Henri Poincaré",tag:"Critical Thinking",feat:true},
+  {en:"The wound has settled on his heart.",aE:"Hafez",tag:"Poetry",feat:false},
+  {en:"If you have made a mistake and do not correct it, that is a second mistake.",aE:"Confucius",tag:"Wisdom",feat:false},
+  {en:"Those who are deceived by false good are on the path to their own destruction.",aE:"Niccolò Machiavelli",tag:"Strategy",feat:false},
+  {en:"A man who cannot command himself will forever be a slave.",aE:"Friedrich Nietzsche",tag:"Self-Mastery",feat:false},
+  {en:"Great strength without knowledge defeats itself.",aE:"Francis Bacon",tag:"Knowledge",feat:false},
+  {en:"The worst enemy you will ever face is yourself.",aE:"Marcus Aurelius",tag:"Stoicism",feat:false},
+  {en:"The most important principle of growth lies in human decision-making.",aE:"William James",tag:"Growth",feat:false},
+  {en:"Man is a wolf to man.",aE:"Thomas Hobbes",tag:"Human Nature",feat:false},
+  {en:"We never truly forget what we try most to forget.",aE:"Sigmund Freud",tag:"Psychology",feat:false},
+  {en:"In the doing of a thing, you have no will over its outcome.",aE:"Bhagavad Gita",tag:"Philosophy",feat:false},
+  {en:"Fortune favours the bold.",aE:"Virgil",tag:"Courage",feat:false},
+  {en:"It is better to suffer wrong than to do wrong.",aE:"Socrates",tag:"Ethics",feat:false},
+  {en:"People will do the most ridiculous things to avoid confronting their inner selves.",aE:"Carl Jung",tag:"Psychology",feat:false},
+  {en:"Those who cannot remember the past are condemned to repeat it.",aE:"George Santayana",tag:"History",feat:false},
+  {en:"Extreme justice is extreme injustice.",aE:"Cicero",tag:"Justice",feat:false},
+  {en:"I consider the first cause of undesirable conclusions to be the search for a correct method.",aE:"René Descartes",tag:"Epistemology",feat:false},
+  {en:"In love, there is only one law: bring joy to those you love.",aE:"Stendhal",tag:"Love",feat:false},
+  {en:"Instead of trying to change the order of the world, change your desires.",aE:"Marcus Aurelius",tag:"Stoicism",feat:false},
+  {en:"Love is the greatest teacher.",aE:"Plato",tag:"Love",feat:false},
+];
+
+let coteOn=false,spIdx=Math.floor(Math.random()*Q.length),shareIdx=0,openPanel=null,isDark=true;
+const I={
+  copy:`<svg viewBox="0 0 13 13" fill="none"><rect x="3.5" y="3.5" width="8" height="8.5" rx="1" stroke="currentColor" stroke-width="1.2"/><path d="M1.5 9.5V1.5h8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>`,
+  check:`<svg viewBox="0 0 13 13" fill="none"><polyline points="2,6.5 5,9.5 11,3.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  share:`<svg viewBox="0 0 13 13" fill="none"><circle cx="10.5" cy="2.5" r="1.4" stroke="currentColor" stroke-width="1.1"/><circle cx="10.5" cy="10.5" r="1.4" stroke="currentColor" stroke-width="1.1"/><circle cx="2.5" cy="6.5" r="1.4" stroke="currentColor" stroke-width="1.1"/><line x1="3.9" y1="7.1" x2="9.1" y2="9.8" stroke="currentColor" stroke-width="1.1"/><line x1="3.9" y1="5.9" x2="9.1" y2="3.2" stroke="currentColor" stroke-width="1.1"/></svg>`,
+  cote:`<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="2" y="3" width="12" height="10" rx="1.5"/><line x1="5" y1="7" x2="11" y2="7"/><line x1="5" y1="10" x2="9" y2="10"/></svg>`,
+};
+let _tt;
+function toast(m){const e=document.getElementById('toast');e.textContent=m;e.classList.add('show');clearTimeout(_tt);_tt=setTimeout(()=>e.classList.remove('show'),2300)}
+function copyText(t,btn,lbl){const orig=btn.innerHTML;const ok=()=>{btn.innerHTML=I.check+lbl;btn.classList.add('ok');toast('✓ Copied');setTimeout(()=>{btn.innerHTML=orig;btn.classList.remove('ok')},1900)};navigator.clipboard?navigator.clipboard.writeText(t).then(ok).catch(()=>{fc(t);ok()}):(fc(t),ok())}
+function fc(t){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');document.body.removeChild(a)}
+function toggleTheme(){isDark=!isDark;document.documentElement.setAttribute('data-theme',isDark?'dark':'light');toast(isDark?'🌙 Dark mode':'☀️ Light mode')}
+function toggleCote(){coteOn=!coteOn;document.getElementById('coteFab').classList.toggle('on',coteOn);document.querySelectorAll('.cotebadge').forEach(b=>b.classList.toggle('vis',coteOn));if(!coteOn&&openPanel){openPanel.classList.remove('open');openPanel=null}toast(coteOn?'🎌 Anime sources ON':'Sources hidden')}
+document.addEventListener('click',e=>{if(openPanel&&!e.target.closest('.cotebadge')){openPanel.classList.remove('open');openPanel=null}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal();if(openPanel){openPanel.classList.remove('open');openPanel=null}}});
+function renderSp(anim){
+  const q=Q[spIdx];
+  const el=document.getElementById('sptext'),ae=document.getElementById('spauth');
+  if(anim){el.classList.add('gone');ae.classList.add('gone');setTimeout(()=>{el.textContent=q.en;document.getElementById('spname').textContent=q.aE;el.classList.remove('gone');ae.classList.remove('gone')},380)}
+  else{el.textContent=q.en;document.getElementById('spname').textContent=q.aE}
+  document.getElementById('spctr').textContent=`${String(spIdx+1).padStart(2,'0')} / ${String(Q.length).padStart(2,'0')}`;
+}
+function nextRnd(){let n;do{n=Math.floor(Math.random()*Q.length)}while(n===spIdx&&Q.length>1);spIdx=n;renderSp(true);const cards=document.querySelectorAll('.qc');const c=cards[spIdx];if(c){setTimeout(()=>{c.scrollIntoView({behavior:'smooth',block:'center'});c.style.boxShadow='0 0 0 2px var(--brdS)';setTimeout(()=>c.style.boxShadow='',1200)},400)}}
+function openModal(i){shareIdx=i;const q=Q[i];document.getElementById('mq').textContent=q.en;document.getElementById('ma').textContent=q.aE;document.getElementById('modal').classList.add('open')}
+function closeModal(){document.getElementById('modal').classList.remove('open')}
+function mCopy(){const q=Q[shareIdx];const btn=document.getElementById('mb1'),orig=btn.innerHTML;const ok=()=>{btn.innerHTML=I.check+'Copied!';btn.classList.add('ok');toast('✓ Copied');setTimeout(()=>{btn.innerHTML=orig;btn.classList.remove('ok')},1900)};navigator.clipboard?navigator.clipboard.writeText(`"${q.en}"`).then(ok).catch(()=>{fc(`"${q.en}"`);ok()}):(fc(`"${q.en}"`),ok())}
+function mCopyFull(){const q=Q[shareIdx];const t=`"${q.en}"\n— ${q.aE}`;const btn=document.getElementById('mb2'),orig=btn.innerHTML;const ok=()=>{btn.innerHTML=I.check+'Copied!';btn.classList.add('ok');toast('✓ Copied');setTimeout(()=>{btn.innerHTML=orig;btn.classList.remove('ok')},1900)};navigator.clipboard?navigator.clipboard.writeText(t).then(ok).catch(()=>{fc(t);ok()}):(fc(t),ok())}
+const io=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){const el=e.target;setTimeout(()=>el.classList.add('visible'),parseInt(el.dataset.idx||'0')%8*65);io.unobserve(el)}})},{threshold:.08,rootMargin:'0px 0px -40px 0px'});
+function addTilt(card){card.addEventListener('mousemove',e=>{const r=card.getBoundingClientRect();const x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;card.style.transform=`translateY(-5px) rotateX(${-y*4}deg) rotateY(${x*4}deg)`});card.addEventListener('mouseleave',()=>{card.style.transform=''})}
+function renderGrid(){
+  const grid=document.getElementById('grid');grid.innerHTML='';openPanel=null;
+  Q.forEach((q,i)=>{
+    const c=COTE[i];
+    const card=document.createElement('div');
+    card.className='qc'+(q.feat?' feat':'');card.dataset.idx=String(i);
+    const slabel=`S${c.s} · Ep.${c.ep}`;
+    const epFull=`Season ${c.s} — Episode ${c.ep}`;
+    card.innerHTML=`
+      <div class="qacts">
+        <button class="qabtn cbtn">${I.copy}Copy</button>
+        <button class="qabtn sbtn">${I.share}Share</button>
+      </div>
+      <div class="qmark">"</div>
+      <div class="qnum">${String(i+1).padStart(2,'0')}</div>
+      <p class="qt">${q.en}</p>
+      <div class="qa"><div class="qa-dash"></div><span class="qa-name">${q.aE}</span></div>
+      <div class="qbot">
+        <span class="qtag">${q.tag}</span>
+        <div class="cotebadge ${coteOn?'vis':''}">
+          <span class="cdot"></span>${slabel}
+          <div class="cpanel">
+            <div class="cp-hdr">${I.cote}<span class="cp-title">Source in Classroom of the Elite</span></div>
+            <div class="cp-body">${c.scene}<br><em>${c.who}</em></div>
+            <span class="cp-ep">${epFull}</span>
+          </div>
+        </div>
+      </div>`;
+    card.querySelector('.cbtn').addEventListener('click',e=>{e.stopPropagation();copyText(q.en,e.currentTarget,'Copy')});
+    card.querySelector('.sbtn').addEventListener('click',e=>{e.stopPropagation();openModal(i)});
+    const badge=card.querySelector('.cotebadge'),panel=card.querySelector('.cpanel');
+    badge.addEventListener('click',e=>{e.stopPropagation();if(!coteOn)return;if(openPanel&&openPanel!==panel)openPanel.classList.remove('open');panel.classList.toggle('open');openPanel=panel.classList.contains('open')?panel:null});
+    addTilt(card);grid.appendChild(card);io.observe(card);
+  });
+}
+renderSp(false);renderGrid();
+</script>
+</body>
+</html>
