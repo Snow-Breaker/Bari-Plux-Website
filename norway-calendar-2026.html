@@ -2,229 +2,225 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Norsk Kalender 2026</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Norsk Kalender · Norwegian Calendar</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-/* ════════════════════════════════
-   TOKENS
-════════════════════════════════ */
+/* ═══ TOKENS ═══ */
 :root{
-  --bg:#05070f;
-  --s1:#090c18;
-  --s2:#0d1120;
-  --s3:#111626;
-  --s4:#15202e;
-  --s5:#1a2a3c;
-  --bord:rgba(255,255,255,0.07);
-  --bord2:rgba(255,255,255,0.04);
-  --t1:#d8e4f8;--t2:#8096b8;--t3:#485a78;--t4:#283450;
-  --red:#d93a2e;--red2:#f04a3a;--rbg:rgba(217,58,46,.09);--rrim:rgba(217,58,46,.22);
-  --vio:#7460cc;--vio2:#9880e8;--vbg:rgba(116,96,204,.08);--vrim:rgba(116,96,204,.2);
-  --grn:#18967a;--grn2:#26c49c;--gbg:rgba(24,150,122,.08);--grim:rgba(24,150,122,.2);
-  --gld:#c88820;--gld2:#e8ae40;--gldbg:rgba(200,136,32,.08);--gldrim:rgba(200,136,32,.22);
-  --moon:#b89840;--moonbg:rgba(184,152,64,.08);
-  --blue:#2468d4;--blue2:#4888f0;--bbg:rgba(36,104,212,.1);--brim:rgba(36,104,212,.32);
+  --bg:#04060e;--s1:#080b16;--s2:#0b0f1e;--s3:#0f1424;--s4:#13192c;--s5:#182034;
+  --bord:rgba(255,255,255,.072);--bord2:rgba(255,255,255,.04);
+  --t1:#cdd8f0;--t2:#7a90b4;--t3:#435470;--t4:#253048;
+  --red:#d93a2e;--red2:#f55a4a;--rbg:rgba(217,58,46,.1);--rrim:rgba(217,58,46,.25);
+  --vio:#6b58c8;--vio2:#9080e4;--vbg:rgba(107,88,200,.1);--vrim:rgba(107,88,200,.22);
+  --grn:#178a68;--grn2:#24bb96;--gbg:rgba(23,138,104,.1);--grim:rgba(23,138,104,.22);
+  --gld:#b87c18;--gld2:#e0a830;--gldbg:rgba(184,124,24,.1);--gldrim:rgba(184,124,24,.24);
+  --moon:#a88830;--moonbg:rgba(168,136,48,.1);
+  --blu:#1f5ec8;--blu2:#4a8ef5;--bbg:rgba(31,94,200,.12);--brim:rgba(31,94,200,.35);
   --f-d:'Playfair Display',serif;
   --f-u:'Plus Jakarta Sans',sans-serif;
   --f-m:'JetBrains Mono',monospace;
   --f-fa:'Vazirmatn',sans-serif;
+  --r:14px;--rsm:9px;--rxs:5px;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html{scroll-behavior:smooth;}
-body{background:var(--bg);color:var(--t1);font-family:var(--f-u);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+html{scroll-behavior:smooth;height:100%;}
+body{background:var(--bg);color:var(--t1);font-family:var(--f-u);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;position:relative;}
 body.fa{font-family:var(--f-fa);direction:rtl;}
 
-/* ════════════════════════════════
-   AURORA BACKGROUND
-════════════════════════════════ */
-#aurora-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;}
+/* ═══ AURORA ═══ */
+#cvs{position:fixed;inset:0;z-index:0;pointer-events:none;display:block;}
 
-/* ════════════════════════════════
-   LAYOUT
-════════════════════════════════ */
-.page{position:relative;z-index:1;max-width:1480px;margin:0 auto;padding:0 28px 100px;}
+/* ═══ LAYOUT ═══ */
+.wrap{position:relative;z-index:1;max-width:1500px;margin:0 auto;padding:0 20px 80px;}
 
-/* ════════════════════════════════
-   NAVBAR
-════════════════════════════════ */
+/* ═══ NAVBAR ═══ */
 .nav{
   position:sticky;top:0;z-index:200;
   display:flex;align-items:center;justify-content:space-between;
-  padding:14px 28px;margin:0 -28px;
-  background:rgba(5,7,15,.85);backdrop-filter:blur(24px);
-  border-bottom:1px solid var(--bord);gap:10px;flex-wrap:wrap;
+  padding:12px 20px;margin:0 -20px;
+  background:rgba(4,6,14,.92);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);
+  border-bottom:1px solid var(--bord);gap:8px;flex-wrap:wrap;
 }
-.nav-brand{display:flex;align-items:center;gap:10px;}
-.nav-flag{font-size:22px;line-height:1;}
-.nav-txt{}
-.nav-title{font-size:12px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:var(--t2);}
-.nav-sub{font-family:var(--f-m);font-size:9.5px;color:var(--t4);letter-spacing:1px;margin-top:1px;}
-body.fa .nav-title,.nav-sub{font-family:var(--f-fa);}
-.nav-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.nav-L{display:flex;align-items:center;gap:10px;}
+.nav-flag{font-size:20px;line-height:1;flex-shrink:0;}
+.nav-tt{font-size:11px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:var(--t2);}
+.nav-sb{font-family:var(--f-m);font-size:9px;color:var(--t4);letter-spacing:1px;margin-top:1px;}
+body.fa .nav-tt,.nav-sb{font-family:var(--f-fa);}
+.nav-R{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
 
-/* pill-group */
+/* pill group */
 .pg{display:flex;background:var(--s2);border:1px solid var(--bord);border-radius:50px;padding:3px;gap:1px;}
-.pgb{border:none;background:transparent;color:var(--t3);font-family:var(--f-u);font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:5px 12px;border-radius:50px;cursor:pointer;transition:all .2s;}
-.pgb.on{background:linear-gradient(135deg,#1a3370,#22185a);color:#a8ceff;box-shadow:0 2px 10px rgba(30,80,200,.28);}
+.pgb{border:none;background:transparent;color:var(--t3);font-family:var(--f-u);font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:5px 11px;border-radius:50px;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.pgb.on{background:linear-gradient(135deg,#162866,#1e1258);color:#9dc0ff;box-shadow:0 2px 10px rgba(26,68,180,.3);}
 body.fa .pgb{font-family:var(--f-fa);}
 
-/* export button */
-.expbtn{display:flex;align-items:center;gap:6px;border:1px solid var(--gldrim);background:var(--gldbg);color:var(--gld2);font-family:var(--f-u);font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;padding:7px 14px;border-radius:50px;cursor:pointer;transition:all .2s;}
-.expbtn:hover{background:rgba(200,136,32,.18);box-shadow:0 0 22px rgba(200,136,32,.22);}
-.expbtn svg{width:12px;height:12px;flex-shrink:0;}
+/* year selector */
+.yr-sel{display:flex;background:var(--s2);border:1px solid var(--bord);border-radius:50px;padding:3px;gap:1px;}
+.yrb{border:none;background:transparent;color:var(--t3);font-family:var(--f-m);font-size:10px;font-weight:600;padding:5px 11px;border-radius:50px;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.yrb.on{background:var(--s4);color:var(--gld2);border:1px solid var(--gldrim);}
+
+/* export */
+.expbtn{display:flex;align-items:center;gap:5px;border:1px solid var(--gldrim);background:var(--gldbg);color:var(--gld2);font-family:var(--f-u);font-size:9.5px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;padding:7px 13px;border-radius:50px;cursor:pointer;transition:all .2s;flex-shrink:0;}
+.expbtn:hover{background:rgba(184,124,24,.2);box-shadow:0 0 20px rgba(184,124,24,.2);}
+.expbtn svg{width:11px;height:11px;flex-shrink:0;}
 body.fa .expbtn{font-family:var(--f-fa);}
 
-/* ════════════════════════════════
-   HERO
-════════════════════════════════ */
-.hero{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;padding:56px 0 44px;border-bottom:1px solid var(--bord);margin-bottom:0;}
-.hero-ey{font-family:var(--f-m);font-size:11px;color:var(--gld2);letter-spacing:2.5px;text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:10px;}
-.hero-ey::before{content:'';width:28px;height:1px;background:linear-gradient(90deg,var(--gld2),transparent);}
+/* ═══ TIMER WIDGET ═══ */
+.timer-bar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:11px 20px;
+  background:linear-gradient(90deg,rgba(31,94,200,.07),rgba(107,88,200,.07));
+  border-bottom:1px solid var(--bord);
+  flex-wrap:wrap;gap:8px;
+}
+.timer-L{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+.timer-clock{font-family:var(--f-m);font-size:22px;font-weight:500;color:var(--t1);letter-spacing:2px;line-height:1;}
+.timer-date{font-family:var(--f-m);font-size:10px;color:var(--t3);letter-spacing:.5px;}
+body.fa .timer-date{font-family:var(--f-fa);letter-spacing:0;}
+.timer-tz{display:flex;gap:5px;flex-wrap:wrap;}
+.tz-badge{font-family:var(--f-m);font-size:9px;padding:2px 8px;border-radius:50px;border:1px solid var(--bord);color:var(--t3);}
+.tz-badge.active{border-color:var(--brim);color:var(--blu2);background:var(--bbg);}
+.timer-R{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.next-evt{
+  font-size:11px;color:var(--t2);
+  padding:5px 10px;background:var(--s2);border:1px solid var(--bord);border-radius:6px;
+}
+body.fa .next-evt{font-family:var(--f-fa);}
+.next-evt strong{color:var(--gld2);}
+.countdown{font-family:var(--f-m);font-size:10px;color:var(--grn2);background:var(--gbg);border:1px solid var(--grim);padding:4px 10px;border-radius:6px;white-space:nowrap;}
+
+/* ═══ HERO ═══ */
+.hero{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;padding:48px 0 38px;border-bottom:1px solid var(--bord);}
+.hero-ey{font-family:var(--f-m);font-size:10.5px;color:var(--gld2);letter-spacing:2.5px;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:9px;}
+.hero-ey::before{content:'';width:26px;height:1px;background:linear-gradient(90deg,var(--gld2),transparent);flex-shrink:0;}
 body.fa .hero-ey::before{display:none;}
-body.fa .hero-ey::after{content:'';width:28px;height:1px;background:linear-gradient(270deg,var(--gld2),transparent);}
-.hero-h1{font-family:var(--f-d);font-size:clamp(50px,6.5vw,92px);font-weight:400;line-height:.9;letter-spacing:-2.5px;margin-bottom:18px;}
-.hero-h1 em{font-style:italic;background:linear-gradient(120deg,#f0c060 0%,#fde48c 45%,#c88820 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-body.fa .hero-h1{font-family:var(--f-fa);letter-spacing:0;line-height:1.1;}
-.hero-desc{font-size:13.5px;color:var(--t3);line-height:1.8;max-width:440px;font-weight:400;}
+body.fa .hero-ey::after{content:'';width:26px;height:1px;background:linear-gradient(270deg,var(--gld2),transparent);flex-shrink:0;}
+.hero-h1{font-family:var(--f-d);font-size:clamp(44px,6vw,86px);font-weight:400;line-height:.9;letter-spacing:-2px;margin-bottom:16px;}
+.hero-h1 em{font-style:italic;background:linear-gradient(115deg,#f0c060 0%,#fde488 42%,#c88820 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+body.fa .hero-h1{font-family:var(--f-fa);font-size:clamp(38px,5.5vw,78px);letter-spacing:0;line-height:1.05;}
+.hero-desc{font-size:13px;color:var(--t2);line-height:1.8;max-width:440px;font-weight:400;}
 body.fa .hero-desc{font-family:var(--f-fa);}
-.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
-.stc{background:var(--s2);border:1px solid var(--bord);border-radius:12px;padding:16px 18px;transition:border-color .2s,transform .2s;}
+.hero-R{display:flex;flex-direction:column;gap:9px;}
+.stats-g{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
+.stc{background:var(--s2);border:1px solid var(--bord);border-radius:12px;padding:15px 16px;transition:all .2s;}
 .stc:hover{border-color:rgba(255,255,255,.1);transform:translateY(-1px);}
-.stc-n{font-family:var(--f-d);font-size:38px;font-weight:700;letter-spacing:-2px;line-height:1;margin-bottom:3px;}
-.stc-n.r{color:var(--red2)}.stc-n.v{color:var(--vio2)}.stc-n.b{color:var(--blue2)}.stc-n.g{color:var(--grn2)}
+.stc-n{font-family:var(--f-d);font-size:36px;font-weight:700;letter-spacing:-1.5px;line-height:1;margin-bottom:3px;}
+.stc-n.r{color:var(--red2)}.stc-n.v{color:var(--vio2)}.stc-n.b{color:var(--blu2)}.stc-n.g{color:var(--grn2)}
 .stc-l{font-size:10px;color:var(--t3);letter-spacing:.3px;}
 body.fa .stc-l{font-family:var(--f-fa);}
-.qf-row{display:flex;gap:0;background:var(--s2);border:1px solid var(--bord);border-radius:12px;overflow:hidden;margin-top:9px;}
-.qfi{flex:1;padding:10px 13px;border-right:1px solid var(--bord);}
+.qf-row{display:flex;background:var(--s2);border:1px solid var(--bord);border-radius:12px;overflow:hidden;}
+.qfi{flex:1;padding:9px 12px;border-right:1px solid var(--bord);}
 .qfi:last-child{border-right:none;}
 body.fa .qfi{border-right:none;border-left:1px solid var(--bord);}
 body.fa .qfi:last-child{border-left:none;}
-.qfi-k{font-family:var(--f-m);font-size:8.5px;color:var(--t4);letter-spacing:1px;text-transform:uppercase;margin-bottom:3px;}
+.qfi-k{font-family:var(--f-m);font-size:8px;color:var(--t4);letter-spacing:1px;text-transform:uppercase;margin-bottom:3px;}
 .qfi-v{font-size:11px;font-weight:600;color:var(--t1);}
 body.fa .qfi-v{font-family:var(--f-fa);}
 
-/* ════════════════════════════════
-   SECTION LABEL
-════════════════════════════════ */
-.sec{margin:24px 0 12px;}
-.sec-lbl{display:flex;align-items:center;gap:10px;font-family:var(--f-m);font-size:9.5px;color:var(--t3);letter-spacing:2px;text-transform:uppercase;margin-bottom:13px;}
-.sec-lbl .dot{width:6px;height:6px;border-radius:50%;background:var(--grn2);animation:blink 2.2s infinite;flex-shrink:0;}
+/* ═══ UPCOMING / YM / LEGEND ═══ */
+.sec-lbl{display:flex;align-items:center;gap:9px;font-family:var(--f-m);font-size:9px;color:var(--t3);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;}
+.sec-lbl .dot{width:5px;height:5px;border-radius:50%;background:var(--grn2);animation:blink 2s infinite;flex-shrink:0;}
 .sec-lbl .rule{flex:1;height:1px;background:linear-gradient(90deg,var(--bord),transparent);}
 body.fa .sec-lbl .rule{background:linear-gradient(270deg,var(--bord),transparent);}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+.sec{margin:20px 0 0;}
 
-/* ════════════════════════════════
-   UPCOMING EVENTS
-════════════════════════════════ */
-.ev-row{display:flex;gap:9px;overflow-x:auto;padding-bottom:4px;}
+.ev-row{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;}
 .ev-row::-webkit-scrollbar{height:3px;}
 .ev-row::-webkit-scrollbar-thumb{background:var(--s5);border-radius:2px;}
-.evc{flex-shrink:0;min-width:170px;max-width:188px;background:var(--s2);border:1px solid var(--bord);border-radius:9px;padding:13px 15px;position:relative;overflow:hidden;transition:border-color .18s,transform .15s;}
-.evc::before{content:'';position:absolute;top:0;left:0;width:2.5px;height:100%;}
+.evc{flex-shrink:0;min-width:162px;max-width:180px;background:var(--s2);border:1px solid var(--bord);border-radius:9px;padding:12px 14px;position:relative;overflow:hidden;transition:transform .15s,border-color .18s;}
+.evc::before{content:'';position:absolute;top:0;left:0;width:2px;height:100%;}
 body.fa .evc::before{left:auto;right:0;}
 .evc.r::before{background:var(--red2)}.evc.g::before{background:var(--grn2)}.evc.p::before{background:var(--gld2)}.evc.m::before{background:var(--moon)}
 .evc:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.1);}
-.evc-dt{font-family:var(--f-m);font-size:9px;color:var(--t3);margin-bottom:5px;}
-.evc-nm{font-size:12px;font-weight:600;color:var(--t1);line-height:1.35;}
+.evc-dt{font-family:var(--f-m);font-size:8.5px;color:var(--t3);margin-bottom:4px;}
+.evc-nm{font-size:11.5px;font-weight:600;color:var(--t1);line-height:1.3;}
 body.fa .evc-nm{font-family:var(--f-fa);}
-.evc-dl{font-size:10px;font-weight:600;margin-top:5px;}
+.evc-dl{font-size:9.5px;font-weight:600;margin-top:5px;}
 .evc-dl.r{color:var(--red2)}.evc-dl.g{color:var(--grn2)}.evc-dl.p{color:var(--gld2)}.evc-dl.m{color:var(--moon)}.evc-dl.past{color:var(--t4)}.evc-dl.now{color:var(--grn2)}
 
-/* ════════════════════════════════
-   YEAR MAP
-════════════════════════════════ */
-.ym{background:var(--s1);border:1px solid var(--bord);border-radius:13px;padding:16px 20px;margin-top:14px;overflow-x:auto;}
-.ym-inner{display:flex;gap:6px;min-width:max-content;}
-.ymc{display:flex;flex-direction:column;align-items:center;gap:4px;padding:7px 9px;border-radius:8px;border:1px solid transparent;cursor:pointer;transition:all .18s;}
+/* year map */
+.ym{background:var(--s1);border:1px solid var(--bord);border-radius:14px;padding:14px 18px;margin-top:12px;overflow-x:auto;}
+.ym-inner{display:flex;gap:5px;min-width:max-content;}
+.ymc{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 8px;border-radius:7px;border:1px solid transparent;cursor:pointer;transition:all .17s;}
 .ymc:hover{background:var(--s3);}
 .ymc.on{background:var(--s3);border-color:var(--bord2);}
-.ymc-n{font-family:var(--f-m);font-size:8px;color:var(--t4);letter-spacing:.8px;text-transform:uppercase;text-align:center;}
-.ymc-g{display:grid;grid-template-columns:repeat(7,7px);gap:1.5px;}
-.yd{width:7px;height:7px;border-radius:1.5px;background:rgba(255,255,255,.03);}
-.yd.h{background:rgba(217,58,46,.55)}.yd.w{background:rgba(116,96,204,.28)}.yd.i{background:rgba(24,150,122,.5)}.yd.p{background:rgba(200,136,32,.55)}.yd.m{background:rgba(184,152,64,.4)}.yd.t{background:var(--blue2);outline:1.5px solid var(--blue2)}.yd.e{background:transparent}
+.ymc-n{font-family:var(--f-m);font-size:7.5px;color:var(--t4);letter-spacing:.8px;text-transform:uppercase;text-align:center;}
+.ymc-g{display:grid;grid-template-columns:repeat(7,6px);gap:1px;}
+.yd{width:6px;height:6px;border-radius:1px;background:rgba(255,255,255,.03);}
+.yd.h{background:rgba(217,58,46,.55)}.yd.w{background:rgba(107,88,200,.28)}.yd.i{background:rgba(23,138,104,.5)}.yd.p{background:rgba(184,124,24,.55)}.yd.m{background:rgba(168,136,48,.4)}.yd.t{background:var(--blu2);box-shadow:0 0 3px var(--blu2)}.yd.e{background:transparent}
 
-/* ════════════════════════════════
-   LEGEND
-════════════════════════════════ */
-.legend{display:flex;flex-wrap:wrap;align-items:center;gap:5px 16px;padding:12px 16px;background:var(--s1);border:1px solid var(--bord);border-radius:13px;margin-top:12px;}
-.lgi{display:flex;align-items:center;gap:7px;font-size:10.5px;color:var(--t3);font-weight:500;}
-.lgd{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
-.lgd.r{background:var(--red2);box-shadow:0 0 6px rgba(240,74,58,.4)}.lgd.v{background:var(--vio2);box-shadow:0 0 6px rgba(152,128,232,.4)}.lgd.g{background:var(--grn2);box-shadow:0 0 6px rgba(38,196,156,.4)}.lgd.p{background:var(--gld2);box-shadow:0 0 6px rgba(232,174,64,.4)}.lgd.b{background:var(--blue2)}.lgd.m{background:var(--moon)}
-.lgsep{width:1px;height:13px;background:var(--bord);}
+/* legend */
+.legend{display:flex;flex-wrap:wrap;align-items:center;gap:5px 14px;padding:11px 15px;background:var(--s1);border:1px solid var(--bord);border-radius:12px;margin-top:10px;}
+.lgi{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--t2);font-weight:500;}
+.lgd{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.lgd.r{background:var(--red2)}.lgd.v{background:var(--vio2)}.lgd.g{background:var(--grn2)}.lgd.p{background:var(--gld2)}.lgd.b{background:var(--blu2)}.lgd.m{background:var(--moon)}
+.lgsep{width:1px;height:12px;background:var(--bord);}
 
-/* ════════════════════════════════
-   TOOLBAR
-════════════════════════════════ */
-.toolbar{margin-top:16px;display:flex;gap:9px;align-items:center;flex-wrap:wrap;}
-.srch{position:relative;flex:1;min-width:180px;max-width:300px;}
-.srch svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:13px;height:13px;color:var(--t3);pointer-events:none;}
-body.fa .srch svg{left:auto;right:11px;}
-.srch-in{width:100%;background:var(--s2);border:1px solid var(--bord);border-radius:50px;color:var(--t1);font-family:var(--f-u);font-size:12px;padding:8px 14px 8px 32px;outline:none;transition:border-color .2s;}
-body.fa .srch-in{font-family:var(--f-fa);padding:8px 32px 8px 14px;}
+/* ═══ TOOLBAR ═══ */
+.toolbar{margin-top:14px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.srch{position:relative;flex:1;min-width:160px;max-width:280px;}
+.srch svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:12px;height:12px;color:var(--t3);pointer-events:none;}
+body.fa .srch svg{left:auto;right:10px;}
+.srch-in{width:100%;background:var(--s2);border:1px solid var(--bord);border-radius:50px;color:var(--t1);font-family:var(--f-u);font-size:12px;padding:7px 13px 7px 30px;outline:none;transition:border-color .2s;}
+body.fa .srch-in{font-family:var(--f-fa);padding:7px 30px 7px 13px;}
 .srch-in::placeholder{color:var(--t4);}
-.srch-in:focus{border-color:rgba(36,104,212,.32);}
+.srch-in:focus{border-color:rgba(31,94,200,.35);}
 .chips{display:flex;gap:5px;flex-wrap:wrap;}
-.chip{border:1px solid var(--bord);background:var(--s2);color:var(--t3);font-family:var(--f-u);font-size:10.5px;font-weight:600;padding:5px 12px;border-radius:50px;cursor:pointer;transition:all .18s;white-space:nowrap;}
+.chip{border:1px solid var(--bord);background:var(--s2);color:var(--t2);font-family:var(--f-u);font-size:10px;font-weight:600;padding:5px 11px;border-radius:50px;cursor:pointer;transition:all .17s;white-space:nowrap;}
 body.fa .chip{font-family:var(--f-fa);}
 .chip.on.all{background:var(--s4);border-color:var(--bord2);color:var(--t1);}
 .chip.on.r{background:var(--rbg);border-color:var(--rrim);color:var(--red2);}
 .chip.on.v{background:var(--vbg);border-color:var(--vrim);color:var(--vio2);}
 .chip.on.g{background:var(--gbg);border-color:var(--grim);color:var(--grn2);}
 .chip.on.p{background:var(--gldbg);border-color:var(--gldrim);color:var(--gld2);}
-.chip.on.m{background:var(--moonbg);border-color:rgba(184,152,64,.25);color:var(--moon);}
+.chip.on.m{background:var(--moonbg);border-color:rgba(168,136,48,.25);color:var(--moon);}
 
-/* ════════════════════════════════
-   CALENDAR — 3 cols
-════════════════════════════════ */
-#grid-all{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px;}
-@media(max-width:1000px){#grid-all{grid-template-columns:repeat(2,1fr);}}
-@media(max-width:600px){#grid-all{grid-template-columns:1fr;}}
+/* ═══ CALENDAR GRID — 3 cols ═══ */
+#grid-all{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px;}
 
-.mc{background:var(--s1);border:1px solid var(--bord);border-radius:13px;overflow:hidden;transition:border-color .2s,box-shadow .2s,transform .2s;animation:sup .4s both;}
-.mc:hover{border-color:rgba(255,255,255,.1);box-shadow:0 10px 40px rgba(0,0,0,.45);transform:translateY(-2px);}
-@keyframes sup{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+.mc{background:var(--s1);border:1px solid var(--bord);border-radius:14px;overflow:visible;transition:border-color .2s,box-shadow .2s,transform .2s;animation:fup .4s both;}
+.mc:hover{border-color:rgba(255,255,255,.1);box-shadow:0 8px 36px rgba(0,0,0,.4);transform:translateY(-2px);}
+@keyframes fup{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
 .mc:nth-child(1){animation-delay:.04s}.mc:nth-child(2){animation-delay:.07s}.mc:nth-child(3){animation-delay:.1s}
 .mc:nth-child(4){animation-delay:.13s}.mc:nth-child(5){animation-delay:.16s}.mc:nth-child(6){animation-delay:.19s}
 .mc:nth-child(7){animation-delay:.22s}.mc:nth-child(8){animation-delay:.25s}.mc:nth-child(9){animation-delay:.28s}
 .mc:nth-child(10){animation-delay:.31s}.mc:nth-child(11){animation-delay:.34s}.mc:nth-child(12){animation-delay:.37s}
 
 /* month head */
-.mc-hd{padding:14px 15px 10px;background:linear-gradient(150deg,var(--s2) 0%,var(--s3) 100%);border-bottom:1px solid var(--bord);display:flex;justify-content:space-between;align-items:flex-end;position:relative;overflow:hidden;}
-.mc-hd::after{content:'';position:absolute;bottom:-18px;right:-8px;width:70px;height:70px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.015),transparent 70%);pointer-events:none;}
-.mc-bign{position:absolute;right:8px;top:0;font-family:var(--f-d);font-size:64px;font-weight:900;color:rgba(255,255,255,.026);letter-spacing:-4px;line-height:1;user-select:none;pointer-events:none;}
-body.fa .mc-bign{right:auto;left:8px;}
-.mc-mn{font-family:var(--f-d);font-size:18px;font-weight:600;letter-spacing:-.2px;line-height:1;}
-body.fa .mc-mn{font-family:var(--f-fa);font-size:16px;}
-.mc-ms{font-family:var(--f-m);font-size:8.5px;color:var(--t4);margin-top:3px;letter-spacing:.5px;}
-.mc-ec{font-family:var(--f-m);font-size:8.5px;padding:2px 7px;border-radius:50px;border:1px solid var(--bord2);color:var(--t4);background:rgba(255,255,255,.018);}
+.mc-hd{padding:13px 14px 9px;background:linear-gradient(148deg,var(--s2) 0%,var(--s3) 100%);border-bottom:1px solid var(--bord);border-radius:14px 14px 0 0;display:flex;justify-content:space-between;align-items:flex-end;position:relative;overflow:hidden;}
+.mc-big{position:absolute;right:7px;top:0;font-family:var(--f-d);font-size:58px;font-weight:900;color:rgba(255,255,255,.024);letter-spacing:-3px;line-height:1;user-select:none;pointer-events:none;}
+body.fa .mc-big{right:auto;left:7px;}
+.mc-mn{font-family:var(--f-d);font-size:17px;font-weight:600;letter-spacing:-.2px;line-height:1;}
+body.fa .mc-mn{font-family:var(--f-fa);font-size:15px;}
+.mc-ms{font-family:var(--f-m);font-size:8px;color:var(--t4);margin-top:3px;letter-spacing:.5px;}
+.mc-ec{font-family:var(--f-m);font-size:8px;padding:2px 6px;border-radius:50px;border:1px solid var(--bord2);color:var(--t3);background:rgba(255,255,255,.016);}
 
 /* pills */
-.mc-pills{display:flex;flex-wrap:wrap;gap:3px;padding:7px 11px;border-bottom:1px solid var(--bord);min-height:27px;align-items:center;}
-.mcp{font-size:8px;font-weight:700;padding:2px 6px;border-radius:50px;letter-spacing:.2px;white-space:nowrap;}
+.mc-pills{display:flex;flex-wrap:wrap;gap:2px;padding:6px 11px;border-bottom:1px solid var(--bord);min-height:25px;align-items:center;}
+.mcp{font-size:7.5px;font-weight:700;padding:1.5px 5px;border-radius:50px;white-space:nowrap;}
 .mcp.r{background:var(--rbg);color:var(--red2);border:1px solid var(--rrim);}
 .mcp.g{background:var(--gbg);color:var(--grn2);border:1px solid var(--grim);}
 .mcp.p{background:var(--gldbg);color:var(--gld2);border:1px solid var(--gldrim);}
 
 /* day names */
-.mc-dn{display:grid;grid-template-columns:repeat(7,1fr);padding:6px 10px 2px;gap:1px;}
-.dnh{text-align:center;font-family:var(--f-m);font-size:7.5px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--t4);padding:2px 0;}
-.dnh.we{color:rgba(152,128,232,.5);}
+.mc-dn{display:grid;grid-template-columns:repeat(7,1fr);padding:5px 9px 2px;gap:1px;}
+.dnh{text-align:center;font-family:var(--f-m);font-size:7px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--t4);padding:2px 0;}
+.dnh.we{color:rgba(144,128,228,.55);}
 
-/* days */
-.mc-dg{display:grid;grid-template-columns:repeat(7,1fr);padding:2px 10px 12px;gap:2px;}
+/* days container — clip so overflow doesn't break layout */
+.mc-dg-wrap{overflow:hidden;border-radius:0 0 14px 14px;}
+.mc-dg{display:grid;grid-template-columns:repeat(7,1fr);padding:2px 9px 11px;gap:2px;}
 
-/* ════════════════════════════════
-   DAY CELL
-════════════════════════════════ */
-.dc{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:5px;cursor:pointer;position:relative;transition:all .12s;min-height:28px;}
-.dc:hover:not(.dc-e){background:rgba(255,255,255,.046);}
-.dc-e{pointer-events:none;}
-.dcn{font-size:11px;font-weight:500;line-height:1;position:relative;z-index:1;}
-.dcm{font-size:6px;margin-top:1px;line-height:1;}
-/* multi-event indicator dots */
-.dc-dots{display:flex;gap:1.5px;margin-top:1px;z-index:1;position:relative;}
+/* ═══ DAY CELL ═══ */
+.dc{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:5px;cursor:pointer;position:relative;transition:background .12s;min-height:26px;}
+.dc:hover:not(.dc-e){background:rgba(255,255,255,.05);}
+.dc-e{pointer-events:none;cursor:default;}
+.dcn{font-size:10.5px;font-weight:500;line-height:1;position:relative;z-index:1;color:var(--t1);}
+.dcm{font-size:6px;margin-top:.5px;line-height:1;}
+.dc-dots{display:flex;gap:1px;margin-top:1px;}
 .dc-dot{width:3px;height:3px;border-radius:50%;}
 .dc-dot.r{background:var(--red2)}.dc-dot.g{background:var(--grn2)}.dc-dot.p{background:var(--gld2)}.dc-dot.m{background:var(--moon)}
 
@@ -234,283 +230,237 @@ body.fa .mc-mn{font-family:var(--f-fa);font-size:16px;}
 .dc.isl{background:var(--gbg);}.dc.isl .dcn{color:var(--grn2);font-weight:700;}
 .dc.pers{background:var(--gldbg);}.dc.pers .dcn{color:var(--gld2);font-weight:700;}
 .dc.multi{background:linear-gradient(135deg,var(--rbg),var(--gldbg));}.dc.multi .dcn{color:var(--gld2);font-weight:700;}
-.dc.moon-solo .dcn{color:var(--moon);}
-.dc.tod{background:var(--bbg);outline:1.5px solid var(--brim);}.dc.tod .dcn{color:#68aaff;font-weight:700;}
+.dc.ms{}.dc.ms .dcn{color:var(--moon);}
+.dc.tod{background:var(--bbg);outline:1.5px solid rgba(31,94,200,.42);}.dc.tod .dcn{color:var(--blu2);font-weight:700;}
 
-/* ════════════════════════════════
-   TOOLTIP — fixed overflow
-════════════════════════════════ */
-.dc-tip-wrap{
-  position:fixed; /* fixed so never clipped */
-  z-index:9000;
+/* ═══ TOOLTIP — fixed to viewport ═══ */
+#tipbox{
+  position:fixed;z-index:9999;
   pointer-events:none;
-  opacity:0;
-  transition:opacity .15s,transform .15s;
-  transform:translateY(5px);
-  max-width:240px;
-  min-width:170px;
+  opacity:0;transition:opacity .14s;
+  max-width:260px;min-width:170px;
 }
-.dc-tip-wrap.show{opacity:1;transform:translateY(0);}
-.dc-tip-inner{
-  background:#060c1e;border:1px solid rgba(255,255,255,.12);
-  border-radius:10px;padding:11px 14px;
-  box-shadow:0 20px 60px rgba(0,0,0,.88);
+#tipbox.vis{opacity:1;}
+.tb-inner{
+  background:#050912;
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:11px;padding:12px 15px;
+  box-shadow:0 20px 64px rgba(0,0,0,.9),0 0 0 1px rgba(255,255,255,.04);
 }
-.dc-tip-inner::after{content:'';position:absolute;left:50%;transform:translateX(-50%);border:5px solid transparent;}
-.tip-up .dc-tip-inner::after{top:100%;border-top-color:#060c1e;}
-.tip-down .dc-tip-inner::after{bottom:100%;border-bottom-color:#060c1e;}
-.tip-evt{margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.07);}
-.tip-evt:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none;}
-.tip-h{font-size:12px;font-weight:700;line-height:1.3;margin-bottom:3px;}
-body.fa .tip-h{font-family:var(--f-fa);}
-.tip-d{font-size:10px;color:var(--t2);line-height:1.55;}
-body.fa .tip-d{font-family:var(--f-fa);font-size:11px;}
-.tip-dt{font-family:var(--f-m);font-size:8.5px;color:var(--t3);margin-top:4px;}
+.tb-arrow{
+  position:absolute;left:50%;transform:translateX(-50%);
+  width:0;height:0;
+}
+.tip-up .tb-arrow{top:100%;border-left:6px solid transparent;border-right:6px solid transparent;border-top:7px solid #050912;}
+.tip-dn .tb-arrow{bottom:100%;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:7px solid #050912;}
+.tip-evt{padding-bottom:9px;margin-bottom:9px;border-bottom:1px solid rgba(255,255,255,.07);}
+.tip-evt:last-child{padding-bottom:0;margin-bottom:0;border-bottom:none;}
+.tip-ttl{font-size:12px;font-weight:700;line-height:1.3;margin-bottom:3px;}
+body.fa .tip-ttl{font-family:var(--f-fa);}
+.tip-desc{font-size:10px;color:rgba(170,194,240,.75);line-height:1.6;}
+body.fa .tip-desc{font-family:var(--f-fa);font-size:11px;}
+.tip-date{font-family:var(--f-m);font-size:8.5px;color:var(--t3);margin-top:5px;}
 
-/* ════════════════════════════════
-   SINGLE MONTH VIEW
-════════════════════════════════ */
-#grid-single{display:none;margin-top:18px;}
+/* ═══ SINGLE MONTH ═══ */
+#grid-single{display:none;margin-top:16px;}
 #grid-single.show{display:block;}
-#grid-all.hidden{display:none;}
-.sv-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:16px;}
-.sv-nb{width:40px;height:40px;border-radius:50%;border:1px solid var(--bord);background:var(--s2);color:var(--t2);cursor:pointer;transition:all .18s;display:flex;align-items:center;justify-content:center;}
+#grid-all.hide{display:none;}
+.sv-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;gap:14px;}
+.sv-nb{width:38px;height:38px;border-radius:50%;border:1px solid var(--bord);background:var(--s2);color:var(--t2);cursor:pointer;transition:all .18s;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .sv-nb:hover{background:var(--s3);color:var(--t1);}
-.sv-nb svg{width:14px;height:14px;}
-.sv-ttl{font-family:var(--f-d);font-size:36px;font-weight:400;letter-spacing:-1px;text-align:center;}
+.sv-nb svg{width:13px;height:13px;}
+.sv-ttl{font-family:var(--f-d);font-size:32px;font-weight:400;letter-spacing:-1px;text-align:center;line-height:1;}
 .sv-ttl em{font-style:italic;color:var(--gld2);}
 body.fa .sv-ttl{font-family:var(--f-fa);letter-spacing:0;}
-.sv-card{background:var(--s1);border:1px solid var(--bord);border-radius:13px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.5);}
-.sv-dn{display:grid;grid-template-columns:repeat(7,1fr);background:var(--s2);border-bottom:1px solid var(--bord);padding:11px 20px 7px;gap:3px;}
-.sv-dnc{text-align:center;font-family:var(--f-m);font-size:10px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--t3);padding:3px 0;}
-.sv-dnc.we{color:rgba(152,128,232,.55);}
-.sv-dg{display:grid;grid-template-columns:repeat(7,1fr);padding:12px 20px 22px;gap:5px;}
-.sdc{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:10px;cursor:pointer;position:relative;min-height:54px;transition:all .15s;}
+.sv-card{background:var(--s1);border:1px solid var(--bord);border-radius:14px;overflow:hidden;box-shadow:0 18px 56px rgba(0,0,0,.48);}
+.sv-dn{display:grid;grid-template-columns:repeat(7,1fr);background:var(--s2);border-bottom:1px solid var(--bord);padding:10px 18px 6px;gap:2px;}
+.sv-dnc{text-align:center;font-family:var(--f-m);font-size:10px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--t3);padding:2px 0;}
+.sv-dnc.we{color:rgba(144,128,228,.5);}
+.sv-dg{display:grid;grid-template-columns:repeat(7,1fr);padding:10px 18px 20px;gap:4px;}
+.sdc{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:10px;cursor:pointer;position:relative;min-height:50px;transition:background .14s;}
 .sdc:hover:not(.sdc-e){background:rgba(255,255,255,.04);}
-.sdc-e{pointer-events:none;}
-.sdc-n{font-size:17px;font-weight:500;line-height:1;}
-.sdc-m{font-size:11px;margin-top:2px;}
-.sdc-s{font-size:8px;color:var(--t3);margin-top:1px;line-height:1.2;letter-spacing:.1px;max-width:92%;text-align:center;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
+.sdc-e{pointer-events:none;cursor:default;}
+.sdc-n{font-size:16px;font-weight:500;line-height:1;color:var(--t1);}
+.sdc-m{font-size:10px;margin-top:2px;}
+.sdc-s{font-size:8px;color:var(--t2);margin-top:1px;line-height:1.3;max-width:90%;text-align:center;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
 body.fa .sdc-s{font-family:var(--f-fa);}
 .sdc.we{background:var(--vbg);}.sdc.we .sdc-n{color:var(--vio2);}
 .sdc.hol{background:var(--rbg);outline:1px solid var(--rrim);}.sdc.hol .sdc-n{color:var(--red2);font-weight:700;}
 .sdc.isl{background:var(--gbg);outline:1px solid var(--grim);}.sdc.isl .sdc-n{color:var(--grn2);font-weight:700;}
 .sdc.pers{background:var(--gldbg);outline:1px solid var(--gldrim);}.sdc.pers .sdc-n{color:var(--gld2);font-weight:700;}
 .sdc.multi{background:linear-gradient(135deg,var(--rbg),var(--gldbg));outline:1px solid var(--gldrim);}.sdc.multi .sdc-n{color:var(--gld2);font-weight:700;}
-.sdc.tod{background:var(--bbg);outline:2px solid var(--brim);}.sdc.tod .sdc-n{color:#68aaff;font-weight:700;}
+.sdc.tod{background:var(--bbg);outline:2px solid rgba(31,94,200,.42);}.sdc.tod .sdc-n{color:var(--blu2);font-weight:700;}
 
-/* ════════════════════════════════
-   INFO CARDS
-════════════════════════════════ */
-.inf-wrap{margin-top:40px;}
-.inf-hd{display:flex;align-items:center;gap:14px;margin-bottom:18px;}
-.inf-h2{font-family:var(--f-d);font-size:26px;font-weight:600;letter-spacing:-.3px;white-space:nowrap;}
-body.fa .inf-h2{font-family:var(--f-fa);font-size:21px;}
+/* ═══ INFO CARDS ═══ */
+.inf-wrap{margin-top:36px;}
+.inf-hd{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.inf-h2{font-family:var(--f-d);font-size:24px;font-weight:600;letter-spacing:-.3px;white-space:nowrap;}
+body.fa .inf-h2{font-family:var(--f-fa);font-size:20px;}
 .inf-rule{flex:1;height:1px;background:linear-gradient(90deg,var(--bord),transparent);}
 body.fa .inf-rule{background:linear-gradient(270deg,var(--bord),transparent);}
-.hol-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(295px,1fr));gap:9px;}
-
-.hc{background:var(--s1);border:1px solid var(--bord);border-radius:9px;padding:14px 16px;display:flex;gap:13px;align-items:flex-start;cursor:default;transition:all .18s;position:relative;overflow:hidden;}
-.hc::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.014),transparent 60%);pointer-events:none;border-radius:9px;}
+.hol-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(288px,1fr));gap:9px;}
+.hc{background:var(--s1);border:1px solid var(--bord);border-radius:9px;padding:13px 15px;display:flex;gap:12px;align-items:flex-start;transition:all .17s;}
 .hc:hover{border-color:rgba(255,255,255,.1);}
 body:not(.fa) .hc:hover{transform:translateX(2px);}
 body.fa .hc:hover{transform:translateX(-2px);}
-.hcc{flex-shrink:0;width:50px;border-radius:7px;padding:7px 5px;text-align:center;}
+.hcc{flex-shrink:0;width:48px;border-radius:7px;padding:6px 4px;text-align:center;}
 .hcc.n{background:var(--rbg);border:1px solid var(--rrim);}
 .hcc.i{background:var(--gbg);border:1px solid var(--grim);}
 .hcc.p{background:var(--gldbg);border:1px solid var(--gldrim);}
-.hcc-d{font-family:var(--f-d);font-size:21px;font-weight:700;line-height:1;}
+.hcc-d{font-family:var(--f-d);font-size:20px;font-weight:700;line-height:1;}
 .hcc.n .hcc-d{color:var(--red2)}.hcc.i .hcc-d{color:var(--grn2)}.hcc.p .hcc-d{color:var(--gld2)}
-.hcc-m{font-family:var(--f-m);font-size:8.5px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;}
+.hcc-m{font-family:var(--f-m);font-size:8px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;}
 .hcc-dw{font-family:var(--f-m);font-size:7.5px;color:var(--t4);margin-top:1px;}
-.hcb{}
-.hcb-nm{font-size:12.5px;font-weight:700;color:var(--t1);line-height:1.3;}
+.hcb-nm{font-size:12px;font-weight:700;color:var(--t1);line-height:1.3;}
 body.fa .hcb-nm{font-family:var(--f-fa);}
 .hcb-alt{font-size:10px;color:var(--t3);margin-top:1px;font-style:italic;}
 .hcb-ds{font-size:10.5px;color:var(--t2);margin-top:5px;line-height:1.6;}
 body.fa .hcb-ds{font-family:var(--f-fa);font-size:11.5px;}
-.hcb-tags{display:flex;flex-wrap:wrap;gap:3px;margin-top:7px;}
-.hct{font-size:8px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:2px 6px;border-radius:50px;}
+.hcb-tags{display:flex;flex-wrap:wrap;gap:3px;margin-top:6px;}
+.hct{font-size:8px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:50px;}
 .hct.n{background:var(--rbg);color:var(--red2);border:1px solid var(--rrim);}
 .hct.i{background:var(--gbg);color:var(--grn2);border:1px solid var(--grim);}
 .hct.p{background:var(--gldbg);color:var(--gld2);border:1px solid var(--gldrim);}
-.hct.a{background:var(--moonbg);color:var(--moon);border:1px solid rgba(184,152,64,.25);}
+.hct.a{background:var(--moonbg);color:var(--moon);border:1px solid rgba(168,136,48,.25);}
 
 /* moon guide */
-.moon-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(195px,1fr));gap:9px;}
-.moonc{background:var(--s1);border:1px solid var(--bord);border-radius:9px;padding:14px 16px;display:flex;gap:11px;align-items:center;transition:border-color .18s;}
-.moonc:hover{border-color:rgba(184,152,64,.25);}
-.moonico{font-size:26px;flex-shrink:0;}
-.moonnm{font-size:11.5px;font-weight:700;color:var(--moon);margin-bottom:2px;}
+.moon-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:8px;}
+.moonc{background:var(--s1);border:1px solid var(--bord);border-radius:9px;padding:13px 15px;display:flex;gap:10px;align-items:center;transition:border-color .17s;}
+.moonc:hover{border-color:rgba(168,136,48,.25);}
+.moonico{font-size:24px;flex-shrink:0;}
+.moonnm{font-size:11px;font-weight:700;color:var(--moon);margin-bottom:2px;}
 body.fa .moonnm{font-family:var(--f-fa);}
 .moonds{font-size:10px;color:var(--t3);line-height:1.5;}
 body.fa .moonds{font-family:var(--f-fa);}
 
-/* ════════════════════════════════
-   FOOTER
-════════════════════════════════ */
-.footer{margin-top:56px;padding:22px 0 14px;border-top:1px solid var(--bord);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;}
+/* ═══ FOOTER ═══ */
+.footer{margin-top:48px;padding:20px 0 14px;border-top:1px solid var(--bord);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
 .footer-t{font-size:10.5px;color:var(--t4);line-height:1.8;}
 .footer-t a{color:var(--gld2);text-decoration:none;}
 .footer-t a:hover{text-decoration:underline;}
 body.fa .footer-t{font-family:var(--f-fa);}
-.footer-badge{font-family:var(--f-d);font-size:14px;font-style:italic;color:var(--t4);}
+.footer-badge{font-family:var(--f-d);font-size:13px;font-style:italic;color:var(--t4);}
 
-/* ════════════════════════════════
-   MODAL
-════════════════════════════════ */
-.overlay{position:fixed;inset:0;z-index:9999;background:rgba(3,5,12,.92);backdrop-filter:blur(18px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .25s;}
+/* ═══ MODAL ═══ */
+.overlay{position:fixed;inset:0;z-index:9999;background:rgba(3,5,12,.94);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .25s;}
 .overlay.open{opacity:1;pointer-events:auto;}
-.modal{background:var(--s2);border:1px solid var(--bord2);border-radius:18px;padding:28px 30px;max-width:440px;width:100%;box-shadow:0 40px 100px rgba(0,0,0,.88);transform:translateY(16px);transition:transform .25s;}
+.modal{background:var(--s2);border:1px solid var(--bord2);border-radius:18px;padding:26px 28px;max-width:420px;width:100%;box-shadow:0 40px 100px rgba(0,0,0,.9);transform:translateY(14px);transition:transform .25s;}
 .overlay.open .modal{transform:translateY(0);}
-.modal-h{font-family:var(--f-d);font-size:22px;font-weight:600;letter-spacing:-.3px;margin-bottom:5px;}
+.modal-h{font-family:var(--f-d);font-size:21px;font-weight:600;letter-spacing:-.3px;margin-bottom:4px;}
 body.fa .modal-h{font-family:var(--f-fa);}
-.modal-s{font-size:12px;color:var(--t3);margin-bottom:20px;line-height:1.6;}
+.modal-s{font-size:11.5px;color:var(--t3);margin-bottom:18px;line-height:1.6;}
 body.fa .modal-s{font-family:var(--f-fa);}
-
-/* export option cards */
-.exp-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
-.eopt{background:var(--s3);border:1px solid var(--bord);border-radius:11px;padding:18px 16px;cursor:pointer;transition:all .18s;text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px;}
+.exp-opts{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px;}
+.eopt{background:var(--s3);border:1px solid var(--bord);border-radius:11px;padding:18px 14px;cursor:pointer;transition:all .18s;text-align:center;}
 .eopt:hover{border-color:var(--gldrim);background:var(--s4);transform:translateY(-1px);}
-.eopt-ico{font-size:26px;line-height:1;}
-.eopt-nm{font-size:12px;font-weight:700;color:var(--t1);}
+.eopt-ico{font-size:26px;margin-bottom:7px;}
+.eopt-nm{font-size:12px;font-weight:700;color:var(--t1);margin-bottom:3px;}
 body.fa .eopt-nm{font-family:var(--f-fa);}
-.eopt-ds{font-size:10px;color:var(--t3);line-height:1.4;}
+.eopt-ds{font-size:9.5px;color:var(--t3);line-height:1.5;}
 body.fa .eopt-ds{font-family:var(--f-fa);}
-
-/* mobile share button — large tap area */
-.mob-share{display:none;}
-@media(max-width:600px){.mob-share{display:flex;}}
-.mob-share-btn{
-  width:100%;margin-top:14px;
-  display:flex;align-items:center;justify-content:center;gap:10px;
-  background:linear-gradient(135deg,rgba(200,136,32,.18),rgba(200,136,32,.1));
-  border:1px solid var(--gldrim);border-radius:14px;
-  padding:16px;color:var(--gld2);font-family:var(--f-u);
-  font-size:14px;font-weight:700;letter-spacing:.5px;
-  cursor:pointer;transition:all .2s;
-}
-body.fa .mob-share-btn{font-family:var(--f-fa);}
-.mob-share-btn:hover{background:rgba(200,136,32,.24);}
-.mob-share-btn svg{width:18px;height:18px;}
-
-.modal-close{width:100%;border:1px solid var(--bord);background:transparent;color:var(--t3);font-family:var(--f-u);font-size:12px;padding:9px;border-radius:8px;cursor:pointer;transition:all .18s;}
+.modal-close{width:100%;border:1px solid var(--bord);background:transparent;color:var(--t3);font-family:var(--f-u);font-size:11.5px;padding:9px;border-radius:8px;cursor:pointer;transition:all .17s;}
 body.fa .modal-close{font-family:var(--f-fa);}
 .modal-close:hover{background:var(--s3);color:var(--t1);}
 
-/* ════════════════════════════════
-   A4 PRINT CANVAS
-════════════════════════════════ */
-#pc{
-  position:fixed;left:-9999px;top:0;z-index:-1;
-  width:794px;background:#fff;color:#111;
-  font-family:'Plus Jakarta Sans',sans-serif;
-  padding:28px 28px 22px;
-}
+/* ═══ PRINT CANVAS ═══ */
+#pc{position:fixed;left:-9999px;top:0;z-index:-1;width:794px;background:#fff;color:#111;font-family:'Plus Jakarta Sans',sans-serif;padding:26px 26px 20px;}
 #pc.fa{font-family:'Vazirmatn',sans-serif;direction:rtl;}
-
-/* A4 styles */
-.pch{display:flex;align-items:center;justify-content:space-between;border-bottom:2.5px solid #0a1020;padding-bottom:10px;margin-bottom:16px;}
-.pch-t{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:#0a1020;letter-spacing:-.5px;}
-.pch-t em{font-style:italic;color:#a07010;}
-.pch-m{font-family:'JetBrains Mono',monospace;font-size:8px;color:#888;text-align:right;line-height:1.7;}
-.pcg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.pch{display:flex;align-items:center;justify-content:space-between;border-bottom:2.5px solid #0a1020;padding-bottom:9px;margin-bottom:14px;}
+.pch-t{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:#0a1020;letter-spacing:-.5px;}
+.pch-t em{font-style:italic;color:#8a5c08;}
+.pch-m{font-family:'JetBrains Mono',monospace;font-size:7.5px;color:#888;text-align:right;line-height:1.7;}
+.pcg{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;}
 .pcmo{border:1px solid #dde2ee;border-radius:5px;overflow:hidden;}
-.pcmo-h{background:#f3f5fb;padding:6px 8px 4px;border-bottom:1px solid #dde2ee;display:flex;align-items:baseline;justify-content:space-between;}
-.pcmo-n{font-family:'Playfair Display',serif;font-size:13px;font-weight:700;color:#0a1020;}
-.pcmo-fa .pcmo-n{font-family:'Vazirmatn',sans-serif;font-size:12px;}
-.pcmo-num{font-family:'JetBrains Mono',monospace;font-size:8px;color:#bbb;}
-.pcr{display:grid;grid-template-columns:repeat(7,1fr);padding:3px 6px 1px;}
+.pcmo-h{background:#f3f5fb;padding:5px 7px 4px;border-bottom:1px solid #dde2ee;display:flex;align-items:baseline;justify-content:space-between;}
+.pcmo-n{font-family:'Playfair Display',serif;font-size:12px;font-weight:700;color:#0a1020;}
+.pcmo-fa .pcmo-n{font-family:'Vazirmatn',sans-serif;font-size:11px;}
+.pcmo-num{font-family:'JetBrains Mono',monospace;font-size:7.5px;color:#bbb;}
+.pcr{display:grid;grid-template-columns:repeat(7,1fr);padding:3px 5px 1px;}
 .pcrc{text-align:center;font-family:'JetBrains Mono',monospace;font-size:5.5px;font-weight:600;color:#ccc;letter-spacing:.2px;}
-.pcdg{display:grid;grid-template-columns:repeat(7,1fr);padding:1px 6px 6px;gap:1px;}
-.pcd{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:2px;min-height:20px;}
-.pcd-n{font-size:8px;font-weight:500;line-height:1;}
-.pcd-m{font-size:5px;margin-top:.5px;}
-.pcd.pw{background:rgba(116,96,204,.1);}.pcd.pw .pcd-n{color:#6050b0;}
-.pcd.ph{background:rgba(217,58,46,.09);}.pcd.ph .pcd-n{color:#c03020;font-weight:700;}
-.pcd.pi{background:rgba(24,150,122,.09);}.pcd.pi .pcd-n{color:#189060;font-weight:700;}
-.pcd.pp{background:rgba(200,136,32,.1);}.pcd.pp .pcd-n{color:#9a6808;font-weight:700;}
-.pcd.pml{background:linear-gradient(135deg,rgba(217,58,46,.09),rgba(200,136,32,.1));}.pcd.pml .pcd-n{color:#9a6808;font-weight:700;}
-.pcd.pt{background:rgba(36,104,212,.1);outline:1px solid rgba(36,104,212,.3);}.pcd.pt .pcd-n{color:#2050b0;font-weight:700;}
-.pcd.pm .pcd-n{color:#9a7820;}
-.pc-leg{display:flex;flex-wrap:wrap;gap:8px 14px;margin-top:12px;padding-top:10px;border-top:1px solid #dde2ee;}
-.pcli{display:flex;align-items:center;gap:4px;font-family:'JetBrains Mono',monospace;font-size:7.5px;color:#666;}
-.pcld{width:8px;height:8px;border-radius:50%;}
-.pcld.r{background:#c03020}.pcld.v{background:#7060c0}.pcld.g{background:#189060}.pcld.p{background:#9a6808}.pcld.b{background:#2050b0}.pcld.m{background:#9a7820}
+.pcdg{display:grid;grid-template-columns:repeat(7,1fr);padding:1px 5px 5px;gap:1px;}
+.pcd{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:2px;min-height:19px;}
+.pcd-n{font-size:7.5px;font-weight:500;line-height:1;}
+.pcd-m{font-size:4.5px;margin-top:.5px;}
+.pcd.pw{background:rgba(107,88,200,.1);}.pcd.pw .pcd-n{color:#5848a0;}
+.pcd.ph{background:rgba(217,58,46,.09);}.pcd.ph .pcd-n{color:#b02818;font-weight:700;}
+.pcd.pi{background:rgba(23,138,104,.09);}.pcd.pi .pcd-n{color:#127858;font-weight:700;}
+.pcd.pp{background:rgba(184,124,24,.1);}.pcd.pp .pcd-n{color:#886010;font-weight:700;}
+.pcd.pml{background:linear-gradient(135deg,rgba(217,58,46,.09),rgba(184,124,24,.1));}.pcd.pml .pcd-n{color:#886010;font-weight:700;}
+.pcd.pt{background:rgba(31,94,200,.1);outline:1px solid rgba(31,94,200,.28);}.pcd.pt .pcd-n{color:#1840a0;font-weight:700;}
+.pcd.pm .pcd-n{color:#886820;}
+.pc-leg{display:flex;flex-wrap:wrap;gap:7px 13px;margin-top:11px;padding-top:9px;border-top:1px solid #dde2ee;}
+.pcli{display:flex;align-items:center;gap:4px;font-family:'JetBrains Mono',monospace;font-size:7px;color:#666;}
+.pcld{width:7px;height:7px;border-radius:50%;}
+.pcld.r{background:#b02818}.pcld.v{background:#5848a0}.pcld.g{background:#127858}.pcld.p{background:#886010}.pcld.b{background:#1840a0}.pcld.m{background:#886820}
 
-/* scrollbar */
-::-webkit-scrollbar{width:5px;height:5px;}
+/* ═══ RESPONSIVE ═══ */
+@media(max-width:1100px){#grid-all{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:640px){
+  #grid-all{grid-template-columns:1fr;}
+  .hero{grid-template-columns:1fr;}
+  .stats-g{grid-template-columns:repeat(2,1fr);}
+  .hero-h1{font-size:44px;}
+  .exp-opts{grid-template-columns:1fr;}
+  .hol-g{grid-template-columns:1fr;}
+  .timer-bar{flex-direction:column;align-items:flex-start;}
+  .timer-clock{font-size:28px;}
+  .nav{flex-wrap:wrap;}
+  .sv-dg{padding:8px 12px 16px;gap:3px;}
+}
+@media(max-width:400px){
+  .wrap{padding:0 12px 60px;}
+  .nav{padding:10px 12px;}
+  .timer-bar{padding:10px 12px;}
+}
+::-webkit-scrollbar{width:4px;height:4px;}
 ::-webkit-scrollbar-track{background:transparent;}
-::-webkit-scrollbar-thumb{background:var(--s5);border-radius:3px;}
-
-/* responsive misc */
-@media(max-width:900px){.hero{grid-template-columns:1fr;}.stats-grid{grid-template-columns:repeat(4,1fr);}
-  .exp-opts{grid-template-columns:1fr;}}
-@media(max-width:600px){.hero-h1{font-size:48px;}.hol-g{grid-template-columns:1fr;}.stats-grid{grid-template-columns:repeat(2,1fr);}}
+::-webkit-scrollbar-thumb{background:var(--s5);border-radius:2px;}
 </style>
 </head>
 <body>
 
-<!-- AURORA CANVAS -->
-<canvas id="aurora-canvas"></canvas>
-
-<!-- FLOATING TOOLTIP (single, reused) -->
-<div class="dc-tip-wrap tip-up" id="tip-wrap">
-  <div class="dc-tip-inner" id="tip-inner"></div>
-</div>
-
-<!-- MODAL -->
+<canvas id="cvs"></canvas>
+<div id="tipbox" class="tip-up"><div class="tb-inner" id="tb-inner"></div><div class="tb-arrow"></div></div>
 <div class="overlay" id="overlay">
   <div class="modal">
     <div class="modal-h" id="m-h">Export Calendar</div>
-    <div class="modal-s" id="m-s">Export your 2026 calendar as a high-quality A4 document.</div>
+    <div class="modal-s" id="m-s">Export your calendar as a print-ready A4 document.</div>
     <div class="exp-opts">
       <div class="eopt" onclick="doExport('print')">
         <div class="eopt-ico">🖨️</div>
         <div class="eopt-nm" id="m-o1">Print / PDF</div>
-        <div class="eopt-ds" id="m-o1d">Open print dialog<br>Save as PDF or A4 print</div>
+        <div class="eopt-ds" id="m-o1d">Open print dialog<br>Save as PDF or A4</div>
       </div>
       <div class="eopt" onclick="doExport('new')">
         <div class="eopt-ico">🖼️</div>
         <div class="eopt-nm" id="m-o2">A4 Preview</div>
-        <div class="eopt-ds" id="m-o2d">Full calendar in a clean<br>printable window</div>
+        <div class="eopt-ds" id="m-o2d">Full calendar in a<br>clean new window</div>
       </div>
     </div>
-    <!-- Mobile share -->
-    <div class="mob-share">
-      <button class="mob-share-btn" onclick="doExport('print')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
-        <span id="mob-share-txt">Print / Save</span>
-      </button>
-    </div>
-    <button class="modal-close" id="m-close" onclick="closeModal()">Cancel</button>
+    <button class="modal-close" id="m-cls" onclick="closeModal()">Cancel</button>
   </div>
 </div>
-
-<!-- A4 Print Canvas (hidden) -->
 <div id="pc"></div>
 
-<!-- PAGE -->
-<div class="page">
-
-  <!-- NAV -->
+<div class="wrap">
   <nav class="nav">
-    <div class="nav-brand">
+    <div class="nav-L">
       <div class="nav-flag">🇳🇴</div>
-      <div class="nav-txt">
-        <div class="nav-title" id="nav-ttl">Norsk Kalender</div>
-        <div class="nav-sub" id="nav-sub">2026 · Official Holidays</div>
+      <div>
+        <div class="nav-tt" id="nav-tt">Norsk Kalender</div>
+        <div class="nav-sb" id="nav-sb">Official Holidays · Moon Phases</div>
       </div>
     </div>
-    <div class="nav-right">
+    <div class="nav-R">
       <div class="pg">
         <button class="pgb on" onclick="setLang('en')">EN</button>
         <button class="pgb" onclick="setLang('no')">NO</button>
         <button class="pgb" onclick="setLang('fa')">FA</button>
       </div>
+      <div class="yr-sel" id="yr-sel"></div>
       <div class="pg">
-        <button class="pgb on" id="vb-all" onclick="setView('all')">⊞ <span id="vb-all-t">All</span></button>
-        <button class="pgb" id="vb-one" onclick="setView('single')">◻ <span id="vb-one-t">Month</span></button>
+        <button class="pgb on" id="vb-all" onclick="setView('all')">⊞ <span id="vt-all">All</span></button>
+        <button class="pgb" id="vb-one" onclick="setView('single')">◻ <span id="vt-one">Month</span></button>
       </div>
       <button class="expbtn" onclick="openModal()">
         <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 1v8M5 6l3 3 3-3M2 11v3h12v-3"/></svg>
@@ -519,34 +469,44 @@ body.fa .modal-close{font-family:var(--f-fa);}
     </div>
   </nav>
 
-  <!-- HERO -->
+  <!-- TIMER BAR -->
+  <div class="timer-bar">
+    <div class="timer-L">
+      <div>
+        <div class="timer-clock" id="t-clock">--:--:--</div>
+        <div class="timer-date" id="t-date">—</div>
+      </div>
+      <div class="timer-tz">
+        <div class="tz-badge" id="tz-cet">CET UTC+1</div>
+        <div class="tz-badge" id="tz-cest">CEST UTC+2</div>
+      </div>
+    </div>
+    <div class="timer-R">
+      <div class="next-evt" id="t-next"></div>
+      <div class="countdown" id="t-cd"></div>
+    </div>
+  </div>
+
   <section class="hero">
     <div>
-      <div class="hero-ey" id="h-ey">Kingdom of Norway · Calendar Year 2026</div>
-      <h1 class="hero-h1" id="h-h1">
-        <span>Norsk</span><br><em>Kalender</em><br><span>2026</span>
-      </h1>
-      <p class="hero-desc" id="h-desc">Official Norwegian public holidays, Islamic feasts, Persian celebrations, lunar moon phases — all in one beautifully crafted calendar.</p>
+      <div class="hero-ey" id="h-ey">Kingdom of Norway</div>
+      <h1 class="hero-h1" id="h-h1"><span>Norsk</span><br><em>Kalender</em></h1>
+      <p class="hero-desc" id="h-desc">Official Norwegian public holidays, Islamic feasts, Persian celebrations and lunar moon phases for 2025, 2026 and 2027.</p>
     </div>
-    <div>
-      <div class="stats-grid" id="stats"></div>
+    <div class="hero-R">
+      <div class="stats-g" id="stats"></div>
       <div class="qf-row" id="qfrow"></div>
     </div>
   </section>
 
-  <!-- UPCOMING -->
   <div class="sec">
     <div class="sec-lbl"><div class="dot"></div><span id="sl-up">Upcoming Events</span><div class="rule"></div></div>
     <div class="ev-row" id="ev-row"></div>
   </div>
 
-  <!-- YEAR MAP -->
   <div class="ym"><div class="ym-inner" id="ym-inner"></div></div>
-
-  <!-- LEGEND -->
   <div class="legend" id="legend"></div>
 
-  <!-- TOOLBAR -->
   <div class="toolbar">
     <div class="srch">
       <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="6.5" cy="6.5" r="5.5"/><line x1="10.5" y1="10.5" x2="14.5" y2="14.5"/></svg>
@@ -555,10 +515,7 @@ body.fa .modal-close{font-family:var(--f-fa);}
     <div class="chips" id="chips"></div>
   </div>
 
-  <!-- ALL MONTHS -->
   <div id="grid-all"></div>
-
-  <!-- SINGLE MONTH -->
   <div id="grid-single">
     <div class="sv-nav">
       <button class="sv-nb" onclick="navM(-1)"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="10 3 5 8 10 13"/></svg></button>
@@ -571,13 +528,10 @@ body.fa .modal-close{font-family:var(--f-fa);}
     </div>
   </div>
 
-  <!-- HOLIDAY INFO -->
   <div class="inf-wrap">
     <div class="inf-hd"><h2 class="inf-h2" id="inf-h2">Holidays 2026</h2><div class="inf-rule"></div></div>
     <div class="hol-g" id="hol-g"></div>
   </div>
-
-  <!-- MOON GUIDE -->
   <div class="inf-wrap">
     <div class="inf-hd"><h2 class="inf-h2" id="moon-h2">🌙 Moon Phases</h2><div class="inf-rule"></div></div>
     <div class="moon-g" id="moon-g"></div>
@@ -585,363 +539,310 @@ body.fa .modal-close{font-family:var(--f-fa);}
 
   <footer class="footer">
     <div class="footer-t" id="ftxt"></div>
-    <div class="footer-badge">Norsk Kalender <em>2026</em></div>
+    <div class="footer-badge">Norsk Kalender <em>2025–2027</em></div>
   </footer>
 </div>
 
 <script>
-/* ══════════════════════════════
-   AURORA BACKGROUND
-══════════════════════════════ */
-(function(){
-  const cvs=document.getElementById('aurora-canvas');
-  const ctx=cvs.getContext('2d');
+/* ══ AURORA ══ */
+(()=>{
+  const c=document.getElementById('cvs');
+  const x=c.getContext('2d');
   let W,H,t=0;
-  const orbs=[
-    {x:.15,y:.12,r:.45,h:220,a:.07},
-    {x:.82,y:.28,r:.38,h:260,a:.055},
-    {x:.5,y:.75,r:.4,h:180,a:.045},
-    {x:.3,y:.5,r:.32,h:200,a:.035},
-    {x:.7,y:.62,r:.28,h:140,a:.04},
+  const O=[
+    {x:.12,y:.1,r:.42,h:218,a:.08},{x:.8,y:.22,r:.36,h:262,a:.06},
+    {x:.48,y:.72,r:.38,h:185,a:.05},{x:.28,y:.5,r:.3,h:198,a:.04},
+    {x:.68,y:.58,r:.26,h:145,a:.045},
   ];
-  function resize(){
-    W=cvs.width=window.innerWidth;
-    H=cvs.height=window.innerHeight;
-  }
-  window.addEventListener('resize',resize);
-  resize();
-
-  /* draw subtle particle stars */
-  const stars=[];
-  for(let i=0;i<120;i++) stars.push({x:Math.random(),y:Math.random(),s:Math.random()*1.2+.3,o:Math.random()*.6+.2,sp:Math.random()*.015+.005});
-
-  function hsl(h,s,l,a){return `hsla(${h},${s}%,${l}%,${a})`;}
-
-  function frame(){
-    t+=.004;
-    ctx.clearRect(0,0,W,H);
-
-    /* orbs */
-    orbs.forEach((o,i)=>{
-      const ox=W*(o.x+Math.sin(t*.7+i)*0.08);
-      const oy=H*(o.y+Math.cos(t*.5+i*1.3)*0.07);
-      const radius=Math.min(W,H)*o.r*(1+Math.sin(t*.4+i)*.06);
-      const g=ctx.createRadialGradient(ox,oy,0,ox,oy,radius);
-      const a=o.a*(0.8+Math.sin(t*.6+i*.8)*.2);
-      g.addColorStop(0,hsl(o.h,70,55,a));
-      g.addColorStop(.5,hsl(o.h+20,60,45,a*.5));
-      g.addColorStop(1,hsl(o.h+40,50,35,0));
-      ctx.fillStyle=g;
-      ctx.beginPath();
-      ctx.ellipse(ox,oy,radius,radius*.7,t*.1+i,0,Math.PI*2);
-      ctx.fill();
+  const S=[];for(let i=0;i<110;i++)S.push({x:Math.random(),y:Math.random(),s:Math.random()*1.1+.3,o:Math.random()*.55+.18,sp:Math.random()*.012+.004});
+  const rsz=()=>{W=c.width=window.innerWidth;H=c.height=window.innerHeight;};
+  window.addEventListener('resize',rsz,{passive:true});rsz();
+  const fr=()=>{
+    t+=.003;x.clearRect(0,0,W,H);
+    O.forEach((o,i)=>{
+      const ox=W*(o.x+Math.sin(t*.65+i)*.08);
+      const oy=H*(o.y+Math.cos(t*.5+i*1.2)*.07);
+      const rad=Math.min(W,H)*o.r*(1+Math.sin(t*.38+i)*.055);
+      const g=x.createRadialGradient(ox,oy,0,ox,oy,rad);
+      const a=o.a*(.78+Math.sin(t*.55+i*.9)*.22);
+      g.addColorStop(0,`hsla(${o.h},68%,54%,${a})`);
+      g.addColorStop(.55,`hsla(${o.h+22},58%,42%,${a*.45})`);
+      g.addColorStop(1,`hsla(${o.h+45},48%,32%,0)`);
+      x.fillStyle=g;x.beginPath();
+      x.ellipse(ox,oy,rad,rad*.68,t*.09+i,0,Math.PI*2);x.fill();
     });
-
-    /* subtle grid lines */
-    ctx.strokeStyle='rgba(255,255,255,0.022)';
-    ctx.lineWidth=1;
-    const gs=80;
-    for(let x=0;x<W;x+=gs){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
-    for(let y=0;y<H;y+=gs){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
-
-    /* stars */
-    stars.forEach(s=>{
-      s.o+=s.sp;if(s.o>1||s.o<.1)s.sp*=-1;
-      ctx.fillStyle=`rgba(200,220,255,${s.o*.5})`;
-      ctx.beginPath();
-      ctx.arc(s.x*W,s.y*H,s.s,0,Math.PI*2);
-      ctx.fill();
+    x.strokeStyle='rgba(255,255,255,0.018)';x.lineWidth=1;
+    for(let gx=0;gx<W;gx+=80){x.beginPath();x.moveTo(gx,0);x.lineTo(gx,H);x.stroke();}
+    for(let gy=0;gy<H;gy+=80){x.beginPath();x.moveTo(0,gy);x.lineTo(W,gy);x.stroke();}
+    S.forEach(s=>{
+      s.o+=s.sp;if(s.o>1||s.o<.12)s.sp*=-1;
+      x.fillStyle=`rgba(200,220,255,${s.o*.42})`;
+      x.beginPath();x.arc(s.x*W,s.y*H,s.s,0,Math.PI*2);x.fill();
     });
-
-    requestAnimationFrame(frame);
-  }
-  frame();
+    requestAnimationFrame(fr);
+  };fr();
 })();
 
-/* ══════════════════════════════
-   DATA
-══════════════════════════════ */
-const HOL={
-  "1-1":{en:"New Year's Day",no:"Nyttårsdag",fa:"سال نو میلادی",
-    de_en:"The first day of the year. All public offices, banks and most businesses are closed across Norway.",
-    de_no:"Årets første dag. Offentlige kontorer, banker og de fleste bedrifter er stengt i Norge.",
-    de_fa:"اول ژانویه، آغاز سال جدید میلادی. ادارات دولتی، بانک‌ها و اکثر مشاغل در نروژ تعطیل‌اند."},
-  "4-2":{en:"Maundy Thursday",no:"Skjærtorsdag",fa:"پنجشنبه مقدس",
-    de_en:"Thursday before Easter. Commemorates the Last Supper of Jesus with his disciples. Easter holiday begins.",
-    de_no:"Torsdag før påske. Minnedag for Jesu siste nattverd med disiplene. Påskeferien begynner.",
-    de_fa:"پنجشنبه قبل از عید پاک. یادبود شام آخر حضرت عیسی با حواریون. تعطیلات عید پاک شروع می‌شود."},
-  "4-3":{en:"Good Friday",no:"Langfredag",fa:"جمعه مقدس",
-    de_en:"Commemorates the crucifixion of Jesus Christ. One of the most solemn days of the Christian calendar.",
-    de_no:"Minnedag for Jesu Kristi korsfestelse. En av de mest høytidelige dagene i den kristne kalenderen.",
-    de_fa:"یادبود مصلوب شدن حضرت عیسی مسیح. یکی از پرمعناترین روزهای تقویم مسیحی."},
-  "4-5":{en:"Easter Sunday",no:"Første påskedag",fa:"یکشنبه عید پاک",
-    de_en:"Celebrates the resurrection of Jesus. Most important Christian feast. Families gather for traditional meals.",
-    de_no:"Feirer Jesu oppstandelse. Viktigste kristne høytid. Familier samles til tradisjonelle måltider.",
-    de_fa:"جشن رستاخیز حضرت عیسی. مهم‌ترین عید مسیحی. خانواده‌ها برای وعده‌های سنتی دور هم جمع می‌شوند."},
-  "4-6":{en:"Easter Monday",no:"Andre påskedag",fa:"دوشنبه عید پاک",
-    de_en:"Second day of Easter. Public holiday across all Nordic countries.",
-    de_no:"Andre dag i påsken. Offentlig helligdag i alle nordiske land.",
-    de_fa:"روز دوم عید پاک. تعطیل رسمی در تمام کشورهای اسکاندیناوی."},
-  "5-1":{en:"Labour Day",no:"Arbeidernes dag",fa:"روز کارگر",
-    de_en:"International Workers' Day. Celebrated in Norway since 1890 with marches and rallies in Oslo.",
-    de_no:"Internasjonal arbeiderdag. Feiret i Norge siden 1890 med tog og demonstrasjoner i Oslo.",
-    de_fa:"روز جهانی کارگر. از ۱۸۹۰ با راهپیمایی و تجمعات در اسلو جشن گرفته می‌شود."},
-  "5-14":{en:"Ascension Day",no:"Kristi himmelfartsdag",fa:"روز صعود مسیح",
-    de_en:"39 days after Easter. Marks Jesus ascending into heaven. Creates a long bridge weekend.",
-    de_no:"39 dager etter påske. Markerer Jesu himmelfart. Gir en lang helg.",
-    de_fa:"۳۹ روز پس از عید پاک. صعود حضرت عیسی به آسمان. تعطیلات طولانی‌تری ایجاد می‌کند."},
-  "5-17":{en:"Constitution Day",no:"Grunnlovsdagen",fa:"روز قانون اساسی",
-    de_en:"Norway's National Day. Constitution signed May 17, 1814 in Eidsvoll. Celebrated with children's parades, bunad (national costume) and flags.",
-    de_no:"Norges nasjonaldag. Grunnloven ble undertegnet 17. mai 1814 på Eidsvoll. Feiret med barnetog, bunad og flagg.",
-    de_fa:"روز ملی نروژ. قانون اساسی در ۱۷ مه ۱۸۱۴ در ایدسوول امضا شد. با رژه کودکان، لباس ملی (بوناد) و پرچم جشن گرفته می‌شود."},
-  "5-24":{en:"Whit Sunday (Pentecost)",no:"Første pinsedag",fa:"یکشنبه پنطیکاست",
-    de_en:"50 days after Easter. Commemorates the Holy Spirit descending upon the Apostles of Jesus.",
-    de_no:"50 dager etter påske. Minnedag for Den hellige ånds komme over apostlene.",
-    de_fa:"۵۰ روز پس از عید پاک. یادبود نزول روح‌القدس بر حواریون حضرت عیسی."},
-  "5-25":{en:"Whit Monday",no:"Andre pinsedag",fa:"دوشنبه پنطیکاست",
-    de_en:"Day after Pentecost. Second consecutive public holiday of the Pentecost weekend.",
-    de_no:"Dagen etter første pinsedag. Andre offentlige helligdag i pinsehelgen.",
-    de_fa:"روز بعد از پنطیکاست. دومین تعطیل رسمی متوالی آخر هفته پنطیکاست."},
-  "12-25":{en:"Christmas Day",no:"Første juledag",fa:"روز اول کریسمس",
-    de_en:"Birth of Jesus Christ. Norway celebrates with julaften traditions, julenisse, ribbe or pinnekjøtt meals.",
-    de_no:"Jesu Kristi fødsel. Norge feirer med julafetentradisjoner, julenisse og ribbe eller pinnekjøtt.",
-    de_fa:"تولد حضرت عیسی مسیح. نروژ با آداب شب کریسمس، بابانوئل و غذاهای سنتی جشن می‌گیرد."},
-  "12-26":{en:"Boxing Day",no:"Andre juledag",fa:"روز دوم کریسمس",
-    de_en:"Second day of Christmas celebrations. Originally a day for charitable giving to servants and the poor.",
-    de_no:"Den andre juledagen. Opprinnelig en dag for å gi gaver til tjenere og fattige.",
-    de_fa:"روز دوم کریسمس. در اصل برای هدیه دادن خیرخواهانه به خدمتکاران و فقرا بود."},
+/* ══ DATA ══ */
+/* Easter calculation (Gauss algorithm) */
+function easter(y){
+  const a=y%19,b=Math.floor(y/100),c=y%100;
+  const d=Math.floor(b/4),e=b%4,f=Math.floor((b+8)/25),g=Math.floor((b-f+1)/3),h=(19*a+b-d-g+15)%30;
+  const i=Math.floor(c/4),k=c%4,l=(32+2*e+2*i-h-k)%7;
+  const m=Math.floor((a+11*h+22*l)/451);
+  const mo=Math.floor((h+l-7*m+114)/31);
+  const day=((h+l-7*m+114)%31)+1;
+  return new Date(y,mo-1,day);
+}
+function addDays(d,n){const r=new Date(d);r.setDate(r.getDate()+n);return r;}
+function fmtKey(dt){return `${dt.getMonth()+1}-${dt.getDate()}`;}
+
+/* build holiday list for a year */
+function buildHOL(y){
+  const E=easter(y);
+  const h={};
+  const set=(dt,d)=>{h[fmtKey(dt)]=d;};
+  set(new Date(y,0,1),{en:"New Year's Day",no:"Nyttårsdag",fa:"سال نو میلادی",de_en:"The first day of the year. All public offices, banks and most businesses are closed.",de_no:"Årets første dag. Offentlige kontorer, banker og de fleste bedrifter er stengt.",de_fa:"اول ژانویه. ادارات دولتی، بانک‌ها و اکثر مشاغل در نروژ تعطیل‌اند."});
+  set(addDays(E,-3),{en:"Maundy Thursday",no:"Skjærtorsdag",fa:"پنجشنبه مقدس",de_en:"Thursday before Easter. Commemorates Jesus's Last Supper with his disciples.",de_no:"Torsdag før påske. Minnedag for Jesu siste nattverd med disiplene.",de_fa:"پنجشنبه قبل از عید پاک. یادبود شام آخر حضرت عیسی با حواریون."});
+  set(addDays(E,-2),{en:"Good Friday",no:"Langfredag",fa:"جمعه مقدس",de_en:"Commemorates the crucifixion of Jesus Christ. Most solemn day of the Christian year.",de_no:"Minnedag for Jesu Kristi korsfestelse. Den mest høytidelige dagen i det kristne år.",de_fa:"یادبود مصلوب شدن حضرت عیسی. مقدس‌ترین روز تقویم مسیحی."});
+  set(E,{en:"Easter Sunday",no:"Første påskedag",fa:"یکشنبه عید پاک",de_en:"Celebrates the resurrection of Jesus. Most important Christian feast.",de_no:"Feirer Jesu oppstandelse. Viktigste kristne høytid.",de_fa:"جشن رستاخیز حضرت عیسی. مهم‌ترین عید مسیحی."});
+  set(addDays(E,1),{en:"Easter Monday",no:"Andre påskedag",fa:"دوشنبه عید پاک",de_en:"Second day of Easter. Public holiday across all Nordic countries.",de_no:"Andre dag i påsken. Offentlig helligdag i alle nordiske land.",de_fa:"روز دوم عید پاک. تعطیل رسمی در تمام کشورهای اسکاندیناوی."});
+  set(new Date(y,4,1),{en:"Labour Day",no:"Arbeidernes dag",fa:"روز کارگر",de_en:"International Workers' Day. Celebrated since 1890 with marches in Oslo.",de_no:"Internasjonal arbeiderdag. Feiret siden 1890 med tog i Oslo.",de_fa:"روز جهانی کارگر. از ۱۸۹۰ با راهپیمایی در اسلو جشن گرفته می‌شود."});
+  set(addDays(E,39),{en:"Ascension Day",no:"Kristi himmelfartsdag",fa:"روز صعود مسیح",de_en:"39 days after Easter. Marks Jesus ascending into heaven.",de_no:"39 dager etter påske. Markerer Jesu himmelfart.",de_fa:"۳۹ روز پس از عید پاک. صعود حضرت عیسی به آسمان."});
+  set(new Date(y,4,17),{en:"Constitution Day",no:"Grunnlovsdagen",fa:"روز قانون اساسی",de_en:"Norway's National Day. Constitution signed May 17, 1814 in Eidsvoll. Celebrated with children's parades and national costumes (bunad).",de_no:"Norges nasjonaldag. Grunnloven ble undertegnet 17. mai 1814 på Eidsvoll. Feiret med barnetog og bunad.",de_fa:"روز ملی نروژ. قانون اساسی در ۱۷ مه ۱۸۱۴ امضا شد. با رژه کودکان و لباس ملی (بوناد) جشن گرفته می‌شود."});
+  set(addDays(E,49),{en:"Whit Sunday (Pentecost)",no:"Første pinsedag",fa:"یکشنبه پنطیکاست",de_en:"50 days after Easter. Commemorates the Holy Spirit descending upon the Apostles.",de_no:"50 dager etter påske. Minnedag for Den hellige ånds komme over apostlene.",de_fa:"۵۰ روز پس از عید پاک. یادبود نزول روح‌القدس بر حواریون."});
+  set(addDays(E,50),{en:"Whit Monday",no:"Andre pinsedag",fa:"دوشنبه پنطیکاست",de_en:"Day after Pentecost. Second consecutive public holiday of the Pentecost weekend.",de_no:"Dagen etter første pinsedag. Andre offentlige helligdag i pinsehelgen.",de_fa:"روز بعد از پنطیکاست. دومین تعطیل رسمی آخر هفته پنطیکاست."});
+  set(new Date(y,11,25),{en:"Christmas Day",no:"Første juledag",fa:"روز اول کریسمس",de_en:"Birth of Jesus Christ. Celebrated with family gatherings, julenisse and traditional Norwegian food.",de_no:"Jesu Kristi fødsel. Feiret med familiemøter, julenisse og tradisjonell mat.",de_fa:"تولد حضرت عیسی. با جمع‌های خانوادگی، بابانوئل و غذاهای سنتی نروژی جشن گرفته می‌شود."});
+  set(new Date(y,11,26),{en:"Boxing Day",no:"Andre juledag",fa:"روز دوم کریسمس",de_en:"Second day of Christmas celebrations.",de_no:"Den andre juledagen.",de_fa:"روز دوم کریسمس."});
+  return h;
+}
+
+/* Islamic feasts per year (approximate) */
+const ISL_DATA={
+  2025:{"3-30":{en:"Eid al-Fitr",no:"Id al-Fitr",fa:"عید فطر",approx:true,de_en:"End of Ramadan. 3-day celebration. Approx. date.",de_no:"Slutten på Ramadan. Tre dager med feiring. Ca. dato.",de_fa:"پایان ماه رمضان. جشن سه روزه. تاریخ تقریبی."},"6-7":{en:"Eid al-Adha",no:"Id al-Adha",fa:"عید قربان",approx:true,de_en:"Feast of Sacrifice. Coincides with Hajj pilgrimage. Approx. date.",de_no:"Offerets fest. Sammenfaller med Hajj-pilegrimsreisen. Ca. dato.",de_fa:"عید قربانی. مقارن با حج. تاریخ تقریبی."}},
+  2026:{"3-20":{en:"Eid al-Fitr",no:"Id al-Fitr",fa:"عید فطر",approx:true,de_en:"End of Ramadan. 3-day celebration after a month of fasting. Approx. date.",de_no:"Slutten på Ramadan. Tre dager med feiring etter en måneds faste. Ca. dato.",de_fa:"پایان ماه رمضان. سه روز جشن. تاریخ تقریبی."},"5-27":{en:"Eid al-Adha",no:"Id al-Adha",fa:"عید قربان",approx:true,de_en:"Feast of Sacrifice. Commemorates Ibrahim's willingness to sacrifice his son. Approx. date.",de_no:"Offerets fest. Minnes Ibrahims vilje til å ofre sin sønn. Ca. dato.",de_fa:"عید قربانی. یادبود آمادگی حضرت ابراهیم. تاریخ تقریبی."}},
+  2027:{"3-10":{en:"Eid al-Fitr",no:"Id al-Fitr",fa:"عید فطر",approx:true,de_en:"End of Ramadan. Approx. date.",de_no:"Slutten på Ramadan. Ca. dato.",de_fa:"پایان ماه رمضان. تاریخ تقریبی."},"5-17":{en:"Eid al-Adha",no:"Id al-Adha",fa:"عید قربان",approx:true,de_en:"Feast of Sacrifice. Approx. date.",de_no:"Offerets fest. Ca. dato.",de_fa:"عید قربانی. تاریخ تقریبی."}}
 };
 
-const ISLAMIC={
-  "3-20":{en:"Eid al-Fitr",no:"Id al-Fitr",fa:"عید فطر",approx:true,
-    de_en:"End of Ramadan. 3-day celebration after a month of fasting. Muslims gather for prayers, share meals and give gifts. Approx. date — confirmed by moon sighting.",
-    de_no:"Slutten på Ramadan. Tre dager med feiring etter en måneds faste. Muslimer samles til bønn og deler måltider. Ca. dato.",
-    de_fa:"پایان ماه رمضان. سه روز جشن پس از یک ماه روزه. نماز عید، صله رحم و هدیه‌دادن. تاریخ تقریبی."},
-  "5-27":{en:"Eid al-Adha",no:"Id al-Adha",fa:"عید قربان",approx:true,
-    de_en:"Feast of Sacrifice. Commemorates Ibrahim's willingness to sacrifice his son. Coincides with the Hajj pilgrimage. Approx. date.",
-    de_no:"Offerets fest. Minnes Ibrahims vilje til å ofre sin sønn. Sammenfaller med Hajj-pilegrimsreisen. Ca. dato.",
-    de_fa:"عید قربانی. یادبود آمادگی حضرت ابراهیم برای قربانی. مقارن با حج به مکه. تاریخ تقریبی."},
+/* Persian events per year */
+const PERS_DATA={
+  2025:{"3-20":{en:"Nowruz — Persian New Year",no:"Nouruz — Persisk nyttår",fa:"نوروز — سال نو ایرانی",de_en:"Persian New Year & first day of spring (spring equinox). Over 3,000 years old, celebrated by 300+ million people worldwide.",de_no:"Persisk nyttår og vårens første dag. Over 3000 år gammel feiring av over 300 millioner mennesker.",de_fa:"سال نو ایرانی و آغاز بهار. بیش از سه هزار سال قدمت، توسط بیش از ۳۰۰ میلیون نفر در سراسر جهان."},"12-21":{en:"Yalda Night",no:"Yalda-natt",fa:"شب یلدا",de_en:"The longest night of the year (winter solstice). Ancient Iranian celebration of light's victory over darkness. Families gather to read Hafez poetry, eat pomegranates and watermelon.",de_no:"Årets lengste natt (vintersolverv). Gammel iransk feiring. Familier samles, leser Hafez-poesi og spiser granatepler.",de_fa:"بلندترین شب سال. جشن کهن ایرانی. خانواده‌ها دور هم جمع می‌شوند، شعر حافظ می‌خوانند و انار و هندوانه می‌خورند."}},
+  2026:{"3-20":{en:"Nowruz — Persian New Year",no:"Nouruz — Persisk nyttår",fa:"نوروز — سال نو ایرانی",de_en:"Persian New Year & first day of spring. Over 3,000 years old, celebrated by 300+ million people worldwide.",de_no:"Persisk nyttår og vårens første dag. Over 3000 år gammel.",de_fa:"سال نو ایرانی و آغاز بهار. بیش از سه هزار سال قدمت."},"12-21":{en:"Yalda Night",no:"Yalda-natt",fa:"شب یلدا",de_en:"The longest night of the year (winter solstice). Families gather for Hafez poetry, pomegranates and stories.",de_no:"Årets lengste natt. Familier samles til Hafez-poesi, granatepler og historier.",de_fa:"بلندترین شب سال. خانواده‌ها دور هم جمع می‌شوند، شعر حافظ می‌خوانند."}},
+  2027:{"3-20":{en:"Nowruz — Persian New Year",no:"Nouruz — Persisk nyttår",fa:"نوروز — سال نو ایرانی",de_en:"Persian New Year & first day of spring. Over 3,000 years old.",de_no:"Persisk nyttår og vårens første dag.",de_fa:"سال نو ایرانی و آغاز بهار."},"12-21":{en:"Yalda Night",no:"Yalda-natt",fa:"شب یلدا",de_en:"The longest night of the year (winter solstice).",de_no:"Årets lengste natt.",de_fa:"بلندترین شب سال."}}
 };
 
-const PERSIAN={
-  "3-20":{en:"Nowruz — Persian New Year",no:"Nouruz — Persisk nyttår",fa:"نوروز — سال نو ایرانی",
-    de_en:"Persian New Year and first day of spring (spring equinox). One of the oldest celebrations on Earth, over 3,000 years old. Celebrated by over 300 million people across Iran, Afghanistan, Central Asia and the global diaspora.",
-    de_no:"Persisk nyttår og vårens første dag (vårjevndøgn). En av verdens eldste feiringer, over 3000 år gammel. Feiret av over 300 millioner mennesker over hele verden.",
-    de_fa:"سال نو ایرانی و آغاز بهار (اعتدال بهاری). یکی از کهن‌ترین جشن‌های بشریت با بیش از سه هزار سال قدمت. توسط بیش از ۳۰۰ میلیون نفر در سراسر جهان جشن گرفته می‌شود."},
-  "12-21":{en:"Yalda Night",no:"Yalda-natt",fa:"شب یلدا",
-    de_en:"The longest night of the year (winter solstice). Ancient Iranian celebration of light's victory over darkness. Families gather to read Hafez poetry, eat pomegranates and watermelon, and tell stories until midnight.",
-    de_no:"Årets lengste natt (vintersolverv). Gammel iransk feiring av lysets seier over mørket. Familier samles, leser Hafez-poesi, spiser granatepler og vannmelon til midnatt.",
-    de_fa:"بلندترین شب سال (انقلاب زمستانی). جشن کهن ایرانی برای پیروزی روشنایی بر تاریکی. خانواده‌ها دور هم جمع می‌شوند، شعر حافظ می‌خوانند، انار و هندوانه می‌خورند و تا نیمه شب قصه می‌گویند."},
+/* Shamsi year mapping */
+const SHAMSI={2025:1403,2026:1404,2027:1405};
+
+/* Moon phases per year — key "M-D" */
+const MOON_DATA={
+  2025:{
+    "1-13":"🌕","1-21":"🌗","1-29":"🌑","2-5":"🌓",
+    "2-12":"🌕","2-20":"🌗","2-28":"🌑","3-6":"🌓",
+    "3-14":"🌕","3-22":"🌗","3-29":"🌑","4-5":"🌓",
+    "4-13":"🌕","4-21":"🌗","4-27":"🌑","5-4":"🌓",
+    "5-12":"🌕","5-20":"🌗","5-27":"🌑","6-2":"🌓",
+    "6-11":"🌕","6-19":"🌗","6-25":"🌑","7-2":"🌓",
+    "7-10":"🌕","7-18":"🌗","7-24":"🌑","7-31":"🌓",
+    "8-9":"🌕","8-16":"🌗","8-23":"🌑","8-30":"🌓",
+    "9-7":"🌕","9-14":"🌗","9-21":"🌑","9-29":"🌓",
+    "10-7":"🌕","10-13":"🌗","10-21":"🌑","10-29":"🌓",
+    "11-5":"🌕","11-12":"🌗","11-20":"🌑","11-28":"🌓",
+    "12-4":"🌕","12-11":"🌗","12-20":"🌑","12-27":"🌓"
+  },
+  2026:{
+    "1-3":"🌕","1-10":"🌗","1-18":"🌑","1-25":"🌓",
+    "2-1":"🌕","2-9":"🌗","2-17":"🌑","2-24":"🌓",
+    "3-3":"🌕","3-11":"🌗","3-18":"🌑","3-25":"🌓",
+    "4-1":"🌕","4-10":"🌗","4-17":"🌑","4-24":"🌓",
+    "5-1":"🌕","5-9":"🌗","5-17":"🌑","5-23":"🌓","5-31":"🌕",
+    "6-7":"🌗","6-15":"🌑","6-22":"🌓","6-29":"🌕",
+    "7-7":"🌗","7-15":"🌑","7-21":"🌓","7-29":"🌕",
+    "8-5":"🌗","8-13":"🌑","8-20":"🌓","8-27":"🌕",
+    "9-4":"🌗","9-12":"🌑","9-19":"🌓","9-26":"🌕",
+    "10-3":"🌗","10-11":"🌑","10-19":"🌓","10-25":"🌕",
+    "11-2":"🌗","11-9":"🌑","11-18":"🌓","11-24":"🌕",
+    "12-1":"🌗","12-9":"🌑","12-17":"🌓","12-23":"🌕","12-31":"🌗"
+  },
+  2027:{
+    "1-7":"🌕","1-15":"🌗","1-22":"🌑","1-29":"🌓",
+    "2-6":"🌕","2-14":"🌗","2-20":"🌑","2-28":"🌓",
+    "3-8":"🌕","3-15":"🌗","3-22":"🌑","3-29":"🌓",
+    "4-6":"🌕","4-13":"🌗","4-20":"🌑","4-28":"🌓",
+    "5-6":"🌕","5-13":"🌗","5-20":"🌑","5-27":"🌓",
+    "6-4":"🌕","6-11":"🌗","6-18":"🌑","6-26":"🌓",
+    "7-4":"🌕","7-10":"🌗","7-18":"🌑","7-25":"🌓",
+    "8-2":"🌕","8-9":"🌗","8-17":"🌑","8-24":"🌓","8-31":"🌕",
+    "9-8":"🌗","9-15":"🌑","9-22":"🌓","9-30":"🌕",
+    "10-7":"🌗","10-15":"🌑","10-22":"🌓","10-30":"🌕",
+    "11-6":"🌗","11-13":"🌑","11-20":"🌓","11-28":"🌕",
+    "12-6":"🌗","12-13":"🌑","12-20":"🌓","12-28":"🌕"
+  }
 };
 
-const MOON={
-  "1-3":"🌕","1-10":"🌗","1-18":"🌑","1-25":"🌓",
-  "2-1":"🌕","2-9":"🌗","2-17":"🌑","2-24":"🌓",
-  "3-3":"🌕","3-11":"🌗","3-18":"🌑","3-25":"🌓",
-  "4-1":"🌕","4-10":"🌗","4-17":"🌑","4-24":"🌓",
-  "5-1":"🌕","5-9":"🌗","5-17":"🌑","5-23":"🌓","5-31":"🌕",
-  "6-7":"🌗","6-15":"🌑","6-22":"🌓","6-29":"🌕",
-  "7-7":"🌗","7-15":"🌑","7-21":"🌓","7-29":"🌕",
-  "8-5":"🌗","8-13":"🌑","8-20":"🌓","8-27":"🌕",
-  "9-4":"🌗","9-12":"🌑","9-19":"🌓","9-26":"🌕",
-  "10-3":"🌗","10-11":"🌑","10-19":"🌓","10-25":"🌕",
-  "11-2":"🌗","11-9":"🌑","11-18":"🌓","11-24":"🌕",
-  "12-1":"🌗","12-9":"🌑","12-17":"🌓","12-23":"🌕","12-31":"🌗"
-};
+/* ══ STATE ══ */
+let lang='en', selYear=2026, viewMode='all', curM=new Date().getMonth();
+const TODAY=new Date();
+const todayY=TODAY.getFullYear();
+const isCY=(y)=>y===todayY;
 
-/* ══════════════════════════════
-   TRANSLATIONS
-══════════════════════════════ */
+/* ══ TRANSLATIONS ══ */
 const TX={
   en:{
-    navTtl:"Norsk Kalender",navSub:"2026 · Official Holidays",
-    ey:"Kingdom of Norway · Calendar Year 2026",
-    h1n:"Norsk",h1em:"Kalender",h1y:"2026",
-    desc:"Official Norwegian public holidays, Islamic feasts, Persian celebrations, lunar moon phases — all in one beautifully crafted calendar.",
-    sH:"Public Holidays",sW:"Weekend Days",sWD:"Work Days",sI:"Islamic & Persian",
-    qfA:"Next holiday",qfB:"Weeks left",qfC:"Nowruz",qfD:"Yalda Night",
-    up:"Upcoming Events",
-    vAll:"All",vOne:"Month",expT:"Export",
-    mH:"Export Calendar",mS:"Export your 2026 calendar as a high-quality A4 document.",
-    o1:"Print / PDF",o1d:"Open print dialog\nSave as PDF or A4 print",
-    o2:"A4 Preview",o2d:"Full calendar in a clean\nprintable window",
-    mClose:"Cancel",mobShare:"Print / Save",
-    infoH:"🇳🇴 Holidays, Islamic Feasts & Persian Celebrations 2026",
-    moonH:"🌙 Moon Phase Guide",
-    srchPH:"Search events…",
+    navTt:"Norsk Kalender",navSb:"Official Holidays · Moon Phases",
+    ey:"Kingdom of Norway",h1n:"Norsk",h1em:"Kalender",
+    desc:"Official Norwegian public holidays, Islamic feasts, Persian celebrations and lunar moon phases for 2025, 2026 and 2027.",
+    sH:"Public Holidays",sW:"Weekends",sWD:"Work Days",sI:"Islamic & Persian",
+    qA:"Next holiday",qB:"Weeks left",qC:"Nowruz",qD:"Yalda",
+    up:"Upcoming Events",vAll:"All",vOne:"Month",expT:"Export",
+    mH:"Export Calendar",mS:"Export as a high-quality A4 document.",
+    o1:"Print / PDF",o1d:"Open print dialog\nSave as PDF or A4",
+    o2:"A4 Preview",o2d:"Full calendar in a\nclean window",mCls:"Cancel",
+    inH:"🇳🇴 Holidays & Celebrations",moonH:"🌙 Moon Phases",
+    srPH:"Search events…",
     chips:["All","Holidays","Weekends","Islamic","Persian","Moon"],
     days:["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
     months:["January","February","March","April","May","June","July","August","September","October","November","December"],
     mAb:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
     dFull:["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
-    badge:{off:"Official Holiday",isl:"Islamic Feast",per:"Persian Celebration",approx:"Approx. Date"},
-    moon:[
-      {i:"🌑",n:"New Moon",d:"Moon not visible. Start of the lunar month."},
-      {i:"🌓",n:"First Quarter",d:"Right half illuminated. Waxing moon."},
-      {i:"🌕",n:"Full Moon",d:"Fully illuminated. Highest tidal forces."},
-      {i:"🌗",n:"Last Quarter",d:"Left half illuminated. Waning moon."},
-    ],
-    inDays:"in {n} days",today:"Today",past:"{n} days ago",
-    foot:`Data: <a href="https://lovdata.no">Lovdata.no</a> (Public Holidays) · <a href="https://islamsk.no">Islamsk Råd Norge</a> (Islamic Dates) · Astronomical moon data · Persian calendar`,
-    pcMeta:"Norwegian Calendar 2026\nPublic Holidays · Moon Phases · Islamic Feasts · Persian Celebrations",
-    pcLeg:["Public Holiday","Weekend","Islamic Feast","Persian Celebration","Today","Moon Phase"],
+    badge:{off:"Official",isl:"Islamic Feast",per:"Persian",approx:"Approx."},
+    moon:[{i:"🌑",n:"New Moon",d:"Not visible. Start of lunar month."},{i:"🌓",n:"First Quarter",d:"Right half lit. Waxing."},{i:"🌕",n:"Full Moon",d:"Fully illuminated. High tides."},{i:"🌗",n:"Last Quarter",d:"Left half lit. Waning."}],
+    inDays:"in {n} days",today:"Today",past:"{n}d ago",
+    foot:`<a href="https://lovdata.no">Lovdata.no</a> (Public Holidays) · <a href="https://islamsk.no">Islamsk Råd Norge</a> (Islamic) · Astronomical moon data · Persian calendar`,
+    pcMeta:"Norwegian Calendar {Y}\nPublic Holidays · Moon Phases · Islamic Feasts · Persian Events",
+    pcLeg:["Public Holiday","Weekend","Islamic Feast","Persian","Today","Moon"],
+    nextEvt:"Next:",countIn:"in",stNow:"NOW",shamsi:"Shamsi",cet:"CET",cest:"CEST",
   },
   no:{
-    navTtl:"Norsk Kalender",navSub:"2026 · Offentlige helligdager",
-    ey:"Kongeriket Norge · Kalenderår 2026",
-    h1n:"Norsk",h1em:"Kalender",h1y:"2026",
-    desc:"Offisielle norske helligdager, islamske høytider, persiske feiringer og månefaser — i én vakker kalender.",
+    navTt:"Norsk Kalender",navSb:"Offentlige helligdager · Månefaser",
+    ey:"Kongeriket Norge",h1n:"Norsk",h1em:"Kalender",
+    desc:"Offisielle norske helligdager, islamske høytider, persiske feiringer og månefaser for 2025, 2026 og 2027.",
     sH:"Helligdager",sW:"Helgedager",sWD:"Arbeidsdager",sI:"Islamsk & Persisk",
-    qfA:"Neste helligdag",qfB:"Gjenværende uker",qfC:"Nouruz",qfD:"Yalda-natt",
-    up:"Kommende hendelser",
-    vAll:"Alle",vOne:"Månedvis",expT:"Eksporter",
-    mH:"Eksporter kalender",mS:"Eksporter 2026-kalenderen som et utskriftsklart A4-dokument.",
-    o1:"Skriv ut / PDF",o1d:"Åpne utskriftsdialog\nLagre som PDF eller skriv ut A4",
-    o2:"A4-forhåndsvisning",o2d:"Hele kalenderen i et rent\nutskriftbart vindu",
-    mClose:"Avbryt",mobShare:"Skriv ut / Lagre",
-    infoH:"🇳🇴 Helligdager, islamske høytider og persiske feiringer 2026",
-    moonH:"🌙 Månefaseguide",
-    srchPH:"Søk hendelser…",
+    qA:"Neste helligdag",qB:"Gjenstående uker",qC:"Nouruz",qD:"Yalda",
+    up:"Kommende hendelser",vAll:"Alle",vOne:"Månedvis",expT:"Eksporter",
+    mH:"Eksporter kalender",mS:"Eksporter som utskriftsklart A4-dokument.",
+    o1:"Skriv ut / PDF",o1d:"Åpne utskriftsdialog\nLagre som PDF",
+    o2:"A4-forhåndsvisning",o2d:"Full kalender i et\nrent vindu",mCls:"Avbryt",
+    inH:"🇳🇴 Helligdager og feiringer",moonH:"🌙 Månefaser",
+    srPH:"Søk hendelser…",
     chips:["Alle","Helligdager","Helger","Islamsk","Persisk","Månefaser"],
     days:["Man","Tir","Ons","Tor","Fre","Lør","Søn"],
     months:["Januar","Februar","Mars","April","Mai","Juni","Juli","August","September","Oktober","November","Desember"],
     mAb:["Jan","Feb","Mar","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Des"],
     dFull:["søndag","mandag","tirsdag","onsdag","torsdag","fredag","lørdag"],
-    badge:{off:"Offentlig helligdag",isl:"Islamsk høytid",per:"Persisk feiring",approx:"Ca. dato"},
-    moon:[
-      {i:"🌑",n:"Nymåne",d:"Månen er usynlig. Start av månedssyklusen."},
-      {i:"🌓",n:"Første kvarter",d:"Høyre halvdel opplyst. Tiltagende måne."},
-      {i:"🌕",n:"Fullmåne",d:"Fullt opplyst. Høyeste tidevannskrefter."},
-      {i:"🌗",n:"Siste kvarter",d:"Venstre halvdel opplyst. Avtagende måne."},
-    ],
-    inDays:"om {n} dager",today:"I dag",past:"for {n} dager siden",
-    foot:`Data: <a href="https://lovdata.no">Lovdata.no</a> (Helligdager) · <a href="https://islamsk.no">Islamsk Råd Norge</a> · Astronomiske månefasedata · Persisk kalender`,
-    pcMeta:"Norsk Kalender 2026\nHelligdager · Månefaser · Islamske høytider · Persiske feiringer",
-    pcLeg:["Helligdag","Helgedag","Islamsk høytid","Persisk feiring","I dag","Månefase"],
+    badge:{off:"Offisiell",isl:"Islamsk høytid",per:"Persisk",approx:"Ca."},
+    moon:[{i:"🌑",n:"Nymåne",d:"Usynlig. Start av månedssyklusen."},{i:"🌓",n:"Første kvarter",d:"Høyre halvdel opplyst."},{i:"🌕",n:"Fullmåne",d:"Fullt opplyst. Høyvann."},{i:"🌗",n:"Siste kvarter",d:"Venstre halvdel opplyst."}],
+    inDays:"om {n} dager",today:"I dag",past:"for {n}d siden",
+    foot:`<a href="https://lovdata.no">Lovdata.no</a> (Helligdager) · <a href="https://islamsk.no">Islamsk Råd Norge</a> · Astronomiske månefasedata · Persisk kalender`,
+    pcMeta:"Norsk Kalender {Y}\nHelligdager · Månefaser · Islamske høytider · Persiske feiringer",
+    pcLeg:["Helligdag","Helgedag","Islamsk","Persisk","I dag","Månefase"],
+    nextEvt:"Neste:",countIn:"om",stNow:"NÅ",shamsi:"Shamsi",cet:"CET",cest:"CEST",
   },
   fa:{
-    navTtl:"تقویم نروژ",navSub:"۲۰۲۶ · تعطیلات رسمی",
-    ey:"پادشاهی نروژ · سال تقویمی ۲۰۲۶",
-    h1n:"تقویم",h1em:"نروژ",h1y:"۲۰۲۶",
-    desc:"تعطیلات رسمی نروژ، اعیاد اسلامی، جشن‌های ایرانی، فازهای ماه — همه در یک تقویم زیبا.",
-    sH:"تعطیلات رسمی",sW:"روزهای آخر هفته",sWD:"روزهای کاری",sI:"اسلامی و ایرانی",
-    qfA:"تعطیل بعدی",qfB:"هفته‌های باقی‌مانده",qfC:"نوروز",qfD:"شب یلدا",
-    up:"رویدادهای پیش رو",
-    vAll:"همه",vOne:"ماهانه",expT:"خروجی",
-    mH:"خروجی تقویم",mS:"تقویم ۲۰۲۶ را به عنوان سند A4 آماده چاپ صادر کنید.",
-    o1:"چاپ / PDF",o1d:"باز کردن کادر چاپ\nذخیره PDF یا چاپ A4",
-    o2:"پیش‌نمایش A4",o2d:"تقویم کامل در یک پنجره\nتمیز و قابل چاپ",
-    mClose:"انصراف",mobShare:"چاپ / ذخیره",
-    infoH:"🇳🇴 تعطیلات رسمی، اعیاد اسلامی و جشن‌های ایرانی ۲۰۲۶",
-    moonH:"🌙 راهنمای فازهای ماه",
-    srchPH:"جستجوی رویدادها…",
-    chips:["همه","تعطیلات","آخر هفته","اسلامی","ایرانی","فازهای ماه"],
+    navTt:"تقویم نروژ",navSb:"تعطیلات رسمی · فازهای ماه",
+    ey:"پادشاهی نروژ",h1n:"تقویم",h1em:"نروژ",
+    desc:"تعطیلات رسمی نروژ، اعیاد اسلامی، جشن‌های ایرانی و فازهای ماه برای سال‌های ۲۰۲۵، ۲۰۲۶ و ۲۰۲۷.",
+    sH:"تعطیلات رسمی",sW:"آخر هفته",sWD:"روزهای کاری",sI:"اسلامی و ایرانی",
+    qA:"تعطیل بعدی",qB:"هفته‌های باقی‌مانده",qC:"نوروز",qD:"یلدا",
+    up:"رویدادهای پیش رو",vAll:"همه",vOne:"ماهانه",expT:"خروجی",
+    mH:"خروجی تقویم",mS:"تقویم را به صورت سند A4 آماده چاپ صادر کنید.",
+    o1:"چاپ / PDF",o1d:"باز کردن کادر چاپ\nذخیره PDF",
+    o2:"پیش‌نمایش A4",o2d:"تقویم کامل در یک\nپنجره تمیز",mCls:"انصراف",
+    inH:"🇳🇴 تعطیلات و جشن‌ها",moonH:"🌙 فازهای ماه",
+    srPH:"جستجوی رویدادها…",
+    chips:["همه","تعطیلات","آخر هفته","اسلامی","ایرانی","ماه"],
     days:["دوشنبه","سه‌شنبه","چهارشنبه","پنجشنبه","جمعه","شنبه","یکشنبه"],
     months:["ژانویه","فوریه","مارس","آوریل","مه","ژوئن","ژوئیه","اوت","سپتامبر","اکتبر","نوامبر","دسامبر"],
     mAb:["ژان","فور","مار","آور","مه","ژون","ژوئ","اوت","سپت","اکت","نوو","دسم"],
     dFull:["یکشنبه","دوشنبه","سه‌شنبه","چهارشنبه","پنجشنبه","جمعه","شنبه"],
-    badge:{off:"تعطیل رسمی",isl:"عید اسلامی",per:"جشن ایرانی",approx:"تاریخ تقریبی"},
-    moon:[
-      {i:"🌑",n:"هلال ماه",d:"ماه دیده نمی‌شود. آغاز ماه قمری."},
-      {i:"🌓",n:"ربع اول",d:"نیمه راست روشن. ماه در حال رشد."},
-      {i:"🌕",n:"ماه کامل",d:"کاملاً روشن. بالاترین نیروی کشندی."},
-      {i:"🌗",n:"ربع آخر",d:"نیمه چپ روشن. ماه در حال کاهش."},
-    ],
-    inDays:"تا {n} روز دیگر",today:"امروز",past:"{n} روز پیش",
-    foot:`داده‌ها: <a href="https://lovdata.no">Lovdata.no</a> (تعطیلات) · <a href="https://islamsk.no">شورای اسلامی نروژ</a> · داده‌های نجومی فازهای ماه · تقویم ایرانی`,
-    pcMeta:"تقویم نروژ ۲۰۲۶\nتعطیلات رسمی · فازهای ماه · اعیاد اسلامی · جشن‌های ایرانی",
-    pcLeg:["تعطیل رسمی","آخر هفته","عید اسلامی","جشن ایرانی","امروز","فاز ماه"],
+    badge:{off:"رسمی",isl:"عید اسلامی",per:"ایرانی",approx:"تقریبی"},
+    moon:[{i:"🌑",n:"هلال ماه",d:"ماه دیده نمی‌شود. آغاز ماه قمری."},{i:"🌓",n:"ربع اول",d:"نیمه راست روشن."},{i:"🌕",n:"ماه کامل",d:"کاملاً روشن."},{i:"🌗",n:"ربع آخر",d:"نیمه چپ روشن."}],
+    inDays:"تا {n} روز",today:"امروز",past:"{n} روز پیش",
+    foot:`<a href="https://lovdata.no">Lovdata.no</a> (تعطیلات) · <a href="https://islamsk.no">شورای اسلامی نروژ</a> · داده‌های نجومی · تقویم ایرانی`,
+    pcMeta:"تقویم نروژ {Y}\nتعطیلات · فازهای ماه · اعیاد اسلامی · جشن‌های ایرانی",
+    pcLeg:["تعطیل رسمی","آخر هفته","عید اسلامی","ایرانی","امروز","ماه"],
+    nextEvt:"بعدی:",countIn:"تا",stNow:"الان",shamsi:"شمسی",cet:"CET",cest:"CEST",
   }
 };
 
-/* ══════════════════════════════
-   STATE
-══════════════════════════════ */
-let lang='en',view='all',curM=new Date().getMonth();
-const TODAY=new Date();
-const IS26=TODAY.getFullYear()===2026;
-
-/* ══════════════════════════════
-   TOOLTIP — fixed position
-══════════════════════════════ */
-const tipWrap=document.getElementById('tip-wrap');
-const tipInner=document.getElementById('tip-inner');
-let tipTO=null;
-
-function getEventsForKey(k){
-  const evs=[];
-  if(HOL[k]) evs.push({data:HOL[k],cls:'r',tp:'n'});
-  if(ISLAMIC[k]) evs.push({data:ISLAMIC[k],cls:'g',tp:'i'});
-  if(PERSIAN[k]) evs.push({data:PERSIAN[k],cls:'p',tp:'p'});
-  if(MOON[k]) evs.push({data:{en:TX.en.moon.find(m=>m.i===MOON[k])?.n||'',no:TX.no.moon.find(m=>m.i===MOON[k])?.n||'',fa:TX.fa.moon.find(m=>m.i===MOON[k])?.n||''},cls:'m',tp:'moon',icon:MOON[k]});
-  return evs;
+/* ══ TIMER ══ */
+function getCETInfo(){
+  const now=new Date();
+  // CEST: last Sunday March → last Sunday October
+  const y=now.getFullYear();
+  // last sunday of march
+  const mar=new Date(y,2,31);mar.setDate(mar.getDate()-mar.getDay());
+  // last sunday of october
+  const oct=new Date(y,9,31);oct.setDate(oct.getDate()-oct.getDay());
+  const isCEST=now>=mar&&now<oct;
+  const off=isCEST?2:1;
+  const localMs=now.getTime()+now.getTimezoneOffset()*60000+off*3600000;
+  return {time:new Date(localMs),isCEST,off};
 }
 
-function showTip(el,k,m,d){
+function updateTimer(){
   const t=TX[lang];
-  const evs=getEventsForKey(k);
-  if(!evs.length){hideTip();return;}
-  const dow=new Date(2026,m,d).getDay();
-  const colors={r:'var(--red2)',g:'var(--grn2)',p:'var(--gld2)',m:'var(--moon)'};
-  let html=evs.map(ev=>{
-    const nm=ev.tp==='moon'
-      ? (MOON[k]+' '+(ev.data[lang]||ev.data.en))
-      : (ev.data[lang]||ev.data.en);
-    const de=ev.tp==='moon'?'':(ev.data[`de_${lang}`]||ev.data.de_en||'');
-    return `<div class="tip-evt">
-      <div class="tip-h" style="color:${colors[ev.cls]}">${nm}</div>
-      ${de?`<div class="tip-d">${de}</div>`:''}
-      <div class="tip-dt">${t.dFull[dow]}, ${d+1} ${t.mAb[m]}</div>
-    </div>`;
-  }).join('');
-  tipInner.innerHTML=html;
+  const {time,isCEST}=getCETInfo();
+  const hh=String(time.getHours()).padStart(2,'0');
+  const mm=String(time.getMinutes()).padStart(2,'0');
+  const ss=String(time.getSeconds()).padStart(2,'0');
+  document.getElementById('t-clock').textContent=`${hh}:${mm}:${ss}`;
 
-  const rect=el.getBoundingClientRect();
-  const tipH=160; // estimate
-  const above=rect.top>tipH+20;
+  const days=t.dFull||TX.en.dFull;
+  const months=(TX[lang]||TX.en).months;
+  const shamsi=SHAMSI[selYear]||'';
+  const shamsiStr=lang==='fa'?` · ${shamsi} شمسی`:` · Shamsi ${shamsi}`;
+  document.getElementById('t-date').textContent=
+    `${days[time.getDay()]}, ${time.getDate()} ${months[time.getMonth()]} ${time.getFullYear()}${shamsiStr}`;
 
-  tipWrap.style.left=(rect.left+rect.width/2-120)+'px';
-  if(above){
-    tipWrap.style.top=(rect.top-tipH-14+window.scrollY)+'px';
-    tipWrap.className='dc-tip-wrap tip-up';
-  } else {
-    tipWrap.style.top=(rect.bottom+10+window.scrollY)+'px';
-    tipWrap.className='dc-tip-wrap tip-down';
+  document.getElementById('tz-cet').className='tz-badge'+(isCEST?'':' active');
+  document.getElementById('tz-cest').className='tz-badge'+(isCEST?' active':'');
+  document.getElementById('tz-cet').textContent=`CET UTC+1`;
+  document.getElementById('tz-cest').textContent=`CEST UTC+2`;
+
+  // countdown to next event in selected year
+  const HOL=buildHOL(selYear);
+  const ISL=ISL_DATA[selYear]||{};
+  const PER=PERS_DATA[selYear]||{};
+  const allEvts=[];
+  [...Object.entries(HOL),...Object.entries(ISL),...Object.entries(PER)].forEach(([k,v])=>{
+    const[mo,d]=k.split('-').map(Number);
+    const dt=new Date(selYear,mo-1,d);
+    allEvts.push({dt,nm:v[lang]||v.en});
+  });
+  allEvts.sort((a,b)=>a.dt-b.dt);
+  const now2=new Date();
+  let nxt=allEvts.find(e=>e.dt>=new Date(now2.getFullYear(),now2.getMonth(),now2.getDate()));
+  if(nxt){
+    const diff=nxt.dt-new Date(now2.getFullYear(),now2.getMonth(),now2.getDate(),0,0,0);
+    const ddays=Math.round(diff/86400000);
+    const nm=nxt.nm.length>22?nxt.nm.substring(0,20)+'…':nxt.nm;
+    document.getElementById('t-next').innerHTML=`<strong>${t.nextEvt}</strong> ${nm}`;
+    if(ddays===0) document.getElementById('t-cd').textContent=t.stNow;
+    else{
+      // countdown seconds
+      const msLeft=nxt.dt.getTime()-now2.getTime();
+      const totalSec=Math.floor(msLeft/1000);
+      const ds=Math.floor(totalSec/86400),hs=Math.floor((totalSec%86400)/3600),ms2=Math.floor((totalSec%3600)/60),sc=totalSec%60;
+      document.getElementById('t-cd').textContent=`${t.countIn} ${ds}d ${String(hs).padStart(2,'0')}:${String(ms2).padStart(2,'0')}:${String(sc).padStart(2,'0')}`;
+    }
   }
-
-  clearTimeout(tipTO);
-  tipWrap.classList.add('show');
 }
+setInterval(updateTimer,1000);
 
-function hideTip(){
-  tipTO=setTimeout(()=>tipWrap.classList.remove('show'),80);
-}
-
-document.addEventListener('scroll',hideTip,{passive:true});
-
-/* ══════════════════════════════
-   RENDER
-══════════════════════════════ */
+/* ══ RENDER ══ */
 function render(){
   const t=TX[lang],fa=lang==='fa';
   document.body.className=fa?'fa':'';
-
-  // nav
-  document.getElementById('nav-ttl').textContent=t.navTtl;
-  document.getElementById('nav-sub').textContent=t.navSub;
-  // hero
+  document.getElementById('nav-tt').textContent=t.navTt;
+  document.getElementById('nav-sb').textContent=t.navSb;
   document.getElementById('h-ey').textContent=t.ey;
-  const h=document.getElementById('h-h1');
-  if(fa) h.innerHTML=`<em>${t.h1n}</em><br><span>${t.h1em}</span><br><span>${t.h1y}</span>`;
-  else    h.innerHTML=`<span>${t.h1n}</span><br><em>${t.h1em}</em><br><span>${t.h1y}</span>`;
+  const hh=document.getElementById('h-h1');
+  hh.innerHTML=fa?`<em>${t.h1n}</em><br><span>${t.h1em}</span>`:`<span>${t.h1n}</span><br><em>${t.h1em}</em>`;
   document.getElementById('h-desc').textContent=t.desc;
   document.getElementById('sl-up').textContent=t.up;
-  document.getElementById('inf-h2').textContent=t.infoH;
-  document.getElementById('moon-h2').textContent=t.moonH;
-  document.getElementById('srch').placeholder=t.srchPH;
-  document.getElementById('ftxt').innerHTML=t.foot;
-  document.getElementById('vb-all-t').textContent=t.vAll;
-  document.getElementById('vb-one-t').textContent=t.vOne;
+  document.getElementById('vt-all').textContent=t.vAll;
+  document.getElementById('vt-one').textContent=t.vOne;
   document.getElementById('exp-t').textContent=t.expT;
   document.getElementById('m-h').textContent=t.mH;
   document.getElementById('m-s').textContent=t.mS;
@@ -949,9 +850,12 @@ function render(){
   document.getElementById('m-o1d').innerHTML=t.o1d.replace('\n','<br>');
   document.getElementById('m-o2').textContent=t.o2;
   document.getElementById('m-o2d').innerHTML=t.o2d.replace('\n','<br>');
-  document.getElementById('m-close').textContent=t.mClose;
-  document.getElementById('mob-share-txt').textContent=t.mobShare;
-
+  document.getElementById('m-cls').textContent=t.mCls;
+  document.getElementById('srch').placeholder=t.srPH;
+  document.getElementById('inf-h2').textContent=`${t.inH} ${selYear}`;
+  document.getElementById('moon-h2').textContent=t.moonH;
+  document.getElementById('ftxt').innerHTML=t.foot;
+  renderYrSel();
   renderStats(t);
   renderUpcoming(t);
   renderYM(t);
@@ -961,53 +865,79 @@ function render(){
   renderSingle(t);
   renderHolCards(t);
   renderMoonGuide(t);
+  updateTimer();
 }
 
-/* ── STATS ── */
+/* ── year selector ── */
+function renderYrSel(){
+  const div=document.getElementById('yr-sel');
+  div.innerHTML='';
+  [2025,2026,2027].forEach(y=>{
+    const b=document.createElement('button');
+    b.className='yrb'+(y===selYear?' on':'');
+    const sh=SHAMSI[y]||'';
+    b.textContent=lang==='fa'?`${y} (${sh})`:`${y}`;
+    b.onclick=()=>{selYear=y;render();};
+    div.appendChild(b);
+  });
+}
+
+/* ── stats ── */
 function renderStats(t){
+  const HOL=buildHOL(selYear);
   let h=0,we=0,wd=0;
   for(let m=0;m<12;m++){
-    const dim=new Date(2026,m+1,0).getDate();
+    const dim=new Date(selYear,m+1,0).getDate();
     for(let d=1;d<=dim;d++){
-      const dow=new Date(2026,m,d).getDay();
+      const dow=new Date(selYear,m,d).getDay();
       const k=`${m+1}-${d}`;
       if(HOL[k])h++;
       if(dow===0||dow===6)we++;
       else if(!HOL[k])wd++;
     }
   }
-  const ic=Object.keys(ISLAMIC).length+Object.keys(PERSIAN).length;
+  const ISL=ISL_DATA[selYear]||{};
+  const PER=PERS_DATA[selYear]||{};
+  const ic=Object.keys(ISL).length+Object.keys(PER).length;
   document.getElementById('stats').innerHTML=`
     <div class="stc"><div class="stc-n r">${h}</div><div class="stc-l">${t.sH}</div></div>
     <div class="stc"><div class="stc-n v">${we}</div><div class="stc-l">${t.sW}</div></div>
     <div class="stc"><div class="stc-n b">${wd}</div><div class="stc-l">${t.sWD}</div></div>
     <div class="stc"><div class="stc-n g">${ic}</div><div class="stc-l">${t.sI}</div></div>
   `;
+  const HOL2=buildHOL(selYear);
   let nextH='—';
-  for(const[k,v] of Object.entries(HOL)){
+  const nowDate=new Date(TODAY.getFullYear(),TODAY.getMonth(),TODAY.getDate());
+  for(const[k] of Object.entries(HOL2).sort((a,b)=>{
+    const[am,ad]=a[0].split('-').map(Number),[bm,bd]=b[0].split('-').map(Number);return am!==bm?am-bm:ad-bd;
+  })){
     const[mo,d]=k.split('-').map(Number);
-    const dt=new Date(2026,mo-1,d);
-    if(dt>=TODAY){nextH=`${d} ${t.mAb[mo-1]}`;break;}
+    const dt=new Date(selYear,mo-1,d);
+    if(dt>=nowDate){nextH=`${d} ${t.mAb[mo-1]}`;break;}
   }
-  const wl=Math.max(0,Math.round((new Date('2026-12-31')-TODAY)/604800000));
+  const wl=Math.max(0,Math.round((new Date(`${selYear}-12-31`)-TODAY)/604800000));
+  const sh=SHAMSI[selYear]||'';
   document.getElementById('qfrow').innerHTML=`
-    <div class="qfi"><div class="qfi-k">${t.qfA}</div><div class="qfi-v">${nextH}</div></div>
-    <div class="qfi"><div class="qfi-k">${t.qfB}</div><div class="qfi-v">${wl}</div></div>
-    <div class="qfi"><div class="qfi-k">${t.qfC}</div><div class="qfi-v">${lang==='fa'?'۲۰ مارس':'20 Mar'}</div></div>
-    <div class="qfi" style="border:none"><div class="qfi-k">${t.qfD}</div><div class="qfi-v">${lang==='fa'?'۲۱ دسامبر':'21 Dec'}</div></div>
+    <div class="qfi"><div class="qfi-k">${t.qA}</div><div class="qfi-v">${nextH}</div></div>
+    <div class="qfi"><div class="qfi-k">${t.qB}</div><div class="qfi-v">${wl}</div></div>
+    <div class="qfi"><div class="qfi-k">${lang==='fa'?'سال شمسی':t.shamsi||'Shamsi'}</div><div class="qfi-v">${sh}</div></div>
+    <div class="qfi" style="border:none"><div class="qfi-k">${t.qC}</div><div class="qfi-v">${lang==='fa'?'۲۰ مارس':'20 Mar'}</div></div>
   `;
 }
 
-/* ── UPCOMING ── */
+/* ── upcoming ── */
 function renderUpcoming(t){
+  const HOL=buildHOL(selYear);
+  const ISL=ISL_DATA[selYear]||{};
+  const PER=PERS_DATA[selYear]||{};
   const evs=[];
   const add=(obj,cls)=>Object.entries(obj).forEach(([k,v])=>{
     const[mo,d]=k.split('-').map(Number);
-    const dt=new Date(2026,mo-1,d);
+    const dt=new Date(selYear,mo-1,d);
     const delta=Math.round((dt-TODAY)/86400000);
     evs.push({dt,delta,mo,d,v,k,cls});
   });
-  add(HOL,'r');add(ISLAMIC,'g');add(PERSIAN,'p');
+  add(HOL,'r');add(ISL,'g');add(PER,'p');
   evs.sort((a,b)=>Math.abs(a.delta)-Math.abs(b.delta));
   document.getElementById('ev-row').innerHTML=evs.slice(0,12).map(ev=>{
     const nm=ev.v[lang]||ev.v.en;
@@ -1020,26 +950,30 @@ function renderUpcoming(t){
   }).join('');
 }
 
-/* ── YEAR MAP ── */
+/* ── year map ── */
 function renderYM(t){
+  const HOL=buildHOL(selYear);
+  const ISL=ISL_DATA[selYear]||{};
+  const PER=PERS_DATA[selYear]||{};
+  const MOON=MOON_DATA[selYear]||{};
   const inn=document.getElementById('ym-inner');
   inn.innerHTML='';
   for(let m=0;m<12;m++){
-    const dim=new Date(2026,m+1,0).getDate();
-    const fd=new Date(2026,m,1).getDay();
+    const dim=new Date(selYear,m+1,0).getDate();
+    const fd=new Date(selYear,m,1).getDay();
     const off=fd===0?6:fd-1;
-    const isC=IS26&&TODAY.getMonth()===m;
+    const isC=isCY(selYear)&&TODAY.getMonth()===m;
     let dots='';
     for(let i=0;i<off;i++) dots+=`<div class="yd e"></div>`;
     for(let d=1;d<=dim;d++){
-      const dw=new Date(2026,m,d).getDay();
+      const dw=new Date(selYear,m,d).getDay();
       const k=`${m+1}-${d}`;
-      const iT=IS26&&TODAY.getMonth()===m&&TODAY.getDate()===d;
+      const iT=isCY(selYear)&&TODAY.getMonth()===m&&TODAY.getDate()===d;
       let c='';
       if(iT)c='t';
       else if(HOL[k])c='h';
-      else if(ISLAMIC[k])c='i';
-      else if(PERSIAN[k])c='p';
+      else if(ISL[k])c='i';
+      else if(PER[k])c='p';
       else if(MOON[k])c='m';
       else if(dw===0||dw===6)c='w';
       dots+=`<div class="yd ${c}"></div>`;
@@ -1052,7 +986,7 @@ function renderYM(t){
   }
 }
 
-/* ── LEGEND ── */
+/* ── legend ── */
 function renderLegend(t){
   document.getElementById('legend').innerHTML=`
     <div class="lgi"><div class="lgd r"></div>${t.badge.off}</div>
@@ -1069,7 +1003,7 @@ function renderLegend(t){
   `;
 }
 
-/* ── CHIPS ── */
+/* ── chips ── */
 function renderChips(t){
   const ds=[{id:'all',cl:'all'},{id:'h',cl:'r'},{id:'we',cl:'v'},{id:'i',cl:'g'},{id:'p',cl:'p'},{id:'m',cl:'m'}];
   document.getElementById('chips').innerHTML=ds.map((c,i)=>
@@ -1081,7 +1015,7 @@ function onChip(el){
   el.classList.add('on');
 }
 
-/* ── GRID ── */
+/* ── grid ── */
 function renderGrid(t){
   const g=document.getElementById('grid-all');
   g.innerHTML='';
@@ -1089,31 +1023,33 @@ function renderGrid(t){
 }
 
 function buildMC(m,t){
-  const dim=new Date(2026,m+1,0).getDate();
-  const fd=new Date(2026,m,1).getDay();
+  const HOL=buildHOL(selYear);
+  const ISL=ISL_DATA[selYear]||{};
+  const PER=PERS_DATA[selYear]||{};
+  const dim=new Date(selYear,m+1,0).getDate();
+  const fd=new Date(selYear,m,1).getDay();
   const off=fd===0?6:fd-1;
   const fa=lang==='fa';
-  const evs=[];
+  const pills=[];
+  let ec=0;
   for(let d=1;d<=dim;d++){
     const k=`${m+1}-${d}`;
-    if(HOL[k]) evs.push({cl:'r',nm:HOL[k][lang]||HOL[k].en});
-    if(ISLAMIC[k]) evs.push({cl:'g',nm:ISLAMIC[k][lang]||ISLAMIC[k].en});
-    if(PERSIAN[k]) evs.push({cl:'p',nm:PERSIAN[k][lang]||PERSIAN[k].en});
+    if(HOL[k]){pills.push({cl:'r',nm:HOL[k][lang]||HOL[k].en});ec++;}
+    if(ISL[k]){pills.push({cl:'g',nm:ISL[k][lang]||ISL[k].en});ec++;}
+    if(PER[k]){pills.push({cl:'p',nm:PER[k][lang]||PER[k].en});ec++;}
   }
-  const ec=evs.length;
-  const pills=[...new Map(evs.map(e=>[e.nm,e])).values()].slice(0,4);
-
+  const uniq=[...new Map(pills.map(p=>[p.nm,p])).values()].slice(0,3);
   const card=document.createElement('div');
   card.className='mc';
   card.innerHTML=`
     <div class="mc-hd">
-      <div class="mc-bign">${String(m+1).padStart(2,'0')}</div>
-      <div><div class="mc-mn">${t.months[m]}</div><div class="mc-ms">${fa?'۲۰۲۶':'2026'}</div></div>
-      ${ec?`<div class="mc-ec">${ec} ${lang==='fa'?'رویداد':lang==='no'?'hdg':'events'}</div>`:''}
+      <div class="mc-big">${String(m+1).padStart(2,'0')}</div>
+      <div><div class="mc-mn">${t.months[m]}</div><div class="mc-ms">${selYear}</div></div>
+      ${ec?`<div class="mc-ec">${ec} ev</div>`:''}
     </div>
-    <div class="mc-pills">${pills.map(p=>`<span class="mcp ${p.cl}">${p.nm}</span>`).join('')||'<span style="font-size:8px;color:var(--t4)">&nbsp;</span>'}</div>
+    <div class="mc-pills">${uniq.map(p=>`<span class="mcp ${p.cl}">${p.nm}</span>`).join('')||'<span style="font-size:7.5px;color:var(--t4)">&nbsp;</span>'}</div>
     <div class="mc-dn">${t.days.map((n,i)=>`<div class="dnh${i>=5?' we':''}">${n.substring(0,2)}</div>`).join('')}</div>
-    <div class="mc-dg" id="mcdg-${m}"></div>
+    <div class="mc-dg-wrap"><div class="mc-dg" id="mcdg-${m}"></div></div>
   `;
   const dg=card.querySelector(`#mcdg-${m}`);
   for(let i=0;i<off;i++){const e=document.createElement('div');e.className='dc dc-e';dg.appendChild(e);}
@@ -1121,99 +1057,162 @@ function buildMC(m,t){
   return card;
 }
 
-/* ── DAY CELL ── */
+/* ── day cell ── */
 function buildDC(m,d,t,large){
-  const dow=new Date(2026,m,d).getDay();
+  const HOL=buildHOL(selYear);
+  const ISL=ISL_DATA[selYear]||{};
+  const PER=PERS_DATA[selYear]||{};
+  const MOON=MOON_DATA[selYear]||{};
+  const dow=new Date(selYear,m,d).getDay();
   const k=`${m+1}-${d}`;
   const isWE=dow===0||dow===6;
-  const isH=!!HOL[k],isI=!!ISLAMIC[k],isP=!!PERSIAN[k];
+  const isH=!!HOL[k],isI=!!ISL[k],isP=!!PER[k];
   const isMulti=(isH&&(isI||isP))||(isI&&isP);
-  const isT=IS26&&TODAY.getMonth()===m&&TODAY.getDate()===d;
+  const isT=isCY(selYear)&&TODAY.getMonth()===m&&TODAY.getDate()===d;
   const moon=MOON[k]||'';
   const pre=large?'sdc':'dc';
   let cls=pre;
-
-  if(isMulti) cls+=` multi`;
-  else if(isH) cls+=` hol`;
-  else if(isI) cls+=` isl`;
-  else if(isP) cls+=` pers`;
-  else if(isWE) cls+=` we`;
-  if(isT) cls+=` tod`;
-  if(!large&&!isH&&!isI&&!isP&&!isWE&&moon) cls+=` moon-solo`;
+  if(isMulti)cls+=' multi';
+  else if(isH)cls+=' hol';
+  else if(isI)cls+=' isl';
+  else if(isP)cls+=' pers';
+  else if(isWE)cls+=' we';
+  if(isT)cls+=' tod';
+  if(!large&&!isH&&!isI&&!isP&&!isWE&&moon)cls+=' ms';
 
   const el=document.createElement('div');
   el.className=cls;
 
-  // indicator dots for multi
-  let dotsHtml='';
+  const dotList=[];
   if(!large){
-    const dotList=[];
-    if(isH) dotList.push('r');
-    if(isI) dotList.push('g');
-    if(isP) dotList.push('p');
-    if(moon&&!isH&&!isI&&!isP) dotList.push('m');
-    if(dotList.length>1) dotsHtml=`<div class="dc-dots">${dotList.map(c=>`<div class="dc-dot ${c}"></div>`).join('')}</div>`;
+    if(isH)dotList.push('r');
+    if(isI)dotList.push('g');
+    if(isP)dotList.push('p');
+    if(moon&&!isH&&!isI&&!isP)dotList.push('m');
   }
 
-  // sub label for single view
-  let subLabel='';
+  let sub='';
   if(large){
     const labels=[];
-    if(isH) labels.push(HOL[k][lang]||HOL[k].en);
-    if(isI) labels.push(ISLAMIC[k][lang]||ISLAMIC[k].en);
-    if(isP) labels.push(PERSIAN[k][lang]||PERSIAN[k].en);
-    subLabel=labels.join(' · ');
+    if(isH)labels.push(HOL[k][lang]||HOL[k].en);
+    if(isI)labels.push(ISL[k][lang]||ISL[k].en);
+    if(isP)labels.push(PER[k][lang]||PER[k].en);
+    sub=labels.join(' · ');
   }
 
   if(large){
-    el.innerHTML=`
-      <div class="sdc-n">${d}</div>
-      ${moon?`<div class="sdc-m">${moon}</div>`:''}
-      ${subLabel?`<div class="sdc-s">${subLabel}</div>`:''}
-    `;
+    el.innerHTML=`<div class="sdc-n">${d}</div>${moon?`<div class="sdc-m">${moon}</div>`:''}${sub?`<div class="sdc-s">${sub}</div>`:''}`;
   } else {
+    const dotsHtml=dotList.length>1?`<div class="dc-dots">${dotList.map(c=>`<div class="dc-dot ${c}"></div>`).join('')}</div>`:'';
     el.innerHTML=`<div class="dcn">${d}</div>${moon?`<div class="dcm">${moon}</div>`:''}${dotsHtml}`;
   }
 
-  // tooltip via mouse events
-  el.addEventListener('mouseenter',()=>showTip(el,k,m,d));
-  el.addEventListener('mouseleave',hideTip);
-  el.addEventListener('click',()=>showTip(el,k,m,d));
+  // TOOLTIP: use mouseenter + click (for mobile)
+  const hasEvt=isH||isI||isP||moon;
+  if(hasEvt){
+    el.addEventListener('mouseenter',()=>positionTip(el,k,m,d,t));
+    el.addEventListener('click',(e)=>{e.stopPropagation();positionTip(el,k,m,d,t);});
+  }
   return el;
 }
 
-/* ── SINGLE ── */
-function renderSingle(t){
-  const m=curM,fa=lang==='fa';
-  document.getElementById('sv-ttl').innerHTML=fa
-    ?`${t.months[m]} <em>۲۰۲۶</em>`:`${t.months[m]} <em>2026</em>`;
-  document.getElementById('sv-dn').innerHTML=t.days.map((n,i)=>`<div class="sv-dnc${i>=5?' we':''}">${n}</div>`).join('');
-  const sg=document.getElementById('sv-dg');
-  sg.innerHTML='';
-  const fd=new Date(2026,m,1).getDay();
-  const off=fd===0?6:fd-1;
-  const dim=new Date(2026,m+1,0).getDate();
-  for(let i=0;i<off;i++){const e=document.createElement('div');e.className='sdc sdc-e';sg.appendChild(e);}
-  for(let d=1;d<=dim;d++) sg.appendChild(buildDC(m,d,t,true));
-  document.querySelectorAll('.ymc').forEach((el,i)=>el.classList.toggle('on',i===m));
+/* ── tooltip positioning (fixed to viewport) ── */
+let tipVisible=false;
+const tipbox=document.getElementById('tipbox');
+const tbInner=document.getElementById('tb-inner');
+
+function buildTipHTML(k,m,d,t){
+  const HOL=buildHOL(selYear);
+  const ISL=ISL_DATA[selYear]||{};
+  const PER=PERS_DATA[selYear]||{};
+  const MOON=MOON_DATA[selYear]||{};
+  const dow=new Date(selYear,m,d).getDay();
+  const cols={r:'var(--red2)',g:'var(--grn2)',p:'var(--gld2)',m:'var(--moon)'};
+  const evts=[];
+  if(HOL[k])evts.push({d:HOL[k],cl:'r'});
+  if(ISL[k])evts.push({d:ISL[k],cl:'g'});
+  if(PER[k])evts.push({d:PER[k],cl:'p'});
+  if(MOON[k]){
+    const mn=t.moon.find(x=>x.i===MOON[k]);
+    evts.push({d:{[lang]:(MOON[k]+' '+(mn?mn.n:'')),en:MOON[k]+' '+((TX.en.moon.find(x=>x.i===MOON[k])||{}).n||'')},cl:'m',noDesc:true});
+  }
+  if(!evts.length)return '';
+  const dtStr=`${t.dFull[dow]}, ${d} ${t.mAb[m]} ${selYear}`;
+  return evts.map(ev=>`<div class="tip-evt">
+    <div class="tip-ttl" style="color:${cols[ev.cl]}">${ev.d[lang]||ev.d.en}</div>
+    ${!ev.noDesc&&(ev.d[`de_${lang}`]||ev.d.de_en)?`<div class="tip-desc">${ev.d[`de_${lang}`]||ev.d.de_en}</div>`:''}
+    <div class="tip-date">${dtStr}</div>
+  </div>`).join('');
 }
 
-/* ── HOL CARDS ── */
+function positionTip(el,k,m,d,t){
+  const html=buildTipHTML(k,m,d,t);
+  if(!html){tipbox.classList.remove('vis');return;}
+  tbInner.innerHTML=html;
+  tipbox.style.visibility='hidden';
+  tipbox.style.opacity='0';
+  tipbox.classList.remove('vis');
+  // measure
+  tipbox.style.left='0';tipbox.style.top='0';
+  tipbox.style.visibility='visible';
+  const tW=tipbox.offsetWidth,tH=tipbox.offsetHeight;
+  tipbox.style.visibility='hidden';
+  const rect=el.getBoundingClientRect();
+  const vW=window.innerWidth,vH=window.innerHeight;
+  // horizontal: center over element, clamp to viewport
+  let lx=rect.left+rect.width/2-tW/2;
+  lx=Math.max(8,Math.min(lx,vW-tW-8));
+  // vertical: prefer above, else below
+  const MARGIN=10;
+  let ty,above=true;
+  if(rect.top-tH-MARGIN>8){ty=rect.top-tH-MARGIN;}
+  else{ty=rect.bottom+MARGIN;above=false;}
+  tipbox.className=above?'tip-up':'tip-dn';
+  // arrow horizontal offset
+  const arrowEl=tipbox.querySelector('.tb-arrow');
+  const arrX=rect.left+rect.width/2-lx;
+  if(arrowEl)arrowEl.style.left=Math.max(12,Math.min(arrX,tW-12))+'px';
+  tipbox.style.left=lx+'px';
+  tipbox.style.top=(ty+window.scrollY)+'px';
+  tipbox.classList.add('vis');
+  tipVisible=true;
+}
+
+document.addEventListener('click',()=>{tipbox.classList.remove('vis');tipVisible=false;});
+document.addEventListener('scroll',()=>{tipbox.classList.remove('vis');tipVisible=false;},{passive:true});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){tipbox.classList.remove('vis');tipVisible=false;}});
+
+/* ── single month ── */
+function renderSingle(t){
+  const fa=lang==='fa';
+  document.getElementById('sv-ttl').innerHTML=fa
+    ?`${t.months[curM]} <em>${selYear}</em>`:`${t.months[curM]} <em>${selYear}</em>`;
+  document.getElementById('sv-dn').innerHTML=t.days.map((n,i)=>`<div class="sv-dnc${i>=5?' we':''}">${n}</div>`).join('');
+  const sg=document.getElementById('sv-dg');sg.innerHTML='';
+  const fd=new Date(selYear,curM,1).getDay();
+  const off=fd===0?6:fd-1;
+  const dim=new Date(selYear,curM+1,0).getDate();
+  for(let i=0;i<off;i++){const e=document.createElement('div');e.className='sdc sdc-e';sg.appendChild(e);}
+  for(let d=1;d<=dim;d++) sg.appendChild(buildDC(curM,d,t,true));
+  document.querySelectorAll('.ymc').forEach((el,i)=>el.classList.toggle('on',i===curM));
+}
+
+/* ── holiday cards ── */
 function renderHolCards(t){
+  const HOL=buildHOL(selYear);
+  const ISL=ISL_DATA[selYear]||{};
+  const PER=PERS_DATA[selYear]||{};
   const all=[
     ...Object.entries(HOL).map(([k,v])=>({k,v,tp:'n'})),
-    ...Object.entries(ISLAMIC).map(([k,v])=>({k,v,tp:'i'})),
-    ...Object.entries(PERSIAN).map(([k,v])=>({k,v,tp:'p'})),
-  ].sort((a,b)=>{
-    const[am,ad]=a.k.split('-').map(Number),[bm,bd]=b.k.split('-').map(Number);
-    return am!==bm?am-bm:ad-bd;
-  });
+    ...Object.entries(ISL).map(([k,v])=>({k,v,tp:'i'})),
+    ...Object.entries(PER).map(([k,v])=>({k,v,tp:'p'})),
+  ].sort((a,b)=>{const[am,ad]=a.k.split('-').map(Number),[bm,bd]=b.k.split('-').map(Number);return am!==bm?am-bm:ad-bd;});
   const fa=lang==='fa';
   document.getElementById('hol-g').innerHTML=all.map(({k,v,tp})=>{
     const[mo,d]=k.split('-').map(Number);
     const nm=v[lang]||v.en;
     const de=v[`de_${lang}`]||v.de_en||'';
-    const dow=new Date(2026,mo-1,d).getDay();
+    const dow=new Date(selYear,mo-1,d).getDay();
     const alt=lang!=='no'?(v.no||''):lang!=='en'?(v.en||''):'';
     const tags=tp==='n'?`<span class="hct n">${t.badge.off}</span>`
       :tp==='i'?`<span class="hct i">${t.badge.isl}</span>${v.approx?`<span class="hct a">${t.badge.approx}</span>`:''}`
@@ -1224,90 +1223,77 @@ function renderHolCards(t){
         <div class="hcc-m">${t.mAb[mo-1]}</div>
         <div class="hcc-dw">${t.dFull[dow]}</div>
       </div>
-      <div class="hcb">
+      <div>
         <div class="hcb-nm">${nm}</div>
         ${alt&&alt!==nm?`<div class="hcb-alt">${alt}</div>`:''}
-        <div class="hcb-ds">${de}</div>
+        ${de?`<div class="hcb-ds">${de}</div>`:''}
         <div class="hcb-tags">${tags}</div>
       </div>
     </div>`;
   }).join('');
 }
 
-/* ── MOON GUIDE ── */
+/* ── moon guide ── */
 function renderMoonGuide(t){
   document.getElementById('moon-g').innerHTML=t.moon.map(p=>`
-    <div class="moonc">
-      <div class="moonico">${p.i}</div>
-      <div><div class="moonnm">${p.n}</div><div class="moonds">${p.d}</div></div>
-    </div>`).join('');
+    <div class="moonc"><div class="moonico">${p.i}</div><div><div class="moonnm">${p.n}</div><div class="moonds">${p.d}</div></div></div>`).join('');
 }
 
-/* ══════════════════════════════
-   SEARCH
-══════════════════════════════ */
+/* ── search ── */
 function doSearch(v){
-  const q=v.toLowerCase().trim();
-  document.querySelectorAll('.dc,.sdc').forEach(el=>{
-    if(el.classList.contains('dc-e')||el.classList.contains('sdc-e')){el.style.opacity='1';return;}
-    // find key from parent month
-    el.style.opacity='1';
-  });
+  // just visual highlight — cells don't store keys directly so we reset
+  // full re-render on empty
 }
 
-/* ══════════════════════════════
-   VIEW / NAV
-══════════════════════════════ */
+/* ══ VIEW ══ */
 function setView(v){
-  view=v;
+  viewMode=v;
   document.getElementById('vb-all').classList.toggle('on',v==='all');
   document.getElementById('vb-one').classList.toggle('on',v==='single');
-  document.getElementById('grid-all').classList.toggle('hidden',v==='single');
+  document.getElementById('grid-all').classList.toggle('hide',v==='single');
   document.getElementById('grid-single').classList.toggle('show',v==='single');
-  if(v==='single') renderSingle(TX[lang]);
+  if(v==='single')renderSingle(TX[lang]);
 }
 function navM(d){curM=(curM+d+12)%12;renderSingle(TX[lang]);}
 
-/* ══════════════════════════════
-   LANG
-══════════════════════════════ */
+/* ══ LANG ══ */
 function setLang(l){
   lang=l;
   document.querySelectorAll('.pgb').forEach(b=>{
-    const oc=b.getAttribute('onclick')||'';
-    b.classList.toggle('on',oc.includes(`'${l}'`));
+    if((b.getAttribute('onclick')||'').includes(`'${l}'`))b.classList.add('on');
+    else if((b.getAttribute('onclick')||'').includes('setLang'))b.classList.remove('on');
   });
   render();
 }
 
-/* ══════════════════════════════
-   MODAL
-══════════════════════════════ */
+/* ══ MODAL ══ */
 function openModal(){document.getElementById('overlay').classList.add('open');}
 function closeModal(){document.getElementById('overlay').classList.remove('open');}
 document.getElementById('overlay').addEventListener('click',e=>{if(e.target.id==='overlay')closeModal();});
 
-/* ══════════════════════════════
-   EXPORT — high quality A4
-══════════════════════════════ */
+/* ══ EXPORT ══ */
 function buildPC(){
   const t=TX[lang],fa=lang==='fa';
+  const HOL=buildHOL(selYear);
+  const ISL=ISL_DATA[selYear]||{};
+  const PER=PERS_DATA[selYear]||{};
+  const MOON=MOON_DATA[selYear]||{};
   const pc=document.getElementById('pc');
   pc.className=fa?'fa':'';
   const dn=fa?['د','س','چ','پ','ج','ش','ی']:lang==='no'?['M','T','O','T','F','L','S']:['M','T','W','T','F','S','S'];
   let mHtml='';
   for(let m=0;m<12;m++){
-    const dim=new Date(2026,m+1,0).getDate();
-    const fd=new Date(2026,m,1).getDay();
+    const dim=new Date(selYear,m+1,0).getDate();
+    const fd=new Date(selYear,m,1).getDay();
     const off=fd===0?6:fd-1;
     let cells='';
-    for(let i=0;i<off;i++) cells+=`<div class="pcd"></div>`;
+    for(let i=0;i<off;i++)cells+=`<div class="pcd"></div>`;
     for(let d=1;d<=dim;d++){
-      const dw=new Date(2026,m,d).getDay();
+      const dw=new Date(selYear,m,d).getDay();
       const k=`${m+1}-${d}`;
-      const isWE=dw===0||dw===6,isH=!!HOL[k],isI=!!ISLAMIC[k],isP=!!PERSIAN[k];
+      const isWE=dw===0||dw===6,isH=!!HOL[k],isI=!!ISL[k],isP=!!PER[k];
       const isMulti=(isH&&(isI||isP))||(isI&&isP);
-      const isT=IS26&&TODAY.getMonth()===m&&TODAY.getDate()===d;
+      const isT=isCY(selYear)&&TODAY.getMonth()===m&&TODAY.getDate()===d;
       const moon=MOON[k]||'';
       let c='pcd';
       if(isMulti)c+=' pml';
@@ -1325,11 +1311,12 @@ function buildPC(){
       <div class="pcdg">${cells}</div>
     </div>`;
   }
+  const sh=SHAMSI[selYear]||'';
   const leg=t.pcLeg;
   pc.innerHTML=`
     <div class="pch">
-      <div class="pch-t">🇳🇴 ${fa?`<em>تقویم</em> نروژ`:lang==='no'?`Norsk <em>Kalender</em>`:`Norsk <em>Calendar</em>`} 2026</div>
-      <div class="pch-m">${t.pcMeta.replace(/\n/g,'<br>')}</div>
+      <div class="pch-t">🇳🇴 ${fa?`<em>تقویم</em> نروژ`:lang==='no'?`Norsk <em>Kalender</em>`:`Norsk <em>Calendar</em>`} ${selYear}</div>
+      <div class="pch-m">${t.pcMeta.replace('{Y}',selYear).replace(/\n/g,'<br>')}${sh?`<br>${t.shamsi||'Shamsi'} ${sh}`:''}</div>
     </div>
     <div class="pcg">${mHtml}</div>
     <div class="pc-leg">
@@ -1348,44 +1335,30 @@ function doExport(type){
   closeModal();
   const pc=buildPC();
   const fa=lang==='fa';
-  let stylesTxt='';
-  try{stylesTxt=Array.from(document.styleSheets).map(ss=>{try{return Array.from(ss.cssRules).map(r=>r.cssText).join('\n');}catch(e){return '';}}).join('\n');}catch(e){}
-
-  const autoprint=type==='print';
-  const fullHTML=`<!DOCTYPE html>
-<html><head>
+  let css='';
+  try{css=Array.from(document.styleSheets).map(s=>{try{return Array.from(s.cssRules).map(r=>r.cssText).join('\n');}catch(e){return '';}}).join('\n');}catch(e){}
+  const autoprint=(type==='print');
+  const html=`<!DOCTYPE html><html><head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Plus+Jakarta+Sans:wght@500;700&family=JetBrains+Mono:wght@400&family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
-<title>Norsk Kalender 2026</title>
+<title>Norsk Kalender ${selYear}</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
-html,body{width:794px;min-height:1123px;background:#fff;}
-body{margin:0;padding:0;font-family:'Plus Jakarta Sans',${fa?"'Vazirmatn',":''}sans-serif;${fa?'direction:rtl;':''}}
-${stylesTxt}
+html,body{width:794px;background:#fff;font-family:'Plus Jakarta Sans',${fa?"'Vazirmatn',":''}sans-serif;${fa?'direction:rtl;':''}}
+${css}
 #pc{position:static!important;left:0!important;top:0!important;z-index:auto!important;display:block!important;width:794px!important;background:#fff!important;}
 @media print{@page{size:A4 portrait;margin:0;}html,body{width:210mm;}}
-</style>
-</head>
-<body>
+</style></head><body>
 ${pc.outerHTML}
-${autoprint?`<script>
-window.addEventListener('load',function(){
-  setTimeout(function(){window.print();},800);
-});<\/script>`:''}
+${autoprint?`<script>window.addEventListener('load',function(){setTimeout(function(){window.print();},900);});<\/script>`:''}
 </body></html>`;
-
-  const w=window.open('','_blank','width=820,height=1180');
-  if(!w){alert('Please allow popups to export.');return;}
-  w.document.open();
-  w.document.write(fullHTML);
-  w.document.close();
+  const w=window.open('','_blank','width=830,height=1180');
+  if(!w){alert('Please allow popups.');return;}
+  w.document.open();w.document.write(html);w.document.close();
 }
 
-/* ══════════════════════════════
-   INIT
-══════════════════════════════ */
+/* ══ INIT ══ */
 curM=TODAY.getMonth();
 render();
 </script>
