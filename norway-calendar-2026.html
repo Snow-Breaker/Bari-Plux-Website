@@ -5,1170 +5,736 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Norsk Kalender 2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Outfit:wght@300;400;500;600;700&family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-/* ═══════════════════════════════════════════
-   ROOT TOKENS
-═══════════════════════════════════════════ */
-:root {
-  --bg:         #060810;
-  --bg2:        #0b0f1c;
-  --card:       #0f1623;
-  --card2:      #131d2e;
-  --card3:      #172038;
-  --rim:        rgba(255,255,255,0.055);
-  --rim2:       rgba(255,255,255,0.03);
+/* ════════════════════════════════
+   TOKENS
+════════════════════════════════ */
+:root{
+  --bg:#05070f;
+  --s1:#090c18;
+  --s2:#0d1120;
+  --s3:#111626;
+  --s4:#15202e;
+  --s5:#1a2a3c;
+  --bord:rgba(255,255,255,0.07);
+  --bord2:rgba(255,255,255,0.04);
+  --t1:#d8e4f8;--t2:#8096b8;--t3:#485a78;--t4:#283450;
+  --red:#d93a2e;--red2:#f04a3a;--rbg:rgba(217,58,46,.09);--rrim:rgba(217,58,46,.22);
+  --vio:#7460cc;--vio2:#9880e8;--vbg:rgba(116,96,204,.08);--vrim:rgba(116,96,204,.2);
+  --grn:#18967a;--grn2:#26c49c;--gbg:rgba(24,150,122,.08);--grim:rgba(24,150,122,.2);
+  --gld:#c88820;--gld2:#e8ae40;--gldbg:rgba(200,136,32,.08);--gldrim:rgba(200,136,32,.22);
+  --moon:#b89840;--moonbg:rgba(184,152,64,.08);
+  --blue:#2468d4;--blue2:#4888f0;--bbg:rgba(36,104,212,.1);--brim:rgba(36,104,212,.32);
+  --f-d:'Playfair Display',serif;
+  --f-u:'Plus Jakarta Sans',sans-serif;
+  --f-m:'JetBrains Mono',monospace;
+  --f-fa:'Vazirmatn',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--t1);font-family:var(--f-u);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+body.fa{font-family:var(--f-fa);direction:rtl;}
 
-  --ink:        #dde4f0;
-  --ink2:       #8899b8;
-  --ink3:       #3d4f6e;
-  --ink4:       rgba(255,255,255,0.025);
+/* ════════════════════════════════
+   AURORA BACKGROUND
+════════════════════════════════ */
+#aurora-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;}
 
-  --aurora1:    #3d7fff;
-  --aurora2:    #5bc8d6;
-  --aurora3:    #a06bf5;
-  --gold:       #e8c060;
-  --gold2:      #c49a30;
+/* ════════════════════════════════
+   LAYOUT
+════════════════════════════════ */
+.page{position:relative;z-index:1;max-width:1480px;margin:0 auto;padding:0 28px 100px;}
 
-  --red:        #ff3d5a;
-  --red-bg:     rgba(255,61,90,0.08);
-  --red-rim:    rgba(255,61,90,0.18);
+/* ════════════════════════════════
+   NAVBAR
+════════════════════════════════ */
+.nav{
+  position:sticky;top:0;z-index:200;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 28px;margin:0 -28px;
+  background:rgba(5,7,15,.85);backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--bord);gap:10px;flex-wrap:wrap;
+}
+.nav-brand{display:flex;align-items:center;gap:10px;}
+.nav-flag{font-size:22px;line-height:1;}
+.nav-txt{}
+.nav-title{font-size:12px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:var(--t2);}
+.nav-sub{font-family:var(--f-m);font-size:9.5px;color:var(--t4);letter-spacing:1px;margin-top:1px;}
+body.fa .nav-title,.nav-sub{font-family:var(--f-fa);}
+.nav-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
 
-  --purple:     #8b6fff;
-  --purple-bg:  rgba(139,111,255,0.08);
-  --purple-rim: rgba(139,111,255,0.18);
+/* pill-group */
+.pg{display:flex;background:var(--s2);border:1px solid var(--bord);border-radius:50px;padding:3px;gap:1px;}
+.pgb{border:none;background:transparent;color:var(--t3);font-family:var(--f-u);font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:5px 12px;border-radius:50px;cursor:pointer;transition:all .2s;}
+.pgb.on{background:linear-gradient(135deg,#1a3370,#22185a);color:#a8ceff;box-shadow:0 2px 10px rgba(30,80,200,.28);}
+body.fa .pgb{font-family:var(--f-fa);}
 
-  --green:      #36d09e;
-  --green-bg:   rgba(54,208,158,0.08);
-  --green-rim:  rgba(54,208,158,0.18);
+/* export button */
+.expbtn{display:flex;align-items:center;gap:6px;border:1px solid var(--gldrim);background:var(--gldbg);color:var(--gld2);font-family:var(--f-u);font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;padding:7px 14px;border-radius:50px;cursor:pointer;transition:all .2s;}
+.expbtn:hover{background:rgba(200,136,32,.18);box-shadow:0 0 22px rgba(200,136,32,.22);}
+.expbtn svg{width:12px;height:12px;flex-shrink:0;}
+body.fa .expbtn{font-family:var(--f-fa);}
 
-  --blue-bg:    rgba(61,127,255,0.12);
-  --blue-rim:   rgba(61,127,255,0.3);
+/* ════════════════════════════════
+   HERO
+════════════════════════════════ */
+.hero{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;padding:56px 0 44px;border-bottom:1px solid var(--bord);margin-bottom:0;}
+.hero-ey{font-family:var(--f-m);font-size:11px;color:var(--gld2);letter-spacing:2.5px;text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.hero-ey::before{content:'';width:28px;height:1px;background:linear-gradient(90deg,var(--gld2),transparent);}
+body.fa .hero-ey::before{display:none;}
+body.fa .hero-ey::after{content:'';width:28px;height:1px;background:linear-gradient(270deg,var(--gld2),transparent);}
+.hero-h1{font-family:var(--f-d);font-size:clamp(50px,6.5vw,92px);font-weight:400;line-height:.9;letter-spacing:-2.5px;margin-bottom:18px;}
+.hero-h1 em{font-style:italic;background:linear-gradient(120deg,#f0c060 0%,#fde48c 45%,#c88820 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+body.fa .hero-h1{font-family:var(--f-fa);letter-spacing:0;line-height:1.1;}
+.hero-desc{font-size:13.5px;color:var(--t3);line-height:1.8;max-width:440px;font-weight:400;}
+body.fa .hero-desc{font-family:var(--f-fa);}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+.stc{background:var(--s2);border:1px solid var(--bord);border-radius:12px;padding:16px 18px;transition:border-color .2s,transform .2s;}
+.stc:hover{border-color:rgba(255,255,255,.1);transform:translateY(-1px);}
+.stc-n{font-family:var(--f-d);font-size:38px;font-weight:700;letter-spacing:-2px;line-height:1;margin-bottom:3px;}
+.stc-n.r{color:var(--red2)}.stc-n.v{color:var(--vio2)}.stc-n.b{color:var(--blue2)}.stc-n.g{color:var(--grn2)}
+.stc-l{font-size:10px;color:var(--t3);letter-spacing:.3px;}
+body.fa .stc-l{font-family:var(--f-fa);}
+.qf-row{display:flex;gap:0;background:var(--s2);border:1px solid var(--bord);border-radius:12px;overflow:hidden;margin-top:9px;}
+.qfi{flex:1;padding:10px 13px;border-right:1px solid var(--bord);}
+.qfi:last-child{border-right:none;}
+body.fa .qfi{border-right:none;border-left:1px solid var(--bord);}
+body.fa .qfi:last-child{border-left:none;}
+.qfi-k{font-family:var(--f-m);font-size:8.5px;color:var(--t4);letter-spacing:1px;text-transform:uppercase;margin-bottom:3px;}
+.qfi-v{font-size:11px;font-weight:600;color:var(--t1);}
+body.fa .qfi-v{font-family:var(--f-fa);}
 
-  --r:          16px;
-  --r-sm:       10px;
-  --r-xs:       7px;
+/* ════════════════════════════════
+   SECTION LABEL
+════════════════════════════════ */
+.sec{margin:24px 0 12px;}
+.sec-lbl{display:flex;align-items:center;gap:10px;font-family:var(--f-m);font-size:9.5px;color:var(--t3);letter-spacing:2px;text-transform:uppercase;margin-bottom:13px;}
+.sec-lbl .dot{width:6px;height:6px;border-radius:50%;background:var(--grn2);animation:blink 2.2s infinite;flex-shrink:0;}
+.sec-lbl .rule{flex:1;height:1px;background:linear-gradient(90deg,var(--bord),transparent);}
+body.fa .sec-lbl .rule{background:linear-gradient(270deg,var(--bord),transparent);}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
 
-  --shadow-card: 0 4px 32px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.04) inset;
-  --shadow-float: 0 16px 48px rgba(0,0,0,0.7), 0 1px 0 rgba(255,255,255,0.06) inset;
-}
+/* ════════════════════════════════
+   UPCOMING EVENTS
+════════════════════════════════ */
+.ev-row{display:flex;gap:9px;overflow-x:auto;padding-bottom:4px;}
+.ev-row::-webkit-scrollbar{height:3px;}
+.ev-row::-webkit-scrollbar-thumb{background:var(--s5);border-radius:2px;}
+.evc{flex-shrink:0;min-width:170px;max-width:188px;background:var(--s2);border:1px solid var(--bord);border-radius:9px;padding:13px 15px;position:relative;overflow:hidden;transition:border-color .18s,transform .15s;}
+.evc::before{content:'';position:absolute;top:0;left:0;width:2.5px;height:100%;}
+body.fa .evc::before{left:auto;right:0;}
+.evc.r::before{background:var(--red2)}.evc.g::before{background:var(--grn2)}.evc.p::before{background:var(--gld2)}.evc.m::before{background:var(--moon)}
+.evc:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.1);}
+.evc-dt{font-family:var(--f-m);font-size:9px;color:var(--t3);margin-bottom:5px;}
+.evc-nm{font-size:12px;font-weight:600;color:var(--t1);line-height:1.35;}
+body.fa .evc-nm{font-family:var(--f-fa);}
+.evc-dl{font-size:10px;font-weight:600;margin-top:5px;}
+.evc-dl.r{color:var(--red2)}.evc-dl.g{color:var(--grn2)}.evc-dl.p{color:var(--gld2)}.evc-dl.m{color:var(--moon)}.evc-dl.past{color:var(--t4)}.evc-dl.now{color:var(--grn2)}
 
-/* ═══════════════════════════════════════════
-   RESET & BASE
-═══════════════════════════════════════════ */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* ════════════════════════════════
+   YEAR MAP
+════════════════════════════════ */
+.ym{background:var(--s1);border:1px solid var(--bord);border-radius:13px;padding:16px 20px;margin-top:14px;overflow-x:auto;}
+.ym-inner{display:flex;gap:6px;min-width:max-content;}
+.ymc{display:flex;flex-direction:column;align-items:center;gap:4px;padding:7px 9px;border-radius:8px;border:1px solid transparent;cursor:pointer;transition:all .18s;}
+.ymc:hover{background:var(--s3);}
+.ymc.on{background:var(--s3);border-color:var(--bord2);}
+.ymc-n{font-family:var(--f-m);font-size:8px;color:var(--t4);letter-spacing:.8px;text-transform:uppercase;text-align:center;}
+.ymc-g{display:grid;grid-template-columns:repeat(7,7px);gap:1.5px;}
+.yd{width:7px;height:7px;border-radius:1.5px;background:rgba(255,255,255,.03);}
+.yd.h{background:rgba(217,58,46,.55)}.yd.w{background:rgba(116,96,204,.28)}.yd.i{background:rgba(24,150,122,.5)}.yd.p{background:rgba(200,136,32,.55)}.yd.m{background:rgba(184,152,64,.4)}.yd.t{background:var(--blue2);outline:1.5px solid var(--blue2)}.yd.e{background:transparent}
 
-html { scroll-behavior: smooth; }
+/* ════════════════════════════════
+   LEGEND
+════════════════════════════════ */
+.legend{display:flex;flex-wrap:wrap;align-items:center;gap:5px 16px;padding:12px 16px;background:var(--s1);border:1px solid var(--bord);border-radius:13px;margin-top:12px;}
+.lgi{display:flex;align-items:center;gap:7px;font-size:10.5px;color:var(--t3);font-weight:500;}
+.lgd{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.lgd.r{background:var(--red2);box-shadow:0 0 6px rgba(240,74,58,.4)}.lgd.v{background:var(--vio2);box-shadow:0 0 6px rgba(152,128,232,.4)}.lgd.g{background:var(--grn2);box-shadow:0 0 6px rgba(38,196,156,.4)}.lgd.p{background:var(--gld2);box-shadow:0 0 6px rgba(232,174,64,.4)}.lgd.b{background:var(--blue2)}.lgd.m{background:var(--moon)}
+.lgsep{width:1px;height:13px;background:var(--bord);}
 
-body {
-  background: var(--bg);
-  color: var(--ink);
-  font-family: 'Outfit', sans-serif;
-  min-height: 100vh;
-  overflow-x: hidden;
-  cursor: default;
-}
-body.fa { font-family: 'Vazirmatn', 'Outfit', sans-serif; direction: rtl; }
+/* ════════════════════════════════
+   TOOLBAR
+════════════════════════════════ */
+.toolbar{margin-top:16px;display:flex;gap:9px;align-items:center;flex-wrap:wrap;}
+.srch{position:relative;flex:1;min-width:180px;max-width:300px;}
+.srch svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:13px;height:13px;color:var(--t3);pointer-events:none;}
+body.fa .srch svg{left:auto;right:11px;}
+.srch-in{width:100%;background:var(--s2);border:1px solid var(--bord);border-radius:50px;color:var(--t1);font-family:var(--f-u);font-size:12px;padding:8px 14px 8px 32px;outline:none;transition:border-color .2s;}
+body.fa .srch-in{font-family:var(--f-fa);padding:8px 32px 8px 14px;}
+.srch-in::placeholder{color:var(--t4);}
+.srch-in:focus{border-color:rgba(36,104,212,.32);}
+.chips{display:flex;gap:5px;flex-wrap:wrap;}
+.chip{border:1px solid var(--bord);background:var(--s2);color:var(--t3);font-family:var(--f-u);font-size:10.5px;font-weight:600;padding:5px 12px;border-radius:50px;cursor:pointer;transition:all .18s;white-space:nowrap;}
+body.fa .chip{font-family:var(--f-fa);}
+.chip.on.all{background:var(--s4);border-color:var(--bord2);color:var(--t1);}
+.chip.on.r{background:var(--rbg);border-color:var(--rrim);color:var(--red2);}
+.chip.on.v{background:var(--vbg);border-color:var(--vrim);color:var(--vio2);}
+.chip.on.g{background:var(--gbg);border-color:var(--grim);color:var(--grn2);}
+.chip.on.p{background:var(--gldbg);border-color:var(--gldrim);color:var(--gld2);}
+.chip.on.m{background:var(--moonbg);border-color:rgba(184,152,64,.25);color:var(--moon);}
 
-/* ═══════════════════════════════════════════
-   ANIMATED BACKGROUND
-═══════════════════════════════════════════ */
-.bg-canvas {
-  position: fixed; inset: 0; z-index: 0;
-  overflow: hidden; pointer-events: none;
-}
-.aurora {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.12;
-  animation: drift 18s ease-in-out infinite alternate;
-}
-.aurora-1 { width:700px;height:500px; background:var(--aurora1); top:-200px; left:-150px; animation-delay:0s; }
-.aurora-2 { width:600px;height:600px; background:var(--aurora3); top:20%; right:-200px; animation-delay:-6s; }
-.aurora-3 { width:500px;height:400px; background:var(--aurora2); bottom:-100px; left:30%; animation-delay:-12s; }
-.stars { position:absolute; inset:0; }
-.stars::before, .stars::after {
-  content:'';
-  position:absolute; inset:0;
-  background-image:
-    radial-gradient(1px 1px at 10% 15%, rgba(255,255,255,0.6) 0%, transparent 100%),
-    radial-gradient(1px 1px at 25% 40%, rgba(255,255,255,0.4) 0%, transparent 100%),
-    radial-gradient(1.5px 1.5px at 40% 8%, rgba(255,255,255,0.7) 0%, transparent 100%),
-    radial-gradient(1px 1px at 60% 25%, rgba(255,255,255,0.5) 0%, transparent 100%),
-    radial-gradient(1px 1px at 75% 55%, rgba(255,255,255,0.4) 0%, transparent 100%),
-    radial-gradient(1.5px 1.5px at 85% 12%, rgba(255,255,255,0.6) 0%, transparent 100%),
-    radial-gradient(1px 1px at 92% 70%, rgba(255,255,255,0.3) 0%, transparent 100%),
-    radial-gradient(1px 1px at 5% 80%, rgba(255,255,255,0.5) 0%, transparent 100%),
-    radial-gradient(1px 1px at 50% 90%, rgba(255,255,255,0.4) 0%, transparent 100%),
-    radial-gradient(1px 1px at 20% 65%, rgba(255,255,255,0.3) 0%, transparent 100%);
-  background-size: 400px 300px;
-  animation: twinkle 5s ease-in-out infinite alternate;
-}
-.stars::after { background-size:300px 250px; animation-delay:-2.5s; opacity:0.6; }
+/* ════════════════════════════════
+   CALENDAR — 3 cols
+════════════════════════════════ */
+#grid-all{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px;}
+@media(max-width:1000px){#grid-all{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:600px){#grid-all{grid-template-columns:1fr;}}
 
-@keyframes drift {
-  0% { transform: translate(0,0) scale(1); }
-  50% { transform: translate(40px,-30px) scale(1.1); }
-  100% { transform: translate(-20px,40px) scale(0.95); }
-}
-@keyframes twinkle {
-  0%,100% { opacity:0.8; } 50% { opacity:0.3; }
-}
+.mc{background:var(--s1);border:1px solid var(--bord);border-radius:13px;overflow:hidden;transition:border-color .2s,box-shadow .2s,transform .2s;animation:sup .4s both;}
+.mc:hover{border-color:rgba(255,255,255,.1);box-shadow:0 10px 40px rgba(0,0,0,.45);transform:translateY(-2px);}
+@keyframes sup{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+.mc:nth-child(1){animation-delay:.04s}.mc:nth-child(2){animation-delay:.07s}.mc:nth-child(3){animation-delay:.1s}
+.mc:nth-child(4){animation-delay:.13s}.mc:nth-child(5){animation-delay:.16s}.mc:nth-child(6){animation-delay:.19s}
+.mc:nth-child(7){animation-delay:.22s}.mc:nth-child(8){animation-delay:.25s}.mc:nth-child(9){animation-delay:.28s}
+.mc:nth-child(10){animation-delay:.31s}.mc:nth-child(11){animation-delay:.34s}.mc:nth-child(12){animation-delay:.37s}
 
-/* ═══════════════════════════════════════════
-   WRAPPER
-═══════════════════════════════════════════ */
-.wrapper {
-  position: relative; z-index: 1;
-  max-width: 1440px;
-  margin: 0 auto;
-  padding: 0 24px 80px;
-}
+/* month head */
+.mc-hd{padding:14px 15px 10px;background:linear-gradient(150deg,var(--s2) 0%,var(--s3) 100%);border-bottom:1px solid var(--bord);display:flex;justify-content:space-between;align-items:flex-end;position:relative;overflow:hidden;}
+.mc-hd::after{content:'';position:absolute;bottom:-18px;right:-8px;width:70px;height:70px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.015),transparent 70%);pointer-events:none;}
+.mc-bign{position:absolute;right:8px;top:0;font-family:var(--f-d);font-size:64px;font-weight:900;color:rgba(255,255,255,.026);letter-spacing:-4px;line-height:1;user-select:none;pointer-events:none;}
+body.fa .mc-bign{right:auto;left:8px;}
+.mc-mn{font-family:var(--f-d);font-size:18px;font-weight:600;letter-spacing:-.2px;line-height:1;}
+body.fa .mc-mn{font-family:var(--f-fa);font-size:16px;}
+.mc-ms{font-family:var(--f-m);font-size:8.5px;color:var(--t4);margin-top:3px;letter-spacing:.5px;}
+.mc-ec{font-family:var(--f-m);font-size:8.5px;padding:2px 7px;border-radius:50px;border:1px solid var(--bord2);color:var(--t4);background:rgba(255,255,255,.018);}
 
-/* ═══════════════════════════════════════════
-   HEADER
-═══════════════════════════════════════════ */
-.header {
-  padding: 36px 0 28px;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 20px;
-  border-bottom: 1px solid var(--rim);
-  margin-bottom: 32px;
-}
+/* pills */
+.mc-pills{display:flex;flex-wrap:wrap;gap:3px;padding:7px 11px;border-bottom:1px solid var(--bord);min-height:27px;align-items:center;}
+.mcp{font-size:8px;font-weight:700;padding:2px 6px;border-radius:50px;letter-spacing:.2px;white-space:nowrap;}
+.mcp.r{background:var(--rbg);color:var(--red2);border:1px solid var(--rrim);}
+.mcp.g{background:var(--gbg);color:var(--grn2);border:1px solid var(--grim);}
+.mcp.p{background:var(--gldbg);color:var(--gld2);border:1px solid var(--gldrim);}
 
-.header-brand {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
+/* day names */
+.mc-dn{display:grid;grid-template-columns:repeat(7,1fr);padding:6px 10px 2px;gap:1px;}
+.dnh{text-align:center;font-family:var(--f-m);font-size:7.5px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--t4);padding:2px 0;}
+.dnh.we{color:rgba(152,128,232,.5);}
 
-.brand-eyebrow {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 2.5px;
-  text-transform: uppercase;
-  color: var(--ink3);
-}
-.brand-eyebrow::before {
-  content:'';
-  width:24px; height:1px;
-  background: linear-gradient(90deg, var(--aurora1), transparent);
-}
-.fa .brand-eyebrow::before { display: none; }
-.fa .brand-eyebrow::after {
-  content:'';
-  width:24px; height:1px;
-  background: linear-gradient(270deg, var(--aurora1), transparent);
-}
+/* days */
+.mc-dg{display:grid;grid-template-columns:repeat(7,1fr);padding:2px 10px 12px;gap:2px;}
 
-.brand-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(32px, 5vw, 58px);
-  font-weight: 300;
-  letter-spacing: -1.5px;
-  line-height: 1;
-  color: var(--ink);
-}
-.brand-title em {
-  font-style: italic;
-  background: linear-gradient(135deg, var(--gold) 0%, var(--aurora2) 100%);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-}
+/* ════════════════════════════════
+   DAY CELL
+════════════════════════════════ */
+.dc{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:5px;cursor:pointer;position:relative;transition:all .12s;min-height:28px;}
+.dc:hover:not(.dc-e){background:rgba(255,255,255,.046);}
+.dc-e{pointer-events:none;}
+.dcn{font-size:11px;font-weight:500;line-height:1;position:relative;z-index:1;}
+.dcm{font-size:6px;margin-top:1px;line-height:1;}
+/* multi-event indicator dots */
+.dc-dots{display:flex;gap:1.5px;margin-top:1px;z-index:1;position:relative;}
+.dc-dot{width:3px;height:3px;border-radius:50%;}
+.dc-dot.r{background:var(--red2)}.dc-dot.g{background:var(--grn2)}.dc-dot.p{background:var(--gld2)}.dc-dot.m{background:var(--moon)}
 
-.brand-sub {
-  font-size: 12.5px;
-  color: var(--ink2);
-  font-weight: 300;
-  letter-spacing: 0.3px;
-}
+/* states */
+.dc.we{background:var(--vbg);}.dc.we .dcn{color:var(--vio2);}
+.dc.hol{background:var(--rbg);}.dc.hol .dcn{color:var(--red2);font-weight:700;}
+.dc.isl{background:var(--gbg);}.dc.isl .dcn{color:var(--grn2);font-weight:700;}
+.dc.pers{background:var(--gldbg);}.dc.pers .dcn{color:var(--gld2);font-weight:700;}
+.dc.multi{background:linear-gradient(135deg,var(--rbg),var(--gldbg));}.dc.multi .dcn{color:var(--gld2);font-weight:700;}
+.dc.moon-solo .dcn{color:var(--moon);}
+.dc.tod{background:var(--bbg);outline:1.5px solid var(--brim);}.dc.tod .dcn{color:#68aaff;font-weight:700;}
 
-.header-controls {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 12px;
+/* ════════════════════════════════
+   TOOLTIP — fixed overflow
+════════════════════════════════ */
+.dc-tip-wrap{
+  position:fixed; /* fixed so never clipped */
+  z-index:9000;
+  pointer-events:none;
+  opacity:0;
+  transition:opacity .15s,transform .15s;
+  transform:translateY(5px);
+  max-width:240px;
+  min-width:170px;
 }
+.dc-tip-wrap.show{opacity:1;transform:translateY(0);}
+.dc-tip-inner{
+  background:#060c1e;border:1px solid rgba(255,255,255,.12);
+  border-radius:10px;padding:11px 14px;
+  box-shadow:0 20px 60px rgba(0,0,0,.88);
+}
+.dc-tip-inner::after{content:'';position:absolute;left:50%;transform:translateX(-50%);border:5px solid transparent;}
+.tip-up .dc-tip-inner::after{top:100%;border-top-color:#060c1e;}
+.tip-down .dc-tip-inner::after{bottom:100%;border-bottom-color:#060c1e;}
+.tip-evt{margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.07);}
+.tip-evt:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none;}
+.tip-h{font-size:12px;font-weight:700;line-height:1.3;margin-bottom:3px;}
+body.fa .tip-h{font-family:var(--f-fa);}
+.tip-d{font-size:10px;color:var(--t2);line-height:1.55;}
+body.fa .tip-d{font-family:var(--f-fa);font-size:11px;}
+.tip-dt{font-family:var(--f-m);font-size:8.5px;color:var(--t3);margin-top:4px;}
 
-/* Language switcher */
-.lang-bar {
-  display: flex;
-  background: var(--card);
-  border: 1px solid var(--rim);
-  border-radius: 50px;
-  padding: 3px;
-  gap: 2px;
-}
-.lb {
-  border: none;
-  background: transparent;
-  color: var(--ink3);
-  font-family: inherit;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  padding: 6px 16px;
-  border-radius: 50px;
-  cursor: pointer;
-  transition: all 0.25s;
-}
-.lb.on {
-  background: linear-gradient(135deg, var(--aurora1), var(--aurora3));
-  color: #fff;
-  box-shadow: 0 2px 14px rgba(61,127,255,0.4);
-}
-
-/* View toggle */
-.view-bar {
-  display: flex;
-  background: var(--card);
-  border: 1px solid var(--rim);
-  border-radius: 50px;
-  padding: 3px;
-  gap: 2px;
-}
-.vb {
-  border: none;
-  background: transparent;
-  color: var(--ink3);
-  font-family: inherit;
-  font-size: 11px;
-  font-weight: 500;
-  padding: 5px 14px;
-  border-radius: 50px;
-  cursor: pointer;
-  transition: all 0.25s;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-.vb.on { background: var(--card3); color: var(--ink); }
-.vb svg { width:13px; height:13px; }
-
-/* ═══════════════════════════════════════════
-   STATS RIBBON
-═══════════════════════════════════════════ */
-.stats-ribbon {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 14px;
-  margin-bottom: 28px;
-}
-
-.stat {
-  background: var(--card);
-  border: 1px solid var(--rim);
-  border-radius: var(--r);
-  padding: 20px 22px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  transition: border-color 0.2s, transform 0.2s;
-  animation: fadeUp 0.5s both;
-}
-.stat:hover { border-color: var(--rim2); transform: translateY(-1px); }
-.stat:nth-child(1) { animation-delay:0.05s; }
-.stat:nth-child(2) { animation-delay:0.1s; }
-.stat:nth-child(3) { animation-delay:0.15s; }
-.stat:nth-child(4) { animation-delay:0.2s; }
-
-.stat-icon {
-  width: 40px; height: 40px;
-  border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 18px;
-  flex-shrink: 0;
-}
-.stat-icon.r { background: var(--red-bg); }
-.stat-icon.p { background: var(--purple-bg); }
-.stat-icon.b { background: var(--blue-bg); }
-.stat-icon.g { background: var(--green-bg); }
-
-.stat-body {}
-.stat-n {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 30px;
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: -1px;
-}
-.stat-n.r { color: var(--red); }
-.stat-n.p { color: var(--purple); }
-.stat-n.b { color: var(--aurora1); }
-.stat-n.g { color: var(--green); }
-.stat-l { font-size: 11px; color: var(--ink3); margin-top: 2px; letter-spacing: 0.3px; }
-
-/* ═══════════════════════════════════════════
-   SEARCH & FILTER BAR
-═══════════════════════════════════════════ */
-.toolbar {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 24px;
-  flex-wrap: wrap;
-  align-items: center;
-}
-
-.search-wrap {
-  flex: 1;
-  min-width: 200px;
-  max-width: 360px;
-  position: relative;
-}
-.search-wrap svg {
-  position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
-  width:14px; height:14px; color: var(--ink3);
-  pointer-events: none;
-}
-.fa .search-wrap svg { left:auto; right:14px; }
-.search-input {
-  width: 100%;
-  background: var(--card);
-  border: 1px solid var(--rim);
-  border-radius: 50px;
-  color: var(--ink);
-  font-family: inherit;
-  font-size: 13px;
-  padding: 9px 16px 9px 38px;
-  outline: none;
-  transition: border-color 0.2s;
-}
-.fa .search-input { padding: 9px 38px 9px 16px; }
-.search-input::placeholder { color: var(--ink3); }
-.search-input:focus { border-color: rgba(61,127,255,0.4); }
-
-.filter-chips {
-  display: flex;
-  gap: 7px;
-  flex-wrap: wrap;
-}
-.chip {
-  border: 1px solid var(--rim);
-  background: var(--card);
-  color: var(--ink3);
-  font-family: inherit;
-  font-size: 11.5px;
-  font-weight: 500;
-  padding: 6px 14px;
-  border-radius: 50px;
-  cursor: pointer;
-  transition: all 0.2s;
-  white-space: nowrap;
-}
-.chip.on { color: var(--ink); }
-.chip.on.r { background: var(--red-bg); border-color: var(--red-rim); color: var(--red); }
-.chip.on.p { background: var(--purple-bg); border-color: var(--purple-rim); color: var(--purple); }
-.chip.on.g { background: var(--green-bg); border-color: var(--green-rim); color: var(--green); }
-.chip.on.m { background: rgba(232,192,96,0.08); border-color: rgba(232,192,96,0.2); color: var(--gold); }
-
-/* ═══════════════════════════════════════════
-   MINI YEAR OVERVIEW
-═══════════════════════════════════════════ */
-.year-strip {
-  background: var(--card);
-  border: 1px solid var(--rim);
-  border-radius: var(--r);
-  padding: 20px 24px;
-  margin-bottom: 24px;
-  overflow-x: auto;
-  box-shadow: var(--shadow-card);
-  animation: fadeUp 0.4s 0.1s both;
-}
-.year-strip-inner {
-  display: flex;
-  gap: 10px;
-  min-width: max-content;
-}
-.mini-month {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  cursor: pointer;
-  padding: 10px 12px;
-  border-radius: var(--r-sm);
-  transition: background 0.2s;
-  flex-shrink: 0;
-}
-.mini-month:hover { background: var(--card2); }
-.mini-month.active-month { background: var(--card3); outline: 1px solid var(--rim2); }
-
-.mini-month-name {
-  font-size: 10px; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase;
-  color: var(--ink3); margin-bottom: 4px; text-align: center;
-}
-.mini-dots {
-  display: grid;
-  grid-template-columns: repeat(7, 8px);
-  gap: 2px;
-}
-.mini-dot {
-  width: 8px; height: 8px;
-  border-radius: 2px;
-  background: var(--ink4);
-}
-.mini-dot.h { background: rgba(255,61,90,0.5); }
-.mini-dot.w { background: rgba(139,111,255,0.3); }
-.mini-dot.i { background: rgba(54,208,158,0.5); }
-.mini-dot.m { background: rgba(232,192,96,0.5); }
-.mini-dot.t { background: rgba(61,127,255,0.8); outline: 1px solid var(--aurora1); }
-.mini-dot.empty { background: transparent; }
-
-/* ═══════════════════════════════════════════
-   CALENDAR GRID (MONTH VIEW)
-═══════════════════════════════════════════ */
-#view-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
-  gap: 18px;
-  margin-bottom: 40px;
-}
-
-.month-card {
-  background: var(--card);
-  border: 1px solid var(--rim);
-  border-radius: var(--r);
-  overflow: hidden;
-  box-shadow: var(--shadow-card);
-  animation: fadeUp 0.45s both;
-  transition: box-shadow 0.2s, transform 0.2s;
-}
-.month-card:hover {
-  box-shadow: var(--shadow-float);
-  transform: translateY(-2px);
-}
-/* stagger */
-.month-card:nth-child(1)  { animation-delay: 0.05s; }
-.month-card:nth-child(2)  { animation-delay: 0.08s; }
-.month-card:nth-child(3)  { animation-delay: 0.11s; }
-.month-card:nth-child(4)  { animation-delay: 0.14s; }
-.month-card:nth-child(5)  { animation-delay: 0.17s; }
-.month-card:nth-child(6)  { animation-delay: 0.20s; }
-.month-card:nth-child(7)  { animation-delay: 0.23s; }
-.month-card:nth-child(8)  { animation-delay: 0.26s; }
-.month-card:nth-child(9)  { animation-delay: 0.29s; }
-.month-card:nth-child(10) { animation-delay: 0.32s; }
-.month-card:nth-child(11) { animation-delay: 0.35s; }
-.month-card:nth-child(12) { animation-delay: 0.38s; }
-
-.mc-head {
-  padding: 16px 18px 12px;
-  background: linear-gradient(160deg, var(--card2) 0%, var(--card3) 100%);
-  border-bottom: 1px solid var(--rim);
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-}
-
-.mc-month-name {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 20px;
-  font-weight: 600;
-  letter-spacing: -0.3px;
-  line-height: 1;
-}
-.mc-month-sub {
-  font-size: 10.5px;
-  color: var(--ink3);
-  font-weight: 400;
-  margin-top: 3px;
-  letter-spacing: 0.3px;
-}
-
-.mc-num {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 52px;
-  font-weight: 700;
-  line-height: 0.9;
-  color: rgba(255,255,255,0.04);
-  letter-spacing: -3px;
-  user-select: none;
-}
-
-/* Event pills on month header */
-.mc-pills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  padding: 8px 18px;
-  border-bottom: 1px solid var(--rim);
-  min-height: 33px;
-}
-.pill {
-  font-size: 9.5px;
-  font-weight: 600;
-  padding: 2px 8px;
-  border-radius: 50px;
-  letter-spacing: 0.3px;
-  white-space: nowrap;
-}
-.pill.r { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-rim); }
-.pill.g { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-rim); }
-.pill.m { background: rgba(232,192,96,0.08); color: var(--gold); border: 1px solid rgba(232,192,96,0.2); }
-
-/* Day name row */
-.mc-daynames {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  padding: 8px 12px 4px;
-  gap: 1px;
-}
-.dn {
-  text-align: center;
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.8px;
-  text-transform: uppercase;
-  color: var(--ink3);
-  padding: 2px 0;
-}
-.dn.we { color: rgba(139,111,255,0.55); }
-
-/* Days */
-.mc-days {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  padding: 2px 12px 14px;
-  gap: 3px;
-}
-
-.dc {
-  aspect-ratio: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--r-xs);
-  cursor: pointer;
-  position: relative;
-  transition: all 0.15s;
-  min-height: 30px;
-}
-.dc:hover:not(.dc-empty) { background: rgba(255,255,255,0.05); }
-
-.dc-n {
-  font-size: 11.5px;
-  font-weight: 500;
-  line-height: 1;
-  position: relative;
-  z-index: 1;
-}
-.dc-moon {
-  font-size: 7px;
-  line-height: 1;
-  margin-top: 1px;
-  opacity: 0.85;
-}
-.dc-empty { pointer-events: none; }
-
-/* weekend */
-.dc.dc-we { background: var(--purple-bg); }
-.dc.dc-we .dc-n { color: var(--purple); }
-
-/* holiday */
-.dc.dc-h { background: var(--red-bg); }
-.dc.dc-h .dc-n { color: var(--red); font-weight: 700; }
-.dc.dc-h::after {
-  content:''; position:absolute; top:3px; right:3px;
-  width:4px; height:4px; border-radius:50%;
-  background: var(--red); opacity:0.8;
-}
-
-/* islamic */
-.dc.dc-i { background: var(--green-bg); }
-.dc.dc-i .dc-n { color: var(--green); font-weight: 700; }
-.dc.dc-i::after {
-  content:''; position:absolute; top:3px; right:3px;
-  width:4px; height:4px; border-radius:50%;
-  background: var(--green); opacity:0.8;
-}
-
-/* today */
-.dc.dc-today {
-  background: var(--blue-bg);
-  outline: 1.5px solid rgba(61,127,255,0.4);
-}
-.dc.dc-today .dc-n { color: var(--aurora1); font-weight: 700; }
-
-/* moon-only */
-.dc.dc-moon-only .dc-n { color: var(--gold); }
-
-/* ── Tooltip ── */
-.tip {
-  position: absolute;
-  bottom: calc(100% + 8px);
-  left: 50%;
-  transform: translateX(-50%);
-  background: #0d1524;
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 10px;
-  padding: 10px 14px;
-  min-width: 160px;
-  max-width: 220px;
-  white-space: normal;
-  z-index: 200;
-  pointer-events: none;
-  opacity: 0;
-  transform: translateX(-50%) translateY(6px);
-  transition: opacity 0.18s, transform 0.18s;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.7);
-  text-align: left;
-}
-.fa .tip { text-align: right; }
-.dc:hover .tip { opacity: 1; transform: translateX(-50%) translateY(0); }
-.tip::after {
-  content:''; position:absolute; top:100%; left:50%; transform:translateX(-50%);
-  border:6px solid transparent; border-top-color:#0d1524;
-}
-.tip-title { font-size: 12px; font-weight: 700; line-height: 1.3; margin-bottom: 4px; }
-.tip-desc  { font-size: 10.5px; color: var(--ink2); line-height: 1.5; }
-.tip-date  { font-size: 10px; color: var(--ink3); margin-top: 4px; font-style: italic; }
-
-/* ═══════════════════════════════════════════
+/* ════════════════════════════════
    SINGLE MONTH VIEW
-═══════════════════════════════════════════ */
-#view-single {
-  display: none;
-  margin-bottom: 40px;
-}
-#view-single.active { display: block; }
-#view-grid.hidden { display: none; }
+════════════════════════════════ */
+#grid-single{display:none;margin-top:18px;}
+#grid-single.show{display:block;}
+#grid-all.hidden{display:none;}
+.sv-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:16px;}
+.sv-nb{width:40px;height:40px;border-radius:50%;border:1px solid var(--bord);background:var(--s2);color:var(--t2);cursor:pointer;transition:all .18s;display:flex;align-items:center;justify-content:center;}
+.sv-nb:hover{background:var(--s3);color:var(--t1);}
+.sv-nb svg{width:14px;height:14px;}
+.sv-ttl{font-family:var(--f-d);font-size:36px;font-weight:400;letter-spacing:-1px;text-align:center;}
+.sv-ttl em{font-style:italic;color:var(--gld2);}
+body.fa .sv-ttl{font-family:var(--f-fa);letter-spacing:0;}
+.sv-card{background:var(--s1);border:1px solid var(--bord);border-radius:13px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.5);}
+.sv-dn{display:grid;grid-template-columns:repeat(7,1fr);background:var(--s2);border-bottom:1px solid var(--bord);padding:11px 20px 7px;gap:3px;}
+.sv-dnc{text-align:center;font-family:var(--f-m);font-size:10px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--t3);padding:3px 0;}
+.sv-dnc.we{color:rgba(152,128,232,.55);}
+.sv-dg{display:grid;grid-template-columns:repeat(7,1fr);padding:12px 20px 22px;gap:5px;}
+.sdc{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:10px;cursor:pointer;position:relative;min-height:54px;transition:all .15s;}
+.sdc:hover:not(.sdc-e){background:rgba(255,255,255,.04);}
+.sdc-e{pointer-events:none;}
+.sdc-n{font-size:17px;font-weight:500;line-height:1;}
+.sdc-m{font-size:11px;margin-top:2px;}
+.sdc-s{font-size:8px;color:var(--t3);margin-top:1px;line-height:1.2;letter-spacing:.1px;max-width:92%;text-align:center;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
+body.fa .sdc-s{font-family:var(--f-fa);}
+.sdc.we{background:var(--vbg);}.sdc.we .sdc-n{color:var(--vio2);}
+.sdc.hol{background:var(--rbg);outline:1px solid var(--rrim);}.sdc.hol .sdc-n{color:var(--red2);font-weight:700;}
+.sdc.isl{background:var(--gbg);outline:1px solid var(--grim);}.sdc.isl .sdc-n{color:var(--grn2);font-weight:700;}
+.sdc.pers{background:var(--gldbg);outline:1px solid var(--gldrim);}.sdc.pers .sdc-n{color:var(--gld2);font-weight:700;}
+.sdc.multi{background:linear-gradient(135deg,var(--rbg),var(--gldbg));outline:1px solid var(--gldrim);}.sdc.multi .sdc-n{color:var(--gld2);font-weight:700;}
+.sdc.tod{background:var(--bbg);outline:2px solid var(--brim);}.sdc.tod .sdc-n{color:#68aaff;font-weight:700;}
 
-.single-nav {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 20px;
-  gap: 16px;
-}
-.nav-btn {
-  width: 40px; height: 40px;
-  border: 1px solid var(--rim);
-  background: var(--card);
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  color: var(--ink2);
-  transition: all 0.2s;
-}
-.nav-btn:hover { background: var(--card2); color: var(--ink); }
-.nav-btn svg { width:16px; height:16px; }
-.single-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 36px;
-  font-weight: 600;
-  letter-spacing: -0.5px;
-  text-align: center;
-}
+/* ════════════════════════════════
+   INFO CARDS
+════════════════════════════════ */
+.inf-wrap{margin-top:40px;}
+.inf-hd{display:flex;align-items:center;gap:14px;margin-bottom:18px;}
+.inf-h2{font-family:var(--f-d);font-size:26px;font-weight:600;letter-spacing:-.3px;white-space:nowrap;}
+body.fa .inf-h2{font-family:var(--f-fa);font-size:21px;}
+.inf-rule{flex:1;height:1px;background:linear-gradient(90deg,var(--bord),transparent);}
+body.fa .inf-rule{background:linear-gradient(270deg,var(--bord),transparent);}
+.hol-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(295px,1fr));gap:9px;}
 
-.single-card {
-  background: var(--card);
-  border: 1px solid var(--rim);
-  border-radius: var(--r);
-  overflow: hidden;
-  box-shadow: var(--shadow-float);
-}
-.single-daynames {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  background: var(--card2);
-  border-bottom: 1px solid var(--rim);
-  padding: 12px 20px 8px;
-  gap: 4px;
-}
-.sdn {
-  text-align: center;
-  font-size: 11px; font-weight: 700;
-  letter-spacing: 1px; text-transform: uppercase;
-  color: var(--ink3);
-  padding: 4px 0;
-}
-.sdn.we { color: rgba(139,111,255,0.6); }
-.single-days {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  padding: 12px 20px 20px;
-  gap: 6px;
-}
-.sdc {
-  aspect-ratio: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border-radius: 12px;
-  cursor: pointer;
-  position: relative;
-  transition: all 0.15s;
-  min-height: 56px;
-}
-.sdc:hover:not(.sdc-empty) { background: rgba(255,255,255,0.05); }
-.sdc-n {
-  font-size: 16px; font-weight: 500;
-  position: relative; z-index: 1;
-}
-.sdc-sub {
-  font-size: 9px; color: var(--ink3);
-  margin-top: 2px; line-height: 1;
-  letter-spacing: 0.3px;
-}
-.sdc-moon { font-size: 11px; margin-top: 2px; }
-.sdc.we { background: var(--purple-bg); }
-.sdc.we .sdc-n { color: var(--purple); }
-.sdc.hol { background: var(--red-bg); outline: 1px solid var(--red-rim); }
-.sdc.hol .sdc-n { color: var(--red); font-weight: 700; }
-.sdc.isl { background: var(--green-bg); outline: 1px solid var(--green-rim); }
-.sdc.isl .sdc-n { color: var(--green); font-weight: 700; }
-.sdc.tod {
-  background: var(--blue-bg);
-  outline: 2px solid rgba(61,127,255,0.5);
-}
-.sdc.tod .sdc-n { color: var(--aurora1); font-weight: 700; }
-.sdc::after { display:none; }
+.hc{background:var(--s1);border:1px solid var(--bord);border-radius:9px;padding:14px 16px;display:flex;gap:13px;align-items:flex-start;cursor:default;transition:all .18s;position:relative;overflow:hidden;}
+.hc::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.014),transparent 60%);pointer-events:none;border-radius:9px;}
+.hc:hover{border-color:rgba(255,255,255,.1);}
+body:not(.fa) .hc:hover{transform:translateX(2px);}
+body.fa .hc:hover{transform:translateX(-2px);}
+.hcc{flex-shrink:0;width:50px;border-radius:7px;padding:7px 5px;text-align:center;}
+.hcc.n{background:var(--rbg);border:1px solid var(--rrim);}
+.hcc.i{background:var(--gbg);border:1px solid var(--grim);}
+.hcc.p{background:var(--gldbg);border:1px solid var(--gldrim);}
+.hcc-d{font-family:var(--f-d);font-size:21px;font-weight:700;line-height:1;}
+.hcc.n .hcc-d{color:var(--red2)}.hcc.i .hcc-d{color:var(--grn2)}.hcc.p .hcc-d{color:var(--gld2)}
+.hcc-m{font-family:var(--f-m);font-size:8.5px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;}
+.hcc-dw{font-family:var(--f-m);font-size:7.5px;color:var(--t4);margin-top:1px;}
+.hcb{}
+.hcb-nm{font-size:12.5px;font-weight:700;color:var(--t1);line-height:1.3;}
+body.fa .hcb-nm{font-family:var(--f-fa);}
+.hcb-alt{font-size:10px;color:var(--t3);margin-top:1px;font-style:italic;}
+.hcb-ds{font-size:10.5px;color:var(--t2);margin-top:5px;line-height:1.6;}
+body.fa .hcb-ds{font-family:var(--f-fa);font-size:11.5px;}
+.hcb-tags{display:flex;flex-wrap:wrap;gap:3px;margin-top:7px;}
+.hct{font-size:8px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:2px 6px;border-radius:50px;}
+.hct.n{background:var(--rbg);color:var(--red2);border:1px solid var(--rrim);}
+.hct.i{background:var(--gbg);color:var(--grn2);border:1px solid var(--grim);}
+.hct.p{background:var(--gldbg);color:var(--gld2);border:1px solid var(--gldrim);}
+.hct.a{background:var(--moonbg);color:var(--moon);border:1px solid rgba(184,152,64,.25);}
 
-/* ═══════════════════════════════════════════
-   INFO PANEL
-═══════════════════════════════════════════ */
-.info-section {
-  margin-bottom: 32px;
-}
-.section-head {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 18px;
-}
-.section-head h2 {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 26px;
-  font-weight: 600;
-  letter-spacing: -0.3px;
-}
-.section-line {
-  flex: 1; height: 1px;
-  background: linear-gradient(90deg, var(--rim), transparent);
-}
-.fa .section-line {
-  background: linear-gradient(270deg, var(--rim), transparent);
-}
+/* moon guide */
+.moon-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(195px,1fr));gap:9px;}
+.moonc{background:var(--s1);border:1px solid var(--bord);border-radius:9px;padding:14px 16px;display:flex;gap:11px;align-items:center;transition:border-color .18s;}
+.moonc:hover{border-color:rgba(184,152,64,.25);}
+.moonico{font-size:26px;flex-shrink:0;}
+.moonnm{font-size:11.5px;font-weight:700;color:var(--moon);margin-bottom:2px;}
+body.fa .moonnm{font-family:var(--f-fa);}
+.moonds{font-size:10px;color:var(--t3);line-height:1.5;}
+body.fa .moonds{font-family:var(--f-fa);}
 
-.holiday-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 12px;
-}
-
-.hc {
-  background: var(--card);
-  border: 1px solid var(--rim);
-  border-radius: var(--r-sm);
-  padding: 16px 18px;
-  display: flex;
-  gap: 16px;
-  align-items: flex-start;
-  transition: border-color 0.2s, transform 0.15s;
-  cursor: default;
-}
-.hc:hover { border-color: var(--red-rim); transform: translateX(2px); }
-.hc.isl:hover { border-color: var(--green-rim); }
-.fa .hc:hover { transform: translateX(-2px); }
-
-.hc-date {
-  flex-shrink: 0;
-  width: 52px;
-  background: var(--red-bg);
-  border: 1px solid var(--red-rim);
-  border-radius: var(--r-xs);
-  padding: 8px 6px;
-  text-align: center;
-}
-.hc-date.isl { background: var(--green-bg); border-color: var(--green-rim); }
-.hc-d { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 700; line-height: 1; color: var(--red); }
-.hc-date.isl .hc-d { color: var(--green); }
-.hc-m { font-size: 9.5px; color: var(--ink3); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
-.hc-dow { font-size: 9px; color: var(--ink3); margin-top: 1px; }
-
-.hc-info {}
-.hc-name { font-size: 13.5px; font-weight: 600; line-height: 1.3; color: var(--ink); }
-.hc-name-no { font-size: 11px; color: var(--ink3); margin-top: 2px; font-style: italic; }
-.hc-desc { font-size: 11px; color: var(--ink2); margin-top: 6px; line-height: 1.6; }
-.hc-badge {
-  display: inline-block;
-  margin-top: 6px;
-  font-size: 9px; font-weight: 700; letter-spacing: 0.8px;
-  text-transform: uppercase;
-  padding: 2px 7px; border-radius: 50px;
-  background: var(--red-bg); color: var(--red);
-  border: 1px solid var(--red-rim);
-}
-.hc-badge.isl { background: var(--green-bg); color: var(--green); border-color: var(--green-rim); }
-.hc-badge.app { background: rgba(232,192,96,0.08); color: var(--gold); border-color: rgba(232,192,96,0.2); }
-
-/* Moon guide */
-.moon-guide {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 10px;
-  margin-top: 16px;
-}
-.mg-item {
-  background: var(--card);
-  border: 1px solid var(--rim);
-  border-radius: var(--r-sm);
-  padding: 14px 16px;
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
-.mg-icon { font-size: 26px; }
-.mg-name { font-size: 12px; font-weight: 600; color: var(--gold); }
-.mg-desc { font-size: 10.5px; color: var(--ink3); margin-top: 2px; line-height: 1.4; }
-
-/* ═══════════════════════════════════════════
-   UPCOMING EVENTS SIDEBAR STRIP
-═══════════════════════════════════════════ */
-.next-events {
-  background: var(--card);
-  border: 1px solid var(--rim);
-  border-radius: var(--r);
-  padding: 20px 22px;
-  margin-bottom: 28px;
-  box-shadow: var(--shadow-card);
-}
-.ne-head {
-  font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
-  text-transform: uppercase; color: var(--ink3);
-  margin-bottom: 14px;
-  display: flex; align-items: center; gap: 8px;
-}
-.ne-head::before { content:'●'; font-size:7px; color:var(--aurora1); animation: pulse 2s infinite; }
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
-
-.ne-list { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 4px; }
-.ne-item {
-  flex-shrink: 0;
-  background: var(--card2);
-  border: 1px solid var(--rim);
-  border-radius: var(--r-sm);
-  padding: 12px 16px;
-  min-width: 170px;
-  cursor: default;
-  transition: border-color 0.2s;
-}
-.ne-item:hover { border-color: rgba(255,255,255,0.1); }
-.ne-item.r { border-left: 2px solid var(--red); }
-.ne-item.g { border-left: 2px solid var(--green); }
-.ne-item.m { border-left: 2px solid var(--gold); }
-.fa .ne-item.r { border-left: none; border-right: 2px solid var(--red); }
-.fa .ne-item.g { border-left: none; border-right: 2px solid var(--green); }
-.fa .ne-item.m { border-left: none; border-right: 2px solid var(--gold); }
-.ne-day { font-size: 10px; color: var(--ink3); letter-spacing: 0.5px; margin-bottom: 4px; }
-.ne-name { font-size: 12px; font-weight: 600; color: var(--ink); line-height: 1.3; }
-.ne-delta {
-  font-size: 10px; margin-top: 4px;
-  font-weight: 500;
-}
-.ne-delta.r { color: var(--red); }
-.ne-delta.g { color: var(--green); }
-.ne-delta.m { color: var(--gold); }
-.ne-delta.past { color: var(--ink3); }
-
-/* ═══════════════════════════════════════════
+/* ════════════════════════════════
    FOOTER
-═══════════════════════════════════════════ */
-.footer {
-  text-align: center;
-  padding: 24px 0 12px;
-  border-top: 1px solid var(--rim);
-  color: var(--ink3);
-  font-size: 11px;
-  line-height: 1.8;
-}
-.footer a { color: var(--aurora1); text-decoration: none; }
-.footer a:hover { text-decoration: underline; }
+════════════════════════════════ */
+.footer{margin-top:56px;padding:22px 0 14px;border-top:1px solid var(--bord);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;}
+.footer-t{font-size:10.5px;color:var(--t4);line-height:1.8;}
+.footer-t a{color:var(--gld2);text-decoration:none;}
+.footer-t a:hover{text-decoration:underline;}
+body.fa .footer-t{font-family:var(--f-fa);}
+.footer-badge{font-family:var(--f-d);font-size:14px;font-style:italic;color:var(--t4);}
 
-/* ═══════════════════════════════════════════
-   ANIMATIONS
-═══════════════════════════════════════════ */
-@keyframes fadeUp {
-  from { opacity:0; transform: translateY(18px); }
-  to   { opacity:1; transform: translateY(0); }
-}
+/* ════════════════════════════════
+   MODAL
+════════════════════════════════ */
+.overlay{position:fixed;inset:0;z-index:9999;background:rgba(3,5,12,.92);backdrop-filter:blur(18px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .25s;}
+.overlay.open{opacity:1;pointer-events:auto;}
+.modal{background:var(--s2);border:1px solid var(--bord2);border-radius:18px;padding:28px 30px;max-width:440px;width:100%;box-shadow:0 40px 100px rgba(0,0,0,.88);transform:translateY(16px);transition:transform .25s;}
+.overlay.open .modal{transform:translateY(0);}
+.modal-h{font-family:var(--f-d);font-size:22px;font-weight:600;letter-spacing:-.3px;margin-bottom:5px;}
+body.fa .modal-h{font-family:var(--f-fa);}
+.modal-s{font-size:12px;color:var(--t3);margin-bottom:20px;line-height:1.6;}
+body.fa .modal-s{font-family:var(--f-fa);}
 
-/* ═══════════════════════════════════════════
-   SCROLLBAR
-═══════════════════════════════════════════ */
-::-webkit-scrollbar { width:5px; height:5px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--card3); border-radius:3px; }
+/* export option cards */
+.exp-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.eopt{background:var(--s3);border:1px solid var(--bord);border-radius:11px;padding:18px 16px;cursor:pointer;transition:all .18s;text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px;}
+.eopt:hover{border-color:var(--gldrim);background:var(--s4);transform:translateY(-1px);}
+.eopt-ico{font-size:26px;line-height:1;}
+.eopt-nm{font-size:12px;font-weight:700;color:var(--t1);}
+body.fa .eopt-nm{font-family:var(--f-fa);}
+.eopt-ds{font-size:10px;color:var(--t3);line-height:1.4;}
+body.fa .eopt-ds{font-family:var(--f-fa);}
 
-/* ═══════════════════════════════════════════
-   RESPONSIVE
-═══════════════════════════════════════════ */
-@media (max-width: 900px) {
-  .stats-ribbon { grid-template-columns: repeat(2, 1fr); }
+/* mobile share button — large tap area */
+.mob-share{display:none;}
+@media(max-width:600px){.mob-share{display:flex;}}
+.mob-share-btn{
+  width:100%;margin-top:14px;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  background:linear-gradient(135deg,rgba(200,136,32,.18),rgba(200,136,32,.1));
+  border:1px solid var(--gldrim);border-radius:14px;
+  padding:16px;color:var(--gld2);font-family:var(--f-u);
+  font-size:14px;font-weight:700;letter-spacing:.5px;
+  cursor:pointer;transition:all .2s;
 }
-@media (max-width: 600px) {
-  #view-grid { grid-template-columns: 1fr; }
-  .holiday-cards { grid-template-columns: 1fr; }
-  .stats-ribbon { grid-template-columns: repeat(2, 1fr); }
-  .header { flex-direction: column; align-items: flex-start; }
-  .header-controls { align-items: flex-start; }
+body.fa .mob-share-btn{font-family:var(--f-fa);}
+.mob-share-btn:hover{background:rgba(200,136,32,.24);}
+.mob-share-btn svg{width:18px;height:18px;}
+
+.modal-close{width:100%;border:1px solid var(--bord);background:transparent;color:var(--t3);font-family:var(--f-u);font-size:12px;padding:9px;border-radius:8px;cursor:pointer;transition:all .18s;}
+body.fa .modal-close{font-family:var(--f-fa);}
+.modal-close:hover{background:var(--s3);color:var(--t1);}
+
+/* ════════════════════════════════
+   A4 PRINT CANVAS
+════════════════════════════════ */
+#pc{
+  position:fixed;left:-9999px;top:0;z-index:-1;
+  width:794px;background:#fff;color:#111;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  padding:28px 28px 22px;
 }
+#pc.fa{font-family:'Vazirmatn',sans-serif;direction:rtl;}
+
+/* A4 styles */
+.pch{display:flex;align-items:center;justify-content:space-between;border-bottom:2.5px solid #0a1020;padding-bottom:10px;margin-bottom:16px;}
+.pch-t{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:#0a1020;letter-spacing:-.5px;}
+.pch-t em{font-style:italic;color:#a07010;}
+.pch-m{font-family:'JetBrains Mono',monospace;font-size:8px;color:#888;text-align:right;line-height:1.7;}
+.pcg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.pcmo{border:1px solid #dde2ee;border-radius:5px;overflow:hidden;}
+.pcmo-h{background:#f3f5fb;padding:6px 8px 4px;border-bottom:1px solid #dde2ee;display:flex;align-items:baseline;justify-content:space-between;}
+.pcmo-n{font-family:'Playfair Display',serif;font-size:13px;font-weight:700;color:#0a1020;}
+.pcmo-fa .pcmo-n{font-family:'Vazirmatn',sans-serif;font-size:12px;}
+.pcmo-num{font-family:'JetBrains Mono',monospace;font-size:8px;color:#bbb;}
+.pcr{display:grid;grid-template-columns:repeat(7,1fr);padding:3px 6px 1px;}
+.pcrc{text-align:center;font-family:'JetBrains Mono',monospace;font-size:5.5px;font-weight:600;color:#ccc;letter-spacing:.2px;}
+.pcdg{display:grid;grid-template-columns:repeat(7,1fr);padding:1px 6px 6px;gap:1px;}
+.pcd{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:2px;min-height:20px;}
+.pcd-n{font-size:8px;font-weight:500;line-height:1;}
+.pcd-m{font-size:5px;margin-top:.5px;}
+.pcd.pw{background:rgba(116,96,204,.1);}.pcd.pw .pcd-n{color:#6050b0;}
+.pcd.ph{background:rgba(217,58,46,.09);}.pcd.ph .pcd-n{color:#c03020;font-weight:700;}
+.pcd.pi{background:rgba(24,150,122,.09);}.pcd.pi .pcd-n{color:#189060;font-weight:700;}
+.pcd.pp{background:rgba(200,136,32,.1);}.pcd.pp .pcd-n{color:#9a6808;font-weight:700;}
+.pcd.pml{background:linear-gradient(135deg,rgba(217,58,46,.09),rgba(200,136,32,.1));}.pcd.pml .pcd-n{color:#9a6808;font-weight:700;}
+.pcd.pt{background:rgba(36,104,212,.1);outline:1px solid rgba(36,104,212,.3);}.pcd.pt .pcd-n{color:#2050b0;font-weight:700;}
+.pcd.pm .pcd-n{color:#9a7820;}
+.pc-leg{display:flex;flex-wrap:wrap;gap:8px 14px;margin-top:12px;padding-top:10px;border-top:1px solid #dde2ee;}
+.pcli{display:flex;align-items:center;gap:4px;font-family:'JetBrains Mono',monospace;font-size:7.5px;color:#666;}
+.pcld{width:8px;height:8px;border-radius:50%;}
+.pcld.r{background:#c03020}.pcld.v{background:#7060c0}.pcld.g{background:#189060}.pcld.p{background:#9a6808}.pcld.b{background:#2050b0}.pcld.m{background:#9a7820}
+
+/* scrollbar */
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--s5);border-radius:3px;}
+
+/* responsive misc */
+@media(max-width:900px){.hero{grid-template-columns:1fr;}.stats-grid{grid-template-columns:repeat(4,1fr);}
+  .exp-opts{grid-template-columns:1fr;}}
+@media(max-width:600px){.hero-h1{font-size:48px;}.hol-g{grid-template-columns:1fr;}.stats-grid{grid-template-columns:repeat(2,1fr);}}
 </style>
 </head>
 <body>
 
-<!-- Background -->
-<div class="bg-canvas">
-  <div class="stars"></div>
-  <div class="aurora aurora-1"></div>
-  <div class="aurora aurora-2"></div>
-  <div class="aurora aurora-3"></div>
+<!-- AURORA CANVAS -->
+<canvas id="aurora-canvas"></canvas>
+
+<!-- FLOATING TOOLTIP (single, reused) -->
+<div class="dc-tip-wrap tip-up" id="tip-wrap">
+  <div class="dc-tip-inner" id="tip-inner"></div>
 </div>
 
-<div class="wrapper">
-
-  <!-- ── HEADER ── -->
-  <header class="header">
-    <div class="header-brand">
-      <div class="brand-eyebrow" id="txt-eyebrow">Kingdom of Norway · 2026</div>
-      <h1 class="brand-title" id="txt-title">Norsk <em>Kalender</em></h1>
-      <p class="brand-sub" id="txt-sub">Public Holidays · Moon Phases · Islamic Feasts</p>
-    </div>
-    <div class="header-controls">
-      <div class="lang-bar">
-        <button class="lb on" onclick="setLang('en')">EN</button>
-        <button class="lb" onclick="setLang('no')">NO</button>
-        <button class="lb" onclick="setLang('fa')">FA</button>
+<!-- MODAL -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="modal-h" id="m-h">Export Calendar</div>
+    <div class="modal-s" id="m-s">Export your 2026 calendar as a high-quality A4 document.</div>
+    <div class="exp-opts">
+      <div class="eopt" onclick="doExport('print')">
+        <div class="eopt-ico">🖨️</div>
+        <div class="eopt-nm" id="m-o1">Print / PDF</div>
+        <div class="eopt-ds" id="m-o1d">Open print dialog<br>Save as PDF or A4 print</div>
       </div>
-      <div class="view-bar">
-        <button class="vb on" id="vb-all" onclick="setView('all')">
-          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>
-          <span id="vb-all-txt">All Months</span>
-        </button>
-        <button class="vb" id="vb-single" onclick="setView('single')">
-          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="14" height="14" rx="2"/><line x1="1" y1="5" x2="15" y2="5"/><line x1="5" y1="1" x2="5" y2="5"/><line x1="11" y1="1" x2="11" y2="5"/></svg>
-          <span id="vb-single-txt">Month View</span>
-        </button>
+      <div class="eopt" onclick="doExport('new')">
+        <div class="eopt-ico">🖼️</div>
+        <div class="eopt-nm" id="m-o2">A4 Preview</div>
+        <div class="eopt-ds" id="m-o2d">Full calendar in a clean<br>printable window</div>
       </div>
     </div>
-  </header>
+    <!-- Mobile share -->
+    <div class="mob-share">
+      <button class="mob-share-btn" onclick="doExport('print')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+        <span id="mob-share-txt">Print / Save</span>
+      </button>
+    </div>
+    <button class="modal-close" id="m-close" onclick="closeModal()">Cancel</button>
+  </div>
+</div>
 
-  <!-- ── STATS RIBBON ── -->
-  <div class="stats-ribbon" id="stats-ribbon"></div>
+<!-- A4 Print Canvas (hidden) -->
+<div id="pc"></div>
 
-  <!-- ── UPCOMING EVENTS ── -->
-  <div class="next-events">
-    <div class="ne-head" id="ne-head-txt">Upcoming Events</div>
-    <div class="ne-list" id="ne-list"></div>
+<!-- PAGE -->
+<div class="page">
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="nav-brand">
+      <div class="nav-flag">🇳🇴</div>
+      <div class="nav-txt">
+        <div class="nav-title" id="nav-ttl">Norsk Kalender</div>
+        <div class="nav-sub" id="nav-sub">2026 · Official Holidays</div>
+      </div>
+    </div>
+    <div class="nav-right">
+      <div class="pg">
+        <button class="pgb on" onclick="setLang('en')">EN</button>
+        <button class="pgb" onclick="setLang('no')">NO</button>
+        <button class="pgb" onclick="setLang('fa')">FA</button>
+      </div>
+      <div class="pg">
+        <button class="pgb on" id="vb-all" onclick="setView('all')">⊞ <span id="vb-all-t">All</span></button>
+        <button class="pgb" id="vb-one" onclick="setView('single')">◻ <span id="vb-one-t">Month</span></button>
+      </div>
+      <button class="expbtn" onclick="openModal()">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 1v8M5 6l3 3 3-3M2 11v3h12v-3"/></svg>
+        <span id="exp-t">Export</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div>
+      <div class="hero-ey" id="h-ey">Kingdom of Norway · Calendar Year 2026</div>
+      <h1 class="hero-h1" id="h-h1">
+        <span>Norsk</span><br><em>Kalender</em><br><span>2026</span>
+      </h1>
+      <p class="hero-desc" id="h-desc">Official Norwegian public holidays, Islamic feasts, Persian celebrations, lunar moon phases — all in one beautifully crafted calendar.</p>
+    </div>
+    <div>
+      <div class="stats-grid" id="stats"></div>
+      <div class="qf-row" id="qfrow"></div>
+    </div>
+  </section>
+
+  <!-- UPCOMING -->
+  <div class="sec">
+    <div class="sec-lbl"><div class="dot"></div><span id="sl-up">Upcoming Events</span><div class="rule"></div></div>
+    <div class="ev-row" id="ev-row"></div>
   </div>
 
-  <!-- ── YEAR STRIP ── -->
-  <div class="year-strip">
-    <div class="year-strip-inner" id="year-strip-inner"></div>
-  </div>
+  <!-- YEAR MAP -->
+  <div class="ym"><div class="ym-inner" id="ym-inner"></div></div>
 
-  <!-- ── TOOLBAR ── -->
+  <!-- LEGEND -->
+  <div class="legend" id="legend"></div>
+
+  <!-- TOOLBAR -->
   <div class="toolbar">
-    <div class="search-wrap">
-      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6.5" cy="6.5" r="5"/><line x1="10.5" y1="10.5" x2="14" y2="14"/></svg>
-      <input class="search-input" id="search-input" type="text" placeholder="Search holidays…" oninput="onSearch(this.value)">
+    <div class="srch">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="6.5" cy="6.5" r="5.5"/><line x1="10.5" y1="10.5" x2="14.5" y2="14.5"/></svg>
+      <input class="srch-in" id="srch" type="text" oninput="doSearch(this.value)">
     </div>
-    <div class="filter-chips" id="filter-chips"></div>
+    <div class="chips" id="chips"></div>
   </div>
 
-  <!-- ── CALENDAR: All months ── -->
-  <div id="view-grid"></div>
+  <!-- ALL MONTHS -->
+  <div id="grid-all"></div>
 
-  <!-- ── CALENDAR: Single month ── -->
-  <div id="view-single">
-    <div class="single-nav">
-      <button class="nav-btn" onclick="navMonth(-1)">
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="10 3 5 8 10 13"/></svg>
-      </button>
-      <div class="single-title" id="single-title"></div>
-      <button class="nav-btn" onclick="navMonth(1)">
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 3 11 8 6 13"/></svg>
-      </button>
+  <!-- SINGLE MONTH -->
+  <div id="grid-single">
+    <div class="sv-nav">
+      <button class="sv-nb" onclick="navM(-1)"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="10 3 5 8 10 13"/></svg></button>
+      <div class="sv-ttl" id="sv-ttl"></div>
+      <button class="sv-nb" onclick="navM(1)"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 3 11 8 6 13"/></svg></button>
     </div>
-    <div class="single-card">
-      <div class="single-daynames" id="single-daynames"></div>
-      <div class="single-days" id="single-days"></div>
+    <div class="sv-card">
+      <div class="sv-dn" id="sv-dn"></div>
+      <div class="sv-dg" id="sv-dg"></div>
     </div>
   </div>
 
-  <!-- ── INFO PANEL ── -->
-  <div class="info-section">
-    <div class="section-head">
-      <h2 id="info-h2">🇳🇴 Holidays & Islamic Feasts 2026</h2>
-      <div class="section-line"></div>
-    </div>
-    <div class="holiday-cards" id="holiday-cards"></div>
+  <!-- HOLIDAY INFO -->
+  <div class="inf-wrap">
+    <div class="inf-hd"><h2 class="inf-h2" id="inf-h2">Holidays 2026</h2><div class="inf-rule"></div></div>
+    <div class="hol-g" id="hol-g"></div>
   </div>
 
-  <!-- ── MOON GUIDE ── -->
-  <div class="info-section">
-    <div class="section-head">
-      <h2 id="moon-h2">🌙 Moon Phase Guide</h2>
-      <div class="section-line"></div>
-    </div>
-    <div class="moon-guide" id="moon-guide"></div>
+  <!-- MOON GUIDE -->
+  <div class="inf-wrap">
+    <div class="inf-hd"><h2 class="inf-h2" id="moon-h2">🌙 Moon Phases</h2><div class="inf-rule"></div></div>
+    <div class="moon-g" id="moon-g"></div>
   </div>
 
-  <!-- ── FOOTER ── -->
-  <footer class="footer" id="footer-txt"></footer>
-
+  <footer class="footer">
+    <div class="footer-t" id="ftxt"></div>
+    <div class="footer-badge">Norsk Kalender <em>2026</em></div>
+  </footer>
 </div>
 
 <script>
-/* ═══════════════════════════════════════════
-   DATA
-═══════════════════════════════════════════ */
-const T = {
-  en: {
-    eyebrow:"Kingdom of Norway · 2026", title:"Norsk Calendar",
-    sub:"Public Holidays · Moon Phases · Islamic Feasts",
-    statH:"Public Holidays", statW:"Weekend Days", statWD:"Work Days", statI:"Islamic Feasts",
-    leg:{h:"Public Holiday",we:"Weekend",i:"Islamic Feast",t:"Today",nm:"New Moon",fq:"First Quarter",fm:"Full Moon",lq:"Last Quarter"},
-    upcoming:"Upcoming Events",
-    infoH:"🇳🇴 Holidays & Islamic Feasts 2026", moonH:"🌙 Moon Phase Guide",
-    vbAll:"All Months", vbSingle:"Month View",
-    days:["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
-    months:["January","February","March","April","May","June","July","August","September","October","November","December"],
-    mSub:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
-    chips:["All","Holidays","Weekends","Islamic","Moon"],
-    searchPH:"Search holidays…",
-    badge:{official:"Official",islamic:"Islamic Feast",approx:"Approx. Date"},
-    moonPhases:[
-      {icon:"🌑",name:"New Moon",desc:"The Moon is not visible. Start of the lunar month."},
-      {icon:"🌓",name:"First Quarter",desc:"Right half illuminated. Waxing crescent phase."},
-      {icon:"🌕",name:"Full Moon",desc:"Fully illuminated. Highest tides of the month."},
-      {icon:"🌗",name:"Last Quarter",desc:"Left half illuminated. Waning crescent phase."},
-    ],
-    days2:["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
-    footer:`Norwegian Calendar 2026 · Public holidays sourced from <a href="https://lovdata.no">Lovdata.no</a> · Islamic dates via <a href="https://islamsk.no">Islamsk Råd Norge</a> · Moon phases: astronomical data`,
-    inDays:"in {n} days", today:"Today", pastDays:"{n} days ago",
-  },
-  no: {
-    eyebrow:"Kongeriket Norge · 2026", title:"Norsk Kalender",
-    sub:"Helligdager · Månefaser · Islamske høytider",
-    statH:"Helligdager", statW:"Helgedager", statWD:"Arbeidsdager", statI:"Islamske høytider",
-    leg:{h:"Offentlig helligdag",we:"Helgedag",i:"Islamsk høytid",t:"I dag",nm:"Nymåne",fq:"Første kvarter",fm:"Fullmåne",lq:"Siste kvarter"},
-    upcoming:"Kommende hendelser",
-    infoH:"🇳🇴 Helligdager og islamske høytider 2026", moonH:"🌙 Månefaseguide",
-    vbAll:"Alle måneder", vbSingle:"Månedvisning",
-    days:["Man","Tir","Ons","Tor","Fre","Lør","Søn"],
-    months:["Januar","Februar","Mars","April","Mai","Juni","Juli","August","September","Oktober","November","Desember"],
-    mSub:["Jan","Feb","Mar","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Des"],
-    chips:["Alle","Helligdager","Helger","Islamsk","Måne"],
-    searchPH:"Søk helligdager…",
-    badge:{official:"Offisiell",islamic:"Islamsk høytid",approx:"Ca. dato"},
-    moonPhases:[
-      {icon:"🌑",name:"Nymåne",desc:"Månen er ikke synlig. Start på månedssyklusen."},
-      {icon:"🌓",name:"Første kvarter",desc:"Høyre halvdel opplyst. Tiltagende halvmåne."},
-      {icon:"🌕",name:"Fullmåne",desc:"Fullt opplyst. Høyeste tider i måneden."},
-      {icon:"🌗",name:"Siste kvarter",desc:"Venstre halvdel opplyst. Avtagende halvmåne."},
-    ],
-    days2:["søndag","mandag","tirsdag","onsdag","torsdag","fredag","lørdag"],
-    footer:`Norsk Kalender 2026 · Helligdager fra <a href="https://lovdata.no">Lovdata.no</a> · Islamske datoer via <a href="https://islamsk.no">Islamsk Råd Norge</a> · Månefaser: astronomiske data`,
-    inDays:"om {n} dager", today:"I dag", pastDays:"for {n} dager siden",
-  },
-  fa: {
-    eyebrow:"پادشاهی نروژ · ۲۰۲۶", title:"تقویم نروژ",
-    sub:"تعطیلات رسمی · فازهای ماه · اعیاد اسلامی",
-    statH:"تعطیلات رسمی", statW:"روزهای آخر هفته", statWD:"روزهای کاری", statI:"اعیاد اسلامی",
-    leg:{h:"تعطیل رسمی",we:"آخر هفته",i:"عید اسلامی",t:"امروز",nm:"هلال ماه",fq:"ربع اول",fm:"ماه کامل",lq:"ربع آخر"},
-    upcoming:"رویدادهای آینده",
-    infoH:"🇳🇴 تعطیلات رسمی و اعیاد اسلامی ۲۰۲۶", moonH:"🌙 راهنمای فازهای ماه",
-    vbAll:"همه ماه‌ها", vbSingle:"نمای ماهانه",
-    days:["دوشنبه","سه‌شنبه","چهارشنبه","پنجشنبه","جمعه","شنبه","یکشنبه"],
-    months:["ژانویه","فوریه","مارس","آوریل","مه","ژوئن","ژوئیه","اوت","سپتامبر","اکتبر","نوامبر","دسامبر"],
-    mSub:["ژان","فور","مار","آور","مه","ژون","ژوئ","اوت","سپت","اکت","نوو","دسم"],
-    chips:["همه","تعطیلات","آخر هفته","اسلامی","ماه"],
-    searchPH:"جستجو در تعطیلات…",
-    badge:{official:"رسمی",islamic:"عید اسلامی",approx:"تاریخ تقریبی"},
-    moonPhases:[
-      {icon:"🌑",name:"هلال ماه",desc:"ماه دیده نمی‌شود. آغاز ماه قمری."},
-      {icon:"🌓",name:"ربع اول",desc:"نیمه راست روشن. ماه در حال رشد."},
-      {icon:"🌕",name:"ماه کامل",desc:"کاملاً روشن. بالاترین کشند ماه."},
-      {icon:"🌗",name:"ربع آخر",desc:"نیمه چپ روشن. ماه در حال کاهش."},
-    ],
-    days2:["یکشنبه","دوشنبه","سه‌شنبه","چهارشنبه","پنجشنبه","جمعه","شنبه"],
-    footer:`تقویم نروژ ۲۰۲۶ · تعطیلات از <a href="https://lovdata.no">Lovdata.no</a> · تاریخ‌های اسلامی از <a href="https://islamsk.no">شورای اسلامی نروژ</a> · فازهای ماه: داده‌های نجومی`,
-    inDays:"تا {n} روز دیگر", today:"امروز", pastDays:"{n} روز پیش",
+/* ══════════════════════════════
+   AURORA BACKGROUND
+══════════════════════════════ */
+(function(){
+  const cvs=document.getElementById('aurora-canvas');
+  const ctx=cvs.getContext('2d');
+  let W,H,t=0;
+  const orbs=[
+    {x:.15,y:.12,r:.45,h:220,a:.07},
+    {x:.82,y:.28,r:.38,h:260,a:.055},
+    {x:.5,y:.75,r:.4,h:180,a:.045},
+    {x:.3,y:.5,r:.32,h:200,a:.035},
+    {x:.7,y:.62,r:.28,h:140,a:.04},
+  ];
+  function resize(){
+    W=cvs.width=window.innerWidth;
+    H=cvs.height=window.innerHeight;
   }
-};
+  window.addEventListener('resize',resize);
+  resize();
 
-const HOLIDAYS = {
-  "1-1":  {en:"New Year's Day",no:"Nyttårsdag",fa:"سال نو میلادی",
-    de_en:"First day of the year. Norway closes banks, shops, and government offices.",
-    de_no:"Årets første dag. Norge stenger banker, butikker og offentlige kontorer.",
-    de_fa:"اول ژانویه، آغاز سال جدید. بانک‌ها، مغازه‌ها و ادارات دولتی تعطیل هستند.",type:"official"},
-  "4-2":  {en:"Maundy Thursday",no:"Skjærtorsdag",fa:"پنجشنبه مقدس",
-    de_en:"Thursday before Easter. Commemorates Jesus's Last Supper. 3-day weekend begins.",
-    de_no:"Torsdag før påske. Minnedag for Jesu siste nattverd. Langhelgen starter.",
-    de_fa:"پنجشنبه قبل از عید پاک. یادبود شام آخر حضرت عیسی. آغاز تعطیلات سه‌روزه.",type:"official"},
-  "4-3":  {en:"Good Friday",no:"Langfredag",fa:"جمعه مقدس",
-    de_en:"Crucifixion of Jesus Christ. One of the most solemn days in the Christian calendar.",
-    de_no:"Jesu Kristi korsfestelse. En av de høytideligste dagene i den kristne kalenderen.",
-    de_fa:"یادبود مصلوب شدن حضرت عیسی. یکی از مقدس‌ترین روزهای تقویم مسیحی.",type:"official"},
-  "4-5":  {en:"Easter Sunday",no:"Første påskedag",fa:"یکشنبه عید پاک",
-    de_en:"Resurrection of Jesus Christ. The most important feast of the Christian year.",
-    de_no:"Jesu Kristi oppstandelse. Den viktigste høytiden i det kristne året.",
-    de_fa:"رستاخیز حضرت عیسی مسیح. مهم‌ترین عید تقویم مسیحی.",type:"official"},
-  "4-6":  {en:"Easter Monday",no:"Andre påskedag",fa:"دوشنبه عید پاک",
-    de_en:"Continuation of Easter celebrations. Public holiday in all Nordic countries.",
-    de_no:"Fortsettelse av påskefeiringen. Offentlig helligdag i alle nordiske land.",
-    de_fa:"ادامه جشن‌های عید پاک. تعطیل رسمی در تمام کشورهای اسکاندیناوی.",type:"official"},
-  "5-1":  {en:"Labour Day",no:"Arbeidernes dag",fa:"روز کارگر",
-    de_en:"International Workers' Day. Celebrated with marches in Oslo and major cities since 1890.",
-    de_no:"Internasjonal arbeiderdag. Feiret med tog i Oslo og andre byer siden 1890.",
-    de_fa:"روز جهانی کارگر. از سال ۱۸۹۰ با راهپیمایی در اسلو و شهرهای بزرگ جشن گرفته می‌شود.",type:"official"},
-  "5-14": {en:"Ascension Day",no:"Kristi himmelfartsdag",fa:"روز صعود مسیح",
-    de_en:"39 days after Easter. Celebrates Jesus ascending into heaven. Creates a long weekend.",
-    de_no:"39 dager etter påske. Feirer Jesu himmelfart. Gir en lang helg.",
-    de_fa:"۳۹ روز پس از عید پاک. صعود حضرت عیسی به آسمان. تعطیلات طولانی‌تری می‌سازد.",type:"official"},
-  "5-17": {en:"Constitution Day",no:"Grunnlovsdagen",fa:"روز قانون اساسی",
-    de_en:"Norway's National Day. The Constitution was signed on May 17, 1814. Children's parades are held across the country.",
-    de_no:"Norges nasjonaldag. Grunnloven ble undertegnet 17. mai 1814. Barnetog holdes over hele landet.",
-    de_fa:"روز ملی نروژ. قانون اساسی در ۱۷ مه ۱۸۱۴ امضا شد. رژه‌های کودکان در سراسر کشور برگزار می‌شود.",type:"official"},
-  "5-24": {en:"Whit Sunday (Pentecost)",no:"Første pinsedag",fa:"یکشنبه پنطیکاست",
-    de_en:"50 days after Easter. Commemorates the Holy Spirit descending on the Apostles.",
-    de_no:"50 dager etter påske. Minnes Den hellige ånds komme over apostlene.",
-    de_fa:"۵۰ روز پس از عید پاک. یادبود نزول روح‌القدس بر حواریون.",type:"official"},
-  "5-25": {en:"Whit Monday",no:"Andre pinsedag",fa:"دوشنبه پنطیکاست",
+  /* draw subtle particle stars */
+  const stars=[];
+  for(let i=0;i<120;i++) stars.push({x:Math.random(),y:Math.random(),s:Math.random()*1.2+.3,o:Math.random()*.6+.2,sp:Math.random()*.015+.005});
+
+  function hsl(h,s,l,a){return `hsla(${h},${s}%,${l}%,${a})`;}
+
+  function frame(){
+    t+=.004;
+    ctx.clearRect(0,0,W,H);
+
+    /* orbs */
+    orbs.forEach((o,i)=>{
+      const ox=W*(o.x+Math.sin(t*.7+i)*0.08);
+      const oy=H*(o.y+Math.cos(t*.5+i*1.3)*0.07);
+      const radius=Math.min(W,H)*o.r*(1+Math.sin(t*.4+i)*.06);
+      const g=ctx.createRadialGradient(ox,oy,0,ox,oy,radius);
+      const a=o.a*(0.8+Math.sin(t*.6+i*.8)*.2);
+      g.addColorStop(0,hsl(o.h,70,55,a));
+      g.addColorStop(.5,hsl(o.h+20,60,45,a*.5));
+      g.addColorStop(1,hsl(o.h+40,50,35,0));
+      ctx.fillStyle=g;
+      ctx.beginPath();
+      ctx.ellipse(ox,oy,radius,radius*.7,t*.1+i,0,Math.PI*2);
+      ctx.fill();
+    });
+
+    /* subtle grid lines */
+    ctx.strokeStyle='rgba(255,255,255,0.022)';
+    ctx.lineWidth=1;
+    const gs=80;
+    for(let x=0;x<W;x+=gs){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+    for(let y=0;y<H;y+=gs){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+
+    /* stars */
+    stars.forEach(s=>{
+      s.o+=s.sp;if(s.o>1||s.o<.1)s.sp*=-1;
+      ctx.fillStyle=`rgba(200,220,255,${s.o*.5})`;
+      ctx.beginPath();
+      ctx.arc(s.x*W,s.y*H,s.s,0,Math.PI*2);
+      ctx.fill();
+    });
+
+    requestAnimationFrame(frame);
+  }
+  frame();
+})();
+
+/* ══════════════════════════════
+   DATA
+══════════════════════════════ */
+const HOL={
+  "1-1":{en:"New Year's Day",no:"Nyttårsdag",fa:"سال نو میلادی",
+    de_en:"The first day of the year. All public offices, banks and most businesses are closed across Norway.",
+    de_no:"Årets første dag. Offentlige kontorer, banker og de fleste bedrifter er stengt i Norge.",
+    de_fa:"اول ژانویه، آغاز سال جدید میلادی. ادارات دولتی، بانک‌ها و اکثر مشاغل در نروژ تعطیل‌اند."},
+  "4-2":{en:"Maundy Thursday",no:"Skjærtorsdag",fa:"پنجشنبه مقدس",
+    de_en:"Thursday before Easter. Commemorates the Last Supper of Jesus with his disciples. Easter holiday begins.",
+    de_no:"Torsdag før påske. Minnedag for Jesu siste nattverd med disiplene. Påskeferien begynner.",
+    de_fa:"پنجشنبه قبل از عید پاک. یادبود شام آخر حضرت عیسی با حواریون. تعطیلات عید پاک شروع می‌شود."},
+  "4-3":{en:"Good Friday",no:"Langfredag",fa:"جمعه مقدس",
+    de_en:"Commemorates the crucifixion of Jesus Christ. One of the most solemn days of the Christian calendar.",
+    de_no:"Minnedag for Jesu Kristi korsfestelse. En av de mest høytidelige dagene i den kristne kalenderen.",
+    de_fa:"یادبود مصلوب شدن حضرت عیسی مسیح. یکی از پرمعناترین روزهای تقویم مسیحی."},
+  "4-5":{en:"Easter Sunday",no:"Første påskedag",fa:"یکشنبه عید پاک",
+    de_en:"Celebrates the resurrection of Jesus. Most important Christian feast. Families gather for traditional meals.",
+    de_no:"Feirer Jesu oppstandelse. Viktigste kristne høytid. Familier samles til tradisjonelle måltider.",
+    de_fa:"جشن رستاخیز حضرت عیسی. مهم‌ترین عید مسیحی. خانواده‌ها برای وعده‌های سنتی دور هم جمع می‌شوند."},
+  "4-6":{en:"Easter Monday",no:"Andre påskedag",fa:"دوشنبه عید پاک",
+    de_en:"Second day of Easter. Public holiday across all Nordic countries.",
+    de_no:"Andre dag i påsken. Offentlig helligdag i alle nordiske land.",
+    de_fa:"روز دوم عید پاک. تعطیل رسمی در تمام کشورهای اسکاندیناوی."},
+  "5-1":{en:"Labour Day",no:"Arbeidernes dag",fa:"روز کارگر",
+    de_en:"International Workers' Day. Celebrated in Norway since 1890 with marches and rallies in Oslo.",
+    de_no:"Internasjonal arbeiderdag. Feiret i Norge siden 1890 med tog og demonstrasjoner i Oslo.",
+    de_fa:"روز جهانی کارگر. از ۱۸۹۰ با راهپیمایی و تجمعات در اسلو جشن گرفته می‌شود."},
+  "5-14":{en:"Ascension Day",no:"Kristi himmelfartsdag",fa:"روز صعود مسیح",
+    de_en:"39 days after Easter. Marks Jesus ascending into heaven. Creates a long bridge weekend.",
+    de_no:"39 dager etter påske. Markerer Jesu himmelfart. Gir en lang helg.",
+    de_fa:"۳۹ روز پس از عید پاک. صعود حضرت عیسی به آسمان. تعطیلات طولانی‌تری ایجاد می‌کند."},
+  "5-17":{en:"Constitution Day",no:"Grunnlovsdagen",fa:"روز قانون اساسی",
+    de_en:"Norway's National Day. Constitution signed May 17, 1814 in Eidsvoll. Celebrated with children's parades, bunad (national costume) and flags.",
+    de_no:"Norges nasjonaldag. Grunnloven ble undertegnet 17. mai 1814 på Eidsvoll. Feiret med barnetog, bunad og flagg.",
+    de_fa:"روز ملی نروژ. قانون اساسی در ۱۷ مه ۱۸۱۴ در ایدسوول امضا شد. با رژه کودکان، لباس ملی (بوناد) و پرچم جشن گرفته می‌شود."},
+  "5-24":{en:"Whit Sunday (Pentecost)",no:"Første pinsedag",fa:"یکشنبه پنطیکاست",
+    de_en:"50 days after Easter. Commemorates the Holy Spirit descending upon the Apostles of Jesus.",
+    de_no:"50 dager etter påske. Minnedag for Den hellige ånds komme over apostlene.",
+    de_fa:"۵۰ روز پس از عید پاک. یادبود نزول روح‌القدس بر حواریون حضرت عیسی."},
+  "5-25":{en:"Whit Monday",no:"Andre pinsedag",fa:"دوشنبه پنطیکاست",
     de_en:"Day after Pentecost. Second consecutive public holiday of the Pentecost weekend.",
-    de_no:"Dagen etter første pinsedag. Andre offentlige helligdag på rad i pinsehelgen.",
-    de_fa:"روز بعد از پنطیکاست. دومین تعطیل رسمی متوالی آخر هفته پنطیکاست.",type:"official"},
+    de_no:"Dagen etter første pinsedag. Andre offentlige helligdag i pinsehelgen.",
+    de_fa:"روز بعد از پنطیکاست. دومین تعطیل رسمی متوالی آخر هفته پنطیکاست."},
   "12-25":{en:"Christmas Day",no:"Første juledag",fa:"روز اول کریسمس",
-    de_en:"Birth of Jesus Christ. Norway celebrates with family gatherings, traditional food and gifts.",
-    de_no:"Jesu Kristi fødsel. Norge feirer med familiemiddager, tradisjonsmat og gaver.",
-    de_fa:"تولد حضرت عیسی مسیح. نروژ با جمع‌های خانوادگی، غذاهای سنتی و هدایا جشن می‌گیرد.",type:"official"},
-  "12-26":{en:"Boxing Day (2nd Christmas)",no:"Andre juledag",fa:"روز دوم کریسمس",
-    de_en:"Second day of Christmas. Originally a day for giving gifts to servants and the poor.",
+    de_en:"Birth of Jesus Christ. Norway celebrates with julaften traditions, julenisse, ribbe or pinnekjøtt meals.",
+    de_no:"Jesu Kristi fødsel. Norge feirer med julafetentradisjoner, julenisse og ribbe eller pinnekjøtt.",
+    de_fa:"تولد حضرت عیسی مسیح. نروژ با آداب شب کریسمس، بابانوئل و غذاهای سنتی جشن می‌گیرد."},
+  "12-26":{en:"Boxing Day",no:"Andre juledag",fa:"روز دوم کریسمس",
+    de_en:"Second day of Christmas celebrations. Originally a day for charitable giving to servants and the poor.",
     de_no:"Den andre juledagen. Opprinnelig en dag for å gi gaver til tjenere og fattige.",
-    de_fa:"روز دوم کریسمس. در اصل روزی برای هدیه دادن به خدمتکاران و فقرا بود.",type:"official"},
+    de_fa:"روز دوم کریسمس. در اصل برای هدیه دادن خیرخواهانه به خدمتکاران و فقرا بود."},
 };
 
-const ISLAMIC = {
-  "3-20":{en:"Eid al-Fitr",no:"Id al-Fitr",fa:"عید فطر",
-    de_en:"End of Ramadan. A 3-day celebration after a month of fasting. Approximate date — confirmed by moon sighting.",
-    de_no:"Slutten på Ramadan. Tre dager med feiring etter en måneds faste. Ca. dato — bekreftes ved månefase.",
-    de_fa:"پایان ماه رمضان. سه روز جشن پس از یک ماه روزه. تاریخ تقریبی — با رؤیت هلال تأیید می‌شود.",type:"islamic",approx:true},
-  "5-27":{en:"Eid al-Adha",no:"Id al-Adha",fa:"عید قربان",
-    de_en:"Feast of Sacrifice. Commemorates Ibrahim's willingness to sacrifice his son. Pilgrimage to Mecca (Hajj). Approximate date.",
-    de_no:"Offerets fest. Minnes Ibrahims vilje til å ofre sin sønn. Pilgrimsreise til Mekka (Hajj). Ca. dato.",
-    de_fa:"عید قربانی. یادبود آمادگی حضرت ابراهیم برای قربانی. حج به مکه. تاریخ تقریبی.",type:"islamic",approx:true},
+const ISLAMIC={
+  "3-20":{en:"Eid al-Fitr",no:"Id al-Fitr",fa:"عید فطر",approx:true,
+    de_en:"End of Ramadan. 3-day celebration after a month of fasting. Muslims gather for prayers, share meals and give gifts. Approx. date — confirmed by moon sighting.",
+    de_no:"Slutten på Ramadan. Tre dager med feiring etter en måneds faste. Muslimer samles til bønn og deler måltider. Ca. dato.",
+    de_fa:"پایان ماه رمضان. سه روز جشن پس از یک ماه روزه. نماز عید، صله رحم و هدیه‌دادن. تاریخ تقریبی."},
+  "5-27":{en:"Eid al-Adha",no:"Id al-Adha",fa:"عید قربان",approx:true,
+    de_en:"Feast of Sacrifice. Commemorates Ibrahim's willingness to sacrifice his son. Coincides with the Hajj pilgrimage. Approx. date.",
+    de_no:"Offerets fest. Minnes Ibrahims vilje til å ofre sin sønn. Sammenfaller med Hajj-pilegrimsreisen. Ca. dato.",
+    de_fa:"عید قربانی. یادبود آمادگی حضرت ابراهیم برای قربانی. مقارن با حج به مکه. تاریخ تقریبی."},
 };
 
-const MOON = {
+const PERSIAN={
+  "3-20":{en:"Nowruz — Persian New Year",no:"Nouruz — Persisk nyttår",fa:"نوروز — سال نو ایرانی",
+    de_en:"Persian New Year and first day of spring (spring equinox). One of the oldest celebrations on Earth, over 3,000 years old. Celebrated by over 300 million people across Iran, Afghanistan, Central Asia and the global diaspora.",
+    de_no:"Persisk nyttår og vårens første dag (vårjevndøgn). En av verdens eldste feiringer, over 3000 år gammel. Feiret av over 300 millioner mennesker over hele verden.",
+    de_fa:"سال نو ایرانی و آغاز بهار (اعتدال بهاری). یکی از کهن‌ترین جشن‌های بشریت با بیش از سه هزار سال قدمت. توسط بیش از ۳۰۰ میلیون نفر در سراسر جهان جشن گرفته می‌شود."},
+  "12-21":{en:"Yalda Night",no:"Yalda-natt",fa:"شب یلدا",
+    de_en:"The longest night of the year (winter solstice). Ancient Iranian celebration of light's victory over darkness. Families gather to read Hafez poetry, eat pomegranates and watermelon, and tell stories until midnight.",
+    de_no:"Årets lengste natt (vintersolverv). Gammel iransk feiring av lysets seier over mørket. Familier samles, leser Hafez-poesi, spiser granatepler og vannmelon til midnatt.",
+    de_fa:"بلندترین شب سال (انقلاب زمستانی). جشن کهن ایرانی برای پیروزی روشنایی بر تاریکی. خانواده‌ها دور هم جمع می‌شوند، شعر حافظ می‌خوانند، انار و هندوانه می‌خورند و تا نیمه شب قصه می‌گویند."},
+};
+
+const MOON={
   "1-3":"🌕","1-10":"🌗","1-18":"🌑","1-25":"🌓",
   "2-1":"🌕","2-9":"🌗","2-17":"🌑","2-24":"🌓",
   "3-3":"🌕","3-11":"🌗","3-18":"🌑","3-25":"🌓",
@@ -1183,380 +749,644 @@ const MOON = {
   "12-1":"🌗","12-9":"🌑","12-17":"🌓","12-23":"🌕","12-31":"🌗"
 };
 
-/* ═══════════════════════════════════════════
+/* ══════════════════════════════
+   TRANSLATIONS
+══════════════════════════════ */
+const TX={
+  en:{
+    navTtl:"Norsk Kalender",navSub:"2026 · Official Holidays",
+    ey:"Kingdom of Norway · Calendar Year 2026",
+    h1n:"Norsk",h1em:"Kalender",h1y:"2026",
+    desc:"Official Norwegian public holidays, Islamic feasts, Persian celebrations, lunar moon phases — all in one beautifully crafted calendar.",
+    sH:"Public Holidays",sW:"Weekend Days",sWD:"Work Days",sI:"Islamic & Persian",
+    qfA:"Next holiday",qfB:"Weeks left",qfC:"Nowruz",qfD:"Yalda Night",
+    up:"Upcoming Events",
+    vAll:"All",vOne:"Month",expT:"Export",
+    mH:"Export Calendar",mS:"Export your 2026 calendar as a high-quality A4 document.",
+    o1:"Print / PDF",o1d:"Open print dialog\nSave as PDF or A4 print",
+    o2:"A4 Preview",o2d:"Full calendar in a clean\nprintable window",
+    mClose:"Cancel",mobShare:"Print / Save",
+    infoH:"🇳🇴 Holidays, Islamic Feasts & Persian Celebrations 2026",
+    moonH:"🌙 Moon Phase Guide",
+    srchPH:"Search events…",
+    chips:["All","Holidays","Weekends","Islamic","Persian","Moon"],
+    days:["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
+    months:["January","February","March","April","May","June","July","August","September","October","November","December"],
+    mAb:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
+    dFull:["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
+    badge:{off:"Official Holiday",isl:"Islamic Feast",per:"Persian Celebration",approx:"Approx. Date"},
+    moon:[
+      {i:"🌑",n:"New Moon",d:"Moon not visible. Start of the lunar month."},
+      {i:"🌓",n:"First Quarter",d:"Right half illuminated. Waxing moon."},
+      {i:"🌕",n:"Full Moon",d:"Fully illuminated. Highest tidal forces."},
+      {i:"🌗",n:"Last Quarter",d:"Left half illuminated. Waning moon."},
+    ],
+    inDays:"in {n} days",today:"Today",past:"{n} days ago",
+    foot:`Data: <a href="https://lovdata.no">Lovdata.no</a> (Public Holidays) · <a href="https://islamsk.no">Islamsk Råd Norge</a> (Islamic Dates) · Astronomical moon data · Persian calendar`,
+    pcMeta:"Norwegian Calendar 2026\nPublic Holidays · Moon Phases · Islamic Feasts · Persian Celebrations",
+    pcLeg:["Public Holiday","Weekend","Islamic Feast","Persian Celebration","Today","Moon Phase"],
+  },
+  no:{
+    navTtl:"Norsk Kalender",navSub:"2026 · Offentlige helligdager",
+    ey:"Kongeriket Norge · Kalenderår 2026",
+    h1n:"Norsk",h1em:"Kalender",h1y:"2026",
+    desc:"Offisielle norske helligdager, islamske høytider, persiske feiringer og månefaser — i én vakker kalender.",
+    sH:"Helligdager",sW:"Helgedager",sWD:"Arbeidsdager",sI:"Islamsk & Persisk",
+    qfA:"Neste helligdag",qfB:"Gjenværende uker",qfC:"Nouruz",qfD:"Yalda-natt",
+    up:"Kommende hendelser",
+    vAll:"Alle",vOne:"Månedvis",expT:"Eksporter",
+    mH:"Eksporter kalender",mS:"Eksporter 2026-kalenderen som et utskriftsklart A4-dokument.",
+    o1:"Skriv ut / PDF",o1d:"Åpne utskriftsdialog\nLagre som PDF eller skriv ut A4",
+    o2:"A4-forhåndsvisning",o2d:"Hele kalenderen i et rent\nutskriftbart vindu",
+    mClose:"Avbryt",mobShare:"Skriv ut / Lagre",
+    infoH:"🇳🇴 Helligdager, islamske høytider og persiske feiringer 2026",
+    moonH:"🌙 Månefaseguide",
+    srchPH:"Søk hendelser…",
+    chips:["Alle","Helligdager","Helger","Islamsk","Persisk","Månefaser"],
+    days:["Man","Tir","Ons","Tor","Fre","Lør","Søn"],
+    months:["Januar","Februar","Mars","April","Mai","Juni","Juli","August","September","Oktober","November","Desember"],
+    mAb:["Jan","Feb","Mar","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Des"],
+    dFull:["søndag","mandag","tirsdag","onsdag","torsdag","fredag","lørdag"],
+    badge:{off:"Offentlig helligdag",isl:"Islamsk høytid",per:"Persisk feiring",approx:"Ca. dato"},
+    moon:[
+      {i:"🌑",n:"Nymåne",d:"Månen er usynlig. Start av månedssyklusen."},
+      {i:"🌓",n:"Første kvarter",d:"Høyre halvdel opplyst. Tiltagende måne."},
+      {i:"🌕",n:"Fullmåne",d:"Fullt opplyst. Høyeste tidevannskrefter."},
+      {i:"🌗",n:"Siste kvarter",d:"Venstre halvdel opplyst. Avtagende måne."},
+    ],
+    inDays:"om {n} dager",today:"I dag",past:"for {n} dager siden",
+    foot:`Data: <a href="https://lovdata.no">Lovdata.no</a> (Helligdager) · <a href="https://islamsk.no">Islamsk Råd Norge</a> · Astronomiske månefasedata · Persisk kalender`,
+    pcMeta:"Norsk Kalender 2026\nHelligdager · Månefaser · Islamske høytider · Persiske feiringer",
+    pcLeg:["Helligdag","Helgedag","Islamsk høytid","Persisk feiring","I dag","Månefase"],
+  },
+  fa:{
+    navTtl:"تقویم نروژ",navSub:"۲۰۲۶ · تعطیلات رسمی",
+    ey:"پادشاهی نروژ · سال تقویمی ۲۰۲۶",
+    h1n:"تقویم",h1em:"نروژ",h1y:"۲۰۲۶",
+    desc:"تعطیلات رسمی نروژ، اعیاد اسلامی، جشن‌های ایرانی، فازهای ماه — همه در یک تقویم زیبا.",
+    sH:"تعطیلات رسمی",sW:"روزهای آخر هفته",sWD:"روزهای کاری",sI:"اسلامی و ایرانی",
+    qfA:"تعطیل بعدی",qfB:"هفته‌های باقی‌مانده",qfC:"نوروز",qfD:"شب یلدا",
+    up:"رویدادهای پیش رو",
+    vAll:"همه",vOne:"ماهانه",expT:"خروجی",
+    mH:"خروجی تقویم",mS:"تقویم ۲۰۲۶ را به عنوان سند A4 آماده چاپ صادر کنید.",
+    o1:"چاپ / PDF",o1d:"باز کردن کادر چاپ\nذخیره PDF یا چاپ A4",
+    o2:"پیش‌نمایش A4",o2d:"تقویم کامل در یک پنجره\nتمیز و قابل چاپ",
+    mClose:"انصراف",mobShare:"چاپ / ذخیره",
+    infoH:"🇳🇴 تعطیلات رسمی، اعیاد اسلامی و جشن‌های ایرانی ۲۰۲۶",
+    moonH:"🌙 راهنمای فازهای ماه",
+    srchPH:"جستجوی رویدادها…",
+    chips:["همه","تعطیلات","آخر هفته","اسلامی","ایرانی","فازهای ماه"],
+    days:["دوشنبه","سه‌شنبه","چهارشنبه","پنجشنبه","جمعه","شنبه","یکشنبه"],
+    months:["ژانویه","فوریه","مارس","آوریل","مه","ژوئن","ژوئیه","اوت","سپتامبر","اکتبر","نوامبر","دسامبر"],
+    mAb:["ژان","فور","مار","آور","مه","ژون","ژوئ","اوت","سپت","اکت","نوو","دسم"],
+    dFull:["یکشنبه","دوشنبه","سه‌شنبه","چهارشنبه","پنجشنبه","جمعه","شنبه"],
+    badge:{off:"تعطیل رسمی",isl:"عید اسلامی",per:"جشن ایرانی",approx:"تاریخ تقریبی"},
+    moon:[
+      {i:"🌑",n:"هلال ماه",d:"ماه دیده نمی‌شود. آغاز ماه قمری."},
+      {i:"🌓",n:"ربع اول",d:"نیمه راست روشن. ماه در حال رشد."},
+      {i:"🌕",n:"ماه کامل",d:"کاملاً روشن. بالاترین نیروی کشندی."},
+      {i:"🌗",n:"ربع آخر",d:"نیمه چپ روشن. ماه در حال کاهش."},
+    ],
+    inDays:"تا {n} روز دیگر",today:"امروز",past:"{n} روز پیش",
+    foot:`داده‌ها: <a href="https://lovdata.no">Lovdata.no</a> (تعطیلات) · <a href="https://islamsk.no">شورای اسلامی نروژ</a> · داده‌های نجومی فازهای ماه · تقویم ایرانی`,
+    pcMeta:"تقویم نروژ ۲۰۲۶\nتعطیلات رسمی · فازهای ماه · اعیاد اسلامی · جشن‌های ایرانی",
+    pcLeg:["تعطیل رسمی","آخر هفته","عید اسلامی","جشن ایرانی","امروز","فاز ماه"],
+  }
+};
+
+/* ══════════════════════════════
    STATE
-═══════════════════════════════════════════ */
-let lang = 'en';
-let view = 'all'; // 'all' | 'single'
-let singleMonth = new Date().getMonth();
-let activeFilters = { holiday:true, weekend:true, islamic:true, moon:true };
-let searchQ = '';
+══════════════════════════════ */
+let lang='en',view='all',curM=new Date().getMonth();
+const TODAY=new Date();
+const IS26=TODAY.getFullYear()===2026;
 
-const today = new Date();
-const isYear2026 = today.getFullYear() === 2026;
+/* ══════════════════════════════
+   TOOLTIP — fixed position
+══════════════════════════════ */
+const tipWrap=document.getElementById('tip-wrap');
+const tipInner=document.getElementById('tip-inner');
+let tipTO=null;
 
-/* ═══════════════════════════════════════════
-   MAIN RENDER
-═══════════════════════════════════════════ */
-function render() {
-  const t = T[lang];
-  const isFA = lang === 'fa';
-  document.body.className = isFA ? 'fa' : '';
-  document.getElementById('txt-eyebrow').textContent = t.eyebrow;
-  document.getElementById('txt-title').innerHTML = lang==='no'
-    ? 'Norsk <em>Kalender</em>'
-    : lang==='fa'
-    ? '<em>تقویم</em> نروژ'
-    : 'Norsk <em>Calendar</em>';
-  document.getElementById('txt-sub').textContent = t.sub;
-  document.getElementById('vb-all-txt').textContent = t.vbAll;
-  document.getElementById('vb-single-txt').textContent = t.vbSingle;
-  document.getElementById('ne-head-txt').textContent = t.upcoming;
-  document.getElementById('info-h2').textContent = t.infoH;
-  document.getElementById('moon-h2').textContent = t.moonH;
-  document.getElementById('footer-txt').innerHTML = t.footer;
-  document.getElementById('search-input').placeholder = t.searchPH;
+function getEventsForKey(k){
+  const evs=[];
+  if(HOL[k]) evs.push({data:HOL[k],cls:'r',tp:'n'});
+  if(ISLAMIC[k]) evs.push({data:ISLAMIC[k],cls:'g',tp:'i'});
+  if(PERSIAN[k]) evs.push({data:PERSIAN[k],cls:'p',tp:'p'});
+  if(MOON[k]) evs.push({data:{en:TX.en.moon.find(m=>m.i===MOON[k])?.n||'',no:TX.no.moon.find(m=>m.i===MOON[k])?.n||'',fa:TX.fa.moon.find(m=>m.i===MOON[k])?.n||''},cls:'m',tp:'moon',icon:MOON[k]});
+  return evs;
+}
+
+function showTip(el,k,m,d){
+  const t=TX[lang];
+  const evs=getEventsForKey(k);
+  if(!evs.length){hideTip();return;}
+  const dow=new Date(2026,m,d).getDay();
+  const colors={r:'var(--red2)',g:'var(--grn2)',p:'var(--gld2)',m:'var(--moon)'};
+  let html=evs.map(ev=>{
+    const nm=ev.tp==='moon'
+      ? (MOON[k]+' '+(ev.data[lang]||ev.data.en))
+      : (ev.data[lang]||ev.data.en);
+    const de=ev.tp==='moon'?'':(ev.data[`de_${lang}`]||ev.data.de_en||'');
+    return `<div class="tip-evt">
+      <div class="tip-h" style="color:${colors[ev.cls]}">${nm}</div>
+      ${de?`<div class="tip-d">${de}</div>`:''}
+      <div class="tip-dt">${t.dFull[dow]}, ${d+1} ${t.mAb[m]}</div>
+    </div>`;
+  }).join('');
+  tipInner.innerHTML=html;
+
+  const rect=el.getBoundingClientRect();
+  const tipH=160; // estimate
+  const above=rect.top>tipH+20;
+
+  tipWrap.style.left=(rect.left+rect.width/2-120)+'px';
+  if(above){
+    tipWrap.style.top=(rect.top-tipH-14+window.scrollY)+'px';
+    tipWrap.className='dc-tip-wrap tip-up';
+  } else {
+    tipWrap.style.top=(rect.bottom+10+window.scrollY)+'px';
+    tipWrap.className='dc-tip-wrap tip-down';
+  }
+
+  clearTimeout(tipTO);
+  tipWrap.classList.add('show');
+}
+
+function hideTip(){
+  tipTO=setTimeout(()=>tipWrap.classList.remove('show'),80);
+}
+
+document.addEventListener('scroll',hideTip,{passive:true});
+
+/* ══════════════════════════════
+   RENDER
+══════════════════════════════ */
+function render(){
+  const t=TX[lang],fa=lang==='fa';
+  document.body.className=fa?'fa':'';
+
+  // nav
+  document.getElementById('nav-ttl').textContent=t.navTtl;
+  document.getElementById('nav-sub').textContent=t.navSub;
+  // hero
+  document.getElementById('h-ey').textContent=t.ey;
+  const h=document.getElementById('h-h1');
+  if(fa) h.innerHTML=`<em>${t.h1n}</em><br><span>${t.h1em}</span><br><span>${t.h1y}</span>`;
+  else    h.innerHTML=`<span>${t.h1n}</span><br><em>${t.h1em}</em><br><span>${t.h1y}</span>`;
+  document.getElementById('h-desc').textContent=t.desc;
+  document.getElementById('sl-up').textContent=t.up;
+  document.getElementById('inf-h2').textContent=t.infoH;
+  document.getElementById('moon-h2').textContent=t.moonH;
+  document.getElementById('srch').placeholder=t.srchPH;
+  document.getElementById('ftxt').innerHTML=t.foot;
+  document.getElementById('vb-all-t').textContent=t.vAll;
+  document.getElementById('vb-one-t').textContent=t.vOne;
+  document.getElementById('exp-t').textContent=t.expT;
+  document.getElementById('m-h').textContent=t.mH;
+  document.getElementById('m-s').textContent=t.mS;
+  document.getElementById('m-o1').textContent=t.o1;
+  document.getElementById('m-o1d').innerHTML=t.o1d.replace('\n','<br>');
+  document.getElementById('m-o2').textContent=t.o2;
+  document.getElementById('m-o2d').innerHTML=t.o2d.replace('\n','<br>');
+  document.getElementById('m-close').textContent=t.mClose;
+  document.getElementById('mob-share-txt').textContent=t.mobShare;
 
   renderStats(t);
   renderUpcoming(t);
-  renderYearStrip(t);
-  renderFilters(t);
-  renderCalendarGrid(t);
-  renderSingleMonth(t);
-  renderHolidayCards(t);
+  renderYM(t);
+  renderLegend(t);
+  renderChips(t);
+  renderGrid(t);
+  renderSingle(t);
+  renderHolCards(t);
   renderMoonGuide(t);
 }
 
-/* ─── STATS ─── */
-function renderStats(t) {
-  let hCount=0, wCount=0, wdCount=0, iCount=Object.keys(ISLAMIC).length;
+/* ── STATS ── */
+function renderStats(t){
+  let h=0,we=0,wd=0;
   for(let m=0;m<12;m++){
-    const dim = new Date(2026,m+1,0).getDate();
+    const dim=new Date(2026,m+1,0).getDate();
     for(let d=1;d<=dim;d++){
-      const dow = new Date(2026,m,d).getDay();
-      const key=`${m+1}-${d}`;
-      if(HOLIDAYS[key]) hCount++;
-      if(dow===0||dow===6) wCount++;
-      else if(!HOLIDAYS[key]) wdCount++;
+      const dow=new Date(2026,m,d).getDay();
+      const k=`${m+1}-${d}`;
+      if(HOL[k])h++;
+      if(dow===0||dow===6)we++;
+      else if(!HOL[k])wd++;
     }
   }
-  document.getElementById('stats-ribbon').innerHTML = `
-    <div class="stat"><div class="stat-icon r">🏛️</div><div class="stat-body"><div class="stat-n r">${hCount}</div><div class="stat-l">${t.statH}</div></div></div>
-    <div class="stat"><div class="stat-icon p">📅</div><div class="stat-body"><div class="stat-n p">${wCount}</div><div class="stat-l">${t.statW}</div></div></div>
-    <div class="stat"><div class="stat-icon b">💼</div><div class="stat-body"><div class="stat-n b">${wdCount}</div><div class="stat-l">${t.statWD}</div></div></div>
-    <div class="stat"><div class="stat-icon g">☪️</div><div class="stat-body"><div class="stat-n g">${iCount}</div><div class="stat-l">${t.statI}</div></div></div>
+  const ic=Object.keys(ISLAMIC).length+Object.keys(PERSIAN).length;
+  document.getElementById('stats').innerHTML=`
+    <div class="stc"><div class="stc-n r">${h}</div><div class="stc-l">${t.sH}</div></div>
+    <div class="stc"><div class="stc-n v">${we}</div><div class="stc-l">${t.sW}</div></div>
+    <div class="stc"><div class="stc-n b">${wd}</div><div class="stc-l">${t.sWD}</div></div>
+    <div class="stc"><div class="stc-n g">${ic}</div><div class="stc-l">${t.sI}</div></div>
+  `;
+  let nextH='—';
+  for(const[k,v] of Object.entries(HOL)){
+    const[mo,d]=k.split('-').map(Number);
+    const dt=new Date(2026,mo-1,d);
+    if(dt>=TODAY){nextH=`${d} ${t.mAb[mo-1]}`;break;}
+  }
+  const wl=Math.max(0,Math.round((new Date('2026-12-31')-TODAY)/604800000));
+  document.getElementById('qfrow').innerHTML=`
+    <div class="qfi"><div class="qfi-k">${t.qfA}</div><div class="qfi-v">${nextH}</div></div>
+    <div class="qfi"><div class="qfi-k">${t.qfB}</div><div class="qfi-v">${wl}</div></div>
+    <div class="qfi"><div class="qfi-k">${t.qfC}</div><div class="qfi-v">${lang==='fa'?'۲۰ مارس':'20 Mar'}</div></div>
+    <div class="qfi" style="border:none"><div class="qfi-k">${t.qfD}</div><div class="qfi-v">${lang==='fa'?'۲۱ دسامبر':'21 Dec'}</div></div>
   `;
 }
 
-/* ─── UPCOMING ─── */
-function renderUpcoming(t) {
-  const now = today;
-  const allEvents = [];
-  
-  [...Object.entries(HOLIDAYS), ...Object.entries(ISLAMIC)].forEach(([key,v]) => {
-    const [m,d] = key.split('-').map(Number);
-    const evDate = new Date(2026, m-1, d);
-    const delta = Math.round((evDate - now) / 86400000);
-    allEvents.push({ date: evDate, delta, m, d, data: v, key, isIslamic: !!ISLAMIC[key] });
+/* ── UPCOMING ── */
+function renderUpcoming(t){
+  const evs=[];
+  const add=(obj,cls)=>Object.entries(obj).forEach(([k,v])=>{
+    const[mo,d]=k.split('-').map(Number);
+    const dt=new Date(2026,mo-1,d);
+    const delta=Math.round((dt-TODAY)/86400000);
+    evs.push({dt,delta,mo,d,v,k,cls});
   });
-  allEvents.sort((a,b) => Math.abs(a.delta) - Math.abs(b.delta));
+  add(HOL,'r');add(ISLAMIC,'g');add(PERSIAN,'p');
+  evs.sort((a,b)=>Math.abs(a.delta)-Math.abs(b.delta));
+  document.getElementById('ev-row').innerHTML=evs.slice(0,12).map(ev=>{
+    const nm=ev.v[lang]||ev.v.en;
+    const dow=t.dFull[ev.dt.getDay()];
+    let ds,dc;
+    if(ev.delta===0){ds=t.today;dc='now';}
+    else if(ev.delta>0){ds=t.inDays.replace('{n}',ev.delta);dc=ev.cls;}
+    else{ds=t.past.replace('{n}',-ev.delta);dc='past';}
+    return `<div class="evc ${ev.cls}"><div class="evc-dt">${dow}, ${ev.d} ${t.mAb[ev.mo-1]}</div><div class="evc-nm">${nm}</div><div class="evc-dl ${dc}">${ds}</div></div>`;
+  }).join('');
+}
 
-  const shown = allEvents.slice(0, 8);
-  document.getElementById('ne-list').innerHTML = shown.map(ev => {
-    const name = ev.data[lang] || ev.data.en;
-    const cls = ev.isIslamic ? 'g' : 'r';
-    const dow = t.days2[ev.date.getDay()];
-    let deltaStr, deltaCls;
-    if(ev.delta === 0) { deltaStr = t.today; deltaCls = cls; }
-    else if(ev.delta > 0) { deltaStr = t.inDays.replace('{n}', ev.delta); deltaCls = cls; }
-    else { deltaStr = t.pastDays.replace('{n}', -ev.delta); deltaCls = 'past'; }
-    return `<div class="ne-item ${cls}">
-      <div class="ne-day">${dow}, ${ev.d} ${t.mSub[ev.m-1]}</div>
-      <div class="ne-name">${name}</div>
-      <div class="ne-delta ${deltaCls}">${deltaStr}</div>
+/* ── YEAR MAP ── */
+function renderYM(t){
+  const inn=document.getElementById('ym-inner');
+  inn.innerHTML='';
+  for(let m=0;m<12;m++){
+    const dim=new Date(2026,m+1,0).getDate();
+    const fd=new Date(2026,m,1).getDay();
+    const off=fd===0?6:fd-1;
+    const isC=IS26&&TODAY.getMonth()===m;
+    let dots='';
+    for(let i=0;i<off;i++) dots+=`<div class="yd e"></div>`;
+    for(let d=1;d<=dim;d++){
+      const dw=new Date(2026,m,d).getDay();
+      const k=`${m+1}-${d}`;
+      const iT=IS26&&TODAY.getMonth()===m&&TODAY.getDate()===d;
+      let c='';
+      if(iT)c='t';
+      else if(HOL[k])c='h';
+      else if(ISLAMIC[k])c='i';
+      else if(PERSIAN[k])c='p';
+      else if(MOON[k])c='m';
+      else if(dw===0||dw===6)c='w';
+      dots+=`<div class="yd ${c}"></div>`;
+    }
+    const el=document.createElement('div');
+    el.className=`ymc${isC?' on':''}`;
+    el.onclick=()=>{curM=m;setView('single');};
+    el.innerHTML=`<div class="ymc-n">${t.mAb[m]}</div><div class="ymc-g">${dots}</div>`;
+    inn.appendChild(el);
+  }
+}
+
+/* ── LEGEND ── */
+function renderLegend(t){
+  document.getElementById('legend').innerHTML=`
+    <div class="lgi"><div class="lgd r"></div>${t.badge.off}</div>
+    <div class="lgsep"></div>
+    <div class="lgi"><div class="lgd v"></div>${t.days[5]}/${t.days[6]}</div>
+    <div class="lgsep"></div>
+    <div class="lgi"><div class="lgd g"></div>${t.badge.isl}</div>
+    <div class="lgsep"></div>
+    <div class="lgi"><div class="lgd p"></div>${t.badge.per}</div>
+    <div class="lgsep"></div>
+    <div class="lgi"><div class="lgd b"></div>${lang==='fa'?'امروز':lang==='no'?'I dag':'Today'}</div>
+    <div class="lgsep"></div>
+    <div class="lgi"><div class="lgd m"></div>🌑🌓🌕🌗</div>
+  `;
+}
+
+/* ── CHIPS ── */
+function renderChips(t){
+  const ds=[{id:'all',cl:'all'},{id:'h',cl:'r'},{id:'we',cl:'v'},{id:'i',cl:'g'},{id:'p',cl:'p'},{id:'m',cl:'m'}];
+  document.getElementById('chips').innerHTML=ds.map((c,i)=>
+    `<button class="chip ${c.cl}${i===0?' on':''}" onclick="onChip(this,'${c.id}')">${t.chips[i]}</button>`
+  ).join('');
+}
+function onChip(el){
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
+  el.classList.add('on');
+}
+
+/* ── GRID ── */
+function renderGrid(t){
+  const g=document.getElementById('grid-all');
+  g.innerHTML='';
+  for(let m=0;m<12;m++) g.appendChild(buildMC(m,t));
+}
+
+function buildMC(m,t){
+  const dim=new Date(2026,m+1,0).getDate();
+  const fd=new Date(2026,m,1).getDay();
+  const off=fd===0?6:fd-1;
+  const fa=lang==='fa';
+  const evs=[];
+  for(let d=1;d<=dim;d++){
+    const k=`${m+1}-${d}`;
+    if(HOL[k]) evs.push({cl:'r',nm:HOL[k][lang]||HOL[k].en});
+    if(ISLAMIC[k]) evs.push({cl:'g',nm:ISLAMIC[k][lang]||ISLAMIC[k].en});
+    if(PERSIAN[k]) evs.push({cl:'p',nm:PERSIAN[k][lang]||PERSIAN[k].en});
+  }
+  const ec=evs.length;
+  const pills=[...new Map(evs.map(e=>[e.nm,e])).values()].slice(0,4);
+
+  const card=document.createElement('div');
+  card.className='mc';
+  card.innerHTML=`
+    <div class="mc-hd">
+      <div class="mc-bign">${String(m+1).padStart(2,'0')}</div>
+      <div><div class="mc-mn">${t.months[m]}</div><div class="mc-ms">${fa?'۲۰۲۶':'2026'}</div></div>
+      ${ec?`<div class="mc-ec">${ec} ${lang==='fa'?'رویداد':lang==='no'?'hdg':'events'}</div>`:''}
+    </div>
+    <div class="mc-pills">${pills.map(p=>`<span class="mcp ${p.cl}">${p.nm}</span>`).join('')||'<span style="font-size:8px;color:var(--t4)">&nbsp;</span>'}</div>
+    <div class="mc-dn">${t.days.map((n,i)=>`<div class="dnh${i>=5?' we':''}">${n.substring(0,2)}</div>`).join('')}</div>
+    <div class="mc-dg" id="mcdg-${m}"></div>
+  `;
+  const dg=card.querySelector(`#mcdg-${m}`);
+  for(let i=0;i<off;i++){const e=document.createElement('div');e.className='dc dc-e';dg.appendChild(e);}
+  for(let d=1;d<=dim;d++) dg.appendChild(buildDC(m,d,t,false));
+  return card;
+}
+
+/* ── DAY CELL ── */
+function buildDC(m,d,t,large){
+  const dow=new Date(2026,m,d).getDay();
+  const k=`${m+1}-${d}`;
+  const isWE=dow===0||dow===6;
+  const isH=!!HOL[k],isI=!!ISLAMIC[k],isP=!!PERSIAN[k];
+  const isMulti=(isH&&(isI||isP))||(isI&&isP);
+  const isT=IS26&&TODAY.getMonth()===m&&TODAY.getDate()===d;
+  const moon=MOON[k]||'';
+  const pre=large?'sdc':'dc';
+  let cls=pre;
+
+  if(isMulti) cls+=` multi`;
+  else if(isH) cls+=` hol`;
+  else if(isI) cls+=` isl`;
+  else if(isP) cls+=` pers`;
+  else if(isWE) cls+=` we`;
+  if(isT) cls+=` tod`;
+  if(!large&&!isH&&!isI&&!isP&&!isWE&&moon) cls+=` moon-solo`;
+
+  const el=document.createElement('div');
+  el.className=cls;
+
+  // indicator dots for multi
+  let dotsHtml='';
+  if(!large){
+    const dotList=[];
+    if(isH) dotList.push('r');
+    if(isI) dotList.push('g');
+    if(isP) dotList.push('p');
+    if(moon&&!isH&&!isI&&!isP) dotList.push('m');
+    if(dotList.length>1) dotsHtml=`<div class="dc-dots">${dotList.map(c=>`<div class="dc-dot ${c}"></div>`).join('')}</div>`;
+  }
+
+  // sub label for single view
+  let subLabel='';
+  if(large){
+    const labels=[];
+    if(isH) labels.push(HOL[k][lang]||HOL[k].en);
+    if(isI) labels.push(ISLAMIC[k][lang]||ISLAMIC[k].en);
+    if(isP) labels.push(PERSIAN[k][lang]||PERSIAN[k].en);
+    subLabel=labels.join(' · ');
+  }
+
+  if(large){
+    el.innerHTML=`
+      <div class="sdc-n">${d}</div>
+      ${moon?`<div class="sdc-m">${moon}</div>`:''}
+      ${subLabel?`<div class="sdc-s">${subLabel}</div>`:''}
+    `;
+  } else {
+    el.innerHTML=`<div class="dcn">${d}</div>${moon?`<div class="dcm">${moon}</div>`:''}${dotsHtml}`;
+  }
+
+  // tooltip via mouse events
+  el.addEventListener('mouseenter',()=>showTip(el,k,m,d));
+  el.addEventListener('mouseleave',hideTip);
+  el.addEventListener('click',()=>showTip(el,k,m,d));
+  return el;
+}
+
+/* ── SINGLE ── */
+function renderSingle(t){
+  const m=curM,fa=lang==='fa';
+  document.getElementById('sv-ttl').innerHTML=fa
+    ?`${t.months[m]} <em>۲۰۲۶</em>`:`${t.months[m]} <em>2026</em>`;
+  document.getElementById('sv-dn').innerHTML=t.days.map((n,i)=>`<div class="sv-dnc${i>=5?' we':''}">${n}</div>`).join('');
+  const sg=document.getElementById('sv-dg');
+  sg.innerHTML='';
+  const fd=new Date(2026,m,1).getDay();
+  const off=fd===0?6:fd-1;
+  const dim=new Date(2026,m+1,0).getDate();
+  for(let i=0;i<off;i++){const e=document.createElement('div');e.className='sdc sdc-e';sg.appendChild(e);}
+  for(let d=1;d<=dim;d++) sg.appendChild(buildDC(m,d,t,true));
+  document.querySelectorAll('.ymc').forEach((el,i)=>el.classList.toggle('on',i===m));
+}
+
+/* ── HOL CARDS ── */
+function renderHolCards(t){
+  const all=[
+    ...Object.entries(HOL).map(([k,v])=>({k,v,tp:'n'})),
+    ...Object.entries(ISLAMIC).map(([k,v])=>({k,v,tp:'i'})),
+    ...Object.entries(PERSIAN).map(([k,v])=>({k,v,tp:'p'})),
+  ].sort((a,b)=>{
+    const[am,ad]=a.k.split('-').map(Number),[bm,bd]=b.k.split('-').map(Number);
+    return am!==bm?am-bm:ad-bd;
+  });
+  const fa=lang==='fa';
+  document.getElementById('hol-g').innerHTML=all.map(({k,v,tp})=>{
+    const[mo,d]=k.split('-').map(Number);
+    const nm=v[lang]||v.en;
+    const de=v[`de_${lang}`]||v.de_en||'';
+    const dow=new Date(2026,mo-1,d).getDay();
+    const alt=lang!=='no'?(v.no||''):lang!=='en'?(v.en||''):'';
+    const tags=tp==='n'?`<span class="hct n">${t.badge.off}</span>`
+      :tp==='i'?`<span class="hct i">${t.badge.isl}</span>${v.approx?`<span class="hct a">${t.badge.approx}</span>`:''}`
+      :`<span class="hct p">${t.badge.per}</span>`;
+    return `<div class="hc">
+      <div class="hcc ${tp}">
+        <div class="hcc-d">${d}</div>
+        <div class="hcc-m">${t.mAb[mo-1]}</div>
+        <div class="hcc-dw">${t.dFull[dow]}</div>
+      </div>
+      <div class="hcb">
+        <div class="hcb-nm">${nm}</div>
+        ${alt&&alt!==nm?`<div class="hcb-alt">${alt}</div>`:''}
+        <div class="hcb-ds">${de}</div>
+        <div class="hcb-tags">${tags}</div>
+      </div>
     </div>`;
   }).join('');
 }
 
-/* ─── YEAR STRIP ─── */
-function renderYearStrip(t) {
-  const inner = document.getElementById('year-strip-inner');
-  inner.innerHTML = '';
-  for(let m=0;m<12;m++){
-    const dim = new Date(2026,m+1,0).getDate();
-    const firstDow = new Date(2026,m,1).getDay();
-    const startOff = firstDow === 0 ? 6 : firstDow - 1;
-    const isActive = isYear2026 && today.getMonth() === m;
-
-    let dots = '';
-    for(let i=0;i<startOff;i++) dots += `<div class="mini-dot empty"></div>`;
-    for(let d=1;d<=dim;d++){
-      const dow = new Date(2026,m,d).getDay();
-      const key=`${m+1}-${d}`;
-      const isT = isYear2026 && today.getMonth()===m && today.getDate()===d;
-      let cls = '';
-      if(isT) cls='t';
-      else if(HOLIDAYS[key]) cls='h';
-      else if(ISLAMIC[key]) cls='i';
-      else if(MOON[key]) cls='m';
-      else if(dow===0||dow===6) cls='w';
-      dots += `<div class="mini-dot ${cls}"></div>`;
-    }
-
-    const card = document.createElement('div');
-    card.className = `mini-month${isActive?' active-month':''}`;
-    card.onclick = () => { singleMonth = m; setView('single'); };
-    card.innerHTML = `<div class="mini-month-name">${t.mSub[m]}</div><div class="mini-dots">${dots}</div>`;
-    inner.appendChild(card);
-  }
-}
-
-/* ─── FILTERS ─── */
-function renderFilters(t) {
-  const chips = document.getElementById('filter-chips');
-  const defs = [
-    {id:'all',  cls:'',  txt: t.chips[0]},
-    {id:'h',    cls:'r', txt: t.chips[1]},
-    {id:'we',   cls:'p', txt: t.chips[2]},
-    {id:'isl',  cls:'g', txt: t.chips[3]},
-    {id:'moon', cls:'m', txt: t.chips[4]},
-  ];
-  chips.innerHTML = defs.map(c => `
-    <button class="chip ${c.cls} ${c.id==='all'?'on':''}" data-f="${c.id}" onclick="toggleFilter('${c.id}', this)">
-      ${c.txt}
-    </button>`).join('');
-}
-function toggleFilter(id, el) {
-  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
-  el.classList.add('on');
-  // Just re-render for now (all = show all)
-  renderCalendarGrid(T[lang]);
-}
-
-/* ─── SEARCH ─── */
-function onSearch(val) {
-  searchQ = val.toLowerCase().trim();
-  highlightSearch();
-}
-function highlightSearch() {
-  document.querySelectorAll('.dc[data-hkey]').forEach(el => {
-    const key = el.dataset.hkey;
-    const hd = HOLIDAYS[key]||ISLAMIC[key];
-    if(!hd) return;
-    const name = (hd[lang]||hd.en||'').toLowerCase();
-    if(searchQ && !name.includes(searchQ)) {
-      el.style.opacity='0.2';
-    } else {
-      el.style.opacity='1';
-    }
-  });
-}
-
-/* ─── CALENDAR GRID ─── */
-function renderCalendarGrid(t) {
-  const grid = document.getElementById('view-grid');
-  grid.innerHTML = '';
-  for(let m=0;m<12;m++) grid.appendChild(buildMonthCard(m, t));
-}
-
-function buildMonthCard(m, t) {
-  const dim = new Date(2026,m+1,0).getDate();
-  const firstDow = new Date(2026,m,1).getDay();
-  const startOff = firstDow===0 ? 6 : firstDow-1;
-
-  // Collect pills for this month
-  const pills = [];
-  for(let d=1;d<=dim;d++){
-    const key=`${m+1}-${d}`;
-    if(HOLIDAYS[key]) pills.push(`<span class="pill r">${HOLIDAYS[key][lang]||HOLIDAYS[key].en}</span>`);
-    if(ISLAMIC[key])  pills.push(`<span class="pill g">${ISLAMIC[key][lang]||ISLAMIC[key].en}</span>`);
-  }
-  const hasMoon = Object.keys(MOON).some(k=>k.startsWith(`${m+1}-`));
-  if(hasMoon) pills.push(`<span class="pill m">🌙</span>`);
-
-  const card = document.createElement('div');
-  card.className = 'month-card';
-  card.innerHTML = `
-    <div class="mc-head">
-      <div>
-        <div class="mc-month-name">${t.months[m]}</div>
-        <div class="mc-month-sub">${lang==='fa'?'۲۰۲۶':'2026'}</div>
-      </div>
-      <div class="mc-num">${String(m+1).padStart(2,'0')}</div>
-    </div>
-    <div class="mc-pills">${pills.join('') || ''}</div>
-    <div class="mc-daynames">${t.days.map((n,i)=>`<div class="dn${i>=5?' we':''}">${n}</div>`).join('')}</div>
-    <div class="mc-days" id="mcdays-${m}"></div>
-  `;
-
-  const daysEl = card.querySelector(`#mcdays-${m}`);
-  for(let i=0;i<startOff;i++){
-    const e=document.createElement('div'); e.className='dc dc-empty'; daysEl.appendChild(e);
-  }
-  for(let d=1;d<=dim;d++){
-    daysEl.appendChild(buildDayCell(m, d, t, false));
-  }
-  return card;
-}
-
-function buildDayCell(m, d, t, large) {
-  const dow = new Date(2026,m,d).getDay();
-  const key = `${m+1}-${d}`;
-  const isWE = dow===0||dow===6;
-  const isH  = !!HOLIDAYS[key];
-  const isI  = !!ISLAMIC[key];
-  const isT  = isYear2026 && today.getMonth()===m && today.getDate()===d;
-  const moon = MOON[key]||'';
-  const isMoonOnly = !isH && !isI && !isWE && !!moon;
-
-  const cell = document.createElement('div');
-  let cls = large ? 'sdc' : 'dc';
-  if(isH) cls += large ? ' hol' : ' dc-h';
-  else if(isI) cls += large ? ' isl' : ' dc-i';
-  else if(isWE) cls += large ? ' we' : ' dc-we';
-  if(isT) cls += large ? ' tod' : ' dc-today';
-  if(!large && isMoonOnly) cls += ' dc-moon-only';
-  cell.className = cls;
-  if(!large) cell.dataset.hkey = key;
-
-  const dayNames = T[lang].days2;
-  let tipHtml = '';
-  if(isH){
-    const h=HOLIDAYS[key];
-    const nm=h[lang]||h.en; const de=h[`de_${lang}`]||h.de_en;
-    tipHtml=`<div class="tip"><div class="tip-title" style="color:var(--red)">${nm}</div><div class="tip-desc">${de}</div><div class="tip-date">${dayNames[dow]}, ${d} ${t.mSub[m]}</div></div>`;
-  } else if(isI){
-    const h=ISLAMIC[key];
-    const nm=h[lang]||h.en; const de=h[`de_${lang}`]||h.de_en;
-    tipHtml=`<div class="tip"><div class="tip-title" style="color:var(--green)">${nm}</div><div class="tip-desc">${de}</div><div class="tip-date">${dayNames[dow]}, ${d} ${t.mSub[m]}</div></div>`;
-  } else if(moon){
-    const mNames={'🌑':t.leg.nm,'🌓':t.leg.fq,'🌕':t.leg.fm,'🌗':t.leg.lq};
-    tipHtml=`<div class="tip"><div class="tip-title" style="color:var(--gold)">${moon} ${mNames[moon]||''}</div><div class="tip-date">${dayNames[dow]}, ${d} ${t.mSub[m]}</div></div>`;
-  }
-
-  if(large){
-    const h = HOLIDAYS[key]||ISLAMIC[key];
-    const subTxt = h ? (h[lang]||h.en) : (moon||'');
-    cell.innerHTML = `
-      <div class="${large?'sdc-n':'dc-n'}">${d}</div>
-      ${moon?`<div class="${large?'sdc-moon':'dc-moon'}">${moon}</div>`:''}
-      ${large && subTxt ? `<div class="sdc-sub">${h?'●':moon}</div>` : ''}
-    `;
-  } else {
-    cell.innerHTML = `
-      <div class="dc-n">${d}</div>
-      ${moon?`<div class="dc-moon">${moon}</div>`:''}
-      ${tipHtml}
-    `;
-  }
-  return cell;
-}
-
-/* ─── SINGLE MONTH ─── */
-function renderSingleMonth(t) {
-  const m = singleMonth;
-  document.getElementById('single-title').textContent = `${t.months[m]} 2026`;
-
-  document.getElementById('single-daynames').innerHTML =
-    t.days.map((n,i)=>`<div class="sdn${i>=5?' we':''}">${n}</div>`).join('');
-
-  const daysEl = document.getElementById('single-days');
-  daysEl.innerHTML = '';
-  const firstDow = new Date(2026,m,1).getDay();
-  const startOff = firstDow===0 ? 6 : firstDow-1;
-  const dim = new Date(2026,m+1,0).getDate();
-  for(let i=0;i<startOff;i++){
-    const e=document.createElement('div'); e.className='sdc sdc-empty'; daysEl.appendChild(e);
-  }
-  for(let d=1;d<=dim;d++){
-    daysEl.appendChild(buildDayCell(m,d,t,true));
-  }
-
-  // Update active in strip
-  document.querySelectorAll('.mini-month').forEach((el,i)=>{
-    el.classList.toggle('active-month', i===m);
-  });
-}
-
-/* ─── HOLIDAY CARDS ─── */
-function renderHolidayCards(t) {
-  const all = [
-    ...Object.entries(HOLIDAYS).map(([k,v])=>({key:k,v,type:'official'})),
-    ...Object.entries(ISLAMIC).map(([k,v])=>({key:k,v,type:'islamic'})),
-  ].sort((a,b)=>{
-    const [am,ad]=a.key.split('-').map(Number);
-    const [bm,bd]=b.key.split('-').map(Number);
-    return am!==bm?am-bm:ad-bd;
-  });
-
-  const container = document.getElementById('holiday-cards');
-  container.innerHTML = all.map(({key,v,type})=>{
-    const [m,d]=key.split('-').map(Number);
-    const isI = type==='islamic';
-    const nm = v[lang]||v.en;
-    const de = v[`de_${lang}`]||v.de_en;
-    const dow = new Date(2026,m-1,d).getDay();
-    const dowName = t.days2[dow];
-    const badge = isI
-      ? `<span class="hc-badge isl">${t.badge.islamic}</span>${v.approx?` <span class="hc-badge app">${t.badge.approx}</span>`:''}`
-      : `<span class="hc-badge">${t.badge.official}</span>`;
-    return `
-      <div class="hc${isI?' isl':''}">
-        <div class="hc-date${isI?' isl':''}">
-          <div class="hc-d">${d}</div>
-          <div class="hc-m">${t.mSub[m-1]}</div>
-          <div class="hc-dow">${dowName}</div>
-        </div>
-        <div class="hc-info">
-          <div class="hc-name">${nm}</div>
-          <div class="hc-name-no">${lang!=='no'?(v.no||''):''}</div>
-          <div class="hc-desc">${de}</div>
-          <div style="margin-top:8px">${badge}</div>
-        </div>
-      </div>`;
-  }).join('');
-}
-
-/* ─── MOON GUIDE ─── */
-function renderMoonGuide(t) {
-  document.getElementById('moon-guide').innerHTML = t.moonPhases.map(p=>`
-    <div class="mg-item">
-      <div class="mg-icon">${p.icon}</div>
-      <div><div class="mg-name">${p.name}</div><div class="mg-desc">${p.desc}</div></div>
+/* ── MOON GUIDE ── */
+function renderMoonGuide(t){
+  document.getElementById('moon-g').innerHTML=t.moon.map(p=>`
+    <div class="moonc">
+      <div class="moonico">${p.i}</div>
+      <div><div class="moonnm">${p.n}</div><div class="moonds">${p.d}</div></div>
     </div>`).join('');
 }
 
-/* ═══════════════════════════════════════════
-   VIEW SWITCHING
-═══════════════════════════════════════════ */
-function setView(v) {
-  view = v;
-  const grid = document.getElementById('view-grid');
-  const single = document.getElementById('view-single');
-  document.getElementById('vb-all').classList.toggle('on', v==='all');
-  document.getElementById('vb-single').classList.toggle('on', v==='single');
-  if(v==='all'){ grid.classList.remove('hidden'); single.classList.remove('active'); }
-  else { grid.classList.add('hidden'); single.classList.add('active'); }
-  renderSingleMonth(T[lang]);
+/* ══════════════════════════════
+   SEARCH
+══════════════════════════════ */
+function doSearch(v){
+  const q=v.toLowerCase().trim();
+  document.querySelectorAll('.dc,.sdc').forEach(el=>{
+    if(el.classList.contains('dc-e')||el.classList.contains('sdc-e')){el.style.opacity='1';return;}
+    // find key from parent month
+    el.style.opacity='1';
+  });
 }
 
-function navMonth(dir) {
-  singleMonth = (singleMonth + dir + 12) % 12;
-  renderSingleMonth(T[lang]);
+/* ══════════════════════════════
+   VIEW / NAV
+══════════════════════════════ */
+function setView(v){
+  view=v;
+  document.getElementById('vb-all').classList.toggle('on',v==='all');
+  document.getElementById('vb-one').classList.toggle('on',v==='single');
+  document.getElementById('grid-all').classList.toggle('hidden',v==='single');
+  document.getElementById('grid-single').classList.toggle('show',v==='single');
+  if(v==='single') renderSingle(TX[lang]);
 }
+function navM(d){curM=(curM+d+12)%12;renderSingle(TX[lang]);}
 
-/* ═══════════════════════════════════════════
-   LANGUAGE
-═══════════════════════════════════════════ */
-function setLang(l) {
-  lang = l;
-  document.querySelectorAll('.lb').forEach(b => b.classList.remove('on'));
-  document.querySelector(`.lb[onclick="setLang('${l}')"]`).classList.add('on');
+/* ══════════════════════════════
+   LANG
+══════════════════════════════ */
+function setLang(l){
+  lang=l;
+  document.querySelectorAll('.pgb').forEach(b=>{
+    const oc=b.getAttribute('onclick')||'';
+    b.classList.toggle('on',oc.includes(`'${l}'`));
+  });
   render();
 }
 
-/* Init */
-singleMonth = today.getMonth();
+/* ══════════════════════════════
+   MODAL
+══════════════════════════════ */
+function openModal(){document.getElementById('overlay').classList.add('open');}
+function closeModal(){document.getElementById('overlay').classList.remove('open');}
+document.getElementById('overlay').addEventListener('click',e=>{if(e.target.id==='overlay')closeModal();});
+
+/* ══════════════════════════════
+   EXPORT — high quality A4
+══════════════════════════════ */
+function buildPC(){
+  const t=TX[lang],fa=lang==='fa';
+  const pc=document.getElementById('pc');
+  pc.className=fa?'fa':'';
+  const dn=fa?['د','س','چ','پ','ج','ش','ی']:lang==='no'?['M','T','O','T','F','L','S']:['M','T','W','T','F','S','S'];
+  let mHtml='';
+  for(let m=0;m<12;m++){
+    const dim=new Date(2026,m+1,0).getDate();
+    const fd=new Date(2026,m,1).getDay();
+    const off=fd===0?6:fd-1;
+    let cells='';
+    for(let i=0;i<off;i++) cells+=`<div class="pcd"></div>`;
+    for(let d=1;d<=dim;d++){
+      const dw=new Date(2026,m,d).getDay();
+      const k=`${m+1}-${d}`;
+      const isWE=dw===0||dw===6,isH=!!HOL[k],isI=!!ISLAMIC[k],isP=!!PERSIAN[k];
+      const isMulti=(isH&&(isI||isP))||(isI&&isP);
+      const isT=IS26&&TODAY.getMonth()===m&&TODAY.getDate()===d;
+      const moon=MOON[k]||'';
+      let c='pcd';
+      if(isMulti)c+=' pml';
+      else if(isH)c+=' ph';
+      else if(isI)c+=' pi';
+      else if(isP)c+=' pp';
+      else if(isWE)c+=' pw';
+      if(isT)c+=' pt';
+      else if(!isH&&!isI&&!isP&&!isWE&&moon)c+=' pm';
+      cells+=`<div class="${c}"><div class="pcd-n">${d}</div>${moon?`<div class="pcd-m">${moon}</div>`:''}</div>`;
+    }
+    mHtml+=`<div class="pcmo${fa?' pcmo-fa':''}">
+      <div class="pcmo-h"><div class="pcmo-n">${t.months[m]}</div><div class="pcmo-num">${String(m+1).padStart(2,'0')}</div></div>
+      <div class="pcr">${dn.map(n=>`<div class="pcrc">${n}</div>`).join('')}</div>
+      <div class="pcdg">${cells}</div>
+    </div>`;
+  }
+  const leg=t.pcLeg;
+  pc.innerHTML=`
+    <div class="pch">
+      <div class="pch-t">🇳🇴 ${fa?`<em>تقویم</em> نروژ`:lang==='no'?`Norsk <em>Kalender</em>`:`Norsk <em>Calendar</em>`} 2026</div>
+      <div class="pch-m">${t.pcMeta.replace(/\n/g,'<br>')}</div>
+    </div>
+    <div class="pcg">${mHtml}</div>
+    <div class="pc-leg">
+      <div class="pcli"><div class="pcld r"></div>${leg[0]}</div>
+      <div class="pcli"><div class="pcld v"></div>${leg[1]}</div>
+      <div class="pcli"><div class="pcld g"></div>${leg[2]}</div>
+      <div class="pcli"><div class="pcld p"></div>${leg[3]}</div>
+      <div class="pcli"><div class="pcld b"></div>${leg[4]}</div>
+      <div class="pcli"><div class="pcld m"></div>🌙 ${leg[5]}</div>
+    </div>
+  `;
+  return pc;
+}
+
+function doExport(type){
+  closeModal();
+  const pc=buildPC();
+  const fa=lang==='fa';
+  let stylesTxt='';
+  try{stylesTxt=Array.from(document.styleSheets).map(ss=>{try{return Array.from(ss.cssRules).map(r=>r.cssText).join('\n');}catch(e){return '';}}).join('\n');}catch(e){}
+
+  const autoprint=type==='print';
+  const fullHTML=`<!DOCTYPE html>
+<html><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Plus+Jakarta+Sans:wght@500;700&family=JetBrains+Mono:wght@400&family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
+<title>Norsk Kalender 2026</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:794px;min-height:1123px;background:#fff;}
+body{margin:0;padding:0;font-family:'Plus Jakarta Sans',${fa?"'Vazirmatn',":''}sans-serif;${fa?'direction:rtl;':''}}
+${stylesTxt}
+#pc{position:static!important;left:0!important;top:0!important;z-index:auto!important;display:block!important;width:794px!important;background:#fff!important;}
+@media print{@page{size:A4 portrait;margin:0;}html,body{width:210mm;}}
+</style>
+</head>
+<body>
+${pc.outerHTML}
+${autoprint?`<script>
+window.addEventListener('load',function(){
+  setTimeout(function(){window.print();},800);
+});<\/script>`:''}
+</body></html>`;
+
+  const w=window.open('','_blank','width=820,height=1180');
+  if(!w){alert('Please allow popups to export.');return;}
+  w.document.open();
+  w.document.write(fullHTML);
+  w.document.close();
+}
+
+/* ══════════════════════════════
+   INIT
+══════════════════════════════ */
+curM=TODAY.getMonth();
 render();
 </script>
 </body>
