@@ -22,7 +22,14 @@
   --f-u:'Plus Jakarta Sans',sans-serif;
   --f-m:'JetBrains Mono',monospace;
   --f-fa:'Vazirmatn',sans-serif;
-  --r:14px;--rsm:9px;--rxs:5px;
+  /* TYPE SCALE — used consistently everywhere */
+  --fs-xs:10px;   /* labels, tags, mono labels */
+  --fs-sm:12px;   /* body small, card desc */
+  --fs-md:14px;   /* body default, desc */
+  --fs-lg:16px;   /* card titles, section items */
+  --fs-xl:20px;   /* sub-headings */
+  --fs-2xl:28px;  /* section headings */
+  --fs-3xl:42px;  /* hero numbers */
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;height:100%;}
@@ -1107,21 +1114,24 @@ function buildDC(m,d,t,large){
     el.innerHTML=`<div class="dcn">${d}</div>${moon?`<div class="dcm">${moon}</div>`:''}${dotsHtml}`;
   }
 
-  // TOOLTIP: use mouseenter + click (for mobile)
+  // TOOLTIP — capture m,d,k in closure; t fetched fresh at show-time
   const hasEvt=isH||isI||isP||moon;
   if(hasEvt){
-    el.addEventListener('mouseenter',()=>positionTip(el,k,m,d,t));
-    el.addEventListener('click',(e)=>{e.stopPropagation();positionTip(el,k,m,d,t);});
+    const _m=m,_d=d,_k=k;
+    el.addEventListener('mouseenter',()=>positionTip(el,_k,_m,_d));
+    el.addEventListener('click',(e)=>{e.stopPropagation();positionTip(el,_k,_m,_d);});
+    el.addEventListener('mouseleave',hideTip);
   }
   return el;
 }
 
-/* ── tooltip positioning (fixed to viewport) ── */
-let tipVisible=false;
+/* ── tooltip ── */
 const tipbox=document.getElementById('tipbox');
 const tbInner=document.getElementById('tb-inner');
+let _tipTO=null;
 
-function buildTipHTML(k,m,d,t){
+function buildTipHTML(k,m,d){
+  const t=TX[lang]; // always fresh
   const HOL=buildHOL(selYear);
   const ISL=ISL_DATA[selYear]||{};
   const PER=PERS_DATA[selYear]||{};
@@ -1134,7 +1144,8 @@ function buildTipHTML(k,m,d,t){
   if(PER[k])evts.push({d:PER[k],cl:'p'});
   if(MOON[k]){
     const mn=t.moon.find(x=>x.i===MOON[k]);
-    evts.push({d:{[lang]:(MOON[k]+' '+(mn?mn.n:'')),en:MOON[k]+' '+((TX.en.moon.find(x=>x.i===MOON[k])||{}).n||'')},cl:'m',noDesc:true});
+    const label=MOON[k]+' '+(mn?mn.n:'');
+    evts.push({d:{[lang]:label,en:label},cl:'m',noDesc:true});
   }
   if(!evts.length)return '';
   const dtStr=`${t.dFull[dow]}, ${d} ${t.mAb[m]} ${selYear}`;
@@ -1145,42 +1156,57 @@ function buildTipHTML(k,m,d,t){
   </div>`).join('');
 }
 
-function positionTip(el,k,m,d,t){
-  const html=buildTipHTML(k,m,d,t);
-  if(!html){tipbox.classList.remove('vis');return;}
-  tbInner.innerHTML=html;
-  tipbox.style.visibility='hidden';
-  tipbox.style.opacity='0';
-  tipbox.classList.remove('vis');
-  // measure
-  tipbox.style.left='0';tipbox.style.top='0';
-  tipbox.style.visibility='visible';
-  const tW=tipbox.offsetWidth,tH=tipbox.offsetHeight;
-  tipbox.style.visibility='hidden';
-  const rect=el.getBoundingClientRect();
-  const vW=window.innerWidth,vH=window.innerHeight;
-  // horizontal: center over element, clamp to viewport
-  let lx=rect.left+rect.width/2-tW/2;
-  lx=Math.max(8,Math.min(lx,vW-tW-8));
-  // vertical: prefer above, else below
-  const MARGIN=10;
-  let ty,above=true;
-  if(rect.top-tH-MARGIN>8){ty=rect.top-tH-MARGIN;}
-  else{ty=rect.bottom+MARGIN;above=false;}
-  tipbox.className=above?'tip-up':'tip-dn';
-  // arrow horizontal offset
-  const arrowEl=tipbox.querySelector('.tb-arrow');
-  const arrX=rect.left+rect.width/2-lx;
-  if(arrowEl)arrowEl.style.left=Math.max(12,Math.min(arrX,tW-12))+'px';
-  tipbox.style.left=lx+'px';
-  tipbox.style.top=(ty+window.scrollY)+'px';
-  tipbox.classList.add('vis');
-  tipVisible=true;
+function hideTip(){
+  clearTimeout(_tipTO);
+  _tipTO=setTimeout(()=>tipbox.classList.remove('vis'),120);
 }
 
-document.addEventListener('click',()=>{tipbox.classList.remove('vis');tipVisible=false;});
-document.addEventListener('scroll',()=>{tipbox.classList.remove('vis');tipVisible=false;},{passive:true});
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){tipbox.classList.remove('vis');tipVisible=false;}});
+function positionTip(el,k,m,d){
+  clearTimeout(_tipTO);
+  const html=buildTipHTML(k,m,d);
+  if(!html){tipbox.classList.remove('vis');return;}
+  tbInner.innerHTML=html;
+
+  /* --- measure real size at position 0,0 --- */
+  tipbox.style.cssText='position:fixed;left:0;top:0;visibility:hidden;opacity:0;pointer-events:none;';
+  // force layout
+  const tW=tipbox.offsetWidth||240;
+  const tH=tipbox.offsetHeight||100;
+
+  const rect=el.getBoundingClientRect();
+  const vW=window.innerWidth, vH=window.innerHeight;
+  const PAD=8, GAP=10;
+
+  /* horizontal — center on element, clamp inside viewport */
+  let lx=rect.left+rect.width/2-tW/2;
+  lx=Math.max(PAD, Math.min(lx, vW-tW-PAD));
+
+  /* vertical — prefer above; if not enough room go below */
+  let ty, above=true;
+  if(rect.top-tH-GAP >= PAD){ ty=rect.top-tH-GAP; }
+  else { ty=rect.bottom+GAP; above=false; }
+
+  /* keep within screen vertically */
+  ty=Math.max(PAD, Math.min(ty, vH-tH-PAD));
+
+  /* arrow position */
+  const arrowEl=tipbox.querySelector('.tb-arrow');
+  if(arrowEl){
+    const arrX=rect.left+rect.width/2-lx;
+    arrowEl.style.left=Math.max(14,Math.min(arrX,tW-14))+'px';
+    arrowEl.style.transform='translateX(-50%)';
+  }
+
+  tipbox.className=above?'tip-up':'tip-dn';
+  /* tipbox is position:fixed so top = viewport coords, no scrollY */
+  tipbox.style.cssText=`position:fixed;left:${lx}px;top:${ty}px;visibility:visible;opacity:0;pointer-events:none;z-index:9999;max-width:260px;min-width:170px;transition:opacity .14s;`;
+  /* trigger opacity transition */
+  requestAnimationFrame(()=>{ tipbox.style.opacity='1'; tipbox.classList.add('vis'); });
+}
+
+document.addEventListener('click',()=>{tipbox.classList.remove('vis');tipbox.style.opacity='0';});
+document.addEventListener('scroll',hideTip,{passive:true});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){tipbox.classList.remove('vis');tipbox.style.opacity='0';}});
 
 /* ── single month ── */
 function renderSingle(t){
