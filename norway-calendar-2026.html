@@ -1114,24 +1114,43 @@ function buildDC(m,d,t,large){
     el.innerHTML=`<div class="dcn">${d}</div>${moon?`<div class="dcm">${moon}</div>`:''}${dotsHtml}`;
   }
 
-  // TOOLTIP — capture m,d,k in closure; t fetched fresh at show-time
+  // TOOLTIP events
   const hasEvt=isH||isI||isP||moon;
   if(hasEvt){
     const _m=m,_d=d,_k=k;
+    // Desktop: hover shows/hides naturally
     el.addEventListener('mouseenter',()=>positionTip(el,_k,_m,_d));
-    el.addEventListener('click',(e)=>{e.stopPropagation();positionTip(el,_k,_m,_d);});
-    el.addEventListener('mouseleave',hideTip);
+    el.addEventListener('mouseleave',()=>closeTip());
+    // Click: toggle — if already showing THIS cell, close; else open
+    el.addEventListener('click',(e)=>{
+      e.stopPropagation();
+      if(tipbox._srcEl===el && tipbox.classList.contains('vis')){
+        closeTip(); // second tap on same cell → close
+      } else {
+        positionTip(el,_k,_m,_d);
+      }
+    });
   }
   return el;
 }
 
-/* ── tooltip ── */
+/* ═══ TOOLTIP ENGINE ═══ */
 const tipbox=document.getElementById('tipbox');
 const tbInner=document.getElementById('tb-inner');
 let _tipTO=null;
+let _autoTO=null;
+tipbox._srcEl=null;
+
+function closeTip(){
+  clearTimeout(_tipTO);
+  clearTimeout(_autoTO);
+  tipbox._srcEl=null;
+  tipbox.classList.remove('vis');
+  tipbox.style.opacity='0';
+}
 
 function buildTipHTML(k,m,d){
-  const t=TX[lang]; // always fresh
+  const t=TX[lang];
   const HOL=buildHOL(selYear);
   const ISL=ISL_DATA[selYear]||{};
   const PER=PERS_DATA[selYear]||{};
@@ -1139,15 +1158,15 @@ function buildTipHTML(k,m,d){
   const dow=new Date(selYear,m,d).getDay();
   const cols={r:'var(--red2)',g:'var(--grn2)',p:'var(--gld2)',m:'var(--moon)'};
   const evts=[];
-  if(HOL[k])evts.push({d:HOL[k],cl:'r'});
-  if(ISL[k])evts.push({d:ISL[k],cl:'g'});
-  if(PER[k])evts.push({d:PER[k],cl:'p'});
+  if(HOL[k]) evts.push({d:HOL[k],cl:'r'});
+  if(ISL[k]) evts.push({d:ISL[k],cl:'g'});
+  if(PER[k]) evts.push({d:PER[k],cl:'p'});
   if(MOON[k]){
     const mn=t.moon.find(x=>x.i===MOON[k]);
     const label=MOON[k]+' '+(mn?mn.n:'');
     evts.push({d:{[lang]:label,en:label},cl:'m',noDesc:true});
   }
-  if(!evts.length)return '';
+  if(!evts.length) return '';
   const dtStr=`${t.dFull[dow]}, ${d} ${t.mAb[m]} ${selYear}`;
   return evts.map(ev=>`<div class="tip-evt">
     <div class="tip-ttl" style="color:${cols[ev.cl]}">${ev.d[lang]||ev.d.en}</div>
@@ -1156,57 +1175,60 @@ function buildTipHTML(k,m,d){
   </div>`).join('');
 }
 
-function hideTip(){
-  clearTimeout(_tipTO);
-  _tipTO=setTimeout(()=>tipbox.classList.remove('vis'),120);
-}
-
 function positionTip(el,k,m,d){
   clearTimeout(_tipTO);
-  const html=buildTipHTML(k,m,d);
-  if(!html){tipbox.classList.remove('vis');return;}
-  tbInner.innerHTML=html;
+  clearTimeout(_autoTO);
 
-  /* --- measure real size at position 0,0 --- */
-  tipbox.style.cssText='position:fixed;left:0;top:0;visibility:hidden;opacity:0;pointer-events:none;';
-  // force layout
+  const html=buildTipHTML(k,m,d);
+  if(!html){ closeTip(); return; }
+
+  tbInner.innerHTML=html;
+  tipbox._srcEl=el;
+
+  // Measure at corner (hidden)
+  tipbox.style.cssText='position:fixed;left:0;top:0;visibility:hidden;opacity:0;pointer-events:none;max-width:260px;min-width:170px;z-index:9999;';
   const tW=tipbox.offsetWidth||240;
-  const tH=tipbox.offsetHeight||100;
+  const tH=tipbox.offsetHeight||110;
 
   const rect=el.getBoundingClientRect();
   const vW=window.innerWidth, vH=window.innerHeight;
-  const PAD=8, GAP=10;
+  const PAD=10, GAP=10;
 
-  /* horizontal — center on element, clamp inside viewport */
+  // Horizontal: center over cell, clamp
   let lx=rect.left+rect.width/2-tW/2;
   lx=Math.max(PAD, Math.min(lx, vW-tW-PAD));
 
-  /* vertical — prefer above; if not enough room go below */
+  // Vertical: prefer above, fall back to below
   let ty, above=true;
   if(rect.top-tH-GAP >= PAD){ ty=rect.top-tH-GAP; }
   else { ty=rect.bottom+GAP; above=false; }
-
-  /* keep within screen vertically */
   ty=Math.max(PAD, Math.min(ty, vH-tH-PAD));
 
-  /* arrow position */
+  // Arrow offset
   const arrowEl=tipbox.querySelector('.tb-arrow');
   if(arrowEl){
     const arrX=rect.left+rect.width/2-lx;
     arrowEl.style.left=Math.max(14,Math.min(arrX,tW-14))+'px';
-    arrowEl.style.transform='translateX(-50%)';
+    arrowEl.style.transform='none';
   }
 
   tipbox.className=above?'tip-up':'tip-dn';
-  /* tipbox is position:fixed so top = viewport coords, no scrollY */
-  tipbox.style.cssText=`position:fixed;left:${lx}px;top:${ty}px;visibility:visible;opacity:0;pointer-events:none;z-index:9999;max-width:260px;min-width:170px;transition:opacity .14s;`;
-  /* trigger opacity transition */
+  tipbox.style.cssText=`position:fixed;left:${lx}px;top:${ty}px;visibility:visible;opacity:0;pointer-events:none;z-index:9999;max-width:260px;min-width:170px;transition:opacity .15s;`;
   requestAnimationFrame(()=>{ tipbox.style.opacity='1'; tipbox.classList.add('vis'); });
+
+  // Auto-close after 4 seconds (helpful on mobile)
+  _autoTO=setTimeout(closeTip, 4000);
 }
 
-document.addEventListener('click',()=>{tipbox.classList.remove('vis');tipbox.style.opacity='0';});
-document.addEventListener('scroll',hideTip,{passive:true});
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){tipbox.classList.remove('vis');tipbox.style.opacity='0';}});
+// Close on outside click or tap
+document.addEventListener('click', ()=>closeTip());
+document.addEventListener('touchstart', (e)=>{
+  if(tipbox._srcEl && !tipbox._srcEl.contains(e.target) && !tipbox.contains(e.target)){
+    closeTip();
+  }
+},{passive:true});
+document.addEventListener('scroll', ()=>closeTip(), {passive:true});
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeTip(); });
 
 /* ── single month ── */
 function renderSingle(t){
