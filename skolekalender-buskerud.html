@@ -2,1083 +2,1340 @@
 <html lang="no">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Skolekalender Buskerud 2025–2026</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Skolekalender · Norge 2025–2028</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400;1,9..144,600&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --ink:       #0d0f14;
-  --ink2:      #2a2d36;
-  --ink3:      #5a5f70;
-  --ink4:      #9098ac;
-  --paper:     #f5f3ef;
-  --paper2:    #edeae4;
-  --paper3:    #e4e0d8;
-  --line:      rgba(0,0,0,.09);
-  --line2:     rgba(0,0,0,.05);
+/* ═══════════════════════════════════════
+   DESIGN TOKENS
+═══════════════════════════════════════ */
+:root{
+  --c-bg:      #0b0e18;
+  --c-s1:      #0f1322;
+  --c-s2:      #131828;
+  --c-s3:      #181f32;
+  --c-s4:      #1d2540;
+  --c-s5:      #222c4a;
+  --c-rim:     rgba(255,255,255,.07);
+  --c-rim2:    rgba(255,255,255,.04);
+  --c-rim3:    rgba(255,255,255,.025);
 
-  --nor:       #ba1f2a;  /* Norwegian red */
-  --nor-l:     rgba(186,31,42,.1);
-  --nor-rim:   rgba(186,31,42,.22);
+  --c-ink:     #e0e8ff;
+  --c-ink2:    #8898c8;
+  --c-ink3:    #4858a0;
+  --c-ink4:    #2a3470;
 
-  --grn:       #1a7a5a;
-  --grn-l:     rgba(26,122,90,.1);
-  --grn-rim:   rgba(26,122,90,.22);
+  /* Norwegian flag colours as accent */
+  --nor:       #ce2028;
+  --nor2:      #ff4450;
+  --nor-l:     rgba(206,32,40,.12);
+  --nor-rim:   rgba(206,32,40,.28);
 
-  --blu:       #1a4e8a;
-  --blu-l:     rgba(26,78,138,.1);
-  --blu-rim:   rgba(26,78,138,.22);
+  --grn:       #1a8f6c;
+  --grn2:      #26d4a0;
+  --grn-l:     rgba(26,143,108,.12);
+  --grn-rim:   rgba(26,143,108,.28);
 
-  --gld:       #8a6010;
-  --gld-l:     rgba(138,96,16,.1);
-  --gld-rim:   rgba(138,96,16,.22);
+  --blu:       #1a60d4;
+  --blu2:      #4a98ff;
+  --blu-l:     rgba(26,96,212,.12);
+  --blu-rim:   rgba(26,96,212,.28);
 
-  --f-disp: 'Fraunces', serif;
-  --f-body: 'DM Sans', sans-serif;
-  --f-mono: 'DM Mono', monospace;
-  --f-fa:   'Vazirmatn', sans-serif;
-}
+  --gld:       #c88020;
+  --gld2:      #f0b040;
+  --gld-l:     rgba(200,128,32,.12);
+  --gld-rim:   rgba(200,128,32,.28);
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
+  --pur:       #7848d4;
+  --pur2:      #a870ff;
+  --pur-l:     rgba(120,72,212,.12);
+  --pur-rim:   rgba(120,72,212,.28);
 
-body {
-  background: var(--paper);
-  color: var(--ink);
-  font-family: var(--f-body);
-  min-height: 100vh;
-  -webkit-font-smoothing: antialiased;
+  --f-d: 'Instrument Serif', serif;
+  --f-b: 'Instrument Sans', sans-serif;
+  --f-m: 'DM Mono', monospace;
+  --f-fa:'Vazirmatn', sans-serif;
 }
-body.fa { font-family: var(--f-fa); direction: rtl; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--c-bg);color:var(--c-ink);
+  font-family:var(--f-b);min-height:100vh;
+  overflow-x:hidden;-webkit-font-smoothing:antialiased;
+}
+body.fa{font-family:var(--f-fa);direction:rtl}
 
-/* ─── NOISE TEXTURE ─── */
-body::before {
-  content: '';
-  position: fixed; inset: 0; z-index: 0;
-  pointer-events: none;
-  opacity: .018;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 200px;
+/* ═══════════════════════════════════════
+   ANIMATED AURORA BACKGROUND
+═══════════════════════════════════════ */
+#aurora{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.au-orb{position:absolute;border-radius:50%;filter:blur(80px);will-change:transform}
+.au1{width:700px;height:500px;
+  background:radial-gradient(ellipse,rgba(206,32,40,.09) 0%,transparent 70%);
+  top:-15%;left:-10%;animation:au1 24s ease-in-out infinite alternate}
+.au2{width:600px;height:600px;
+  background:radial-gradient(ellipse,rgba(120,72,212,.08) 0%,transparent 70%);
+  top:20%;right:-15%;animation:au2 30s ease-in-out infinite alternate}
+.au3{width:800px;height:400px;
+  background:radial-gradient(ellipse,rgba(26,96,212,.07) 0%,transparent 70%);
+  bottom:-10%;left:20%;animation:au3 20s ease-in-out infinite alternate}
+.au4{width:500px;height:500px;
+  background:radial-gradient(ellipse,rgba(26,143,108,.06) 0%,transparent 70%);
+  top:50%;left:40%;animation:au1 26s ease-in-out infinite alternate-reverse}
+/* Norwegian flag cross accent — very subtle */
+.au-cross{
+  position:absolute;top:0;left:0;right:0;bottom:0;
+  background-image:
+    linear-gradient(to right, transparent 26%,rgba(206,32,40,.012) 26%,rgba(206,32,40,.012) 35%,transparent 35%),
+    linear-gradient(to bottom,transparent 40%,rgba(206,32,40,.012) 40%,rgba(206,32,40,.012) 50%,transparent 50%);
 }
+/* Star dots */
+.au-stars{position:absolute;inset:0}
+.au-stars::before,.au-stars::after{
+  content:'';position:absolute;inset:0;
+  background-image:
+    radial-gradient(1px 1px at 10% 12%,rgba(255,255,255,.55) 0%,transparent 100%),
+    radial-gradient(1.5px 1.5px at 32% 5%,rgba(255,255,255,.45) 0%,transparent 100%),
+    radial-gradient(1px 1px at 56% 18%,rgba(255,255,255,.5) 0%,transparent 100%),
+    radial-gradient(1px 1px at 74% 8%,rgba(255,255,255,.4) 0%,transparent 100%),
+    radial-gradient(1.5px 1.5px at 88% 22%,rgba(255,255,255,.55) 0%,transparent 100%),
+    radial-gradient(1px 1px at 15% 55%,rgba(255,255,255,.35) 0%,transparent 100%),
+    radial-gradient(1px 1px at 42% 70%,rgba(255,255,255,.4) 0%,transparent 100%),
+    radial-gradient(1px 1px at 68% 62%,rgba(255,255,255,.3) 0%,transparent 100%),
+    radial-gradient(1px 1px at 92% 48%,rgba(255,255,255,.45) 0%,transparent 100%),
+    radial-gradient(1px 1px at 5% 88%,rgba(255,255,255,.4) 0%,transparent 100%);
+  background-size:400px 300px;
+  animation:twinkle 5s ease-in-out infinite alternate
+}
+.au-stars::after{background-size:300px 260px;animation-delay:-2.5s;opacity:.7}
+/* subtle grid */
+.au-grid{
+  position:absolute;inset:0;
+  background-image:linear-gradient(var(--c-rim3) 1px,transparent 1px),linear-gradient(90deg,var(--c-rim3) 1px,transparent 1px);
+  background-size:72px 72px;
+  mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 20%,transparent 100%)
+}
+@keyframes au1{to{transform:translate(55px,40px) scale(1.06)}}
+@keyframes au2{to{transform:translate(-40px,60px) scale(.95)}}
+@keyframes au3{to{transform:translate(30px,-50px) scale(1.09)}}
+@keyframes twinkle{0%,100%{opacity:.8}50%{opacity:.25}}
 
-/* ─── LAYOUT ─── */
-.wrap { position: relative; z-index: 1; max-width: 1360px; margin: 0 auto; padding: 0 24px 80px; }
+/* ═══════════════════════════════════════
+   PAGE LAYOUT
+═══════════════════════════════════════ */
+.page{position:relative;z-index:1;max-width:1480px;margin:0 auto;padding:0 24px 100px}
 
-/* ─── NAV ─── */
-.nav {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 18px 24px; margin: 0 -24px;
-  background: rgba(245,243,239,.94);
-  backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
-  border-bottom: 1px solid var(--line);
-  position: sticky; top: 0; z-index: 100;
-  gap: 12px; flex-wrap: wrap;
+/* ═══════════════════════════════════════
+   NAVBAR
+═══════════════════════════════════════ */
+.nav{
+  position:sticky;top:0;z-index:300;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:13px 24px;margin:0 -24px;
+  background:rgba(11,14,24,.88);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--c-rim);gap:10px;flex-wrap:wrap
 }
-.nav-brand { display: flex; align-items: center; gap: 12px; }
-.nav-logo {
-  width: 36px; height: 36px; border-radius: 9px;
-  background: var(--nor); display: flex; align-items: center; justify-content: center;
-  font-size: 18px; flex-shrink: 0;
-  box-shadow: 0 2px 10px rgba(186,31,42,.3);
+.nav-L{display:flex;align-items:center;gap:12px}
+.nav-ico{
+  width:34px;height:34px;border-radius:9px;
+  background:linear-gradient(135deg,var(--nor),#8b0000);
+  display:flex;align-items:center;justify-content:center;
+  font-size:17px;flex-shrink:0;
+  box-shadow:0 2px 12px rgba(206,32,40,.4)
 }
-.nav-name { font-size: 13px; font-weight: 600; color: var(--ink); letter-spacing: -.2px; }
-.nav-sub  { font-family: var(--f-mono); font-size: 10px; color: var(--ink4); margin-top: 1px; letter-spacing: .5px; }
-body.fa .nav-name,.nav-sub { font-family: var(--f-fa); }
+.nav-tt{font-size:12px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--c-ink2)}
+.nav-sb{font-family:var(--f-m);font-size:9.5px;color:var(--c-ink4);letter-spacing:.8px;margin-top:1px}
+body.fa .nav-tt,.nav-sb{font-family:var(--f-fa)}
+.nav-R{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
 
-.nav-R { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+/* pill groups */
+.pg{display:flex;background:var(--c-s1);border:1px solid var(--c-rim);border-radius:50px;padding:3px;gap:1px}
+.pgb{
+  border:none;background:transparent;color:var(--c-ink3);
+  font-family:var(--f-b);font-size:10px;font-weight:700;
+  letter-spacing:.8px;text-transform:uppercase;
+  padding:5px 11px;border-radius:50px;cursor:pointer;transition:all .2s;white-space:nowrap
+}
+.pgb.on{background:linear-gradient(135deg,#1e3480,#2a1a70);color:#b0d0ff;box-shadow:0 2px 10px rgba(30,80,200,.35)}
+body.fa .pgb{font-family:var(--f-fa)}
 
-.pg { display: flex; background: var(--paper2); border: 1px solid var(--line); border-radius: 50px; padding: 3px; gap: 1px; }
-.pgb { border: none; background: transparent; color: var(--ink3); font-family: var(--f-body); font-size: 10px; font-weight: 600; letter-spacing: .8px; text-transform: uppercase; padding: 5px 12px; border-radius: 50px; cursor: pointer; transition: all .2s; white-space: nowrap; }
-.pgb.on { background: var(--ink); color: var(--paper); }
-body.fa .pgb { font-family: var(--f-fa); }
+/* year selector */
+.yr-sel{display:flex;background:var(--c-s1);border:1px solid var(--c-rim);border-radius:50px;padding:3px;gap:1px}
+.yrb{
+  border:none;background:transparent;color:var(--c-ink3);
+  font-family:var(--f-m);font-size:10px;font-weight:600;
+  padding:5px 11px;border-radius:50px;cursor:pointer;transition:all .2s;white-space:nowrap
+}
+.yrb.on{background:var(--c-s4);color:var(--gld2);border:1px solid var(--gld-rim)}
 
-/* countdown pill in nav */
-.nav-cd {
-  font-family: var(--f-mono); font-size: 11px;
-  padding: 5px 12px; border-radius: 50px;
-  background: var(--nor-l); border: 1px solid var(--nor-rim);
-  color: var(--nor); font-weight: 500; white-space: nowrap;
+/* MODE SWITCHER — School vs University */
+.mode-sw{
+  display:flex;background:var(--c-s1);border:1px solid var(--c-rim);border-radius:50px;padding:3px;gap:1px
 }
+.msb{
+  border:none;background:transparent;color:var(--c-ink3);
+  font-family:var(--f-b);font-size:10px;font-weight:600;
+  padding:5px 13px;border-radius:50px;cursor:pointer;transition:all .2s;white-space:nowrap;
+  display:flex;align-items:center;gap:5px
+}
+.msb.on.school{background:linear-gradient(135deg,rgba(26,143,108,.4),rgba(26,143,108,.2));color:var(--grn2);border:1px solid var(--grn-rim)}
+.msb.on.uni{background:linear-gradient(135deg,rgba(120,72,212,.4),rgba(120,72,212,.2));color:var(--pur2);border:1px solid var(--pur-rim)}
+body.fa .msb{font-family:var(--f-fa)}
 
-/* ─── HERO ─── */
-.hero {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 0; min-height: 340px;
-  margin: 0 -24px 0;
-  border-bottom: 1px solid var(--line);
-  overflow: hidden;
-}
-.hero-L {
-  padding: 56px 48px 48px 24px;
-  display: flex; flex-direction: column; justify-content: center;
-}
-.hero-eyebrow {
-  font-family: var(--f-mono); font-size: 10px; color: var(--nor);
-  letter-spacing: 2px; text-transform: uppercase; margin-bottom: 14px;
-  display: flex; align-items: center; gap: 8px;
-}
-.hero-eyebrow::before { content: ''; width: 20px; height: 1.5px; background: var(--nor); }
-body.fa .hero-eyebrow::before { display: none; }
-body.fa .hero-eyebrow::after { content: ''; width: 20px; height: 1.5px; background: var(--nor); }
-
-.hero-h1 {
-  font-family: var(--f-disp);
-  font-size: clamp(36px, 5vw, 64px);
-  font-weight: 300; line-height: .95; letter-spacing: -1.5px;
-  margin-bottom: 16px; color: var(--ink);
-}
-.hero-h1 em { font-style: italic; font-weight: 600; color: var(--nor); }
-body.fa .hero-h1 { font-family: var(--f-fa); font-size: clamp(28px, 4vw, 50px); letter-spacing: 0; line-height: 1.1; }
-
-.hero-desc { font-size: 14px; color: var(--ink3); line-height: 1.75; max-width: 400px; }
-body.fa .hero-desc { font-family: var(--f-fa); }
-
-.hero-R {
-  position: relative; overflow: hidden;
-  border-left: 1px solid var(--line);
-}
-.hero-R img {
-  width: 100%; height: 100%;
-  object-fit: cover; object-position: center;
-  display: block;
-}
-.hero-R-overlay {
-  position: absolute; inset: 0;
-  background: linear-gradient(135deg, rgba(186,31,42,.08), rgba(0,0,0,.15));
-}
-.hero-badge {
-  position: absolute; bottom: 20px; right: 20px;
-  background: rgba(245,243,239,.95); backdrop-filter: blur(10px);
-  border: 1px solid var(--line); border-radius: 10px;
-  padding: 10px 14px;
-  font-family: var(--f-mono); font-size: 10px; color: var(--ink3);
-  text-align: right; line-height: 1.6;
-}
-.hero-badge strong { color: var(--ink); font-size: 13px; font-weight: 600; display: block; }
-
-/* ─── NEXT EVENT BANNER ─── */
-.next-banner {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 14px 0; border-bottom: 1px solid var(--line);
-  margin-top: 28px; gap: 12px; flex-wrap: wrap;
-}
-.nb-L { display: flex; align-items: center; gap: 12px; }
-.nb-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--nor); animation: pulse 2s infinite; flex-shrink: 0; }
-@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.8)} }
-.nb-label { font-family: var(--f-mono); font-size: 10px; color: var(--ink4); letter-spacing: 1.5px; text-transform: uppercase; }
-.nb-name { font-size: 15px; font-weight: 600; color: var(--ink); letter-spacing: -.2px; }
-body.fa .nb-name { font-family: var(--f-fa); }
-.nb-date { font-family: var(--f-mono); font-size: 11px; color: var(--ink3); }
-.nb-R { display: flex; align-items: center; gap: 8px; }
-.nb-cd {
-  font-family: var(--f-mono); font-size: 13px; font-weight: 500;
-  color: var(--nor); background: var(--nor-l); border: 1px solid var(--nor-rim);
-  padding: 6px 14px; border-radius: 8px; white-space: nowrap;
-}
-.nb-countdown-full {
-  display: flex; gap: 6px;
-}
-.nb-unit {
-  text-align: center; background: var(--paper2); border: 1px solid var(--line);
-  border-radius: 8px; padding: 6px 10px; min-width: 52px;
-}
-.nb-unit-num { font-family: var(--f-mono); font-size: 18px; font-weight: 500; color: var(--ink); line-height: 1; }
-.nb-unit-lbl { font-family: var(--f-mono); font-size: 8px; color: var(--ink4); text-transform: uppercase; letter-spacing: .8px; margin-top: 2px; }
-body.fa .nb-unit-lbl { font-family: var(--f-fa); font-size: 9px; }
-
-/* ─── FILTER TABS ─── */
-.filter-row {
-  display: flex; align-items: center; gap: 8px;
-  margin: 24px 0 20px; flex-wrap: wrap;
-}
-.filter-label { font-family: var(--f-mono); font-size: 10px; color: var(--ink4); letter-spacing: 1.5px; text-transform: uppercase; margin-right: 4px; }
-.ftab {
-  border: 1px solid var(--line); background: transparent;
-  color: var(--ink3); font-family: var(--f-body); font-size: 11px; font-weight: 600;
-  padding: 5px 14px; border-radius: 50px; cursor: pointer; transition: all .18s;
-  white-space: nowrap; display: flex; align-items: center; gap: 5px;
-}
-body.fa .ftab { font-family: var(--f-fa); }
-.ftab .badge { font-family: var(--f-mono); font-size: 9px; background: var(--paper2); padding: 1px 5px; border-radius: 50px; color: var(--ink4); }
-.ftab.on.all { background: var(--ink); border-color: var(--ink); color: var(--paper); }
-.ftab.on.all .badge { background: rgba(255,255,255,.15); color: var(--paper); }
-.ftab.on.ferie { background: var(--grn-l); border-color: var(--grn-rim); color: var(--grn); }
-.ftab.on.ferie .badge { background: var(--grn); color: #fff; }
-.ftab.on.helligdag { background: var(--nor-l); border-color: var(--nor-rim); color: var(--nor); }
-.ftab.on.helligdag .badge { background: var(--nor); color: #fff; }
-.ftab.on.skole { background: var(--blu-l); border-color: var(--blu-rim); color: var(--blu); }
-.ftab.on.skole .badge { background: var(--blu); color: #fff; }
-.ftab.on.islamsk { background: var(--gld-l); border-color: var(--gld-rim); color: var(--gld); }
-.ftab.on.islamsk .badge { background: var(--gld); color: #fff; }
-
-/* ─── EVENTS GRID ─── */
-.events-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 16px;
+/* nav countdown */
+.nav-cd{
+  font-family:var(--f-m);font-size:10.5px;
+  padding:5px 12px;border-radius:50px;
+  background:var(--nor-l);border:1px solid var(--nor-rim);
+  color:var(--nor2);white-space:nowrap
 }
 
-/* ─── EVENT CARD ─── */
-.ecard {
-  background: #fff; border: 1px solid var(--line);
-  border-radius: 16px; overflow: hidden;
-  transition: transform .2s, box-shadow .2s, border-color .2s;
-  animation: cardUp .45s both;
-  cursor: default;
-  display: flex; flex-direction: column;
+/* ═══════════════════════════════════════
+   HERO SECTION
+═══════════════════════════════════════ */
+.hero{
+  display:grid;grid-template-columns:1fr 1fr;
+  min-height:360px;margin:0 -24px;border-bottom:1px solid var(--c-rim)
 }
-@keyframes cardUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
-.ecard:nth-child(1){animation-delay:.04s}.ecard:nth-child(2){animation-delay:.07s}.ecard:nth-child(3){animation-delay:.1s}
-.ecard:nth-child(4){animation-delay:.13s}.ecard:nth-child(5){animation-delay:.16s}.ecard:nth-child(6){animation-delay:.19s}
-.ecard:nth-child(7){animation-delay:.22s}.ecard:nth-child(8){animation-delay:.25s}
+.hero-L{
+  padding:60px 48px 52px 24px;
+  display:flex;flex-direction:column;justify-content:center
+}
+.hero-ey{
+  font-family:var(--f-m);font-size:10px;color:var(--nor2);
+  letter-spacing:2.5px;text-transform:uppercase;margin-bottom:16px;
+  display:flex;align-items:center;gap:9px
+}
+.hero-ey::before{content:'';width:22px;height:1.5px;background:var(--nor2);flex-shrink:0}
+body.fa .hero-ey::before{display:none}
+body.fa .hero-ey::after{content:'';width:22px;height:1.5px;background:var(--nor2);flex-shrink:0}
+.hero-h1{
+  font-family:var(--f-d);
+  font-size:clamp(44px,5.5vw,80px);
+  font-weight:400;line-height:.92;letter-spacing:-1.5px;
+  margin-bottom:18px
+}
+.hero-h1 em{font-style:italic;color:var(--nor2)}
+.hero-h1 .uni-em{font-style:italic;color:var(--pur2)}
+body.fa .hero-h1{font-family:var(--f-fa);font-size:clamp(36px,5vw,64px);letter-spacing:0;line-height:1.08}
+.hero-desc{font-size:13.5px;color:var(--c-ink2);line-height:1.75;max-width:420px}
+body.fa .hero-desc{font-family:var(--f-fa)}
+.hero-R{
+  position:relative;overflow:hidden;
+  border-left:1px solid var(--c-rim)
+}
+.hero-img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;transition:transform 8s ease}
+.hero-R:hover .hero-img{transform:scale(1.04)}
+.hero-grad{
+  position:absolute;inset:0;
+  background:linear-gradient(to right,rgba(11,14,24,.5) 0%,transparent 40%),
+             linear-gradient(to bottom,transparent 50%,rgba(11,14,24,.6) 100%)
+}
+.hero-pill{
+  position:absolute;top:16px;left:16px;
+  display:flex;align-items:center;gap:7px;
+  background:rgba(11,14,24,.75);backdrop-filter:blur(12px);
+  border:1px solid var(--c-rim2);border-radius:50px;
+  padding:6px 12px 6px 8px;
+}
+.hero-pill-dot{width:7px;height:7px;border-radius:50%;animation:pulse 2s infinite}
+.hero-pill-dot.school{background:var(--grn2);box-shadow:0 0 6px var(--grn2)}
+.hero-pill-dot.uni{background:var(--pur2);box-shadow:0 0 6px var(--pur2)}
+.hero-pill-txt{font-family:var(--f-m);font-size:10px;color:var(--c-ink2);letter-spacing:.5px}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.75)}}
+.hero-bottom{
+  position:absolute;bottom:0;left:0;right:0;
+  padding:16px 18px;
+  background:linear-gradient(to top,rgba(11,14,24,.9),transparent);
+  display:flex;align-items:flex-end;justify-content:space-between
+}
+.hero-stat{text-align:right}
+.hero-stat-n{font-family:var(--f-d);font-size:36px;font-weight:400;color:var(--c-ink);letter-spacing:-1px;line-height:1}
+.hero-stat-l{font-family:var(--f-m);font-size:9px;color:var(--c-ink3);letter-spacing:.8px;text-transform:uppercase}
 
-.ecard:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,.1); border-color: rgba(0,0,0,.14); }
-.ecard.past { opacity: .6; }
-.ecard.past:hover { opacity: .8; }
+/* ═══════════════════════════════════════
+   COUNTDOWN STRIP
+═══════════════════════════════════════ */
+.cd-strip{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 0;border-bottom:1px solid var(--c-rim);
+  margin-top:24px;gap:12px;flex-wrap:wrap
+}
+.cd-L{display:flex;align-items:center;gap:12px}
+.cd-live{width:7px;height:7px;border-radius:50%;background:var(--grn2);animation:pulse 2s infinite;box-shadow:0 0 6px var(--grn2);flex-shrink:0}
+.cd-lbl{font-family:var(--f-m);font-size:9px;color:var(--c-ink4);letter-spacing:1.5px;text-transform:uppercase}
+.cd-name{font-size:15px;font-weight:600;color:var(--c-ink);letter-spacing:-.2px}
+body.fa .cd-name{font-family:var(--f-fa)}
+.cd-date{font-family:var(--f-m);font-size:10px;color:var(--c-ink3);margin-top:2px}
+.cd-R{display:flex;gap:8px;align-items:center}
+.cd-units{display:flex;gap:6px}
+.cd-unit{
+  min-width:54px;text-align:center;
+  background:var(--c-s2);border:1px solid var(--c-rim);border-radius:10px;padding:8px 6px
+}
+.cd-unit-n{font-family:var(--f-m);font-size:20px;font-weight:500;color:var(--c-ink);line-height:1}
+.cd-unit-l{font-family:var(--f-m);font-size:8px;color:var(--c-ink4);text-transform:uppercase;letter-spacing:.8px;margin-top:2px}
+body.fa .cd-unit-l{font-family:var(--f-fa);font-size:9px}
+.cd-btn{
+  font-family:var(--f-m);font-size:11px;font-weight:500;
+  padding:6px 14px;border-radius:8px;border:none;cursor:pointer;transition:all .18s;white-space:nowrap
+}
+.cd-btn.school{background:var(--grn-l);border:1px solid var(--grn-rim);color:var(--grn2)}
+.cd-btn.uni{background:var(--pur-l);border:1px solid var(--pur-rim);color:var(--pur2)}
 
-/* card image */
-.ec-img {
-  position: relative; height: 180px; overflow: hidden; flex-shrink: 0;
+/* ═══════════════════════════════════════
+   STATS BAR
+═══════════════════════════════════════ */
+.stats-bar{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:22px 0}
+.sb{
+  background:var(--c-s1);border:1px solid var(--c-rim);
+  border-radius:13px;padding:16px 18px;transition:all .2s
 }
-.ec-img img {
-  width: 100%; height: 100%;
-  object-fit: cover; object-position: center;
-  transition: transform .4s;
-  display: block;
+.sb:hover{border-color:rgba(255,255,255,.12);transform:translateY(-1px)}
+.sb-n{
+  font-family:var(--f-d);font-size:34px;font-weight:400;
+  letter-spacing:-1.5px;line-height:1;margin-bottom:4px
 }
-.ecard:hover .ec-img img { transform: scale(1.04); }
-.ec-img-overlay {
-  position: absolute; inset: 0;
-  background: linear-gradient(to bottom, transparent 40%, rgba(0,0,0,.45));
-}
-.ec-type-badge {
-  position: absolute; top: 12px; left: 12px;
-  font-size: 10px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase;
-  padding: 3px 9px; border-radius: 50px; backdrop-filter: blur(8px);
-}
-.ec-type-badge.ferie    { background: rgba(26,122,90,.9); color: #fff; }
-.ec-type-badge.helligdag { background: rgba(186,31,42,.9); color: #fff; }
-.ec-type-badge.skole    { background: rgba(26,78,138,.9); color: #fff; }
-.ec-type-badge.islamsk  { background: rgba(138,96,16,.9); color: #fff; }
+.sb-n.r{color:var(--nor2)}.sb-n.g{color:var(--grn2)}.sb-n.b{color:var(--blu2)}.sb-n.gd{color:var(--gld2)}.sb-n.p{color:var(--pur2)}
+.sb-l{font-size:10.5px;color:var(--c-ink3)}
+body.fa .sb-l{font-family:var(--f-fa)}
 
-.ec-cd-badge {
-  position: absolute; bottom: 10px; right: 10px;
-  font-family: var(--f-mono); font-size: 11px; font-weight: 500;
-  padding: 4px 10px; border-radius: 8px;
-  backdrop-filter: blur(8px); background: rgba(245,243,239,.9);
-  border: 1px solid rgba(255,255,255,.5); color: var(--ink);
-  white-space: nowrap;
+/* ═══════════════════════════════════════
+   ISLAMIC TOGGLE
+═══════════════════════════════════════ */
+.isl-toggle-wrap{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 16px;
+  background:var(--gld-l);border:1px solid var(--gld-rim);border-radius:12px;
+  margin-bottom:16px;gap:12px;flex-wrap:wrap
 }
-.ec-cd-badge.past { color: var(--ink4); }
-.ec-cd-badge.today { color: var(--nor); border-color: var(--nor-rim); background: rgba(186,31,42,.1); }
+.isl-toggle-L{display:flex;align-items:center;gap:10px}
+.isl-icon{font-size:18px}
+.isl-txt{font-size:13px;font-weight:600;color:var(--gld2)}
+body.fa .isl-txt{font-family:var(--f-fa)}
+.isl-sub{font-size:10.5px;color:var(--c-ink3);margin-top:1px}
+body.fa .isl-sub{font-family:var(--f-fa)}
+.toggle-sw{
+  position:relative;width:46px;height:26px;flex-shrink:0
+}
+.toggle-sw input{opacity:0;width:0;height:0;position:absolute}
+.toggle-track{
+  position:absolute;inset:0;border-radius:13px;
+  background:var(--c-s3);border:1px solid var(--c-rim);
+  cursor:pointer;transition:all .25s
+}
+.toggle-sw input:checked ~ .toggle-track{background:var(--gld);border-color:var(--gld-rim);box-shadow:0 0 12px rgba(200,128,32,.4)}
+.toggle-thumb{
+  position:absolute;top:3px;left:3px;
+  width:18px;height:18px;border-radius:50%;
+  background:#fff;transition:transform .25s;
+  box-shadow:0 1px 4px rgba(0,0,0,.4)
+}
+.toggle-sw input:checked ~ .toggle-track .toggle-thumb{transform:translateX(20px)}
+
+/* ═══════════════════════════════════════
+   FILTER ROW
+═══════════════════════════════════════ */
+.filter-row{display:flex;align-items:center;gap:7px;margin-bottom:18px;flex-wrap:wrap}
+.fl{font-family:var(--f-m);font-size:9px;color:var(--c-ink4);letter-spacing:1.5px;text-transform:uppercase;margin-right:4px;white-space:nowrap}
+.fc{
+  border:1px solid var(--c-rim);background:transparent;
+  color:var(--c-ink2);font-family:var(--f-b);font-size:11px;font-weight:600;
+  padding:6px 14px;border-radius:50px;cursor:pointer;transition:all .18s;
+  white-space:nowrap;display:flex;align-items:center;gap:5px
+}
+body.fa .fc{font-family:var(--f-fa)}
+.fc .n{font-family:var(--f-m);font-size:9px;background:rgba(255,255,255,.06);padding:1px 5px;border-radius:50px;color:var(--c-ink4)}
+.fc:hover{border-color:rgba(255,255,255,.14)}
+.fc.on.all{background:var(--c-s4);border-color:var(--c-rim2);color:var(--c-ink)}
+.fc.on.ferie{background:var(--grn-l);border-color:var(--grn-rim);color:var(--grn2)}
+.fc.on.ferie .n{background:var(--grn);color:#fff}
+.fc.on.helligdag{background:var(--nor-l);border-color:var(--nor-rim);color:var(--nor2)}
+.fc.on.helligdag .n{background:var(--nor);color:#fff}
+.fc.on.skole{background:var(--blu-l);border-color:var(--blu-rim);color:var(--blu2)}
+.fc.on.skole .n{background:var(--blu);color:#fff}
+.fc.on.islamsk{background:var(--gld-l);border-color:var(--gld-rim);color:var(--gld2)}
+.fc.on.islamsk .n{background:var(--gld);color:#fff}
+.fc.on.uni{background:var(--pur-l);border-color:var(--pur-rim);color:var(--pur2)}
+.fc.on.uni .n{background:var(--pur);color:#fff}
+
+/* ═══════════════════════════════════════
+   SECTION HEADER
+═══════════════════════════════════════ */
+.sh{display:flex;align-items:center;gap:14px;margin:28px 0 18px}
+.sh h2{font-family:var(--f-d);font-size:26px;font-weight:400;letter-spacing:-.5px;white-space:nowrap;color:var(--c-ink)}
+body.fa .sh h2{font-family:var(--f-fa);font-size:22px}
+.sh-rule{flex:1;height:1px;background:linear-gradient(90deg,var(--c-rim),transparent)}
+body.fa .sh-rule{background:linear-gradient(270deg,var(--c-rim),transparent)}
+.sh-ct{font-family:var(--f-m);font-size:11px;color:var(--c-ink4);padding:3px 10px;background:var(--c-s2);border:1px solid var(--c-rim);border-radius:50px}
+
+/* ═══════════════════════════════════════
+   EVENTS GRID (CARD VIEW)
+═══════════════════════════════════════ */
+#v-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:16px}
+#v-grid.hide{display:none}
+#v-list{display:none}
+#v-list.show{display:block}
+
+/* ── EVENT CARD ── */
+.ec{
+  background:var(--c-s1);border:1px solid var(--c-rim);
+  border-radius:16px;overflow:hidden;
+  display:flex;flex-direction:column;
+  transition:transform .22s,box-shadow .22s,border-color .22s;
+  animation:ecup .42s both
+}
+.ec:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,0,0,.55);border-color:rgba(255,255,255,.12)}
+.ec.past{opacity:.55}
+.ec.past:hover{opacity:.75}
+@keyframes ecup{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+
+/* stagger */
+.ec:nth-child(1){animation-delay:.04s}.ec:nth-child(2){animation-delay:.07s}.ec:nth-child(3){animation-delay:.10s}
+.ec:nth-child(4){animation-delay:.13s}.ec:nth-child(5){animation-delay:.16s}.ec:nth-child(6){animation-delay:.19s}
+.ec:nth-child(7){animation-delay:.22s}.ec:nth-child(8){animation-delay:.25s}.ec:nth-child(9){animation-delay:.28s}
+.ec:nth-child(10){animation-delay:.31s}.ec:nth-child(11){animation-delay:.34s}.ec:nth-child(12){animation-delay:.37s}
+
+/* image area */
+.ec-img{position:relative;height:190px;overflow:hidden;flex-shrink:0}
+.ec-img img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;transition:transform .5s ease}
+.ec:hover .ec-img img{transform:scale(1.06)}
+.ec-img-grad{
+  position:absolute;inset:0;
+  background:linear-gradient(to bottom,rgba(0,0,0,.08) 0%,transparent 40%,rgba(11,14,24,.6) 100%)
+}
+/* type badge */
+.ec-tb{
+  position:absolute;top:12px;left:12px;
+  font-size:9.5px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;
+  padding:3px 9px;border-radius:50px;backdrop-filter:blur(10px)
+}
+body.fa .ec-tb{font-family:var(--f-fa)}
+.ec-tb.ferie{background:rgba(26,143,108,.88);color:#fff}
+.ec-tb.helligdag{background:rgba(206,32,40,.88);color:#fff}
+.ec-tb.skole{background:rgba(26,96,212,.88);color:#fff}
+.ec-tb.islamsk{background:rgba(200,128,32,.88);color:#fff}
+.ec-tb.uni{background:rgba(120,72,212,.88);color:#fff}
+/* countdown badge */
+.ec-cd{
+  position:absolute;bottom:10px;right:10px;
+  font-family:var(--f-m);font-size:10.5px;font-weight:500;
+  padding:4px 10px;border-radius:8px;backdrop-filter:blur(10px);
+  background:rgba(11,14,24,.82);border:1px solid rgba(255,255,255,.15);color:var(--c-ink);
+  white-space:nowrap
+}
+.ec-cd.past{color:var(--c-ink4)}
+.ec-cd.now{color:var(--grn2);border-color:var(--grn-rim);background:rgba(26,143,108,.2)}
 
 /* card body */
-.ec-body { padding: 16px 18px 18px; flex: 1; display: flex; flex-direction: column; }
-.ec-date-row {
-  display: flex; align-items: center; gap: 8px; margin-bottom: 8px;
+.ec-b{padding:16px 18px 18px;flex:1;display:flex;flex-direction:column}
+.ec-row1{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px}
+.ec-cal{
+  flex-shrink:0;width:50px;
+  background:var(--c-s2);border:1px solid var(--c-rim);border-radius:9px;
+  padding:7px 5px;text-align:center
 }
-.ec-date-badge {
-  background: var(--paper2); border: 1px solid var(--line);
-  border-radius: 8px; padding: 6px 8px; text-align: center;
-  flex-shrink: 0; min-width: 46px;
+.ec-cal-d{font-family:var(--f-d);font-size:22px;font-weight:400;line-height:1;color:var(--c-ink)}
+.ec-cal-m{font-family:var(--f-m);font-size:8.5px;color:var(--c-ink4);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+.ec-cal-y{font-family:var(--f-m);font-size:8px;color:var(--c-ink4);margin-top:1px}
+.ec-meta{flex:1}
+.ec-time{font-family:var(--f-m);font-size:9.5px;color:var(--c-ink4);margin-bottom:3px}
+.ec-name{
+  font-family:var(--f-d);font-size:20px;font-weight:400;letter-spacing:-.3px;line-height:1.15;
+  color:var(--c-ink);margin-bottom:6px
 }
-.ec-date-d { font-family: var(--f-disp); font-size: 20px; font-weight: 600; line-height: 1; color: var(--ink); }
-.ec-date-m { font-family: var(--f-mono); font-size: 8.5px; color: var(--ink4); text-transform: uppercase; letter-spacing: .5px; margin-top: 1px; }
-.ec-time { font-family: var(--f-mono); font-size: 10px; color: var(--ink4); }
-
-.ec-name {
-  font-family: var(--f-disp);
-  font-size: 19px; font-weight: 600; letter-spacing: -.3px; line-height: 1.2;
-  color: var(--ink); margin-bottom: 5px;
-}
-body.fa .ec-name { font-family: var(--f-fa); font-size: 17px; }
-
-.ec-desc {
-  font-size: 12px; color: var(--ink3); line-height: 1.6;
-  margin-bottom: 12px; flex: 1;
-}
-body.fa .ec-desc { font-family: var(--f-fa); }
-
+body.fa .ec-name{font-family:var(--f-fa);font-size:18px}
+.ec-desc{font-size:12px;color:var(--c-ink2);line-height:1.65;flex:1;margin-bottom:14px}
+body.fa .ec-desc{font-family:var(--f-fa)}
 /* duration bar */
-.ec-dur {
-  display: flex; align-items: center; gap: 8px;
-  padding-top: 12px; border-top: 1px solid var(--line2);
-}
-.ec-dur-label { font-family: var(--f-mono); font-size: 9px; color: var(--ink4); letter-spacing: 1px; text-transform: uppercase; flex-shrink: 0; }
-.ec-dur-bar { flex: 1; height: 4px; background: var(--paper2); border-radius: 2px; overflow: hidden; }
-.ec-dur-fill { height: 100%; border-radius: 2px; transition: width .8s cubic-bezier(.16,1,.3,1); }
-.ec-dur-fill.ferie    { background: var(--grn); }
-.ec-dur-fill.helligdag { background: var(--nor); }
-.ec-dur-fill.skole    { background: var(--blu); }
-.ec-dur-fill.islamsk  { background: var(--gld); }
-.ec-dur-days { font-family: var(--f-mono); font-size: 10px; color: var(--ink3); flex-shrink: 0; }
+.ec-dur{display:flex;align-items:center;gap:8px;padding-top:12px;border-top:1px solid var(--c-rim3)}
+.ec-dur-lbl{font-family:var(--f-m);font-size:8.5px;color:var(--c-ink4);letter-spacing:1px;text-transform:uppercase;flex-shrink:0}
+.ec-dur-track{flex:1;height:4px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden}
+.ec-dur-fill{height:100%;border-radius:2px;transition:width 1s cubic-bezier(.16,1,.3,1)}
+.ec-dur-fill.ferie{background:linear-gradient(90deg,var(--grn),var(--grn2))}
+.ec-dur-fill.helligdag{background:linear-gradient(90deg,var(--nor),var(--nor2))}
+.ec-dur-fill.skole{background:linear-gradient(90deg,var(--blu),var(--blu2))}
+.ec-dur-fill.islamsk{background:linear-gradient(90deg,var(--gld),var(--gld2))}
+.ec-dur-fill.uni{background:linear-gradient(90deg,var(--pur),var(--pur2))}
+.ec-dur-n{font-family:var(--f-m);font-size:10px;color:var(--c-ink3);flex-shrink:0}
 
-/* ─── TIMELINE VIEW ─── */
-#view-timeline { display: none; }
-#view-timeline.show { display: block; }
-#view-grid.hide { display: none; }
-
-.tl-wrap { position: relative; padding-left: 32px; }
-.tl-wrap::before {
-  content: ''; position: absolute; left: 11px; top: 0; bottom: 0;
-  width: 1.5px; background: linear-gradient(to bottom, var(--nor), var(--line) 80%);
+/* ── LIST / TIMELINE VIEW ── */
+.tl{position:relative;padding-left:28px}
+.tl::before{
+  content:'';position:absolute;left:9px;top:4px;bottom:4px;
+  width:1.5px;
+  background:linear-gradient(to bottom,var(--nor2),var(--c-rim) 85%)
 }
-body.fa .tl-wrap { padding-left: 0; padding-right: 32px; }
-body.fa .tl-wrap::before { left: auto; right: 11px; }
+body.fa .tl{padding-left:0;padding-right:28px}
+body.fa .tl::before{left:auto;right:9px}
 
-.tl-item {
-  position: relative; margin-bottom: 2px;
-  animation: cardUp .4s both;
-}
+.tl-item{position:relative;margin-bottom:8px;animation:ecup .4s both}
 .tl-item:nth-child(1){animation-delay:.04s}.tl-item:nth-child(2){animation-delay:.08s}
 .tl-item:nth-child(3){animation-delay:.12s}.tl-item:nth-child(4){animation-delay:.16s}
 .tl-item:nth-child(5){animation-delay:.20s}.tl-item:nth-child(6){animation-delay:.24s}
 .tl-item:nth-child(7){animation-delay:.28s}.tl-item:nth-child(8){animation-delay:.32s}
+.tl-item:nth-child(9){animation-delay:.36s}.tl-item:nth-child(10){animation-delay:.40s}
 
-.tl-dot {
-  position: absolute; left: -28px; top: 18px;
-  width: 12px; height: 12px; border-radius: 50%;
-  border: 2px solid var(--paper); box-shadow: 0 0 0 1.5px currentColor;
+.tl-dot{
+  position:absolute;left:-24px;top:20px;
+  width:10px;height:10px;border-radius:50%;
+  border:2px solid var(--c-bg);box-shadow:0 0 0 1.5px currentColor
 }
-body.fa .tl-dot { left: auto; right: -28px; }
-.tl-dot.ferie    { background: var(--grn); color: var(--grn); }
-.tl-dot.helligdag { background: var(--nor); color: var(--nor); }
-.tl-dot.skole    { background: var(--blu); color: var(--blu); }
-.tl-dot.islamsk  { background: var(--gld); color: var(--gld); }
+body.fa .tl-dot{left:auto;right:-24px}
+.tl-dot.ferie{background:var(--grn2);color:var(--grn2)}
+.tl-dot.helligdag{background:var(--nor2);color:var(--nor2)}
+.tl-dot.skole{background:var(--blu2);color:var(--blu2)}
+.tl-dot.islamsk{background:var(--gld2);color:var(--gld2)}
+.tl-dot.uni{background:var(--pur2);color:var(--pur2)}
 
-.tl-card {
-  background: #fff; border: 1px solid var(--line);
-  border-radius: 12px; padding: 14px 16px;
-  display: flex; gap: 14px; align-items: flex-start;
-  transition: all .18s; margin-bottom: 10px;
+.tl-card{
+  background:var(--c-s1);border:1px solid var(--c-rim);
+  border-radius:12px;padding:14px 16px;
+  display:flex;gap:14px;align-items:center;
+  transition:all .18s
 }
-.tl-card:hover { border-color: rgba(0,0,0,.14); transform: translateX(3px); }
-body.fa .tl-card:hover { transform: translateX(-3px); }
-.tl-card.past { opacity: .6; }
+.tl-card:hover{border-color:rgba(255,255,255,.12);transform:translateX(4px)}
+body.fa .tl-card:hover{transform:translateX(-4px)}
+.tl-card.past{opacity:.5}
+.tl-img{width:80px;height:60px;border-radius:8px;overflow:hidden;flex-shrink:0}
+.tl-img img{width:100%;height:100%;object-fit:cover}
+.tl-body{flex:1;min-width:0}
+.tl-name{font-family:var(--f-d);font-size:17px;font-weight:400;letter-spacing:-.2px;color:var(--c-ink);line-height:1.2;margin-bottom:3px}
+body.fa .tl-name{font-family:var(--f-fa);font-size:16px}
+.tl-desc{font-size:11.5px;color:var(--c-ink3);line-height:1.5}
+body.fa .tl-desc{font-family:var(--f-fa)}
+.tl-tags{display:flex;gap:5px;margin-top:6px;flex-wrap:wrap;align-items:center}
+.tl-tag{font-size:9.5px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;padding:2px 7px;border-radius:50px}
+.tl-tag.ferie{background:var(--grn-l);color:var(--grn2);border:1px solid var(--grn-rim)}
+.tl-tag.helligdag{background:var(--nor-l);color:var(--nor2);border:1px solid var(--nor-rim)}
+.tl-tag.skole{background:var(--blu-l);color:var(--blu2);border:1px solid var(--blu-rim)}
+.tl-tag.islamsk{background:var(--gld-l);color:var(--gld2);border:1px solid var(--gld-rim)}
+.tl-tag.uni{background:var(--pur-l);color:var(--pur2);border:1px solid var(--pur-rim)}
+.tl-cd-pill{font-family:var(--f-m);font-size:10px;color:var(--c-ink4)}
+.tl-cd-pill.soon{color:var(--nor2);font-weight:600}
+.tl-R{flex-shrink:0;text-align:right;min-width:48px}
+.tl-R-d{font-family:var(--f-d);font-size:26px;font-weight:400;letter-spacing:-1px;line-height:1;color:var(--c-ink)}
+.tl-R-m{font-family:var(--f-m);font-size:9px;color:var(--c-ink4);text-transform:uppercase;letter-spacing:.5px}
+.tl-R-y{font-family:var(--f-m);font-size:9px;color:var(--c-ink4)}
 
-.tl-img { width: 72px; height: 60px; border-radius: 8px; overflow: hidden; flex-shrink: 0; }
-.tl-img img { width: 100%; height: 100%; object-fit: cover; }
-.tl-body { flex: 1; min-width: 0; }
-.tl-name { font-family: var(--f-disp); font-size: 16px; font-weight: 600; letter-spacing: -.2px; color: var(--ink); line-height: 1.2; margin-bottom: 3px; }
-body.fa .tl-name { font-family: var(--f-fa); font-size: 15px; }
-.tl-desc { font-size: 11.5px; color: var(--ink3); line-height: 1.5; }
-body.fa .tl-desc { font-family: var(--f-fa); }
-.tl-meta { display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap; align-items: center; }
-.tl-type { font-size: 9.5px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; padding: 2px 7px; border-radius: 50px; }
-.tl-type.ferie    { background: var(--grn-l); color: var(--grn); border: 1px solid var(--grn-rim); }
-.tl-type.helligdag { background: var(--nor-l); color: var(--nor); border: 1px solid var(--nor-rim); }
-.tl-type.skole    { background: var(--blu-l); color: var(--blu); border: 1px solid var(--blu-rim); }
-.tl-type.islamsk  { background: var(--gld-l); color: var(--gld); border: 1px solid var(--gld-rim); }
-.tl-cd { font-family: var(--f-mono); font-size: 10px; color: var(--ink4); }
-.tl-cd.soon { color: var(--nor); font-weight: 500; }
-.tl-R { text-align: right; flex-shrink: 0; }
-.tl-d { font-family: var(--f-disp); font-size: 22px; font-weight: 600; letter-spacing: -1px; line-height: 1; color: var(--ink); }
-.tl-mo { font-family: var(--f-mono); font-size: 9px; color: var(--ink4); text-transform: uppercase; letter-spacing: .5px; margin-top: 1px; }
-.tl-yr { font-family: var(--f-mono); font-size: 9px; color: var(--ink4); }
-
-/* ─── EMPTY STATE ─── */
-.empty-state { text-align: center; padding: 60px 20px; color: var(--ink3); }
-.empty-state .es-icon { font-size: 40px; margin-bottom: 12px; opacity: .5; }
-.empty-state p { font-size: 14px; }
-
-/* ─── SECTION HEADER ─── */
-.sec-hd { display: flex; align-items: center; gap: 14px; margin: 32px 0 20px; }
-.sec-hd h2 { font-family: var(--f-disp); font-size: 26px; font-weight: 400; letter-spacing: -.5px; white-space: nowrap; }
-body.fa .sec-hd h2 { font-family: var(--f-fa); font-size: 22px; }
-.sec-rule { flex: 1; height: 1px; background: linear-gradient(90deg, var(--line), transparent); }
-body.fa .sec-rule { background: linear-gradient(270deg, var(--line), transparent); }
-.sec-count { font-family: var(--f-mono); font-size: 11px; color: var(--ink4); padding: 3px 9px; background: var(--paper2); border: 1px solid var(--line); border-radius: 50px; }
-
-/* ─── STATS ROW ─── */
-.stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 28px; }
-.stat { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; }
-.stat-n { font-family: var(--f-disp); font-size: 34px; font-weight: 600; letter-spacing: -1.5px; line-height: 1; margin-bottom: 3px; }
-.stat-n.r { color: var(--nor) }.stat-n.g { color: var(--grn) }.stat-n.b { color: var(--blu) }.stat-n.gd { color: var(--gld) }
-.stat-l { font-size: 11px; color: var(--ink3); }
-body.fa .stat-l { font-family: var(--f-fa); }
+/* ─── EMPTY ─── */
+.empty{text-align:center;padding:60px 20px;color:var(--c-ink3)}
+.empty .ei{font-size:42px;margin-bottom:12px;opacity:.5}
+.empty p{font-size:14px}
 
 /* ─── FOOTER ─── */
-.footer { border-top: 1px solid var(--line); padding: 20px 0; margin-top: 40px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
-.footer-t { font-family: var(--f-mono); font-size: 10px; color: var(--ink4); line-height: 1.7; }
-body.fa .footer-t { font-family: var(--f-fa); font-size: 11px; }
-.footer-badge { font-family: var(--f-disp); font-size: 14px; font-style: italic; color: var(--ink4); }
+.footer{margin-top:60px;padding:20px 0 14px;border-top:1px solid var(--c-rim);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px}
+.footer-t{font-size:10.5px;color:var(--c-ink4);line-height:1.8}
+.footer-t a{color:var(--gld2);text-decoration:none}
+.footer-t a:hover{text-decoration:underline}
+body.fa .footer-t{font-family:var(--f-fa)}
+.footer-b{font-family:var(--f-d);font-size:14px;font-style:italic;color:var(--c-ink4)}
 
 /* ─── RESPONSIVE ─── */
-@media (max-width: 900px) {
-  .hero { grid-template-columns: 1fr; }
-  .hero-R { height: 220px; border-left: none; border-top: 1px solid var(--line); }
-  .stats-row { grid-template-columns: repeat(2, 1fr); }
-}
-@media (max-width: 600px) {
-  .events-grid { grid-template-columns: 1fr; }
-  .stats-row { grid-template-columns: repeat(2, 1fr); }
-  .hero-L { padding: 36px 24px 32px; }
-  .hero-h1 { font-size: 38px; }
-  .nb-countdown-full { display: none; }
-  .nav { flex-wrap: wrap; }
-}
-
-::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--paper3); border-radius: 3px; }
+@media(max-width:980px){.hero{grid-template-columns:1fr}.hero-R{height:240px;border-left:none;border-top:1px solid var(--c-rim)}.stats-bar{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:640px){#v-grid{grid-template-columns:1fr}.stats-bar{grid-template-columns:repeat(2,1fr)}.hero-L{padding:40px 24px 36px}.cd-units{display:none}.nav{flex-wrap:wrap}}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--c-s4);border-radius:3px}
 </style>
 </head>
 <body>
 
-<div class="wrap">
+<!-- AURORA BACKGROUND -->
+<div id="aurora">
+  <div class="au-stars"></div>
+  <div class="au-cross"></div>
+  <div class="au-grid"></div>
+  <div class="au-orb au1"></div>
+  <div class="au-orb au2"></div>
+  <div class="au-orb au3"></div>
+  <div class="au-orb au4"></div>
+</div>
+
+<div class="page">
 
 <!-- NAV -->
 <nav class="nav">
-  <div class="nav-brand">
-    <div class="nav-logo">🇳🇴</div>
+  <div class="nav-L">
+    <div class="nav-ico">🇳🇴</div>
     <div>
-      <div class="nav-name" id="nav-name">Skolekalender Buskerud</div>
-      <div class="nav-sub" id="nav-sub">2025–2026 · Viken fylkeskommune</div>
+      <div class="nav-tt" id="n-tt">Skolekalender · Norge</div>
+      <div class="nav-sb" id="n-sb">2025–2028 · Buskerud & Oslo</div>
     </div>
   </div>
   <div class="nav-R">
+    <div class="mode-sw">
+      <button class="msb school on" id="msb-sk" onclick="setMode('school')">🏫 <span id="msb-sk-t">Videregående</span></button>
+      <button class="msb uni" id="msb-un" onclick="setMode('uni')">🎓 <span id="msb-un-t">Universitetet</span></button>
+    </div>
+    <div class="yr-sel" id="yr-sel"></div>
     <div class="pg">
       <button class="pgb on" onclick="setLang('no')">NO</button>
       <button class="pgb" onclick="setLang('en')">EN</button>
       <button class="pgb" onclick="setLang('fa')">FA</button>
     </div>
     <div class="pg">
-      <button class="pgb on" id="vb-grid" onclick="setView('grid')">⊞ <span id="vt-grid">Kort</span></button>
-      <button class="pgb" id="vb-tl" onclick="setView('timeline')">≡ <span id="vt-tl">Liste</span></button>
+      <button class="pgb on" id="vb-g" onclick="setView('grid')">⊞ <span id="vt-g">Kort</span></button>
+      <button class="pgb" id="vb-l" onclick="setView('list')">≡ <span id="vt-l">Liste</span></button>
     </div>
-    <div class="nav-cd" id="nav-cd">⏱ ...</div>
+    <div class="nav-cd" id="n-cd">⏱ ...</div>
   </div>
 </nav>
 
 <!-- HERO -->
 <div class="hero">
   <div class="hero-L">
-    <div class="hero-eyebrow" id="hero-ey">Buskerud · Skoleåret 2025–2026</div>
-    <h1 class="hero-h1" id="hero-h1">Skole<br><em>Kalender</em></h1>
-    <p class="hero-desc" id="hero-desc">Feriedager, helligdager og viktige skole&shy;datoer for Buskerud-skolene i skoleåret 2025–2026.</p>
+    <div class="hero-ey" id="h-ey">Buskerud · 2025–2028</div>
+    <h1 class="hero-h1" id="h-h1">Skole<br><em>Kalender</em></h1>
+    <p class="hero-desc" id="h-desc">Feriedager, helligdager og viktige datoer for Buskerud videregående skoler og Universitetet i Oslo.</p>
   </div>
   <div class="hero-R">
-    <img src="https://c.tadst.com/gfx/600x337/ski-sn-fjell-folk.jpg" alt="Buskerud" loading="lazy">
-    <div class="hero-R-overlay"></div>
-    <div class="hero-badge">
-      <strong id="hb-next">...</strong>
-      <span id="hb-label">Neste ferie</span>
+    <img class="hero-img" id="hero-img" src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=80" alt="Norway mountains">
+    <div class="hero-grad"></div>
+    <div class="hero-pill">
+      <div class="hero-pill-dot school" id="h-dot"></div>
+      <div class="hero-pill-txt" id="h-pill-txt">Buskerud Videregående</div>
+    </div>
+    <div class="hero-bottom">
+      <div></div>
+      <div class="hero-stat">
+        <div class="hero-stat-n" id="h-stat-n">0</div>
+        <div class="hero-stat-l" id="h-stat-l">hendelser</div>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- NEXT EVENT COUNTDOWN -->
-<div class="next-banner">
-  <div class="nb-L">
-    <div class="nb-dot"></div>
+<!-- COUNTDOWN STRIP -->
+<div class="cd-strip">
+  <div class="cd-L">
+    <div class="cd-live"></div>
     <div>
-      <div class="nb-label" id="nb-label">Neste hendelse</div>
-      <div class="nb-name" id="nb-name">...</div>
-      <div class="nb-date" id="nb-date">...</div>
+      <div class="cd-lbl" id="cd-lbl">Neste hendelse</div>
+      <div class="cd-name" id="cd-name">...</div>
+      <div class="cd-date" id="cd-date">...</div>
     </div>
   </div>
-  <div class="nb-R">
-    <div class="nb-countdown-full" id="nb-cd-full">
-      <div class="nb-unit"><div class="nb-unit-num" id="cd-d">--</div><div class="nb-unit-lbl" id="cd-dl">Dager</div></div>
-      <div class="nb-unit"><div class="nb-unit-num" id="cd-h">--</div><div class="nb-unit-lbl" id="cd-hl">Timer</div></div>
-      <div class="nb-unit"><div class="nb-unit-num" id="cd-m">--</div><div class="nb-unit-lbl" id="cd-ml">Min</div></div>
-      <div class="nb-unit"><div class="nb-unit-num" id="cd-s">--</div><div class="nb-unit-lbl" id="cd-sl">Sek</div></div>
+  <div class="cd-R">
+    <div class="cd-units">
+      <div class="cd-unit"><div class="cd-unit-n" id="cu-d">--</div><div class="cd-unit-l" id="cu-dl">Dager</div></div>
+      <div class="cd-unit"><div class="cd-unit-n" id="cu-h">--</div><div class="cd-unit-l" id="cu-hl">Timer</div></div>
+      <div class="cd-unit"><div class="cd-unit-n" id="cu-m">--</div><div class="cd-unit-l" id="cu-ml">Min</div></div>
+      <div class="cd-unit"><div class="cd-unit-n" id="cu-s">--</div><div class="cd-unit-l" id="cu-sl">Sek</div></div>
     </div>
-    <div class="nb-cd" id="nb-cd-short">...</div>
+    <div class="cd-btn school" id="cd-btn">...</div>
   </div>
 </div>
 
 <!-- STATS -->
-<div class="stats-row" id="stats-row"></div>
+<div class="stats-bar" id="stats-bar"></div>
+
+<!-- ISLAMIC TOGGLE -->
+<div class="isl-toggle-wrap">
+  <div class="isl-toggle-L">
+    <div class="isl-icon">☪️</div>
+    <div>
+      <div class="isl-txt" id="isl-tt">Vis islamske høytider</div>
+      <div class="isl-sub" id="isl-sb">Eid al-Fitr og Eid al-Adha · Tilnærmede datoer</div>
+    </div>
+  </div>
+  <label class="toggle-sw">
+    <input type="checkbox" id="isl-toggle" checked onchange="onIslToggle()">
+    <div class="toggle-track"><div class="toggle-thumb"></div></div>
+  </label>
+</div>
 
 <!-- FILTERS -->
 <div class="filter-row">
-  <span class="filter-label" id="filter-label">Filter:</span>
-  <div id="filter-tabs"></div>
+  <span class="fl" id="fl-lbl">Filter:</span>
+  <div id="filter-chips"></div>
 </div>
 
 <!-- SECTION HEADER -->
-<div class="sec-hd">
-  <h2 id="sec-h2">Alle hendelser</h2>
-  <div class="sec-rule"></div>
-  <div class="sec-count" id="sec-count">0</div>
-</div>
+<div class="sh"><h2 id="sh-h2">Alle hendelser</h2><div class="sh-rule"></div><div class="sh-ct" id="sh-ct">0</div></div>
 
-<!-- GRID VIEW -->
-<div class="events-grid" id="view-grid"></div>
-
-<!-- TIMELINE VIEW -->
-<div id="view-timeline" class="tl-wrap"></div>
+<!-- VIEWS -->
+<div id="v-grid"></div>
+<div id="v-list"><div class="tl" id="v-tl"></div></div>
 
 <!-- FOOTER -->
 <footer class="footer">
-  <div class="footer-t" id="ftxt">
-    Buskerud skolekalender 2025–2026 · Kilde: Viken fylkeskommune / kommunenes skolekalendere<br>
-    Islamske datoer er tilnærmede og bekreftes ved månefase
+  <div class="footer-t" id="ft-txt">
+    Skolekalender 2025–2028 · <a href="https://www.udir.no" target="_blank">Udir.no</a> · <a href="https://www.uio.no" target="_blank">UiO</a> · Islamske datoer fra <a href="https://islamsk.no" target="_blank">Islamsk Råd Norge</a>
   </div>
-  <div class="footer-badge">Skole<em>Kalender</em> 2026</div>
+  <div class="footer-b">Skole<em>Kalender</em> 2025–2028</div>
 </footer>
-
-</div><!-- /wrap -->
+</div>
 
 <script>
-/* ═══════════════════════════════════
-   EVENTS DATA — Buskerud 2025-2026
-═══════════════════════════════════ */
-const EVENTS = [
-  {
-    id: 1,
-    name_no: "Høstferie",
-    name_en: "Autumn Holiday",
-    name_fa: "تعطیلات پاییزی",
-    type: "ferie",
-    start: "2025-10-06",
-    end:   "2025-10-10",
-    time:  null,
-    image: "https://c.tadst.com/gfx/600x337/bat-vann-lofoten.jpg",
-    desc_no: "ma. 06.10.2025 – fr. 10.10.2025 · 5 dager",
-    desc_en: "Mon 06 Oct – Fri 10 Oct 2025 · 5 days",
-    desc_fa: "دوشنبه ۶ اکتبر – جمعه ۱۰ اکتبر ۲۰۲۵ · ۵ روز",
-    days: 5
-  },
-  {
-    id: 2,
-    name_no: "Planleggingsdag",
-    name_en: "Planning Day",
-    name_fa: "روز برنامه‌ریزی",
-    type: "skole",
-    start: "2025-11-03",
-    end:   "2025-11-03",
-    time:  null,
-    image: "https://senja.vgs.no/handlers/bv.ashx/i15647be9-9b00-42e6-a9d2-21caaaddea30/w1200/q15761/kc979bd44bd22/skolestart.jpg",
-    desc_no: "ma. 03.11.2025 · Lærerfri dag",
-    desc_en: "Mon 03 Nov 2025 · Teacher planning day",
-    desc_fa: "دوشنبه ۳ نوامبر ۲۰۲۵ · روز برنامه‌ریزی معلمان",
-    days: 1
-  },
-  {
-    id: 3,
-    name_no: "Juleferie",
-    name_en: "Christmas Holiday",
-    name_fa: "تعطیلات کریسمس",
-    type: "ferie",
-    start: "2025-12-22",
-    end:   "2026-01-02",
-    time:  null,
-    image: "https://c.tadst.com/gfx/750w/juletre-oslo.jpg",
-    desc_no: "ma. 22.12.2025 – fr. 02.01.2026 · 12 dager",
-    desc_en: "Mon 22 Dec 2025 – Fri 02 Jan 2026 · 12 days",
-    desc_fa: "دوشنبه ۲۲ دسامبر ۲۰۲۵ – جمعه ۲ ژانویه ۲۰۲۶ · ۱۲ روز",
-    days: 12
-  },
-  {
-    id: 4,
-    name_no: "Vinterferie",
-    name_en: "Winter Holiday",
-    name_fa: "تعطیلات زمستانی",
-    type: "ferie",
-    start: "2026-02-23",
-    end:   "2026-02-27",
-    time:  null,
-    image: "https://c.tadst.com/gfx/600x337/family-skiing-winter.jpg",
-    desc_no: "ma. 23.02.2026 – fr. 27.02.2026 · 5 dager",
-    desc_en: "Mon 23 Feb – Fri 27 Feb 2026 · 5 days",
-    desc_fa: "دوشنبه ۲۳ فوریه – جمعه ۲۷ فوریه ۲۰۲۶ · ۵ روز",
-    days: 5
-  },
-  {
-    id: 5,
-    name_no: "Eid al-Fitr (Id ul-Fitr)",
-    name_en: "Eid al-Fitr",
-    name_fa: "عید فطر",
-    type: "islamsk",
-    start: "2026-03-20",
-    end:   "2026-03-21",
-    time:  "06:00",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Eid_Mubarak_Eid_al_Fitr_Crescent_Moon.jpg/640px-Eid_Mubarak_Eid_al_Fitr_Crescent_Moon.jpg",
-    desc_no: "fr. 20.03.2026 – lø. 21.03.2026 · Tilnærmet dato",
-    desc_en: "Fri 20 Mar – Sat 21 Mar 2026 · Approximate date",
-    desc_fa: "جمعه ۲۰ مارس – شنبه ۲۱ مارس ۲۰۲۶ · تاریخ تقریبی",
-    days: 2
-  },
-  {
-    id: 6,
-    name_no: "Påskeferie",
-    name_en: "Easter Holiday",
-    name_fa: "تعطیلات عید پاک",
-    type: "ferie",
-    start: "2026-03-30",
-    end:   "2026-04-06",
-    time:  null,
-    image: "https://c.tadst.com/gfx/600x337/ski-sn-fjell-folk.jpg",
-    desc_no: "ma. 30.03.2026 – ma. 06.04.2026 · 8 dager",
-    desc_en: "Mon 30 Mar – Mon 06 Apr 2026 · 8 days",
-    desc_fa: "دوشنبه ۳۰ مارس – دوشنبه ۶ آوریل ۲۰۲۶ · ۸ روز",
-    days: 8
-  },
-  {
-    id: 7,
-    name_no: "Arbeidernes dag",
-    name_en: "Labour Day",
-    name_fa: "روز کارگر",
-    type: "helligdag",
-    start: "2026-05-01",
-    end:   "2026-05-01",
-    time:  null,
-    image: "https://norskukekalender.com/wp-content/uploads/2025/03/1.-Mai-Arbeidernes-Dag-Fagforeningene-1024x494.webp",
-    desc_no: "fr. 01.05.2026 · Internasjonal arbeiderdag",
-    desc_en: "Fri 01 May 2026 · International Workers' Day",
-    desc_fa: "جمعه ۱ مه ۲۰۲۶ · روز جهانی کارگر",
-    days: 1
-  },
-  {
-    id: 8,
-    name_no: "Kristi himmelfartsdag",
-    name_en: "Ascension Day",
-    name_fa: "روز صعود مسیح",
-    type: "helligdag",
-    start: "2026-05-14",
-    end:   "2026-05-14",
-    time:  null,
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Ascension_of_Christ_-_Rembrandt.jpg/400px-Ascension_of_Christ_-_Rembrandt.jpg",
-    desc_no: "to. 14.05.2026 · Offentlig helligdag",
-    desc_en: "Thu 14 May 2026 · Public holiday",
-    desc_fa: "پنجشنبه ۱۴ مه ۲۰۲۶ · تعطیل رسمی",
-    days: 1
-  },
-  {
-    id: 9,
-    name_no: "17. mai – Grunnlovsdagen",
-    name_en: "Constitution Day",
-    name_fa: "روز قانون اساسی",
-    type: "helligdag",
-    start: "2026-05-17",
-    end:   "2026-05-17",
-    time:  null,
-    image: "https://i.postimg.cc/3x8870kM/image.png",
-    desc_no: "sø. 17.05.2026 · Norges nasjonaldag",
-    desc_en: "Sun 17 May 2026 · Norway's National Day",
-    desc_fa: "یکشنبه ۱۷ مه ۲۰۲۶ · روز ملی نروژ",
-    days: 1
-  },
-  {
-    id: 10,
-    name_no: "2. pinsedag",
-    name_en: "Whit Monday",
-    name_fa: "دوشنبه پنطیکاست",
-    type: "helligdag",
-    start: "2026-05-25",
-    end:   "2026-05-25",
-    time:  null,
-    image: "https://i.postimg.cc/9f4KdcD8/image.png",
-    desc_no: "ma. 25.05.2026 · Offentlig helligdag",
-    desc_en: "Mon 25 May 2026 · Public holiday",
-    desc_fa: "دوشنبه ۲۵ مه ۲۰۲۶ · تعطیل رسمی",
-    days: 1
-  },
-  {
-    id: 11,
-    name_no: "Eid al-Adha (Id ul-Adha)",
-    name_en: "Eid al-Adha",
-    name_fa: "عید قربان",
-    type: "islamsk",
-    start: "2026-05-27",
-    end:   "2026-05-28",
-    time:  "06:00",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Hajj_Pilgrims_%288108195750%29.jpg/640px-Hajj_Pilgrims_%288108195750%29.jpg",
-    desc_no: "on. 27.05.2026 – to. 28.05.2026 · Tilnærmet dato",
-    desc_en: "Wed 27 May – Thu 28 May 2026 · Approximate date",
-    desc_fa: "چهارشنبه ۲۷ مه – پنجشنبه ۲۸ مه ۲۰۲۶ · تاریخ تقریبی",
-    days: 2
-  },
-  {
-    id: 12,
-    name_no: "Sommerferie",
-    name_en: "Summer Holiday",
-    name_fa: "تعطیلات تابستانی",
-    type: "ferie",
-    start: "2026-06-19",
-    end:   "2026-08-16",
-    time:  null,
-    image: "https://cdn.content.tuigroup.com/adamtui/2021_1/26_11/21377600-a6ae-4a91-bbd7-acbc00bdbe3b/beach-sunset-tui-blue-olhuveli-south-male-atoll-maldivesWebOriginalCompressed.jpg?i10c=img.resize(width:1920);img.crop(width:1920,height:820)",
-    desc_no: "fr. 19.06.2026 – sø. 16.08.2026 · 8 uker",
-    desc_en: "Fri 19 Jun – Sun 16 Aug 2026 · 8 weeks",
-    desc_fa: "دوشنبه ۲۲ ژوئن – یکشنبه ۱۶ اوت ۲۰۲۶ · ۸ هفته",
-    days: 56
-  },
-  {
-    id: 13,
-    name_no: "Første skoledag 2026/2027",
-    name_en: "First School Day 2026/2027",
-    name_fa: "اولین روز مدرسه ۲۰۲۶/۲۰۲۷",
-    type: "skole",
-    start: "2026-08-17",
-    end:   "2026-08-17",
-    time:  "08:30",
-    image: "https://senja.vgs.no/handlers/bv.ashx/i15647be9-9b00-42e6-a9d2-21caaaddea30/w1200/q15761/kc979bd44bd22/skolestart.jpg",
-    desc_no: "ma. 17.08.2026 · Skoleåret 2026/2027 starter",
-    desc_en: "Mon 17 Aug 2026 · School year 2026/2027 begins",
-    desc_fa: "دوشنبه ۱۷ اوت ۲۰۲۶ · آغاز سال تحصیلی ۲۰۲۶/۲۰۲۷",
-    days: 1
-  }
-];
+/* ═══════════════════════════
+   DATA
+═══════════════════════════ */
 
-/* ═══════════════════════════════════
+// School events (Buskerud Videregående)
+const SCHOOL_EVENTS = {
+  "2025-2026": [
+    {id:"s1",type:"skole",start:"2025-08-19",end:"2025-08-19",time:"08:30",
+     img:"https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&q=75",
+     no:"Første skoledag 2025/2026",en:"First School Day 2025/2026",fa:"اولین روز مدرسه ۲۰۲۵/۲۰۲۶",
+     dno:"ti. 19.08.2025 · Skoleåret 2025/2026 starter · Oppmøte kl. 08:30",
+     den:"Tue 19 Aug 2025 · School year 2025/2026 begins · Assembly 08:30",
+     dfa:"سه‌شنبه ۱۹ اوت ۲۰۲۵ · آغاز سال تحصیلی ۲۰۲۵/۲۰۲۶",days:1},
+    {id:"s2",type:"ferie",start:"2025-10-06",end:"2025-10-10",time:null,
+     img:"https://images.unsplash.com/photo-1508739773434-c26b3d09e071?w=800&q=75",
+     no:"Høstferie",en:"Autumn Holiday",fa:"تعطیلات پاییزی",
+     dno:"ma. 06.10 – fr. 10.10.2025 · 5 dager · Buskerud",
+     den:"Mon 06 Oct – Fri 10 Oct 2025 · 5 days · Buskerud",
+     dfa:"دوشنبه ۶ – جمعه ۱۰ اکتبر ۲۰۲۵ · ۵ روز",days:5},
+    {id:"s3",type:"ferie",start:"2025-12-22",end:"2026-01-02",time:null,
+     img:"https://images.unsplash.com/photo-1512389142860-9c449e58a543?w=800&q=75",
+     no:"Juleferie",en:"Christmas Holiday",fa:"تعطیلات کریسمس",
+     dno:"ma. 22.12.2025 – fr. 02.01.2026 · 12 dager",
+     den:"Mon 22 Dec 2025 – Fri 02 Jan 2026 · 12 days",
+     dfa:"دوشنبه ۲۲ دسامبر ۲۰۲۵ – جمعه ۲ ژانویه ۲۰۲۶ · ۱۲ روز",days:12},
+    {id:"s4",type:"ferie",start:"2026-02-23",end:"2026-02-27",time:null,
+     img:"https://images.unsplash.com/photo-1548777123-e216912df7d8?w=800&q=75",
+     no:"Vinterferie",en:"Winter Holiday",fa:"تعطیلات زمستانی",
+     dno:"ma. 23.02 – fr. 27.02.2026 · 5 dager",
+     den:"Mon 23 – Fri 27 Feb 2026 · 5 days",
+     dfa:"دوشنبه ۲۳ – جمعه ۲۷ فوریه ۲۰۲۶ · ۵ روز",days:5},
+    {id:"s5",type:"islamsk",start:"2026-03-20",end:"2026-03-21",time:"06:00",
+     img:"https://images.unsplash.com/photo-1564769662533-4f00a87b4056?w=800&q=75",
+     no:"Eid al-Fitr (Id ul-Fitr)",en:"Eid al-Fitr",fa:"عید فطر",
+     dno:"fr. 20.03 – lø. 21.03.2026 · Tilnærmet dato · Bekreftes ved månefase",
+     den:"Fri 20 – Sat 21 Mar 2026 · Approximate date · Confirmed by moon sighting",
+     dfa:"جمعه ۲۰ – شنبه ۲۱ مارس ۲۰۲۶ · تاریخ تقریبی · با رؤیت هلال تأیید می‌شود",days:2,approx:true},
+    {id:"s6",type:"ferie",start:"2026-03-30",end:"2026-04-06",time:null,
+     img:"https://images.unsplash.com/photo-1520594923568-1b5d82587a45?w=800&q=75",
+     no:"Påskeferie",en:"Easter Holiday",fa:"تعطیلات عید پاک",
+     dno:"ma. 30.03 – ma. 06.04.2026 · 8 dager",
+     den:"Mon 30 Mar – Mon 06 Apr 2026 · 8 days",
+     dfa:"دوشنبه ۳۰ مارس – دوشنبه ۶ آوریل ۲۰۲۶ · ۸ روز",days:8},
+    {id:"s7",type:"helligdag",start:"2026-05-01",end:"2026-05-01",time:null,
+     img:"https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&q=75",
+     no:"Arbeidernes dag",en:"Labour Day",fa:"روز کارگر",
+     dno:"fr. 01.05.2026 · Internasjonal arbeiderdag",
+     den:"Fri 01 May 2026 · International Workers' Day",
+     dfa:"جمعه ۱ مه ۲۰۲۶ · روز جهانی کارگر",days:1},
+    {id:"s8",type:"helligdag",start:"2026-05-14",end:"2026-05-14",time:null,
+     img:"https://images.unsplash.com/photo-1502741224143-90386d7f8c82?w=800&q=75",
+     no:"Kristi himmelfartsdag",en:"Ascension Day",fa:"روز صعود مسیح",
+     dno:"to. 14.05.2026 · Offentlig helligdag",
+     den:"Thu 14 May 2026 · Public holiday",
+     dfa:"پنجشنبه ۱۴ مه ۲۰۲۶ · تعطیل رسمی",days:1},
+    {id:"s9",type:"helligdag",start:"2026-05-17",end:"2026-05-17",time:null,
+     img:"https://images.unsplash.com/photo-1587974928442-77dc3e0dba72?w=800&q=75",
+     no:"17. mai – Grunnlovsdagen",en:"Constitution Day",fa:"روز قانون اساسی",
+     dno:"sø. 17.05.2026 · Norges nasjonaldag · Barnetog og feiring",
+     den:"Sun 17 May 2026 · Norway's National Day · Children's parades",
+     dfa:"یکشنبه ۱۷ مه ۲۰۲۶ · روز ملی نروژ · رژه کودکان",days:1},
+    {id:"s10",type:"helligdag",start:"2026-05-25",end:"2026-05-25",time:null,
+     img:"https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&q=75",
+     no:"2. pinsedag",en:"Whit Monday",fa:"دوشنبه پنطیکاست",
+     dno:"ma. 25.05.2026 · Offentlig helligdag",
+     den:"Mon 25 May 2026 · Public holiday",
+     dfa:"دوشنبه ۲۵ مه ۲۰۲۶ · تعطیل رسمی",days:1},
+    {id:"s11",type:"islamsk",start:"2026-05-27",end:"2026-05-28",time:"06:00",
+     img:"https://images.unsplash.com/photo-1591604021695-0c69b7c05981?w=800&q=75",
+     no:"Eid al-Adha (Id ul-Adha)",en:"Eid al-Adha",fa:"عید قربان",
+     dno:"on. 27.05 – to. 28.05.2026 · Tilnærmet dato",
+     den:"Wed 27 – Thu 28 May 2026 · Approximate date",
+     dfa:"چهارشنبه ۲۷ – پنجشنبه ۲۸ مه ۲۰۲۶ · تاریخ تقریبی",days:2,approx:true},
+    {id:"s12",type:"ferie",start:"2026-06-20",end:"2026-08-16",time:null,
+     img:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=75",
+     no:"Sommerferie",en:"Summer Holiday",fa:"تعطیلات تابستانی",
+     dno:"lø. 20.06 – sø. 16.08.2026 · ~8 uker · Buskerud",
+     den:"Sat 20 Jun – Sun 16 Aug 2026 · ~8 weeks",
+     dfa:"شنبه ۲۰ ژوئن – یکشنبه ۱۶ اوت ۲۰۲۶ · ~۸ هفته",days:57},
+  ],
+  "2026-2027": [
+    {id:"t1",type:"skole",start:"2026-08-17",end:"2026-08-17",time:"08:30",
+     img:"https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&q=75",
+     no:"Første skoledag 2026/2027",en:"First School Day 2026/2027",fa:"اولین روز مدرسه ۲۰۲۶/۲۰۲۷",
+     dno:"ma. 17.08.2026 · Skoleåret 2026/2027 starter",
+     den:"Mon 17 Aug 2026 · School year 2026/2027 begins",
+     dfa:"دوشنبه ۱۷ اوت ۲۰۲۶ · آغاز سال تحصیلی",days:1},
+    {id:"t2",type:"ferie",start:"2026-10-05",end:"2026-10-09",time:null,
+     img:"https://images.unsplash.com/photo-1508739773434-c26b3d09e071?w=800&q=75",
+     no:"Høstferie",en:"Autumn Holiday",fa:"تعطیلات پاییزی",
+     dno:"ma. 05.10 – fr. 09.10.2026 · 5 dager",
+     den:"Mon 05 Oct – Fri 09 Oct 2026 · 5 days",
+     dfa:"دوشنبه ۵ – جمعه ۹ اکتبر ۲۰۲۶ · ۵ روز",days:5},
+    {id:"t3",type:"ferie",start:"2026-12-21",end:"2027-01-01",time:null,
+     img:"https://images.unsplash.com/photo-1512389142860-9c449e58a543?w=800&q=75",
+     no:"Juleferie",en:"Christmas Holiday",fa:"تعطیلات کریسمس",
+     dno:"ma. 21.12.2026 – fr. 01.01.2027 · 12 dager",
+     den:"Mon 21 Dec 2026 – Fri 01 Jan 2027 · 12 days",
+     dfa:"دوشنبه ۲۱ دسامبر ۲۰۲۶ – جمعه ۱ ژانویه ۲۰۲۷ · ۱۲ روز",days:12},
+    {id:"t4",type:"ferie",start:"2027-02-22",end:"2027-02-26",time:null,
+     img:"https://images.unsplash.com/photo-1548777123-e216912df7d8?w=800&q=75",
+     no:"Vinterferie",en:"Winter Holiday",fa:"تعطیلات زمستانی",
+     dno:"ma. 22.02 – fr. 26.02.2027 · 5 dager",
+     den:"Mon 22 – Fri 26 Feb 2027 · 5 days",
+     dfa:"دوشنبه ۲۲ – جمعه ۲۶ فوریه ۲۰۲۷ · ۵ روز",days:5},
+    {id:"t5",type:"islamsk",start:"2027-03-10",end:"2027-03-11",time:"06:00",
+     img:"https://images.unsplash.com/photo-1564769662533-4f00a87b4056?w=800&q=75",
+     no:"Eid al-Fitr",en:"Eid al-Fitr",fa:"عید فطر",
+     dno:"on. 10.03 – to. 11.03.2027 · Tilnærmet dato",
+     den:"Wed 10 – Thu 11 Mar 2027 · Approximate date",
+     dfa:"چهارشنبه ۱۰ – پنجشنبه ۱۱ مارس ۲۰۲۷ · تقریبی",days:2,approx:true},
+    {id:"t6",type:"ferie",start:"2027-03-29",end:"2027-04-05",time:null,
+     img:"https://images.unsplash.com/photo-1520594923568-1b5d82587a45?w=800&q=75",
+     no:"Påskeferie",en:"Easter Holiday",fa:"تعطیلات عید پاک",
+     dno:"ma. 29.03 – ma. 05.04.2027 · 8 dager",
+     den:"Mon 29 Mar – Mon 05 Apr 2027 · 8 days",
+     dfa:"دوشنبه ۲۹ مارس – دوشنبه ۵ آوریل ۲۰۲۷ · ۸ روز",days:8},
+    {id:"t7",type:"islamsk",start:"2027-05-17",end:"2027-05-18",time:"06:00",
+     img:"https://images.unsplash.com/photo-1591604021695-0c69b7c05981?w=800&q=75",
+     no:"Eid al-Adha",en:"Eid al-Adha",fa:"عید قربان",
+     dno:"ma. 17.05 – ti. 18.05.2027 · Tilnærmet dato",
+     den:"Mon 17 – Tue 18 May 2027 · Approximate date",
+     dfa:"دوشنبه ۱۷ – سه‌شنبه ۱۸ مه ۲۰۲۷ · تقریبی",days:2,approx:true},
+    {id:"t8",type:"helligdag",start:"2027-05-17",end:"2027-05-17",time:null,
+     img:"https://images.unsplash.com/photo-1587974928442-77dc3e0dba72?w=800&q=75",
+     no:"17. mai – Grunnlovsdagen",en:"Constitution Day",fa:"روز قانون اساسی",
+     dno:"ma. 17.05.2027 · Norges nasjonaldag",
+     den:"Mon 17 May 2027 · Norway's National Day",
+     dfa:"دوشنبه ۱۷ مه ۲۰۲۷ · روز ملی نروژ",days:1},
+    {id:"t9",type:"ferie",start:"2027-06-19",end:"2027-08-15",time:null,
+     img:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=75",
+     no:"Sommerferie",en:"Summer Holiday",fa:"تعطیلات تابستانی",
+     dno:"lø. 19.06 – sø. 15.08.2027 · ~8 uker",
+     den:"Sat 19 Jun – Sun 15 Aug 2027 · ~8 weeks",
+     dfa:"شنبه ۱۹ ژوئن – یکشنبه ۱۵ اوت ۲۰۲۷ · ~۸ هفته",days:57},
+  ],
+  "2027-2028": [
+    {id:"u1",type:"skole",start:"2027-08-16",end:"2027-08-16",time:"08:30",
+     img:"https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&q=75",
+     no:"Første skoledag 2027/2028",en:"First School Day 2027/2028",fa:"اولین روز مدرسه ۲۰۲۷/۲۰۲۸",
+     dno:"ma. 16.08.2027 · Skoleåret 2027/2028 starter",
+     den:"Mon 16 Aug 2027 · School year 2027/2028 begins",
+     dfa:"دوشنبه ۱۶ اوت ۲۰۲۷ · آغاز سال تحصیلی",days:1},
+    {id:"u2",type:"ferie",start:"2027-10-04",end:"2027-10-08",time:null,
+     img:"https://images.unsplash.com/photo-1508739773434-c26b3d09e071?w=800&q=75",
+     no:"Høstferie",en:"Autumn Holiday",fa:"تعطیلات پاییزی",
+     dno:"ma. 04.10 – fr. 08.10.2027 · 5 dager",
+     den:"Mon 04 – Fri 08 Oct 2027 · 5 days",
+     dfa:"دوشنبه ۴ – جمعه ۸ اکتبر ۲۰۲۷ · ۵ روز",days:5},
+    {id:"u3",type:"ferie",start:"2027-12-20",end:"2027-12-31",time:null,
+     img:"https://images.unsplash.com/photo-1512389142860-9c449e58a543?w=800&q=75",
+     no:"Juleferie",en:"Christmas Holiday",fa:"تعطیلات کریسمس",
+     dno:"ma. 20.12.2027 – fr. 31.12.2027 · 12 dager",
+     den:"Mon 20 Dec – Fri 31 Dec 2027 · 12 days",
+     dfa:"دوشنبه ۲۰ دسامبر – جمعه ۳۱ دسامبر ۲۰۲۷ · ۱۲ روز",days:12},
+    {id:"u4",type:"islamsk",start:"2028-02-28",end:"2028-02-29",time:"06:00",
+     img:"https://images.unsplash.com/photo-1564769662533-4f00a87b4056?w=800&q=75",
+     no:"Eid al-Fitr",en:"Eid al-Fitr",fa:"عید فطر",
+     dno:"ti. 28.02 – on. 29.02.2028 · Tilnærmet dato",
+     den:"Tue 28 – Wed 29 Feb 2028 · Approximate date",
+     dfa:"سه‌شنبه ۲۸ – چهارشنبه ۲۹ فوریه ۲۰۲۸ · تقریبی",days:2,approx:true},
+    {id:"u5",type:"ferie",start:"2028-04-10",end:"2028-04-14",time:null,
+     img:"https://images.unsplash.com/photo-1548777123-e216912df7d8?w=800&q=75",
+     no:"Vinterferie",en:"Winter Holiday",fa:"تعطیلات زمستانی",
+     dno:"ma. 10.04 – fr. 14.04.2028 · 5 dager",
+     den:"Mon 10 – Fri 14 Apr 2028 · 5 days",
+     dfa:"دوشنبه ۱۰ – جمعه ۱۴ آوریل ۲۰۲۸ · ۵ روز",days:5},
+    {id:"u6",type:"islamsk",start:"2028-05-06",end:"2028-05-07",time:"06:00",
+     img:"https://images.unsplash.com/photo-1591604021695-0c69b7c05981?w=800&q=75",
+     no:"Eid al-Adha",en:"Eid al-Adha",fa:"عید قربان",
+     dno:"lø. 06.05 – sø. 07.05.2028 · Tilnærmet dato",
+     den:"Sat 06 – Sun 07 May 2028 · Approximate date",
+     dfa:"شنبه ۶ – یکشنبه ۷ مه ۲۰۲۸ · تقریبی",days:2,approx:true},
+    {id:"u7",type:"helligdag",start:"2028-05-17",end:"2028-05-17",time:null,
+     img:"https://images.unsplash.com/photo-1587974928442-77dc3e0dba72?w=800&q=75",
+     no:"17. mai – Grunnlovsdagen",en:"Constitution Day",fa:"روز قانون اساسی",
+     dno:"on. 17.05.2028 · Norges nasjonaldag",
+     den:"Wed 17 May 2028 · Norway's National Day",
+     dfa:"چهارشنبه ۱۷ مه ۲۰۲۸ · روز ملی نروژ",days:1},
+    {id:"u8",type:"ferie",start:"2028-06-17",end:"2028-08-13",time:null,
+     img:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=75",
+     no:"Sommerferie",en:"Summer Holiday",fa:"تعطیلات تابستانی",
+     dno:"lø. 17.06 – sø. 13.08.2028 · ~8 uker",
+     den:"Sat 17 Jun – Sun 13 Aug 2028 · ~8 weeks",
+     dfa:"شنبه ۱۷ ژوئن – یکشنبه ۱۳ اوت ۲۰۲۸ · ~۸ هفته",days:57},
+  ]
+};
+
+// University Oslo events
+const UNI_EVENTS = {
+  "2025-2026": [
+    {id:"uu1",type:"uni",start:"2025-08-11",end:"2025-08-15",time:"09:00",
+     img:"https://images.unsplash.com/photo-1567168544813-cc03465b4fa8?w=800&q=75",
+     no:"Studiestart – introduksjonsuke",en:"Study Start – Intro Week",fa:"شروع تحصیل – هفته معارفه",
+     dno:"ma. 11.08 – fr. 15.08.2025 · Fadderuke og orientering",
+     den:"Mon 11 – Fri 15 Aug 2025 · Welcome week for new students",
+     dfa:"دوشنبه ۱۱ – جمعه ۱۵ اوت ۲۰۲۵ · هفته پذیرش دانشجویان جدید",days:5},
+    {id:"uu2",type:"uni",start:"2025-08-18",end:"2025-08-18",time:"08:15",
+     img:"https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&q=75",
+     no:"Semesterstart høst 2025",en:"Semester Start Autumn 2025",fa:"آغاز ترم پاییز ۲۰۲۵",
+     dno:"ma. 18.08.2025 · Første forelesningsdag",
+     den:"Mon 18 Aug 2025 · First lecture day",
+     dfa:"دوشنبه ۱۸ اوت ۲۰۲۵ · اولین روز تدریس",days:1},
+    {id:"uu3",type:"uni",start:"2025-11-17",end:"2025-11-28",time:null,
+     img:"https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800&q=75",
+     no:"Eksamensperiode – høst",en:"Exam Period – Autumn",fa:"دوره امتحانات – پاییز",
+     dno:"ma. 17.11 – fr. 28.11.2025 · Skriftlige eksamener",
+     den:"Mon 17 – Fri 28 Nov 2025 · Written exams",
+     dfa:"دوشنبه ۱۷ – جمعه ۲۸ نوامبر ۲۰۲۵ · امتحانات کتبی",days:12},
+    {id:"uu4",type:"uni",start:"2026-01-06",end:"2026-01-06",time:"08:15",
+     img:"https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&q=75",
+     no:"Semesterstart vår 2026",en:"Semester Start Spring 2026",fa:"آغاز ترم بهار ۲۰۲۶",
+     dno:"ti. 06.01.2026 · Første forelesningsdag vår",
+     den:"Tue 06 Jan 2026 · First lecture day spring semester",
+     dfa:"سه‌شنبه ۶ ژانویه ۲۰۲۶ · اولین روز تدریس ترم بهار",days:1},
+    {id:"uu5",type:"islamsk",start:"2026-03-20",end:"2026-03-21",time:"06:00",
+     img:"https://images.unsplash.com/photo-1564769662533-4f00a87b4056?w=800&q=75",
+     no:"Eid al-Fitr",en:"Eid al-Fitr",fa:"عید فطر",
+     dno:"fr. 20.03 – lø. 21.03.2026 · Tilnærmet dato",
+     den:"Fri 20 – Sat 21 Mar 2026 · Approximate date",
+     dfa:"جمعه ۲۰ – شنبه ۲۱ مارس ۲۰۲۶ · تقریبی",days:2,approx:true},
+    {id:"uu6",type:"uni",start:"2026-04-27",end:"2026-05-15",time:null,
+     img:"https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800&q=75",
+     no:"Eksamensperiode – vår",en:"Exam Period – Spring",fa:"دوره امتحانات – بهار",
+     dno:"ma. 27.04 – fr. 15.05.2026 · Skriftlige eksamener",
+     den:"Mon 27 Apr – Fri 15 May 2026 · Written exams",
+     dfa:"دوشنبه ۲۷ آوریل – جمعه ۱۵ مه ۲۰۲۶ · امتحانات",days:19},
+    {id:"uu7",type:"islamsk",start:"2026-05-27",end:"2026-05-28",time:"06:00",
+     img:"https://images.unsplash.com/photo-1591604021695-0c69b7c05981?w=800&q=75",
+     no:"Eid al-Adha",en:"Eid al-Adha",fa:"عید قربان",
+     dno:"on. 27.05 – to. 28.05.2026 · Tilnærmet dato",
+     den:"Wed 27 – Thu 28 May 2026 · Approximate date",
+     dfa:"چهارشنبه ۲۷ – پنجشنبه ۲۸ مه ۲۰۲۶ · تقریبی",days:2,approx:true},
+    {id:"uu8",type:"uni",start:"2026-06-15",end:"2026-08-09",time:null,
+     img:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=75",
+     no:"Sommerferie – UiO",en:"Summer Break – UiO",fa:"تعطیلات تابستانی – دانشگاه اسلو",
+     dno:"ma. 15.06 – sø. 09.08.2026 · Universitetets sommerferie",
+     den:"Mon 15 Jun – Sun 09 Aug 2026 · University summer break",
+     dfa:"دوشنبه ۱۵ ژوئن – یکشنبه ۹ اوت ۲۰۲۶ · تعطیلات تابستانی دانشگاه",days:55},
+  ],
+  "2026-2027": [
+    {id:"vv1",type:"uni",start:"2026-08-10",end:"2026-08-14",time:"09:00",
+     img:"https://images.unsplash.com/photo-1567168544813-cc03465b4fa8?w=800&q=75",
+     no:"Studiestart – introduksjonsuke",en:"Study Start – Intro Week",fa:"شروع تحصیل – هفته معارفه",
+     dno:"ma. 10.08 – fr. 14.08.2026 · Fadderuke",
+     den:"Mon 10 – Fri 14 Aug 2026 · Welcome week",
+     dfa:"دوشنبه ۱۰ – جمعه ۱۴ اوت ۲۰۲۶ · هفته پذیرش",days:5},
+    {id:"vv2",type:"uni",start:"2026-08-17",end:"2026-08-17",time:"08:15",
+     img:"https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&q=75",
+     no:"Semesterstart høst 2026",en:"Semester Start Autumn 2026",fa:"آغاز ترم پاییز ۲۰۲۶",
+     dno:"ma. 17.08.2026 · Første forelesningsdag",
+     den:"Mon 17 Aug 2026 · First lecture day",
+     dfa:"دوشنبه ۱۷ اوت ۲۰۲۶ · اولین روز تدریس",days:1},
+    {id:"vv3",type:"islamsk",start:"2027-03-10",end:"2027-03-11",time:"06:00",
+     img:"https://images.unsplash.com/photo-1564769662533-4f00a87b4056?w=800&q=75",
+     no:"Eid al-Fitr",en:"Eid al-Fitr",fa:"عید فطر",
+     dno:"on. 10.03 – to. 11.03.2027 · Tilnærmet dato",
+     den:"Wed 10 – Thu 11 Mar 2027 · Approximate date",
+     dfa:"چهارشنبه ۱۰ – پنجشنبه ۱۱ مارس ۲۰۲۷ · تقریبی",days:2,approx:true},
+    {id:"vv4",type:"uni",start:"2027-05-21",end:"2027-06-11",time:null,
+     img:"https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800&q=75",
+     no:"Eksamensperiode – vår",en:"Exam Period – Spring",fa:"دوره امتحانات – بهار",
+     dno:"fr. 21.05 – fr. 11.06.2027 · Skriftlige eksamener",
+     den:"Fri 21 May – Fri 11 Jun 2027 · Written exams",
+     dfa:"جمعه ۲۱ مه – جمعه ۱۱ ژوئن ۲۰۲۷ · امتحانات",days:21},
+    {id:"vv5",type:"islamsk",start:"2027-05-17",end:"2027-05-18",time:"06:00",
+     img:"https://images.unsplash.com/photo-1591604021695-0c69b7c05981?w=800&q=75",
+     no:"Eid al-Adha",en:"Eid al-Adha",fa:"عید قربان",
+     dno:"ma. 17.05 – ti. 18.05.2027 · Tilnærmet dato",
+     den:"Mon 17 – Tue 18 May 2027 · Approximate date",
+     dfa:"دوشنبه ۱۷ – سه‌شنبه ۱۸ مه ۲۰۲۷ · تقریبی",days:2,approx:true},
+    {id:"vv6",type:"uni",start:"2027-06-14",end:"2027-08-08",time:null,
+     img:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=75",
+     no:"Sommerferie – UiO",en:"Summer Break – UiO",fa:"تعطیلات تابستانی",
+     dno:"ma. 14.06 – sø. 08.08.2027",
+     den:"Mon 14 Jun – Sun 08 Aug 2027",
+     dfa:"دوشنبه ۱۴ ژوئن – یکشنبه ۸ اوت ۲۰۲۷",days:55},
+  ],
+  "2027-2028": [
+    {id:"ww1",type:"uni",start:"2027-08-09",end:"2027-08-13",time:"09:00",
+     img:"https://images.unsplash.com/photo-1567168544813-cc03465b4fa8?w=800&q=75",
+     no:"Studiestart – introduksjonsuke",en:"Study Start – Intro Week",fa:"شروع تحصیل – هفته معارفه",
+     dno:"ma. 09.08 – fr. 13.08.2027 · Fadderuke",
+     den:"Mon 09 – Fri 13 Aug 2027 · Welcome week",
+     dfa:"دوشنبه ۹ – جمعه ۱۳ اوت ۲۰۲۷ · هفته پذیرش",days:5},
+    {id:"ww2",type:"uni",start:"2027-08-16",end:"2027-08-16",time:"08:15",
+     img:"https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&q=75",
+     no:"Semesterstart høst 2027",en:"Semester Start Autumn 2027",fa:"آغاز ترم پاییز ۲۰۲۷",
+     dno:"ma. 16.08.2027 · Første forelesningsdag",
+     den:"Mon 16 Aug 2027 · First lecture day",
+     dfa:"دوشنبه ۱۶ اوت ۲۰۲۷ · اولین روز تدریس",days:1},
+    {id:"ww3",type:"islamsk",start:"2028-02-28",end:"2028-02-29",time:"06:00",
+     img:"https://images.unsplash.com/photo-1564769662533-4f00a87b4056?w=800&q=75",
+     no:"Eid al-Fitr",en:"Eid al-Fitr",fa:"عید فطر",
+     dno:"ti. 28.02 – on. 29.02.2028 · Tilnærmet dato",
+     den:"Tue 28 – Wed 29 Feb 2028 · Approximate date",
+     dfa:"سه‌شنبه ۲۸ – چهارشنبه ۲۹ فوریه ۲۰۲۸ · تقریبی",days:2,approx:true},
+    {id:"ww4",type:"uni",start:"2028-05-06",end:"2028-05-26",time:null,
+     img:"https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800&q=75",
+     no:"Eksamensperiode – vår",en:"Exam Period – Spring",fa:"دوره امتحانات – بهار",
+     dno:"lø. 06.05 – fr. 26.05.2028 · Skriftlige eksamener",
+     den:"Sat 06 May – Fri 26 May 2028 · Written exams",
+     dfa:"شنبه ۶ مه – جمعه ۲۶ مه ۲۰۲۸ · امتحانات",days:20},
+    {id:"ww5",type:"islamsk",start:"2028-05-06",end:"2028-05-07",time:"06:00",
+     img:"https://images.unsplash.com/photo-1591604021695-0c69b7c05981?w=800&q=75",
+     no:"Eid al-Adha",en:"Eid al-Adha",fa:"عید قربان",
+     dno:"lø. 06.05 – sø. 07.05.2028 · Tilnærmet dato",
+     den:"Sat 06 – Sun 07 May 2028 · Approximate date",
+     dfa:"شنبه ۶ – یکشنبه ۷ مه ۲۰۲۸ · تقریبی",days:2,approx:true},
+    {id:"ww6",type:"uni",start:"2028-06-12",end:"2028-08-11",time:null,
+     img:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=75",
+     no:"Sommerferie – UiO",en:"Summer Break – UiO",fa:"تعطیلات تابستانی",
+     dno:"ti. 12.06 – sø. 11.08.2028",
+     den:"Tue 12 Jun – Sun 11 Aug 2028",
+     dfa:"سه‌شنبه ۱۲ ژوئن – یکشنبه ۱۱ اوت ۲۰۲۸",days:60},
+  ]
+};
+
+/* ═══════════════════════════
    TRANSLATIONS
-═══════════════════════════════════ */
-const TX = {
-  no: {
-    navName: "Skolekalender Buskerud",
-    navSub:  "2025–2026 · Viken fylkeskommune",
-    heroEy:  "Buskerud · Skoleåret 2025–2026",
-    heroH1:  ['Skole', 'Kalender'],
-    heroDesc:"Feriedager, helligdager og viktige skole\u00addatoer for Buskerud-skolene i skoleåret 2025–2026.",
-    hbLabel: "Neste ferie/helligdag",
-    nbLabel: "Neste hendelse",
-    statFerie:"Ferieperioder", statHel:"Helligdager", statIsl:"Islamske høytider", statSk:"Skole",
-    vGrid:"Kort", vTl:"Liste",
-    filterLabel:"Filter",
-    chipAll:"Alle", chipFerie:"Ferie", chipHel:"Helligdag", chipIsl:"Islamsk", chipSk:"Skole",
-    secH2:"Alle hendelser",
-    months:["jan","feb","mar","apr","mai","jun","jul","aug","sep","okt","nov","des"],
-    monthsFull:["Januar","Februar","Mars","April","Mai","Juni","Juli","August","September","Oktober","November","Desember"],
+═══════════════════════════ */
+const TX={
+  no:{
+    navTt:"Skolekalender · Norge",navSb:"2025–2028 · Buskerud & Oslo",
+    hEy:"Buskerud · {year}",
+    hH1s:["Skole","Kalender"],hH1u:["Universitets","Kalender"],
+    hDescs:"Feriedager, helligdager og viktige datoer for Buskerud videregående skoler.",
+    hDesku:"Semesterdatoer, eksamensperioder og ferier for Universitetet i Oslo.",
+    hPillS:"Buskerud Videregående",hPillU:"Universitetet i Oslo",
+    cdLbl:"Neste hendelse",
+    stF:"Ferieperioder",stH:"Helligdager",stI:"Islamske høytider",stS:"Skole",stU:"Universitetet",
+    islTt:"Vis islamske høytider",islSb:"Eid al-Fitr og Eid al-Adha · Tilnærmede datoer",
+    flLbl:"Filter",cAll:"Alle",cFer:"Ferie",cHel:"Helligdag",cSk:"Skole",cIsl:"Islamsk",cUni:"UiO",
+    shH2:"Alle hendelser",vGrid:"Kort",vList:"Liste",
+    msSk:"Videregående",msUn:"Universitetet",
+    durLbl:"Varighet",
+    mths:["jan","feb","mar","apr","mai","jun","jul","aug","sep","okt","nov","des"],
+    days:["søn","man","tir","ons","tor","fre","lør"],
     daysFull:["søndag","mandag","tirsdag","onsdag","torsdag","fredag","lørdag"],
-    cdDays:"dager", cdHours:"timer", cdMin:"min", cdSec:"sek",
-    cdInDays:"om {n} dager", cdToday:"I dag!", cdPast:"Passert",
-    durLabel:"Varighet",
-    ftxt:"Buskerud skolekalender 2025–2026 · Kilde: Viken fylkeskommune\nIslamske datoer er tilnærmede og bekreftes ved månefase",
+    cdDays:"d",cdH:"t",cdM:"m",cdS:"s",cdDaysFull:"Dager",cdHFull:"Timer",cdMFull:"Min",cdSFull:"Sek",
+    inDays:"om {n} dager",today:"I dag",past:"Passert",
+    ftxt:"Skolekalender 2025–2028 · <a href='https://www.udir.no' target='_blank'>Udir.no</a> · <a href='https://www.uio.no' target='_blank'>Universitetet i Oslo</a> · Islamske datoer: <a href='https://islamsk.no' target='_blank'>Islamsk Råd Norge</a>",
+    hStatL:"hendelser",
+    yearPicker:["2025–26","2026–27","2027–28"],
   },
-  en: {
-    navName: "School Calendar Buskerud",
-    navSub:  "2025–2026 · Viken County",
-    heroEy:  "Buskerud · School Year 2025–2026",
-    heroH1:  ['School', 'Calendar'],
-    heroDesc:"Holidays, public holidays and important school dates for Buskerud schools in 2025–2026.",
-    hbLabel: "Next holiday",
-    nbLabel: "Next event",
-    statFerie:"Holiday Periods", statHel:"Public Holidays", statIsl:"Islamic Feasts", statSk:"School",
-    vGrid:"Cards", vTl:"List",
-    filterLabel:"Filter",
-    chipAll:"All", chipFerie:"Holiday", chipHel:"Public Holiday", chipIsl:"Islamic", chipSk:"School",
-    secH2:"All events",
-    months:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
-    monthsFull:["January","February","March","April","May","June","July","August","September","October","November","December"],
+  en:{
+    navTt:"School Calendar · Norway",navSb:"2025–2028 · Buskerud & Oslo",
+    hEy:"Buskerud · {year}",
+    hH1s:["School","Calendar"],hH1u:["University","Calendar"],
+    hDesks:"Holidays, public holidays and important dates for Buskerud upper secondary schools.",
+    hDesku:"Semester dates, exam periods and breaks for University of Oslo.",
+    hPillS:"Buskerud Upper Secondary",hPillU:"University of Oslo",
+    cdLbl:"Next event",
+    stF:"Holiday Periods",stH:"Public Holidays",stI:"Islamic Feasts",stS:"School",stU:"University",
+    islTt:"Show Islamic holidays",islSb:"Eid al-Fitr and Eid al-Adha · Approximate dates",
+    flLbl:"Filter",cAll:"All",cFer:"Holiday",cHel:"Public Holiday",cSk:"School",cIsl:"Islamic",cUni:"UiO",
+    shH2:"All events",vGrid:"Cards",vList:"List",
+    msSk:"Upper Secondary",msUn:"University",
+    durLbl:"Duration",
+    mths:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
+    days:["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],
     daysFull:["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
-    cdDays:"days", cdHours:"hrs", cdMin:"min", cdSec:"sec",
-    cdInDays:"in {n} days", cdToday:"Today!", cdPast:"Past",
-    durLabel:"Duration",
-    ftxt:"Buskerud School Calendar 2025–2026 · Source: Viken County Council\nIslamic dates are approximate and confirmed by moon sighting",
+    cdDays:"d",cdH:"h",cdM:"m",cdS:"s",cdDaysFull:"Days",cdHFull:"Hours",cdMFull:"Min",cdSFull:"Sec",
+    inDays:"in {n} days",today:"Today",past:"Past",
+    ftxt:"School Calendar 2025–2028 · <a href='https://www.udir.no' target='_blank'>Udir.no</a> · <a href='https://www.uio.no' target='_blank'>University of Oslo</a> · Islamic dates: <a href='https://islamsk.no' target='_blank'>Islamsk Råd Norge</a>",
+    hStatL:"events",
+    yearPicker:["2025–26","2026–27","2027–28"],
   },
-  fa: {
-    navName: "تقویم مدرسه بوسکرود",
-    navSub:  "۲۰۲۵–۲۰۲۶ · استان ویکن",
-    heroEy:  "بوسکرود · سال تحصیلی ۲۰۲۵–۲۰۲۶",
-    heroH1:  ['تقویم', 'مدرسه'],
-    heroDesc:"تعطیلات، ایام رسمی و تاریخ‌های مهم مدارس بوسکرود در سال تحصیلی ۲۰۲۵–۲۰۲۶.",
-    hbLabel: "تعطیلات بعدی",
-    nbLabel: "رویداد بعدی",
-    statFerie:"دوره‌های تعطیل", statHel:"تعطیلات رسمی", statIsl:"اعیاد اسلامی", statSk:"مدرسه",
-    vGrid:"کارت‌ها", vTl:"فهرست",
-    filterLabel:"فیلتر",
-    chipAll:"همه", chipFerie:"تعطیل", chipHel:"رسمی", chipIsl:"اسلامی", chipSk:"مدرسه",
-    secH2:"همه رویدادها",
-    months:["ژان","فور","مار","آور","مه","ژون","ژوئ","اوت","سپت","اکت","نوو","دسم"],
-    monthsFull:["ژانویه","فوریه","مارس","آوریل","مه","ژوئن","ژوئیه","اوت","سپتامبر","اکتبر","نوامبر","دسامبر"],
+  fa:{
+    navTt:"تقویم مدرسه · نروژ",navSb:"۲۰۲۵–۲۰۲۸ · بوسکرود و اسلو",
+    hEy:"بوسکرود · {year}",
+    hH1s:["تقویم","مدرسه"],hH1u:["تقویم","دانشگاه"],
+    hDesks:"تعطیلات، ایام رسمی و تاریخ‌های مهم مدارس متوسطه بوسکرود.",
+    hDesku:"تاریخ‌های ترم، دوره‌های امتحانی و تعطیلات دانشگاه اسلو.",
+    hPillS:"دبیرستان بوسکرود",hPillU:"دانشگاه اسلو",
+    cdLbl:"رویداد بعدی",
+    stF:"دوره‌های تعطیل",stH:"تعطیلات رسمی",stI:"اعیاد اسلامی",stS:"مدرسه",stU:"دانشگاه",
+    islTt:"نمایش اعیاد اسلامی",islSb:"عید فطر و عید قربان · تاریخ‌های تقریبی",
+    flLbl:"فیلتر",cAll:"همه",cFer:"تعطیل",cHel:"رسمی",cSk:"مدرسه",cIsl:"اسلامی",cUni:"دانشگاه",
+    shH2:"همه رویدادها",vGrid:"کارت‌ها",vList:"فهرست",
+    msSk:"دبیرستان",msUn:"دانشگاه",
+    durLbl:"مدت",
+    mths:["ژان","فور","مار","آور","مه","ژون","ژوئ","اوت","سپت","اکت","نوو","دسم"],
+    days:["ی","د","س","چ","پ","ج","ش"],
     daysFull:["یکشنبه","دوشنبه","سه‌شنبه","چهارشنبه","پنجشنبه","جمعه","شنبه"],
-    cdDays:"روز", cdHours:"ساعت", cdMin:"دقیقه", cdSec:"ثانیه",
-    cdInDays:"{n} روز دیگر", cdToday:"امروز!", cdPast:"گذشته",
-    durLabel:"مدت",
-    ftxt:"تقویم مدرسه بوسکرود ۲۰۲۵–۲۰۲۶ · منبع: شورای استان ویکن\nتاریخ‌های اسلامی تقریبی هستند و با رؤیت هلال تأیید می‌شوند",
+    cdDays:"ر",cdH:"س",cdM:"د",cdS:"ث",cdDaysFull:"روز",cdHFull:"ساعت",cdMFull:"دقیقه",cdSFull:"ثانیه",
+    inDays:"{n} روز دیگر",today:"امروز",past:"گذشته",
+    ftxt:"تقویم مدرسه ۲۰۲۵–۲۰۲۸ · <a href='https://www.udir.no' target='_blank'>Udir.no</a> · <a href='https://www.uio.no' target='_blank'>دانشگاه اسلو</a> · تاریخ‌های اسلامی: <a href='https://islamsk.no' target='_blank'>شورای اسلامی نروژ</a>",
+    hStatL:"رویداد",
+    yearPicker:["۲۰۲۵–۲۶","۲۰۲۶–۲۷","۲۰۲۷–۲۸"],
   }
 };
 
-/* ═══════════════════════════════════
+/* ═══════════════════════════
    STATE
-═══════════════════════════════════ */
-let lang = 'no';
-let view = 'grid';
-let activeFilter = 'all';
-const TODAY = new Date();
+═══════════════════════════ */
+let lang='no', mode='school', selYear='2025-2026', viewMode='grid', activeFilter='all', showIslamic=true;
+const TODAY=new Date();
+const YEARS=['2025-2026','2026-2027','2027-2028'];
+let cdIv=null;
 
-/* ═══════════════════════════════════
+/* ═══════════════════════════
    HELPERS
-═══════════════════════════════════ */
-function parseDate(s){ const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); }
-function daysBetween(a,b){ return Math.round((b-a)/86400000); }
-function getName(ev){ return ev[`name_${lang}`]||ev.name_no; }
-function getDesc(ev){ return ev[`desc_${lang}`]||ev.desc_no; }
-
+═══════════════════════════ */
+const pd=s=>{const[y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d)};
+const tdMid=()=>new Date(TODAY.getFullYear(),TODAY.getMonth(),TODAY.getDate());
 function getDelta(ev){
-  const start = parseDate(ev.start);
-  const end   = parseDate(ev.end);
-  const todayMid = new Date(TODAY.getFullYear(), TODAY.getMonth(), TODAY.getDate());
-  if(todayMid > end) return { state:'past', days: daysBetween(end, todayMid) };
-  if(todayMid >= start) return { state:'active', days: 0 };
-  return { state:'future', days: daysBetween(todayMid, start) };
+  const s=pd(ev.start),e=pd(ev.end),t=tdMid();
+  if(t>e) return{state:'past',d:Math.round((t-e)/86400000)};
+  if(t>=s) return{state:'active',d:0};
+  return{state:'future',d:Math.round((s-t)/86400000)};
+}
+function getName(ev){return ev[lang]||ev.no}
+function getDesc(ev){return ev['d'+lang]||ev.dno}
+function cdLabel(ev){
+  const t=TX[lang],{state,d}=getDelta(ev);
+  if(state==='past') return t.past;
+  if(state==='active') return t.today;
+  return t.inDays.replace('{n}',d);
+}
+function getEvents(){
+  const raw=mode==='school'?SCHOOL_EVENTS[selYear]:UNI_EVENTS[selYear];
+  if(!raw) return [];
+  return raw.filter(ev=>showIslamic||ev.type!=='islamsk');
 }
 
-function cdLabel(ev, t){
-  const {state, days} = getDelta(ev);
-  if(state==='past')   return t.cdPast;
-  if(state==='active') return t.cdToday;
-  if(days===0)         return t.cdToday;
-  return t.cdInDays.replace('{n}', days);
-}
-
-/* ═══════════════════════════════════
-   COUNTDOWN TIMER
-═══════════════════════════════════ */
-let cdInterval = null;
-function startCountdown(){
-  clearInterval(cdInterval);
-  function tick(){
-    const t = TX[lang];
-    // find next upcoming event
-    const upcoming = EVENTS
-      .filter(ev => getDelta(ev).state !== 'past')
-      .sort((a,b) => parseDate(a.start) - parseDate(b.start));
-
-    const next = upcoming[0];
-    if(!next){ document.getElementById('nav-cd').textContent='✓ ' + t.cdPast; return; }
-
-    const start = parseDate(next.start);
-    if(next.time){ const [hh,mm]=next.time.split(':').map(Number); start.setHours(hh,mm,0,0); }
-    const now = new Date();
-    const diff = start - now;
-
-    if(diff <= 0){
-      document.getElementById('nav-cd').textContent = '🎉 ' + getName(next);
-      document.getElementById('cd-d').textContent = '00';
-      document.getElementById('cd-h').textContent = '00';
-      document.getElementById('cd-m').textContent = '00';
-      document.getElementById('cd-s').textContent = '00';
-    } else {
-      const dd = Math.floor(diff/86400000);
-      const hh = Math.floor((diff%86400000)/3600000);
-      const mm = Math.floor((diff%3600000)/60000);
-      const ss = Math.floor((diff%60000)/1000);
-      const pad = n=>String(n).padStart(2,'0');
-      document.getElementById('nav-cd').textContent = `⏱ ${dd}d ${pad(hh)}:${pad(mm)}:${pad(ss)}`;
-      document.getElementById('cd-d').textContent = String(dd).padStart(2,'0');
-      document.getElementById('cd-h').textContent = pad(hh);
-      document.getElementById('cd-m').textContent = pad(mm);
-      document.getElementById('cd-s').textContent = pad(ss);
-    }
-
-    // next banner
-    document.getElementById('nb-label').textContent = t.nbLabel;
-    document.getElementById('nb-name').textContent  = getName(next);
-    document.getElementById('nb-date').textContent  = getDesc(next);
-    document.getElementById('nb-cd-short').textContent = diff<=0 ? t.cdToday : `${Math.floor(diff/86400000)} ${t.cdDays}`;
-    document.getElementById('cd-dl').textContent = t.cdDays;
-    document.getElementById('cd-hl').textContent = t.cdHours;
-    document.getElementById('cd-ml').textContent = t.cdMin;
-    document.getElementById('cd-sl').textContent = t.cdSec;
-
-    // hero badge
-    document.getElementById('hb-label').textContent = t.hbLabel;
-    document.getElementById('hb-next').textContent  = getName(next);
-  }
-  tick();
-  cdInterval = setInterval(tick, 1000);
-}
-
-/* ═══════════════════════════════════
+/* ═══════════════════════════
    RENDER
-═══════════════════════════════════ */
+═══════════════════════════ */
 function render(){
-  const t = TX[lang];
-  const fa = lang==='fa';
-  document.body.className = fa ? 'fa' : '';
+  const t=TX[lang], fa=lang==='fa';
+  document.body.className=fa?'fa':'';
+  const isUni=mode==='uni';
 
-  document.getElementById('nav-name').textContent   = t.navName;
-  document.getElementById('nav-sub').textContent    = t.navSub;
-  document.getElementById('hero-ey').textContent    = t.heroEy;
-  document.getElementById('hero-desc').textContent  = t.heroDesc;
-  document.getElementById('filter-label').textContent = t.filterLabel;
-  document.getElementById('sec-h2').textContent     = t.secH2;
-  document.getElementById('ftxt').innerHTML         = t.ftxt.replace('\n','<br>');
-  document.getElementById('vt-grid').textContent    = t.vGrid;
-  document.getElementById('vt-tl').textContent      = t.vTl;
+  // texts
+  document.getElementById('n-tt').textContent=t.navTt;
+  document.getElementById('n-sb').textContent=t.navSb;
+  document.getElementById('h-ey').textContent=t.hEy.replace('{year}',selYear);
+  const hh=document.getElementById('h-h1');
+  const parts=isUni?t.hH1u:t.hH1s;
+  hh.innerHTML=fa?`<em>${parts[0]}</em><br>${parts[1]}`:`${parts[0]}<br><em>${parts[1]}</em>`;
+  document.getElementById('h-desc').textContent=isUni?t.hDesku:(t.hDesks||t.hDescs||'');
+  document.getElementById('h-dot').className='hero-pill-dot '+(isUni?'uni':'school');
+  document.getElementById('h-pill-txt').textContent=isUni?t.hPillU:t.hPillS;
+  document.getElementById('msb-sk-t').textContent=t.msSk;
+  document.getElementById('msb-un-t').textContent=t.msUn;
+  document.getElementById('cd-lbl').textContent=t.cdLbl;
+  document.getElementById('isl-tt').textContent=t.islTt;
+  document.getElementById('isl-sb').textContent=t.islSb;
+  document.getElementById('fl-lbl').textContent=t.flLbl;
+  document.getElementById('sh-h2').textContent=t.shH2;
+  document.getElementById('vt-g').textContent=t.vGrid;
+  document.getElementById('vt-l').textContent=t.vList;
+  document.getElementById('ft-txt').innerHTML=t.ftxt;
+  document.getElementById('cu-dl').textContent=t.cdDaysFull;
+  document.getElementById('cu-hl').textContent=t.cdHFull;
+  document.getElementById('cu-ml').textContent=t.cdMFull;
+  document.getElementById('cu-sl').textContent=t.cdSFull;
+  document.getElementById('cd-btn').className='cd-btn '+(isUni?'uni':'school');
+  document.getElementById('msb-sk').className='msb school'+(mode==='school'?' on':'');
+  document.getElementById('msb-un').className='msb uni'+(mode==='uni'?' on':'');
 
-  // hero h1
-  const h = document.getElementById('hero-h1');
-  h.innerHTML = fa
-    ? `<em>${t.heroH1[0]}</em><br>${t.heroH1[1]}`
-    : `${t.heroH1[0]}<br><em>${t.heroH1[1]}</em>`;
+  // hero bg
+  const heroImgs={school:"https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=80",uni:"https://images.unsplash.com/photo-1562774053-701939374585?w=1200&q=80"};
+  document.getElementById('hero-img').src=heroImgs[mode];
 
+  renderYrSel(t);
   renderStats(t);
   renderFilters(t);
-  renderEvents(t);
-  startCountdown();
+  renderSection(t);
+  startCd(t);
+}
+
+function renderYrSel(t){
+  const d=document.getElementById('yr-sel');
+  d.innerHTML='';
+  YEARS.forEach((y,i)=>{
+    const b=document.createElement('button');
+    b.className='yrb'+(y===selYear?' on':'');
+    b.textContent=t.yearPicker[i];
+    b.onclick=()=>{selYear=y;render()};
+    d.appendChild(b);
+  });
 }
 
 function renderStats(t){
-  const ferie    = EVENTS.filter(e=>e.type==='ferie').length;
-  const helligdag = EVENTS.filter(e=>e.type==='helligdag').length;
-  const islamsk   = EVENTS.filter(e=>e.type==='islamsk').length;
-  const skole     = EVENTS.filter(e=>e.type==='skole').length;
-  const totalDays = EVENTS.filter(e=>e.type==='ferie').reduce((s,e)=>s+e.days,0);
-
-  document.getElementById('stats-row').innerHTML=`
-    <div class="stat"><div class="stat-n r">${ferie}</div><div class="stat-l">${t.statFerie}</div></div>
-    <div class="stat"><div class="stat-n g">${helligdag}</div><div class="stat-l">${t.statHel}</div></div>
-    <div class="stat"><div class="stat-n gd">${islamsk}</div><div class="stat-l">${t.statIsl}</div></div>
-    <div class="stat"><div class="stat-n b">${skole}</div><div class="stat-l">${t.statSk}</div></div>
-  `;
+  const evs=getEvents();
+  const cnt=(type)=>evs.filter(e=>e.type===type).length;
+  const isUni=mode==='uni';
+  document.getElementById('h-stat-n').textContent=evs.length;
+  document.getElementById('h-stat-l').textContent=t.hStatL;
+  const items=isUni
+    ?[{n:cnt('uni'),c:'p',l:t.stU},{n:cnt('helligdag')||cnt('ferie'),c:'r',l:t.stH},{n:cnt('islamsk'),c:'gd',l:t.stI}]
+    :[{n:cnt('ferie'),c:'g',l:t.stF},{n:cnt('helligdag'),c:'r',l:t.stH},{n:cnt('islamsk'),c:'gd',l:t.stI},{n:cnt('skole'),c:'b',l:t.stS}];
+  // always 5 cols
+  const total=evs.length;
+  const full=[...items,{n:total,c:'r',l:t.shH2}];
+  document.getElementById('stats-bar').innerHTML=full.slice(0,5).map(s=>`
+    <div class="sb"><div class="sb-n ${s.c}">${s.n}</div><div class="sb-l">${s.l}</div></div>`).join('');
 }
 
 function renderFilters(t){
-  const counts = { all: EVENTS.length, ferie:0, helligdag:0, islamsk:0, skole:0 };
-  EVENTS.forEach(e=>{ if(counts[e.type]!==undefined) counts[e.type]++; });
-  const defs=[
-    {id:'all', cl:'all', lbl:t.chipAll},
-    {id:'ferie', cl:'ferie', lbl:t.chipFerie},
-    {id:'helligdag', cl:'helligdag', lbl:t.chipHel},
-    {id:'islamsk', cl:'islamsk', lbl:t.chipIsl},
-    {id:'skole', cl:'skole', lbl:t.chipSk},
+  const evs=getEvents();
+  const cnt=(type)=>type==='all'?evs.length:evs.filter(e=>e.type===type).length;
+  const isUni=mode==='uni';
+  const chips=[
+    {id:'all',cl:'all',l:t.cAll},
+    ...(isUni?[{id:'uni',cl:'uni',l:t.cUni}]:[{id:'ferie',cl:'ferie',l:t.cFer}]),
+    {id:'helligdag',cl:'helligdag',l:t.cHel},
+    {id:'islamsk',cl:'islamsk',l:t.cIsl},
+    {id:'skole',cl:'skole',l:t.cSk},
   ];
-  document.getElementById('filter-tabs').innerHTML=defs.map(d=>`
-    <button class="ftab ${d.cl}${activeFilter===d.id?' on':''}" onclick="setFilter('${d.id}')">
-      ${d.lbl} <span class="badge">${counts[d.id]||counts['all']}</span>
+  document.getElementById('filter-chips').innerHTML=chips.map(c=>`
+    <button class="fc ${c.cl}${activeFilter===c.id?' on':''}" onclick="setFilter('${c.id}')">
+      ${c.l}<span class="n">${cnt(c.id)}</span>
     </button>`).join('');
 }
 
-function renderEvents(t){
-  const filtered = activeFilter==='all'
-    ? EVENTS
-    : EVENTS.filter(e=>e.type===activeFilter);
-
-  document.getElementById('sec-count').textContent = filtered.length;
-
-  if(view==='grid') renderGrid(filtered, t);
-  else renderTimeline(filtered, t);
+function renderSection(t){
+  let evs=getEvents();
+  if(activeFilter!=='all') evs=evs.filter(e=>e.type===activeFilter);
+  document.getElementById('sh-ct').textContent=evs.length;
+  if(viewMode==='grid') renderGrid(evs,t);
+  else renderList(evs,t);
 }
 
-function renderGrid(evs, t){
-  const g = document.getElementById('view-grid');
-  if(!evs.length){ g.innerHTML=`<div class="empty-state"><div class="es-icon">📭</div><p>${lang==='fa'?'رویدادی یافت نشد':'Ingen hendelser funnet'}</p></div>`; return; }
-
-  g.innerHTML = evs.map((ev,i)=>{
-    const {state} = getDelta(ev);
-    const isPast  = state==='past';
-    const isActive= state==='active';
-    const dt = parseDate(ev.start);
-    const d  = dt.getDate();
-    const mo = t.months[dt.getMonth()];
-    const yrStr = dt.getFullYear()!==2025 ? String(dt.getFullYear()).slice(2) : '25';
-    const timeStr = ev.time ? ` · ${ev.time}` : '';
-    const cdStr = cdLabel(ev, t);
-    const cdCls = isPast?'past':isActive?'today':'';
-
-    // duration fill width (max 14 days = 100%)
-    const fillPct = Math.min(100, (ev.days/14)*100);
-    const typeLabel = {
-      ferie:     t.chipFerie,
-      helligdag: t.chipHel,
-      islamsk:   lang==='fa'?'اسلامی':lang==='en'?'Islamic':'Islamsk',
-      skole:     t.chipSk,
-    }[ev.type]||ev.type;
-
-    return `<div class="ecard${isPast?' past':''}" style="animation-delay:${i*.04}s">
+/* ── GRID ── */
+function renderGrid(evs,t){
+  const g=document.getElementById('v-grid');
+  if(!evs.length){g.innerHTML=`<div class="empty"><div class="ei">📭</div><p>${lang==='fa'?'رویدادی یافت نشد':'Ingen hendelser funnet'}</p></div>`;return}
+  g.innerHTML=evs.map((ev,i)=>{
+    const{state}=getDelta(ev);
+    const past=state==='past',active=state==='active';
+    const dt=pd(ev.start);
+    const d=dt.getDate(), mo=t.mths[dt.getMonth()], yr=dt.getFullYear();
+    const cdStr=cdLabel(ev);
+    const cdCls=past?'past':active?'now':'';
+    const pct=Math.min(100,(ev.days/14)*100);
+    const typeLabel={ferie:t.cFer,helligdag:t.cHel,skole:t.cSk,islamsk:'Islamsk',uni:'UiO'}[ev.type]||ev.type;
+    const name=getName(ev), desc=getDesc(ev);
+    return `<div class="ec${past?' past':''}" style="animation-delay:${i*.04}s">
       <div class="ec-img">
-        <img src="${ev.image}" alt="${getName(ev)}" loading="lazy" onerror="this.src='https://c.tadst.com/gfx/600x337/family-skiing-winter.jpg'">
-        <div class="ec-img-overlay"></div>
-        <div class="ec-type-badge ${ev.type}">${typeLabel}</div>
-        <div class="ec-cd-badge ${cdCls}">${cdStr}</div>
+        <img src="${ev.img}" alt="${name}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=75'">
+        <div class="ec-img-grad"></div>
+        <div class="ec-tb ${ev.type}">${typeLabel}${ev.approx?' ≈':''}</div>
+        <div class="ec-cd ${cdCls}">${cdStr}</div>
       </div>
-      <div class="ec-body">
-        <div class="ec-date-row">
-          <div class="ec-date-badge">
-            <div class="ec-date-d">${d}</div>
-            <div class="ec-date-m">${mo} '${yrStr}</div>
+      <div class="ec-b">
+        <div class="ec-row1">
+          <div class="ec-cal">
+            <div class="ec-cal-d">${d}</div>
+            <div class="ec-cal-m">${mo}</div>
+            <div class="ec-cal-y">${yr}</div>
           </div>
-          <div class="ec-time">${timeStr}</div>
+          <div class="ec-meta">
+            ${ev.time?`<div class="ec-time">⏰ ${ev.time}</div>`:''}
+            <div class="ec-name">${name}</div>
+          </div>
         </div>
-        <div class="ec-name">${getName(ev)}</div>
-        <div class="ec-desc">${getDesc(ev)}</div>
+        <div class="ec-desc">${desc}</div>
         <div class="ec-dur">
-          <div class="ec-dur-label">${t.durLabel}</div>
-          <div class="ec-dur-bar"><div class="ec-dur-fill ${ev.type}" style="width:${fillPct}%"></div></div>
-          <div class="ec-dur-days">${ev.days}d</div>
+          <div class="ec-dur-lbl">${t.durLbl}</div>
+          <div class="ec-dur-track"><div class="ec-dur-fill ${ev.type}" style="width:${pct}%"></div></div>
+          <div class="ec-dur-n">${ev.days}d</div>
         </div>
       </div>
     </div>`;
   }).join('');
 }
 
-function renderTimeline(evs, t){
-  const tl = document.getElementById('view-timeline');
-  if(!evs.length){ tl.innerHTML=`<div class="empty-state"><div class="es-icon">📭</div><p>${lang==='fa'?'رویدادی یافت نشد':'Ingen hendelser funnet'}</p></div>`; return; }
-
-  tl.innerHTML = evs.map((ev,i)=>{
-    const {state} = getDelta(ev);
-    const isPast = state==='past';
-    const dt = parseDate(ev.start);
-    const d  = dt.getDate();
-    const mo = t.months[dt.getMonth()];
-    const yr = dt.getFullYear();
-    const cdStr = cdLabel(ev, t);
-    const cdCls = !isPast && getDelta(ev).days < 30 ? 'soon':'';
-
-    const typeLabel = {
-      ferie:     t.chipFerie,
-      helligdag: t.chipHel,
-      islamsk:   lang==='fa'?'اسلامی':lang==='en'?'Islamic':'Islamsk',
-      skole:     t.chipSk,
-    }[ev.type]||ev.type;
-
+/* ── LIST ── */
+function renderList(evs,t){
+  const tl=document.getElementById('v-tl');
+  if(!evs.length){tl.innerHTML=`<div class="empty"><div class="ei">📭</div><p>${lang==='fa'?'رویدادی یافت نشد':'Ingen hendelser funnet'}</p></div>`;return}
+  tl.innerHTML=evs.map((ev,i)=>{
+    const{state,d}=getDelta(ev);
+    const past=state==='past';
+    const dt=pd(ev.start);
+    const typeLabel={ferie:t.cFer,helligdag:t.cHel,skole:t.cSk,islamsk:'Islamsk',uni:'UiO'}[ev.type]||ev.type;
+    const cdStr=cdLabel(ev);
+    const soon=!past&&d<21;
     return `<div class="tl-item" style="animation-delay:${i*.04}s">
       <div class="tl-dot ${ev.type}"></div>
-      <div class="tl-card${isPast?' past':''}">
-        <div class="tl-img"><img src="${ev.image}" alt="${getName(ev)}" loading="lazy" onerror="this.src='https://c.tadst.com/gfx/600x337/family-skiing-winter.jpg'"></div>
+      <div class="tl-card${past?' past':''}">
+        <div class="tl-img"><img src="${ev.img}" alt="${getName(ev)}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=75'"></div>
         <div class="tl-body">
           <div class="tl-name">${getName(ev)}</div>
           <div class="tl-desc">${getDesc(ev)}</div>
-          <div class="tl-meta">
-            <span class="tl-type ${ev.type}">${typeLabel}</span>
-            <span class="tl-cd ${cdCls}">${cdStr}</span>
+          <div class="tl-tags">
+            <span class="tl-tag ${ev.type}">${typeLabel}${ev.approx?' ≈':''}</span>
+            <span class="tl-cd-pill${soon?' soon':''}">${cdStr}</span>
           </div>
         </div>
         <div class="tl-R">
-          <div class="tl-d">${d}</div>
-          <div class="tl-mo">${mo}</div>
-          <div class="tl-yr">${yr}</div>
+          <div class="tl-R-d">${dt.getDate()}</div>
+          <div class="tl-R-m">${t.mths[dt.getMonth()]}</div>
+          <div class="tl-R-y">${dt.getFullYear()}</div>
         </div>
       </div>
     </div>`;
   }).join('');
 }
 
-/* ═══════════════════════════════════
+/* ═══════════════════════════
+   COUNTDOWN
+═══════════════════════════ */
+function startCd(t){
+  clearInterval(cdIv);
+  function tick(){
+    const evs=getEvents();
+    const upcoming=evs.filter(e=>getDelta(e).state!=='past').sort((a,b)=>pd(a.start)-pd(b.start));
+    const next=upcoming[0];
+    if(!next){document.getElementById('n-cd').textContent='✓ Ferdig';return}
+
+    const start=pd(next.start);
+    if(next.time){const[hh,mm]=next.time.split(':').map(Number);start.setHours(hh,mm,0,0)}
+    const now=new Date();
+    const diff=start-now;
+    const pad=n=>String(n).padStart(2,'0');
+
+    if(diff<=0){
+      document.getElementById('n-cd').textContent='🎉 '+getName(next);
+      ['d','h','m','s'].forEach(k=>document.getElementById('cu-'+k).textContent='00');
+    } else {
+      const dd=Math.floor(diff/86400000),hh=Math.floor((diff%86400000)/3600000),mm=Math.floor((diff%3600000)/60000),ss=Math.floor((diff%60000)/1000);
+      document.getElementById('n-cd').textContent=`⏱ ${dd}${t.cdDays} ${pad(hh)}:${pad(mm)}:${pad(ss)}`;
+      document.getElementById('cu-d').textContent=String(dd).padStart(2,'0');
+      document.getElementById('cu-h').textContent=pad(hh);
+      document.getElementById('cu-m').textContent=pad(mm);
+      document.getElementById('cu-s').textContent=pad(ss);
+    }
+    document.getElementById('cd-name').textContent=getName(next);
+    document.getElementById('cd-date').textContent=getDesc(next);
+    document.getElementById('cd-btn').textContent=diff<=0?t.today:`${Math.ceil(diff/86400000)} ${t.cdDaysFull}`;
+  }
+  tick();
+  cdIv=setInterval(tick,1000);
+}
+
+/* ═══════════════════════════
    CONTROLS
-═══════════════════════════════════ */
+═══════════════════════════ */
 function setLang(l){
-  lang = l;
+  lang=l;
   document.querySelectorAll('.pgb').forEach(b=>{
-    if((b.getAttribute('onclick')||'').includes(`'${l}'`)) b.classList.add('on');
-    else if((b.getAttribute('onclick')||'').includes('setLang')) b.classList.remove('on');
+    const oc=b.getAttribute('onclick')||'';
+    if(oc.includes('setLang'))b.classList.toggle('on',oc.includes(`'${l}'`));
   });
   render();
 }
-
+function setMode(m){
+  mode=m;activeFilter='all';
+  document.getElementById('msb-sk').classList.toggle('on',m==='school');
+  document.getElementById('msb-un').classList.toggle('on',m==='uni');
+  render();
+}
 function setView(v){
-  view = v;
-  document.getElementById('vb-grid').classList.toggle('on', v==='grid');
-  document.getElementById('vb-tl').classList.toggle('on', v==='timeline');
-  const grid = document.getElementById('view-grid');
-  const tl   = document.getElementById('view-timeline');
-  if(v==='grid'){ grid.classList.remove('hide'); tl.classList.remove('show'); }
-  else { grid.classList.add('hide'); tl.classList.add('show'); }
-  renderEvents(TX[lang]);
+  viewMode=v;
+  document.getElementById('vb-g').classList.toggle('on',v==='grid');
+  document.getElementById('vb-l').classList.toggle('on',v==='list');
+  document.getElementById('v-grid').classList.toggle('hide',v==='list');
+  const vl=document.getElementById('v-list');
+  vl.classList.toggle('show',v==='list');
+  renderSection(TX[lang]);
 }
-
-function setFilter(f){
-  activeFilter = f;
-  renderFilters(TX[lang]);
-  renderEvents(TX[lang]);
-}
+function setFilter(f){activeFilter=f;renderFilters(TX[lang]);renderSection(TX[lang])}
+function onIslToggle(){showIslamic=document.getElementById('isl-toggle').checked;render()}
 
 /* INIT */
 render();
