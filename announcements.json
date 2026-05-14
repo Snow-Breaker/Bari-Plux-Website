@@ -1,42 +1,10 @@
 [
   {
-    "id": "New Update",
+    "id": "New Update is here",
     "title": "BPT v2.2 is now live!",
     "description": "We are excited to announce the release of Bari Plux Tool v2.1. This update brings a brand new Settings page, enhanced system specs detection (multi-GPU, exact Windows build, physical resolution), improved cleanup tools, and new optimization features including Virtual Memory, System Services, and GameLoop Priority management.",
     "status": "breaking",
     "date": "2026-05-14",
     "timestamp": 1776000000
   },
-  {
-    "id": "ann_001",
-    "title": "BPT v2.1 is now live!",
-    "description": "We are excited to announce the release of Bari Plux Tool v2.1. This update brings a brand new Settings page, enhanced system specs detection (multi-GPU, exact Windows build, physical resolution), improved cleanup tools, and new optimization features including Virtual Memory, System Services, and GameLoop Priority management.",
-    "status": "new",
-    "date": "2026-05-14",
-    "timestamp": 1776000000
-  },
-  {
-    "id": "ann_002",
-    "title": "Important: Optimization Backup Feature",
-    "description": "All optimization features (Virtual Memory, System Services, Network, Background Services) now include automatic registry backups before applying changes. You can restore your previous settings at any time using the Restore buttons.",
-    "status": "breaking",
-    "date": "2026-05-13",
-    "timestamp": 1775913600
-  },
-  {
-    "id": "ann_003",
-    "title": "New Settings Page Available",
-    "description": "Click the Settings gear icon in the title bar to access the new Settings page. View your program information, detailed system specifications, manage your account login, and see what's new in the latest version.",
-    "status": "update",
-    "date": "2026-05-12",
-    "timestamp": 1775827200
-  },
-  {
-    "id": "ann_004",
-    "title": "GPU Detection Improved",
-    "description": "System Specifications now detects ALL installed GPUs (NVIDIA, AMD, Intel) instead of only the primary adapter. Virtual and remote display adapters are automatically filtered out for accurate hardware reporting.",
-    "status": "update",
-    "date": "2026-05-11",
-    "timestamp": 1775740800
-  }
-]
+
