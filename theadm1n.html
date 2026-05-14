@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel | Bari Plux</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="https://i.postimg.cc/65cjsvfQ/imglogo.png">
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+    <style>
+        :root {
+            --bg: #0a0c10;
+            --bg2: #0f1218;
+            --surface: rgba(255,255,255,0.04);
+            --surface2: rgba(255,255,255,0.07);
+            --border: rgba(255,255,255,0.07);
+            --accent: #6C63FF;
+            --accent2: #00BFA6;
+            --danger: #F44336;
+            --warning: #FF9800;
+            --success: #4CAF50;
+            --discord: #5865F2;
+            --github: #e6edf3;
+            --google: #EA4335;
+            --email: #FFB300;
+            --text: #e2e8f0;
+            --muted: rgba(226,232,240,0.5);
+            --r: 12px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { height: 100%; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+        }
+
+        /* ===== PASSWORD GATE ===== */
+        #gate {
+            position: fixed;
+            inset: 0;
+            background: var(--bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 20px;
+        }
+
+        #gate.hidden { display: none; }
+
+        .gate-box {
+            background: linear-gradient(135deg, rgba(255,255,255,0.07), rgba(255,255,255,0.02));
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 48px 40px;
+            width: 100%;
+            max-width: 420px;
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gate-box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+        }
+
+        .gate-logo {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .gate-logo img {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            margin-bottom: 12px;
+        }
+
+        .gate-logo h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .gate-logo p {
+            color: var(--muted);
+            font-size: 0.85rem;
+            margin-top: 4px;
+        }
+
+        .gate-input-wrap {
+            position: relative;
+            margin-bottom: 16px;
+        }
+
+        .gate-input {
+            width: 100%;
+            padding: 14px 48px 14px 16px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            color: var(--text);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
+            letter-spacing: 2px;
+        }
+
+        .gate-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(108,99,255,0.12);
+        }
+
+        .gate-eye {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--muted);
+            cursor: pointer;
+            padding: 0;
+            font-size: 1rem;
+        }
+
+        .gate-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: white;
+            border: none;
+            border-radius: var(--r);
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .gate-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(108,99,255,0.3); }
+
+        .gate-error {
+            color: var(--danger);
+            font-size: 0.85rem;
+            margin-top: 10px;
+            text-align: center;
+            display: none;
+        }
+
+        .gate-error.show { display: block; animation: shake 0.4s ease; }
+
+        @keyframes shake {
+            0%,100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            75% { transform: translateX(6px); }
+        }
+
+        /* ===== MAIN LAYOUT ===== */
+        #app { display: none; min-height: 100vh; }
+        #app.show { display: block; }
+
+        .topbar {
+            position: sticky;
+            top: 0;
+            background: rgba(10,12,16,0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 32px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 100;
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .topbar-logo {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+        }
+
+        .topbar-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .topbar-badge {
+            background: rgba(108,99,255,0.15);
+            border: 1px solid rgba(108,99,255,0.3);
+            color: var(--accent);
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .topbar-btn {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 8px 16px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--muted);
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.85rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .topbar-btn:hover { background: var(--surface2); color: var(--text); }
+        .topbar-btn.danger:hover { border-color: var(--danger); color: var(--danger); }
+
+        .main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 32px;
+        }
+
+        /* ===== STATS CARDS ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: all 0.2s;
+            animation: fadeUp 0.5s ease both;
+        }
+
+        .stat-card:hover { background: var(--surface2); transform: translateY(-2px); }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .stat-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .stat-icon.total  { background: rgba(108,99,255,0.15); color: var(--accent); }
+        .stat-icon.discord { background: rgba(88,101,242,0.15); color: var(--discord); }
+        .stat-icon.google { background: rgba(234,67,53,0.15); color: var(--google); }
+        .stat-icon.github { background: rgba(230,237,243,0.1); color: var(--github); }
+        .stat-icon.email  { background: rgba(255,179,0,0.15); color: var(--email); }
+        .stat-icon.active { background: rgba(76,175,80,0.15); color: var(--success); }
+
+        .stat-info { flex: 1; min-width: 0; }
+        .stat-num {
+            font-size: 1.8rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            line-height: 1;
+            color: var(--text);
+        }
+        .stat-label { font-size: 0.78rem; color: var(--muted); margin-top: 4px; }
+
+        /* ===== TOOLBAR ===== */
+        .toolbar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .toolbar-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            flex: 1;
+        }
+
+        .search-wrap {
+            position: relative;
+        }
+
+        .search-input {
+            padding: 9px 16px 9px 38px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.85rem;
+            width: 220px;
+            transition: all 0.2s;
+        }
+
+        .search-input:focus { outline: none; border-color: var(--accent); width: 260px; }
+        .search-wrap i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 0.85rem; }
+
+        .filter-btns {
+            display: flex;
+            gap: 6px;
+        }
+
+        .filter-btn {
+            padding: 8px 14px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--muted);
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .filter-btn:hover { background: var(--surface2); color: var(--text); }
+        .filter-btn.active { background: rgba(108,99,255,0.15); border-color: rgba(108,99,255,0.35); color: var(--accent); }
+        .filter-btn.discord.active { background: rgba(88,101,242,0.15); border-color: rgba(88,101,242,0.35); color: var(--discord); }
+        .filter-btn.google.active { background: rgba(234,67,53,0.12); border-color: rgba(234,67,53,0.3); color: var(--google); }
+        .filter-btn.github.active { background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.2); color: var(--github); }
+        .filter-btn.email.active { background: rgba(255,179,0,0.12); border-color: rgba(255,179,0,0.3); color: var(--email); }
+
+        .refresh-btn {
+            padding: 8px 14px;
+            background: rgba(0,191,166,0.1);
+            border: 1px solid rgba(0,191,166,0.25);
+            border-radius: 8px;
+            color: var(--accent2);
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .refresh-btn:hover { background: rgba(0,191,166,0.18); }
+        .refresh-btn.spinning i { animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ===== USERS TABLE ===== */
+        .table-wrap {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead th {
+            padding: 14px 20px;
+            text-align: left;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--border);
+            background: rgba(255,255,255,0.02);
+            white-space: nowrap;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid var(--border);
+            transition: background 0.15s;
+            animation: fadeUp 0.4s ease both;
+        }
+
+        tbody tr:last-child { border-bottom: none; }
+        tbody tr:hover { background: var(--surface2); }
+
+        td {
+            padding: 16px 20px;
+            font-size: 0.88rem;
+            vertical-align: middle;
+        }
+
+        .user-cell {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: var(--surface2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.95rem;
+            flex-shrink: 0;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .user-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+        .user-name { font-weight: 600; color: var(--text); }
+        .user-id {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--muted);
+            margin-top: 2px;
+        }
+
+        .method-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .method-badge.discord { background: rgba(88,101,242,0.15); color: var(--discord); border: 1px solid rgba(88,101,242,0.25); }
+        .method-badge.google  { background: rgba(234,67,53,0.12); color: var(--google); border: 1px solid rgba(234,67,53,0.22); }
+        .method-badge.github  { background: rgba(255,255,255,0.07); color: var(--github); border: 1px solid rgba(255,255,255,0.15); }
+        .method-badge.email   { background: rgba(255,179,0,0.12); color: var(--email); border: 1px solid rgba(255,179,0,0.22); }
+        .method-badge.unknown { background: rgba(255,255,255,0.06); color: var(--muted); border: 1px solid var(--border); }
+
+        .time-cell { color: var(--muted); font-size: 0.82rem; white-space: nowrap; }
+        .time-cell span { display: block; color: var(--text); font-size: 0.86rem; }
+
+        .active-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+            box-shadow: 0 0 6px var(--success);
+            display: inline-block;
+            margin-right: 6px;
+        }
+
+        /* ===== EMPTY / LOADING / ERROR STATES ===== */
+        .state-row td {
+            padding: 60px 20px;
+            text-align: center;
+            color: var(--muted);
+        }
+
+        .state-icon {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+            opacity: 0.4;
+        }
+
+        .loading-dots {
+            display: inline-flex;
+            gap: 6px;
+        }
+        .loading-dots span {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+            animation: pulse 1.2s ease-in-out infinite;
+        }
+        .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes pulse { 0%,80%,100% { transform: scale(0.6); opacity:0.4; } 40% { transform: scale(1); opacity:1; } }
+
+        /* ===== FIREBASE AUTH PANEL ===== */
+        .firebase-panel {
+            margin-top: 28px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .firebase-icon {
+            width: 48px; height: 48px;
+            border-radius: 12px;
+            background: rgba(255,160,0,0.12);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .firebase-text { flex: 1; }
+        .firebase-text h3 { font-size: 0.95rem; font-weight: 600; margin-bottom: 4px; }
+        .firebase-text p { font-size: 0.83rem; color: var(--muted); }
+
+        .firebase-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: rgba(255,160,0,0.12);
+            border: 1px solid rgba(255,160,0,0.25);
+            border-radius: 8px;
+            color: #FFA000;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .firebase-link:hover { background: rgba(255,160,0,0.2); transform: translateY(-1px); }
+
+        /* ===== LAST UPDATED ===== */
+        .last-updated {
+            text-align: right;
+            font-size: 0.78rem;
+            color: var(--muted);
+            margin-top: 12px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        @media (max-width: 768px) {
+            .main { padding: 16px; }
+            .topbar { padding: 0 16px; }
+            .topbar-title { display: none; }
+            .filter-btns { display: none; }
+            .search-input { width: 160px; }
+            .search-input:focus { width: 180px; }
+            thead th:nth-child(3),
+            thead th:nth-child(4),
+            td:nth-child(3),
+            td:nth-child(4) { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== PASSWORD GATE ===== -->
+    <div id="gate">
+        <div class="gate-box">
+            <div class="gate-logo">
+                <img src="https://i.postimg.cc/65cjsvfQ/imglogo.png" alt="Bari Plux">
+                <h2>Admin Panel</h2>
+                <p>Enter your admin password to continue</p>
+            </div>
+            <div class="gate-input-wrap">
+                <input type="password" id="gateInput" class="gate-input" placeholder="••••••••" autocomplete="off">
+                <button class="gate-eye" onclick="toggleGateEye()"><i class="fas fa-eye" id="gateEyeIcon"></i></button>
+            </div>
+            <button class="gate-btn" onclick="checkPassword()">
+                <i class="fas fa-unlock-alt"></i> Enter
+            </button>
+            <div class="gate-error" id="gateError">
+                <i class="fas fa-times-circle"></i> Incorrect password
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MAIN APP ===== -->
+    <div id="app">
+
+        <!-- Topbar -->
+        <div class="topbar">
+            <div class="topbar-left">
+                <img src="https://i.postimg.cc/65cjsvfQ/imglogo.png" alt="Logo" class="topbar-logo">
+                <span class="topbar-title">Bari Plux</span>
+                <span class="topbar-badge">Admin</span>
+            </div>
+            <div class="topbar-right">
+                <a href="https://console.firebase.google.com/project/baripluxwebsite/authentication/users" target="_blank" class="topbar-btn">
+                    <i class="fas fa-fire" style="color:#FFA000;"></i> Firebase Console
+                </a>
+                <button class="topbar-btn danger" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </div>
+
+        <div class="main">
+
+            <!-- Stats -->
+            <div class="stats-grid" id="statsGrid">
+                <div class="stat-card" style="animation-delay:0s">
+                    <div class="stat-icon total"><i class="fas fa-users"></i></div>
+                    <div class="stat-info">
+                        <div class="stat-num" id="statTotal">—</div>
+                        <div class="stat-label">Total Users</div>
+                    </div>
+                </div>
+                <div class="stat-card" style="animation-delay:0.05s">
+                    <div class="stat-icon discord"><i class="fab fa-discord"></i></div>
+                    <div class="stat-info">
+                        <div class="stat-num" id="statDiscord">—</div>
+                        <div class="stat-label">Discord</div>
+                    </div>
+                </div>
+                <div class="stat-card" style="animation-delay:0.1s">
+                    <div class="stat-icon google"><i class="fab fa-google"></i></div>
+                    <div class="stat-info">
+                        <div class="stat-num" id="statGoogle">—</div>
+                        <div class="stat-label">Google</div>
+                    </div>
+                </div>
+                <div class="stat-card" style="animation-delay:0.15s">
+                    <div class="stat-icon github"><i class="fab fa-github"></i></div>
+                    <div class="stat-info">
+                        <div class="stat-num" id="statGithub">—</div>
+                        <div class="stat-label">GitHub</div>
+                    </div>
+                </div>
+                <div class="stat-card" style="animation-delay:0.2s">
+                    <div class="stat-icon email"><i class="fas fa-envelope"></i></div>
+                    <div class="stat-info">
+                        <div class="stat-num" id="statEmail">—</div>
+                        <div class="stat-label">Email</div>
+                    </div>
+                </div>
+                <div class="stat-card" style="animation-delay:0.25s">
+                    <div class="stat-icon active"><i class="fas fa-circle"></i></div>
+                    <div class="stat-info">
+                        <div class="stat-num" id="statActive">—</div>
+                        <div class="stat-label">Last 24h</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table toolbar -->
+            <div class="toolbar">
+                <span class="toolbar-title">Users from Database</span>
+                <div class="search-wrap">
+                    <i class="fas fa-search"></i>
+                    <input type="text" class="search-input" id="searchInput" placeholder="Search name or email..." oninput="renderTable()">
+                </div>
+                <div class="filter-btns">
+                    <button class="filter-btn active" data-filter="all" onclick="setFilter('all', this)">
+                        <i class="fas fa-border-all"></i> All
+                    </button>
+                    <button class="filter-btn discord" data-filter="discord" onclick="setFilter('discord', this)">
+                        <i class="fab fa-discord"></i> Discord
+                    </button>
+                    <button class="filter-btn google" data-filter="google" onclick="setFilter('google', this)">
+                        <i class="fab fa-google"></i> Google
+                    </button>
+                    <button class="filter-btn github" data-filter="github" onclick="setFilter('github', this)">
+                        <i class="fab fa-github"></i> GitHub
+                    </button>
+                    <button class="filter-btn email" data-filter="email" onclick="setFilter('email', this)">
+                        <i class="fas fa-envelope"></i> Email
+                    </button>
+                </div>
+                <button class="refresh-btn" id="refreshBtn" onclick="loadUsers()">
+                    <i class="fas fa-sync-alt"></i> Refresh
+                </button>
+            </div>
+
+            <!-- Table -->
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Email</th>
+                            <th>Login Method</th>
+                            <th>Login Time</th>
+                            <th>Last Active</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        <tr class="state-row">
+                            <td colspan="5">
+                                <div class="state-icon">🔐</div>
+                                <div>Loading users...</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="last-updated" id="lastUpdated"></div>
+
+            <!-- Firebase Auth panel -->
+            <div class="firebase-panel">
+                <div class="firebase-icon">🔥</div>
+                <div class="firebase-text">
+                    <h3>Google · GitHub · Email/Password Users</h3>
+                    <p>These users authenticate through Firebase Auth and are managed directly in the Firebase Console.</p>
+                </div>
+                <a href="https://console.firebase.google.com/project/baripluxwebsite/authentication/users" target="_blank" class="firebase-link">
+                    <i class="fas fa-external-link-alt"></i> Open Firebase Auth
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // ==================== CONFIG ====================
+        // TODO: Change this to your own admin password
+        const ADMIN_PASSWORD = 'bariplux2026';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBH_t3Uue7fbb-DahwjSJGjG2-quCqiLEs",
+            authDomain: "baripluxwebsite.firebaseapp.com",
+            projectId: "baripluxwebsite",
+            storageBucket: "baripluxwebsite.firebasestorage.app",
+            messagingSenderId: "280043766563",
+            appId: "1:280043766563:web:409e6b78c1c24b568fc296",
+            databaseURL: "https://baripluxwebsite-default-rtdb.firebaseio.com"
+        };
+
+        // ==================== STATE ====================
+        let allUsers = [];
+        let activeFilter = 'all';
+        let db = null;
+
+        // ==================== PASSWORD GATE ====================
+        function toggleGateEye() {
+            const input = document.getElementById('gateInput');
+            const icon = document.getElementById('gateEyeIcon');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'fas fa-eye-slash';
+            } else {
+                input.type = 'password';
+                icon.className = 'fas fa-eye';
+            }
+        }
+
+        function checkPassword() {
+            const val = document.getElementById('gateInput').value;
+            const errEl = document.getElementById('gateError');
+            if (val === ADMIN_PASSWORD) {
+                sessionStorage.setItem('bp_admin', '1');
+                document.getElementById('gate').classList.add('hidden');
+                document.getElementById('app').classList.add('show');
+                initApp();
+            } else {
+                errEl.classList.add('show');
+                document.getElementById('gateInput').value = '';
+                setTimeout(() => errEl.classList.remove('show'), 2000);
+            }
+        }
+
+        document.getElementById('gateInput').addEventListener('keydown', e => {
+            if (e.key === 'Enter') checkPassword();
+        });
+
+        function logout() {
+            sessionStorage.removeItem('bp_admin');
+            document.getElementById('gate').classList.remove('hidden');
+            document.getElementById('app').classList.remove('show');
+            document.getElementById('gateInput').value = '';
+        }
+
+        // Auto-login if session active
+        if (sessionStorage.getItem('bp_admin') === '1') {
+            document.getElementById('gate').classList.add('hidden');
+            document.getElementById('app').classList.add('show');
+        }
+
+        // ==================== FIREBASE INIT ====================
+        function initApp() {
+            try {
+                if (!firebase.apps.length) {
+                    firebase.initializeApp(firebaseConfig);
+                }
+                db = firebase.database();
+                loadUsers();
+                // Live updates every 30 seconds
+                setInterval(loadUsers, 30000);
+            } catch (e) {
+                console.error('Firebase init error:', e);
+                showTableError('Could not connect to Firebase. Check your database URL.');
+            }
+        }
+
+        // ==================== LOAD USERS ====================
+        async function loadUsers() {
+            const btn = document.getElementById('refreshBtn');
+            btn.classList.add('spinning');
+
+            if (!db) {
+                showTableError('Firebase not initialized.');
+                btn.classList.remove('spinning');
+                return;
+            }
+
+            try {
+                const snapshot = await db.ref('users').once('value');
+                const data = snapshot.val();
+
+                if (!data) {
+                    allUsers = [];
+                } else {
+                    allUsers = Object.entries(data).map(([id, u]) => ({
+                        id,
+                        name: u.name || 'Unknown',
+                        email: u.email || '—',
+                        loginMethod: u.loginMethod || 'unknown',
+                        loginTime: u.loginTime || null,
+                        lastActive: u.lastActive || null,
+                        platform: u.platform || 'website'
+                    }));
+
+                    // Sort by lastActive descending
+                    allUsers.sort((a, b) => (b.lastActive || 0) - (a.lastActive || 0));
+                }
+
+                updateStats();
+                renderTable();
+
+                const now = new Date();
+                document.getElementById('lastUpdated').textContent =
+                    `Last updated: ${now.toLocaleDateString()} at ${now.toLocaleTimeString()}`;
+
+            } catch (e) {
+                console.error('Load error:', e);
+                showTableError('Could not read database. Make sure Firebase rules allow admin reads.');
+            }
+
+            btn.classList.remove('spinning');
+        }
+
+        // ==================== STATS ====================
+        function updateStats() {
+            const total = allUsers.length;
+            const discord = allUsers.filter(u => u.loginMethod === 'discord').length;
+            const google = allUsers.filter(u => u.loginMethod.includes('google')).length;
+            const github = allUsers.filter(u => u.loginMethod === 'github').length;
+            const email = allUsers.filter(u => u.loginMethod === 'email').length;
+            const now = Date.now();
+            const active = allUsers.filter(u => u.lastActive && (now - u.lastActive) < 86400000).length;
+
+            document.getElementById('statTotal').textContent = total;
+            document.getElementById('statDiscord').textContent = discord;
+            document.getElementById('statGoogle').textContent = google;
+            document.getElementById('statGithub').textContent = github;
+            document.getElementById('statEmail').textContent = email;
+            document.getElementById('statActive').textContent = active;
+        }
+
+        // ==================== FILTER & RENDER ====================
+        function setFilter(filter, btn) {
+            activeFilter = filter;
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderTable();
+        }
+
+        function renderTable() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const tbody = document.getElementById('usersTableBody');
+
+            let filtered = allUsers.filter(u => {
+                const matchFilter = activeFilter === 'all'
+                    || (activeFilter === 'google' && u.loginMethod.includes('google'))
+                    || (activeFilter === 'discord' && u.loginMethod === 'discord')
+                    || (activeFilter === 'github' && u.loginMethod === 'github')
+                    || (activeFilter === 'email' && u.loginMethod === 'email');
+
+                const matchSearch = !search
+                    || u.name.toLowerCase().includes(search)
+                    || u.email.toLowerCase().includes(search)
+                    || u.id.toLowerCase().includes(search);
+
+                return matchFilter && matchSearch;
+            });
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `
+                    <tr class="state-row">
+                        <td colspan="5">
+                            <div class="state-icon">🔍</div>
+                            <div>${search ? 'No users match your search.' : 'No users found in this category.'}</div>
+                        </td>
+                    </tr>`;
+                return;
+            }
+
+            tbody.innerHTML = filtered.map((u, i) => {
+                const method = getMethodInfo(u.loginMethod);
+                const loginTime = u.loginTime ? formatDate(u.loginTime) : '—';
+                const lastActive = u.lastActive ? timeAgo(u.lastActive) : '—';
+                const isRecent = u.lastActive && (Date.now() - u.lastActive) < 300000; // 5 min
+                const initial = u.name.charAt(0).toUpperCase();
+                const avatarColor = getAvatarColor(u.loginMethod);
+
+                return `
+                    <tr style="animation-delay:${i * 0.03}s">
+                        <td>
+                            <div class="user-cell">
+                                <div class="user-avatar" style="background:${avatarColor}20;color:${avatarColor};">
+                                    ${initial}
+                                </div>
+                                <div>
+                                    <div class="user-name">${escHtml(u.name)}</div>
+                                    <div class="user-id">${u.id.substring(0, 20)}${u.id.length > 20 ? '…' : ''}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td style="color:var(--muted);font-size:0.85rem;">${escHtml(u.email)}</td>
+                        <td><span class="method-badge ${method.cls}">${method.icon} ${method.label}</span></td>
+                        <td class="time-cell">${loginTime}</td>
+                        <td class="time-cell">
+                            ${isRecent ? '<span class="active-dot"></span>' : ''}
+                            <span>${lastActive}</span>
+                        </td>
+                    </tr>`;
+            }).join('');
+        }
+
+        function showTableError(msg) {
+            document.getElementById('usersTableBody').innerHTML = `
+                <tr class="state-row">
+                    <td colspan="5">
+                        <div class="state-icon">⚠️</div>
+                        <div style="color:var(--danger);">${msg}</div>
+                    </td>
+                </tr>`;
+        }
+
+        // ==================== HELPERS ====================
+        function getMethodInfo(method) {
+            if (method === 'discord') return { cls: 'discord', icon: '🎮', label: 'Discord' };
+            if (method.includes('google')) return { cls: 'google', icon: '🔵', label: 'Google' };
+            if (method === 'github') return { cls: 'github', icon: '⚫', label: 'GitHub' };
+            if (method === 'email') return { cls: 'email', icon: '✉️', label: 'Email' };
+            return { cls: 'unknown', icon: '❓', label: method };
+        }
+
+        function getAvatarColor(method) {
+            if (method === 'discord') return '#5865F2';
+            if (method.includes('google')) return '#EA4335';
+            if (method === 'github') return '#e6edf3';
+            if (method === 'email') return '#FFB300';
+            return '#6C63FF';
+        }
+
+        function formatDate(iso) {
+            try {
+                const d = new Date(iso);
+                return d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+            } catch { return '—'; }
+        }
+
+        function timeAgo(timestamp) {
+            const diff = Date.now() - timestamp;
+            if (diff < 60000) return 'Just now';
+            if (diff < 3600000) return Math.floor(diff / 60000) + 'm ago';
+            if (diff < 86400000) return Math.floor(diff / 3600000) + 'h ago';
+            if (diff < 604800000) return Math.floor(diff / 86400000) + 'd ago';
+            return new Date(timestamp).toLocaleDateString();
+        }
+
+        function escHtml(str) {
+            return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+        }
+
+        // Auto-init if already logged in
+        if (sessionStorage.getItem('bp_admin') === '1') {
+            initApp();
+        }
+    </script>
+</body>
+</html>
