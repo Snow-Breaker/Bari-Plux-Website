@@ -878,7 +878,7 @@
             const total = allUsers.length;
             const discord = allUsers.filter(u => u.loginMethod === 'discord').length;
             const google = allUsers.filter(u => u.loginMethod.includes('google')).length;
-            const github = allUsers.filter(u => u.loginMethod === 'github').length;
+            const github = allUsers.filter(u => u.loginMethod.includes('github')).length;
             const email = allUsers.filter(u => u.loginMethod === 'email').length;
             const now = Date.now();
             const active = allUsers.filter(u => u.lastActive && (now - u.lastActive) < 86400000).length;
@@ -907,7 +907,7 @@
                 const matchFilter = activeFilter === 'all'
                     || (activeFilter === 'google' && u.loginMethod.includes('google'))
                     || (activeFilter === 'discord' && u.loginMethod === 'discord')
-                    || (activeFilter === 'github' && u.loginMethod === 'github')
+                    || (activeFilter === 'github' && u.loginMethod.includes('github'))
                     || (activeFilter === 'email' && u.loginMethod === 'email');
 
                 const matchSearch = !search
