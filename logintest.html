@@ -1343,16 +1343,6 @@
                     <code>YOUR_FIREBASE_CONFIG_HERE</code>
                 </div>
 
-                <!-- Main Tabs: Social / Email -->
-                <div class="login-tabs">
-                    <div class="login-tab active" id="mainTab-social" onclick="switchMainTab('social')">
-                        <i class="fas fa-users" style="margin-right:6px;font-size:0.85rem;"></i>Social
-                    </div>
-                    <div class="login-tab" id="mainTab-email" onclick="switchMainTab('email')">
-                        <i class="fas fa-envelope" style="margin-right:6px;font-size:0.85rem;"></i>Email
-                    </div>
-                </div>
-
                 <!-- ===== SOCIAL FORM ===== -->
                 <div id="socialForm" class="login-form active">
                     <!-- Google -->
@@ -1904,16 +1894,6 @@
                 try {
                     const result = await auth.signInWithEmailAndPassword(email, password);
                     const user = result.user;
-
-                    // ✅ Check email verification
-                    if (!user.emailVerified) {
-                        await auth.signOut();
-                        this.disabled = false;
-                        this.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In';
-                        showVerificationPending(email, user);
-                        return;
-                    }
-
                     const userData = {
                         id: user.uid,
                         name: user.displayName || email.split('@')[0],
@@ -1968,25 +1948,13 @@
                 try {
                     const result = await auth.createUserWithEmailAndPassword(email, password);
                     await result.user.updateProfile({ displayName: name });
-
-                    // ✅ Send verification email
-                    await result.user.sendEmailVerification();
-
-                    // Sign out until they verify
-                    await auth.signOut();
-
-                    this.disabled = false;
-                    this.innerHTML = '<i class="fas fa-user-plus"></i> Create Account';
-
-                    // Clear the form
-                    document.getElementById('regName').value = '';
-                    document.getElementById('regEmail').value = '';
-                    document.getElementById('regPassword').value = '';
-                    document.getElementById('regConfirm').value = '';
-
-                    // Show "check your inbox" message
-                    showVerificationSent(email);
-
+                    const userData = {
+                        id: result.user.uid, name: name, email: email,
+                        loginMethod: 'email', loginTime: new Date().toISOString()
+                    };
+                    localStorage.setItem('bariplux_user', JSON.stringify(userData));
+                    showNotification('Account created successfully!', 'success');
+                    showLoggedInView(userData);
                 } catch (error) {
                     this.disabled = false;
                     this.innerHTML = '<i class="fas fa-user-plus"></i> Create Account';
@@ -2098,56 +2066,6 @@
                 localStorage.setItem('bariplux_user', JSON.stringify(user));
                 showLoggedInView(user);
             }, 1500);
-        }
-
-        // ==================== EMAIL VERIFICATION HELPERS ====================
-        function showVerificationSent(email) {
-            // Switch to sign-in tab and show a friendly message
-            switchMainTab('email');
-            switchSubTab('signin');
-            const errorEl = document.getElementById('signInError');
-            errorEl.style.background = 'rgba(0,191,166,0.1)';
-            errorEl.style.borderColor = 'var(--accent-2)';
-            errorEl.style.color = 'var(--accent-2)';
-            errorEl.innerHTML = `
-                <i class="fas fa-envelope-open-text" style="margin-right:8px;"></i>
-                <strong>Verification email sent to ${email}</strong><br>
-                <span style="font-size:0.85rem;opacity:0.85;">Please check your inbox and click the link to activate your account, then sign in.</span>
-            `;
-            errorEl.classList.add('active');
-        }
-
-        function showVerificationPending(email, firebaseUser) {
-            const errorEl = document.getElementById('signInError');
-            errorEl.style.background = 'rgba(255,152,0,0.1)';
-            errorEl.style.borderColor = 'var(--warning)';
-            errorEl.style.color = 'var(--warning)';
-            errorEl.innerHTML = `
-                <i class="fas fa-clock" style="margin-right:8px;"></i>
-                <strong>Email not verified yet</strong><br>
-                <span style="font-size:0.85rem;opacity:0.85;">Check your inbox for the verification link.</span><br>
-                <button onclick="resendVerification('${email}')" style="margin-top:10px;background:var(--warning);color:#000;border:none;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:0.82rem;font-weight:600;">
-                    <i class="fas fa-redo"></i> Resend Email
-                </button>
-            `;
-            errorEl.classList.add('active');
-        }
-
-        async function resendVerification(email) {
-            try {
-                // Need to sign in temporarily to resend
-                const password = document.getElementById('passwordInput').value;
-                if (!password) {
-                    showNotification('Enter your password first, then click Resend.', 'error');
-                    return;
-                }
-                const result = await auth.signInWithEmailAndPassword(email, password);
-                await result.user.sendEmailVerification();
-                await auth.signOut();
-                showNotification('Verification email resent! Check your inbox.', 'success');
-            } catch (e) {
-                showNotification('Could not resend. Try again in a minute.', 'error');
-            }
         }
 
         // ==================== PARTICLES ====================
