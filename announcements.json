@@ -1,5 +1,13 @@
 [
   {
+    "id": "New Update",
+    "title": "BPT v2.2 is now live!",
+    "description": "We are excited to announce the release of Bari Plux Tool v2.1. This update brings a brand new Settings page, enhanced system specs detection (multi-GPU, exact Windows build, physical resolution), improved cleanup tools, and new optimization features including Virtual Memory, System Services, and GameLoop Priority management.",
+    "status": "breaking",
+    "date": "2026-05-14",
+    "timestamp": 1776000000
+  },
+  {
     "id": "ann_001",
     "title": "BPT v2.1 is now live!",
     "description": "We are excited to announce the release of Bari Plux Tool v2.1. This update brings a brand new Settings page, enhanced system specs detection (multi-GPU, exact Windows build, physical resolution), improved cleanup tools, and new optimization features including Virtual Memory, System Services, and GameLoop Priority management.",
