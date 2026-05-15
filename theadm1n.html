@@ -719,52 +719,6 @@
 
         <div class="main">
 
-            <!-- Stats -->
-            <div class="stats-grid" id="statsGrid">
-                <div class="stat-card" style="animation-delay:0s">
-                    <div class="stat-icon total"><i class="fas fa-users"></i></div>
-                    <div class="stat-info">
-                        <div class="stat-num" id="statTotal">—</div>
-                        <div class="stat-label">Total Users</div>
-                    </div>
-                </div>
-                <div class="stat-card" style="animation-delay:0.05s">
-                    <div class="stat-icon discord"><i class="fab fa-discord"></i></div>
-                    <div class="stat-info">
-                        <div class="stat-num" id="statDiscord">—</div>
-                        <div class="stat-label">Discord</div>
-                    </div>
-                </div>
-                <div class="stat-card" style="animation-delay:0.1s">
-                    <div class="stat-icon google"><i class="fab fa-google"></i></div>
-                    <div class="stat-info">
-                        <div class="stat-num" id="statGoogle">—</div>
-                        <div class="stat-label">Google</div>
-                    </div>
-                </div>
-                <div class="stat-card" style="animation-delay:0.15s">
-                    <div class="stat-icon github"><i class="fab fa-github"></i></div>
-                    <div class="stat-info">
-                        <div class="stat-num" id="statGithub">—</div>
-                        <div class="stat-label">GitHub</div>
-                    </div>
-                </div>
-                <div class="stat-card" style="animation-delay:0.2s">
-                    <div class="stat-icon email"><i class="fas fa-envelope"></i></div>
-                    <div class="stat-info">
-                        <div class="stat-num" id="statEmail">—</div>
-                        <div class="stat-label">Email</div>
-                    </div>
-                </div>
-                <div class="stat-card" style="animation-delay:0.25s">
-                    <div class="stat-icon active"><i class="fas fa-circle"></i></div>
-                    <div class="stat-info">
-                        <div class="stat-num" id="statActive">—</div>
-                        <div class="stat-label">Last 24h</div>
-                    </div>
-                </div>
-            </div>
-
             <!-- Tabs -->
             <div class="tabs">
                 <button class="tab-btn active" data-tab="users" onclick="switchTab('users', this)">
@@ -775,44 +729,159 @@
                 </button>
             </div>
 
-            <!-- Users toolbar -->
-            <div class="toolbar users-toolbar">
-                <span class="toolbar-title">Users from Database</span>
-                <div class="search-wrap">
-                    <i class="fas fa-search"></i>
-                    <input type="text" class="search-input" id="searchInput" placeholder="Search name or email..." oninput="renderTable()">
+            <!-- ===== USERS SECTION ===== -->
+            <div id="usersSection">
+                <div class="stats-grid">
+                    <div class="stat-card" style="animation-delay:0s">
+                        <div class="stat-icon total"><i class="fas fa-users"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-num" id="statTotal">—</div>
+                            <div class="stat-label">Total Users</div>
+                        </div>
+                    </div>
+                    <div class="stat-card" style="animation-delay:0.05s">
+                        <div class="stat-icon discord"><i class="fab fa-discord"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-num" id="statDiscord">—</div>
+                            <div class="stat-label">Discord</div>
+                        </div>
+                    </div>
+                    <div class="stat-card" style="animation-delay:0.1s">
+                        <div class="stat-icon google"><i class="fab fa-google"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-num" id="statGoogle">—</div>
+                            <div class="stat-label">Google</div>
+                        </div>
+                    </div>
+                    <div class="stat-card" style="animation-delay:0.15s">
+                        <div class="stat-icon github"><i class="fab fa-github"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-num" id="statGithub">—</div>
+                            <div class="stat-label">GitHub</div>
+                        </div>
+                    </div>
+                    <div class="stat-card" style="animation-delay:0.2s">
+                        <div class="stat-icon email"><i class="fas fa-envelope"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-num" id="statEmail">—</div>
+                            <div class="stat-label">Email</div>
+                        </div>
+                    </div>
+                    <div class="stat-card" style="animation-delay:0.25s">
+                        <div class="stat-icon active"><i class="fas fa-circle"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-num" id="statActive">—</div>
+                            <div class="stat-label">Last 24h</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="filter-btns" id="userFilterBtns">
-                    <button class="filter-btn active" data-filter="all" onclick="setFilter('all', this)">
-                        <i class="fas fa-border-all"></i> All
-                    </button>
-                    <button class="filter-btn discord" data-filter="discord" onclick="setFilter('discord', this)">
-                        <i class="fab fa-discord"></i> Discord
-                    </button>
-                    <button class="filter-btn google" data-filter="google" onclick="setFilter('google', this)">
-                        <i class="fab fa-google"></i> Google
-                    </button>
-                    <button class="filter-btn github" data-filter="github" onclick="setFilter('github', this)">
-                        <i class="fab fa-github"></i> GitHub
-                    </button>
-                    <button class="filter-btn email" data-filter="email" onclick="setFilter('email', this)">
-                        <i class="fas fa-envelope"></i> Email
+
+                <div class="toolbar">
+                    <span class="toolbar-title">Users from Database</span>
+                    <div class="search-wrap">
+                        <i class="fas fa-search"></i>
+                        <input type="text" class="search-input" id="searchInput" placeholder="Search name or email..." oninput="renderTable()">
+                    </div>
+                    <div class="filter-btns">
+                        <button class="filter-btn active" data-filter="all" onclick="setFilter('all', this)">
+                            <i class="fas fa-border-all"></i> All
+                        </button>
+                        <button class="filter-btn discord" data-filter="discord" onclick="setFilter('discord', this)">
+                            <i class="fab fa-discord"></i> Discord
+                        </button>
+                        <button class="filter-btn google" data-filter="google" onclick="setFilter('google', this)">
+                            <i class="fab fa-google"></i> Google
+                        </button>
+                        <button class="filter-btn github" data-filter="github" onclick="setFilter('github', this)">
+                            <i class="fab fa-github"></i> GitHub
+                        </button>
+                        <button class="filter-btn email" data-filter="email" onclick="setFilter('email', this)">
+                            <i class="fas fa-envelope"></i> Email
+                        </button>
+                    </div>
+                    <button class="refresh-btn" id="refreshBtn" onclick="loadUsers()">
+                        <i class="fas fa-sync-alt"></i> Refresh
                     </button>
                 </div>
-                <button class="refresh-btn" id="refreshBtn" onclick="loadUsers()">
-                    <i class="fas fa-sync-alt"></i> Refresh
-                </button>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Email</th>
+                                <th>Login Method</th>
+                                <th>Login Time</th>
+                                <th>Last Active</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <tr class="state-row">
+                                <td colspan="5">
+                                    <div class="state-icon">🔐</div>
+                                    <div>Loading users...</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="last-updated" id="lastUpdated"></div>
+
+                <!-- Firebase Auth panel -->
+                <div class="firebase-panel">
+                <div class="firebase-icon">🔥</div>
+                <div class="firebase-text">
+                    <h3>Google · GitHub · Email/Password Users</h3>
+                    <p>These users authenticate through Firebase Auth and are managed directly in the Firebase Console.</p>
+                </div>
+                <a href="https://console.firebase.google.com/project/baripluxwebsite/authentication/users" target="_blank" class="firebase-link">
+                    <i class="fas fa-external-link-alt"></i> Open Firebase Auth
+                </a>
+            </div>
+        </div>
+
+        <!-- ===== BUG REPORTS SECTION ===== -->
+        <div id="reportsSection" style="display:none;">
+            <div class="stats-grid">
+                <div class="stat-card" style="animation-delay:0s">
+                    <div class="stat-icon total"><i class="fas fa-bug"></i></div>
+                    <div class="stat-info">
+                        <div class="stat-num" id="reportStatTotal">—</div>
+                        <div class="stat-label">Total Reports</div>
+                    </div>
+                </div>
+                <div class="stat-card" style="animation-delay:0.05s">
+                    <div class="stat-icon" style="background:rgba(244,67,54,0.15);color:#F44336;"><i class="fas fa-circle"></i></div>
+                    <div class="stat-info">
+                        <div class="stat-num" id="reportStatNew">—</div>
+                        <div class="stat-label">New</div>
+                    </div>
+                </div>
+                <div class="stat-card" style="animation-delay:0.1s">
+                    <div class="stat-icon" style="background:rgba(255,152,0,0.15);color:#FF9800;"><i class="fas fa-eye"></i></div>
+                    <div class="stat-info">
+                        <div class="stat-num" id="reportStatReviewed">—</div>
+                        <div class="stat-label">Reviewed</div>
+                    </div>
+                </div>
+                <div class="stat-card" style="animation-delay:0.15s">
+                    <div class="stat-icon" style="background:rgba(76,175,80,0.15);color:#4CAF50;"><i class="fas fa-check-circle"></i></div>
+                    <div class="stat-info">
+                        <div class="stat-num" id="reportStatResolved">—</div>
+                        <div class="stat-label">Resolved</div>
+                    </div>
+                </div>
             </div>
 
-            <!-- Bug Reports toolbar -->
-            <div class="toolbar reports-toolbar" style="display:none;">
+            <div class="toolbar">
                 <span class="toolbar-title">Bug Reports</span>
                 <div class="search-wrap">
                     <i class="fas fa-search"></i>
                     <input type="text" class="search-input" id="reportSearchInput" placeholder="Search description or email..." oninput="renderBugReports()">
                 </div>
                 <div class="filter-btns">
-                    <button class="filter-btn active report-status-filter" data-status="all" onclick="setReportFilter('all', this)">
+                    <button class="filter-btn active" data-status="all" onclick="setReportFilter('all', this)">
                         <i class="fas fa-border-all"></i> All
                     </button>
                     <button class="filter-btn" data-status="new" style="--filter-color:#F44336;" onclick="setReportFilter('new', this)">
@@ -830,129 +899,59 @@
                 </button>
             </div>
 
-            <!-- Table -->
             <div class="table-wrap">
                 <table>
                     <thead>
                         <tr>
-                            <th>User</th>
+                            <th>Report ID</th>
+                            <th>Description</th>
                             <th>Email</th>
-                            <th>Login Method</th>
-                            <th>Login Time</th>
-                            <th>Last Active</th>
+                            <th>PC Name</th>
+                            <th>OS</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody id="usersTableBody">
+                    <tbody id="reportsTableBody">
                         <tr class="state-row">
-                            <td colspan="5">
-                                <div class="state-icon">🔐</div>
-                                <div>Loading users...</div>
+                            <td colspan="8">
+                                <div class="state-icon">🔍</div>
+                                <div>Loading bug reports...</div>
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
 
-            <!-- ===== BUG REPORTS SECTION ===== -->
-            <div id="reportsSection" style="display:none;">
-                <div class="stats-grid" id="reportStatsGrid">
-                    <div class="stat-card" style="animation-delay:0s">
-                        <div class="stat-icon total"><i class="fas fa-bug"></i></div>
-                        <div class="stat-info">
-                            <div class="stat-num" id="reportStatTotal">—</div>
-                            <div class="stat-label">Total Reports</div>
-                        </div>
-                    </div>
-                    <div class="stat-card" style="animation-delay:0.05s">
-                        <div class="stat-icon" style="background:rgba(244,67,54,0.15);color:#F44336;"><i class="fas fa-circle"></i></div>
-                        <div class="stat-info">
-                            <div class="stat-num" id="reportStatNew">—</div>
-                            <div class="stat-label">New</div>
-                        </div>
-                    </div>
-                    <div class="stat-card" style="animation-delay:0.1s">
-                        <div class="stat-icon" style="background:rgba(255,152,0,0.15);color:#FF9800;"><i class="fas fa-eye"></i></div>
-                        <div class="stat-info">
-                            <div class="stat-num" id="reportStatReviewed">—</div>
-                            <div class="stat-label">Reviewed</div>
-                        </div>
-                    </div>
-                    <div class="stat-card" style="animation-delay:0.15s">
-                        <div class="stat-icon" style="background:rgba(76,175,80,0.15);color:#4CAF50;"><i class="fas fa-check-circle"></i></div>
-                        <div class="stat-info">
-                            <div class="stat-num" id="reportStatResolved">—</div>
-                            <div class="stat-label">Resolved</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="table-wrap">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Report ID</th>
-                                <th>Description</th>
-                                <th>Email</th>
-                                <th>PC Name</th>
-                                <th>OS</th>
-                                <th>Date</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="reportsTableBody">
-                            <tr class="state-row">
-                                <td colspan="8">
-                                    <div class="state-icon">🔍</div>
-                                    <div>Loading bug reports...</div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="last-updated" id="reportsLastUpdated"></div>
-            </div>
-
-            <div class="last-updated" id="lastUpdated"></div>
-
-            <!-- Firebase Auth panel -->
-            <div class="firebase-panel">
-                <div class="firebase-icon">🔥</div>
-                <div class="firebase-text">
-                    <h3>Google · GitHub · Email/Password Users</h3>
-                    <p>These users authenticate through Firebase Auth and are managed directly in the Firebase Console.</p>
-                </div>
-                <a href="https://console.firebase.google.com/project/baripluxwebsite/authentication/users" target="_blank" class="firebase-link">
-                    <i class="fas fa-external-link-alt"></i> Open Firebase Auth
-                </a>
-            </div>
-
+            <div class="last-updated" id="reportsLastUpdated"></div>
         </div>
+
     </div>
+</div>
 
-    <script>
-        // ==================== CONFIG ====================
-        // TODO: Change this to your own admin password
-        const ADMIN_PASSWORD = 'IamTheAtomicSnow7#';
+<script>
+    // ==================== CONFIG ====================
+    // TODO: Change this to your own admin password
+    const ADMIN_PASSWORD = 'IamTheAtomicSnow7#';
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyBH_t3Uue7fbb-DahwjSJGjG2-quCqiLEs",
-            authDomain: "baripluxwebsite.firebaseapp.com",
-            projectId: "baripluxwebsite",
-            storageBucket: "baripluxwebsite.firebasestorage.app",
-            messagingSenderId: "280043766563",
-            appId: "1:280043766563:web:409e6b78c1c24b568fc296",
-            databaseURL: "https://baripluxwebsite-default-rtdb.firebaseio.com"
-        };
+    const firebaseConfig = {
+        apiKey: "AIzaSyBH_t3Uue7fbb-DahwjSJGjG2-quCqiLEs",
+        authDomain: "baripluxwebsite.firebaseapp.com",
+        projectId: "baripluxwebsite",
+        storageBucket: "baripluxwebsite.firebasestorage.app",
+        messagingSenderId: "280043766563",
+        appId: "1:280043766563:web:409e6b78c1c24b568fc296",
+        databaseURL: "https://baripluxwebsite-default-rtdb.firebaseio.com"
+    };
 
-        // ==================== STATE ====================
-        let allUsers = [];
-        let activeFilter = 'all';
-        let db = null;
+    // ==================== STATE ====================
+    let allUsers = [];
+    let activeFilter = 'all';
+    let db = null;
 
-        // ==================== PASSWORD GATE ====================
-        function toggleGateEye() {
+    // ==================== PASSWORD GATE ====================
+    function toggleGateEye() {
             const input = document.getElementById('gateInput');
             const icon = document.getElementById('gateEyeIcon');
             if (input.type === 'password') {
@@ -988,12 +987,6 @@
             document.getElementById('gate').classList.remove('hidden');
             document.getElementById('app').classList.remove('show');
             document.getElementById('gateInput').value = '';
-        }
-
-        // Auto-login if session active
-        if (sessionStorage.getItem('bp_admin') === '1') {
-            document.getElementById('gate').classList.add('hidden');
-            document.getElementById('app').classList.add('show');
         }
 
         // ==================== FIREBASE INIT ====================
@@ -1201,15 +1194,8 @@
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
 
-            const usersSection = [document.querySelector('.users-toolbar'), document.getElementById('statsGrid')?.parentElement?.querySelector('.stats-grid') || document.getElementById('statsGrid')];
-            // Show/hide sections
-            document.querySelector('.users-toolbar').style.display = tab === 'users' ? '' : 'none';
-            document.querySelector('.reports-toolbar').style.display = tab === 'reports' ? '' : 'none';
-            document.getElementById('statsGrid').style.display = tab === 'users' ? '' : 'none';
+            document.getElementById('usersSection').style.display = tab === 'users' ? '' : 'none';
             document.getElementById('reportsSection').style.display = tab === 'reports' ? '' : 'none';
-
-            // Hide user filter btns when on reports tab
-            document.getElementById('userFilterBtns').style.display = tab === 'users' ? '' : 'none';
 
             if (tab === 'reports') {
                 loadBugReports();
