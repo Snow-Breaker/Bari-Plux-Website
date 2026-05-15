@@ -660,6 +660,155 @@
             font-family: 'JetBrains Mono', monospace;
         }
 
+        /* ===== DETAILS MODAL ===== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 20px;
+        }
+
+        .modal-overlay.show { display: flex; }
+
+        .modal-box {
+            background: linear-gradient(135deg, rgba(20,22,30,0.98), rgba(15,18,24,0.98));
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 720px;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 32px;
+            position: relative;
+            animation: modalIn 0.25s ease;
+        }
+
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.95) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .modal-close:hover { background: var(--surface2); color: var(--text); }
+
+        .modal-header {
+            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-header h2 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-header .modal-meta {
+            display: flex;
+            gap: 16px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .modal-header .modal-meta span {
+            font-size: 0.82rem;
+            color: var(--muted);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .modal-section {
+            margin-bottom: 20px;
+        }
+
+        .modal-section h3 {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-section h3::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .modal-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px 24px;
+        }
+
+        .modal-grid .field {
+            display: flex;
+            flex-direction: column;
+            padding: 6px 0;
+        }
+
+        .modal-grid .field .label {
+            font-size: 0.72rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .modal-grid .field .value {
+            font-size: 0.88rem;
+            color: var(--text);
+            margin-top: 2px;
+            word-break: break-word;
+        }
+
+        .modal-description {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px;
+            font-size: 0.88rem;
+            color: var(--text);
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-break: break-word;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        @media (max-width: 600px) {
+            .modal-grid { grid-template-columns: 1fr; }
+            .modal-box { padding: 20px; }
+        }
+
         @media (max-width: 768px) {
             .main { padding: 16px; }
             .topbar { padding: 0 16px; }
@@ -927,6 +1076,58 @@
             <div class="last-updated" id="reportsLastUpdated"></div>
         </div>
 
+    </div>
+</div>
+
+<!-- ===== DETAILS MODAL ===== -->
+<div class="modal-overlay" id="detailsModal">
+    <div class="modal-box">
+        <button class="modal-close" onclick="closeDetailsModal()"><i class="fas fa-times"></i></button>
+        <div class="modal-header">
+            <h2><i class="fas fa-bug" style="color:var(--accent);"></i> Bug Report Details</h2>
+            <div class="modal-meta">
+                <span id="modalReportId">—</span>
+                <span id="modalReportDate">—</span>
+                <span id="modalReportStatus">—</span>
+            </div>
+        </div>
+        <div class="modal-section">
+            <h3><i class="fas fa-align-left"></i> Description</h3>
+            <div class="modal-description" id="modalDescription"></div>
+        </div>
+        <div class="modal-section">
+            <h3><i class="fas fa-info-circle"></i> Program Information</h3>
+            <div class="modal-grid">
+                <div class="field"><span class="label">App Name</span><span class="value" id="modalAppName">—</span></div>
+                <div class="field"><span class="label">Version</span><span class="value" id="modalAppVersion">—</span></div>
+                <div class="field"><span class="label">Company</span><span class="value" id="modalCompany">—</span></div>
+                <div class="field"><span class="label">Developer</span><span class="value" id="modalDeveloper">—</span></div>
+                <div class="field"><span class="label">Website</span><span class="value" id="modalWebsite">—</span></div>
+                <div class="field"><span class="label">Install Path</span><span class="value" id="modalInstallPath" style="font-size:0.78rem;font-family:'JetBrains Mono',monospace;">—</span></div>
+            </div>
+        </div>
+        <div class="modal-section">
+            <h3><i class="fas fa-microchip"></i> System Specifications</h3>
+            <div class="modal-grid">
+                <div class="field"><span class="label">PC Name</span><span class="value" id="modalPcName">—</span></div>
+                <div class="field"><span class="label">PC / Laptop Model</span><span class="value" id="modalPcModel">—</span></div>
+                <div class="field"><span class="label">Processor (CPU)</span><span class="value" id="modalCpu">—</span></div>
+                <div class="field"><span class="label">Graphics (GPU)</span><span class="value" id="modalGpu">—</span></div>
+                <div class="field"><span class="label">Installed RAM</span><span class="value" id="modalRam">—</span></div>
+                <div class="field"><span class="label">Storage</span><span class="value" id="modalStorage">—</span></div>
+                <div class="field"><span class="label">Operating System</span><span class="value" id="modalOs">—</span></div>
+                <div class="field"><span class="label">System Type</span><span class="value" id="modalSystemType">—</span></div>
+                <div class="field"><span class="label">Screen Resolution</span><span class="value" id="modalResolution">—</span></div>
+                <div class="field"><span class="label">Refresh Rate</span><span class="value" id="modalRefreshRate">—</span></div>
+            </div>
+        </div>
+        <div class="modal-section">
+            <h3><i class="fas fa-envelope"></i> User Info</h3>
+            <div class="modal-grid">
+                <div class="field"><span class="label">Email</span><span class="value" id="modalEmail">—</span></div>
+                <div class="field"><span class="label">PC Name</span><span class="value" id="ModalUserPcName">—</span></div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -1307,16 +1508,18 @@
                     ? escHtml(r.description.substring(0, 80)) + '…'
                     : escHtml(r.description || '');
 
-                let actions = '';
+                const reportJson = escHtml(JSON.stringify(r).replace(/'/g, "&#39;"));
+
+                let actions = `<button class="action-btn" onclick="showDetailsModal('${r.firebaseKey}')" style="border-color:rgba(108,99,255,0.3);color:var(--accent);margin-right:4px;">📋 Details</button>`;
                 if (r.status === 'new') {
-                    actions = `
+                    actions += `
                         <button class="action-btn review" onclick="updateReportStatus('${r.firebaseKey}', 'reviewed')">👁️ Review</button>
                         <button class="action-btn resolve" onclick="updateReportStatus('${r.firebaseKey}', 'resolved')" style="margin-left:4px;">✅ Resolve</button>`;
                 } else if (r.status === 'reviewed') {
-                    actions = `
+                    actions += `
                         <button class="action-btn resolve" onclick="updateReportStatus('${r.firebaseKey}', 'resolved')">✅ Resolve</button>`;
                 } else {
-                    actions = `<span style="color:var(--muted);font-size:0.78rem;">Done</span>`;
+                    actions += `<span style="color:var(--muted);font-size:0.78rem;">Done</span>`;
                 }
 
                 return `
@@ -1350,6 +1553,60 @@
                 alert('Failed to update report status.');
             }
         }
+
+        // ==================== DETAILS MODAL ====================
+        function showDetailsModal(firebaseKey) {
+            const r = allReports.find(x => x.firebaseKey === firebaseKey);
+            if (!r) return;
+
+            const statusLabels = { new: '🆕 New', reviewed: '👁️ Reviewed', resolved: '✅ Resolved' };
+
+            document.getElementById('modalReportId').textContent = r.id || '—';
+            document.getElementById('modalReportDate').textContent = r.date || '—';
+            document.getElementById('modalReportStatus').innerHTML =
+                `<span class="report-status ${r.status}">${statusLabels[r.status] || r.status}</span>`;
+            document.getElementById('modalDescription').textContent = r.description || 'No description provided.';
+
+            const pi = r.programInfo || {};
+            document.getElementById('modalAppName').textContent = pi.appName || '—';
+            document.getElementById('modalAppVersion').textContent = pi.appVersion || '—';
+            document.getElementById('modalCompany').textContent = pi.company || '—';
+            document.getElementById('modalDeveloper').textContent = pi.developer || '—';
+            document.getElementById('modalWebsite').textContent = pi.website || '—';
+            document.getElementById('modalInstallPath').textContent = pi.installPath || '—';
+
+            const ss = r.systemSpecs || {};
+            document.getElementById('modalPcName').textContent = r.pcName || '—';
+            document.getElementById('modalPcModel').textContent = ss.pcModel || '—';
+            document.getElementById('modalCpu').textContent = ss.cpu || '—';
+            document.getElementById('modalGpu').textContent = ss.gpu || '—';
+            document.getElementById('modalRam').textContent = ss.ram || '—';
+            document.getElementById('modalStorage').textContent = ss.storage || '—';
+            document.getElementById('modalOs').textContent = r.os || '—';
+            document.getElementById('modalSystemType').textContent = ss.systemType || '—';
+            document.getElementById('modalResolution').textContent = ss.resolution || '—';
+            document.getElementById('modalRefreshRate').textContent = ss.refreshRate || '—';
+            document.getElementById('modalEmail').textContent = r.email || '—';
+            document.getElementById('ModalUserPcName').textContent = r.pcName || '—';
+
+            document.getElementById('detailsModal').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDetailsModal() {
+            document.getElementById('detailsModal').classList.remove('show');
+            document.body.style.overflow = '';
+        }
+
+        // Close modal on overlay click
+        document.getElementById('detailsModal').addEventListener('click', function(e) {
+            if (e.target === this) closeDetailsModal();
+        });
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeDetailsModal();
+        });
 
         function showReportsError(msg) {
             const tbody = document.getElementById('reportsTableBody');
