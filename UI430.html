@@ -1,539 +1,2038 @@
 <!DOCTYPE html>
-<html lang="fa">
-<head></script>
+<html lang="en">
+<head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
-    <title>PUBG Mobile New UI - Bari Plux</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel | Bari Plux</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700;800&family=Oxanium:wght@400;600;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/all-styles.css">
-
-    <!-- Favicon -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="https://i.postimg.cc/65cjsvfQ/imglogo.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="https://i.postimg.cc/65cjsvfQ/imglogo.png">
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
     <style>
         :root {
-            --primary: #6C63FF;
-            --primary-dark: #5548E0;
-            --secondary: #00BFA6;
-            --accent: #FF9F1C;
-            --dark: #1A1D23;
-            --darker: #0F1115;
-            --dark-light: #2A2E36;
-            --light: #F8F9FA;
-            --light-dark: #E5E7EB;
-            --gray: #9CA3AF;
-            --radius: 12px;
-            --radius-round: 30px;
-            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            --glass: rgba(41, 47, 54, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            
-            --bg-color: var(--dark);
-            --text-color: var(--light);
-            --card-bg: var(--glass);
-            --card-border: var(--glass-border);
-            --header-bg: rgba(26, 29, 35, 0.95);
+            --bg: #0a0c10;
+            --bg2: #0f1218;
+            --surface: rgba(255,255,255,0.04);
+            --surface2: rgba(255,255,255,0.07);
+            --border: rgba(255,255,255,0.07);
+            --accent: #6C63FF;
+            --accent2: #00BFA6;
+            --danger: #F44336;
+            --warning: #FF9800;
+            --success: #4CAF50;
+            --discord: #5865F2;
+            --github: #e6edf3;
+            --google: #EA4335;
+            --email: #FFB300;
+            --text: #e2e8f0;
+            --muted: rgba(226,232,240,0.5);
+            --r: 12px;
         }
 
-        [data-theme="light"] {
-            --bg-color: #f0f2f5;
-            --text-color: #2d3748;
-            --card-bg: rgba(255, 255, 255, 0.9);
-            --card-border: rgba(0, 0, 0, 0.1);
-            --header-bg: rgba(255, 255, 255, 0.95);
-            --glass: rgba(255, 255, 255, 0.8);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { height: 100%; }
 
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            line-height: 1.6;
-            background-image: 
-                radial-gradient(circle at 20% 30%, rgba(107, 110, 255, 0.15) 0%, transparent 20%),
-                radial-gradient(circle at 80% 70%, rgba(78, 205, 196, 0.15) 0%, transparent 20%),
-                linear-gradient(to bottom, var(--darker), var(--bg-color));
+            background: var(--bg);
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
             min-height: 100vh;
         }
 
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* Header */
-        .header {
-            padding: 20px 0;
-            background: var(--header-bg);
-            backdrop-filter: blur(10px);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .header-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
+        /* ===== PASSWORD GATE ===== */
+        #gate {
+            position: fixed;
+            inset: 0;
+            background: var(--bg);
             display: flex;
             align-items: center;
-            gap: 15px;
-            text-decoration: none;
+            justify-content: center;
+            z-index: 9999;
+            padding: 20px;
         }
 
-        .logo-img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid var(--primary);
+        #gate.hidden { display: none; }
+
+        .gate-box {
+            background: linear-gradient(135deg, rgba(255,255,255,0.07), rgba(255,255,255,0.02));
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 48px 40px;
+            width: 100%;
+            max-width: 420px;
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
         }
 
-        .logo-text {
-            font-size: 1.8rem;
-            font-weight: 800;
-            background: linear-gradient(45deg, var(--primary), var(--secondary), var(--accent));
+        .gate-box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+        }
+
+        .gate-logo {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .gate-logo img {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            margin-bottom: 12px;
+        }
+
+        .gate-logo h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
         }
 
-        .back-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 12px 24px;
-            background: var(--card-bg);
-            color: var(--text-color);
-            border-radius: var(--radius-round);
-            text-decoration: none;
-            transition: var(--transition);
-            border: 1px solid var(--card-border);
-            font-weight: 500;
+        .gate-logo p {
+            color: var(--muted);
+            font-size: 0.85rem;
+            margin-top: 4px;
         }
 
-        .back-btn:hover {
-            background: var(--primary);
-            color: white;
-            transform: translateY(-2px);
+        .gate-input-wrap {
+            position: relative;
+            margin-bottom: 16px;
         }
 
-        /* Video Section */
-        .video-section {
-            padding: 40px 0;
-        }
-
-        .video-container {
-            background: var(--card-bg);
-            border-radius: var(--radius);
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--card-border);
-            margin-bottom: 30px;
-        }
-
-        .video-header {
-            padding: 25px;
-            border-bottom: 1px solid var(--card-border);
-        }
-
-        .video-title {
-            font-size: 2rem;
-            margin-bottom: 10px;
-            color: var(--primary);
-        }
-
-        .video-meta {
-            display: flex;
-            gap: 20px;
-            font-size: 0.9rem;
-            opacity: 0.8;
-        }
-
-        .video-player {
+        .gate-input {
             width: 100%;
-            min-height: 400px;
-            background: #000;
+            padding: 14px 48px 14px 16px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            color: var(--text);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
+            letter-spacing: 2px;
+        }
+
+        .gate-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(108,99,255,0.12);
+        }
+
+        .gate-eye {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--muted);
+            cursor: pointer;
+            padding: 0;
+            font-size: 1rem;
+        }
+
+        .gate-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: white;
+            border: none;
+            border-radius: var(--r);
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .gate-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(108,99,255,0.3); }
+
+        .gate-error {
+            color: var(--danger);
+            font-size: 0.85rem;
+            margin-top: 10px;
+            text-align: center;
+            display: none;
+        }
+
+        .gate-error.show { display: block; animation: shake 0.4s ease; }
+
+        @keyframes shake {
+            0%,100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            75% { transform: translateX(6px); }
+        }
+
+        /* ===== MAIN LAYOUT ===== */
+        #app { display: none; min-height: 100vh; }
+        #app.show { display: block; }
+
+        .topbar {
+            position: sticky;
+            top: 0;
+            background: rgba(10,12,16,0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 32px;
+            height: 64px;
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
+            z-index: 100;
         }
 
-        .video-description {
-            padding: 25px;
-        }
-
-        .video-description h3 {
-            margin-bottom: 15px;
-            font-size: 1.3rem;
-        }
-
-        .video-description p {
-            line-height: 1.6;
-            opacity: 0.9;
-        }
-
-        /* Footer */
-        .footer {
-            text-align: center;
-            padding: 20px 0;
-            opacity: 0.7;
-            font-size: 0.9rem;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .video-title {
-                font-size: 1.5rem;
-            }
-            
-            .video-meta {
-                flex-direction: column;
-                gap: 5px;
-            }
-            
-            .header-container {
-                flex-direction: column;
-                gap: 15px;
-            }
-        }
-        
-        /* User Menu Dropdown */
-        .user-menu-container { position: relative; }
-        .user-dropdown {
-            position: fixed;
-            top: 80px !important;
-            right: 20px !important;
-            min-width: 250px;
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 12px;
-            padding: 12px;
-            opacity: 0;
-            visibility: hidden;
-            transform: scale(0.95) translateY(-10px);
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            z-index: 10001 !important;
-            backdrop-filter: blur(10px);
-            box-shadow: var(--shadow);
-            overflow: visible !important;
-        }
-        .user-dropdown.active {
-            opacity: 1;
-            visibility: visible;
-            transform: scale(1) translateY(0);
-        }
-        .dropdown-header {
+        .topbar-left {
             display: flex;
             align-items: center;
             gap: 12px;
-            margin-bottom: 12px;
         }
-        .user-avatar-small {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent), var(--secondary));
+
+        .topbar-logo {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+        }
+
+        .topbar-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .topbar-badge {
+            background: rgba(108,99,255,0.15);
+            border: 1px solid rgba(108,99,255,0.3);
+            color: var(--accent);
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .topbar-btn {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 8px 16px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--muted);
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.85rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .topbar-btn:hover { background: var(--surface2); color: var(--text); }
+        .topbar-btn.danger:hover { border-color: var(--danger); color: var(--danger); }
+
+        .main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 32px;
+        }
+
+        /* ===== STATS CARDS ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: all 0.2s;
+            animation: fadeUp 0.5s ease both;
+        }
+
+        .stat-card:hover { background: var(--surface2); transform: translateY(-2px); }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .stat-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 16px;
-            font-weight: 700;
-            color: white;
+            font-size: 1.2rem;
             flex-shrink: 0;
         }
-        .user-name-dropdown {
-            font-weight: 600;
-            color: var(--text-color);
-            font-size: 0.9rem;
+
+        .stat-icon.total  { background: rgba(108,99,255,0.15); color: var(--accent); }
+        .stat-icon.discord { background: rgba(88,101,242,0.15); color: var(--discord); }
+        .stat-icon.google { background: rgba(234,67,53,0.15); color: var(--google); }
+        .stat-icon.github { background: rgba(230,237,243,0.1); color: var(--github); }
+        .stat-icon.email  { background: rgba(255,179,0,0.15); color: var(--email); }
+        .stat-icon.active { background: rgba(76,175,80,0.15); color: var(--success); }
+
+        .stat-info { flex: 1; min-width: 0; }
+        .stat-num {
+            font-size: 1.8rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            line-height: 1;
+            color: var(--text);
         }
-        .user-email-dropdown {
-            color: var(--gray);
-            font-size: 0.8rem;
-            margin-top: 2px;
-        }
-        .dropdown-divider {
-            height: 1px;
-            background: var(--card-border);
-            margin: 8px 0;
-            opacity: 0.5;
-        }
-        .dropdown-actions {
+        .stat-label { font-size: 0.78rem; color: var(--muted); margin-top: 4px; }
+
+        /* ===== TABS ===== */
+        .tabs {
             display: flex;
-            flex-direction: column;
+            gap: 4px;
+            margin-bottom: 20px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 4px;
+            width: fit-content;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            color: var(--muted);
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tab-btn:hover { color: var(--text); background: var(--surface2); }
+        .tab-btn.active { background: var(--accent); color: white; }
+
+        /* ===== TOOLBAR ===== */
+        .toolbar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .toolbar-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            flex: 1;
+        }
+
+        .search-wrap {
+            position: relative;
+        }
+
+        .search-input {
+            padding: 9px 16px 9px 38px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.85rem;
+            width: 220px;
+            transition: all 0.2s;
+        }
+
+        .search-input:focus { outline: none; border-color: var(--accent); width: 260px; }
+        .search-wrap i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 0.85rem; }
+
+        .filter-btns {
+            display: flex;
             gap: 6px;
         }
-        .dropdown-btn {
+
+        .filter-btn {
+            padding: 8px 14px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--muted);
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .filter-btn:hover { background: var(--surface2); color: var(--text); }
+        .filter-btn.active { background: rgba(108,99,255,0.15); border-color: rgba(108,99,255,0.35); color: var(--accent); }
+        .filter-btn.discord.active { background: rgba(88,101,242,0.15); border-color: rgba(88,101,242,0.35); color: var(--discord); }
+        .filter-btn.google.active { background: rgba(234,67,53,0.12); border-color: rgba(234,67,53,0.3); color: var(--google); }
+        .filter-btn.github.active { background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.2); color: var(--github); }
+        .filter-btn.email.active { background: rgba(255,179,0,0.12); border-color: rgba(255,179,0,0.3); color: var(--email); }
+
+        .refresh-btn {
+            padding: 8px 14px;
+            background: rgba(0,191,166,0.1);
+            border: 1px solid rgba(0,191,166,0.25);
+            border-radius: 8px;
+            color: var(--accent2);
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .refresh-btn:hover { background: rgba(0,191,166,0.18); }
+        .refresh-btn.spinning i { animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ===== USERS TABLE ===== */
+        .table-wrap {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead th {
+            padding: 14px 20px;
+            text-align: left;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--border);
+            background: rgba(255,255,255,0.02);
+            white-space: nowrap;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid var(--border);
+            transition: background 0.15s;
+            animation: fadeUp 0.4s ease both;
+        }
+
+        tbody tr:last-child { border-bottom: none; }
+        tbody tr:hover { background: var(--surface2); }
+
+        td {
+            padding: 16px 20px;
+            font-size: 0.88rem;
+            vertical-align: middle;
+        }
+
+        .user-cell {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: var(--surface2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.95rem;
+            flex-shrink: 0;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .user-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+        .user-name { font-weight: 600; color: var(--text); }
+        .user-id {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--muted);
+            margin-top: 2px;
+        }
+
+        .method-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .method-badge.discord { background: rgba(88,101,242,0.15); color: var(--discord); border: 1px solid rgba(88,101,242,0.25); }
+        .method-badge.google  { background: rgba(234,67,53,0.12); color: var(--google); border: 1px solid rgba(234,67,53,0.22); }
+        .method-badge.github  { background: rgba(255,255,255,0.07); color: var(--github); border: 1px solid rgba(255,255,255,0.15); }
+        .method-badge.email   { background: rgba(255,179,0,0.12); color: var(--email); border: 1px solid rgba(255,179,0,0.22); }
+        .method-badge.unknown { background: rgba(255,255,255,0.06); color: var(--muted); border: 1px solid var(--border); }
+
+        .time-cell { color: var(--muted); font-size: 0.82rem; white-space: nowrap; }
+        .time-cell span { display: block; color: var(--text); font-size: 0.86rem; }
+
+        .active-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+            box-shadow: 0 0 6px var(--success);
+            display: inline-block;
+            margin-right: 6px;
+        }
+
+        .report-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .report-status.new { background: rgba(244,67,54,0.15); color: #F44336; border: 1px solid rgba(244,67,54,0.25); }
+        .report-status.reviewed { background: rgba(255,152,0,0.15); color: #FF9800; border: 1px solid rgba(255,152,0,0.25); }
+        .report-status.resolved { background: rgba(76,175,80,0.15); color: #4CAF50; border: 1px solid rgba(76,175,80,0.25); }
+
+        .action-btn {
+            padding: 5px 10px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--muted);
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover { background: var(--surface2); color: var(--text); }
+        .action-btn.review { border-color: rgba(255,152,0,0.3); color: #FF9800; }
+        .action-btn.review:hover { background: rgba(255,152,0,0.12); }
+        .action-btn.resolve { border-color: rgba(76,175,80,0.3); color: #4CAF50; }
+        .action-btn.resolve:hover { background: rgba(76,175,80,0.12); }
+        .action-btn.delete { border-color: rgba(244,67,54,0.3); color: #F44336; }
+        .action-btn.delete:hover { background: rgba(244,67,54,0.12); }
+
+        .report-desc {
+            max-width: 300px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: var(--text);
+            cursor: pointer;
+        }
+
+        .report-desc:hover {
+            white-space: normal;
+            word-break: break-word;
+            background: var(--bg2);
+            padding: 8px;
+            border-radius: 6px;
+            position: relative;
+            z-index: 1;
+        }
+
+        @media (max-width: 768px) {
+            .report-desc { max-width: 120px; }
+        }
+
+        /* ===== EMPTY / LOADING / ERROR STATES ===== */
+        .state-row td {
+            padding: 60px 20px;
+            text-align: center;
+            color: var(--muted);
+        }
+
+        .state-icon {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+            opacity: 0.4;
+        }
+
+        .loading-dots {
+            display: inline-flex;
+            gap: 6px;
+        }
+        .loading-dots span {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+            animation: pulse 1.2s ease-in-out infinite;
+        }
+        .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes pulse { 0%,80%,100% { transform: scale(0.6); opacity:0.4; } 40% { transform: scale(1); opacity:1; } }
+
+        /* ===== FIREBASE AUTH PANEL ===== */
+        .firebase-panel {
+            margin-top: 28px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .firebase-icon {
+            width: 48px; height: 48px;
+            border-radius: 12px;
+            background: rgba(255,160,0,0.12);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .firebase-text { flex: 1; }
+        .firebase-text h3 { font-size: 0.95rem; font-weight: 600; margin-bottom: 4px; }
+        .firebase-text p { font-size: 0.83rem; color: var(--muted); }
+
+        .firebase-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: rgba(255,160,0,0.12);
+            border: 1px solid rgba(255,160,0,0.25);
+            border-radius: 8px;
+            color: #FFA000;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .firebase-link:hover { background: rgba(255,160,0,0.2); transform: translateY(-1px); }
+
+        /* ===== LAST UPDATED ===== */
+        .last-updated {
+            text-align: right;
+            font-size: 0.78rem;
+            color: var(--muted);
+            margin-top: 12px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* ===== DETAILS MODAL ===== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 20px;
+        }
+
+        .modal-overlay.show { display: flex; }
+
+        .modal-box {
+            background: linear-gradient(135deg, rgba(20,22,30,0.98), rgba(15,18,24,0.98));
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 720px;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 32px;
+            position: relative;
+            animation: modalIn 0.25s ease;
+        }
+
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.95) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .modal-close:hover { background: var(--surface2); color: var(--text); }
+
+        .modal-header {
+            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-header h2 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text);
             display: flex;
             align-items: center;
             gap: 10px;
-            width: 100%;
-            padding: 10px 12px;
-            background: transparent;
-            border: 1px solid transparent;
-            color: var(--text-color);
-            border-radius: 8px;
-            cursor: pointer;
+        }
+
+        .modal-header .modal-meta {
+            display: flex;
+            gap: 16px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .modal-header .modal-meta span {
+            font-size: 0.82rem;
+            color: var(--muted);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .modal-section {
+            margin-bottom: 20px;
+        }
+
+        .modal-section h3 {
             font-size: 0.85rem;
-            font-weight: 500;
-            transition: var(--transition);
-        }
-        .dropdown-btn:hover {
-            background: rgba(108, 99, 255, 0.1);
-            border-color: rgba(108, 99, 255, 0.3);
-            transform: translateX(4px);
-        }
-        .dropdown-btn i {
-            width: 18px;
-            text-align: center;
+            font-weight: 600;
             color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-section h3::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .modal-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px 24px;
+        }
+
+        .modal-grid .field {
+            display: flex;
+            flex-direction: column;
+            padding: 6px 0;
+        }
+
+        .modal-grid .field .label {
+            font-size: 0.72rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .modal-grid .field .value {
+            font-size: 0.88rem;
+            color: var(--text);
+            margin-top: 2px;
+            word-break: break-word;
+        }
+
+        .modal-description {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px;
+            font-size: 0.88rem;
+            color: var(--text);
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-break: break-word;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .modal-images {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
+            margin-top: 4px;
+        }
+
+        .modal-images .img-thumb {
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            aspect-ratio: 16 / 10;
+            background: var(--surface);
+            border: 2px solid var(--border);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .modal-images .img-thumb:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        }
+
+        .modal-images .img-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+            animation: imgFadeIn 0.3s ease;
+        }
+
+        .modal-images .img-thumb:hover img {
+            transform: scale(1.08);
+        }
+
+        .modal-images .img-thumb .thumb-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.45);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+
+        .modal-images .img-thumb:hover .thumb-overlay {
+            opacity: 1;
+        }
+
+        .modal-images .img-thumb .thumb-overlay i {
+            color: #fff;
+            font-size: 1.4rem;
+            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.6));
+        }
+
+        @keyframes imgFadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-images-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-images-header h3::after {
+            display: none;
+        }
+
+        .modal-images-count {
+            font-size: 0.68rem;
+            font-weight: 600;
+            background: var(--accent);
+            color: #fff;
+            padding: 2px 10px;
+            border-radius: 10px;
+            letter-spacing: 0.3px;
+        }
+
+        /* Full image preview overlay */
+        .img-preview-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.92);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            padding: 40px;
+            backdrop-filter: blur(4px);
+        }
+
+        .img-preview-overlay.show { display: flex; }
+
+        .img-preview-overlay img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: 10px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+            cursor: zoom-out;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+
+        .preview-btn {
+            position: absolute;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: #fff;
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 10;
+        }
+
+        .preview-btn:hover {
+            background: rgba(255,255,255,0.18);
+            border-color: var(--accent);
+            transform: scale(1.08);
+        }
+
+        .preview-btn:active {
+            transform: scale(0.95);
+        }
+
+        .preview-close {
+            top: 24px;
+            right: 24px;
+        }
+
+        .preview-close:hover {
+            background: rgba(255,60,60,0.25) !important;
+            border-color: #ff4444 !important;
+        }
+
+        .preview-nav {
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .preview-nav.prev { left: 24px; }
+        .preview-nav.next { right: 24px; }
+
+        .preview-nav:disabled {
+            opacity: 0.25;
+            cursor: default;
+            transform: translateY(-50%) scale(0.95);
+        }
+
+        .preview-nav.prev:disabled { left: 24px; }
+        .preview-nav.next:disabled { right: 24px; }
+
+        .preview-nav.prev:disabled:hover,
+        .preview-nav.next:disabled:hover {
+            background: rgba(255,255,255,0.08) !important;
+            border-color: rgba(255,255,255,0.15) !important;
+            transform: translateY(-50%) scale(0.95);
+        }
+
+        .preview-counter {
+            position: absolute;
+            bottom: 32px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,0.75);
+            font-size: 0.82rem;
+            font-weight: 500;
+            background: rgba(0,0,0,0.55);
+            padding: 6px 18px;
+            border-radius: 20px;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.08);
+            letter-spacing: 0.3px;
+            user-select: none;
+        }
+
+        .preview-download {
+            bottom: 28px;
+            right: 28px;
+        }
+
+        .preview-download:hover {
+            background: var(--accent) !important;
+            border-color: var(--accent) !important;
+        }
+
+        @media (max-width: 600px) {
+            .modal-grid { grid-template-columns: 1fr; }
+            .modal-box { padding: 20px; }
+        }
+
+        @media (max-width: 768px) {
+            .main { padding: 16px; }
+            .topbar { padding: 0 16px; }
+            .topbar-title { display: none; }
+            .filter-btns { display: none; }
+            .search-input { width: 160px; }
+            .search-input:focus { width: 180px; }
+            thead th:nth-child(3),
+            thead th:nth-child(4),
+            td:nth-child(3),
+            td:nth-child(4) { display: none; }
         }
     </style>
 </head>
 <body>
-    <!-- Security: Disable right-click and keyboard shortcuts -->
-    <script>
-        document.addEventListener('contextmenu', function(e) { e.preventDefault(); }, false);
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'F12' || (e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S')) || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'C' || e.key === 'c'))) {
-                e.preventDefault();
-            }
-        }, false);
-        document.ondragstart = function() { return false; };
-    </script>
-    <!-- Scroll Progress Bar -->
-    <div class="scroll-progress" id="scrollProgress"></div>
 
-    <!-- Header -->
-    <header class="header glass">
-        <div class="left">
-            <a href="index.html" class="logo" style="display:flex;align-items:center;gap:12px;text-decoration:none">
-                <img class="logo-img" src="https://yt3.googleusercontent.com/RPW5Z_kcoEu0ES_VpL4-7ZqI4eI1OQfuVL-DbuCYWmRhXono9hA5NOCSGGMDLzJqNcHUlhOg=s160-c-k-c0x00ffffff-no-rj" alt="Bari Plux">
-                <span class="logo-text">Bari Plux</span>
-            </a>
+    <!-- ===== PASSWORD GATE ===== -->
+    <div id="gate">
+        <div class="gate-box">
+            <div class="gate-logo">
+                <img src="https://i.postimg.cc/65cjsvfQ/imglogo.png" alt="Bari Plux">
+                <h2>Admin Panel</h2>
+                <p>Enter your admin password to continue</p>
+            </div>
+            <div class="gate-input-wrap">
+                <input type="password" id="gateInput" class="gate-input" placeholder="••••••••" autocomplete="off">
+                <button class="gate-eye" onclick="toggleGateEye()"><i class="fas fa-eye" id="gateEyeIcon"></i></button>
+            </div>
+            <button class="gate-btn" onclick="checkPassword()">
+                <i class="fas fa-unlock-alt"></i> Enter
+            </button>
+            <div class="gate-error" id="gateError">
+                <i class="fas fa-times-circle"></i> Incorrect password
+            </div>
         </div>
-        
-        <nav class="nav">
-            <ul class="nav-links">
-                <li><a href="index.html" class="nav-link">Home</a></li>
-                <li><a href="index.html#downloads" class="nav-link">Downloads</a></li>
-                <li><a href="index.html#videos" class="nav-link">Videos</a></li>
-                <li><a href="mapspubg.html" class="nav-link">Maps</a></li>
-                <li><a href="weaponorg.html" class="nav-link">Weapons</a></li>
-                <li><a href="news.html" class="nav-link">News</a></li>
-                <li><a href="updates.html" class="nav-link">Updates</a></li>
-            </ul>
-        </nav>
-        
-        <div style="display:flex;align-items:center;gap:12px">
-            <div id="theme-toggle" class="theme-toggle" title="Toggle Theme">
-                <span class="moon-icon">🌙</span>
-                <span class="sun-icon">☀️</span>
+    </div>
+
+    <!-- ===== MAIN APP ===== -->
+    <div id="app">
+
+        <!-- Topbar -->
+        <div class="topbar">
+            <div class="topbar-left">
+                <img src="https://i.postimg.cc/65cjsvfQ/imglogo.png" alt="Logo" class="topbar-logo">
+                <span class="topbar-title">Bari Plux</span>
+                <span class="topbar-badge">Admin</span>
+            </div>
+            <div class="topbar-right">
+                <a href="https://console.firebase.google.com/project/baripluxwebsite/authentication/users" target="_blank" class="topbar-btn">
+                    <i class="fas fa-fire" style="color:#FFA000;"></i> Firebase Console
+                </a>
+                <button class="topbar-btn danger" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </div>
+
+        <div class="main">
+
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="users" onclick="switchTab('users', this)">
+                    <i class="fas fa-users"></i> Users
+                </button>
+                <button class="tab-btn" data-tab="reports" onclick="switchTab('reports', this)">
+                    <i class="fas fa-bug"></i> Bug Reports
+                </button>
             </div>
 
-            <div class="user-menu-container">
-                <button id="loginBtnHeader" class="login-btn-header" title="Login">
-                    <i class="fas fa-sign-in-alt"></i>
-                    <span>Login</span>
-                </button>
-                <div id="userDropdown" class="user-dropdown glass">
-                    <div class="dropdown-header">
-                        <div class="user-avatar-small" id="userAvatar">U</div>
-                        <div>
-                            <div class="user-name-dropdown" id="userName">User</div>
-                            <div class="user-email-dropdown" id="userEmail">user@example.com</div>
+            <!-- ===== USERS SECTION ===== -->
+            <div id="usersSection">
+                <div class="stats-grid">
+                    <div class="stat-card" style="animation-delay:0s">
+                        <div class="stat-icon total"><i class="fas fa-users"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-num" id="statTotal">—</div>
+                            <div class="stat-label">Total Users</div>
                         </div>
                     </div>
-                    <div class="dropdown-divider"></div>
-                    <div class="dropdown-actions">
-                        <button type="button" id="viewProfileBtn" class="dropdown-btn">
-                            <i class="fas fa-user-circle"></i>
-                            <span>View Profile</span>
+                    <div class="stat-card" style="animation-delay:0.05s">
+                        <div class="stat-icon discord"><i class="fab fa-discord"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-num" id="statDiscord">—</div>
+                            <div class="stat-label">Discord</div>
+                        </div>
+                    </div>
+                    <div class="stat-card" style="animation-delay:0.1s">
+                        <div class="stat-icon google"><i class="fab fa-google"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-num" id="statGoogle">—</div>
+                            <div class="stat-label">Google</div>
+                        </div>
+                    </div>
+                    <div class="stat-card" style="animation-delay:0.15s">
+                        <div class="stat-icon github"><i class="fab fa-github"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-num" id="statGithub">—</div>
+                            <div class="stat-label">GitHub</div>
+                        </div>
+                    </div>
+                    <div class="stat-card" style="animation-delay:0.2s">
+                        <div class="stat-icon email"><i class="fas fa-envelope"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-num" id="statEmail">—</div>
+                            <div class="stat-label">Email</div>
+                        </div>
+                    </div>
+                    <div class="stat-card" style="animation-delay:0.25s">
+                        <div class="stat-icon active"><i class="fas fa-circle"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-num" id="statActive">—</div>
+                            <div class="stat-label">Last 24h</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="toolbar">
+                    <span class="toolbar-title">Users from Database</span>
+                    <div class="search-wrap">
+                        <i class="fas fa-search"></i>
+                        <input type="text" class="search-input" id="searchInput" placeholder="Search name or email..." oninput="renderTable()">
+                    </div>
+                    <div class="filter-btns">
+                        <button class="filter-btn active" data-filter="all" onclick="setFilter('all', this)">
+                            <i class="fas fa-border-all"></i> All
                         </button>
-                        <button type="button" id="goToLoginBtn" class="dropdown-btn">
-                            <i class="fas fa-sign-in-alt"></i>
-                            <span>Login Page</span>
+                        <button class="filter-btn discord" data-filter="discord" onclick="setFilter('discord', this)">
+                            <i class="fab fa-discord"></i> Discord
                         </button>
-                        <button type="button" id="logoutBtn" class="dropdown-btn">
-                            <i class="fas fa-sign-out-alt"></i>
-                            <span>Logout</span>
+                        <button class="filter-btn google" data-filter="google" onclick="setFilter('google', this)">
+                            <i class="fab fa-google"></i> Google
                         </button>
+                        <button class="filter-btn github" data-filter="github" onclick="setFilter('github', this)">
+                            <i class="fab fa-github"></i> GitHub
+                        </button>
+                        <button class="filter-btn email" data-filter="email" onclick="setFilter('email', this)">
+                            <i class="fas fa-envelope"></i> Email
+                        </button>
+                    </div>
+                    <button class="refresh-btn" id="refreshBtn" onclick="loadUsers()">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Email</th>
+                                <th>Login Method</th>
+                                <th>Login Time</th>
+                                <th>Last Active</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <tr class="state-row">
+                                <td colspan="6">
+                                    <div class="state-icon">🔐</div>
+                                    <div>Loading users...</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="last-updated" id="lastUpdated"></div>
+
+                <!-- Firebase Auth panel -->
+                <div class="firebase-panel">
+                <div class="firebase-icon">🔥</div>
+                <div class="firebase-text">
+                    <h3>Google · GitHub · Email/Password Users</h3>
+                    <p>These users authenticate through Firebase Auth and are managed directly in the Firebase Console.</p>
+                </div>
+                <a href="https://console.firebase.google.com/project/baripluxwebsite/authentication/users" target="_blank" class="firebase-link">
+                    <i class="fas fa-external-link-alt"></i> Open Firebase Auth
+                </a>
+            </div>
+        </div>
+
+        <!-- ===== BUG REPORTS SECTION ===== -->
+        <div id="reportsSection" style="display:none;">
+            <div class="stats-grid">
+                <div class="stat-card" style="animation-delay:0s">
+                    <div class="stat-icon total"><i class="fas fa-bug"></i></div>
+                    <div class="stat-info">
+                        <div class="stat-num" id="reportStatTotal">—</div>
+                        <div class="stat-label">Total Reports</div>
+                    </div>
+                </div>
+                <div class="stat-card" style="animation-delay:0.05s">
+                    <div class="stat-icon" style="background:rgba(244,67,54,0.15);color:#F44336;"><i class="fas fa-circle"></i></div>
+                    <div class="stat-info">
+                        <div class="stat-num" id="reportStatNew">—</div>
+                        <div class="stat-label">New</div>
+                    </div>
+                </div>
+                <div class="stat-card" style="animation-delay:0.1s">
+                    <div class="stat-icon" style="background:rgba(255,152,0,0.15);color:#FF9800;"><i class="fas fa-eye"></i></div>
+                    <div class="stat-info">
+                        <div class="stat-num" id="reportStatReviewed">—</div>
+                        <div class="stat-label">Reviewed</div>
+                    </div>
+                </div>
+                <div class="stat-card" style="animation-delay:0.15s">
+                    <div class="stat-icon" style="background:rgba(76,175,80,0.15);color:#4CAF50;"><i class="fas fa-check-circle"></i></div>
+                    <div class="stat-info">
+                        <div class="stat-num" id="reportStatResolved">—</div>
+                        <div class="stat-label">Resolved</div>
                     </div>
                 </div>
             </div>
-        </div>
-    </header>
 
-    <!-- Video Section -->
-    <section class="video-section">
-        <div class="container">
-            <div class="video-container">
-                <div class="video-header">
-                    <h1 class="video-title">PUBG Mobile New UI (Beta phase 2)</h1>
-                    <div class="video-meta">
-                        <span><i class="fas fa-calendar"></i> Feb 6, 2026</span>
-                        <span><i class="fas fa-clock"></i> 00:00 UTC</span>
-                        <span><i class="fas fa-tag"></i> Beta 4.3</span>
-                    </div>
+            <div class="toolbar">
+                <span class="toolbar-title">Bug Reports</span>
+                <div class="search-wrap">
+                    <i class="fas fa-search"></i>
+                    <input type="text" class="search-input" id="reportSearchInput" placeholder="Search description or email..." oninput="renderBugReports()">
                 </div>
-                
-                <div class="video-player">
-                    <!-- ویدیوی Screenpal -->
-                    <iframe 
-                        src="https://go.screenpal.com/player/cOn1Xdn3N6u" 
-                        width="100%" 
-                        height="100%" 
-                        frameborder="0" 
-                        allowfullscreen 
-                        style="min-height: 400px;">
-                    </iframe>
+                <div class="filter-btns">
+                    <button class="filter-btn active" data-status="all" onclick="setReportFilter('all', this)">
+                        <i class="fas fa-border-all"></i> All
+                    </button>
+                    <button class="filter-btn" data-status="new" style="--filter-color:#F44336;" onclick="setReportFilter('new', this)">
+                        <i class="fas fa-circle" style="color:#F44336;font-size:10px;"></i> New
+                    </button>
+                    <button class="filter-btn" data-status="reviewed" style="--filter-color:#FF9800;" onclick="setReportFilter('reviewed', this)">
+                        <i class="fas fa-circle" style="color:#FF9800;font-size:10px;"></i> Reviewed
+                    </button>
+                    <button class="filter-btn" data-status="resolved" style="--filter-color:#4CAF50;" onclick="setReportFilter('resolved', this)">
+                        <i class="fas fa-circle" style="color:#4CAF50;font-size:10px;"></i> Resolved
+                    </button>
                 </div>
-                <div class="video-description">
-                    <h3>Event Description</h3>
-                    <p>All new changes in UI and settings for PUBG Mobile Beta 4.3.2</p>
+                <button class="refresh-btn" id="refreshReportsBtn" onclick="loadBugReports()">
+                    <i class="fas fa-sync-alt"></i> Refresh
+                </button>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Report ID</th>
+                            <th>Description</th>
+                            <th>Email</th>
+                            <th>PC Name</th>
+                            <th>OS</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reportsTableBody">
+                        <tr class="state-row">
+                            <td colspan="8">
+                                <div class="state-icon">🔍</div>
+                                <div>Loading bug reports...</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="last-updated" id="reportsLastUpdated"></div>
+        </div>
+
+    </div>
+</div>
+
+<!-- ===== FULL IMAGE PREVIEW ===== -->
+<div class="img-preview-overlay" id="imgPreviewOverlay">
+    <button class="preview-btn preview-close" onclick="closeImgPreview()" title="Close (Esc)"><i class="fas fa-times"></i></button>
+    <button class="preview-btn preview-nav prev" id="previewPrevBtn" onclick="prevImage()" title="Previous (←)"><i class="fas fa-chevron-left"></i></button>
+    <img id="imgPreviewFull" src="" alt="Screenshot preview" onclick="closeImgPreview()">
+    <button class="preview-btn preview-nav next" id="previewNextBtn" onclick="nextImage()" title="Next (→)"><i class="fas fa-chevron-right"></i></button>
+    <div class="preview-counter" id="imgPreviewCounter"></div>
+    <button class="preview-btn preview-download" onclick="downloadPreviewImage()" title="Download"><i class="fas fa-download"></i></button>
+</div>
+
+<!-- ===== DETAILS MODAL ===== -->
+<!-- ===== USER DETAILS MODAL ===== -->
+<div class="modal-overlay" id="userDetailsModal">
+    <div class="modal-box" style="max-width:520px;">
+        <button class="modal-close" onclick="closeUserModal()"><i class="fas fa-times"></i></button>
+
+        <!-- Header with avatar -->
+        <div style="display:flex;align-items:center;gap:20px;margin-bottom:28px;padding-bottom:24px;border-bottom:1px solid var(--border);">
+            <div id="udAvatar" style="width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.8rem;font-weight:700;flex-shrink:0;overflow:hidden;border:2px solid var(--border);"></div>
+            <div>
+                <div id="udName" style="font-size:1.25rem;font-weight:700;margin-bottom:4px;"></div>
+                <div id="udMethodBadge"></div>
+            </div>
+        </div>
+
+        <!-- Info grid -->
+        <div class="modal-section">
+            <h3><i class="fas fa-id-card"></i> Account Info</h3>
+            <div class="modal-grid">
+                <div class="field" style="grid-column:1/-1;">
+                    <span class="label">User ID</span>
+                    <span class="value" id="udId" style="font-family:'JetBrains Mono',monospace;font-size:0.78rem;word-break:break-all;"></span>
+                </div>
+                <div class="field" style="grid-column:1/-1;">
+                    <span class="label">Email</span>
+                    <span class="value" id="udEmail"></span>
+                </div>
+                <div class="field">
+                    <span class="label">Login Method</span>
+                    <span class="value" id="udMethod"></span>
+                </div>
+                <div class="field">
+                    <span class="label">Platform</span>
+                    <span class="value" id="udPlatform"></span>
                 </div>
             </div>
         </div>
-    </section>
 
-    <script>
-        // تنظیم تم بر اساس ترجیح کاربر
-        function setupTheme() {
-            const savedTheme = localStorage.getItem('theme');
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            
-            if (savedTheme) {
-                document.documentElement.setAttribute('data-theme', savedTheme);
-            } else if (prefersDark) {
-                document.documentElement.setAttribute('data-theme', 'dark');
+        <div class="modal-section">
+            <h3><i class="fas fa-clock"></i> Activity</h3>
+            <div class="modal-grid">
+                <div class="field">
+                    <span class="label">First Login</span>
+                    <span class="value" id="udLoginTime"></span>
+                </div>
+                <div class="field">
+                    <span class="label">Last Active</span>
+                    <span class="value" id="udLastActive"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile photo if available -->
+        <div class="modal-section" id="udPhotoSection" style="display:none;">
+            <h3><i class="fas fa-image"></i> Profile Photo</h3>
+            <div style="display:flex;align-items:center;gap:14px;">
+                <img id="udPhotoFull" src="" alt="Profile" style="width:80px;height:80px;border-radius:12px;object-fit:cover;border:1px solid var(--border);">
+                <a id="udPhotoLink" href="" target="_blank" style="color:var(--accent);font-size:0.85rem;text-decoration:none;">
+                    <i class="fas fa-external-link-alt"></i> Open original
+                </a>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div style="display:flex;gap:10px;margin-top:24px;">
+            <button onclick="copyUserId()" style="flex:1;padding:10px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-family:'Poppins',sans-serif;font-size:0.85rem;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">
+                <i class="fas fa-copy"></i> Copy ID
+            </button>
+            <button onclick="copyUserEmail()" style="flex:1;padding:10px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-family:'Poppins',sans-serif;font-size:0.85rem;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">
+                <i class="fas fa-envelope"></i> Copy Email
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="detailsModal">
+    <div class="modal-box">
+        <button class="modal-close" onclick="closeDetailsModal()"><i class="fas fa-times"></i></button>
+        <div class="modal-header">
+            <h2><i class="fas fa-bug" style="color:var(--accent);"></i> Bug Report Details</h2>
+            <div class="modal-meta">
+                <span id="modalReportId">—</span>
+                <span id="modalReportDate">—</span>
+                <span id="modalReportStatus">—</span>
+            </div>
+        </div>
+        <div class="modal-section">
+            <h3><i class="fas fa-align-left"></i> Description</h3>
+            <div class="modal-description" id="modalDescription"></div>
+        </div>
+        <div class="modal-section">
+            <h3><i class="fas fa-info-circle"></i> Program Information</h3>
+            <div class="modal-grid">
+                <div class="field"><span class="label">App Name</span><span class="value" id="modalAppName">—</span></div>
+                <div class="field"><span class="label">Version</span><span class="value" id="modalAppVersion">—</span></div>
+                <div class="field"><span class="label">Company</span><span class="value" id="modalCompany">—</span></div>
+                <div class="field"><span class="label">Developer</span><span class="value" id="modalDeveloper">—</span></div>
+                <div class="field"><span class="label">Website</span><span class="value" id="modalWebsite">—</span></div>
+                <div class="field"><span class="label">Install Path</span><span class="value" id="modalInstallPath" style="font-size:0.78rem;font-family:'JetBrains Mono',monospace;">—</span></div>
+            </div>
+        </div>
+        <div class="modal-section">
+            <h3><i class="fas fa-microchip"></i> System Specifications</h3>
+            <div class="modal-grid">
+                <div class="field"><span class="label">PC Name</span><span class="value" id="modalPcName">—</span></div>
+                <div class="field"><span class="label">PC / Laptop Model</span><span class="value" id="modalPcModel">—</span></div>
+                <div class="field"><span class="label">Processor (CPU)</span><span class="value" id="modalCpu">—</span></div>
+                <div class="field"><span class="label">Graphics (GPU)</span><span class="value" id="modalGpu">—</span></div>
+                <div class="field"><span class="label">Installed RAM</span><span class="value" id="modalRam">—</span></div>
+                <div class="field"><span class="label">Storage</span><span class="value" id="modalStorage">—</span></div>
+                <div class="field"><span class="label">Operating System</span><span class="value" id="modalOs">—</span></div>
+                <div class="field"><span class="label">System Type</span><span class="value" id="modalSystemType">—</span></div>
+                <div class="field"><span class="label">Screen Resolution</span><span class="value" id="modalResolution">—</span></div>
+                <div class="field"><span class="label">Refresh Rate</span><span class="value" id="modalRefreshRate">—</span></div>
+            </div>
+        </div>
+        <div class="modal-section" id="modalImagesSection" style="display:none;">
+            <div class="modal-images-header">
+                <h3><i class="fas fa-images"></i> Screenshots</h3>
+                <span class="modal-images-count" id="modalImagesCount"></span>
+            </div>
+            <div class="modal-images" id="modalImagesContainer"></div>
+        </div>
+        <div class="modal-section">
+            <h3><i class="fas fa-envelope"></i> User Info</h3>
+            <div class="modal-grid">
+                <div class="field"><span class="label">Email</span><span class="value" id="modalEmail">—</span></div>
+                <div class="field"><span class="label">PC Name</span><span class="value" id="ModalUserPcName">—</span></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ==================== CONFIG ====================
+    // TODO: Change this to your own admin password
+    const ADMIN_PASSWORD = 'IamTheAtomicSnow7#';
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBH_t3Uue7fbb-DahwjSJGjG2-quCqiLEs",
+        authDomain: "baripluxwebsite.firebaseapp.com",
+        projectId: "baripluxwebsite",
+        storageBucket: "baripluxwebsite.firebasestorage.app",
+        messagingSenderId: "280043766563",
+        appId: "1:280043766563:web:409e6b78c1c24b568fc296",
+        databaseURL: "https://baripluxwebsite-default-rtdb.firebaseio.com"
+    };
+
+    // ==================== STATE ====================
+    let allUsers = [];
+    let activeFilter = 'all';
+    let db = null;
+
+    // ==================== PASSWORD GATE ====================
+    function toggleGateEye() {
+            const input = document.getElementById('gateInput');
+            const icon = document.getElementById('gateEyeIcon');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'fas fa-eye-slash';
             } else {
-                document.documentElement.setAttribute('data-theme', 'light');
+                input.type = 'password';
+                icon.className = 'fas fa-eye';
             }
         }
 
-        // تنظیم ارتفاع ویدیو
-        function setupVideoPlayer() {
-            const videoPlayer = document.querySelector('.video-player');
-            const iframe = videoPlayer.querySelector('iframe');
-            
-            // تنظیم نسبت ابعاد 16:9
-            const width = videoPlayer.clientWidth;
-            const height = width * 9 / 16;
-            
-            iframe.style.height = height + 'px';
-            videoPlayer.style.height = height + 'px';
+        function checkPassword() {
+            const val = document.getElementById('gateInput').value;
+            const errEl = document.getElementById('gateError');
+            if (val === ADMIN_PASSWORD) {
+                sessionStorage.setItem('bp_admin', '1');
+                document.getElementById('gate').classList.add('hidden');
+                document.getElementById('app').classList.add('show');
+                initApp();
+            } else {
+                errEl.classList.add('show');
+                document.getElementById('gateInput').value = '';
+                setTimeout(() => errEl.classList.remove('show'), 2000);
+            }
         }
 
-        // مقداردهی اولیه
-        document.addEventListener('DOMContentLoaded', function() {
-            setupTheme();
-            setupVideoPlayer();
-            
-            // تنظیم مجدد اندازه هنگام تغییر سایز پنجره
-            window.addEventListener('resize', setupVideoPlayer);
+        document.getElementById('gateInput').addEventListener('keydown', e => {
+            if (e.key === 'Enter') checkPassword();
         });
-    </script>
 
-    <!-- Scroll Progress Bar -->
-    <script>
-        const scrollProgress = document.getElementById('scrollProgress');
-        if (scrollProgress) {
-            window.addEventListener('scroll', () => {
-                const scrollTop = window.scrollY;
-                const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-                const scrollPercent = (scrollTop / docHeight) * 100;
-                scrollProgress.style.width = scrollPercent + '%';
-            }, { passive: true });
+        function logout() {
+            sessionStorage.removeItem('bp_admin');
+            document.getElementById('gate').classList.remove('hidden');
+            document.getElementById('app').classList.remove('show');
+            document.getElementById('gateInput').value = '';
         }
-    </script>
 
-    <!-- Login Status - Update Header Button -->
-    <script>
-    function updateLoginButton() {
-        const loginBtn = document.getElementById('loginBtnHeader');
-        const dropdown = document.getElementById('userDropdown');
-        if (!loginBtn || !dropdown) return;
-        
-        const storedUser = localStorage.getItem('bariplux_user');
-        
-        if (storedUser) {
+        // ==================== FIREBASE INIT ====================
+        function initApp() {
             try {
-                const user = JSON.parse(storedUser);
-                const userName = user.name || user.email.split('@')[0];
-                const userEmail = user.email || '';
-                const initial = userName.charAt(0).toUpperCase();
-                
-                loginBtn.innerHTML = '<span style="display:flex;align-items:center;gap:8px;"><span style="width:28px;height:28px;background:linear-gradient(135deg,var(--accent),var(--secondary));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:white;">' + initial + '</span><span style="font-size:0.9rem;">' + userName.substring(0, 12) + (userName.length > 12 ? '...' : '') + '</span></span>';
-                loginBtn.style.cursor = 'pointer';
-                loginBtn.onclick = function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    toggleDropdown();
-                };
-                
-                document.getElementById('userAvatar').innerHTML = initial;
-                document.getElementById('userName').textContent = userName;
-                document.getElementById('userEmail').textContent = userEmail;
-                
-                document.getElementById('viewProfileBtn').onclick = function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    toggleDropdown();
-                };
-                
-                document.getElementById('goToLoginBtn').onclick = function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    window.location.href = 'login.html';
-                };
-                
-                document.getElementById('logoutBtn').onclick = function() {
-                    if (confirm('Logout from Bari Plux?')) {
-                        localStorage.removeItem('bariplux_user');
-                        localStorage.removeItem('bariplux_login_token');
-                        location.reload();
-                    }
-                };
+                if (!firebase.apps.length) {
+                    firebase.initializeApp(firebaseConfig);
+                }
+                db = firebase.database();
+                loadUsers();
+                // Live updates every 30 seconds
+                setInterval(loadUsers, 30000);
             } catch (e) {
-                console.error('Error parsing user:', e);
+                console.error('Firebase init error:', e);
+                showTableError('Could not connect to Firebase. Check your database URL.');
             }
-        } else {
-            loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i><span>Login</span>';
-            loginBtn.onclick = function() { window.location.href = 'login.html'; };
-            dropdown.classList.remove('active');
         }
-    }
-    
-    function toggleDropdown() {
-        const dropdown = document.getElementById('userDropdown');
-        dropdown.classList.toggle('active');
-    }
-    
-    document.addEventListener('click', function(e) {
-        const dropdown = document.getElementById('userDropdown');
-        const container = document.querySelector('.user-menu-container');
-        
-        if (container && !container.contains(e.target)) {
-            dropdown.classList.remove('active');
+
+        // ==================== LOAD USERS ====================
+        async function loadUsers() {
+            const btn = document.getElementById('refreshBtn');
+            btn.classList.add('spinning');
+
+            if (!db) {
+                showTableError('Firebase not initialized.');
+                btn.classList.remove('spinning');
+                return;
+            }
+
+            try {
+                // Read both nodes in parallel
+                const [usersSnap, discordSnap] = await Promise.all([
+                    db.ref('users').once('value'),
+                    db.ref('discordUsers').once('value')
+                ]);
+
+                const parseNode = (snap) => {
+                    const data = snap.val();
+                    if (!data) return [];
+                    return Object.entries(data).map(([id, u]) => ({
+                        id,
+                        name: u.name || 'Unknown',
+                        email: u.email || '—',
+                        loginMethod: u.loginMethod || 'unknown',
+                        loginTime: u.loginTime || null,
+                        lastActive: u.lastActive || null,
+                        photoURL: u.photoURL || null,
+                        platform: u.platform || 'website'
+                    }));
+                };
+
+                // Merge and deduplicate by id
+                const merged = [...parseNode(usersSnap), ...parseNode(discordSnap)];
+                const seen = new Set();
+                allUsers = merged.filter(u => {
+                    if (seen.has(u.id)) return false;
+                    seen.add(u.id);
+                    return true;
+                });
+
+                // Sort by lastActive descending
+                allUsers.sort((a, b) => (b.lastActive || 0) - (a.lastActive || 0));
+
+                updateStats();
+                renderTable();
+
+                const now = new Date();
+                document.getElementById('lastUpdated').textContent =
+                    `Last updated: ${now.toLocaleDateString()} at ${now.toLocaleTimeString()}`;
+
+            } catch (e) {
+                console.error('Load error:', e);
+                showTableError('Could not read database. Make sure Firebase rules allow admin reads.');
+            }
+
+            btn.classList.remove('spinning');
         }
-    });
-    
-    updateLoginButton();
-    setTimeout(updateLoginButton, 500);
-    setTimeout(updateLoginButton, 1000);
+
+        // ==================== STATS ====================
+        function updateStats() {
+            const total = allUsers.length;
+            const discord = allUsers.filter(u => u.loginMethod === 'discord').length;
+            const google = allUsers.filter(u => u.loginMethod.includes('google')).length;
+            const github = allUsers.filter(u => u.loginMethod.includes('github')).length;
+            const email = allUsers.filter(u => u.loginMethod === 'email').length;
+            const now = Date.now();
+            const active = allUsers.filter(u => u.lastActive && (now - u.lastActive) < 86400000).length;
+
+            document.getElementById('statTotal').textContent = total;
+            document.getElementById('statDiscord').textContent = discord;
+            document.getElementById('statGoogle').textContent = google;
+            document.getElementById('statGithub').textContent = github;
+            document.getElementById('statEmail').textContent = email;
+            document.getElementById('statActive').textContent = active;
+        }
+
+        // ==================== FILTER & RENDER ====================
+        function setFilter(filter, btn) {
+            activeFilter = filter;
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderTable();
+        }
+
+        function renderTable() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const tbody = document.getElementById('usersTableBody');
+
+            let filtered = allUsers.filter(u => {
+                const matchFilter = activeFilter === 'all'
+                    || (activeFilter === 'google' && u.loginMethod.includes('google'))
+                    || (activeFilter === 'discord' && u.loginMethod === 'discord')
+                    || (activeFilter === 'github' && u.loginMethod.includes('github'))
+                    || (activeFilter === 'email' && u.loginMethod === 'email');
+
+                const matchSearch = !search
+                    || u.name.toLowerCase().includes(search)
+                    || u.email.toLowerCase().includes(search)
+                    || u.id.toLowerCase().includes(search);
+
+                return matchFilter && matchSearch;
+            });
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `
+                    <tr class="state-row">
+                        <td colspan="5">
+                            <div class="state-icon">🔍</div>
+                            <div>${search ? 'No users match your search.' : 'No users found in this category.'}</div>
+                        </td>
+                    </tr>`;
+                return;
+            }
+
+            tbody.innerHTML = filtered.map((u, i) => {
+                const method = getMethodInfo(u.loginMethod);
+                const loginTime = u.loginTime ? formatDate(u.loginTime) : '—';
+                const lastActive = u.lastActive ? timeAgo(u.lastActive) : '—';
+                const isRecent = u.lastActive && (Date.now() - u.lastActive) < 300000; // 5 min
+                const initial = u.name.charAt(0).toUpperCase();
+                const avatarColor = getAvatarColor(u.loginMethod);
+
+                return `
+                    <tr style="animation-delay:${i * 0.03}s" onclick="openUserModal('${escHtml(u.id)}')" style="cursor:pointer;">
+                        <td>
+                            <div class="user-cell">
+                                <div class="user-avatar" style="background:${avatarColor}20;color:${avatarColor};">
+                                    ${u.photoURL ? `<img src="${escHtml(u.photoURL)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" onerror="this.style.display='none';this.parentElement.textContent='${initial}'">` : initial}
+                                </div>
+                                <div>
+                                    <div class="user-name">${escHtml(u.name)}</div>
+                                    <div class="user-id">${u.id.substring(0, 20)}${u.id.length > 20 ? '…' : ''}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td style="color:var(--muted);font-size:0.85rem;">${escHtml(u.email)}</td>
+                        <td><span class="method-badge ${method.cls}">${method.icon} ${method.label}</span></td>
+                        <td class="time-cell">${loginTime}</td>
+                        <td class="time-cell">
+                            ${isRecent ? '<span class="active-dot"></span>' : ''}
+                            <span>${lastActive}</span>
+                        </td>
+                        <td>
+                            <button onclick="event.stopPropagation();openUserModal('${escHtml(u.id)}')"
+                                style="padding:6px 12px;background:rgba(108,99,255,0.12);border:1px solid rgba(108,99,255,0.25);border-radius:6px;color:var(--accent);font-family:'Poppins',sans-serif;font-size:0.78rem;font-weight:600;cursor:pointer;transition:all 0.2s;white-space:nowrap;"
+                                onmouseover="this.style.background='rgba(108,99,255,0.22)'"
+                                onmouseout="this.style.background='rgba(108,99,255,0.12)'">
+                                <i class="fas fa-eye"></i> Details
+                            </button>
+                        </td>
+                    </tr>`;
+            }).join('');
+        }
+
+        function showTableError(msg) {
+            document.getElementById('usersTableBody').innerHTML = `
+                <tr class="state-row">
+                    <td colspan="5">
+                        <div class="state-icon">⚠️</div>
+                        <div style="color:var(--danger);">${msg}</div>
+                    </td>
+                </tr>`;
+        }
+
+        // ==================== HELPERS ====================
+        function getMethodInfo(method) {
+            if (method === 'discord') return { cls: 'discord', icon: '🎮', label: 'Discord' };
+            if (method.includes('google')) return { cls: 'google', icon: '🔵', label: 'Google' };
+            if (method === 'github') return { cls: 'github', icon: '⚫', label: 'GitHub' };
+            if (method === 'email') return { cls: 'email', icon: '✉️', label: 'Email' };
+            return { cls: 'unknown', icon: '❓', label: method };
+        }
+
+        function getAvatarColor(method) {
+            if (method === 'discord') return '#5865F2';
+            if (method.includes('google')) return '#EA4335';
+            if (method === 'github') return '#e6edf3';
+            if (method === 'email') return '#FFB300';
+            return '#6C63FF';
+        }
+
+        function formatDate(iso) {
+            try {
+                const d = new Date(iso);
+                return d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+            } catch { return '—'; }
+        }
+
+        function timeAgo(timestamp) {
+            const diff = Date.now() - timestamp;
+            if (diff < 60000) return 'Just now';
+            if (diff < 3600000) return Math.floor(diff / 60000) + 'm ago';
+            if (diff < 86400000) return Math.floor(diff / 3600000) + 'h ago';
+            if (diff < 604800000) return Math.floor(diff / 86400000) + 'd ago';
+            return new Date(timestamp).toLocaleDateString();
+        }
+
+        function escHtml(str) {
+            return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+        }
+
+        // ==================== TAB SWITCHING ====================
+        let activeReportFilter = 'all';
+
+        function switchTab(tab, btn) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            document.getElementById('usersSection').style.display = tab === 'users' ? '' : 'none';
+            document.getElementById('reportsSection').style.display = tab === 'reports' ? '' : 'none';
+
+            if (tab === 'reports') {
+                loadBugReports();
+            }
+        }
+
+        // ==================== BUG REPORTS ====================
+        let allReports = [];
+
+        async function loadBugReports() {
+            const btn = document.getElementById('refreshReportsBtn');
+            if (btn) btn.classList.add('spinning');
+
+            if (!db) {
+                showReportsError('Firebase not initialized.');
+                if (btn) btn.classList.remove('spinning');
+                return;
+            }
+
+            try {
+                const snapshot = await db.ref('bugReports').once('value');
+                const data = snapshot.val();
+
+                if (!data) {
+                    allReports = [];
+                } else {
+                    allReports = Object.entries(data).map(([key, r]) => ({
+                        firebaseKey: key,
+                        id: r.id || key,
+                        description: r.description || '',
+                        email: r.email || '',
+                        pcName: r.pcName || '—',
+                        os: r.os || '—',
+                        version: r.version || '—',
+                        status: r.status || 'new',
+                        date: r.date || '—',
+                        timestamp: r.timestamp || 0,
+                        programInfo: r.programInfo || null,
+                        systemSpecs: r.systemSpecs || null,
+                        images: r.images || []
+                    }));
+
+                    // Sort by timestamp descending (newest first)
+                    allReports.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+                }
+
+                updateReportStats();
+                renderBugReports();
+
+                const now = new Date();
+                const updated = document.getElementById('reportsLastUpdated');
+                if (updated) {
+                    updated.textContent = `Last updated: ${now.toLocaleDateString()} at ${now.toLocaleTimeString()}`;
+                }
+
+            } catch (e) {
+                console.error('Load reports error:', e);
+                showReportsError('Could not load bug reports from database.');
+            }
+
+            if (btn) btn.classList.remove('spinning');
+        }
+
+        function updateReportStats() {
+            const total = allReports.length;
+            const newCount = allReports.filter(r => r.status === 'new').length;
+            const reviewed = allReports.filter(r => r.status === 'reviewed').length;
+            const resolved = allReports.filter(r => r.status === 'resolved').length;
+
+            document.getElementById('reportStatTotal').textContent = total;
+            document.getElementById('reportStatNew').textContent = newCount;
+            document.getElementById('reportStatReviewed').textContent = reviewed;
+            document.getElementById('reportStatResolved').textContent = resolved;
+        }
+
+        function setReportFilter(status, btn) {
+            activeReportFilter = status;
+            document.querySelectorAll('.report-status-filter').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderBugReports();
+        }
+
+        function renderBugReports() {
+            const search = document.getElementById('reportSearchInput').value.toLowerCase();
+            const tbody = document.getElementById('reportsTableBody');
+
+            let filtered = allReports.filter(r => {
+                const matchFilter = activeReportFilter === 'all' || r.status === activeReportFilter;
+                const matchSearch = !search
+                    || (r.description || '').toLowerCase().includes(search)
+                    || (r.email || '').toLowerCase().includes(search)
+                    || (r.pcName || '').toLowerCase().includes(search)
+                    || (r.id || '').toLowerCase().includes(search);
+                return matchFilter && matchSearch;
+            });
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `
+                    <tr class="state-row">
+                        <td colspan="8">
+                            <div class="state-icon">🔍</div>
+                            <div>${search ? 'No reports match your search.' : 'No bug reports found.'}</div>
+                        </td>
+                    </tr>`;
+                return;
+            }
+
+            tbody.innerHTML = filtered.map((r, i) => {
+                const statusLabel = r.status.charAt(0).toUpperCase() + r.status.slice(1);
+                const statusIcon = r.status === 'new' ? '🆕' : r.status === 'reviewed' ? '👁️' : '✅';
+                const descPreview = (r.description || '').length > 80
+                    ? escHtml(r.description.substring(0, 80)) + '…'
+                    : escHtml(r.description || '');
+
+                const reportJson = escHtml(JSON.stringify(r).replace(/'/g, "&#39;"));
+
+                let actions = `<button class="action-btn" onclick="showDetailsModal('${r.firebaseKey}')" style="border-color:rgba(108,99,255,0.3);color:var(--accent);margin-right:4px;">📋 Details</button>`;
+                if (r.status === 'new') {
+                    actions += `
+                        <button class="action-btn review" onclick="updateReportStatus('${r.firebaseKey}', 'reviewed')">👁️ Review</button>
+                        <button class="action-btn resolve" onclick="updateReportStatus('${r.firebaseKey}', 'resolved')" style="margin-left:4px;">✅ Resolve</button>`;
+                } else if (r.status === 'reviewed') {
+                    actions += `
+                        <button class="action-btn resolve" onclick="updateReportStatus('${r.firebaseKey}', 'resolved')">✅ Resolve</button>`;
+                } else {
+                    actions += `<span style="color:var(--muted);font-size:0.78rem;">Done</span>`;
+                }
+
+                return `
+                    <tr style="animation-delay:${i * 0.03}s">
+                        <td style="font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:var(--muted);">${escHtml(r.id)}</td>
+                        <td>
+                            <div class="report-desc" title="${escHtml(r.description || '')}">${descPreview}</div>
+                        </td>
+                        <td style="color:var(--muted);font-size:0.85rem;">${escHtml(r.email) || '—'}</td>
+                        <td style="font-size:0.85rem;">${escHtml(r.pcName)}</td>
+                        <td style="color:var(--muted);font-size:0.78rem;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${escHtml(r.os)}">${escHtml(r.os)}</td>
+                        <td class="time-cell"><span>${r.date}</span></td>
+                        <td><span class="report-status ${r.status}">${statusIcon} ${statusLabel}</span></td>
+                        <td style="white-space:nowrap;">${actions}</td>
+                    </tr>`;
+            }).join('');
+        }
+
+        async function updateReportStatus(firebaseKey, newStatus) {
+            if (!db || !firebaseKey) return;
+
+            try {
+                await db.ref(`bugReports/${firebaseKey}/status`).set(newStatus);
+                // Also update locally
+                const report = allReports.find(r => r.firebaseKey === firebaseKey);
+                if (report) report.status = newStatus;
+                updateReportStats();
+                renderBugReports();
+            } catch (e) {
+                console.error('Status update error:', e);
+                alert('Failed to update report status.');
+            }
+        }
+
+        // ==================== DETAILS MODAL ====================
+        function showDetailsModal(firebaseKey) {
+            const r = allReports.find(x => x.firebaseKey === firebaseKey);
+            if (!r) return;
+
+            const statusLabels = { new: '🆕 New', reviewed: '👁️ Reviewed', resolved: '✅ Resolved' };
+
+            document.getElementById('modalReportId').textContent = r.id || '—';
+            document.getElementById('modalReportDate').textContent = r.date || '—';
+            document.getElementById('modalReportStatus').innerHTML =
+                `<span class="report-status ${r.status}">${statusLabels[r.status] || r.status}</span>`;
+            document.getElementById('modalDescription').textContent = r.description || 'No description provided.';
+
+            const pi = r.programInfo || {};
+            document.getElementById('modalAppName').textContent = pi.appName || '—';
+            document.getElementById('modalAppVersion').textContent = pi.appVersion || '—';
+            document.getElementById('modalCompany').textContent = pi.company || '—';
+            document.getElementById('modalDeveloper').textContent = pi.developer || '—';
+            document.getElementById('modalWebsite').textContent = pi.website || '—';
+            document.getElementById('modalInstallPath').textContent = pi.installPath || '—';
+
+            const ss = r.systemSpecs || {};
+            document.getElementById('modalPcName').textContent = r.pcName || '—';
+            document.getElementById('modalPcModel').textContent = ss.pcModel || '—';
+            document.getElementById('modalCpu').textContent = ss.cpu || '—';
+            document.getElementById('modalGpu').textContent = ss.gpu || '—';
+            document.getElementById('modalRam').textContent = ss.ram || '—';
+            document.getElementById('modalStorage').textContent = ss.storage || '—';
+            document.getElementById('modalOs').textContent = r.os || '—';
+            document.getElementById('modalSystemType').textContent = ss.systemType || '—';
+            document.getElementById('modalResolution').textContent = ss.resolution || '—';
+            document.getElementById('modalRefreshRate').textContent = ss.refreshRate || '—';
+            document.getElementById('modalEmail').textContent = r.email || '—';
+            document.getElementById('ModalUserPcName').textContent = r.pcName || '—';
+
+            // Show images
+            const images = r.images || [];
+            currentPreviewImages = images;
+            const imgSection = document.getElementById('modalImagesSection');
+            const imgContainer = document.getElementById('modalImagesContainer');
+            const imgCount = document.getElementById('modalImagesCount');
+            imgContainer.innerHTML = '';
+            if (images.length > 0) {
+                imgSection.style.display = '';
+                imgCount.textContent = `${images.length} image${images.length !== 1 ? 's' : ''}`;
+                images.forEach((base64, idx) => {
+                    const src = base64.startsWith('data:') ? base64 : `data:image/png;base64,${base64}`;
+                    const thumb = document.createElement('div');
+                    thumb.className = 'img-thumb';
+                    thumb.innerHTML = `
+                        <img src="${src}" alt="Screenshot ${idx + 1}" loading="lazy">
+                        <div class="thumb-overlay" onclick="openImgPreview(${idx})">
+                            <i class="fas fa-search-plus"></i>
+                        </div>`;
+                    imgContainer.appendChild(thumb);
+                });
+            } else {
+                imgSection.style.display = 'none';
+                imgCount.textContent = '';
+            }
+
+            document.getElementById('detailsModal').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDetailsModal() {
+            document.getElementById('detailsModal').classList.remove('show');
+            document.body.style.overflow = '';
+        }
+
+        // ==================== IMAGE PREVIEW ====================
+        let currentPreviewImages = [];
+        let currentPreviewIndex = 0;
+
+        function openImgPreview(idx) {
+            currentPreviewIndex = idx;
+            const total = currentPreviewImages.length;
+            if (total === 0) return;
+            updatePreviewImage();
+            document.getElementById('previewPrevBtn').style.display = total > 1 ? '' : 'none';
+            document.getElementById('previewNextBtn').style.display = total > 1 ? '' : 'none';
+            document.getElementById('imgPreviewOverlay').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function updatePreviewImage() {
+            const raw = currentPreviewImages[currentPreviewIndex];
+            if (!raw) return;
+            const src = raw.startsWith('data:') ? raw : `data:image/png;base64,${raw}`;
+            document.getElementById('imgPreviewFull').src = src;
+            document.getElementById('imgPreviewCounter').textContent =
+                `${currentPreviewIndex + 1} / ${currentPreviewImages.length}`;
+            document.getElementById('previewPrevBtn').disabled = currentPreviewIndex === 0;
+            document.getElementById('previewNextBtn').disabled =
+                currentPreviewIndex === currentPreviewImages.length - 1;
+        }
+
+        function prevImage() {
+            if (currentPreviewIndex > 0) {
+                currentPreviewIndex--;
+                updatePreviewImage();
+            }
+        }
+
+        function nextImage() {
+            if (currentPreviewIndex < currentPreviewImages.length - 1) {
+                currentPreviewIndex++;
+                updatePreviewImage();
+            }
+        }
+
+        function closeImgPreview() {
+            document.getElementById('imgPreviewOverlay').classList.remove('show');
+            document.body.style.overflow = '';
+        }
+
+        function downloadPreviewImage() {
+            const img = document.getElementById('imgPreviewFull');
+            if (!img.src) return;
+            const a = document.createElement('a');
+            a.href = img.src;
+            a.download = `screenshot-${currentPreviewIndex + 1}.png`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        // Close modal on overlay click
+        document.getElementById('detailsModal').addEventListener('click', function(e) {
+            if (e.target === this) closeDetailsModal();
+        });
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const preview = document.getElementById('imgPreviewOverlay');
+                if (preview.classList.contains('show')) closeImgPreview();
+                else closeDetailsModal();
+            } else if (e.key === 'ArrowLeft') {
+                if (document.getElementById('imgPreviewOverlay').classList.contains('show'))
+                    prevImage();
+            } else if (e.key === 'ArrowRight') {
+                if (document.getElementById('imgPreviewOverlay').classList.contains('show'))
+                    nextImage();
+            }
+        });
+
+        function showReportsError(msg) {
+            const tbody = document.getElementById('reportsTableBody');
+            if (tbody) {
+                tbody.innerHTML = `
+                    <tr class="state-row">
+                        <td colspan="8">
+                            <div class="state-icon">⚠️</div>
+                            <div style="color:var(--danger);">${msg}</div>
+                        </td>
+                    </tr>`;
+            }
+        }
+
+        // Auto-init if already logged in
+        if (sessionStorage.getItem('bp_admin') === '1') {
+            initApp();
+        }
     </script>
-<script src="js/main.js" defer></script>
 </body>
 </html>
