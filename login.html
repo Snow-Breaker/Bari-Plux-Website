@@ -1599,7 +1599,7 @@
             };
             const jsonStr = JSON.stringify(userData);
             const base64Token = btoa(unescape(encodeURIComponent(jsonStr)));
-            window.location.href = 'baripluxtool://login?token=' + encodeURIComponent(base64Token);
+            window.location.href = 'baripluxtool://login?token=' + base64Token;
         }
 
         function showDesktopReturnView() {
