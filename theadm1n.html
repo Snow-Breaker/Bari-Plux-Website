@@ -805,46 +805,98 @@
         }
 
         .modal-images {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
+            margin-top: 4px;
         }
 
         .modal-images .img-thumb {
-            width: 120px;
-            height: 90px;
-            border-radius: 8px;
-            border: 1px solid var(--border);
+            position: relative;
+            border-radius: 10px;
             overflow: hidden;
             cursor: pointer;
-            transition: all 0.2s;
-            position: relative;
+            aspect-ratio: 16 / 10;
             background: var(--surface);
+            border: 2px solid var(--border);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .modal-images .img-thumb:hover {
             border-color: var(--accent);
-            transform: scale(1.05);
-            z-index: 2;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
         }
 
         .modal-images .img-thumb img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: transform 0.3s ease;
+            animation: imgFadeIn 0.3s ease;
+        }
+
+        .modal-images .img-thumb:hover img {
+            transform: scale(1.08);
+        }
+
+        .modal-images .img-thumb .thumb-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.45);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+
+        .modal-images .img-thumb:hover .thumb-overlay {
+            opacity: 1;
+        }
+
+        .modal-images .img-thumb .thumb-overlay i {
+            color: #fff;
+            font-size: 1.4rem;
+            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.6));
+        }
+
+        @keyframes imgFadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-images-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-images-header h3::after {
+            display: none;
+        }
+
+        .modal-images-count {
+            font-size: 0.68rem;
+            font-weight: 600;
+            background: var(--accent);
+            color: #fff;
+            padding: 2px 10px;
+            border-radius: 10px;
+            letter-spacing: 0.3px;
         }
 
         /* Full image preview overlay */
         .img-preview-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.9);
+            background: rgba(0,0,0,0.92);
             display: none;
             align-items: center;
             justify-content: center;
             z-index: 99999;
             padding: 40px;
-            cursor: zoom-out;
+            backdrop-filter: blur(4px);
         }
 
         .img-preview-overlay.show { display: flex; }
@@ -853,8 +905,102 @@
             max-width: 100%;
             max-height: 100%;
             object-fit: contain;
-            border-radius: 8px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            border-radius: 10px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+            cursor: zoom-out;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+
+        .preview-btn {
+            position: absolute;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: #fff;
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 10;
+        }
+
+        .preview-btn:hover {
+            background: rgba(255,255,255,0.18);
+            border-color: var(--accent);
+            transform: scale(1.08);
+        }
+
+        .preview-btn:active {
+            transform: scale(0.95);
+        }
+
+        .preview-close {
+            top: 24px;
+            right: 24px;
+        }
+
+        .preview-close:hover {
+            background: rgba(255,60,60,0.25) !important;
+            border-color: #ff4444 !important;
+        }
+
+        .preview-nav {
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .preview-nav.prev { left: 24px; }
+        .preview-nav.next { right: 24px; }
+
+        .preview-nav:disabled {
+            opacity: 0.25;
+            cursor: default;
+            transform: translateY(-50%) scale(0.95);
+        }
+
+        .preview-nav.prev:disabled { left: 24px; }
+        .preview-nav.next:disabled { right: 24px; }
+
+        .preview-nav.prev:disabled:hover,
+        .preview-nav.next:disabled:hover {
+            background: rgba(255,255,255,0.08) !important;
+            border-color: rgba(255,255,255,0.15) !important;
+            transform: translateY(-50%) scale(0.95);
+        }
+
+        .preview-counter {
+            position: absolute;
+            bottom: 32px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,0.75);
+            font-size: 0.82rem;
+            font-weight: 500;
+            background: rgba(0,0,0,0.55);
+            padding: 6px 18px;
+            border-radius: 20px;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.08);
+            letter-spacing: 0.3px;
+            user-select: none;
+        }
+
+        .preview-download {
+            bottom: 28px;
+            right: 28px;
+        }
+
+        .preview-download:hover {
+            background: var(--accent) !important;
+            border-color: var(--accent) !important;
         }
 
         @media (max-width: 600px) {
@@ -1133,8 +1279,13 @@
 </div>
 
 <!-- ===== FULL IMAGE PREVIEW ===== -->
-<div class="img-preview-overlay" id="imgPreviewOverlay" onclick="closeImgPreview()">
-    <img id="imgPreviewFull" src="" alt="Screenshot preview">
+<div class="img-preview-overlay" id="imgPreviewOverlay">
+    <button class="preview-btn preview-close" onclick="closeImgPreview()" title="Close (Esc)"><i class="fas fa-times"></i></button>
+    <button class="preview-btn preview-nav prev" id="previewPrevBtn" onclick="prevImage()" title="Previous (←)"><i class="fas fa-chevron-left"></i></button>
+    <img id="imgPreviewFull" src="" alt="Screenshot preview" onclick="closeImgPreview()">
+    <button class="preview-btn preview-nav next" id="previewNextBtn" onclick="nextImage()" title="Next (→)"><i class="fas fa-chevron-right"></i></button>
+    <div class="preview-counter" id="imgPreviewCounter"></div>
+    <button class="preview-btn preview-download" onclick="downloadPreviewImage()" title="Download"><i class="fas fa-download"></i></button>
 </div>
 
 <!-- ===== DETAILS MODAL ===== -->
@@ -1180,7 +1331,10 @@
             </div>
         </div>
         <div class="modal-section" id="modalImagesSection" style="display:none;">
-            <h3><i class="fas fa-images"></i> Screenshots</h3>
+            <div class="modal-images-header">
+                <h3><i class="fas fa-images"></i> Screenshots</h3>
+                <span class="modal-images-count" id="modalImagesCount"></span>
+            </div>
             <div class="modal-images" id="modalImagesContainer"></div>
         </div>
         <div class="modal-section">
@@ -1656,20 +1810,28 @@
 
             // Show images
             const images = r.images || [];
+            currentPreviewImages = images;
             const imgSection = document.getElementById('modalImagesSection');
             const imgContainer = document.getElementById('modalImagesContainer');
+            const imgCount = document.getElementById('modalImagesCount');
             imgContainer.innerHTML = '';
             if (images.length > 0) {
                 imgSection.style.display = '';
+                imgCount.textContent = `${images.length} image${images.length !== 1 ? 's' : ''}`;
                 images.forEach((base64, idx) => {
                     const src = base64.startsWith('data:') ? base64 : `data:image/png;base64,${base64}`;
                     const thumb = document.createElement('div');
                     thumb.className = 'img-thumb';
-                    thumb.innerHTML = `<img src="${src}" alt="Screenshot ${idx + 1}" onclick="openImgPreview('${src}')">`;
+                    thumb.innerHTML = `
+                        <img src="${src}" alt="Screenshot ${idx + 1}" loading="lazy">
+                        <div class="thumb-overlay" onclick="openImgPreview(${idx})">
+                            <i class="fas fa-search-plus"></i>
+                        </div>`;
                     imgContainer.appendChild(thumb);
                 });
             } else {
                 imgSection.style.display = 'none';
+                imgCount.textContent = '';
             }
 
             document.getElementById('detailsModal').classList.add('show');
@@ -1681,15 +1843,61 @@
             document.body.style.overflow = '';
         }
 
-        function openImgPreview(src) {
-            document.getElementById('imgPreviewFull').src = src;
+        // ==================== IMAGE PREVIEW ====================
+        let currentPreviewImages = [];
+        let currentPreviewIndex = 0;
+
+        function openImgPreview(idx) {
+            currentPreviewIndex = idx;
+            const total = currentPreviewImages.length;
+            if (total === 0) return;
+            updatePreviewImage();
+            document.getElementById('previewPrevBtn').style.display = total > 1 ? '' : 'none';
+            document.getElementById('previewNextBtn').style.display = total > 1 ? '' : 'none';
             document.getElementById('imgPreviewOverlay').classList.add('show');
             document.body.style.overflow = 'hidden';
+        }
+
+        function updatePreviewImage() {
+            const raw = currentPreviewImages[currentPreviewIndex];
+            if (!raw) return;
+            const src = raw.startsWith('data:') ? raw : `data:image/png;base64,${raw}`;
+            document.getElementById('imgPreviewFull').src = src;
+            document.getElementById('imgPreviewCounter').textContent =
+                `${currentPreviewIndex + 1} / ${currentPreviewImages.length}`;
+            document.getElementById('previewPrevBtn').disabled = currentPreviewIndex === 0;
+            document.getElementById('previewNextBtn').disabled =
+                currentPreviewIndex === currentPreviewImages.length - 1;
+        }
+
+        function prevImage() {
+            if (currentPreviewIndex > 0) {
+                currentPreviewIndex--;
+                updatePreviewImage();
+            }
+        }
+
+        function nextImage() {
+            if (currentPreviewIndex < currentPreviewImages.length - 1) {
+                currentPreviewIndex++;
+                updatePreviewImage();
+            }
         }
 
         function closeImgPreview() {
             document.getElementById('imgPreviewOverlay').classList.remove('show');
             document.body.style.overflow = '';
+        }
+
+        function downloadPreviewImage() {
+            const img = document.getElementById('imgPreviewFull');
+            if (!img.src) return;
+            const a = document.createElement('a');
+            a.href = img.src;
+            a.download = `screenshot-${currentPreviewIndex + 1}.png`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
         }
 
         // Close modal on overlay click
@@ -1699,7 +1907,17 @@
 
         // Close modal on Escape key
         document.addEventListener('keydown', function(e) {
-            if (e.target === 'Escape') closeDetailsModal();
+            if (e.key === 'Escape') {
+                const preview = document.getElementById('imgPreviewOverlay');
+                if (preview.classList.contains('show')) closeImgPreview();
+                else closeDetailsModal();
+            } else if (e.key === 'ArrowLeft') {
+                if (document.getElementById('imgPreviewOverlay').classList.contains('show'))
+                    prevImage();
+            } else if (e.key === 'ArrowRight') {
+                if (document.getElementById('imgPreviewOverlay').classList.contains('show'))
+                    nextImage();
+            }
         });
 
         function showReportsError(msg) {
