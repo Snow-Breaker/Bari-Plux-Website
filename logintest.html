@@ -1253,6 +1253,48 @@
             }
         }
 
+        /* Desktop app embed (Bari Plux Tool WebView) */
+        body.app-embed {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100%;
+            overflow: hidden;
+        }
+        body.app-embed .header,
+        body.app-embed .footer,
+        body.app-embed .scroll-progress,
+        body.app-embed #particles-js,
+        body.app-embed .bg-animation { display: none !important; }
+        body.app-embed .container {
+            max-width: 100%;
+            width: 100%;
+            padding: 8px 12px 12px;
+            margin: 0;
+        }
+        body.app-embed .login-container {
+            padding: 22px 18px;
+            box-shadow: none;
+        }
+        body.app-embed .login-logo { width: 72px; height: 72px; margin-bottom: 12px; }
+        body.app-embed .login-title { font-size: 1.35rem; }
+        body.app-embed .app-token-section,
+        body.app-embed .user-id,
+        body.app-embed .back-home,
+        body.app-embed #openAppBtn { display: none !important; }
+        body.app-embed .app-signing-in {
+            text-align: center;
+            padding: 28px 12px;
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+        body.app-embed .app-signing-in .loading-spinner {
+            margin: 0 auto 14px;
+            width: 28px;
+            height: 28px;
+            border-width: 3px;
+        }
+
         /* Safe area for notched phones */
         @supports (padding: max(0px)) {
             .theme-toggle {
@@ -1534,6 +1576,66 @@
     </div>
 
     <script>
+        // ==================== DESKTOP APP EMBED ====================
+        function isAppEmbed() {
+            try {
+                if (new URLSearchParams(window.location.search).get('app') === '1') return true;
+                return !!(window.chrome && window.chrome.webview);
+            } catch (e) { return false; }
+        }
+
+        function isDesktopFlow() {
+            try {
+                return new URLSearchParams(window.location.search).get('desktop') === '1';
+            } catch (e) { return false; }
+        }
+
+        function returnToDesktopApp(user) {
+            const userData = {
+                id: user.id,
+                name: user.name || 'User',
+                email: user.email || '',
+                loginTime: Date.now()
+            };
+            const jsonStr = JSON.stringify(userData);
+            const base64Token = btoa(unescape(encodeURIComponent(jsonStr)));
+            window.location.href = 'baripluxtool://login?token=' + encodeURIComponent(base64Token);
+        }
+
+        function showDesktopReturnView() {
+            document.getElementById('loginFormView').style.display = 'none';
+            const loggedIn = document.getElementById('loggedInView');
+            loggedIn.classList.add('active');
+            loggedIn.innerHTML = '<div class="app-signing-in" style="display:block;"><div class="loading-spinner"></motion><p style="margin-top:14px;color:var(--muted);">Returning to Bari Plux Tool…</p><p style="font-size:0.85rem;color:var(--muted);margin-top:8px;">You can close this browser tab.</p></div>'
+                .replace(/<\/motion>/g, '').replace(/motion/g, 'div');
+        }
+
+        function notifyDesktopApp(user) {
+            const payload = {
+                type: 'bariplux-login-success',
+                id: user.id,
+                name: user.name,
+                email: user.email || '',
+                loginMethod: user.loginMethod || 'website',
+                photoURL: user.photoURL || null
+            };
+            try {
+                if (window.chrome && window.chrome.webview) {
+                    window.chrome.webview.postMessage(JSON.stringify(payload));
+                    return true;
+                }
+            } catch (e) {}
+            return false;
+        }
+
+        function showAppSigningInView() {
+            const view = document.getElementById('loggedInView');
+            if (!view) return;
+            document.getElementById('loginFormView').style.display = 'none';
+            view.classList.add('active');
+            view.innerHTML = '<div class="app-signing-in"><div class="loading-spinner"></div><p>Signing you in to Bari Plux Tool...</p></div>';
+        }
+
         // ==================== FIREBASE CONFIGURATION ====================
         const firebaseConfig = {
             apiKey: "AIzaSyBH_t3Uue7fbb-DahwjSJGjG2-quCqiLEs",
@@ -1683,6 +1785,22 @@
         // ==================== LOGGED IN / OUT VIEWS ====================
         function showLoggedInView(user) {
             currentUser = user;
+            localStorage.setItem('bariplux_user', JSON.stringify(user));
+            syncLoginToFirebase(user);
+
+            if (isAppEmbed()) {
+                if (notifyDesktopApp(user)) {
+                    showAppSigningInView();
+                    return;
+                }
+            }
+
+            if (isDesktopFlow()) {
+                showDesktopReturnView();
+                setTimeout(function() { returnToDesktopApp(user); }, 500);
+                return;
+            }
+
             document.getElementById('loginFormView').style.display = 'none';
             document.getElementById('loggedInView').classList.add('active');
 
@@ -1703,13 +1821,17 @@
                 }
             }
 
-            const token = btoa(JSON.stringify({
-                id: user.id, name: user.name, email: user.email,
-                method: user.loginMethod, time: Date.now()
-            }));
-            document.getElementById('loginToken').value = token;
-            localStorage.setItem('bariplux_login_token', token);
-            syncLoginToFirebase(user);
+            const tokenSection = document.getElementById('appTokenSection');
+            if (isAppEmbed() || isDesktopFlow()) {
+                if (tokenSection) tokenSection.style.display = 'none';
+            } else {
+                const token = btoa(JSON.stringify({
+                    id: user.id, name: user.name, email: user.email,
+                    method: user.loginMethod, time: Date.now()
+                }));
+                document.getElementById('loginToken').value = token;
+                localStorage.setItem('bariplux_login_token', token);
+            }
         }
 
         function showLoginFormView() {
@@ -1768,6 +1890,10 @@
                 btn.disabled = true;
                 btn.innerHTML = '<div class="loading-spinner" style="border-color:#333;border-top-color:#666;"></div> Redirecting...';
                 try {
+                    if (isAppEmbed()) {
+                        await auth.signInWithRedirect(provider);
+                        return;
+                    }
                     const result = await auth.signInWithPopup(provider);
                     const user = result.user;
                     const userData = {
@@ -1803,6 +1929,10 @@
                 btn.disabled = true;
                 btn.innerHTML = '<div class="loading-spinner"></div> Connecting...';
                 try {
+                    if (isAppEmbed()) {
+                        await auth.signInWithRedirect(provider);
+                        return;
+                    }
                     const result = await auth.signInWithPopup(provider);
                     const user = result.user;
                     const userData = {
@@ -2110,8 +2240,26 @@
 
         // ==================== INIT ====================
         document.addEventListener('DOMContentLoaded', () => {
+            if (isAppEmbed()) document.body.classList.add('app-embed');
             initFirebase();
             handleDiscordCallback(); // Must run before checkLoginStatus
+            if (isAppEmbed() && firebaseInitialized && auth) {
+                auth.getRedirectResult().then((result) => {
+                    if (result && result.user) {
+                        const u = result.user;
+                        const userData = {
+                            id: u.uid,
+                            name: u.displayName || (u.email ? u.email.split('@')[0] : 'User'),
+                            email: u.email || '',
+                            loginMethod: result.credential?.providerId || 'firebase',
+                            loginTime: new Date().toISOString(),
+                            photoURL: u.photoURL
+                        };
+                        localStorage.setItem('bariplux_user', JSON.stringify(userData));
+                        showLoggedInView(userData);
+                    }
+                }).catch(() => {});
+            }
             checkLoginStatus();
             initParticles();
 
