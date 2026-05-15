@@ -1433,7 +1433,9 @@
                         version: r.version || '—',
                         status: r.status || 'new',
                         date: r.date || '—',
-                        timestamp: r.timestamp || 0
+                        timestamp: r.timestamp || 0,
+                        programInfo: r.programInfo || null,
+                        systemSpecs: r.systemSpecs || null
                     }));
 
                     // Sort by timestamp descending (newest first)
