@@ -1254,9 +1254,9 @@
                         <tr>
                             <th>Report ID</th>
                             <th>Description</th>
-                            <th>Email</th>
+                            <th>Account</th>
+                            <th>Contact</th>
                             <th>PC Name</th>
-                            <th>OS</th>
                             <th>Date</th>
                             <th>Status</th>
                             <th>Action</th>
@@ -1413,10 +1413,25 @@
             <div class="modal-images" id="modalImagesContainer"></div>
         </div>
         <div class="modal-section">
-            <h3><i class="fas fa-envelope"></i> User Info</h3>
-            <div class="modal-grid">
-                <div class="field"><span class="label">Email</span><span class="value" id="modalEmail">—</span></div>
-                <div class="field"><span class="label">PC Name</span><span class="value" id="ModalUserPcName">—</span></div>
+            <h3><i class="fas fa-user-circle"></i> Reporter Account</h3>
+            <div id="modalAccountGuest" style="display:none;color:var(--muted);font-size:0.9rem;padding:8px 0;">
+                Reporter was not signed in to a Bari Plux account.
+            </div>
+            <div id="modalAccountCard" style="display:none;">
+                <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--border);">
+                    <div id="modalAccountAvatar" style="width:56px;height:56px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.2rem;flex-shrink:0;color:#fff;"></div>
+                    <div>
+                        <div id="modalAccountName" style="font-size:1.1rem;font-weight:700;margin-bottom:4px;"></div>
+                        <span id="modalAccountMethodBadge" class="report-status reviewed" style="display:inline-block;font-size:0.75rem;"></span>
+                    </div>
+                </div>
+                <div class="modal-grid">
+                    <div class="field" style="grid-column:1/-1;"><span class="label">User ID</span><span class="value" id="modalAccountId" style="font-family:'JetBrains Mono',monospace;font-size:0.78rem;word-break:break-all;"></span></div>
+                    <div class="field"><span class="label">Account Email</span><span class="value" id="modalAccountEmail"></span></div>
+                    <div class="field"><span class="label">Signed in at</span><span class="value" id="modalAccountLoginTime"></span></div>
+                    <div class="field"><span class="label">Contact Email</span><span class="value" id="modalEmail">—</span></div>
+                    <div class="field"><span class="label">PC Name</span><span class="value" id="ModalUserPcName">—</span></div>
+                </div>
             </div>
         </div>
     </div>
@@ -1748,7 +1763,9 @@
                         timestamp: r.timestamp || 0,
                         programInfo: r.programInfo || null,
                         systemSpecs: r.systemSpecs || null,
-                        images: r.images || []
+                        images: r.images || [],
+                        userAccount: r.userAccount || null,
+                        isLoggedIn: r.isLoggedIn === true
                     }));
 
                     // Sort by timestamp descending (newest first)
@@ -1797,11 +1814,15 @@
 
             let filtered = allReports.filter(r => {
                 const matchFilter = activeReportFilter === 'all' || r.status === activeReportFilter;
+                const ua = r.userAccount || {};
                 const matchSearch = !search
                     || (r.description || '').toLowerCase().includes(search)
                     || (r.email || '').toLowerCase().includes(search)
                     || (r.pcName || '').toLowerCase().includes(search)
-                    || (r.id || '').toLowerCase().includes(search);
+                    || (r.id || '').toLowerCase().includes(search)
+                    || (ua.name || '').toLowerCase().includes(search)
+                    || (ua.email || '').toLowerCase().includes(search)
+                    || (ua.id || '').toLowerCase().includes(search);
                 return matchFilter && matchSearch;
             });
 
@@ -1823,7 +1844,10 @@
                     ? escHtml(r.description.substring(0, 80)) + '…'
                     : escHtml(r.description || '');
 
-                const reportJson = escHtml(JSON.stringify(r).replace(/'/g, "&#39;"));
+                const ua = r.userAccount || {};
+                const accountCell = r.isLoggedIn && ua.name
+                    ? `<div style="font-size:0.85rem;font-weight:600;color:var(--text);">${escHtml(ua.name)}</div><div style="font-size:0.72rem;color:var(--muted);font-family:'JetBrains Mono',monospace;">${escHtml((ua.id || '').substring(0, 18))}${(ua.id || '').length > 18 ? '…' : ''}</div>`
+                    : `<span style="color:var(--muted);font-size:0.78rem;">Guest</span>`;
 
                 let actions = `<button class="action-btn" onclick="showDetailsModal('${r.firebaseKey}')" style="border-color:rgba(108,99,255,0.3);color:var(--accent);margin-right:4px;">📋 Details</button>`;
                 if (r.status === 'new') {
@@ -1843,9 +1867,9 @@
                         <td>
                             <div class="report-desc" title="${escHtml(r.description || '')}">${descPreview}</div>
                         </td>
+                        <td>${accountCell}</td>
                         <td style="color:var(--muted);font-size:0.85rem;">${escHtml(r.email) || '—'}</td>
                         <td style="font-size:0.85rem;">${escHtml(r.pcName)}</td>
-                        <td style="color:var(--muted);font-size:0.78rem;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${escHtml(r.os)}">${escHtml(r.os)}</td>
                         <td class="time-cell"><span>${r.date}</span></td>
                         <td><span class="report-status ${r.status}">${statusIcon} ${statusLabel}</span></td>
                         <td style="white-space:nowrap;">${actions}</td>
@@ -1901,6 +1925,31 @@
             document.getElementById('modalSystemType').textContent = ss.systemType || '—';
             document.getElementById('modalResolution').textContent = ss.resolution || '—';
             document.getElementById('modalRefreshRate').textContent = ss.refreshRate || '—';
+            const ua = r.userAccount || {};
+            const guestEl = document.getElementById('modalAccountGuest');
+            const cardEl = document.getElementById('modalAccountCard');
+            const signedIn = r.isLoggedIn === true && ua.id && !ua.note;
+
+            if (signedIn) {
+                guestEl.style.display = 'none';
+                cardEl.style.display = '';
+                const methodKey = (ua.loginMethod || '').toLowerCase();
+                const method = getMethodInfo(methodKey);
+                const avatar = document.getElementById('modalAccountAvatar');
+                avatar.textContent = (ua.name || '?').charAt(0).toUpperCase();
+                avatar.style.background = getAvatarColor(methodKey);
+                document.getElementById('modalAccountName').textContent = ua.name || '—';
+                const badge = document.getElementById('modalAccountMethodBadge');
+                badge.textContent = `${method.icon} ${method.label}`;
+                badge.className = `method-badge ${method.cls}`;
+                document.getElementById('modalAccountId').textContent = ua.id || '—';
+                document.getElementById('modalAccountEmail').textContent = ua.email || '—';
+                document.getElementById('modalAccountLoginTime').textContent = ua.loginTime ? formatDate(ua.loginTime) : '—';
+            } else {
+                guestEl.style.display = '';
+                cardEl.style.display = 'none';
+            }
+
             document.getElementById('modalEmail').textContent = r.email || '—';
             document.getElementById('ModalUserPcName').textContent = r.pcName || '—';
 
