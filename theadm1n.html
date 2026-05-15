@@ -804,6 +804,59 @@
             overflow-y: auto;
         }
 
+        .modal-images {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .modal-images .img-thumb {
+            width: 120px;
+            height: 90px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            background: var(--surface);
+        }
+
+        .modal-images .img-thumb:hover {
+            border-color: var(--accent);
+            transform: scale(1.05);
+            z-index: 2;
+        }
+
+        .modal-images .img-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Full image preview overlay */
+        .img-preview-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            padding: 40px;
+            cursor: zoom-out;
+        }
+
+        .img-preview-overlay.show { display: flex; }
+
+        .img-preview-overlay img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
         @media (max-width: 600px) {
             .modal-grid { grid-template-columns: 1fr; }
             .modal-box { padding: 20px; }
@@ -1079,6 +1132,11 @@
     </div>
 </div>
 
+<!-- ===== FULL IMAGE PREVIEW ===== -->
+<div class="img-preview-overlay" id="imgPreviewOverlay" onclick="closeImgPreview()">
+    <img id="imgPreviewFull" src="" alt="Screenshot preview">
+</div>
+
 <!-- ===== DETAILS MODAL ===== -->
 <div class="modal-overlay" id="detailsModal">
     <div class="modal-box">
@@ -1120,6 +1178,10 @@
                 <div class="field"><span class="label">Screen Resolution</span><span class="value" id="modalResolution">—</span></div>
                 <div class="field"><span class="label">Refresh Rate</span><span class="value" id="modalRefreshRate">—</span></div>
             </div>
+        </div>
+        <div class="modal-section" id="modalImagesSection" style="display:none;">
+            <h3><i class="fas fa-images"></i> Screenshots</h3>
+            <div class="modal-images" id="modalImagesContainer"></div>
         </div>
         <div class="modal-section">
             <h3><i class="fas fa-envelope"></i> User Info</h3>
@@ -1591,12 +1653,41 @@
             document.getElementById('modalEmail').textContent = r.email || '—';
             document.getElementById('ModalUserPcName').textContent = r.pcName || '—';
 
+            // Show images
+            const images = r.images || [];
+            const imgSection = document.getElementById('modalImagesSection');
+            const imgContainer = document.getElementById('modalImagesContainer');
+            imgContainer.innerHTML = '';
+            if (images.length > 0) {
+                imgSection.style.display = '';
+                images.forEach((base64, idx) => {
+                    const src = base64.startsWith('data:') ? base64 : `data:image/png;base64,${base64}`;
+                    const thumb = document.createElement('div');
+                    thumb.className = 'img-thumb';
+                    thumb.innerHTML = `<img src="${src}" alt="Screenshot ${idx + 1}" onclick="openImgPreview('${src}')">`;
+                    imgContainer.appendChild(thumb);
+                });
+            } else {
+                imgSection.style.display = 'none';
+            }
+
             document.getElementById('detailsModal').classList.add('show');
             document.body.style.overflow = 'hidden';
         }
 
         function closeDetailsModal() {
             document.getElementById('detailsModal').classList.remove('show');
+            document.body.style.overflow = '';
+        }
+
+        function openImgPreview(src) {
+            document.getElementById('imgPreviewFull').src = src;
+            document.getElementById('imgPreviewOverlay').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeImgPreview() {
+            document.getElementById('imgPreviewOverlay').classList.remove('show');
             document.body.style.overflow = '';
         }
 
@@ -1607,7 +1698,7 @@
 
         // Close modal on Escape key
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') closeDetailsModal();
+            if (e.target === 'Escape') closeDetailsModal();
         });
 
         function showReportsError(msg) {
