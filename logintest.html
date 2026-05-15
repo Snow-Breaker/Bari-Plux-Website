@@ -1348,9 +1348,9 @@
                     <div class="login-tab active" id="mainTab-social" onclick="switchMainTab('social')">
                         <i class="fas fa-users" style="margin-right:6px;font-size:0.85rem;"></i>Social
                     </div>
-                    <div class="login-tab" id="mainTab-email" onclick="switchMainTab('email')">
-                        <i class="fas fa-envelope" style="margin-right:6px;font-size:0.85rem;"></i>Email
-                    </div>
+                    <div class="login-tab" id="mainTab-email" onclick="switchMainTab('email')" style="display:none;">
+    <i class="fas fa-envelope" style="margin-right:6px;font-size:0.85rem;"></i>Email
+</div>
                 </div>
 
                 <!-- ===== SOCIAL FORM ===== -->
@@ -1504,7 +1504,7 @@
                 </div>
                 
                 <!-- Token for App -->
-                <div class="app-token-section" id="appTokenSection">
+                <div class="app-token-section" id="appTokenSection" style="display:none;">
                     <h4><i class="fas fa-mobile-alt"></i> Use in Bari Plux App</h4>
                     <div class="token-display">
                         <input type="text" class="token-input" id="loginToken" readonly placeholder="Login token will appear here">
