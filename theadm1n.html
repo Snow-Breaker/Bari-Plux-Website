@@ -309,6 +309,37 @@
         }
         .stat-label { font-size: 0.78rem; color: var(--muted); margin-top: 4px; }
 
+        /* ===== TABS ===== */
+        .tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 20px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 4px;
+            width: fit-content;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            color: var(--muted);
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tab-btn:hover { color: var(--text); background: var(--surface2); }
+        .tab-btn.active { background: var(--accent); color: white; }
+
         /* ===== TOOLBAR ===== */
         .toolbar {
             display: flex;
@@ -490,6 +521,64 @@
             box-shadow: 0 0 6px var(--success);
             display: inline-block;
             margin-right: 6px;
+        }
+
+        .report-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .report-status.new { background: rgba(244,67,54,0.15); color: #F44336; border: 1px solid rgba(244,67,54,0.25); }
+        .report-status.reviewed { background: rgba(255,152,0,0.15); color: #FF9800; border: 1px solid rgba(255,152,0,0.25); }
+        .report-status.resolved { background: rgba(76,175,80,0.15); color: #4CAF50; border: 1px solid rgba(76,175,80,0.25); }
+
+        .action-btn {
+            padding: 5px 10px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--muted);
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover { background: var(--surface2); color: var(--text); }
+        .action-btn.review { border-color: rgba(255,152,0,0.3); color: #FF9800; }
+        .action-btn.review:hover { background: rgba(255,152,0,0.12); }
+        .action-btn.resolve { border-color: rgba(76,175,80,0.3); color: #4CAF50; }
+        .action-btn.resolve:hover { background: rgba(76,175,80,0.12); }
+        .action-btn.delete { border-color: rgba(244,67,54,0.3); color: #F44336; }
+        .action-btn.delete:hover { background: rgba(244,67,54,0.12); }
+
+        .report-desc {
+            max-width: 300px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: var(--text);
+            cursor: pointer;
+        }
+
+        .report-desc:hover {
+            white-space: normal;
+            word-break: break-word;
+            background: var(--bg2);
+            padding: 8px;
+            border-radius: 6px;
+            position: relative;
+            z-index: 1;
+        }
+
+        @media (max-width: 768px) {
+            .report-desc { max-width: 120px; }
         }
 
         /* ===== EMPTY / LOADING / ERROR STATES ===== */
@@ -676,14 +765,24 @@
                 </div>
             </div>
 
-            <!-- Table toolbar -->
-            <div class="toolbar">
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="users" onclick="switchTab('users', this)">
+                    <i class="fas fa-users"></i> Users
+                </button>
+                <button class="tab-btn" data-tab="reports" onclick="switchTab('reports', this)">
+                    <i class="fas fa-bug"></i> Bug Reports
+                </button>
+            </div>
+
+            <!-- Users toolbar -->
+            <div class="toolbar users-toolbar">
                 <span class="toolbar-title">Users from Database</span>
                 <div class="search-wrap">
                     <i class="fas fa-search"></i>
                     <input type="text" class="search-input" id="searchInput" placeholder="Search name or email..." oninput="renderTable()">
                 </div>
-                <div class="filter-btns">
+                <div class="filter-btns" id="userFilterBtns">
                     <button class="filter-btn active" data-filter="all" onclick="setFilter('all', this)">
                         <i class="fas fa-border-all"></i> All
                     </button>
@@ -701,6 +800,32 @@
                     </button>
                 </div>
                 <button class="refresh-btn" id="refreshBtn" onclick="loadUsers()">
+                    <i class="fas fa-sync-alt"></i> Refresh
+                </button>
+            </div>
+
+            <!-- Bug Reports toolbar -->
+            <div class="toolbar reports-toolbar" style="display:none;">
+                <span class="toolbar-title">Bug Reports</span>
+                <div class="search-wrap">
+                    <i class="fas fa-search"></i>
+                    <input type="text" class="search-input" id="reportSearchInput" placeholder="Search description or email..." oninput="renderBugReports()">
+                </div>
+                <div class="filter-btns">
+                    <button class="filter-btn active report-status-filter" data-status="all" onclick="setReportFilter('all', this)">
+                        <i class="fas fa-border-all"></i> All
+                    </button>
+                    <button class="filter-btn" data-status="new" style="--filter-color:#F44336;" onclick="setReportFilter('new', this)">
+                        <i class="fas fa-circle" style="color:#F44336;font-size:10px;"></i> New
+                    </button>
+                    <button class="filter-btn" data-status="reviewed" style="--filter-color:#FF9800;" onclick="setReportFilter('reviewed', this)">
+                        <i class="fas fa-circle" style="color:#FF9800;font-size:10px;"></i> Reviewed
+                    </button>
+                    <button class="filter-btn" data-status="resolved" style="--filter-color:#4CAF50;" onclick="setReportFilter('resolved', this)">
+                        <i class="fas fa-circle" style="color:#4CAF50;font-size:10px;"></i> Resolved
+                    </button>
+                </div>
+                <button class="refresh-btn" id="refreshReportsBtn" onclick="loadBugReports()">
                     <i class="fas fa-sync-alt"></i> Refresh
                 </button>
             </div>
@@ -726,6 +851,67 @@
                         </tr>
                     </tbody>
                 </table>
+            </div>
+
+            <!-- ===== BUG REPORTS SECTION ===== -->
+            <div id="reportsSection" style="display:none;">
+                <div class="stats-grid" id="reportStatsGrid">
+                    <div class="stat-card" style="animation-delay:0s">
+                        <div class="stat-icon total"><i class="fas fa-bug"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-num" id="reportStatTotal">—</div>
+                            <div class="stat-label">Total Reports</div>
+                        </div>
+                    </div>
+                    <div class="stat-card" style="animation-delay:0.05s">
+                        <div class="stat-icon" style="background:rgba(244,67,54,0.15);color:#F44336;"><i class="fas fa-circle"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-num" id="reportStatNew">—</div>
+                            <div class="stat-label">New</div>
+                        </div>
+                    </div>
+                    <div class="stat-card" style="animation-delay:0.1s">
+                        <div class="stat-icon" style="background:rgba(255,152,0,0.15);color:#FF9800;"><i class="fas fa-eye"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-num" id="reportStatReviewed">—</div>
+                            <div class="stat-label">Reviewed</div>
+                        </div>
+                    </div>
+                    <div class="stat-card" style="animation-delay:0.15s">
+                        <div class="stat-icon" style="background:rgba(76,175,80,0.15);color:#4CAF50;"><i class="fas fa-check-circle"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-num" id="reportStatResolved">—</div>
+                            <div class="stat-label">Resolved</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Report ID</th>
+                                <th>Description</th>
+                                <th>Email</th>
+                                <th>PC Name</th>
+                                <th>OS</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reportsTableBody">
+                            <tr class="state-row">
+                                <td colspan="8">
+                                    <div class="state-icon">🔍</div>
+                                    <div>Loading bug reports...</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="last-updated" id="reportsLastUpdated"></div>
             </div>
 
             <div class="last-updated" id="lastUpdated"></div>
@@ -1006,6 +1192,190 @@
 
         function escHtml(str) {
             return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+        }
+
+        // ==================== TAB SWITCHING ====================
+        let activeReportFilter = 'all';
+
+        function switchTab(tab, btn) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const usersSection = [document.querySelector('.users-toolbar'), document.getElementById('statsGrid')?.parentElement?.querySelector('.stats-grid') || document.getElementById('statsGrid')];
+            // Show/hide sections
+            document.querySelector('.users-toolbar').style.display = tab === 'users' ? '' : 'none';
+            document.querySelector('.reports-toolbar').style.display = tab === 'reports' ? '' : 'none';
+            document.getElementById('statsGrid').style.display = tab === 'users' ? '' : 'none';
+            document.getElementById('reportsSection').style.display = tab === 'reports' ? '' : 'none';
+
+            // Hide user filter btns when on reports tab
+            document.getElementById('userFilterBtns').style.display = tab === 'users' ? '' : 'none';
+
+            if (tab === 'reports') {
+                loadBugReports();
+            }
+        }
+
+        // ==================== BUG REPORTS ====================
+        let allReports = [];
+
+        async function loadBugReports() {
+            const btn = document.getElementById('refreshReportsBtn');
+            if (btn) btn.classList.add('spinning');
+
+            if (!db) {
+                showReportsError('Firebase not initialized.');
+                if (btn) btn.classList.remove('spinning');
+                return;
+            }
+
+            try {
+                const snapshot = await db.ref('bugReports').once('value');
+                const data = snapshot.val();
+
+                if (!data) {
+                    allReports = [];
+                } else {
+                    allReports = Object.entries(data).map(([key, r]) => ({
+                        firebaseKey: key,
+                        id: r.id || key,
+                        description: r.description || '',
+                        email: r.email || '',
+                        pcName: r.pcName || '—',
+                        os: r.os || '—',
+                        version: r.version || '—',
+                        status: r.status || 'new',
+                        date: r.date || '—',
+                        timestamp: r.timestamp || 0
+                    }));
+
+                    // Sort by timestamp descending (newest first)
+                    allReports.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+                }
+
+                updateReportStats();
+                renderBugReports();
+
+                const now = new Date();
+                const updated = document.getElementById('reportsLastUpdated');
+                if (updated) {
+                    updated.textContent = `Last updated: ${now.toLocaleDateString()} at ${now.toLocaleTimeString()}`;
+                }
+
+            } catch (e) {
+                console.error('Load reports error:', e);
+                showReportsError('Could not load bug reports from database.');
+            }
+
+            if (btn) btn.classList.remove('spinning');
+        }
+
+        function updateReportStats() {
+            const total = allReports.length;
+            const newCount = allReports.filter(r => r.status === 'new').length;
+            const reviewed = allReports.filter(r => r.status === 'reviewed').length;
+            const resolved = allReports.filter(r => r.status === 'resolved').length;
+
+            document.getElementById('reportStatTotal').textContent = total;
+            document.getElementById('reportStatNew').textContent = newCount;
+            document.getElementById('reportStatReviewed').textContent = reviewed;
+            document.getElementById('reportStatResolved').textContent = resolved;
+        }
+
+        function setReportFilter(status, btn) {
+            activeReportFilter = status;
+            document.querySelectorAll('.report-status-filter').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderBugReports();
+        }
+
+        function renderBugReports() {
+            const search = document.getElementById('reportSearchInput').value.toLowerCase();
+            const tbody = document.getElementById('reportsTableBody');
+
+            let filtered = allReports.filter(r => {
+                const matchFilter = activeReportFilter === 'all' || r.status === activeReportFilter;
+                const matchSearch = !search
+                    || (r.description || '').toLowerCase().includes(search)
+                    || (r.email || '').toLowerCase().includes(search)
+                    || (r.pcName || '').toLowerCase().includes(search)
+                    || (r.id || '').toLowerCase().includes(search);
+                return matchFilter && matchSearch;
+            });
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `
+                    <tr class="state-row">
+                        <td colspan="8">
+                            <div class="state-icon">🔍</div>
+                            <div>${search ? 'No reports match your search.' : 'No bug reports found.'}</div>
+                        </td>
+                    </tr>`;
+                return;
+            }
+
+            tbody.innerHTML = filtered.map((r, i) => {
+                const statusLabel = r.status.charAt(0).toUpperCase() + r.status.slice(1);
+                const statusIcon = r.status === 'new' ? '🆕' : r.status === 'reviewed' ? '👁️' : '✅';
+                const descPreview = (r.description || '').length > 80
+                    ? escHtml(r.description.substring(0, 80)) + '…'
+                    : escHtml(r.description || '');
+
+                let actions = '';
+                if (r.status === 'new') {
+                    actions = `
+                        <button class="action-btn review" onclick="updateReportStatus('${r.firebaseKey}', 'reviewed')">👁️ Review</button>
+                        <button class="action-btn resolve" onclick="updateReportStatus('${r.firebaseKey}', 'resolved')" style="margin-left:4px;">✅ Resolve</button>`;
+                } else if (r.status === 'reviewed') {
+                    actions = `
+                        <button class="action-btn resolve" onclick="updateReportStatus('${r.firebaseKey}', 'resolved')">✅ Resolve</button>`;
+                } else {
+                    actions = `<span style="color:var(--muted);font-size:0.78rem;">Done</span>`;
+                }
+
+                return `
+                    <tr style="animation-delay:${i * 0.03}s">
+                        <td style="font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:var(--muted);">${escHtml(r.id)}</td>
+                        <td>
+                            <div class="report-desc" title="${escHtml(r.description || '')}">${descPreview}</div>
+                        </td>
+                        <td style="color:var(--muted);font-size:0.85rem;">${escHtml(r.email) || '—'}</td>
+                        <td style="font-size:0.85rem;">${escHtml(r.pcName)}</td>
+                        <td style="color:var(--muted);font-size:0.78rem;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${escHtml(r.os)}">${escHtml(r.os)}</td>
+                        <td class="time-cell"><span>${r.date}</span></td>
+                        <td><span class="report-status ${r.status}">${statusIcon} ${statusLabel}</span></td>
+                        <td style="white-space:nowrap;">${actions}</td>
+                    </tr>`;
+            }).join('');
+        }
+
+        async function updateReportStatus(firebaseKey, newStatus) {
+            if (!db || !firebaseKey) return;
+
+            try {
+                await db.ref(`bugReports/${firebaseKey}/status`).set(newStatus);
+                // Also update locally
+                const report = allReports.find(r => r.firebaseKey === firebaseKey);
+                if (report) report.status = newStatus;
+                updateReportStats();
+                renderBugReports();
+            } catch (e) {
+                console.error('Status update error:', e);
+                alert('Failed to update report status.');
+            }
+        }
+
+        function showReportsError(msg) {
+            const tbody = document.getElementById('reportsTableBody');
+            if (tbody) {
+                tbody.innerHTML = `
+                    <tr class="state-row">
+                        <td colspan="8">
+                            <div class="state-icon">⚠️</div>
+                            <div style="color:var(--danger);">${msg}</div>
+                        </td>
+                    </tr>`;
+            }
         }
 
         // Auto-init if already logged in
