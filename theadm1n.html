@@ -1434,25 +1434,38 @@
             }
 
             try {
-                const snapshot = await db.ref('users').once('value');
-                const data = snapshot.val();
+                // Read both nodes in parallel
+                const [usersSnap, discordSnap] = await Promise.all([
+                    db.ref('users').once('value'),
+                    db.ref('discordUsers').once('value')
+                ]);
 
-                if (!data) {
-                    allUsers = [];
-                } else {
-                    allUsers = Object.entries(data).map(([id, u]) => ({
+                const parseNode = (snap) => {
+                    const data = snap.val();
+                    if (!data) return [];
+                    return Object.entries(data).map(([id, u]) => ({
                         id,
                         name: u.name || 'Unknown',
                         email: u.email || '—',
                         loginMethod: u.loginMethod || 'unknown',
                         loginTime: u.loginTime || null,
                         lastActive: u.lastActive || null,
+                        photoURL: u.photoURL || null,
                         platform: u.platform || 'website'
                     }));
+                };
 
-                    // Sort by lastActive descending
-                    allUsers.sort((a, b) => (b.lastActive || 0) - (a.lastActive || 0));
-                }
+                // Merge and deduplicate by id
+                const merged = [...parseNode(usersSnap), ...parseNode(discordSnap)];
+                const seen = new Set();
+                allUsers = merged.filter(u => {
+                    if (seen.has(u.id)) return false;
+                    seen.add(u.id);
+                    return true;
+                });
+
+                // Sort by lastActive descending
+                allUsers.sort((a, b) => (b.lastActive || 0) - (a.lastActive || 0));
 
                 updateStats();
                 renderTable();
