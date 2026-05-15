@@ -1343,6 +1343,16 @@
                     <code>YOUR_FIREBASE_CONFIG_HERE</code>
                 </div>
 
+                <!-- Main Tabs: Social / Email -->
+                <div class="login-tabs">
+                    <div class="login-tab active" id="mainTab-social" onclick="switchMainTab('social')">
+                        <i class="fas fa-users" style="margin-right:6px;font-size:0.85rem;"></i>Social
+                    </div>
+                    <div class="login-tab" id="mainTab-email" onclick="switchMainTab('email')">
+                        <i class="fas fa-envelope" style="margin-right:6px;font-size:0.85rem;"></i>Email
+                    </div>
+                </div>
+
                 <!-- ===== SOCIAL FORM ===== -->
                 <div id="socialForm" class="login-form active">
                     <!-- Google -->
@@ -1537,7 +1547,7 @@
         // ==================== DISCORD CONFIGURATION ====================
         // TODO: Replace with your Discord Application Client ID
         // Get it from: https://discord.com/developers/applications → Your App → OAuth2
-        const DISCORD_CLIENT_ID = '1504446428959871127';
+        const DISCORD_CLIENT_ID = 'YOUR_DISCORD_CLIENT_ID';
 
         // Initialize Firebase
         let auth = null;
@@ -1569,16 +1579,21 @@
         function syncLoginToFirebase(user) {
             if (!firebaseInitialized || !database) return;
             try {
-                const userRef = database.ref('users/' + user.id);
+                // Discord users go to a separate node (no Firebase Auth = no write permission on /users)
+                const isDiscord = user.loginMethod === 'discord';
+                const nodePath = isDiscord ? 'discordUsers/' + user.id : 'users/' + user.id;
+
+                const userRef = database.ref(nodePath);
                 userRef.set({
                     name: user.name,
                     email: user.email,
                     loginMethod: user.loginMethod,
                     loginTime: user.loginTime || new Date().toISOString(),
+                    photoURL: user.photoURL || null,
                     lastActive: firebase.database.ServerValue.TIMESTAMP,
                     platform: 'website'
                 }).then(() => {
-                    console.log('Login synced to Firebase!');
+                    console.log('Login synced to Firebase! (' + nodePath + ')');
                 }).catch(err => {
                     console.log('Firebase sync note:', err.code);
                 });
@@ -2131,7 +2146,7 @@
     <!-- Footer -->
     <footer class="footer" style="border-top: none; margin-top: 0; padding: 15px 0;">
         <div class="footer-bottom" style="border-top: none; padding-top: 0;">
-            <a href="https://bariplux.com/Legal%20Information" class="copyright">&copy; 2026 Bari Plux. All rights reserved.</a>
+            <a href="#" class="copyright">&copy; 2026 Bari Plux. All rights reserved.</a>
         </div>
     </footer>
 
