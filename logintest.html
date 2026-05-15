@@ -1344,17 +1344,17 @@
                 </div>
 
                 <!-- Main Tabs: Social / Email -->
-                <div class="login-tabs">
+                <div class="login-tabs" style="display:none;">
                     <div class="login-tab active" id="mainTab-social" onclick="switchMainTab('social')">
                         <i class="fas fa-users" style="margin-right:6px;font-size:0.85rem;"></i>Social
                     </div>
-                    <div class="login-tab" id="mainTab-email" onclick="switchMainTab('email')" style="display:none;">
+                    <div class="login-tab" id="mainTab-email" onclick="switchMainTab('email')">
     <i class="fas fa-envelope" style="margin-right:6px;font-size:0.85rem;"></i>Email
 </div>
                 </div>
 
                 <!-- ===== SOCIAL FORM ===== -->
-                <div id="socialForm" class="login-form active">
+                <div id="socialForm" class="login-form" style="display:block;">
                     <!-- Google -->
                     <button id="btnGoogleLogin" class="btn-google">
                         <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
