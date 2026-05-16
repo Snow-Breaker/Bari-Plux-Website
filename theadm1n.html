@@ -158,6 +158,7 @@
         }
 
         .gate-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(108,99,255,0.3); }
+        .gate-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
         .gate-error {
             color: var(--danger);
@@ -937,43 +938,19 @@
             transform: scale(1.08);
         }
 
-        .preview-btn:active {
-            transform: scale(0.95);
-        }
+        .preview-btn:active { transform: scale(0.95); }
 
-        .preview-close {
-            top: 24px;
-            right: 24px;
-        }
+        .preview-close { top: 24px; right: 24px; }
+        .preview-close:hover { background: rgba(255,60,60,0.25) !important; border-color: #ff4444 !important; }
 
-        .preview-close:hover {
-            background: rgba(255,60,60,0.25) !important;
-            border-color: #ff4444 !important;
-        }
-
-        .preview-nav {
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
+        .preview-nav { top: 50%; transform: translateY(-50%); }
         .preview-nav.prev { left: 24px; }
         .preview-nav.next { right: 24px; }
 
-        .preview-nav:disabled {
-            opacity: 0.25;
-            cursor: default;
-            transform: translateY(-50%) scale(0.95);
-        }
-
+        .preview-nav:disabled { opacity: 0.25; cursor: default; transform: translateY(-50%) scale(0.95); }
         .preview-nav.prev:disabled { left: 24px; }
         .preview-nav.next:disabled { right: 24px; }
-
-        .preview-nav.prev:disabled:hover,
-        .preview-nav.next:disabled:hover {
-            background: rgba(255,255,255,0.08) !important;
-            border-color: rgba(255,255,255,0.15) !important;
-            transform: translateY(-50%) scale(0.95);
-        }
+        .preview-nav:disabled:hover { background: rgba(255,255,255,0.08) !important; border-color: rgba(255,255,255,0.15) !important; transform: translateY(-50%) scale(0.95); }
 
         .preview-counter {
             position: absolute;
@@ -987,21 +964,34 @@
             padding: 6px 18px;
             border-radius: 20px;
             backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
             border: 1px solid rgba(255,255,255,0.08);
             letter-spacing: 0.3px;
             user-select: none;
         }
 
-        .preview-download {
-            bottom: 28px;
-            right: 28px;
-        }
+        .preview-download { bottom: 28px; right: 28px; }
+        .preview-download:hover { background: var(--accent) !important; border-color: var(--accent) !important; }
 
-        .preview-download:hover {
-            background: var(--accent) !important;
-            border-color: var(--accent) !important;
+        /* ===== COPY TOAST ===== */
+        .copy-toast {
+            position: fixed;
+            bottom: 32px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: rgba(30,32,40,0.95);
+            border: 1px solid rgba(108,99,255,0.35);
+            color: var(--text);
+            font-size: 0.85rem;
+            padding: 10px 20px;
+            border-radius: 30px;
+            backdrop-filter: blur(12px);
+            z-index: 99999;
+            opacity: 0;
+            transition: all 0.3s ease;
+            pointer-events: none;
+            white-space: nowrap;
         }
+        .copy-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
         @media (max-width: 600px) {
             .modal-grid { grid-template-columns: 1fr; }
@@ -1015,10 +1005,8 @@
             .filter-btns { display: none; }
             .search-input { width: 160px; }
             .search-input:focus { width: 180px; }
-            thead th:nth-child(3),
-            thead th:nth-child(4),
-            td:nth-child(3),
-            td:nth-child(4) { display: none; }
+            thead th:nth-child(3), thead th:nth-child(4),
+            td:nth-child(3), td:nth-child(4) { display: none; }
         }
     </style>
 </head>
@@ -1036,7 +1024,7 @@
                 <input type="password" id="gateInput" class="gate-input" placeholder="••••••••" autocomplete="off">
                 <button class="gate-eye" onclick="toggleGateEye()"><i class="fas fa-eye" id="gateEyeIcon"></i></button>
             </div>
-            <button class="gate-btn" onclick="checkPassword()">
+            <button class="gate-btn" id="gateBtn" onclick="checkPassword()">
                 <i class="fas fa-unlock-alt"></i> Enter
             </button>
             <div class="gate-error" id="gateError">
@@ -1177,270 +1165,272 @@
 
                 <div class="last-updated" id="lastUpdated"></div>
 
-                <!-- Firebase Auth panel -->
                 <div class="firebase-panel">
-                <div class="firebase-icon">🔥</div>
-                <div class="firebase-text">
-                    <h3>Google · GitHub · Email/Password Users</h3>
-                    <p>These users authenticate through Firebase Auth and are managed directly in the Firebase Console.</p>
+                    <div class="firebase-icon">🔥</div>
+                    <div class="firebase-text">
+                        <h3>Google · GitHub · Email/Password Users</h3>
+                        <p>These users authenticate through Firebase Auth and are managed directly in the Firebase Console.</p>
+                    </div>
+                    <a href="https://console.firebase.google.com/project/baripluxwebsite/authentication/users" target="_blank" class="firebase-link">
+                        <i class="fas fa-external-link-alt"></i> Open Firebase Auth
+                    </a>
                 </div>
-                <a href="https://console.firebase.google.com/project/baripluxwebsite/authentication/users" target="_blank" class="firebase-link">
-                    <i class="fas fa-external-link-alt"></i> Open Firebase Auth
-                </a>
             </div>
+
+            <!-- ===== BUG REPORTS SECTION ===== -->
+            <div id="reportsSection" style="display:none;">
+                <div class="stats-grid">
+                    <div class="stat-card" style="animation-delay:0s">
+                        <div class="stat-icon total"><i class="fas fa-bug"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-num" id="reportStatTotal">—</div>
+                            <div class="stat-label">Total Reports</div>
+                        </div>
+                    </div>
+                    <div class="stat-card" style="animation-delay:0.05s">
+                        <div class="stat-icon" style="background:rgba(244,67,54,0.15);color:#F44336;"><i class="fas fa-circle"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-num" id="reportStatNew">—</div>
+                            <div class="stat-label">New</div>
+                        </div>
+                    </div>
+                    <div class="stat-card" style="animation-delay:0.1s">
+                        <div class="stat-icon" style="background:rgba(255,152,0,0.15);color:#FF9800;"><i class="fas fa-eye"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-num" id="reportStatReviewed">—</div>
+                            <div class="stat-label">Reviewed</div>
+                        </div>
+                    </div>
+                    <div class="stat-card" style="animation-delay:0.15s">
+                        <div class="stat-icon" style="background:rgba(76,175,80,0.15);color:#4CAF50;"><i class="fas fa-check-circle"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-num" id="reportStatResolved">—</div>
+                            <div class="stat-label">Resolved</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="toolbar">
+                    <span class="toolbar-title">Bug Reports</span>
+                    <div class="search-wrap">
+                        <i class="fas fa-search"></i>
+                        <input type="text" class="search-input" id="reportSearchInput" placeholder="Search description or email..." oninput="renderBugReports()">
+                    </div>
+                    <div class="filter-btns">
+                        <button class="filter-btn active" data-status="all" onclick="setReportFilter('all', this)">
+                            <i class="fas fa-border-all"></i> All
+                        </button>
+                        <button class="filter-btn" data-status="new" onclick="setReportFilter('new', this)">
+                            <i class="fas fa-circle" style="color:#F44336;font-size:10px;"></i> New
+                        </button>
+                        <button class="filter-btn" data-status="reviewed" onclick="setReportFilter('reviewed', this)">
+                            <i class="fas fa-circle" style="color:#FF9800;font-size:10px;"></i> Reviewed
+                        </button>
+                        <button class="filter-btn" data-status="resolved" onclick="setReportFilter('resolved', this)">
+                            <i class="fas fa-circle" style="color:#4CAF50;font-size:10px;"></i> Resolved
+                        </button>
+                    </div>
+                    <button class="refresh-btn" id="refreshReportsBtn" onclick="loadBugReports()">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Report ID</th>
+                                <th>Description</th>
+                                <th>Account</th>
+                                <th>Contact</th>
+                                <th>PC Name</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reportsTableBody">
+                            <tr class="state-row">
+                                <td colspan="8">
+                                    <div class="state-icon">🔍</div>
+                                    <div>Loading bug reports...</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="last-updated" id="reportsLastUpdated"></div>
+            </div>
+
         </div>
+    </div>
 
-        <!-- ===== BUG REPORTS SECTION ===== -->
-        <div id="reportsSection" style="display:none;">
-            <div class="stats-grid">
-                <div class="stat-card" style="animation-delay:0s">
-                    <div class="stat-icon total"><i class="fas fa-bug"></i></div>
-                    <div class="stat-info">
-                        <div class="stat-num" id="reportStatTotal">—</div>
-                        <div class="stat-label">Total Reports</div>
-                    </div>
+    <!-- ===== FULL IMAGE PREVIEW ===== -->
+    <div class="img-preview-overlay" id="imgPreviewOverlay">
+        <button class="preview-btn preview-close" onclick="closeImgPreview()" title="Close (Esc)"><i class="fas fa-times"></i></button>
+        <button class="preview-btn preview-nav prev" id="previewPrevBtn" onclick="prevImage()" title="Previous (←)"><i class="fas fa-chevron-left"></i></button>
+        <img id="imgPreviewFull" src="" alt="Screenshot preview" onclick="closeImgPreview()">
+        <button class="preview-btn preview-nav next" id="previewNextBtn" onclick="nextImage()" title="Next (→)"><i class="fas fa-chevron-right"></i></button>
+        <div class="preview-counter" id="imgPreviewCounter"></div>
+        <button class="preview-btn preview-download" onclick="downloadPreviewImage()" title="Download"><i class="fas fa-download"></i></button>
+    </div>
+
+    <!-- ===== USER DETAILS MODAL ===== -->
+    <div class="modal-overlay" id="userDetailsModal" onclick="handleUserModalOverlayClick(event)">
+        <div class="modal-box" style="max-width:520px;">
+            <button class="modal-close" onclick="closeUserModal()"><i class="fas fa-times"></i></button>
+
+            <div style="display:flex;align-items:center;gap:20px;margin-bottom:28px;padding-bottom:24px;border-bottom:1px solid var(--border);">
+                <div id="udAvatar" style="width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.8rem;font-weight:700;flex-shrink:0;overflow:hidden;border:2px solid var(--border);"></div>
+                <div>
+                    <div id="udName" style="font-size:1.25rem;font-weight:700;margin-bottom:4px;"></div>
+                    <div id="udMethodBadge"></div>
                 </div>
-                <div class="stat-card" style="animation-delay:0.05s">
-                    <div class="stat-icon" style="background:rgba(244,67,54,0.15);color:#F44336;"><i class="fas fa-circle"></i></div>
-                    <div class="stat-info">
-                        <div class="stat-num" id="reportStatNew">—</div>
-                        <div class="stat-label">New</div>
+            </div>
+
+            <div class="modal-section">
+                <h3><i class="fas fa-id-card"></i> Account Info</h3>
+                <div class="modal-grid">
+                    <div class="field" style="grid-column:1/-1;">
+                        <span class="label">User ID</span>
+                        <span class="value" id="udId" style="font-family:'JetBrains Mono',monospace;font-size:0.78rem;word-break:break-all;"></span>
                     </div>
-                </div>
-                <div class="stat-card" style="animation-delay:0.1s">
-                    <div class="stat-icon" style="background:rgba(255,152,0,0.15);color:#FF9800;"><i class="fas fa-eye"></i></div>
-                    <div class="stat-info">
-                        <div class="stat-num" id="reportStatReviewed">—</div>
-                        <div class="stat-label">Reviewed</div>
+                    <div class="field" style="grid-column:1/-1;">
+                        <span class="label">Email</span>
+                        <span class="value" id="udEmail"></span>
                     </div>
-                </div>
-                <div class="stat-card" style="animation-delay:0.15s">
-                    <div class="stat-icon" style="background:rgba(76,175,80,0.15);color:#4CAF50;"><i class="fas fa-check-circle"></i></div>
-                    <div class="stat-info">
-                        <div class="stat-num" id="reportStatResolved">—</div>
-                        <div class="stat-label">Resolved</div>
+                    <div class="field">
+                        <span class="label">Login Method</span>
+                        <span class="value" id="udMethod"></span>
+                    </div>
+                    <div class="field">
+                        <span class="label">Platform</span>
+                        <span class="value" id="udPlatform"></span>
                     </div>
                 </div>
             </div>
 
-            <div class="toolbar">
-                <span class="toolbar-title">Bug Reports</span>
-                <div class="search-wrap">
-                    <i class="fas fa-search"></i>
-                    <input type="text" class="search-input" id="reportSearchInput" placeholder="Search description or email..." oninput="renderBugReports()">
+            <div class="modal-section">
+                <h3><i class="fas fa-clock"></i> Activity</h3>
+                <div class="modal-grid">
+                    <div class="field">
+                        <span class="label">First Login</span>
+                        <span class="value" id="udLoginTime"></span>
+                    </div>
+                    <div class="field">
+                        <span class="label">Last Active</span>
+                        <span class="value" id="udLastActive"></span>
+                    </div>
                 </div>
-                <div class="filter-btns">
-                    <button class="filter-btn active" data-status="all" onclick="setReportFilter('all', this)">
-                        <i class="fas fa-border-all"></i> All
-                    </button>
-                    <button class="filter-btn" data-status="new" style="--filter-color:#F44336;" onclick="setReportFilter('new', this)">
-                        <i class="fas fa-circle" style="color:#F44336;font-size:10px;"></i> New
-                    </button>
-                    <button class="filter-btn" data-status="reviewed" style="--filter-color:#FF9800;" onclick="setReportFilter('reviewed', this)">
-                        <i class="fas fa-circle" style="color:#FF9800;font-size:10px;"></i> Reviewed
-                    </button>
-                    <button class="filter-btn" data-status="resolved" style="--filter-color:#4CAF50;" onclick="setReportFilter('resolved', this)">
-                        <i class="fas fa-circle" style="color:#4CAF50;font-size:10px;"></i> Resolved
-                    </button>
+            </div>
+
+            <div class="modal-section" id="udPhotoSection" style="display:none;">
+                <h3><i class="fas fa-image"></i> Profile Photo</h3>
+                <div style="display:flex;align-items:center;gap:14px;">
+                    <img id="udPhotoFull" src="" alt="Profile" style="width:80px;height:80px;border-radius:12px;object-fit:cover;border:1px solid var(--border);">
+                    <a id="udPhotoLink" href="" target="_blank" style="color:var(--accent);font-size:0.85rem;text-decoration:none;">
+                        <i class="fas fa-external-link-alt"></i> Open original
+                    </a>
                 </div>
-                <button class="refresh-btn" id="refreshReportsBtn" onclick="loadBugReports()">
-                    <i class="fas fa-sync-alt"></i> Refresh
+            </div>
+
+            <div style="display:flex;gap:10px;margin-top:24px;">
+                <button onclick="copyUserId()" style="flex:1;padding:10px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-family:'Poppins',sans-serif;font-size:0.85rem;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">
+                    <i class="fas fa-copy"></i> Copy ID
+                </button>
+                <button onclick="copyUserEmail()" style="flex:1;padding:10px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-family:'Poppins',sans-serif;font-size:0.85rem;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">
+                    <i class="fas fa-envelope"></i> Copy Email
                 </button>
             </div>
-
-            <div class="table-wrap">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Report ID</th>
-                            <th>Description</th>
-                            <th>Account</th>
-                            <th>Contact</th>
-                            <th>PC Name</th>
-                            <th>Date</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="reportsTableBody">
-                        <tr class="state-row">
-                            <td colspan="8">
-                                <div class="state-icon">🔍</div>
-                                <div>Loading bug reports...</div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="last-updated" id="reportsLastUpdated"></div>
-        </div>
-
-    </div>
-</div>
-
-<!-- ===== FULL IMAGE PREVIEW ===== -->
-<div class="img-preview-overlay" id="imgPreviewOverlay">
-    <button class="preview-btn preview-close" onclick="closeImgPreview()" title="Close (Esc)"><i class="fas fa-times"></i></button>
-    <button class="preview-btn preview-nav prev" id="previewPrevBtn" onclick="prevImage()" title="Previous (←)"><i class="fas fa-chevron-left"></i></button>
-    <img id="imgPreviewFull" src="" alt="Screenshot preview" onclick="closeImgPreview()">
-    <button class="preview-btn preview-nav next" id="previewNextBtn" onclick="nextImage()" title="Next (→)"><i class="fas fa-chevron-right"></i></button>
-    <div class="preview-counter" id="imgPreviewCounter"></div>
-    <button class="preview-btn preview-download" onclick="downloadPreviewImage()" title="Download"><i class="fas fa-download"></i></button>
-</div>
-
-<!-- ===== DETAILS MODAL ===== -->
-<!-- ===== USER DETAILS MODAL ===== -->
-<div class="modal-overlay" id="userDetailsModal">
-    <div class="modal-box" style="max-width:520px;">
-        <button class="modal-close" onclick="closeUserModal()"><i class="fas fa-times"></i></button>
-
-        <!-- Header with avatar -->
-        <div style="display:flex;align-items:center;gap:20px;margin-bottom:28px;padding-bottom:24px;border-bottom:1px solid var(--border);">
-            <div id="udAvatar" style="width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.8rem;font-weight:700;flex-shrink:0;overflow:hidden;border:2px solid var(--border);"></div>
-            <div>
-                <div id="udName" style="font-size:1.25rem;font-weight:700;margin-bottom:4px;"></div>
-                <div id="udMethodBadge"></div>
-            </div>
-        </div>
-
-        <!-- Info grid -->
-        <div class="modal-section">
-            <h3><i class="fas fa-id-card"></i> Account Info</h3>
-            <div class="modal-grid">
-                <div class="field" style="grid-column:1/-1;">
-                    <span class="label">User ID</span>
-                    <span class="value" id="udId" style="font-family:'JetBrains Mono',monospace;font-size:0.78rem;word-break:break-all;"></span>
-                </div>
-                <div class="field" style="grid-column:1/-1;">
-                    <span class="label">Email</span>
-                    <span class="value" id="udEmail"></span>
-                </div>
-                <div class="field">
-                    <span class="label">Login Method</span>
-                    <span class="value" id="udMethod"></span>
-                </div>
-                <div class="field">
-                    <span class="label">Platform</span>
-                    <span class="value" id="udPlatform"></span>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal-section">
-            <h3><i class="fas fa-clock"></i> Activity</h3>
-            <div class="modal-grid">
-                <div class="field">
-                    <span class="label">First Login</span>
-                    <span class="value" id="udLoginTime"></span>
-                </div>
-                <div class="field">
-                    <span class="label">Last Active</span>
-                    <span class="value" id="udLastActive"></span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Profile photo if available -->
-        <div class="modal-section" id="udPhotoSection" style="display:none;">
-            <h3><i class="fas fa-image"></i> Profile Photo</h3>
-            <div style="display:flex;align-items:center;gap:14px;">
-                <img id="udPhotoFull" src="" alt="Profile" style="width:80px;height:80px;border-radius:12px;object-fit:cover;border:1px solid var(--border);">
-                <a id="udPhotoLink" href="" target="_blank" style="color:var(--accent);font-size:0.85rem;text-decoration:none;">
-                    <i class="fas fa-external-link-alt"></i> Open original
-                </a>
-            </div>
-        </div>
-
-        <!-- Actions -->
-        <div style="display:flex;gap:10px;margin-top:24px;">
-            <button onclick="copyUserId()" style="flex:1;padding:10px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-family:'Poppins',sans-serif;font-size:0.85rem;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">
-                <i class="fas fa-copy"></i> Copy ID
-            </button>
-            <button onclick="copyUserEmail()" style="flex:1;padding:10px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-family:'Poppins',sans-serif;font-size:0.85rem;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">
-                <i class="fas fa-envelope"></i> Copy Email
-            </button>
         </div>
     </div>
-</div>
 
-<div class="modal-overlay" id="detailsModal">
-    <div class="modal-box">
-        <button class="modal-close" onclick="closeDetailsModal()"><i class="fas fa-times"></i></button>
-        <div class="modal-header">
-            <h2><i class="fas fa-bug" style="color:var(--accent);"></i> Bug Report Details</h2>
-            <div class="modal-meta">
-                <span id="modalReportId">—</span>
-                <span id="modalReportDate">—</span>
-                <span id="modalReportStatus">—</span>
+    <!-- ===== BUG REPORT DETAILS MODAL ===== -->
+    <div class="modal-overlay" id="detailsModal" onclick="handleReportModalOverlayClick(event)">
+        <div class="modal-box">
+            <button class="modal-close" onclick="closeDetailsModal()"><i class="fas fa-times"></i></button>
+            <div class="modal-header">
+                <h2><i class="fas fa-bug" style="color:var(--accent);"></i> Bug Report Details</h2>
+                <div class="modal-meta">
+                    <span id="modalReportId">—</span>
+                    <span id="modalReportDate">—</span>
+                    <span id="modalReportStatus">—</span>
+                </div>
             </div>
-        </div>
-        <div class="modal-section">
-            <h3><i class="fas fa-align-left"></i> Description</h3>
-            <div class="modal-description" id="modalDescription"></div>
-        </div>
-        <div class="modal-section">
-            <h3><i class="fas fa-info-circle"></i> Program Information</h3>
-            <div class="modal-grid">
-                <div class="field"><span class="label">App Name</span><span class="value" id="modalAppName">—</span></div>
-                <div class="field"><span class="label">Version</span><span class="value" id="modalAppVersion">—</span></div>
-                <div class="field"><span class="label">Company</span><span class="value" id="modalCompany">—</span></div>
-                <div class="field"><span class="label">Developer</span><span class="value" id="modalDeveloper">—</span></div>
-                <div class="field"><span class="label">Website</span><span class="value" id="modalWebsite">—</span></div>
-                <div class="field"><span class="label">Install Path</span><span class="value" id="modalInstallPath" style="font-size:0.78rem;font-family:'JetBrains Mono',monospace;">—</span></div>
+            <div class="modal-section">
+                <h3><i class="fas fa-align-left"></i> Description</h3>
+                <div class="modal-description" id="modalDescription"></div>
             </div>
-        </div>
-        <div class="modal-section">
-            <h3><i class="fas fa-microchip"></i> System Specifications</h3>
-            <div class="modal-grid">
-                <div class="field"><span class="label">PC Name</span><span class="value" id="modalPcName">—</span></div>
-                <div class="field"><span class="label">PC / Laptop Model</span><span class="value" id="modalPcModel">—</span></div>
-                <div class="field"><span class="label">Processor (CPU)</span><span class="value" id="modalCpu">—</span></div>
-                <div class="field"><span class="label">Graphics (GPU)</span><span class="value" id="modalGpu">—</span></div>
-                <div class="field"><span class="label">Installed RAM</span><span class="value" id="modalRam">—</span></div>
-                <div class="field"><span class="label">Storage</span><span class="value" id="modalStorage">—</span></div>
-                <div class="field"><span class="label">Operating System</span><span class="value" id="modalOs">—</span></div>
-                <div class="field"><span class="label">System Type</span><span class="value" id="modalSystemType">—</span></div>
-                <div class="field"><span class="label">Screen Resolution</span><span class="value" id="modalResolution">—</span></div>
-                <div class="field"><span class="label">Refresh Rate</span><span class="value" id="modalRefreshRate">—</span></div>
+            <div class="modal-section">
+                <h3><i class="fas fa-info-circle"></i> Program Information</h3>
+                <div class="modal-grid">
+                    <div class="field"><span class="label">App Name</span><span class="value" id="modalAppName">—</span></div>
+                    <div class="field"><span class="label">Version</span><span class="value" id="modalAppVersion">—</span></div>
+                    <div class="field"><span class="label">Company</span><span class="value" id="modalCompany">—</span></div>
+                    <div class="field"><span class="label">Developer</span><span class="value" id="modalDeveloper">—</span></div>
+                    <div class="field"><span class="label">Website</span><span class="value" id="modalWebsite">—</span></div>
+                    <div class="field"><span class="label">Install Path</span><span class="value" id="modalInstallPath" style="font-size:0.78rem;font-family:'JetBrains Mono',monospace;">—</span></div>
+                </div>
             </div>
-        </div>
-        <div class="modal-section" id="modalImagesSection" style="display:none;">
-            <div class="modal-images-header">
-                <h3><i class="fas fa-images"></i> Screenshots</h3>
-                <span class="modal-images-count" id="modalImagesCount"></span>
+            <div class="modal-section">
+                <h3><i class="fas fa-microchip"></i> System Specifications</h3>
+                <div class="modal-grid">
+                    <div class="field"><span class="label">PC Name</span><span class="value" id="modalPcName">—</span></div>
+                    <div class="field"><span class="label">PC / Laptop Model</span><span class="value" id="modalPcModel">—</span></div>
+                    <div class="field"><span class="label">Processor (CPU)</span><span class="value" id="modalCpu">—</span></div>
+                    <div class="field"><span class="label">Graphics (GPU)</span><span class="value" id="modalGpu">—</span></div>
+                    <div class="field"><span class="label">Installed RAM</span><span class="value" id="modalRam">—</span></div>
+                    <div class="field"><span class="label">Storage</span><span class="value" id="modalStorage">—</span></div>
+                    <div class="field"><span class="label">Operating System</span><span class="value" id="modalOs">—</span></div>
+                    <div class="field"><span class="label">System Type</span><span class="value" id="modalSystemType">—</span></div>
+                    <div class="field"><span class="label">Screen Resolution</span><span class="value" id="modalResolution">—</span></div>
+                    <div class="field"><span class="label">Refresh Rate</span><span class="value" id="modalRefreshRate">—</span></div>
+                </div>
             </div>
-            <div class="modal-images" id="modalImagesContainer"></div>
-        </div>
-        <div class="modal-section">
-            <h3><i class="fas fa-user-circle"></i> Reporter Account</h3>
-            <div id="modalAccountGuest" style="display:none;color:var(--muted);font-size:0.9rem;padding:8px 0;">
-                Reporter was not signed in to a Bari Plux account.
+            <div class="modal-section" id="modalImagesSection" style="display:none;">
+                <div class="modal-images-header">
+                    <h3><i class="fas fa-images"></i> Screenshots</h3>
+                    <span class="modal-images-count" id="modalImagesCount"></span>
+                </div>
+                <div class="modal-images" id="modalImagesContainer"></div>
             </div>
-            <div id="modalAccountCard" style="display:none;">
-                <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--border);">
-                    <div id="modalAccountAvatar" style="width:56px;height:56px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.2rem;flex-shrink:0;color:#fff;"></div>
-                    <div>
-                        <div id="modalAccountName" style="font-size:1.1rem;font-weight:700;margin-bottom:4px;"></div>
-                        <span id="modalAccountMethodBadge" class="report-status reviewed" style="display:inline-block;font-size:0.75rem;"></span>
+            <div class="modal-section">
+                <h3><i class="fas fa-user-circle"></i> Reporter Account</h3>
+                <div id="modalAccountGuest" style="display:none;color:var(--muted);font-size:0.9rem;padding:8px 0;">
+                    Reporter was not signed in to a Bari Plux account.
+                </div>
+                <div id="modalAccountCard" style="display:none;">
+                    <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--border);">
+                        <div id="modalAccountAvatar" style="width:56px;height:56px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.2rem;flex-shrink:0;color:#fff;"></div>
+                        <div>
+                            <div id="modalAccountName" style="font-size:1.1rem;font-weight:700;margin-bottom:4px;"></div>
+                            <span id="modalAccountMethodBadge" class="report-status reviewed" style="display:inline-block;font-size:0.75rem;"></span>
+                        </div>
+                    </div>
+                    <div class="modal-grid">
+                        <div class="field" style="grid-column:1/-1;"><span class="label">User ID</span><span class="value" id="modalAccountId" style="font-family:'JetBrains Mono',monospace;font-size:0.78rem;word-break:break-all;"></span></div>
+                        <div class="field"><span class="label">Account Email</span><span class="value" id="modalAccountEmail"></span></div>
+                        <div class="field"><span class="label">Signed in at</span><span class="value" id="modalAccountLoginTime"></span></div>
+                        <div class="field"><span class="label">Contact Email</span><span class="value" id="modalEmail">—</span></div>
+                        <div class="field"><span class="label">PC Name</span><span class="value" id="ModalUserPcName">—</span></div>
                     </div>
                 </div>
-                <div class="modal-grid">
-                    <div class="field" style="grid-column:1/-1;"><span class="label">User ID</span><span class="value" id="modalAccountId" style="font-family:'JetBrains Mono',monospace;font-size:0.78rem;word-break:break-all;"></span></div>
-                    <div class="field"><span class="label">Account Email</span><span class="value" id="modalAccountEmail"></span></div>
-                    <div class="field"><span class="label">Signed in at</span><span class="value" id="modalAccountLoginTime"></span></div>
-                    <div class="field"><span class="label">Contact Email</span><span class="value" id="modalEmail">—</span></div>
-                    <div class="field"><span class="label">PC Name</span><span class="value" id="ModalUserPcName">—</span></div>
-                </div>
             </div>
         </div>
     </div>
-</div>
+
+    <!-- ===== COPY TOAST ===== -->
+    <div class="copy-toast" id="copyToast"></div>
 
 <script>
-    // ==================== CONFIG ====================
-    // TODO: Change this to your own admin password
-    const ADMIN_PASSWORD = 'IamTheAtomicSnow7#';
+    // ============================================================
+    // SECURITY: Password stored as SHA-256 hash only.
+    // The actual password is NEVER stored in this file.
+    // To change password: run sha256sum on your new password
+    // and update the hash below.
+    // ============================================================
+    const ADMIN_PASSWORD_HASH = '677a05115bca1efb77c9a6677de4af6f7cab101b221c0d0d0c5b021ae79d098c';
 
     const firebaseConfig = {
         apiKey: "AIzaSyBH_t3Uue7fbb-DahwjSJGjG2-quCqiLEs",
@@ -1456,24 +1446,42 @@
     let allUsers = [];
     let activeFilter = 'all';
     let db = null;
+    let _currentModalUser = null;
+
+    // ==================== SHA-256 HELPER ====================
+    async function sha256(message) {
+        const msgBuffer = new TextEncoder().encode(message);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
 
     // ==================== PASSWORD GATE ====================
     function toggleGateEye() {
-            const input = document.getElementById('gateInput');
-            const icon = document.getElementById('gateEyeIcon');
-            if (input.type === 'password') {
-                input.type = 'text';
-                icon.className = 'fas fa-eye-slash';
-            } else {
-                input.type = 'password';
-                icon.className = 'fas fa-eye';
-            }
+        const input = document.getElementById('gateInput');
+        const icon = document.getElementById('gateEyeIcon');
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.className = 'fas fa-eye-slash';
+        } else {
+            input.type = 'password';
+            icon.className = 'fas fa-eye';
         }
+    }
 
-        function checkPassword() {
-            const val = document.getElementById('gateInput').value;
-            const errEl = document.getElementById('gateError');
-            if (val === ADMIN_PASSWORD) {
+    async function checkPassword() {
+        const val = document.getElementById('gateInput').value;
+        const errEl = document.getElementById('gateError');
+        const btn = document.getElementById('gateBtn');
+
+        if (!val) return;
+
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking...';
+
+        try {
+            const hash = await sha256(val);
+            if (hash === ADMIN_PASSWORD_HASH) {
                 sessionStorage.setItem('bp_admin', '1');
                 document.getElementById('gate').classList.add('hidden');
                 document.getElementById('app').classList.add('show');
@@ -1483,605 +1491,645 @@
                 document.getElementById('gateInput').value = '';
                 setTimeout(() => errEl.classList.remove('show'), 2000);
             }
+        } catch(e) {
+            console.error('Hash error:', e);
         }
 
-        document.getElementById('gateInput').addEventListener('keydown', e => {
-            if (e.key === 'Enter') checkPassword();
-        });
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-unlock-alt"></i> Enter';
+    }
 
-        function logout() {
-            sessionStorage.removeItem('bp_admin');
-            document.getElementById('gate').classList.remove('hidden');
-            document.getElementById('app').classList.remove('show');
-            document.getElementById('gateInput').value = '';
+    document.getElementById('gateInput').addEventListener('keydown', e => {
+        if (e.key === 'Enter') checkPassword();
+    });
+
+    function logout() {
+        sessionStorage.removeItem('bp_admin');
+        document.getElementById('gate').classList.remove('hidden');
+        document.getElementById('app').classList.remove('show');
+        document.getElementById('gateInput').value = '';
+    }
+
+    // ==================== FIREBASE INIT ====================
+    function initApp() {
+        try {
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+            db = firebase.database();
+            loadUsers();
+            setInterval(loadUsers, 30000);
+        } catch (e) {
+            console.error('Firebase init error:', e);
+            showTableError('Could not connect to Firebase. Check your database URL.');
         }
+    }
 
-        // ==================== FIREBASE INIT ====================
-        function initApp() {
-            try {
-                if (!firebase.apps.length) {
-                    firebase.initializeApp(firebaseConfig);
-                }
-                db = firebase.database();
-                loadUsers();
-                // Live updates every 30 seconds
-                setInterval(loadUsers, 30000);
-            } catch (e) {
-                console.error('Firebase init error:', e);
-                showTableError('Could not connect to Firebase. Check your database URL.');
-            }
-        }
+    // ==================== LOAD USERS ====================
+    async function loadUsers() {
+        const btn = document.getElementById('refreshBtn');
+        btn.classList.add('spinning');
 
-        // ==================== LOAD USERS ====================
-        async function loadUsers() {
-            const btn = document.getElementById('refreshBtn');
-            btn.classList.add('spinning');
-
-            if (!db) {
-                showTableError('Firebase not initialized.');
-                btn.classList.remove('spinning');
-                return;
-            }
-
-            try {
-                // Read both nodes in parallel
-                const [usersSnap, discordSnap] = await Promise.all([
-                    db.ref('users').once('value'),
-                    db.ref('discordUsers').once('value')
-                ]);
-
-                const parseNode = (snap) => {
-                    const data = snap.val();
-                    if (!data) return [];
-                    return Object.entries(data).map(([id, u]) => ({
-                        id,
-                        name: u.name || 'Unknown',
-                        email: u.email || '—',
-                        loginMethod: u.loginMethod || 'unknown',
-                        loginTime: u.loginTime || null,
-                        lastActive: u.lastActive || null,
-                        photoURL: u.photoURL || null,
-                        platform: u.platform || 'website'
-                    }));
-                };
-
-                // Merge and deduplicate by id
-                const merged = [...parseNode(usersSnap), ...parseNode(discordSnap)];
-                const seen = new Set();
-                allUsers = merged.filter(u => {
-                    if (seen.has(u.id)) return false;
-                    seen.add(u.id);
-                    return true;
-                });
-
-                // Sort by lastActive descending
-                allUsers.sort((a, b) => (b.lastActive || 0) - (a.lastActive || 0));
-
-                updateStats();
-                renderTable();
-
-                const now = new Date();
-                document.getElementById('lastUpdated').textContent =
-                    `Last updated: ${now.toLocaleDateString()} at ${now.toLocaleTimeString()}`;
-
-            } catch (e) {
-                console.error('Load error:', e);
-                showTableError('Could not read database. Make sure Firebase rules allow admin reads.');
-            }
-
+        if (!db) {
+            showTableError('Firebase not initialized.');
             btn.classList.remove('spinning');
+            return;
         }
 
-        // ==================== STATS ====================
-        function updateStats() {
-            const total = allUsers.length;
-            const discord = allUsers.filter(u => u.loginMethod === 'discord').length;
-            const google = allUsers.filter(u => u.loginMethod.includes('google')).length;
-            const github = allUsers.filter(u => u.loginMethod.includes('github')).length;
-            const email = allUsers.filter(u => u.loginMethod === 'email').length;
-            const now = Date.now();
-            const active = allUsers.filter(u => u.lastActive && (now - u.lastActive) < 86400000).length;
+        try {
+            const [usersSnap, discordSnap] = await Promise.all([
+                db.ref('users').once('value'),
+                db.ref('discordUsers').once('value')
+            ]);
 
-            document.getElementById('statTotal').textContent = total;
-            document.getElementById('statDiscord').textContent = discord;
-            document.getElementById('statGoogle').textContent = google;
-            document.getElementById('statGithub').textContent = github;
-            document.getElementById('statEmail').textContent = email;
-            document.getElementById('statActive').textContent = active;
-        }
+            const parseNode = (snap) => {
+                const data = snap.val();
+                if (!data) return [];
+                return Object.entries(data).map(([id, u]) => ({
+                    id,
+                    name: u.name || 'Unknown',
+                    email: u.email || '—',
+                    loginMethod: u.loginMethod || 'unknown',
+                    loginTime: u.loginTime || null,
+                    lastActive: u.lastActive || null,
+                    photoURL: u.photoURL || null,
+                    platform: u.platform || 'website'
+                }));
+            };
 
-        // ==================== FILTER & RENDER ====================
-        function setFilter(filter, btn) {
-            activeFilter = filter;
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            renderTable();
-        }
-
-        function renderTable() {
-            const search = document.getElementById('searchInput').value.toLowerCase();
-            const tbody = document.getElementById('usersTableBody');
-
-            let filtered = allUsers.filter(u => {
-                const matchFilter = activeFilter === 'all'
-                    || (activeFilter === 'google' && u.loginMethod.includes('google'))
-                    || (activeFilter === 'discord' && u.loginMethod === 'discord')
-                    || (activeFilter === 'github' && u.loginMethod.includes('github'))
-                    || (activeFilter === 'email' && u.loginMethod === 'email');
-
-                const matchSearch = !search
-                    || u.name.toLowerCase().includes(search)
-                    || u.email.toLowerCase().includes(search)
-                    || u.id.toLowerCase().includes(search);
-
-                return matchFilter && matchSearch;
+            const merged = [...parseNode(usersSnap), ...parseNode(discordSnap)];
+            const seen = new Set();
+            allUsers = merged.filter(u => {
+                if (seen.has(u.id)) return false;
+                seen.add(u.id);
+                return true;
             });
 
-            if (filtered.length === 0) {
-                tbody.innerHTML = `
-                    <tr class="state-row">
-                        <td colspan="5">
-                            <div class="state-icon">🔍</div>
-                            <div>${search ? 'No users match your search.' : 'No users found in this category.'}</div>
-                        </td>
-                    </tr>`;
-                return;
-            }
+            allUsers.sort((a, b) => (b.lastActive || 0) - (a.lastActive || 0));
 
-            tbody.innerHTML = filtered.map((u, i) => {
-                const method = getMethodInfo(u.loginMethod);
-                const loginTime = u.loginTime ? formatDate(u.loginTime) : '—';
-                const lastActive = u.lastActive ? timeAgo(u.lastActive) : '—';
-                const isRecent = u.lastActive && (Date.now() - u.lastActive) < 300000; // 5 min
-                const initial = u.name.charAt(0).toUpperCase();
-                const avatarColor = getAvatarColor(u.loginMethod);
+            updateStats();
+            renderTable();
 
-                return `
-                    <tr style="animation-delay:${i * 0.03}s" onclick="openUserModal('${escHtml(u.id)}')" style="cursor:pointer;">
-                        <td>
-                            <div class="user-cell">
-                                <div class="user-avatar" style="background:${avatarColor}20;color:${avatarColor};">
-                                    ${u.photoURL ? `<img src="${escHtml(u.photoURL)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" onerror="this.style.display='none';this.parentElement.textContent='${initial}'">` : initial}
-                                </div>
-                                <div>
-                                    <div class="user-name">${escHtml(u.name)}</div>
-                                    <div class="user-id">${u.id.substring(0, 20)}${u.id.length > 20 ? '…' : ''}</div>
-                                </div>
-                            </div>
-                        </td>
-                        <td style="color:var(--muted);font-size:0.85rem;">${escHtml(u.email)}</td>
-                        <td><span class="method-badge ${method.cls}">${method.icon} ${method.label}</span></td>
-                        <td class="time-cell">${loginTime}</td>
-                        <td class="time-cell">
-                            ${isRecent ? '<span class="active-dot"></span>' : ''}
-                            <span>${lastActive}</span>
-                        </td>
-                        <td>
-                            <button onclick="event.stopPropagation();openUserModal('${escHtml(u.id)}')"
-                                style="padding:6px 12px;background:rgba(108,99,255,0.12);border:1px solid rgba(108,99,255,0.25);border-radius:6px;color:var(--accent);font-family:'Poppins',sans-serif;font-size:0.78rem;font-weight:600;cursor:pointer;transition:all 0.2s;white-space:nowrap;"
-                                onmouseover="this.style.background='rgba(108,99,255,0.22)'"
-                                onmouseout="this.style.background='rgba(108,99,255,0.12)'">
-                                <i class="fas fa-eye"></i> Details
-                            </button>
-                        </td>
-                    </tr>`;
-            }).join('');
+            const now = new Date();
+            document.getElementById('lastUpdated').textContent =
+                `Last updated: ${now.toLocaleDateString()} at ${now.toLocaleTimeString()}`;
+
+        } catch (e) {
+            console.error('Load error:', e);
+            showTableError('Could not read database. Make sure Firebase rules allow admin reads.');
         }
 
-        function showTableError(msg) {
-            document.getElementById('usersTableBody').innerHTML = `
+        btn.classList.remove('spinning');
+    }
+
+    // ==================== STATS ====================
+    function updateStats() {
+        const total = allUsers.length;
+        const discord = allUsers.filter(u => u.loginMethod === 'discord').length;
+        const google = allUsers.filter(u => u.loginMethod.includes('google')).length;
+        const github = allUsers.filter(u => u.loginMethod.includes('github')).length;
+        const email = allUsers.filter(u => u.loginMethod === 'email').length;
+        const now = Date.now();
+        const active = allUsers.filter(u => u.lastActive && (now - u.lastActive) < 86400000).length;
+
+        document.getElementById('statTotal').textContent = total;
+        document.getElementById('statDiscord').textContent = discord;
+        document.getElementById('statGoogle').textContent = google;
+        document.getElementById('statGithub').textContent = github;
+        document.getElementById('statEmail').textContent = email;
+        document.getElementById('statActive').textContent = active;
+    }
+
+    // ==================== FILTER & RENDER ====================
+    function setFilter(filter, btn) {
+        activeFilter = filter;
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderTable();
+    }
+
+    function renderTable() {
+        const search = document.getElementById('searchInput').value.toLowerCase();
+        const tbody = document.getElementById('usersTableBody');
+
+        let filtered = allUsers.filter(u => {
+            const matchFilter = activeFilter === 'all'
+                || (activeFilter === 'google' && u.loginMethod.includes('google'))
+                || (activeFilter === 'discord' && u.loginMethod === 'discord')
+                || (activeFilter === 'github' && u.loginMethod.includes('github'))
+                || (activeFilter === 'email' && u.loginMethod === 'email');
+
+            const matchSearch = !search
+                || u.name.toLowerCase().includes(search)
+                || u.email.toLowerCase().includes(search)
+                || u.id.toLowerCase().includes(search);
+
+            return matchFilter && matchSearch;
+        });
+
+        if (filtered.length === 0) {
+            tbody.innerHTML = `
                 <tr class="state-row">
-                    <td colspan="5">
-                        <div class="state-icon">⚠️</div>
-                        <div style="color:var(--danger);">${msg}</div>
+                    <td colspan="6">
+                        <div class="state-icon">🔍</div>
+                        <div>${search ? 'No users match your search.' : 'No users found in this category.'}</div>
                     </td>
                 </tr>`;
+            return;
         }
 
-        // ==================== HELPERS ====================
-        function getMethodInfo(method) {
-            if (method === 'discord') return { cls: 'discord', icon: '🎮', label: 'Discord' };
-            if (method.includes('google')) return { cls: 'google', icon: '🔵', label: 'Google' };
-            if (method === 'github') return { cls: 'github', icon: '⚫', label: 'GitHub' };
-            if (method === 'email') return { cls: 'email', icon: '✉️', label: 'Email' };
-            return { cls: 'unknown', icon: '❓', label: method };
+        tbody.innerHTML = filtered.map((u, i) => {
+            const method = getMethodInfo(u.loginMethod);
+            const loginTime = u.loginTime ? formatDate(u.loginTime) : '—';
+            const lastActive = u.lastActive ? timeAgo(u.lastActive) : '—';
+            const isRecent = u.lastActive && (Date.now() - u.lastActive) < 300000;
+            const initial = u.name.charAt(0).toUpperCase();
+            const avatarColor = getAvatarColor(u.loginMethod);
+
+            return `
+                <tr style="animation-delay:${i * 0.03}s;cursor:pointer;" onclick="openUserModal('${escHtml(u.id)}')">
+                    <td>
+                        <div class="user-cell">
+                            <div class="user-avatar" style="background:${avatarColor}20;color:${avatarColor};">
+                                ${u.photoURL
+                                    ? `<img src="${escHtml(u.photoURL)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" onerror="this.style.display='none';this.parentElement.textContent='${initial}'">`
+                                    : initial}
+                            </div>
+                            <div>
+                                <div class="user-name">${escHtml(u.name)}</div>
+                                <div class="user-id">${u.id.substring(0, 20)}${u.id.length > 20 ? '…' : ''}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td style="color:var(--muted);font-size:0.85rem;">${escHtml(u.email)}</td>
+                    <td><span class="method-badge ${method.cls}">${method.icon} ${method.label}</span></td>
+                    <td class="time-cell">${loginTime}</td>
+                    <td class="time-cell">
+                        ${isRecent ? '<span class="active-dot"></span>' : ''}
+                        <span>${lastActive}</span>
+                    </td>
+                    <td>
+                        <button onclick="event.stopPropagation();openUserModal('${escHtml(u.id)}')"
+                            style="padding:6px 12px;background:rgba(108,99,255,0.12);border:1px solid rgba(108,99,255,0.25);border-radius:6px;color:var(--accent);font-family:'Poppins',sans-serif;font-size:0.78rem;font-weight:600;cursor:pointer;transition:all 0.2s;white-space:nowrap;"
+                            onmouseover="this.style.background='rgba(108,99,255,0.22)'"
+                            onmouseout="this.style.background='rgba(108,99,255,0.12)'">
+                            <i class="fas fa-eye"></i> Details
+                        </button>
+                    </td>
+                </tr>`;
+        }).join('');
+    }
+
+    function showTableError(msg) {
+        document.getElementById('usersTableBody').innerHTML = `
+            <tr class="state-row">
+                <td colspan="6">
+                    <div class="state-icon">⚠️</div>
+                    <div style="color:var(--danger);">${msg}</div>
+                </td>
+            </tr>`;
+    }
+
+    // ==================== USER DETAILS MODAL (FIXED) ====================
+    function openUserModal(userId) {
+        const user = allUsers.find(u => u.id === userId);
+        if (!user) return;
+
+        _currentModalUser = user;
+        const method = getMethodInfo(user.loginMethod);
+        const avatarColor = getAvatarColor(user.loginMethod);
+
+        // Avatar
+        const avatarEl = document.getElementById('udAvatar');
+        avatarEl.style.background = avatarColor + '20';
+        avatarEl.style.color = avatarColor;
+        if (user.photoURL) {
+            avatarEl.innerHTML = `<img src="${escHtml(user.photoURL)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" onerror="this.style.display='none';this.parentElement.textContent='${user.name.charAt(0).toUpperCase()}'">`;
+        } else {
+            avatarEl.textContent = user.name.charAt(0).toUpperCase();
         }
 
-        function getAvatarColor(method) {
-            if (method === 'discord') return '#5865F2';
-            if (method.includes('google')) return '#EA4335';
-            if (method === 'github') return '#e6edf3';
-            if (method === 'email') return '#FFB300';
-            return '#6C63FF';
+        document.getElementById('udName').textContent = user.name;
+        document.getElementById('udMethodBadge').innerHTML = `<span class="method-badge ${method.cls}">${method.icon} ${method.label}</span>`;
+        document.getElementById('udId').textContent = user.id;
+        document.getElementById('udEmail').textContent = user.email;
+        document.getElementById('udMethod').textContent = method.label;
+        document.getElementById('udPlatform').textContent = user.platform || 'website';
+        document.getElementById('udLoginTime').textContent = user.loginTime ? formatDate(user.loginTime) : '—';
+        document.getElementById('udLastActive').textContent = user.lastActive ? formatDate(user.lastActive) : '—';
+
+        // Profile photo section
+        if (user.photoURL) {
+            document.getElementById('udPhotoSection').style.display = '';
+            document.getElementById('udPhotoFull').src = user.photoURL;
+            document.getElementById('udPhotoLink').href = user.photoURL;
+        } else {
+            document.getElementById('udPhotoSection').style.display = 'none';
         }
 
-        function formatDate(iso) {
-            try {
-                const d = new Date(iso);
-                return d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
-            } catch { return '—'; }
-        }
+        document.getElementById('userDetailsModal').classList.add('show');
+        document.body.style.overflow = 'hidden';
+    }
 
-        function timeAgo(timestamp) {
-            const diff = Date.now() - timestamp;
-            if (diff < 60000) return 'Just now';
-            if (diff < 3600000) return Math.floor(diff / 60000) + 'm ago';
-            if (diff < 86400000) return Math.floor(diff / 3600000) + 'h ago';
-            if (diff < 604800000) return Math.floor(diff / 86400000) + 'd ago';
-            return new Date(timestamp).toLocaleDateString();
-        }
+    function closeUserModal() {
+        document.getElementById('userDetailsModal').classList.remove('show');
+        document.body.style.overflow = '';
+    }
 
-        function escHtml(str) {
-            return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-        }
+    function handleUserModalOverlayClick(e) {
+        if (e.target === document.getElementById('userDetailsModal')) closeUserModal();
+    }
 
-        // ==================== TAB SWITCHING ====================
-        let activeReportFilter = 'all';
+    function copyUserId() {
+        if (!_currentModalUser) return;
+        navigator.clipboard.writeText(_currentModalUser.id).then(() => showToast('✅ User ID copied!'));
+    }
 
-        function switchTab(tab, btn) {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+    function copyUserEmail() {
+        if (!_currentModalUser) return;
+        navigator.clipboard.writeText(_currentModalUser.email).then(() => showToast('✅ Email copied!'));
+    }
 
-            document.getElementById('usersSection').style.display = tab === 'users' ? '' : 'none';
-            document.getElementById('reportsSection').style.display = tab === 'reports' ? '' : 'none';
+    // ==================== TOAST ====================
+    function showToast(msg) {
+        const t = document.getElementById('copyToast');
+        t.textContent = msg;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 2200);
+    }
 
-            if (tab === 'reports') {
-                loadBugReports();
-            }
-        }
+    // ==================== HELPERS ====================
+    function getMethodInfo(method) {
+        if (method === 'discord') return { cls: 'discord', icon: '🎮', label: 'Discord' };
+        if (method.includes('google')) return { cls: 'google', icon: '🔵', label: 'Google' };
+        if (method === 'github') return { cls: 'github', icon: '⚫', label: 'GitHub' };
+        if (method === 'email') return { cls: 'email', icon: '✉️', label: 'Email' };
+        return { cls: 'unknown', icon: '❓', label: method };
+    }
 
-        // ==================== BUG REPORTS ====================
-        let allReports = [];
+    function getAvatarColor(method) {
+        if (method === 'discord') return '#5865F2';
+        if (method.includes('google')) return '#EA4335';
+        if (method === 'github') return '#e6edf3';
+        if (method === 'email') return '#FFB300';
+        return '#6C63FF';
+    }
 
-        async function loadBugReports() {
-            const btn = document.getElementById('refreshReportsBtn');
-            if (btn) btn.classList.add('spinning');
+    function formatDate(iso) {
+        try {
+            const d = new Date(iso);
+            return d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+        } catch { return '—'; }
+    }
 
-            if (!db) {
-                showReportsError('Firebase not initialized.');
-                if (btn) btn.classList.remove('spinning');
-                return;
-            }
+    function timeAgo(timestamp) {
+        const diff = Date.now() - timestamp;
+        if (diff < 60000) return 'Just now';
+        if (diff < 3600000) return Math.floor(diff / 60000) + 'm ago';
+        if (diff < 86400000) return Math.floor(diff / 3600000) + 'h ago';
+        if (diff < 604800000) return Math.floor(diff / 86400000) + 'd ago';
+        return new Date(timestamp).toLocaleDateString();
+    }
 
-            try {
-                const snapshot = await db.ref('bugReports').once('value');
-                const data = snapshot.val();
+    function escHtml(str) {
+        return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
 
-                if (!data) {
-                    allReports = [];
-                } else {
-                    allReports = Object.entries(data).map(([key, r]) => ({
-                        firebaseKey: key,
-                        id: r.id || key,
-                        description: r.description || '',
-                        email: r.email || '',
-                        pcName: r.pcName || '—',
-                        os: r.os || '—',
-                        version: r.version || '—',
-                        status: r.status || 'new',
-                        date: r.date || '—',
-                        timestamp: r.timestamp || 0,
-                        programInfo: r.programInfo || null,
-                        systemSpecs: r.systemSpecs || null,
-                        images: r.images || [],
-                        userAccount: r.userAccount || null,
-                        isLoggedIn: r.isLoggedIn === true
-                    }));
+    // ==================== TAB SWITCHING ====================
+    let activeReportFilter = 'all';
 
-                    // Sort by timestamp descending (newest first)
-                    allReports.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-                }
+    function switchTab(tab, btn) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('usersSection').style.display = tab === 'users' ? '' : 'none';
+        document.getElementById('reportsSection').style.display = tab === 'reports' ? '' : 'none';
+        if (tab === 'reports') loadBugReports();
+    }
 
-                updateReportStats();
-                renderBugReports();
+    // ==================== BUG REPORTS ====================
+    let allReports = [];
 
-                const now = new Date();
-                const updated = document.getElementById('reportsLastUpdated');
-                if (updated) {
-                    updated.textContent = `Last updated: ${now.toLocaleDateString()} at ${now.toLocaleTimeString()}`;
-                }
+    async function loadBugReports() {
+        const btn = document.getElementById('refreshReportsBtn');
+        if (btn) btn.classList.add('spinning');
 
-            } catch (e) {
-                console.error('Load reports error:', e);
-                showReportsError('Could not load bug reports from database.');
-            }
-
+        if (!db) {
+            showReportsError('Firebase not initialized.');
             if (btn) btn.classList.remove('spinning');
+            return;
         }
 
-        function updateReportStats() {
-            const total = allReports.length;
-            const newCount = allReports.filter(r => r.status === 'new').length;
-            const reviewed = allReports.filter(r => r.status === 'reviewed').length;
-            const resolved = allReports.filter(r => r.status === 'resolved').length;
+        try {
+            const snapshot = await db.ref('bugReports').once('value');
+            const data = snapshot.val();
 
-            document.getElementById('reportStatTotal').textContent = total;
-            document.getElementById('reportStatNew').textContent = newCount;
-            document.getElementById('reportStatReviewed').textContent = reviewed;
-            document.getElementById('reportStatResolved').textContent = resolved;
-        }
+            if (!data) {
+                allReports = [];
+            } else {
+                allReports = Object.entries(data).map(([key, r]) => ({
+                    firebaseKey: key,
+                    id: r.id || key,
+                    description: r.description || '',
+                    email: r.email || '',
+                    pcName: r.pcName || '—',
+                    os: r.os || '—',
+                    version: r.version || '—',
+                    status: r.status || 'new',
+                    date: r.date || '—',
+                    timestamp: r.timestamp || 0,
+                    programInfo: r.programInfo || null,
+                    systemSpecs: r.systemSpecs || null,
+                    images: r.images || [],
+                    userAccount: r.userAccount || null,
+                    isLoggedIn: r.isLoggedIn === true
+                }));
+                allReports.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+            }
 
-        function setReportFilter(status, btn) {
-            activeReportFilter = status;
-            document.querySelectorAll('.report-status-filter').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+            updateReportStats();
             renderBugReports();
+
+            const now = new Date();
+            const updated = document.getElementById('reportsLastUpdated');
+            if (updated) updated.textContent = `Last updated: ${now.toLocaleDateString()} at ${now.toLocaleTimeString()}`;
+
+        } catch (e) {
+            console.error('Load reports error:', e);
+            showReportsError('Could not load bug reports from database.');
         }
 
-        function renderBugReports() {
-            const search = document.getElementById('reportSearchInput').value.toLowerCase();
-            const tbody = document.getElementById('reportsTableBody');
+        if (btn) btn.classList.remove('spinning');
+    }
 
-            let filtered = allReports.filter(r => {
-                const matchFilter = activeReportFilter === 'all' || r.status === activeReportFilter;
-                const ua = r.userAccount || {};
-                const matchSearch = !search
-                    || (r.description || '').toLowerCase().includes(search)
-                    || (r.email || '').toLowerCase().includes(search)
-                    || (r.pcName || '').toLowerCase().includes(search)
-                    || (r.id || '').toLowerCase().includes(search)
-                    || (ua.name || '').toLowerCase().includes(search)
-                    || (ua.email || '').toLowerCase().includes(search)
-                    || (ua.id || '').toLowerCase().includes(search);
-                return matchFilter && matchSearch;
-            });
+    function updateReportStats() {
+        document.getElementById('reportStatTotal').textContent = allReports.length;
+        document.getElementById('reportStatNew').textContent = allReports.filter(r => r.status === 'new').length;
+        document.getElementById('reportStatReviewed').textContent = allReports.filter(r => r.status === 'reviewed').length;
+        document.getElementById('reportStatResolved').textContent = allReports.filter(r => r.status === 'resolved').length;
+    }
 
-            if (filtered.length === 0) {
-                tbody.innerHTML = `
-                    <tr class="state-row">
-                        <td colspan="8">
-                            <div class="state-icon">🔍</div>
-                            <div>${search ? 'No reports match your search.' : 'No bug reports found.'}</div>
-                        </td>
-                    </tr>`;
-                return;
-            }
+    function setReportFilter(status, btn) {
+        activeReportFilter = status;
+        document.querySelectorAll('#reportsSection .filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderBugReports();
+    }
 
-            tbody.innerHTML = filtered.map((r, i) => {
-                const statusLabel = r.status.charAt(0).toUpperCase() + r.status.slice(1);
-                const statusIcon = r.status === 'new' ? '🆕' : r.status === 'reviewed' ? '👁️' : '✅';
-                const descPreview = (r.description || '').length > 80
-                    ? escHtml(r.description.substring(0, 80)) + '…'
-                    : escHtml(r.description || '');
+    function renderBugReports() {
+        const search = document.getElementById('reportSearchInput').value.toLowerCase();
+        const tbody = document.getElementById('reportsTableBody');
 
-                const ua = r.userAccount || {};
-                const accountCell = r.isLoggedIn && ua.name
-                    ? `<div style="font-size:0.85rem;font-weight:600;color:var(--text);">${escHtml(ua.name)}</div><div style="font-size:0.72rem;color:var(--muted);font-family:'JetBrains Mono',monospace;">${escHtml((ua.id || '').substring(0, 18))}${(ua.id || '').length > 18 ? '…' : ''}</div>`
-                    : `<span style="color:var(--muted);font-size:0.78rem;">Guest</span>`;
-
-                let actions = `<button class="action-btn" onclick="showDetailsModal('${r.firebaseKey}')" style="border-color:rgba(108,99,255,0.3);color:var(--accent);margin-right:4px;">📋 Details</button>`;
-                if (r.status === 'new') {
-                    actions += `
-                        <button class="action-btn review" onclick="updateReportStatus('${r.firebaseKey}', 'reviewed')">👁️ Review</button>
-                        <button class="action-btn resolve" onclick="updateReportStatus('${r.firebaseKey}', 'resolved')" style="margin-left:4px;">✅ Resolve</button>`;
-                } else if (r.status === 'reviewed') {
-                    actions += `
-                        <button class="action-btn resolve" onclick="updateReportStatus('${r.firebaseKey}', 'resolved')">✅ Resolve</button>`;
-                } else {
-                    actions += `<span style="color:var(--muted);font-size:0.78rem;">Done</span>`;
-                }
-
-                return `
-                    <tr style="animation-delay:${i * 0.03}s">
-                        <td style="font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:var(--muted);">${escHtml(r.id)}</td>
-                        <td>
-                            <div class="report-desc" title="${escHtml(r.description || '')}">${descPreview}</div>
-                        </td>
-                        <td>${accountCell}</td>
-                        <td style="color:var(--muted);font-size:0.85rem;">${escHtml(r.email) || '—'}</td>
-                        <td style="font-size:0.85rem;">${escHtml(r.pcName)}</td>
-                        <td class="time-cell"><span>${r.date}</span></td>
-                        <td><span class="report-status ${r.status}">${statusIcon} ${statusLabel}</span></td>
-                        <td style="white-space:nowrap;">${actions}</td>
-                    </tr>`;
-            }).join('');
-        }
-
-        async function updateReportStatus(firebaseKey, newStatus) {
-            if (!db || !firebaseKey) return;
-
-            try {
-                await db.ref(`bugReports/${firebaseKey}/status`).set(newStatus);
-                // Also update locally
-                const report = allReports.find(r => r.firebaseKey === firebaseKey);
-                if (report) report.status = newStatus;
-                updateReportStats();
-                renderBugReports();
-            } catch (e) {
-                console.error('Status update error:', e);
-                alert('Failed to update report status.');
-            }
-        }
-
-        // ==================== DETAILS MODAL ====================
-        function showDetailsModal(firebaseKey) {
-            const r = allReports.find(x => x.firebaseKey === firebaseKey);
-            if (!r) return;
-
-            const statusLabels = { new: '🆕 New', reviewed: '👁️ Reviewed', resolved: '✅ Resolved' };
-
-            document.getElementById('modalReportId').textContent = r.id || '—';
-            document.getElementById('modalReportDate').textContent = r.date || '—';
-            document.getElementById('modalReportStatus').innerHTML =
-                `<span class="report-status ${r.status}">${statusLabels[r.status] || r.status}</span>`;
-            document.getElementById('modalDescription').textContent = r.description || 'No description provided.';
-
-            const pi = r.programInfo || {};
-            document.getElementById('modalAppName').textContent = pi.appName || '—';
-            document.getElementById('modalAppVersion').textContent = pi.appVersion || '—';
-            document.getElementById('modalCompany').textContent = pi.company || '—';
-            document.getElementById('modalDeveloper').textContent = pi.developer || '—';
-            document.getElementById('modalWebsite').textContent = pi.website || '—';
-            document.getElementById('modalInstallPath').textContent = pi.installPath || '—';
-
-            const ss = r.systemSpecs || {};
-            document.getElementById('modalPcName').textContent = r.pcName || '—';
-            document.getElementById('modalPcModel').textContent = ss.pcModel || '—';
-            document.getElementById('modalCpu').textContent = ss.cpu || '—';
-            document.getElementById('modalGpu').textContent = ss.gpu || '—';
-            document.getElementById('modalRam').textContent = ss.ram || '—';
-            document.getElementById('modalStorage').textContent = ss.storage || '—';
-            document.getElementById('modalOs').textContent = r.os || '—';
-            document.getElementById('modalSystemType').textContent = ss.systemType || '—';
-            document.getElementById('modalResolution').textContent = ss.resolution || '—';
-            document.getElementById('modalRefreshRate').textContent = ss.refreshRate || '—';
+        let filtered = allReports.filter(r => {
+            const matchFilter = activeReportFilter === 'all' || r.status === activeReportFilter;
             const ua = r.userAccount || {};
-            const guestEl = document.getElementById('modalAccountGuest');
-            const cardEl = document.getElementById('modalAccountCard');
-            const signedIn = r.isLoggedIn === true && ua.id && !ua.note;
-
-            if (signedIn) {
-                guestEl.style.display = 'none';
-                cardEl.style.display = '';
-                const methodKey = (ua.loginMethod || '').toLowerCase();
-                const method = getMethodInfo(methodKey);
-                const avatar = document.getElementById('modalAccountAvatar');
-                avatar.textContent = (ua.name || '?').charAt(0).toUpperCase();
-                avatar.style.background = getAvatarColor(methodKey);
-                document.getElementById('modalAccountName').textContent = ua.name || '—';
-                const badge = document.getElementById('modalAccountMethodBadge');
-                badge.textContent = `${method.icon} ${method.label}`;
-                badge.className = `method-badge ${method.cls}`;
-                document.getElementById('modalAccountId').textContent = ua.id || '—';
-                document.getElementById('modalAccountEmail').textContent = ua.email || '—';
-                document.getElementById('modalAccountLoginTime').textContent = ua.loginTime ? formatDate(ua.loginTime) : '—';
-            } else {
-                guestEl.style.display = '';
-                cardEl.style.display = 'none';
-            }
-
-            document.getElementById('modalEmail').textContent = r.email || '—';
-            document.getElementById('ModalUserPcName').textContent = r.pcName || '—';
-
-            // Show images
-            const images = r.images || [];
-            currentPreviewImages = images;
-            const imgSection = document.getElementById('modalImagesSection');
-            const imgContainer = document.getElementById('modalImagesContainer');
-            const imgCount = document.getElementById('modalImagesCount');
-            imgContainer.innerHTML = '';
-            if (images.length > 0) {
-                imgSection.style.display = '';
-                imgCount.textContent = `${images.length} image${images.length !== 1 ? 's' : ''}`;
-                images.forEach((base64, idx) => {
-                    const src = base64.startsWith('data:') ? base64 : `data:image/png;base64,${base64}`;
-                    const thumb = document.createElement('div');
-                    thumb.className = 'img-thumb';
-                    thumb.innerHTML = `
-                        <img src="${src}" alt="Screenshot ${idx + 1}" loading="lazy">
-                        <div class="thumb-overlay" onclick="openImgPreview(${idx})">
-                            <i class="fas fa-search-plus"></i>
-                        </div>`;
-                    imgContainer.appendChild(thumb);
-                });
-            } else {
-                imgSection.style.display = 'none';
-                imgCount.textContent = '';
-            }
-
-            document.getElementById('detailsModal').classList.add('show');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeDetailsModal() {
-            document.getElementById('detailsModal').classList.remove('show');
-            document.body.style.overflow = '';
-        }
-
-        // ==================== IMAGE PREVIEW ====================
-        let currentPreviewImages = [];
-        let currentPreviewIndex = 0;
-
-        function openImgPreview(idx) {
-            currentPreviewIndex = idx;
-            const total = currentPreviewImages.length;
-            if (total === 0) return;
-            updatePreviewImage();
-            document.getElementById('previewPrevBtn').style.display = total > 1 ? '' : 'none';
-            document.getElementById('previewNextBtn').style.display = total > 1 ? '' : 'none';
-            document.getElementById('imgPreviewOverlay').classList.add('show');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function updatePreviewImage() {
-            const raw = currentPreviewImages[currentPreviewIndex];
-            if (!raw) return;
-            const src = raw.startsWith('data:') ? raw : `data:image/png;base64,${raw}`;
-            document.getElementById('imgPreviewFull').src = src;
-            document.getElementById('imgPreviewCounter').textContent =
-                `${currentPreviewIndex + 1} / ${currentPreviewImages.length}`;
-            document.getElementById('previewPrevBtn').disabled = currentPreviewIndex === 0;
-            document.getElementById('previewNextBtn').disabled =
-                currentPreviewIndex === currentPreviewImages.length - 1;
-        }
-
-        function prevImage() {
-            if (currentPreviewIndex > 0) {
-                currentPreviewIndex--;
-                updatePreviewImage();
-            }
-        }
-
-        function nextImage() {
-            if (currentPreviewIndex < currentPreviewImages.length - 1) {
-                currentPreviewIndex++;
-                updatePreviewImage();
-            }
-        }
-
-        function closeImgPreview() {
-            document.getElementById('imgPreviewOverlay').classList.remove('show');
-            document.body.style.overflow = '';
-        }
-
-        function downloadPreviewImage() {
-            const img = document.getElementById('imgPreviewFull');
-            if (!img.src) return;
-            const a = document.createElement('a');
-            a.href = img.src;
-            a.download = `screenshot-${currentPreviewIndex + 1}.png`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        }
-
-        // Close modal on overlay click
-        document.getElementById('detailsModal').addEventListener('click', function(e) {
-            if (e.target === this) closeDetailsModal();
+            const matchSearch = !search
+                || (r.description || '').toLowerCase().includes(search)
+                || (r.email || '').toLowerCase().includes(search)
+                || (r.pcName || '').toLowerCase().includes(search)
+                || (r.id || '').toLowerCase().includes(search)
+                || (ua.name || '').toLowerCase().includes(search)
+                || (ua.email || '').toLowerCase().includes(search);
+            return matchFilter && matchSearch;
         });
 
-        // Close modal on Escape key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                const preview = document.getElementById('imgPreviewOverlay');
-                if (preview.classList.contains('show')) closeImgPreview();
-                else closeDetailsModal();
-            } else if (e.key === 'ArrowLeft') {
-                if (document.getElementById('imgPreviewOverlay').classList.contains('show'))
-                    prevImage();
-            } else if (e.key === 'ArrowRight') {
-                if (document.getElementById('imgPreviewOverlay').classList.contains('show'))
-                    nextImage();
-            }
-        });
-
-        function showReportsError(msg) {
-            const tbody = document.getElementById('reportsTableBody');
-            if (tbody) {
-                tbody.innerHTML = `
-                    <tr class="state-row">
-                        <td colspan="8">
-                            <div class="state-icon">⚠️</div>
-                            <div style="color:var(--danger);">${msg}</div>
-                        </td>
-                    </tr>`;
-            }
+        if (filtered.length === 0) {
+            tbody.innerHTML = `
+                <tr class="state-row">
+                    <td colspan="8">
+                        <div class="state-icon">🔍</div>
+                        <div>${search ? 'No reports match your search.' : 'No bug reports found.'}</div>
+                    </td>
+                </tr>`;
+            return;
         }
 
-        // Auto-init if already logged in
-        if (sessionStorage.getItem('bp_admin') === '1') {
-            initApp();
+        tbody.innerHTML = filtered.map((r, i) => {
+            const statusLabel = r.status.charAt(0).toUpperCase() + r.status.slice(1);
+            const statusIcon = r.status === 'new' ? '🆕' : r.status === 'reviewed' ? '👁️' : '✅';
+            const descPreview = (r.description || '').length > 80
+                ? escHtml(r.description.substring(0, 80)) + '…'
+                : escHtml(r.description || '');
+
+            const ua = r.userAccount || {};
+            const accountCell = r.isLoggedIn && ua.name
+                ? `<div style="font-size:0.85rem;font-weight:600;color:var(--text);">${escHtml(ua.name)}</div><div style="font-size:0.72rem;color:var(--muted);font-family:'JetBrains Mono',monospace;">${escHtml((ua.id || '').substring(0, 18))}${(ua.id || '').length > 18 ? '…' : ''}</div>`
+                : `<span style="color:var(--muted);font-size:0.78rem;">Guest</span>`;
+
+            let actions = `<button class="action-btn" onclick="showDetailsModal('${r.firebaseKey}')" style="border-color:rgba(108,99,255,0.3);color:var(--accent);margin-right:4px;">📋 Details</button>`;
+            if (r.status === 'new') {
+                actions += `<button class="action-btn review" onclick="updateReportStatus('${r.firebaseKey}', 'reviewed')">👁️ Review</button>
+                            <button class="action-btn resolve" onclick="updateReportStatus('${r.firebaseKey}', 'resolved')" style="margin-left:4px;">✅ Resolve</button>`;
+            } else if (r.status === 'reviewed') {
+                actions += `<button class="action-btn resolve" onclick="updateReportStatus('${r.firebaseKey}', 'resolved')">✅ Resolve</button>`;
+            } else {
+                actions += `<span style="color:var(--muted);font-size:0.78rem;">Done</span>`;
+            }
+
+            return `
+                <tr style="animation-delay:${i * 0.03}s">
+                    <td style="font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:var(--muted);">${escHtml(r.id)}</td>
+                    <td><div class="report-desc" title="${escHtml(r.description || '')}">${descPreview}</div></td>
+                    <td>${accountCell}</td>
+                    <td style="color:var(--muted);font-size:0.85rem;">${escHtml(r.email) || '—'}</td>
+                    <td style="font-size:0.85rem;">${escHtml(r.pcName)}</td>
+                    <td class="time-cell"><span>${r.date}</span></td>
+                    <td><span class="report-status ${r.status}">${statusIcon} ${statusLabel}</span></td>
+                    <td style="white-space:nowrap;">${actions}</td>
+                </tr>`;
+        }).join('');
+    }
+
+    async function updateReportStatus(firebaseKey, newStatus) {
+        if (!db || !firebaseKey) return;
+        try {
+            await db.ref(`bugReports/${firebaseKey}/status`).set(newStatus);
+            const report = allReports.find(r => r.firebaseKey === firebaseKey);
+            if (report) report.status = newStatus;
+            updateReportStats();
+            renderBugReports();
+        } catch (e) {
+            console.error('Status update error:', e);
+            alert('Failed to update report status.');
         }
-    </script>
+    }
+
+    // ==================== BUG REPORT DETAILS MODAL ====================
+    function showDetailsModal(firebaseKey) {
+        const r = allReports.find(x => x.firebaseKey === firebaseKey);
+        if (!r) return;
+
+        const statusLabels = { new: '🆕 New', reviewed: '👁️ Reviewed', resolved: '✅ Resolved' };
+
+        document.getElementById('modalReportId').textContent = r.id || '—';
+        document.getElementById('modalReportDate').textContent = r.date || '—';
+        document.getElementById('modalReportStatus').innerHTML =
+            `<span class="report-status ${r.status}">${statusLabels[r.status] || r.status}</span>`;
+        document.getElementById('modalDescription').textContent = r.description || 'No description provided.';
+
+        const pi = r.programInfo || {};
+        document.getElementById('modalAppName').textContent = pi.appName || '—';
+        document.getElementById('modalAppVersion').textContent = pi.appVersion || '—';
+        document.getElementById('modalCompany').textContent = pi.company || '—';
+        document.getElementById('modalDeveloper').textContent = pi.developer || '—';
+        document.getElementById('modalWebsite').textContent = pi.website || '—';
+        document.getElementById('modalInstallPath').textContent = pi.installPath || '—';
+
+        const ss = r.systemSpecs || {};
+        document.getElementById('modalPcName').textContent = r.pcName || '—';
+        document.getElementById('modalPcModel').textContent = ss.pcModel || '—';
+        document.getElementById('modalCpu').textContent = ss.cpu || '—';
+        document.getElementById('modalGpu').textContent = ss.gpu || '—';
+        document.getElementById('modalRam').textContent = ss.ram || '—';
+        document.getElementById('modalStorage').textContent = ss.storage || '—';
+        document.getElementById('modalOs').textContent = r.os || '—';
+        document.getElementById('modalSystemType').textContent = ss.systemType || '—';
+        document.getElementById('modalResolution').textContent = ss.resolution || '—';
+        document.getElementById('modalRefreshRate').textContent = ss.refreshRate || '—';
+
+        const ua = r.userAccount || {};
+        const signedIn = r.isLoggedIn === true && ua.id && !ua.note;
+        const guestEl = document.getElementById('modalAccountGuest');
+        const cardEl = document.getElementById('modalAccountCard');
+
+        if (signedIn) {
+            guestEl.style.display = 'none';
+            cardEl.style.display = '';
+            const methodKey = (ua.loginMethod || '').toLowerCase();
+            const method = getMethodInfo(methodKey);
+            const avatar = document.getElementById('modalAccountAvatar');
+            avatar.textContent = (ua.name || '?').charAt(0).toUpperCase();
+            avatar.style.background = getAvatarColor(methodKey);
+            document.getElementById('modalAccountName').textContent = ua.name || '—';
+            const badge = document.getElementById('modalAccountMethodBadge');
+            badge.textContent = `${method.icon} ${method.label}`;
+            badge.className = `method-badge ${method.cls}`;
+            document.getElementById('modalAccountId').textContent = ua.id || '—';
+            document.getElementById('modalAccountEmail').textContent = ua.email || '—';
+            document.getElementById('modalAccountLoginTime').textContent = ua.loginTime ? formatDate(ua.loginTime) : '—';
+        } else {
+            guestEl.style.display = '';
+            cardEl.style.display = 'none';
+        }
+
+        document.getElementById('modalEmail').textContent = r.email || '—';
+        document.getElementById('ModalUserPcName').textContent = r.pcName || '—';
+
+        // Images
+        const images = r.images || [];
+        currentPreviewImages = images;
+        const imgSection = document.getElementById('modalImagesSection');
+        const imgContainer = document.getElementById('modalImagesContainer');
+        const imgCount = document.getElementById('modalImagesCount');
+        imgContainer.innerHTML = '';
+        if (images.length > 0) {
+            imgSection.style.display = '';
+            imgCount.textContent = `${images.length} image${images.length !== 1 ? 's' : ''}`;
+            images.forEach((base64, idx) => {
+                const src = base64.startsWith('data:') ? base64 : `data:image/png;base64,${base64}`;
+                const thumb = document.createElement('div');
+                thumb.className = 'img-thumb';
+                thumb.innerHTML = `
+                    <img src="${src}" alt="Screenshot ${idx + 1}" loading="lazy">
+                    <div class="thumb-overlay" onclick="openImgPreview(${idx})">
+                        <i class="fas fa-search-plus"></i>
+                    </div>`;
+                imgContainer.appendChild(thumb);
+            });
+        } else {
+            imgSection.style.display = 'none';
+        }
+
+        document.getElementById('detailsModal').classList.add('show');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeDetailsModal() {
+        document.getElementById('detailsModal').classList.remove('show');
+        document.body.style.overflow = '';
+    }
+
+    function handleReportModalOverlayClick(e) {
+        if (e.target === document.getElementById('detailsModal')) closeDetailsModal();
+    }
+
+    // ==================== IMAGE PREVIEW ====================
+    let currentPreviewImages = [];
+    let currentPreviewIndex = 0;
+
+    function openImgPreview(idx) {
+        currentPreviewIndex = idx;
+        const total = currentPreviewImages.length;
+        if (total === 0) return;
+        updatePreviewImage();
+        document.getElementById('previewPrevBtn').style.display = total > 1 ? '' : 'none';
+        document.getElementById('previewNextBtn').style.display = total > 1 ? '' : 'none';
+        document.getElementById('imgPreviewOverlay').classList.add('show');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function updatePreviewImage() {
+        const raw = currentPreviewImages[currentPreviewIndex];
+        if (!raw) return;
+        const src = raw.startsWith('data:') ? raw : `data:image/png;base64,${raw}`;
+        document.getElementById('imgPreviewFull').src = src;
+        document.getElementById('imgPreviewCounter').textContent = `${currentPreviewIndex + 1} / ${currentPreviewImages.length}`;
+        document.getElementById('previewPrevBtn').disabled = currentPreviewIndex === 0;
+        document.getElementById('previewNextBtn').disabled = currentPreviewIndex === currentPreviewImages.length - 1;
+    }
+
+    function prevImage() {
+        if (currentPreviewIndex > 0) { currentPreviewIndex--; updatePreviewImage(); }
+    }
+
+    function nextImage() {
+        if (currentPreviewIndex < currentPreviewImages.length - 1) { currentPreviewIndex++; updatePreviewImage(); }
+    }
+
+    function closeImgPreview() {
+        document.getElementById('imgPreviewOverlay').classList.remove('show');
+        document.body.style.overflow = '';
+    }
+
+    function downloadPreviewImage() {
+        const img = document.getElementById('imgPreviewFull');
+        if (!img.src) return;
+        const a = document.createElement('a');
+        a.href = img.src;
+        a.download = `screenshot-${currentPreviewIndex + 1}.png`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+
+    // ==================== KEYBOARD SHORTCUTS ====================
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            const preview = document.getElementById('imgPreviewOverlay');
+            if (preview.classList.contains('show')) { closeImgPreview(); return; }
+            if (document.getElementById('detailsModal').classList.contains('show')) { closeDetailsModal(); return; }
+            if (document.getElementById('userDetailsModal').classList.contains('show')) { closeUserModal(); return; }
+        }
+        if (e.key === 'ArrowLeft' && document.getElementById('imgPreviewOverlay').classList.contains('show')) prevImage();
+        if (e.key === 'ArrowRight' && document.getElementById('imgPreviewOverlay').classList.contains('show')) nextImage();
+    });
+
+    function showReportsError(msg) {
+        const tbody = document.getElementById('reportsTableBody');
+        if (tbody) tbody.innerHTML = `
+            <tr class="state-row">
+                <td colspan="8">
+                    <div class="state-icon">⚠️</div>
+                    <div style="color:var(--danger);">${msg}</div>
+                </td>
+            </tr>`;
+    }
+
+    // Auto-init if already authenticated this session
+    if (sessionStorage.getItem('bp_admin') === '1') {
+        document.getElementById('gate').classList.add('hidden');
+        document.getElementById('app').classList.add('show');
+        initApp();
+    }
+</script>
 </body>
 </html>
