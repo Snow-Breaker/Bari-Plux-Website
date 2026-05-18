@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Skolekalender · Norge 2025–2028</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600&family=Nunito:wght@400;500;600;700;800;900&family=DM+Mono:wght@400;500&family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════
+   TOKENS (Light Mode DEFAULT)
+═══════════════════════════════════════ */
+:root{
+  --bg:#f0f2f8;--bg2:#e8ebf5;--bg3:#dde1f0;
+  --card:#ffffff;--card2:#f7f8fc;--card3:#eef0f8;
+  --rim:rgba(60,80,160,.1);--rim2:rgba(60,80,160,.06);--rim3:rgba(60,80,160,.04);
+  --ink:#0f1428;--ink2:#2a3560;--ink3:#5060a0;--ink4:#8090c0;
+  --nor:#c41e2a;--nor2:#e8303e;--nor3:#ff5560;--nor-l:rgba(196,30,42,.1);--nor-l2:rgba(196,30,42,.06);--nor-rim:rgba(196,30,42,.25);
+  --grn:#1a7a58;--grn2:#22a878;--grn3:#2ed4a0;--grn-l:rgba(26,122,88,.1);--grn-l2:rgba(26,122,88,.06);--grn-rim:rgba(26,122,88,.25);
+  --blu:#1a50c8;--blu2:#2e6ee0;--blu3:#5090ff;--blu-l:rgba(26,80,200,.1);--blu-l2:rgba(26,80,200,.06);--blu-rim:rgba(26,80,200,.25);
+  --gld:#b07010;--gld2:#d89020;--gld3:#f0b040;--gld-l:rgba(176,112,16,.1);--gld-l2:rgba(176,112,16,.06);--gld-rim:rgba(176,112,16,.25);
+  --pur:#6030c0;--pur2:#8050e0;--pur3:#a878ff;--pur-l:rgba(96,48,192,.1);--pur-l2:rgba(96,48,192,.06);--pur-rim:rgba(96,48,192,.25);
+  --ram:#0e6673;--ram2:#158fa0;--ram3:#1dc0d8;--ram-l:rgba(14,102,115,.1);--ram-l2:rgba(14,102,115,.06);--ram-rim:rgba(14,102,115,.25);
+  --f-d:'Fraunces',serif;--f-b:'Nunito',sans-serif;--f-m:'DM Mono',monospace;--f-fa:'Vazirmatn',sans-serif;
+  --hero-overlay:rgba(255,255,255,.92);--hero-overlay2:rgba(247,248,252,.88);
+  --popup-bg:rgba(255,255,255,.97);
+}
+
+/* Dark Mode Override */
+body.dark {
+  --bg:#1a1e2c;--bg2:#222736;--bg3:#2a3040;
+  --card:#2c3244;--card2:#252b3c;--card3:#2f3548;
+  --rim:rgba(120,140,220,.2);--rim2:rgba(120,140,220,.1);--rim3:rgba(120,140,220,.05);
+  --ink:#f0f2f8;--ink2:#c8d0e8;--ink3:#9aa8d0;--ink4:#7080b0;
+  --nor:#ff5c6e;--nor2:#ff6f80;--nor3:#ff8898;--nor-l:rgba(196,30,42,.25);--nor-l2:rgba(196,30,42,.15);--nor-rim:rgba(196,30,42,.4);
+  --grn:#3ed4a0;--grn2:#48e0b0;--grn3:#70ffc8;--grn-l:rgba(26,122,88,.25);--grn-l2:rgba(26,122,88,.15);--grn-rim:rgba(26,122,88,.4);
+  --blu:#6a9eff;--blu2:#80b0ff;--blu3:#a0c8ff;--blu-l:rgba(26,80,200,.25);--blu-l2:rgba(26,80,200,.15);--blu-rim:rgba(26,80,200,.4);
+  --gld:#ffc860;--gld2:#ffd080;--gld3:#ffe0a0;--gld-l:rgba(176,112,16,.25);--gld-l2:rgba(176,112,16,.15);--gld-rim:rgba(176,112,16,.4);
+  --pur:#c090ff;--pur2:#d0a8ff;--pur3:#e0c0ff;--pur-l:rgba(96,48,192,.25);--pur-l2:rgba(96,48,192,.15);--pur-rim:rgba(96,48,192,.4);
+  --ram:#5cd0e0;--ram2:#70e0f0;--ram3:#90f0ff;--ram-l:rgba(14,102,115,.25);--ram-l2:rgba(14,102,115,.15);--ram-rim:rgba(14,102,115,.4);
+  --hero-overlay:rgba(26,30,44,.92);--hero-overlay2:rgba(34,39,54,.88);
+  --popup-bg:rgba(34,39,54,.96);
+}
+
+body.dark #scene::before {
+  background: radial-gradient(ellipse 120% 80% at 15% 10%, rgba(40,50,90,.5) 0%, transparent 55%),
+              radial-gradient(ellipse 80% 60% at 85% 5%,  rgba(60,40,100,.4) 0%, transparent 50%),
+              radial-gradient(ellipse 100% 70% at 50% 95%, rgba(30,70,60,.45) 0%, transparent 55%);
+}
+body.dark .hero { background: linear-gradient(135deg, var(--hero-overlay), var(--hero-overlay2)); }
+body.dark .filter-popup { background: var(--popup-bg); backdrop-filter: blur(20px); }
+body.dark .ec-cd-unit { background: rgba(0,0,0,.6); }
+body.dark .hero-badge { background: rgba(30,35,48,.95); }
+body.dark .nav { background: rgba(26,30,44,.88); }
+body.dark .filter-btn, body.dark .tgl-pill, body.dark .pg, body.dark .yr-sel, body.dark .mode-sw { background: var(--card); }
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-b);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;transition:background .3s, color .2s;}
+body.fa{font-family:var(--f-fa);direction:rtl}
+
+/* scene background */
+#scene{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+#scene::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 120% 80% at 15% 10%, rgba(180,210,255,.55) 0%, transparent 55%),radial-gradient(ellipse 80% 60% at 85% 5%, rgba(220,200,255,.35) 0%, transparent 50%),radial-gradient(ellipse 100% 70% at 50% 95%, rgba(200,240,220,.45) 0%, transparent 55%),radial-gradient(ellipse 60% 80% at 5% 60%, rgba(255,220,200,.3) 0%, transparent 50%),radial-gradient(ellipse 90% 50% at 90% 55%, rgba(200,220,255,.35) 0%, transparent 55%),linear-gradient(160deg, #dce8ff 0%, #eef0fc 35%, #f0f4f0 65%, #eef2ff 100%);}
+#scene::after{content:'';position:absolute;inset:0;background-image:linear-gradient(to right,transparent 27%,rgba(196,30,42,.04) 27%,rgba(196,30,42,.04) 36%,transparent 36%),linear-gradient(to bottom,transparent 38%,rgba(196,30,42,.04) 38%,rgba(196,30,42,.04) 48%,transparent 48%);}
+.scene-grain{position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");background-repeat:repeat;background-size:256px 256px;opacity:.4;mix-blend-mode:multiply;}
+.blob{position:absolute;border-radius:50%;filter:blur(70px);animation:blobPulse 12s ease-in-out infinite alternate;}
+.blob1{width:500px;height:400px;top:-100px;left:-100px;background:radial-gradient(circle,rgba(100,160,255,.18),transparent 70%)}
+.blob2{width:400px;height:350px;top:20%;right:-80px;background:radial-gradient(circle,rgba(160,100,255,.12),transparent 70%)}
+.blob3{width:450px;height:300px;bottom:10%;left:20%;background:radial-gradient(circle,rgba(80,200,160,.14),transparent 70%)}
+@keyframes blobPulse{0%{transform:scale(1) translate(0,0)}100%{transform:scale(1.08) translate(15px,-10px)}}
+.geo-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(60,80,180,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(60,80,180,.04) 1px,transparent 1px);background-size:48px 48px;mask-image:radial-gradient(ellipse 85% 85% at 50% 50%,black 20%,transparent 100%);}
+.page{position:relative;z-index:1;max-width:1440px;margin:0 auto;padding:0 24px 100px}
+.nav{position:sticky;top:0;z-index:300;display:flex;align-items:center;justify-content:space-between;padding:10px 24px;margin:0 -24px;background:rgba(240,242,248,.88);backdrop-filter:blur(24px);border-bottom:1.5px solid var(--rim);gap:10px;flex-wrap:wrap;}
+body.dark .nav{background:rgba(26,30,44,.88);}
+.nav-L{display:flex;align-items:center;gap:12px}
+.nav-ico{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--nor),#8b0000);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.nav-tt{font-size:13px;font-weight:800;letter-spacing:-.2px;color:var(--ink);}
+.nav-sb{font-family:var(--f-m);font-size:9.5px;color:var(--ink4);}
+.nav-R{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.pg{display:flex;background:var(--card);border:1.5px solid var(--rim);border-radius:50px;padding:3px;gap:1px;}
+.pgb{border:none;background:transparent;color:var(--ink3);font-family:var(--f-b);font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:5px 12px;border-radius:50px;cursor:pointer;}
+.pgb.on{background:var(--nor);color:#fff;}
+.yr-sel{display:flex;background:var(--card);border:1.5px solid var(--rim);border-radius:50px;padding:3px;gap:1px}
+.yrb{border:none;background:transparent;color:var(--ink3);font-family:var(--f-m);font-size:10px;font-weight:600;padding:5px 12px;border-radius:50px;cursor:pointer;}
+.yrb.on{background:var(--blu);color:#fff;}
+.mode-sw{display:flex;background:var(--card);border:1.5px solid var(--rim);border-radius:50px;padding:3px;gap:1px}
+.msb{border:none;background:transparent;color:var(--ink3);font-family:var(--f-b);font-size:10px;font-weight:700;padding:5px 12px;border-radius:50px;cursor:pointer;display:flex;align-items:center;gap:4px;}
+.msb.on.school{background:var(--grn2);color:#fff}
+.msb.on.uni{background:var(--pur2);color:#fff}
+.nav-clock{font-family:var(--f-m);font-size:11px;font-weight:500;padding:5px 12px;border-radius:50px;background:var(--nor-l);border:1.5px solid var(--nor-rim);color:var(--nor);white-space:nowrap;}
+.dark-mode-toggle{background:var(--card);border:1.5px solid var(--rim);border-radius:50px;padding:3px;display:flex;gap:1px;margin-left:4px;}
+.dark-mode-toggle button{border:none;background:transparent;color:var(--ink3);font-family:var(--f-b);font-size:13px;padding:5px 12px;border-radius:50px;cursor:pointer;transition:all .2s;}
+.dark-mode-toggle button.on{background:var(--ink);color:var(--card);box-shadow:0 1px 6px rgba(0,0,0,.2);}
+.hero{display:grid;grid-template-columns:1.1fr 1fr;min-height:380px;margin:0 -24px;border-bottom:1.5px solid var(--rim);background:linear-gradient(135deg,var(--hero-overlay),var(--hero-overlay2));backdrop-filter:blur(8px);}
+.hero-L{padding:56px 40px 52px 24px;display:flex;flex-direction:column;justify-content:center;}
+.hero-ey{font-family:var(--f-m);font-size:10px;color:var(--nor);letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.hero-ey::before{content:'';width:20px;height:2px;background:var(--nor);border-radius:1px;}
+.hero-h1{font-family:var(--f-d);font-size:clamp(46px,5.5vw,78px);font-weight:400;line-height:.92;letter-spacing:-1.5px;color:var(--ink);margin-bottom:16px;}
+.hero-h1 em{font-style:italic;color:var(--nor)}
+.hero-desc{font-size:14.5px;color:var(--ink2);line-height:1.75;max-width:420px;font-weight:500;}
+.hero-R{position:relative;overflow:hidden}
+.hero-img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 8s ease}
+.hero-R:hover .hero-img{transform:scale(1.03)}
+.hero-grad{position:absolute;inset:0;background:linear-gradient(to right,rgba(255,255,255,.4) 0%,transparent 30%),linear-gradient(to bottom,transparent 50%,rgba(255,255,255,.5) 100%);}
+.hero-badge{position:absolute;top:16px;left:16px;display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.9);backdrop-filter:blur(10px);border:1.5px solid var(--rim);border-radius:50px;padding:6px 12px 6px 8px;}
+.hb-dot{width:7px;height:7px;border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.hero-stat-wrap{position:absolute;bottom:0;right:0;left:0;display:flex;justify-content:flex-end;padding:16px 20px;background:linear-gradient(to top,rgba(255,255,255,.85) 0%,transparent 100%);}
+.hero-stat-n{font-family:var(--f-d);font-size:42px;font-weight:700;color:var(--ink);line-height:1}
+.main-cd{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;margin:0 -24px;background:linear-gradient(90deg,var(--hero-overlay),var(--hero-overlay2));backdrop-filter:blur(12px);border-bottom:1.5px solid var(--rim);flex-wrap:wrap;gap:12px;}
+.mcd-L{display:flex;align-items:center;gap:12px}
+.mcd-live{width:8px;height:8px;border-radius:50%;background:var(--nor2);animation:pulse 2s infinite;}
+.mcd-name{font-size:15px;font-weight:800;color:var(--ink);}
+.mcd-units{display:flex;gap:6px}
+.mcu{min-width:56px;text-align:center;background:var(--card);border:1.5px solid var(--rim);border-radius:12px;padding:9px 8px;}
+.mcu-n{font-family:var(--f-m);font-size:22px;font-weight:500;color:var(--ink);}
+.mcu-l{font-family:var(--f-m);font-size:8px;color:var(--ink4);text-transform:uppercase;}
+.mcd-btn{font-family:var(--f-b);font-size:12px;font-weight:700;padding:8px 16px;border-radius:10px;border:none;background:var(--nor);color:#fff;}
+.stats-bar{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:22px 0}
+.sbc{background:var(--card);backdrop-filter:blur(8px);border:1.5px solid var(--rim);border-radius:14px;padding:16px 18px;transition:all .2s;}
+.sbc-n{font-family:var(--f-d);font-size:36px;font-weight:700;line-height:1;margin-bottom:4px}
+.sbc-n.r{color:var(--nor)}.sbc-n.g{color:var(--grn2)}.sbc-n.b{color:var(--blu2)}.sbc-n.gd{color:var(--gld2)}.sbc-n.p{color:var(--pur2)}.sbc-n.t{color:var(--ram2)}
+.sbc-l{font-size:11px;color:var(--ink3);font-weight:600}
+.controls-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;}
+.tgl-pill{display:flex;align-items:center;gap:9px;padding:9px 14px;border-radius:50px;border:1.5px solid var(--rim);background:var(--card);backdrop-filter:blur(8px);cursor:pointer;}
+.tgl-pill.active{border-color:var(--gld-rim);background:rgba(176,112,16,.08)}
+.weekend-pill.active{border-color:var(--blu-rim);background:rgba(26,80,200,.07)}
+.mini-sw{position:relative;width:36px;height:20px;flex-shrink:0}
+.mini-sw input{opacity:0;width:0;height:0}
+.mini-track{position:absolute;inset:0;border-radius:10px;background:var(--bg3);border:1.5px solid var(--rim);cursor:pointer;transition:.25s;}
+.mini-sw input:checked ~ .mini-track{background:var(--gld2);}
+.weekend-pill .mini-sw input:checked ~ .mini-track{background:var(--blu2);}
+.mini-thumb{position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:#fff;transition:transform .25s;}
+.mini-sw input:checked ~ .mini-track .mini-thumb{transform:translateX(16px)}
+.filter-btn-wrap{position:relative;margin-left:auto}
+.filter-btn{display:flex;align-items:center;gap:7px;padding:9px 16px;border-radius:50px;border:1.5px solid var(--rim);background:var(--card);backdrop-filter:blur(8px);cursor:pointer;font-weight:700;color:var(--ink2);}
+.filter-popup{position:absolute;top:calc(100% + 8px);right:0;background:var(--popup-bg);backdrop-filter:blur(20px);border:1.5px solid var(--rim);border-radius:18px;padding:14px;display:none;z-index:400;min-width:300px;}
+.filter-popup.open{display:block}
+.filter-popup-chips{display:flex;flex-wrap:wrap;gap:6px}
+.fc{border:1.5px solid var(--rim);background:var(--card2);color:var(--ink2);font-size:11.5px;font-weight:700;padding:6px 14px;border-radius:50px;cursor:pointer;display:flex;align-items:center;gap:5px;}
+.fc.on.all{background:var(--ink);border-color:var(--ink);color:#fff}
+.fc.on.ferie{background:var(--grn-l);border-color:var(--grn-rim);color:var(--grn)}
+.fc.on.helligdag{background:var(--nor-l);border-color:var(--nor-rim);color:var(--nor)}
+.sh{display:flex;align-items:center;gap:14px;margin:8px 0 18px}
+.sh h2{font-family:var(--f-d);font-size:26px;font-weight:600;color:var(--ink);}
+.sh-rule{flex:1;height:1.5px;background:linear-gradient(90deg,var(--rim),transparent);}
+#v-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:18px}
+#v-grid.hide{display:none}
+#v-list{display:none}
+#v-list.show{display:block}
+.ec{background:var(--card);backdrop-filter:blur(6px);border:1.5px solid var(--rim);border-radius:18px;overflow:hidden;transition:transform .22s;}
+.ec:hover{transform:translateY(-5px);}
+.ec-strip{height:4px}
+.ec-strip.ferie{background:linear-gradient(90deg,var(--grn),var(--grn3))}
+.ec-strip.helligdag{background:linear-gradient(90deg,var(--nor),var(--nor3))}
+.ec-strip.skole{background:linear-gradient(90deg,var(--blu),var(--blu3))}
+.ec-strip.islamsk{background:linear-gradient(90deg,var(--gld),var(--gld3))}
+.ec-strip.ramazan{background:linear-gradient(90deg,var(--ram),var(--ram3))}
+.ec-img{position:relative;height:185px;overflow:hidden;}
+.ec-img img{width:100%;height:100%;object-fit:cover;}
+.ec-tb{position:absolute;top:10px;left:10px;font-size:10px;font-weight:700;padding:3px 10px;border-radius:50px;backdrop-filter:blur(8px);color:#fff}
+.ec-tb.ferie{background:rgba(26,122,88,.88)}.ec-tb.helligdag{background:rgba(196,30,42,.88)}
+.ec-cd-box{position:absolute;bottom:10px;left:10px;right:10px;display:flex;gap:5px;}
+.ec-cd-unit{flex:1;text-align:center;background:rgba(0,0,0,.7);backdrop-filter:blur(10px);border-radius:8px;padding:5px 4px;color:#fff}
+.ec-cd-n{font-family:var(--f-m);font-size:16px;font-weight:500;}
+.ec-cd-l{font-family:var(--f-m);font-size:7px;text-transform:uppercase;opacity:.8}
+.ec-b{padding:16px 18px 18px;}
+.ec-row1{display:flex;gap:12px;margin-bottom:10px}
+.ec-cal{width:52px;background:var(--card2);border:1.5px solid var(--rim);border-radius:10px;padding:8px 5px;text-align:center;}
+.ec-cal-d{font-family:var(--f-d);font-size:24px;font-weight:600;}
+.ec-name{font-family:var(--f-d);font-size:20px;font-weight:600;color:var(--ink);}
+.ec-desc{font-size:12.5px;color:var(--ink2);margin-bottom:14px;}
+.ec-dur{display:flex;align-items:center;gap:8px;padding-top:12px;border-top:1.5px solid var(--rim2);}
+.ec-dur-fill{height:5px;border-radius:3px;transition:width 1s}
+.ec-dur-fill.ferie{background:linear-gradient(90deg,var(--grn),var(--grn3))}
+.footer{margin-top:56px;padding:20px 0 14px;border-top:1.5px solid var(--rim);display:flex;justify-content:space-between;flex-wrap:wrap;}
+.footer-t{font-size:11px;color:var(--ink3);}
+@media(max-width:960px){.hero{grid-template-columns:1fr}.stats-bar{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:640px){#v-grid{grid-template-columns:1fr}.stats-bar{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div id="scene"><div class="scene-grain"></div><div class="blob blob1"></div><div class="blob blob2"></div><div class="blob blob3"></div><div class="geo-grid"></div></div>
+<div class="page">
+<nav class="nav">
+  <div class="nav-L"><div class="nav-ico">🇳🇴</div><div><div class="nav-tt" id="n-tt">Skolekalender · Norge</div><div class="nav-sb" id="n-sb">2025–2028 · Buskerud & Oslo</div></div></div>
+  <div class="nav-R">
+    <div class="mode-sw"><button class="msb school on" id="msb-sk" onclick="setMode('school')">🏫 <span>Videregående</span></button><button class="msb uni" id="msb-un" onclick="setMode('uni')">🎓 <span>Universitetet</span></button></div>
+    <div class="yr-sel" id="yr-sel"></div>
+    <div class="pg"><button class="pgb on" onclick="setLang('no')">NO</button><button class="pgb" onclick="setLang('en')">EN</button><button class="pgb" onclick="setLang('fa')">FA</button></div>
+    <div class="pg"><button class="pgb on" id="vb-g" onclick="setView('grid')">⊞ Kort</button><button class="pgb" id="vb-l" onclick="setView('list')">≡ Liste</button></div>
+    <div class="dark-mode-toggle"><button id="light-mode-btn" class="on" onclick="setDarkMode(false)">☀️</button><button id="dark-mode-btn" onclick="setDarkMode(true)">🌙</button></div>
+    <div class="nav-clock" id="n-clock">⏱ --:--:--</div>
+  </div>
+</nav>
+<div class="hero"><div class="hero-L"><div class="hero-ey" id="h-ey">Buskerud · 2025–2028</div><h1 class="hero-h1" id="h-h1">Skole<br><em>Kalender</em></h1><p class="hero-desc" id="h-desc">Feriedager, helligdager og viktige datoer.</p></div><div class="hero-R"><img class="hero-img" id="h-img" src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=1400&q=80" alt=""><div class="hero-grad"></div><div class="hero-badge"><div class="hb-dot school" id="hb-dot"></div><div class="hb-txt" id="hb-txt">Buskerud Videregående</div></div><div class="hero-stat-wrap"><div class="hero-stat-n" id="h-sn">0</div><div class="hero-stat-l" id="h-sl">hendelser</div></div></div></div>
+<div class="main-cd"><div class="mcd-L"><div class="mcd-live"></div><div><div class="mcd-lbl" id="mcd-lbl">Neste hendelse</div><div class="mcd-name" id="mcd-name">...</div><div class="mcd-date" id="mcd-date">...</div></div></div><div class="mcd-R"><div class="mcd-units"><div class="mcu"><div class="mcu-n" id="cu-d">--</div><div class="mcu-l" id="cu-dl">Dager</div></div><div class="mcu"><div class="mcu-n" id="cu-h">--</div><div class="mcu-l">Timer</div></div><div class="mcu"><div class="mcu-n" id="cu-m">--</div><div class="mcu-l">Min</div></div><div class="mcu"><div class="mcu-n" id="cu-s">--</div><div class="mcu-l">Sek</div></div></div><div class="mcd-btn" id="mcd-btn">...</div></div></div>
+<div class="stats-bar" id="stats-bar"></div>
+<div class="controls-row">
+  <label class="tgl-pill islamic-pill" id="isl-pill"><span>☪️</span><span id="isl-tt">Islamske høytider</span><label class="mini-sw"><input type="checkbox" id="isl-chk" onchange="onIslToggle()"><div class="mini-track"><div class="mini-thumb"></div></div></label></label>
+  <label class="tgl-pill" id="ram-pill"><span>🌙</span><span id="ram-tt">Ramadan</span><label class="mini-sw"><input type="checkbox" id="ram-chk" onchange="onRamToggle()"><div class="mini-track"><div class="mini-thumb"></div></div></label></label>
+  <label class="tgl-pill weekend-pill" id="wknd-pill"><span>📅</span><span id="wknd-tt">Bare hverdager</span><label class="mini-sw"><input type="checkbox" id="wknd-chk" onchange="onWkndToggle()"><div class="mini-track"><div class="mini-thumb"></div></div></label></label>
+  <div class="filter-btn-wrap"><button class="filter-btn" id="filter-btn" onclick="toggleFilterPopup()"><span>🎛</span><span id="filter-btn-txt">Filter</span><div class="filter-active-dot" id="filter-dot" style="display:none"></div><span>▾</span></button><div class="filter-popup" id="filter-popup"><div class="filter-popup-title" id="fp-title">Velg kategori</div><div class="filter-popup-chips" id="filter-chips"></div></div></div>
+</div>
+<div class="sh"><h2 id="sh-h2">Alle hendelser</h2><div class="sh-rule"></div><div class="sh-ct" id="sh-ct">0</div></div>
+<div id="v-grid"></div><div id="v-list"><div class="tl" id="v-tl"></div></div>
+<footer class="footer"><div class="footer-t" id="ft-txt">Skolekalender 2025–2028 · <a href="#">Udir.no</a> · <a href="#">UiO</a></div><div class="footer-b">SkoleKalender</div></footer></div>
+<script>
+const SCHOOL={ "2025-2026":[{id:"s01",type:"skole",start:"2025-08-19",end:"2025-08-19",time:"08:30",img:"https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&q=75",no:"Første skoledag 2025/2026",en:"First School Day",fa:"اولین روز مدرسه",dno:"ti. 19.08.2025",den:"Tue 19 Aug 2025",dfa:"سه‌شنبه ۱۹ اوت ۲۰۲۵",days:1},{id:"s02",type:"ferie",start:"2025-10-06",end:"2025-10-10",img:"https://images.unsplash.com/photo-1508739773434-c26b3d09e071?w=800&q=75",no:"Høstferie",en:"Autumn Holiday",fa:"تعطیلات پاییزی",dno:"06–10 okt 2025",den:"06–10 Oct 2025",dfa:"۶–۱۰ اکتبر",days:5},{id:"s03",type:"ferie",start:"2025-12-22",end:"2026-01-02",img:"https://images.unsplash.com/photo-1512389142860-9c449e58a543?w=800&q=75",no:"Juleferie",en:"Christmas",fa:"کریسمس",dno:"22 des–2 jan",den:"22 Dec–2 Jan",dfa:"۲۲ دسامبر–۲ ژانویه",days:12},{id:"s_ram26",type:"ramazan",start:"2026-02-18",end:"2026-03-19",approx:true,img:"https://images.unsplash.com/photo-1564769662533-4f00a87b4056?w=800&q=75",no:"Ramadan 1447",en:"Ramadan 1447",fa:"رمضان ۱۴۴۷",dno:"18 feb–19 mar 2026",den:"18 Feb–19 Mar 2026",dfa:"۱۸ فوریه–۱۹ مارس",days:29},{id:"s04",type:"ferie",start:"2026-02-23",end:"2026-02-27",img:"https://images.unsplash.com/photo-1548777123-e216912df7d8?w=800&q=75",no:"Vinterferie",en:"Winter break",fa:"تعطیلات زمستانی",dno:"23–27 feb",den:"23–27 Feb",dfa:"۲۳–۲۷ فوریه",days:5},{id:"s05",type:"islamsk",start:"2026-03-20",end:"2026-03-21",approx:true,img:"https://images.unsplash.com/photo-1564769662533-4f00a87b4056?w=800&q=75",no:"Eid al-Fitr",en:"Eid al-Fitr",fa:"عید فطر",dno:"20–21 mar 2026",den:"20–21 Mar 2026",dfa:"۲۰–۲۱ مارس",days:2},{id:"s06",type:"helligdag",start:"2026-05-17",end:"2026-05-17",img:"https://images.unsplash.com/photo-1587974928442-77dc3e0dba72?w=800&q=75",no:"17. mai",en:"Constitution Day",fa:"روز قانون اساسی",dno:"17. mai",den:"17 May",dfa:"۱۷ مه",days:1},{id:"s07",type:"islamsk",start:"2026-05-27",end:"2026-05-28",approx:true,img:"https://images.unsplash.com/photo-1591604021695-0c69b7c05981?w=800&q=75",no:"Eid al-Adha",en:"Eid al-Adha",fa:"عید قربان",dno:"27–28 mai 2026",den:"27–28 May 2026",dfa:"۲۷–۲۸ مه",days:2},{id:"s08",type:"ferie",start:"2026-06-20",end:"2026-08-16",img:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=75",no:"Sommerferie",en:"Summer",fa:"تابستان",dno:"20 jun–16 aug",den:"20 Jun–16 Aug",dfa:"۲۰ ژوئن–۱۶ اوت",days:57}],"2026-2027":[{id:"t01",type:"skole",start:"2026-08-17",end:"2026-08-17",time:"08:30",img:"https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&q=75",no:"Skoleår start",en:"School start",fa:"شروع مدرسه",dno:"17.08.2026",den:"17 Aug 2026",dfa:"۱۷ اوت",days:1},{id:"t_ram27",type:"ramazan",start:"2027-02-07",end:"2027-03-08",approx:true,img:"https://images.unsplash.com/photo-1564769662533-4f00a87b4056?w=800&q=75",no:"Ramadan 1448",en:"Ramadan",fa:"رمضان",dno:"7 feb–8 mar",den:"7 Feb–8 Mar",dfa:"۷ فوریه–۸ مارس",days:29},{id:"t02",type:"islamsk",start:"2027-03-10",end:"2027-03-11",approx:true,img:"https://images.unsplash.com/photo-1564769662533-4f00a87b4056?w=800&q=75",no:"Eid al-Fitr",en:"Eid",fa:"عید فطر",dno:"10–11 mar",den:"10–11 Mar",dfa:"۱۰–۱۱ مارس",days:2},{id:"t03",type:"helligdag",start:"2027-05-17",end:"2027-05-17",img:"https://images.unsplash.com/photo-1587974928442-77dc3e0dba72?w=800&q=75",no:"17. mai",en:"Constitution Day",fa:"۱۷ مه",dno:"17 mai",den:"17 May",dfa:"۱۷ مه",days:1}]},"2027-2028":[{id:"u01",type:"skole",start:"2027-08-16",end:"2027-08-16",time:"08:30",img:"https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&q=75",no:"Første skoledag",en:"First day",fa:"روز اول",dno:"16.08.2027",den:"16 Aug 2027",dfa:"۱۶ اوت",days:1},{id:"u_ram28",type:"ramazan",start:"2028-01-28",end:"2028-02-25",approx:true,img:"https://images.unsplash.com/photo-1564769662533-4f00a87b4056?w=800&q=75",no:"Ramadan 1449",en:"Ramadan",fa:"رمضان",dno:"28 jan–25 feb",den:"28 Jan–25 Feb",dfa:"۲۸ ژانویه–۲۵ فوریه",days:29},{id:"u02",type:"islamsk",start:"2028-02-28",end:"2028-02-29",approx:true,img:"https://images.unsplash.com/photo-1564769662533-4f00a87b4056?w=800&q=75",no:"Eid al-Fitr",en:"Eid",fa:"عید فطر",dno:"28–29 feb",den:"28–29 Feb",dfa:"۲۸–۲۹ فوریه",days:2},{id:"u03",type:"helligdag",start:"2028-05-17",end:"2028-05-17",img:"https://images.unsplash.com/photo-1587974928442-77dc3e0dba72?w=800&q=75",no:"17. mai",en:"Constitution Day",fa:"۱۷ مه",dno:"17 mai 2028",den:"17 May 2028",dfa:"۱۷ مه ۲۰۲۸",days:1}]}};
+const UNI={"2025-2026":[{id:"uu1",type:"uni",start:"2025-08-11",end:"2025-08-15",img:"https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=75",no:"Studiestart",en:"Intro week",fa:"شروع تحصیل",dno:"11–15 aug",den:"11–15 Aug",dfa:"۱۱–۱۵ اوت",days:5},{id:"uu_ram26",type:"ramazan",start:"2026-02-18",end:"2026-03-19",approx:true,img:"https://images.unsplash.com/photo-1564769662533-4f00a87b4056?w=800&q=75",no:"Ramadan",en:"Ramadan",fa:"رمضان",dno:"18 feb–19 mar",den:"18 Feb–19 Mar",dfa:"۱۸ فوریه–۱۹ مارس",days:29},{id:"uu2",type:"islamsk",start:"2026-03-20",end:"2026-03-21",approx:true,img:"https://images.unsplash.com/photo-1564769662533-4f00a87b4056?w=800&q=75",no:"Eid al-Fitr",en:"Eid",fa:"عید فطر",dno:"20–21 mar",den:"20–21 Mar",dfa:"۲۰–۲۱ مارس",days:2},{id:"uu3",type:"uni",start:"2026-04-27",end:"2026-05-15",img:"https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800&q=75",no:"Eksamen vår",en:"Exams",fa:"امتحانات",dno:"27 apr–15 mai",den:"27 Apr–15 May",dfa:"۲۷ آوریل–۱۵ مه",days:19}],"2026-2027":[{id:"vv1",type:"uni",start:"2026-08-17",end:"2026-08-17",img:"https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&q=75",no:"Semesterstart",en:"Semester start",fa:"ترم",dno:"17.08.2026",den:"17 Aug 2026",dfa:"۱۷ اوت",days:1},{id:"vv_ram27",type:"ramazan",start:"2027-02-07",end:"2027-03-08",approx:true,img:"https://images.unsplash.com/photo-1564769662533-4f00a87b4056?w=800&q=75",no:"Ramadan",en:"Ramadan",fa:"رمضان",dno:"7 feb–8 mar",den:"7 Feb–8 Mar",dfa:"۷ فوریه–۸ مارس",days:29}]}};
+const TX={no:{navTt:"Skolekalender",cD:"Dager",cH:"Timer",cM:"Min",cS:"Sek",wdL:"Hverdager",mSk:"Videregående",mUn:"Universitetet",cAll:"Alle",cFer:"Ferie",cHel:"Helligdag",cSk:"Skole",cIsl:"Islamsk",cRam:"Ramadan",cUni:"UiO",fpTitle:"Velg kategori",shH:"Alle hendelser",vG:"Kort",vL:"Liste",ft:"Skolekalender 2025–2028",hSl:"hendelser",mths:["jan","feb","mar","apr","mai","jun","jul","aug","sep","okt","nov","des"]},en:{cD:"Days",cH:"Hrs",cM:"Min",cS:"Sec",wdL:"Weekdays",mSk:"High school",mUn:"University",cAll:"All",cFer:"Holiday",cHel:"Public",cSk:"School",cIsl:"Islamic",cRam:"Ramadan",cUni:"Uni",fpTitle:"Category",shH:"All events",vG:"Cards",vL:"List",ft:"Calendar",hSl:"events",mths:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]},fa:{cD:"روز",cH:"ساعت",cM:"دقیقه",cS:"ثانیه",wdL:"روز کاری",mSk:"دبیرستان",mUn:"دانشگاه",cAll:"همه",cFer:"تعطیل",cHel:"رسمی",cSk:"مدرسه",cIsl:"اسلامی",cRam:"رمضان",cUni:"دانشگاه",fpTitle:"دسته‌بندی",shH:"همه رویدادها",vG:"کارت‌ها",vL:"فهرست",ft:"تقویم",hSl:"رویداد",mths:["ژان","فور","مار","آور","مه","ژوئن","ژوئیه","اوت","سپت","اکت","نو","دس"]}};
+let lang='no',mode='school',selY='2025-2026',viewMode='grid',filter='all',showIsl=false,showRam=false,skipWeekend=false,filterPopupOpen=false;
+const YEARS=['2025-2026','2026-2027','2027-2028']; let mainCdIv=null,cardCdIvs={};
+const pd=s=>{let[y,m,d]=s.split('-');return new Date(y,m-1,d)};
+const todayMid=()=>{let n=new Date();return new Date(n.getFullYear(),n.getMonth(),n.getDate())};
+const pad2=n=>String(n).padStart(2,'0');
+function weekdaysTill(target){let now=todayMid();if(target<=now)return 0;let cnt=0,d=new Date(now);while(d<target){let wd=d.getDay();if(wd!==0&&wd!==6)cnt++;d.setDate(d.getDate()+1);}return cnt;}
+function getEvents(){let raw=(mode==='school'?SCHOOL:UNI)[selY]||[];return raw.filter(ev=>{if(ev.type==='islamsk'&&!showIsl)return false;if(ev.type==='ramazan'&&!showRam)return false;return true;});}
+function gName(ev){return ev[lang]||ev.no}function gDesc(ev){return ev['d'+lang]||ev.dno}
+function render(){const t=TX[lang];document.body.className=lang==='fa'?'fa':'';document.getElementById('n-tt').textContent=t.navTt;document.getElementById('sh-h2').textContent=t.shH;document.getElementById('filter-btn-txt').innerHTML='Filter';document.getElementById('fp-title').innerHTML=t.fpTitle;document.getElementById('msk-t').innerHTML=t.mSk;document.getElementById('mun-t').innerHTML=t.mUn;renderYrSel(t);renderStats(t);renderFilters(t);renderSection(t);startMainCd();}
+function renderYrSel(t){let d=document.getElementById('yr-sel');d.innerHTML='';YEARS.forEach((y,i)=>{let b=document.createElement('button');b.className='yrb'+(y===selY?' on':'');b.textContent=y.slice(0,4)+'–'+(parseInt(y.slice(5,9))%100);b.onclick=()=>{selY=y;render();};d.appendChild(b);});}
+function renderStats(t){let evs=getEvents();let cnt=(tp)=>evs.filter(e=>e.type===tp).length;let isUni=mode==='uni';let items=isUni?[{n:cnt('uni'),cl:'p',l:t.cUni},{n:cnt('islamsk'),cl:'gd',l:t.cIsl},{n:cnt('ramazan'),cl:'t',l:t.cRam},{n:evs.length,cl:'b',l:'Total'}]:[{n:cnt('ferie'),cl:'g',l:t.cFer},{n:cnt('helligdag'),cl:'r',l:t.cHel},{n:cnt('islamsk'),cl:'gd',l:t.cIsl},{n:cnt('ramazan'),cl:'t',l:t.cRam},{n:cnt('skole'),cl:'b',l:t.cSk}];document.getElementById('stats-bar').innerHTML=items.map(s=>`<div class="sbc"><div class="sbc-n ${s.cl}">${s.n}</div><div class="sbc-l">${s.l}</div></div>`).join('');document.getElementById('h-sn').textContent=evs.length;document.getElementById('h-sl').textContent=t.hSl;}
+function renderFilters(t){let evs=getEvents();let cnt=(tp)=>tp==='all'?evs.length:evs.filter(e=>e.type===tp).length;let defs=[{id:'all',cl:'all',l:t.cAll},{id:'ferie',cl:'ferie',l:t.cFer},{id:'helligdag',cl:'helligdag',l:t.cHel},{id:'islamsk',cl:'islamsk',l:t.cIsl},{id:'ramazan',cl:'ramazan',l:t.cRam},{id:'skole',cl:'skole',l:t.cSk}];if(mode==='uni')defs=[{id:'all',cl:'all',l:t.cAll},{id:'uni',cl:'uni',l:t.cUni},{id:'islamsk',cl:'islamsk',l:t.cIsl},{id:'ramazan',cl:'ramazan',l:t.cRam}];document.getElementById('filter-chips').innerHTML=defs.map(d=>`<button class="fc ${d.cl}${filter===d.id?' on':''}" onclick="setFilter('${d.id}')">${d.l}<span class="nb">(${cnt(d.id)})</span></button>`).join('');document.getElementById('filter-dot').style.display=filter!=='all'?'block':'none';}
+function renderSection(t){Object.values(cardCdIvs).forEach(iv=>clearInterval(iv));Object.keys(cardCdIvs).forEach(k=>delete cardCdIvs[k]);let evs=getEvents();if(filter!=='all')evs=evs.filter(e=>e.type===filter);document.getElementById('sh-ct').textContent=evs.length;if(viewMode==='grid')renderGrid(evs,t);else renderList(evs,t);}
+function renderGrid(evs,t){let g=document.getElementById('v-grid');if(!evs.length){g.innerHTML=`<div class="empty"><div>📭</div><p>Ingen hendelser</p></div>`;return}g.innerHTML=evs.map(ev=>{let dt=pd(ev.start);let state=getState(ev);let wkLabel=(skipWeekend&&state==='future')?weekdaysTill(pd(ev.start)):null;let cdId=`cd-${ev.id}`;return `<div class="ec"><div class="ec-strip ${ev.type}"></div><div class="ec-img"><img src="${ev.img}" onerror="this.src='https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&q=75'" loading="lazy"><div class="ec-tb ${ev.type}">${ev.type==='ferie'?t.cFer:ev.type==='helligdag'?t.cHel:ev.type==='islamsk'?t.cIsl:ev.type==='ramazan'?t.cRam:ev.type==='skole'?t.cSk:t.cUni}</div><div class="ec-cd-box" id="${cdId}"></div></div><div class="ec-b"><div class="ec-row1"><div class="ec-cal"><div class="ec-cal-d">${dt.getDate()}</div><div class="ec-cal-m">${t.mths[dt.getMonth()]}</div></div><div class="ec-name">${gName(ev)}</div></div><div class="ec-desc">${gDesc(ev)}</div>${wkLabel!==null?`<small>📅 ${wkLabel} ${t.wdL}</small>`:''}<div class="ec-dur"><div class="ec-dur-fill ${ev.type}" style="width:${Math.min(100,(ev.days/14)*100)}%"></div><span>${ev.days}d</span></div></div></div>`;}).join('');requestAnimationFrame(()=>{evs.forEach(ev=>{let boxId=`cd-${ev.id}`;if(document.getElementById(boxId)) startCardCd(ev,boxId,t);});});}
+function startCardCd(ev,containerId,t){if(cardCdIvs[ev.id])clearInterval(cardCdIvs[ev.id]);function tick(){let box=document.getElementById(containerId);if(!box)return;let start=pd(ev.start);let now=new Date();let diff=start-now;let dd=Math.max(0,Math.floor(diff/86400000));if(skipWeekend&&diff>0)dd=weekdaysTill(start);let hh=Math.max(0,Math.floor((diff%86400000)/3600000));let mm=Math.max(0,Math.floor((diff%3600000)/60000));let ss=Math.max(0,Math.floor((diff%60000)/1000));box.innerHTML=`<div class="ec-cd-unit"><div class="ec-cd-n">${pad2(dd)}</div><div class="ec-cd-l">${skipWeekend?t.wdL:t.cD}</div></div><div class="ec-cd-unit"><div class="ec-cd-n">${pad2(hh)}</div><div class="ec-cd-l">${t.cH}</div></div><div class="ec-cd-unit"><div class="ec-cd-n">${pad2(mm)}</div><div class="ec-cd-l">${t.cM}</div></div><div class="ec-cd-unit"><div class="ec-cd-n">${pad2(ss)}</div><div class="ec-cd-l">${t.cS}</div></div>`;}tick();cardCdIvs[ev.id]=setInterval(tick,1000);}
+function renderList(evs,t){let tl=document.getElementById('v-tl');if(!evs.length){tl.innerHTML=`<div class="empty">📭</div>`;return}tl.innerHTML=evs.map(ev=>`<div style="padding:12px;border-bottom:1px solid var(--rim);display:flex;justify-content:space-between;"><div><strong>${gName(ev)}</strong><br><small>${gDesc(ev)}</small></div><div>${pd(ev.start).getDate()} ${t.mths[pd(ev.start).getMonth()]}</div></div>`).join('');}
+function getState(ev){let s=pd(ev.start),e=pd(ev.end),t=todayMid();if(t>e)return'past';if(t>=s)return'active';return'future';}
+function startMainCd(){clearInterval(mainCdIv);const t=TX[lang];function tick(){let evs=getEvents();let next=evs.filter(ev=>getState(ev)!=='past').sort((a,b)=>pd(a.start)-pd(b.start))[0];if(!next)return;let start=pd(next.start);if(next.time){let[hh,mm]=next.time.split(':');start.setHours(hh,mm,0,0);}let diff=start-new Date();let dd=Math.max(0,Math.floor(diff/86400000));if(skipWeekend&&diff>0)dd=weekdaysTill(start);let hh=Math.max(0,Math.floor((diff%86400000)/3600000));let mm=Math.max(0,Math.floor((diff%3600000)/60000));let ss=Math.max(0,Math.floor((diff%60000)/1000));document.getElementById('mcd-name').textContent=gName(next);document.getElementById('mcd-date').textContent=gDesc(next);document.getElementById('cu-d').textContent=pad2(dd);document.getElementById('cu-h').textContent=pad2(hh);document.getElementById('cu-m').textContent=pad2(mm);document.getElementById('cu-s').textContent=pad2(ss);document.getElementById('cu-dl').textContent=skipWeekend?t.wdL:t.cD;}tick();mainCdIv=setInterval(tick,1000);}
+function setLang(l){lang=l;document.querySelectorAll('.pgb').forEach(b=>{let oc=b.getAttribute('onclick')||'';if(oc.includes('setLang'))b.classList.toggle('on',oc.includes(`'${l}'`));});render();}
+function setMode(m){mode=m;filter='all';render()}
+function setView(v){viewMode=v;document.getElementById('vb-g').classList.toggle('on',v==='grid');document.getElementById('vb-l').classList.toggle('on',v==='list');document.getElementById('v-grid').classList.toggle('hide',v==='list');document.getElementById('v-list').classList.toggle('show',v==='list');renderSection(TX[lang]);}
+function setFilter(f){filter=f;renderFilters(TX[lang]);renderSection(TX[lang]);}
+function onIslToggle(){showIsl=document.getElementById('isl-chk').checked;render();}
+function onRamToggle(){showRam=document.getElementById('ram-chk').checked;render();}
+function onWkndToggle(){skipWeekend=document.getElementById('wknd-chk').checked;renderSection(TX[lang]);startMainCd();}
+function toggleFilterPopup(){filterPopupOpen=!filterPopupOpen;document.getElementById('filter-popup').classList.toggle('open',filterPopupOpen);}
+function setDarkMode(isDark){if(isDark){document.body.classList.add('dark');document.getElementById('dark-mode-btn').classList.add('on');document.getElementById('light-mode-btn').classList.remove('on');}else{document.body.classList.remove('dark');document.getElementById('light-mode-btn').classList.add('on');document.getElementById('dark-mode-btn').classList.remove('on');}}
+document.addEventListener('click',e=>{let wrap=document.getElementById('filter-btn-wrap');if(wrap&&!wrap.contains(e.target)&&filterPopupOpen){filterPopupOpen=false;document.getElementById('filter-popup').classList.remove('open');}});
+setInterval(()=>{document.getElementById('n-clock').innerHTML='⏱ '+new Date().toLocaleTimeString('no-NO');},1000);
+render();
+</script>
+</body>
+</html>
