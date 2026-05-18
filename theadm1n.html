@@ -344,6 +344,7 @@
             .modal-grid { grid-template-columns: 1fr; }
             .user-card-body { grid-template-columns: 1fr; }
             .topbar-btn span { display: none; }
+            .danger-btn { min-width: 100%; }
         }
         @media (min-width: 901px) {
             .cards-wrap { display: none !important; }
@@ -535,9 +536,12 @@
     <div class="modal-box" style="max-width:500px;">
         <button class="modal-close" onclick="closeUserModal()"><i class="fas fa-times"></i></button>
         <div style="display:flex;align-items:center;gap:18px;margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid var(--border);">
-            <div id="umAvatar" style="width:68px;height:68px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.7rem;font-weight:700;flex-shrink:0;overflow:hidden;border:2px solid var(--border);"></div>
+            <div id="umAvatar" style="width:68px;height:68px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.7rem;font-weight:700;flex-shrink:0;overflow:hidden;border:2px solid var(--border);position:relative;"></div>
             <div>
-                <div id="umName" style="font-size:1.18rem;font-weight:700;margin-bottom:5px;"></div>
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;">
+                    <div id="umName" style="font-size:1.18rem;font-weight:700;"></div>
+                    <span id="umBlockedBadge" class="blocked-badge" style="display:none;"><i class="fas fa-ban"></i> Blocked</span>
+                </div>
                 <div id="umMethodBadge"></div>
                 <div id="umCountryBadge" style="margin-top:5px;font-size:0.82rem;color:var(--muted);"></div>
             </div>
@@ -570,6 +574,12 @@
         <div style="display:flex;gap:8px;margin-top:20px;">
             <button onclick="copyVal(_currentUser?.id,'ID')" style="flex:1;padding:9px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-family:'Poppins',sans-serif;font-size:0.8rem;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'"><i class="fas fa-copy"></i> Copy ID</button>
             <button onclick="copyVal(_currentUser?.email,'Email')" style="flex:1;padding:9px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-family:'Poppins',sans-serif;font-size:0.8rem;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'"><i class="fas fa-envelope"></i> Copy Email</button>
+        </div>
+
+        <!-- ===== DANGER ZONE ===== -->
+        <div class="danger-zone">
+            <div class="danger-zone-title"><i class="fas fa-shield-alt"></i> Admin Actions</div>
+            <div class="danger-btns" id="dangerBtns"></div>
         </div>
     </div>
 </div>
@@ -644,8 +654,31 @@
                 </div>
             </div>
         </div>
-        <!-- Modal action buttons -->
         <div id="rmActions" style="display:flex;gap:8px;margin-top:20px;padding-top:18px;border-top:1px solid var(--border);flex-wrap:wrap;"></div>
+    </div>
+</div>
+
+<!-- ===== CONFIRM MODAL ===== -->
+<div class="modal-overlay" id="confirmModal">
+    <div class="confirm-box">
+        <div class="confirm-icon" id="confirmIcon">⚠️</div>
+        <div class="confirm-title" id="confirmTitle">Are you sure?</div>
+        <div class="confirm-desc" id="confirmDesc">This action cannot be undone.</div>
+        <div style="text-align:center;margin-bottom:18px;">
+            <span class="confirm-target" id="confirmTarget"></span>
+        </div>
+        <div style="font-size:0.78rem;color:var(--muted);margin-bottom:8px;text-align:center;">
+            <i class="fas fa-lock" style="font-size:0.7rem;margin-right:4px;"></i> Enter admin password to confirm
+        </div>
+        <div class="confirm-pass-wrap">
+            <input type="password" id="confirmPass" class="confirm-pass" placeholder="••••••••" autocomplete="off">
+            <button class="confirm-pass-eye" onclick="toggleConfirmEye()"><i class="fas fa-eye" id="confirmEyeIcon"></i></button>
+        </div>
+        <div class="confirm-err" id="confirmErr"><i class="fas fa-times-circle"></i> Incorrect password</div>
+        <div class="confirm-action-btns">
+            <button class="confirm-cancel" onclick="closeConfirm()">Cancel</button>
+            <button class="confirm-submit" id="confirmSubmit" onclick="submitConfirm()">Confirm</button>
+        </div>
     </div>
 </div>
 
@@ -654,7 +687,6 @@
 <script>
 // ============================================================
 // PASSWORD: SHA-256 hash of your actual password.
-// To change: sha256sum your new password and paste hash here.
 // ============================================================
 const ADMIN_HASH = '677a05115bca1efb77c9a6677de4af6f7cab101b221c0d0d0c5b021ae79d098c';
 
@@ -675,6 +707,9 @@ let userPage = 1, reportPage = 1;
 const PAGE_SIZE = 15;
 let db = null, _currentUser = null;
 let usersListener = null, reportsListener = null;
+
+// ===== CONFIRM MODAL STATE =====
+let _confirmAction = null;
 
 // ===== HELPERS =====
 async function sha256(msg) {
@@ -754,7 +789,6 @@ function logout() {
     document.getElementById('gate').classList.remove('hidden');
     document.getElementById('app').classList.remove('show');
     document.getElementById('gateInput').value='';
-    // Detach listeners
     if(usersListener) { db.ref('users').off(); db.ref('discordUsers').off(); }
     if(reportsListener) { db.ref('bugReports').off(); }
 }
@@ -764,7 +798,6 @@ function initApp() {
     if(!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     db = firebase.database();
     loadUsers();
-    // Check for new reports badge in background
     db.ref('bugReports').on('value', snap => {
         const data = snap.val()||{};
         const newCount = Object.values(data).filter(r=>r.status==='new').length;
@@ -774,7 +807,7 @@ function initApp() {
     });
 }
 
-// ===== LOAD USERS (Real-time) =====
+// ===== LOAD USERS =====
 function loadUsers() {
     const btn=document.getElementById('refreshBtn');
     btn.classList.add('spinning');
@@ -792,7 +825,8 @@ function loadUsers() {
                 loginMethod:u.loginMethod||'unknown',
                 loginTime:u.loginTime||null, lastActive:u.lastActive||null,
                 photoURL:u.photoURL||null, platform:u.platform||'website',
-                country:u.country||null, countryCode:u.countryCode||null, city:u.city||null
+                country:u.country||null, countryCode:u.countryCode||null, city:u.city||null,
+                blocked:u.blocked===true, forceLogout:u.forceLogout||null
             }));
         };
         const merged=[...parse(us),...parse(ds)];
@@ -841,7 +875,6 @@ function renderUsers() {
     if(userPage>total) userPage=Math.max(1,total);
     const start=(userPage-1)*PAGE_SIZE, slice=filtered.slice(start,start+PAGE_SIZE);
 
-    // Desktop table
     const tbody=document.getElementById('usersTableBody');
     if(!filtered.length) {
         tbody.innerHTML=`<tr class="state-row"><td colspan="7"><div class="state-icon">🔍</div><div>No users found.</div></td></tr>`;
@@ -852,12 +885,13 @@ function renderUsers() {
             const flag=u.countryCode?countryFlag(u.countryCode):'';
             const isOnline=u.lastActive&&(Date.now()-u.lastActive)<300000;
             const init=u.name.charAt(0).toUpperCase();
-            return `<tr style="animation-delay:${i*0.025}s;cursor:pointer;" onclick="openUserModal('${esc(u.id)}')">
+            const blockedHtml=u.blocked?`<span class="blocked-badge" style="font-size:0.62rem;padding:1px 6px;margin-left:4px;"><i class="fas fa-ban"></i> Blocked</span>`:'';
+            return `<tr style="animation-delay:${i*0.025}s;cursor:pointer;${u.blocked?'opacity:0.7;':''}" onclick="openUserModal('${esc(u.id)}')">
                 <td><div class="user-cell">
                     <div class="user-avatar" style="background:${ac}20;color:${ac};">
                         ${u.photoURL?`<img src="${esc(u.photoURL)}" onerror="this.style.display='none';this.parentElement.textContent='${init}'">`:''}${!u.photoURL?init:''}
                     </div>
-                    <div><div class="user-name">${esc(u.name)}</div><div class="user-id">${u.id.substring(0,18)}…</div></div>
+                    <div><div class="user-name">${esc(u.name)}${blockedHtml}</div><div class="user-id">${u.id.substring(0,18)}…</div></div>
                 </div></td>
                 <td style="color:var(--muted);font-size:0.82rem;">${esc(u.email)}</td>
                 <td><span class="method-badge ${m.cls}">${m.icon} ${m.label}</span></td>
@@ -870,7 +904,6 @@ function renderUsers() {
         renderPagination('usersPagination', userPage, total, p=>{userPage=p;renderUsers();});
     }
 
-    // Mobile cards
     const cards=document.getElementById('usersCards');
     if(!filtered.length) {
         cards.innerHTML=`<div style="text-align:center;padding:48px 20px;color:var(--muted);"><div style="font-size:2rem;margin-bottom:8px;opacity:0.35;">🔍</div>No users found.</div>`;
@@ -881,13 +914,13 @@ function renderUsers() {
             const flag=u.countryCode?countryFlag(u.countryCode):'';
             const isOnline=u.lastActive&&(Date.now()-u.lastActive)<300000;
             const init=u.name.charAt(0).toUpperCase();
-            return `<div class="user-card" style="animation-delay:${i*0.03}s" onclick="openUserModal('${esc(u.id)}')">
+            return `<div class="user-card" style="animation-delay:${i*0.03}s${u.blocked?';opacity:0.75;border-color:rgba(244,67,54,0.2);':''}" onclick="openUserModal('${esc(u.id)}')">
                 <div class="user-card-header">
                     <div class="user-avatar" style="width:44px;height:44px;background:${ac}20;color:${ac};font-size:1.05rem;border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;border:1px solid var(--border);flex-shrink:0;">
                         ${u.photoURL?`<img src="${esc(u.photoURL)}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none';this.parentElement.textContent='${init}'">`:''}${!u.photoURL?init:''}
                     </div>
                     <div style="flex:1;min-width:0;">
-                        <div style="font-weight:600;font-size:0.9rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(u.name)}</div>
+                        <div style="font-weight:600;font-size:0.9rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(u.name)} ${u.blocked?'🚫':''}</div>
                         <div style="font-size:0.75rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(u.email)}</div>
                     </div>
                     <span class="method-badge ${m.cls}" style="flex-shrink:0;">${m.icon} ${m.label}</span>
@@ -909,8 +942,8 @@ function renderUsers() {
 function exportUsers() {
     const filtered=getFilteredUsers();
     if(!filtered.length) { showToast('No users to export','danger'); return; }
-    const headers=['ID','Name','Email','Login Method','Country','City','Platform','Login Time','Last Active'];
-    const rows=filtered.map(u=>[u.id,u.name,u.email,u.loginMethod,u.country||'',u.city||'',u.platform,fmtDate(u.loginTime),u.lastActive?new Date(u.lastActive).toLocaleString():''].map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(','));
+    const headers=['ID','Name','Email','Login Method','Country','City','Platform','Login Time','Last Active','Blocked'];
+    const rows=filtered.map(u=>[u.id,u.name,u.email,u.loginMethod,u.country||'',u.city||'',u.platform,fmtDate(u.loginTime),u.lastActive?new Date(u.lastActive).toLocaleString():'',u.blocked?'Yes':'No'].map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(','));
     const csv=[headers.join(','),...rows].join('\n');
     const a=document.createElement('a');
     a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);
@@ -930,6 +963,7 @@ function openUserModal(id) {
     if(u.photoURL) av.innerHTML=`<img src="${esc(u.photoURL)}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none';this.parentElement.textContent='${u.name.charAt(0).toUpperCase()}'">`; 
     else av.textContent=u.name.charAt(0).toUpperCase();
     document.getElementById('umName').textContent=u.name;
+    document.getElementById('umBlockedBadge').style.display=u.blocked?'':'none';
     document.getElementById('umMethodBadge').innerHTML=`<span class="method-badge ${m.cls}">${m.icon} ${m.label}</span>`;
     const flag=u.countryCode?countryFlag(u.countryCode):'';
     document.getElementById('umCountryBadge').textContent=flag?(flag+' '+(u.country||'')):'';
@@ -943,10 +977,163 @@ function openUserModal(id) {
     document.getElementById('umLastActive').textContent=u.lastActive?fmtDate(u.lastActive):'—';
     if(u.photoURL) { document.getElementById('umPhotoSection').style.display=''; document.getElementById('umPhotoFull').src=u.photoURL; document.getElementById('umPhotoLink').href=u.photoURL; }
     else document.getElementById('umPhotoSection').style.display='none';
+
+    // Render danger zone buttons
+    renderDangerBtns(u);
+
     document.getElementById('userModal').classList.add('show');
     document.body.style.overflow='hidden';
 }
+
+function renderDangerBtns(u) {
+    const div = document.getElementById('dangerBtns');
+    let html = '';
+    if(u.blocked) {
+        html += `<button class="danger-btn unblock" onclick="askConfirm('unblock','${esc(u.id)}','${esc(u.name)}')"><i class="fas fa-unlock"></i> Unblock</button>`;
+    } else {
+        html += `<button class="danger-btn block" onclick="askConfirm('block','${esc(u.id)}','${esc(u.name)}')"><i class="fas fa-ban"></i> Block</button>`;
+    }
+    html += `<button class="danger-btn force-logout" onclick="askConfirm('forceLogout','${esc(u.id)}','${esc(u.name)}')"><i class="fas fa-sign-out-alt"></i> Force Logout</button>`;
+    html += `<button class="danger-btn delete-user" onclick="askConfirm('deleteUser','${esc(u.id)}','${esc(u.name)}')"><i class="fas fa-trash-alt"></i> Delete User</button>`;
+    div.innerHTML = html;
+}
+
 function closeUserModal() { document.getElementById('userModal').classList.remove('show'); document.body.style.overflow=''; }
+
+// ===== CONFIRM MODAL =====
+const confirmConfigs = {
+    block: {
+        icon: '🚫', iconColor: 'rgba(255,152,0,0.12)',
+        title: 'Block User',
+        desc: 'This user will be marked as blocked. Their sessions will be invalidated and they will not be able to use the app.',
+        submitClass: 'warn', submitText: '<i class="fas fa-ban"></i> Block User'
+    },
+    unblock: {
+        icon: '✅', iconColor: 'rgba(76,175,80,0.12)',
+        title: 'Unblock User',
+        desc: 'This user will be unblocked and can use the app again.',
+        submitClass: 'accent', submitText: '<i class="fas fa-unlock"></i> Unblock'
+    },
+    forceLogout: {
+        icon: '🔄', iconColor: 'rgba(108,99,255,0.12)',
+        title: 'Force Logout',
+        desc: 'The user will be logged out of all active sessions immediately. They can log back in afterward.',
+        submitClass: 'accent', submitText: '<i class="fas fa-sign-out-alt"></i> Force Logout'
+    },
+    deleteUser: {
+        icon: '🗑️', iconColor: 'rgba(244,67,54,0.12)',
+        title: 'Delete User',
+        desc: 'This will permanently delete the user from the database. This action CANNOT be undone.',
+        submitClass: '', submitText: '<i class="fas fa-trash-alt"></i> Delete Permanently'
+    }
+};
+
+function askConfirm(action, userId, userName) {
+    const cfg = confirmConfigs[action];
+    if(!cfg) return;
+    _confirmAction = { action, userId, userName };
+    document.getElementById('confirmIcon').textContent = cfg.icon;
+    document.getElementById('confirmIcon').style.background = cfg.iconColor;
+    document.getElementById('confirmTitle').textContent = cfg.title;
+    document.getElementById('confirmDesc').textContent = cfg.desc;
+    document.getElementById('confirmTarget').textContent = userName + ' — ' + userId.substring(0,20)+'…';
+    const btn = document.getElementById('confirmSubmit');
+    btn.className = 'confirm-submit ' + (cfg.submitClass||'');
+    btn.innerHTML = cfg.submitText;
+    btn.disabled = false;
+    document.getElementById('confirmPass').value = '';
+    document.getElementById('confirmErr').classList.remove('show');
+    document.getElementById('confirmModal').classList.add('show');
+    setTimeout(()=>document.getElementById('confirmPass').focus(), 100);
+}
+
+function closeConfirm() {
+    document.getElementById('confirmModal').classList.remove('show');
+    _confirmAction = null;
+}
+
+function toggleConfirmEye() {
+    const i=document.getElementById('confirmPass'), ic=document.getElementById('confirmEyeIcon');
+    i.type=i.type==='password'?'text':'password';
+    ic.className='fas fa-eye'+(i.type==='text'?'-slash':'');
+}
+
+async function submitConfirm() {
+    const pass = document.getElementById('confirmPass').value;
+    if(!pass) return;
+    const btn = document.getElementById('confirmSubmit');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
+
+    const hash = await sha256(pass);
+    if(hash !== ADMIN_HASH) {
+        document.getElementById('confirmErr').classList.add('show');
+        document.getElementById('confirmPass').value = '';
+        btn.disabled = false;
+        btn.innerHTML = confirmConfigs[_confirmAction?.action]?.submitText || 'Confirm';
+        return;
+    }
+
+    // Password correct — execute action
+    document.getElementById('confirmErr').classList.remove('show');
+    const {action, userId} = _confirmAction;
+    closeConfirm();
+
+    try {
+        // Determine which ref (users or discordUsers)
+        const userRef = await getCorrectRef(userId);
+        if(!userRef) { showToast('⚠️ User ref not found','danger'); return; }
+
+        if(action === 'block') {
+            await userRef.update({ blocked: true, blockedAt: Date.now() });
+            updateLocalUser(userId, {blocked: true});
+            showToast('🚫 User blocked successfully', 'danger');
+        } else if(action === 'unblock') {
+            await userRef.update({ blocked: false, blockedAt: null });
+            updateLocalUser(userId, {blocked: false});
+            showToast('✅ User unblocked', 'success');
+        } else if(action === 'forceLogout') {
+            await userRef.update({ forceLogout: Date.now(), forceLogoutAt: Date.now() });
+            updateLocalUser(userId, {forceLogout: Date.now()});
+            showToast('🔄 Force logout applied', 'success');
+        } else if(action === 'deleteUser') {
+            await userRef.remove();
+            allUsers = allUsers.filter(u=>u.id !== userId);
+            updateUserStats(); renderUsers();
+            closeUserModal();
+            showToast('🗑️ User deleted permanently', 'danger');
+            return;
+        }
+
+        // Refresh modal if still open for same user
+        if(_currentUser?.id === userId) {
+            const updated = allUsers.find(u=>u.id===userId);
+            if(updated) {
+                document.getElementById('umBlockedBadge').style.display = updated.blocked ? '' : 'none';
+                renderDangerBtns(updated);
+                renderUsers();
+            }
+        }
+    } catch(e) {
+        console.error(e);
+        showToast('⚠️ Action failed: '+e.message, 'danger');
+    }
+}
+
+async function getCorrectRef(userId) {
+    // Try users first, then discordUsers
+    const usSnap = await db.ref(`users/${userId}`).once('value');
+    if(usSnap.exists()) return db.ref(`users/${userId}`);
+    const dsSnap = await db.ref(`discordUsers/${userId}`).once('value');
+    if(dsSnap.exists()) return db.ref(`discordUsers/${userId}`);
+    return null;
+}
+
+function updateLocalUser(userId, changes) {
+    const u = allUsers.find(x=>x.id===userId);
+    if(u) Object.assign(u, changes);
+    if(_currentUser?.id===userId) Object.assign(_currentUser, changes);
+}
 
 // ===== LOAD REPORTS =====
 function loadReports() {
@@ -1001,7 +1188,6 @@ function renderReports() {
     const start=(reportPage-1)*PAGE_SIZE, slice=filtered.slice(start,start+PAGE_SIZE);
     const statusIcons={new:'🆕',reviewed:'👁️',resolved:'✅'};
 
-    // Desktop
     const tbody=document.getElementById('reportsTableBody');
     if(!filtered.length) {
         tbody.innerHTML=`<tr class="state-row"><td colspan="8"><div class="state-icon">🔍</div><div>No reports found.</div></td></tr>`;
@@ -1029,7 +1215,6 @@ function renderReports() {
         renderPagination('reportsPagination', reportPage, total, p=>{reportPage=p;renderReports();});
     }
 
-    // Mobile cards
     const cards=document.getElementById('reportsCards');
     if(!filtered.length) {
         cards.innerHTML=`<div style="text-align:center;padding:48px 20px;color:var(--muted);"><div style="font-size:2rem;margin-bottom:8px;opacity:0.35;">🔍</div>No reports found.</div>`;
@@ -1144,7 +1329,6 @@ function openReportModal(key) {
     document.getElementById('rmEmail').textContent=r.email||'—';
     document.getElementById('rmAccountPc').textContent=r.pcName||'—';
 
-    // Images
     currentPreviewImages=r.images||[];
     const imgs=r.images||[];
     const imgSec=document.getElementById('rmImagesSection'), imgCont=document.getElementById('rmImagesContainer');
@@ -1160,7 +1344,6 @@ function openReportModal(key) {
         });
     } else imgSec.style.display='none';
 
-    // Actions
     const actDiv=document.getElementById('rmActions');
     let acts='';
     if(r.status==='new') acts=`<button class="action-btn review" onclick="updateStatus('${r.firebaseKey}','reviewed')">👁️ Mark Reviewed</button><button class="action-btn resolve" onclick="updateStatus('${r.firebaseKey}','resolved')">✅ Mark Resolved</button>`;
@@ -1214,11 +1397,14 @@ function switchTab(tab, btn) {
 // ===== KEYBOARD =====
 document.addEventListener('keydown', e=>{
     const preview=document.getElementById('imgPreviewOverlay');
+    const confirm=document.getElementById('confirmModal');
     if(e.key==='Escape') {
         if(preview.classList.contains('show')){closeImgPreview();return;}
+        if(confirm.classList.contains('show')){closeConfirm();return;}
         if(document.getElementById('reportModal').classList.contains('show')){closeReportModal();return;}
         if(document.getElementById('userModal').classList.contains('show')){closeUserModal();return;}
     }
+    if(confirm.classList.contains('show') && e.key==='Enter') { submitConfirm(); return; }
     if(preview.classList.contains('show')) {
         if(e.key==='ArrowLeft') prevImage();
         if(e.key==='ArrowRight') nextImage();
