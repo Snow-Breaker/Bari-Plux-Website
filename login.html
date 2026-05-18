@@ -1678,38 +1678,51 @@
         }
 
         // ==================== FIREBASE DATABASE SYNC ====================
-        function syncLoginToFirebase(user) {
-            if (!firebaseInitialized || !database) return;
-            try {
-                // Discord users go to a separate node (no Firebase Auth = no write permission on /users)
-                const isDiscord = user.loginMethod === 'discord';
-                const nodePath = isDiscord ? 'discordUsers/' + user.id : 'users/' + user.id;
-
-                const userRef = database.ref(nodePath);
-                userRef.set({
-                    name: user.name,
-                    email: user.email,
-                    loginMethod: user.loginMethod,
-                    loginTime: user.loginTime || new Date().toISOString(),
-                    photoURL: user.photoURL || null,
-                    lastActive: firebase.database.ServerValue.TIMESTAMP,
-                    platform: 'website'
-                }).then(() => {
-                    console.log('Login synced to Firebase! (' + nodePath + ')');
-                }).catch(err => {
-                    console.log('Firebase sync note:', err.code);
-                });
-            } catch (error) {
-                console.error("Sync error:", error);
-            }
+        async function syncLoginToFirebase(user) {
+    if (!firebaseInitialized || !database) return;
+    try {
+        let location = { country: null, countryCode: null, city: null };
+        try {
+            const res = await fetch('https://ipapi.co/json/');
+            const data = await res.json();
+            location = {
+                country: data.country_name || null,
+                countryCode: data.country_code || null,
+                city: data.city || null
+            };
+        } catch (e) {
+            console.log('Location fetch failed:', e);
         }
 
-        function removeLoginFromFirebase(userId) {
-            if (!firebaseInitialized || !database || !userId) return;
-            try {
-                database.ref('users/' + userId).remove();
-            } catch (error) {}
-        }
+        const isDiscord = user.loginMethod === 'discord';
+        const nodePath = isDiscord ? 'discordUsers/' + user.id : 'users/' + user.id;
+        const userRef = database.ref(nodePath);
+        userRef.set({
+            name: user.name,
+            email: user.email,
+            loginMethod: user.loginMethod,
+            loginTime: user.loginTime || new Date().toISOString(),
+            photoURL: user.photoURL || null,
+            lastActive: firebase.database.ServerValue.TIMESTAMP,
+            platform: 'website',
+            country: location.country,
+            countryCode: location.countryCode,
+            city: location.city
+        }).then(() => {
+            console.log('Login synced to Firebase! (' + nodePath + ')');
+        }).catch(err => {
+            console.log('Firebase sync note:', err.code);
+        });
+    } catch (error) {
+        console.error("Sync error:", error);
+    }
+}
+function removeLoginFromFirebase(userId) {
+    if (!firebaseInitialized || !database || !userId) return;
+    try {
+        database.ref('users/' + userId).remove();
+    } catch (error) {}
+}
 
         // ==================== NOTIFICATIONS ====================
         function showNotification(message, type) {
