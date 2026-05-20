@@ -1,5 +1,13 @@
 [
   {
+    "id": "Help service",
+    "title": "PLUX Help Service",
+    "description": "Dear user, we are monitoring all the problems of Bari Plux Tool. If you encounter any problem or bug in the program, please inform us through the Contact -> Report section or via our social media apps.",
+    "status": "New",
+    "date": "2026-05-20",
+    "timestamp": 1776000000
+  },
+  {
     "id": "New Update is here",
     "title": "BPT v2.2 is now live!",
     "description": "We are excited to announce the release of Bari Plux Tool v2.2. This update brings a brand new Settings page, enhanced system specs detection (multi-GPU, exact Windows build, physical resolution), improved cleanup tools, and new optimization features including Virtual Memory, System Services, and GameLoop Priority management.",
