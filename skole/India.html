@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>INDIA — A Geography Odyssey</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Archivo+Black&family=DM+Sans:ital,wght@0,200;0,300;0,400;0,500;1,300&family=Space+Mono:wght@400;700&family=Noto+Sans+Devanagari:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --ink:#05080F;--paper:#F5F0E8;--blue:#0A84FF;--cyan:#00C7BE;
+  --ember:#FF6B2B;--gold:#E8B84B;--sage:#34C759;--lilac:#9B72CF;
+  --rose:#FF3B72;--indigo:#4F46E5;
+  --dim:rgba(245,240,232,.45);--dimmer:rgba(245,240,232,.18);
+  --accent:var(--cyan);--accent2:var(--blue);
+}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--ink);
+  font-family:'DM Sans',sans-serif;color:var(--paper);-webkit-font-smoothing:antialiased}
+
+#grain{position:fixed;inset:0;z-index:9996;pointer-events:none;opacity:.025;mix-blend-mode:overlay}
+#grain::after{content:'';position:absolute;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:256px 256px;opacity:.4}
+#vignette{position:fixed;inset:0;z-index:9995;pointer-events:none;
+  background:radial-gradient(ellipse at center,transparent 55%,rgba(5,8,15,.85) 100%)}
+
+.cine-bar{position:fixed;left:0;right:0;height:0;z-index:9994;pointer-events:none;
+  background:var(--ink);transition:height .7s cubic-bezier(.7,0,.3,1)}
+.cine-bar.t{top:0}.cine-bar.b{bottom:0}
+.cine-bar.active{height:clamp(40px,6vh,80px)}
+.cine-bar.urgent{height:clamp(50px,8vh,100px);transition:height 3s linear}
+
+/* ── FLUID ── */
+#fluid{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;opacity:.5}
+.fluid-blob{position:absolute;border-radius:50%;filter:blur(100px);will-change:transform,opacity,background;
+  animation:fluidDrift var(--dur) ease-in-out infinite alternate;transition:background 1.2s ease}
+@keyframes fluidDrift{
+  0%{transform:translate(0,0) scale(1);opacity:var(--oa,.6)}
+  33%{transform:translate(var(--dx1),var(--dy1)) scale(var(--s1,1.15));opacity:var(--ob,.8)}
+  66%{transform:translate(var(--dx2),var(--dy2)) scale(var(--s2,.88));opacity:var(--oc,.5)}
+  100%{transform:translate(var(--dx3),var(--dy3)) scale(var(--s3,1.1));opacity:var(--od,.7)}
+}
+
+#morph-grid{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.04;
+  background-image:linear-gradient(rgba(255,255,255,.1) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.1) 1px,transparent 1px);
+  background-size:60px 60px;animation:gp 8s ease-in-out infinite alternate}
+@keyframes gp{0%{opacity:.02;background-size:60px 60px}100%{opacity:.06;background-size:70px 70px}}
+
+#bgCanvas{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.4}
+
+/* ── SLIDE SYSTEM ── */
+#deck{position:fixed;inset:0;z-index:10;perspective:2000px}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;
+  justify-content:center;padding:6vh 8vw;overflow:hidden;
+  opacity:0;pointer-events:none;transform-style:preserve-3d;will-change:transform,opacity;
+  transition:opacity .5s ease}
+.slide.active{opacity:1;pointer-events:all}
+
+/* ── PHOTO SYSTEM ── */
+.photo-bg{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.photo-bg .pl{position:absolute;inset:0;opacity:0;transition:opacity 1.8s cubic-bezier(.22,1,.36,1)}
+.photo-bg .pl:first-child{opacity:1}
+.photo-bg .pl img{width:100%;height:100%;object-fit:cover;filter:saturate(.55) brightness(.7);will-change:transform}
+.photo-bg .pl:nth-child(1) img{animation:pf1 20s ease-in-out infinite alternate}
+.photo-bg .pl:nth-child(2) img{animation:pf2 24s ease-in-out infinite alternate}
+@keyframes pf1{0%{transform:scale(1.22) translate(0%,0%)}33%{transform:scale(1.15) translate(-2%,-1.5%)}66%{transform:scale(1.2) translate(1.5%,1%)}100%{transform:scale(1.18) translate(-1%,2%)}}
+@keyframes pf2{0%{transform:scale(1.15) translate(0%,0%)}50%{transform:scale(1.1) translate(2%,-1%)}100%{transform:scale(1.12) translate(-1.5%,1.5%)}}
+.photo-bg .pl.active{opacity:1;z-index:1}.photo-bg .pl.active~.pl{opacity:0}
+.photo-bg .og1{position:absolute;inset:0;z-index:2;background:linear-gradient(105deg,rgba(5,8,15,.95) 0%,rgba(5,8,15,.65) 35%,rgba(5,8,15,.4) 100%)}
+.photo-bg .og2{position:absolute;inset:0;z-index:3;background:linear-gradient(0deg,rgba(5,8,15,.35) 0%,transparent 25%,transparent 75%,rgba(5,8,15,.25) 100%)}
+.photo-bg .og3{position:absolute;inset:0;z-index:4;opacity:0;transition:opacity 3s ease;
+  background:linear-gradient(135deg,rgba(10,132,255,.08),transparent 50%,rgba(232,184,75,.05) 100%)}
+.slide.active .photo-bg .og3{animation:hs 10s ease-in-out infinite alternate}
+@keyframes hs{0%{opacity:.3;background:linear-gradient(135deg,rgba(10,132,255,.08),transparent 50%,rgba(232,184,75,.05) 100%)}50%{opacity:.6;background:linear-gradient(135deg,rgba(0,199,190,.06),transparent 50%,rgba(255,107,43,.08) 100%)}100%{opacity:.3;background:linear-gradient(135deg,rgba(79,70,229,.08),transparent 50%,rgba(0,199,190,.05) 100%)}}
+
+/* Photo reveal — direction variants */
+.pm{clip-path:polygon(0 100%,100% 100%,100% 100%,0 100%);transition:clip-path 1.4s cubic-bezier(.22,1,.36,1)}
+.slide.active .pm{clip-path:polygon(0 0,100% 0,100% 100%,0 100%)}
+.pm-r{clip-path:polygon(100% 0,100% 0,100% 100%,100% 100%);transition:clip-path 1.4s cubic-bezier(.22,1,.36,1)}
+.slide.active .pm-r{clip-path:polygon(0 0,100% 0,100% 100%,0 100%)}
+.pm-c{clip-path:circle(0% at 50% 50%);transition:clip-path 1.6s cubic-bezier(.22,1,.36,1)}
+.slide.active .pm-c{clip-path:circle(100% at 50% 50%)}
+.pm-d{clip-path:polygon(50% 50%,50% 50%,50% 50%,50% 50%);transition:clip-path 1.5s cubic-bezier(.34,1.56,.64,1)}
+.slide.active .pm-d{clip-path:polygon(0 0,100% 0,100% 100%,0 100%)}
+
+.ls{position:absolute;inset:0;z-index:5;pointer-events:none;opacity:0;
+  background:linear-gradient(105deg,transparent 25%,rgba(255,255,255,.025) 40%,rgba(255,255,255,.05) 50%,rgba(255,255,255,.025) 60%,transparent 75%);transform:translateX(-100%)}
+.slide.active .ls{opacity:1;animation:lss 7s ease-in-out 3s infinite}
+@keyframes lss{0%{transform:translateX(-100%)}15%{transform:translateX(100%)}100%{transform:translateX(100%)}}
+
+.photo-right{position:absolute;right:0;top:0;bottom:0;width:44vw;z-index:0;overflow:hidden}
+.photo-right .pl{position:absolute;inset:0;opacity:0;transition:opacity 1.8s cubic-bezier(.22,1,.36,1)}
+.photo-right .pl:first-child{opacity:1}
+.photo-right .pl img{width:100%;height:100%;object-fit:cover;filter:saturate(.65) brightness(.75);will-change:transform}
+.photo-right .pl:nth-child(1) img{animation:pr1 22s ease-in-out infinite alternate}
+.photo-right .pl:nth-child(2) img{animation:pr2 26s ease-in-out infinite alternate}
+@keyframes pr1{0%{transform:scale(1.15) translateX(40px)}50%{transform:scale(1.1) translateX(25px)}100%{transform:scale(1.15) translateX(50px)}}
+@keyframes pr2{0%{transform:scale(1.1) translateX(30px)}50%{transform:scale(1.05) translateX(15px)}100%{transform:scale(1.08) translateX(35px)}}
+.photo-right .pl.active{opacity:1;z-index:1}.photo-right .pl.active~.pl{opacity:0}
+.photo-right .og1{position:absolute;inset:0;z-index:2;background:linear-gradient(90deg,var(--ink) 0%,transparent 30%)}
+.photo-right .og2{position:absolute;inset:0;z-index:2;background:linear-gradient(180deg,rgba(5,8,15,.55) 0%,transparent 25%,transparent 75%,rgba(5,8,15,.65) 100%)}
+.photo-right .ls{position:absolute;inset:0;z-index:3;pointer-events:none;opacity:0;
+  background:linear-gradient(105deg,transparent 25%,rgba(255,255,255,.02) 40%,rgba(255,255,255,.035) 50%,rgba(255,255,255,.02) 60%,transparent 75%);transform:translateX(-100%)}
+.slide.active .photo-right .ls{opacity:1;animation:lss 9s ease-in-out 4s infinite}
+
+/* ── ORBS ── */
+.orb{position:fixed;z-index:2;pointer-events:none;border-radius:50%;opacity:0;will-change:transform;box-shadow:0 0 var(--bs,60px) var(--bc,transparent)}
+.slide.active .orb{animation:of var(--odur,8s) ease-in-out var(--odelay,0s) infinite alternate}
+.orb::after{content:'';position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.4),transparent 70%)}
+@keyframes of{0%{opacity:var(--oa,.15);transform:translate(0,0) scale(1)}50%{opacity:var(--ob,.3);transform:translate(var(--ox,20px),var(--oy,-20px)) scale(var(--os,1.08))}100%{opacity:var(--oa,.15);transform:translate(calc(var(--ox,20px)*-1),calc(var(--oy,-20px)*-1)) scale(1)}}
+
+/* ── TRANSITIONS ── */
+#ct{position:fixed;inset:0;z-index:5000;pointer-events:none;display:grid;grid-template-columns:repeat(8,1fr)}
+.ctc{background:var(--ink);transform:scaleY(0);transform-origin:top;will-change:transform;transition:transform .55s cubic-bezier(.7,0,.3,1)}
+.ctc:nth-child(1){transition-delay:.0s}.ctc:nth-child(2){transition-delay:.025s}.ctc:nth-child(3){transition-delay:.05s}.ctc:nth-child(4){transition-delay:.075s}
+.ctc:nth-child(5){transition-delay:.1s}.ctc:nth-child(6){transition-delay:.075s}.ctc:nth-child(7){transition-delay:.05s}.ctc:nth-child(8){transition-delay:.025s}
+.ctc::after{content:'';position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:0}
+#ct.close .ctc{transform:scaleY(1)}
+#ct.close .ctc::after{opacity:.5;animation:cf 1s ease forwards}
+@keyframes cf{0%{opacity:0;top:0}20%{opacity:.8;top:30%}80%{opacity:.6;top:70%}100%{opacity:0;top:100%}}
+#ct.open .ctc{transform-origin:bottom;transform:scaleY(0)}
+#ct.open .ctc::after{opacity:0}
+
+#go{position:fixed;inset:0;z-index:5001;pointer-events:none;opacity:0}
+#go.active{animation:gf .5s ease forwards}
+@keyframes gf{0%{opacity:0}6%{opacity:1}12%{opacity:0}18%{opacity:.8}24%{opacity:0}40%{opacity:.3}100%{opacity:0}}
+.gr{position:absolute;left:0;width:100%;height:2px;transform:translateX(-100%)}
+.gr.r{background:#ff0040;animation:grw .12s ease forwards}
+.gr.g{background:#00ff88;animation:grw .09s ease forwards}
+.gr.b{background:#0066ff;animation:grw .15s ease forwards}
+@keyframes grw{0%{transform:translateX(-100%)}5%{opacity:1}100%{transform:translateX(100%);opacity:0}}
+
+#rgo{position:fixed;inset:0;z-index:5002;pointer-events:none;mix-blend-mode:screen;opacity:0}
+#rgo.active{animation:rgbf .7s ease forwards}
+@keyframes rgbf{0%{opacity:0}8%{opacity:.95}25%{opacity:.35}100%{opacity:0}}
+.rgl{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;will-change:transform;font-family:'Archivo Black',sans-serif;font-size:clamp(4rem,22vw,16rem);opacity:.6}
+.rgl.r{color:#ff0040;animation:rgbR .35s ease forwards}.rgl.g{color:#00ff88;animation:rgbG .35s ease forwards}.rgl.b{color:#0066ff;animation:rgbB .35s ease forwards}
+@keyframes rgbR{0%{transform:translateX(0)}50%{transform:translateX(-40px)}100%{transform:translateX(0)}}
+@keyframes rgbG{0%{transform:translateX(0)}50%{transform:translateX(20px)}100%{transform:translateX(0)}}
+@keyframes rgbB{0%{transform:translateX(0)}50%{transform:translateX(60px)}100%{transform:translateX(0)}}
+
+#lk{position:fixed;inset:0;z-index:4999;pointer-events:none;opacity:0}
+#lk.active{animation:lkk 1.6s ease forwards}
+#lk::before{content:'';position:absolute;top:-10%;right:-3%;width:55%;height:85%;background:radial-gradient(ellipse,rgba(255,107,43,.5) 0%,rgba(232,184,75,.25) 30%,transparent 60%);transform:rotate(-15deg)}
+#lk::after{content:'';position:absolute;bottom:-8%;left:-3%;width:45%;height:65%;background:radial-gradient(ellipse,rgba(255,60,60,.3) 0%,transparent 55%);transform:rotate(10deg)}
+@keyframes lkk{0%{opacity:0;transform:scale(.85)}15%{opacity:1;transform:scale(1.1)}50%{opacity:.8}100%{opacity:0;transform:scale(1.2)}}
+
+#rw{position:fixed;inset:0;z-index:5000;pointer-events:none;background:var(--ink);clip-path:circle(0% at 50% 50%)}
+#rw.active{animation:rww .8s cubic-bezier(.22,1,.36,1) forwards}
+@keyframes rww{0%{clip-path:circle(0% at 50% 50%)}40%{clip-path:circle(55% at 50% 50%)}100%{clip-path:circle(120% at 50% 50%)}}
+
+#vt{position:fixed;inset:0;z-index:5000;pointer-events:none}
+.vs{position:absolute;left:0;width:100%;background:var(--ink);transform:rotateX(90deg);transform-origin:top;animation:vd .45s ease forwards}
+@keyframes vd{0%{transform:rotateX(90deg)}100%{transform:rotateX(0deg)}}
+
+#pt{position:fixed;inset:0;z-index:5000;pointer-events:none;clip-path:circle(0% at 50% 50%);background:var(--ink)}
+#pt.active{animation:pii .9s cubic-bezier(.22,1,.36,1) forwards}
+@keyframes pii{0%{clip-path:circle(0% at 50% 50%)}35%{clip-path:circle(35% at 50% 50%)}100%{clip-path:circle(71% at 50% 50%)}}
+
+#sl{position:fixed;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--cyan),var(--blue),var(--cyan),transparent);box-shadow:0 0 40px var(--cyan),0 0 80px var(--blue);z-index:5001;opacity:0;pointer-events:none;top:0}
+
+/* ── CHROME ── */
+#prg{position:fixed;bottom:0;left:0;height:2px;z-index:900;
+  background:linear-gradient(90deg,var(--ember),var(--gold),var(--cyan),var(--blue));
+  box-shadow:0 0 15px var(--gold);transition:width .8s cubic-bezier(.22,1,.36,1)}
+#prd{position:fixed;bottom:-3px;width:10px;height:10px;border-radius:50%;z-index:901;
+  background:var(--gold);box-shadow:0 0 25px var(--gold);transition:left .8s cubic-bezier(.22,1,.36,1);
+  pointer-events:none;animation:pdp 2s ease-in-out infinite}
+@keyframes pdp{0%,100%{box-shadow:0 0 25px var(--gold)}50%{box-shadow:0 0 45px var(--gold),0 0 70px rgba(232,184,75,.4)}}
+#sn{position:fixed;bottom:1.8rem;right:2rem;font-family:'Space Mono',monospace;font-size:.58rem;letter-spacing:.25em;color:var(--dimmer);z-index:900}
+
+/* ── TIMER ── */
+#tm{position:fixed;top:1.5rem;right:calc(2rem + 100px);z-index:900;opacity:0;transition:opacity .5s ease;width:80px;height:80px;filter:drop-shadow(0 0 15px rgba(0,0,0,.6))}
+#tm.visible{opacity:1}#tm::before{content:'';position:absolute;inset:-8px;border-radius:50%;background:rgba(5,8,15,.55);backdrop-filter:blur(10px);z-index:-1}
+#tm svg{transform:rotate(-90deg);width:80px;height:80px}
+#tm .tb{fill:none;stroke:rgba(245,240,232,.06);stroke-width:3}
+#tm .tf{fill:none;stroke-width:3;stroke-linecap:round;transition:stroke-dashoffset .5s linear,stroke .5s ease}
+#tm .tt{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:.06em;color:var(--paper)}
+#tm .tl{font-size:.38rem;letter-spacing:.12em;color:var(--dim);margin-top:1px}
+#tm.warn{animation:tmpb .5s ease-in-out infinite alternate}
+@keyframes tmpb{to{filter:drop-shadow(0 0 25px rgba(255,59,114,.4))}}
+
+/* ── DOTS ── */
+#dots{position:fixed;bottom:2.2rem;left:50%;transform:translateX(-50%);z-index:900;display:flex;gap:7px;opacity:0;transition:opacity .6s ease}
+#dots.visible{opacity:1}
+#dots .dt{width:6px;height:6px;border-radius:50%;background:var(--dimmer);transition:all .4s cubic-bezier(.34,1.56,.64,1);cursor:pointer}
+#dots .dt:hover{background:var(--dim);transform:scale(1.3)}
+#dots .dt.da{background:var(--cyan);width:18px;border-radius:3px;box-shadow:0 0 12px rgba(0,199,190,.2)}
+
+#hi{position:fixed;bottom:3.5rem;left:50%;transform:translateX(-50%);font-family:'Space Mono',monospace;font-size:.48rem;letter-spacing:.2em;color:var(--dimmer);z-index:900;animation:hti 3s ease infinite;opacity:0;transition:opacity .5s}
+@keyframes hti{0%,100%{opacity:.1}50%{opacity:.7}}
+#hi.show{opacity:1}
+#fsb{position:fixed;top:1.5rem;right:1.5rem;padding:.45rem 1rem;border:1px solid var(--dimmer);
+  background:rgba(5,8,15,.6);color:var(--dim);font-family:'Space Mono',monospace;
+  font-size:.56rem;letter-spacing:.12em;cursor:pointer;z-index:900;transition:.3s;backdrop-filter:blur(12px)}
+#fsb:hover{border-color:var(--cyan);color:var(--cyan);box-shadow:0 0 30px rgba(0,199,190,.25);background:rgba(5,8,15,.8)}
+
+/* ── FLOATING DEVANAGARI ── */
+.fd{position:fixed;z-index:2;pointer-events:none;font-family:'Noto Sans Devanagari',sans-serif;
+  color:rgba(245,240,232,.025);user-select:none;animation:fdf var(--ddur,28s) ease-in-out infinite;
+  font-size:var(--ds,6rem);will-change:transform}
+@keyframes fdf{0%,100%{transform:translate(0,0) rotate(0deg) scale(1)}25%{transform:translate(var(--dx1,50px),var(--dy1,-60px)) rotate(var(--dr1,5deg)) scale(var(--ds1,1.05))}50%{transform:translate(var(--dx2,-60px),var(--dy2,50px)) rotate(var(--dr2,-5deg)) scale(var(--ds2,.92))}75%{transform:translate(var(--dx3,40px),var(--dy3,-40px)) rotate(var(--dr3,4deg)) scale(var(--ds3,1.03))}}
+
+/* ── TYPOGRAPHY ── */
+.eb{font-family:'Space Mono',monospace;font-size:clamp(.55rem,.85vw,.75rem);letter-spacing:.38em;color:var(--dim);text-transform:uppercase}
+.cs .ch{display:inline-block;opacity:0;transform:translateY(70px) rotate(5deg);transition:opacity .55s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1)}
+.cs .ch.in{opacity:1;transform:none}.cs .sp{display:inline-block;width:.28em}
+.gt{background:linear-gradient(135deg,var(--gold),var(--ember),var(--cyan),var(--gold));background-size:300% 300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:gtsh 6s ease-in-out infinite}
+@keyframes gtsh{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+
+.rv{opacity:0;transform:translateY(28px);transition:opacity .75s cubic-bezier(.22,1,.36,1),transform .75s cubic-bezier(.22,1,.36,1)}
+.rv.in{opacity:1;transform:none}
+.rl{opacity:0;transform:translateX(-40px);transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1)}
+.rl.in{opacity:1;transform:none}
+.rr{opacity:0;transform:translateX(40px);transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1)}
+.rr.in{opacity:1;transform:none}
+.rs{opacity:0;transform:scale(.78);transition:opacity .7s cubic-bezier(.34,1.56,.64,1),transform .7s cubic-bezier(.34,1.56,.64,1)}
+.rs.in{opacity:1;transform:none}
+.rw{clip-path:inset(0 100% 0 0);transition:clip-path .9s cubic-bezier(.22,1,.36,1)}
+.rw.in{clip-path:inset(0 0% 0 0)}
+.rb{opacity:0;transform:translateY(50px) skewX(-4deg);transition:opacity .9s cubic-bezier(.22,1,.36,1),transform .9s cubic-bezier(.22,1,.36,1)}
+.rb.in{opacity:1;transform:none}
+.rbl{opacity:0;filter:blur(15px);transform:translateY(15px);transition:opacity .9s ease,filter .9s ease,transform .9s ease}
+.rbl.in{opacity:1;filter:blur(0);transform:none}
+.rzo{opacity:0;transform:scale(.5) rotate(-5deg);transition:opacity .8s cubic-bezier(.34,1.56,.64,1),transform .8s cubic-bezier(.34,1.56,.64,1)}
+.rzo.in{opacity:1;transform:scale(1) rotate(0deg)}
+
+.rl-g{height:1px;background:linear-gradient(90deg,var(--gold),transparent);border:none;margin:1.1rem 0;opacity:.6;width:160px}
+.rl-f{height:1px;background:linear-gradient(90deg,var(--cyan),var(--blue),transparent);border:none;opacity:.3;width:100%}
+
+.sc{background:rgba(245,240,232,.04);border:1px solid rgba(245,240,232,.08);border-top:1.5px solid var(--blue);padding:1.4rem 1.5rem;position:relative;overflow:hidden;transition:transform .3s,box-shadow .3s}
+.sc:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,0,0,.3)}
+.sc::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(245,240,232,.02),transparent);pointer-events:none}
+.sc .sv{font-family:'Archivo Black',sans-serif;font-size:clamp(2rem,4.5vw,3.8rem);line-height:1}
+.sc .su{font-family:'Space Mono',monospace;font-size:.58rem;letter-spacing:.2em;color:var(--dim);margin:.3rem 0}
+.sc .sd{font-family:'DM Sans',sans-serif;font-size:clamp(.62rem,.88vw,.75rem);color:var(--dim);font-weight:300;line-height:1.55}
+.sc.e{border-top-color:var(--ember)}.sc.e .sv{color:var(--ember)}
+.sc.g{border-top-color:var(--gold)}.sc.g .sv{color:var(--gold)}
+.sc.c{border-top-color:var(--cyan)}.sc.c .sv{color:var(--cyan)}
+.sc.b{border-top-color:var(--blue)}.sc.b .sv{color:var(--blue)}
+.sc.s{border-top-color:var(--sage)}.sc.s .sv{color:var(--sage)}
+
+.gc{background:rgba(245,240,232,.03);border:1px solid rgba(245,240,232,.07);border-left:2px solid var(--cyan);padding:.95rem 1rem;position:relative;overflow:hidden;transition:transform .3s,background .3s}
+.gc:hover{transform:translateX(3px);background:rgba(245,240,232,.06)}
+.gc::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,var(--cyan),transparent);opacity:.2}
+.gc-n{font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.18em;margin-bottom:.35rem}
+.gc-t{font-family:'Archivo Black',sans-serif;font-size:clamp(.82rem,1.4vw,1.12rem);letter-spacing:.03em;margin-bottom:.35rem;line-height:1.2}
+.gc-d{font-family:'DM Sans',sans-serif;font-size:clamp(.58rem,.8vw,.69rem);color:var(--dim);font-weight:300;line-height:1.5}
+
+.rrw{border-bottom:1px solid rgba(245,240,232,.06);padding:.65rem 0;transition:padding .3s}
+.rrw:hover{padding:.65rem 0 .65rem .5rem}
+.rrw:last-child{border-bottom:none}
+.rrw-n{font-family:'Archivo Black',sans-serif;font-size:clamp(.82rem,1.3vw,1.05rem);letter-spacing:.03em;display:flex;justify-content:space-between;align-items:baseline}
+.rrw-k{font-family:'Space Mono',monospace;font-size:.6rem;color:var(--dim)}
+.rrw-d{font-family:'DM Sans',sans-serif;font-size:clamp(.58rem,.8vw,.7rem);color:var(--dim);font-weight:300;margin-top:.12rem;line-height:1.45}
+
+.tw{display:flex;align-items:center;gap:1.2rem;padding:.85rem 1.2rem;transition:transform .3s,background .3s;background:rgba(245,240,232,.03);border:1px solid rgba(245,240,232,.06);border-left:2px solid var(--cyan);position:relative;overflow:hidden}
+.tw:hover{transform:translateX(5px);background:rgba(245,240,232,.06)}
+.tw::after{content:'';position:absolute;right:0;top:0;bottom:0;width:40%;background:linear-gradient(90deg,transparent,rgba(245,240,232,.015));pointer-events:none}
+.tw-n{font-family:'Playfair Display',serif;font-style:italic;font-size:1.5rem;min-width:26px;opacity:.6}
+.tw-t{font-family:'Archivo Black',sans-serif;font-size:clamp(.82rem,1.3vw,1.05rem);letter-spacing:.03em;min-width:16vw;line-height:1.2}
+.tw-b{font-family:'DM Sans',sans-serif;font-size:clamp(.6rem,.85vw,.72rem);color:var(--dim);font-weight:300;line-height:1.5}
+
+.mr{display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:50%;border:1px solid rgba(0,199,190,.25);background:radial-gradient(circle,rgba(0,199,190,.05),transparent 70%);width:clamp(120px,15vw,185px);height:clamp(120px,15vw,185px);position:relative;overflow:hidden}
+.mr::before{content:'';position:absolute;inset:-50%;background:conic-gradient(transparent 0deg,rgba(0,199,190,.12) 60deg,transparent 120deg);animation:mrr 5s linear infinite}
+@keyframes mrr{to{transform:rotate(360deg)}}
+.mv{font-family:'Archivo Black',sans-serif;font-size:clamp(1.8rem,4vw,3.2rem);color:var(--gold);line-height:1;position:relative}
+.ml{font-family:'DM Sans',sans-serif;font-size:clamp(.52rem,.72vw,.65rem);color:var(--dim);text-align:center;margin-top:.3rem;line-height:1.5;font-weight:300;max-width:80%;position:relative}
+
+.pill{display:flex;align-items:center;gap:.9rem;padding:.6rem 1rem;background:rgba(245,240,232,.03);border:1px solid rgba(245,240,232,.07);border-left:2px solid var(--cyan);transition:all .3s;cursor:pointer}
+.pill:hover{background:rgba(245,240,232,.08);border-left-width:4px;transform:translateX(5px)}
+.pill-n{font-family:'Space Mono',monospace;font-size:.58rem;color:var(--dim);min-width:20px}
+.pill-t{font-family:'Archivo Black',sans-serif;font-size:clamp(.82rem,1.4vw,1.1rem);letter-spacing:.03em}
+
+.pc{position:absolute;bottom:1.5rem;right:2rem;font-family:'Space Mono',monospace;font-size:.5rem;letter-spacing:.15em;color:rgba(245,240,232,.18);z-index:5}
+.sn{font-family:'Playfair Display',serif;font-style:italic;color:rgba(245,240,232,.04);pointer-events:none;user-select:none;line-height:1}
+
+.map-svg{position:absolute;z-index:2;pointer-events:none;opacity:0;right:-5%;bottom:-8%;width:clamp(220px,42vw,520px)}
+.slide.active .map-svg{animation:mapIn 2s ease 1s forwards}
+@keyframes mapIn{to{opacity:.06}}
+.mp{stroke-dasharray:2000;stroke-dashoffset:2000;animation:drawMap 4s ease forwards}
+@keyframes drawMap{to{stroke-dashoffset:0}}
+
+@media(max-width:768px){
+  .photo-right{width:100%;opacity:.15}.photo-right .og1{background:linear-gradient(90deg,var(--ink) 0%,transparent 15%)}
+  .slide{padding:3vh 5vw}.tw{flex-direction:column;gap:.5rem;align-items:flex-start}.tw-n{display:none}
+  #hi{font-size:.4rem;bottom:4.5rem}#tm{top:1rem;right:calc(1rem + 80px);width:60px;height:60px}
+  #tm svg{width:60px;height:60px}#tm .tt{font-size:.55rem}
+}
+</style>
+</head>
+<body>
+
+<div id="grain"></div>
+<div id="vignette"></div>
+<div class="cine-bar t" id="cT"></div>
+<div class="cine-bar b" id="cB"></div>
+
+<div id="fluid">
+  <div class="fluid-blob" id="fb1" style="width:1000px;height:1000px;top:-350px;right:-250px;--dur:22s;--dx1:-100px;--dy1:80px;--s1:1.15;--dx2:70px;--dy2:-60px;--s2:.9;--dx3:-50px;--dy3:100px;--s3:1.08;--oa:.5;--ob:.8;--oc:.4;--od:.6"></div>
+  <div class="fluid-blob" id="fb2" style="width:800px;height:800px;bottom:-250px;left:-200px;--dur:28s;--dx1:120px;--dy1:-90px;--s1:1.1;--dx2:-80px;--dy2:70px;--s2:1.15;--dx3:60px;--dy3:-50px;--s3:.95;--oa:.4;--ob:.7;--oc:.5;--od:.6"></div>
+  <div class="fluid-blob" id="fb3" style="width:600px;height:600px;top:25%;left:30%;--dur:32s;--dx1:80px;--dy1:100px;--s1:.95;--dx2:-100px;--dy2:-70px;--s2:1.12;--dx3:50px;--dy3:80px;--s3:1.02;--oa:.3;--ob:.6;--oc:.4;--od:.5"></div>
+  <div class="fluid-blob" id="fb4" style="width:500px;height:500px;top:55%;right:8%;--dur:26s;--dx1:-70px;--dy1:-100px;--s1:1.12;--dx2:90px;--dy2:60px;--s2:.88;--dx3:-40px;--dy3:-80px;--s3:1.06;--oa:.35;--ob:.65;--oc:.4;--od:.55"></div>
+</div>
+<div id="morph-grid"></div>
+
+<div class="fd" style="top:6%;left:2%;--ds:10rem;--ddur:30s;--dx1:80px;--dy1:-70px;--dr1:6deg;--ds1:1.06;--dx2:-60px;--dy2:60px;--dr2:-5deg;--ds2:.9;--dx3:50px;--dy3:-50px;--dr3:5deg;--ds3:1.03">भारत</div>
+<div class="fd" style="bottom:10%;right:4%;--ds:6rem;--ddur:34s;--dx1:-60px;--dy1:70px;--dr1:-7deg;--ds1:1.04;--dx2:80px;--dy2:-50px;--dr2:6deg;--ds2:.88;--dx3:-50px;--dy3:60px;--dr3:-5deg;--ds3:1.02">गंगा</div>
+<div class="fd" style="top:48%;right:22%;--ds:4.5rem;--ddur:26s;--dx1:60px;--dy1:50px;--dr1:5deg;--ds1:1.05;--dx2:-70px;--dy2:-60px;--dr2:-6deg;--ds2:.92;--dx3:40px;--dy3:40px;--dr3:4deg;--ds3:1.02">हिमालय</div>
+<div class="fd" style="top:72%;left:12%;--ds:3.5rem;--ddur:28s;--dx1:-40px;--dy1:-50px;--dr1:-4deg;--ds1:1.03;--dx2:50px;--dy2:40px;--dr2:5deg;--ds2:.95;--dx3:-30px;--dy3:-30px;--dr3:-3deg;--ds3:1.02">ताज</div>
+
+<div class="orb" style="width:300px;height:300px;top:15%;left:-80px;background:radial-gradient(circle,rgba(0,199,190,.08),transparent 65%);--bs:80px;--bc:rgba(0,199,190,.05);--odur:12s;--odelay:0s;--oa:.12;--ob:.25;--ox:40px;--oy:-30px;--os:1.1"></div>
+<div class="orb" style="width:200px;height:200px;bottom:20%;right:-50px;background:radial-gradient(circle,rgba(10,132,255,.06),transparent 65%);--bs:60px;--bc:rgba(10,132,255,.04);--odur:10s;--odelay:2s;--oa:.1;--ob:.2;--ox:-30px;--oy:40px;--os:1.08"></div>
+<div class="orb" style="width:150px;height:150px;top:50%;left:50%;background:radial-gradient(circle,rgba(232,184,75,.05),transparent 65%);--bs:50px;--bc:rgba(232,184,75,.03);--odur:14s;--odelay:4s;--oa:.08;--ob:.18;--ox:50px;--oy:30px;--os:1.12"></div>
+
+<canvas id="bgCanvas"></canvas>
+
+<div id="ct"><div class="ctc"></div><div class="ctc"></div><div class="ctc"></div><div class="ctc"></div><div class="ctc"></div><div class="ctc"></div><div class="ctc"></div><div class="ctc"></div></div>
+<div id="go"></div>
+<div id="rgo"><div class="rgl r">INDIA</div><div class="rgl g">INDIA</div><div class="rgl b">INDIA</div></div>
+<div id="lk"></div>
+<div id="rw"></div>
+<div id="vt"></div>
+<div id="pt"></div>
+<div id="sl"></div>
+
+<div id="prg" style="width:5%"></div>
+<div id="prd" style="left:5%"></div>
+<div id="sn">01 / 10</div>
+
+<div id="tm">
+  <svg viewBox="0 0 70 70">
+    <circle class="tb" cx="35" cy="35" r="30"/>
+    <circle class="tf" id="tr" cx="35" cy="35" r="30" stroke="var(--sage)" stroke-dasharray="188.5" stroke-dashoffset="0"/>
+  </svg>
+  <div class="tt"><span id="td">5:00</span><span class="tl">LEFT</span></div>
+</div>
+
+<div id="dots"></div>
+<div id="hi" class="show">SPACE · ← → · CLICK · <span style="opacity:.5">P</span> = AUTO</div>
+<button id="fsb" onclick="tf()">⛶ FS</button>
+
+<div id="deck">
+
+<div class="slide active" id="s1">
+  <div class="photo-bg pm">
+    <div class="pl"><img src="https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=1920&q=85" alt="Taj Mahal"></div>
+    <div class="pl"><img src="https://images.unsplash.com/photo-1599661046289-e31897846e41?w=1920&q=85" alt="Hawa Mahal"></div>
+    <div class="og1"></div><div class="og2"></div><div class="og3"></div><div class="ls"></div>
+  </div>
+  <div class="sn" style="position:absolute;right:-2vw;bottom:-10vh;font-size:80vw;opacity:.02">भा</div>
+  <svg class="map-svg" viewBox="0 0 400 500" fill="none" stroke="var(--gold)" stroke-width="1.5">
+    <path class="mp" d="M200 20C180 30 155 35 140 50 120 70 105 95 95 120 80 150 70 170 65 195 58 225 55 250 60 275 65 300 75 320 90 340 105 360 120 375 140 390 160 405 175 415 185 430 190 440 195 455 200 470 205 455 210 440 215 430 225 415 240 405 260 390 280 375 295 360 310 340 325 320 335 300 340 275 345 250 342 225 335 195 328 170 315 150 300 130 285 110 265 90 245 70 230 50 215 30 200 20Z" opacity=".8"/>
+    <circle cx="200" cy="320" r="4" fill="var(--gold)" stroke="none" opacity=".6"><animate attributeName="opacity" values=".3;.8;.3" dur="3s" repeatCount="indefinite"/></circle>
+    <circle cx="130" cy="160" r="3" fill="var(--cyan)" stroke="none" opacity=".5"><animate attributeName="opacity" values=".2;.7;.2" dur="4s" repeatCount="indefinite"/></circle>
+    <circle cx="280" cy="140" r="3" fill="var(--ember)" stroke="none" opacity=".5"><animate attributeName="opacity" values=".2;.6;.2" dur="3.5s" repeatCount="indefinite"/></circle>
+  </svg>
+  <div style="position:relative;z-index:6;max-width:78vw">
+    <p class="eb rv" data-d="0">Class IX · Geography of India</p>
+    <div style="margin-top:.8rem">
+      <div class="cs" id="t1-g" style="font-family:'Archivo Black',sans-serif;font-size:clamp(3rem,10vw,8.5rem);line-height:.88;letter-spacing:.02em">GEOGRAPHY</div>
+      <div style="display:flex;align-items:flex-end;gap:1.5rem;margin-top:.1em">
+        <div class="cs" id="t1-o" style="font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(2rem,6vw,5rem);color:var(--gold);line-height:1">of</div>
+        <div class="cs" id="t1-i" style="font-family:'Archivo Black',sans-serif;font-size:clamp(3rem,10vw,8.5rem);line-height:.88;letter-spacing:.02em">INDIA</div>
+      </div>
+    </div>
+    <hr class="rl-g rv" data-d="900" style="margin-top:1.4rem">
+    <p class="rv" data-d="1000" style="font-weight:300;font-size:clamp(.7rem,1.1vw,.95rem);letter-spacing:.25em;color:var(--dim);text-transform:uppercase;max-width:65vw">Landscapes · Rivers · Climate · Monsoon · Diversity</p>
+  </div>
+  <p class="pc">Taj Mahal, Agra — UNESCO World Heritage Site</p>
+  <p style="position:absolute;bottom:1.6rem;left:7vw;font-family:'Space Mono',monospace;font-size:.5rem;letter-spacing:.18em;color:var(--dimmer);z-index:6">Wikipedia · Britannica · National Geographic · PBS</p>
+</div>
+
+<div class="slide" id="s2">
+  <div class="photo-right pm-r">
+    <div class="pl"><img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=85" alt="Himalayas"></div>
+    <div class="pl"><img src="https://images.unsplash.com/photo-1589802829985-817e51171b92?w=1200&q=85" alt="Mountains"></div>
+    <div class="og1"></div><div class="og2"></div><div class="ls"></div>
+  </div>
+  <div style="position:relative;z-index:6;max-width:52vw">
+    <p class="eb rv" data-d="0">The Scale of India</p>
+    <div style="margin-top:.7rem">
+      <div class="cs" id="t2-1" style="font-family:'Archivo Black',sans-serif;font-size:clamp(2.5rem,8vw,6.5rem);line-height:.9;color:var(--paper)">ONE</div>
+      <div class="cs" id="t2-c" style="font-family:'Archivo Black',sans-serif;font-size:clamp(2.5rem,8vw,6.5rem);line-height:.9;color:var(--cyan)">COUNTRY.</div>
+      <div class="cs" id="t2-e" style="font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(2rem,6vw,5rem);line-height:1;color:var(--dim);margin-top:.15em">Every</div>
+      <div class="cs" id="t2-l" style="font-family:'Archivo Black',sans-serif;font-size:clamp(2.5rem,8vw,6.5rem);line-height:.9;color:var(--ember)">LANDSCAPE.</div>
+    </div>
+    <p class="rv" data-d="900" style="margin-top:1rem;font-weight:300;font-size:clamp(.65rem,.95vw,.82rem);color:var(--dim);line-height:1.75;max-width:36vw">India hosts almost every type of terrain found on Earth — within its single 3.29 million km² territory.</p>
+  </div>
+  <div style="position:absolute;right:46vw;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:.5rem;z-index:6;min-width:230px">
+    <div class="pill rr" data-d="200" style="border-left-color:var(--blue)"><span class="pill-n">01</span><span class="pill-t">HIMALAYAS</span></div>
+    <div class="pill rr" data-d="300" style="border-left-color:var(--cyan)"><span class="pill-n">02</span><span class="pill-t">GANGETIC PLAINS</span></div>
+    <div class="pill rr" data-d="400" style="border-left-color:var(--ember)"><span class="pill-n">03</span><span class="pill-t">DECCAN PLATEAU</span></div>
+    <div class="pill rr" data-d="500" style="border-left-color:var(--gold)"><span class="pill-n">04</span><span class="pill-t">THAR DESERT</span></div>
+    <div class="pill rr" data-d="600" style="border-left-color:var(--sage)"><span class="pill-n">05</span><span class="pill-t">COASTAL PLAINS</span></div>
+    <div class="pill rr" data-d="700" style="border-left-color:var(--lilac)"><span class="pill-n">06</span><span class="pill-t">ISLANDS</span></div>
+  </div>
+  <p class="pc">Annapurna Massif, Nepal/India border</p>
+</div>
+
+<div class="slide" id="s3">
+  <div class="photo-bg pm-c">
+    <div class="pl"><img src="https://images.unsplash.com/photo-1570168007204-dfb528c6958f?w=1920&q=85" alt="India satellite"></div>
+    <div class="pl"><img src="https://images.unsplash.com/photo-1490077476659-095159692ab5?w=1920&q=85" alt="India terrain"></div>
+    <div class="og1"></div><div class="og2"></div><div class="og3"></div><div class="ls"></div>
+  </div>
+  <div class="sn" style="position:absolute;right:-3vw;top:-12vh;font-size:70vw">7</div>
+  <div style="position:relative;z-index:6;display:grid;grid-template-columns:1fr 1fr;gap:5vw;width:100%;align-items:center">
+    <div>
+      <p class="eb rv" data-d="0">World Ranking</p>
+      <div class="cs gt" id="t3-7" style="font-family:'Archivo Black',sans-serif;font-size:clamp(6rem,20vw,16rem);line-height:.82;margin-top:.2rem">7th</div>
+      <p class="rw" data-d="300" style="font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(1.2rem,2.5vw,2rem);color:var(--gold);margin-top:.4rem">Largest Country on Earth</p>
+      <p class="rv" data-d="450" style="font-family:'Space Mono',monospace;font-size:.65rem;letter-spacing:.28em;color:var(--dim);margin-top:.3rem">BY TOTAL LAND AREA</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:1rem">
+      <div class="sc b rs" data-d="150"><div class="sv"><span class="ctr" data-t="3.29" data-s="M km²">—</span></div><div class="su">TOTAL AREA</div><div class="sd">Bigger than all of Western Europe combined</div></div>
+      <div class="sc c rs" data-d="280"><div class="sv"><span class="ctr" data-t="7517" data-s=" km">—</span></div><div class="su">COASTLINE</div><div class="sd">Combined Arabian Sea + Bay of Bengal shores</div></div>
+      <div class="sc e rs" data-d="410"><div class="sv"><span class="ctr" data-t="15200" data-s=" km">—</span></div><div class="su">LAND BORDERS</div><div class="sd">Shared across 7 neighbouring countries</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="slide" id="s4">
+  <div class="photo-bg pm-d">
+    <div class="pl"><img src="https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2?w=1920&q=85" alt="Himalayan peaks"></div>
+    <div class="pl"><img src="https://images.unsplash.com/photo-1513415756790-2ac1db1297d0?w=1920&q=85" alt="Himalaya snow"></div>
+    <div class="og1"></div><div class="og2"></div><div class="og3"></div><div class="ls"></div>
+  </div>
+  <div style="position:relative;z-index:6;width:100%">
+    <p class="eb rv" data-d="0">World's Highest Mountain Range</p>
+    <div class="cs" id="t4" style="font-family:'Archivo Black',sans-serif;font-size:clamp(2.5rem,8vw,6.5rem);line-height:.9;margin:.5rem 0">THE HIMALAYAS</div>
+    <p class="rv" data-d="250" style="font-family:'Space Mono',monospace;font-size:.62rem;letter-spacing:.28em;color:var(--cyan);margin-bottom:1.2rem">INDIA'S NORTHERN SPINE · CLIMATE SHIELD · GLACIAL RESERVE</p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.2vw">
+      <div class="sc b rs" data-d="120"><div class="sv"><span class="ctr" data-t="2500" data-s=" km">—</span></div><div class="su">LENGTH</div><div class="sd">West to east — Nanga Parbat to Namcha Barwa. Spans 5 nations.</div></div>
+      <div class="sc c rs" data-d="250"><div class="sv"><span class="ctr" data-t="15000" data-s="">—</span></div><div class="su">GLACIERS</div><div class="sd">3rd largest ice reserve on Earth after Antarctica &amp; the Arctic.</div></div>
+      <div class="sc e rs" data-d="380"><div class="sv"><span class="ctr" data-t="8598" data-s=" m">—</span></div><div class="su">KANGCHENJUNGA</div><div class="sd">India's highest peak — world's 3rd highest mountain.</div></div>
+    </div>
+    <div class="rv" data-d="520" style="margin-top:.9rem;padding:.85rem 1.2rem;border-left:2px solid var(--cyan);background:rgba(0,199,190,.05);font-family:'DM Sans',sans-serif;font-size:clamp(.62rem,.9vw,.78rem);color:var(--dim);font-weight:300;line-height:1.7">
+      The Himalayas block icy Arctic winds from Central Asia and force monsoon clouds to rise, cool, and release rain — making Indian agriculture possible. Without them, India's climate would be unrecognisable.
+    </div>
+  </div>
+  <p class="pc">Himalayan peaks, Himachal Pradesh</p>
+</div>
+
+<div class="slide" id="s5" style="padding-top:3vh;padding-bottom:3vh">
+  <div class="photo-right" style="width:36vw">
+    <div class="pl"><img src="https://images.unsplash.com/photo-1505562130589-9879683e72da?w=900&q=85" alt="India landscape"></div>
+    <div class="pl"><img src="https://images.unsplash.com/photo-1566837945700-30057527ade0?w=900&q=85" alt="India tea"></div>
+    <div class="og1"></div><div class="og2"></div><div class="ls"></div>
+  </div>
+  <div style="position:relative;z-index:6;width:100%">
+    <p class="eb rv" data-d="0">Physical Geography</p>
+    <div class="cs" id="t5" style="font-family:'Archivo Black',sans-serif;font-size:clamp(2.2rem,6.5vw,5rem);line-height:.9">SIX LANDSCAPES</div>
+    <p class="rv" data-d="200" style="font-family:'Space Mono',monospace;font-size:.58rem;letter-spacing:.24em;color:var(--lilac);margin-bottom:.7rem">ONE COUNTRY — ALMOST EVERY TERRAIN TYPE ON EARTH</p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,1fr);gap:.8vw;flex:1">
+      <div class="gc rs" data-d="80" style="border-left-color:var(--blue)"><div class="gc-n" style="color:var(--blue)">01</div><div class="gc-t">🏔 HIMALAYAS</div><p class="gc-d">World's tallest mountains, 15,000 glaciers, perpetual snow.</p></div>
+      <div class="gc rs" data-d="150" style="border-left-color:var(--cyan)"><div class="gc-n" style="color:var(--cyan)">02</div><div class="gc-t">🌾 GANGETIC PLAIN</div><p class="gc-d">Vast fertile alluvial plains — breadbasket of 400M+ people.</p></div>
+      <div class="gc rs" data-d="220" style="border-left-color:var(--ember)"><div class="gc-n" style="color:var(--ember)">03</div><div class="gc-t">🗻 DECCAN PLATEAU</div><p class="gc-d">Ancient triangular plateau covering most of southern India.</p></div>
+      <div class="gc rs" data-d="290" style="border-left-color:var(--gold)"><div class="gc-n" style="color:var(--gold)">04</div><div class="gc-t">🏜 THAR DESERT</div><p class="gc-d">200,000+ km² in Rajasthan. 0°C winters to 50°C+ summers.</p></div>
+      <div class="gc rs" data-d="360" style="border-left-color:var(--sage)"><div class="gc-n" style="color:var(--sage)">05</div><div class="gc-t">🌊 COASTAL PLAINS</div><p class="gc-d">7,517 km of coastline. Lush Konkan/Malabar (west).</p></div>
+      <div class="gc rs" data-d="430" style="border-left-color:var(--lilac)"><div class="gc-n" style="color:var(--lilac)">06</div><div class="gc-t">🏝 ISLANDS</div><p class="gc-d">572 Andaman &amp; Nicobar + 36 Lakshadweep coral atolls.</p></div>
+    </div>
+  </div>
+</div>
+
+<div class="slide" id="s6" style="padding-top:3vh">
+  <div class="photo-bg pm">
+    <div class="pl"><img src="https://images.unsplash.com/photo-1506085452766-c330853bea50?w=1920&q=85" alt="Landscape valley"></div>
+    <div class="pl"><img src="https://images.unsplash.com/photo-1572276596237-5db2c3e16c5d?w=1920&q=85" alt="River valley"></div>
+    <div class="og1"></div><div class="og2"></div><div class="og3"></div><div class="ls"></div>
+  </div>
+  <div style="position:relative;z-index:6;width:100%">
+    <p class="eb rv" data-d="0">Water Systems</p>
+    <div class="cs" id="t6" style="font-family:'Archivo Black',sans-serif;font-size:clamp(2rem,6vw,5rem);line-height:.9">RIVERS THAT FEED BILLIONS</div>
+    <p class="rv" data-d="200" style="font-weight:300;font-size:clamp(.62rem,.9vw,.78rem);color:var(--dim);margin-bottom:.7rem">70% of India's territory drains east into the Bay of Bengal</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:2.5vw">
+      <div>
+        <p class="rv" data-d="150" style="font-family:'Space Mono',monospace;font-size:.58rem;letter-spacing:.22em;color:var(--cyan);padding-bottom:.4rem;border-bottom:1px solid rgba(0,199,190,.25);margin-bottom:.6rem">HIMALAYAN (PERENNIAL)</p>
+        <div class="rrw rl" data-d="200"><div class="rrw-n">GANGES (GANGA)<span class="rrw-k">2,510 km</span></div><div class="rrw-d">Holiest river. Fed by Gangotri Glacier. Drains one quarter of all India.</div></div>
+        <div class="rrw rl" data-d="280"><div class="rrw-n">BRAHMAPUTRA<span class="rrw-k">3,000 km</span></div><div class="rrw-d">Tibet → Assam. Massive tidal bore. Catastrophic spring flooding.</div></div>
+        <div class="rrw rl" data-d="360"><div class="rrw-n">INDUS<span class="rrw-k">3,180 km</span></div><div class="rrw-d">Gave India its name. Indus Valley Civilization flourished on its banks.</div></div>
+        <div class="rrw rl" data-d="440"><div class="rrw-n">YAMUNA<span class="rrw-k">1,376 km</span></div><div class="rrw-d">Flows past Delhi &amp; Agra — the Taj Mahal sits on its banks.</div></div>
+      </div>
+      <div>
+        <p class="rv" data-d="150" style="font-family:'Space Mono',monospace;font-size:.58rem;letter-spacing:.22em;color:var(--sage);padding-bottom:.4rem;border-bottom:1px solid rgba(52,199,89,.25);margin-bottom:.6rem">PENINSULAR (SEASONAL)</p>
+        <div class="rrw rr" data-d="200"><div class="rrw-n" style="color:var(--sage)">GODAVARI<span class="rrw-k">1,465 km</span></div><div class="rrw-d">'Dakshina Ganga' — longest peninsular river. Drains to Bay of Bengal.</div></div>
+        <div class="rrw rr" data-d="280"><div class="rrw-n" style="color:var(--sage)">KRISHNA<span class="rrw-k">1,400 km</span></div><div class="rrw-d">Karnataka → Andhra Pradesh. Key irrigation river of the Deccan.</div></div>
+        <div class="rrw rr" data-d="360"><div class="rrw-n" style="color:var(--sage)">NARMADA<span class="rrw-k">1,312 km</span></div><div class="rrw-d">Flows WEST (rare). Drains into Arabian Sea. Sacred boundary.</div></div>
+        <div class="rrw rr" data-d="440"><div class="rrw-n" style="color:var(--sage)">KAVERI<span class="rrw-k">800 km</span></div><div class="rrw-d">'Ganges of South'. Sacred. Critical for rice in Karnataka &amp; TN.</div></div>
+      </div>
+    </div>
+  </div>
+  <p class="pc">Ghats of Varanasi on the Ganges River</p>
+</div>
+
+<div class="slide" id="s7" style="padding-top:3vh;padding-bottom:3vh">
+  <div class="photo-right" style="width:30vw">
+    <div class="pl"><img src="https://images.unsplash.com/photo-1552083375-1447ce886485?w=900&q=85" alt="India nature"></div>
+    <div class="pl"><img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=900&q=85" alt="Forest"></div>
+    <div class="og1"></div><div class="og2"></div><div class="ls"></div>
+  </div>
+  <div style="position:relative;z-index:6;width:100%">
+    <p class="eb rv" data-d="0">Köppen Climate Classification</p>
+    <div class="cs" id="t7" style="font-family:'Archivo Black',sans-serif;font-size:clamp(2.2rem,6.5vw,5rem);line-height:.9">6 CLIMATE ZONES</div>
+    <p class="rv" data-d="200" style="font-family:'Space Mono',monospace;font-size:.58rem;letter-spacing:.2em;color:var(--sage);margin-bottom:.7rem">EQUATORIAL RAINFOREST TO ARCTIC TUNDRA — WITHIN ONE NATION</p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,1fr);gap:.8vw">
+      <div class="gc rs" data-d="80" style="border-left-color:#00a86b"><div class="gc-n" style="color:#00a86b">Z01</div><div class="gc-t" style="color:#00a86b">🌿 TROPICAL WET</div><p class="gc-d">W. Ghats, Malabar, NE India. &gt;18°C all year. Over 2,000mm rain.</p></div>
+      <div class="gc rs" data-d="150" style="border-left-color:var(--cyan)"><div class="gc-n" style="color:var(--cyan)">Z02</div><div class="gc-t" style="color:var(--cyan)">🌦 TROPICAL SAVANNA</div><p class="gc-d">Most of peninsular India. Wet summers, dry winters.</p></div>
+      <div class="gc rs" data-d="220" style="border-left-color:var(--ember)"><div class="gc-n" style="color:var(--ember)">Z03</div><div class="gc-t" style="color:var(--ember)">🏜 SEMI-ARID</div><p class="gc-d">Rajasthan, Deccan rain shadow. Extreme temperature swings.</p></div>
+      <div class="gc rs" data-d="290" style="border-left-color:var(--gold)"><div class="gc-n" style="color:var(--gold)">Z04</div><div class="gc-t" style="color:var(--gold)">☀️ DESERT / ARID</div><p class="gc-d">Thar Desert. 0°C → 50°C+. Less than 250mm annual rainfall.</p></div>
+      <div class="gc rs" data-d="360" style="border-left-color:var(--blue)"><div class="gc-n" style="color:var(--blue)">Z05</div><div class="gc-t" style="color:var(--blue)">🌤 HUMID SUBTROPICAL</div><p class="gc-d">Indo-Gangetic Plain. Hot summers, cool winters. Most populous.</p></div>
+      <div class="gc rs" data-d="430" style="border-left-color:#a0c4ff"><div class="gc-n" style="color:#a0c4ff">Z06</div><div class="gc-t" style="color:#a0c4ff">🏔 ALPINE / TUNDRA</div><p class="gc-d">High Himalayas &amp; Ladakh. Below 0°C year-round. Snow.</p></div>
+    </div>
+  </div>
+</div>
+
+<div class="slide" id="s8">
+  <div class="photo-bg pm-r">
+    <div class="pl"><img src="https://images.unsplash.com/photo-1464817739973-0128fe77aaa1?w=1920&q=85" alt="Storm sky"></div>
+    <div class="pl"><img src="https://images.unsplash.com/photo-1534274988757-a28bf1a57c17?w=1920&q=85" alt="Rain"></div>
+    <div class="og1"></div><div class="og2"></div><div class="og3"></div><div class="ls"></div>
+  </div>
+  <div style="position:relative;z-index:6;width:100%">
+    <p class="eb rv" data-d="0">India's Most Critical Weather System</p>
+    <div class="cs" id="t8" style="font-family:'Archivo Black',sans-serif;font-size:clamp(2.5rem,8.5vw,7.5rem);line-height:.88">THE MONSOON</div>
+    <p class="rw" data-d="300" style="font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(.9rem,1.5vw,1.3rem);color:var(--gold);margin:.6rem 0">Earth's Most Productive Wet Season</p>
+    <div style="display:flex;gap:2vw;margin:.9rem 0;align-items:center">
+      <div class="mr rs" data-d="150"><div class="mv"><span class="ctr" data-t="80" data-s="%">—</span></div><div class="ml">of India's<br>annual rainfall</div></div>
+      <div class="mr rs" data-d="300" style="border-color:rgba(10,132,255,.25);background:radial-gradient(circle,rgba(10,132,255,.05),transparent 70%)"><div class="mv" style="color:var(--blue)"><span class="ctr" data-t="600" data-s="M">—</span></div><div class="ml">farmers depend<br>on monsoon rains</div></div>
+      <div class="mr rs" data-d="450" style="border-color:rgba(255,107,43,.25);background:radial-gradient(circle,rgba(255,107,43,.05),transparent 70%)"><div class="mv" style="color:var(--ember)"><span class="ctr" data-t="20" data-s="%">—</span></div><div class="ml">of India's GDP<br>tied to agriculture</div></div>
+      <div class="rv" data-d="600" style="flex:1;padding:1.2rem 1.4rem;background:rgba(245,240,232,.04);border:1px solid rgba(245,240,232,.08);border-left:2px solid var(--cyan)">
+        <p style="font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.2em;color:var(--cyan);margin-bottom:.6rem">JOURNEY</p>
+        <p style="font-family:'DM Sans',sans-serif;font-size:clamp(.62rem,.9vw,.78rem);color:var(--dim);font-weight:300;line-height:2">June 1 → <strong style="color:var(--paper)">Kerala</strong><br>+10 days → <strong style="color:var(--paper)">Mumbai</strong><br>Late June → <strong style="color:var(--paper)">Delhi</strong><br>Mid-July → <strong style="color:var(--paper)">All India</strong><br>Sep–Nov → <strong style="color:var(--dim)">Retreat</strong></p>
+      </div>
+    </div>
+  </div>
+  <p class="pc">Monsoon rains, Kerala backwaters</p>
+</div>
+
+<div class="slide" id="s9">
+  <div class="photo-right pm">
+    <div class="pl"><img src="https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=1200&q=85" alt="Western Ghats"></div>
+    <div class="pl"><img src="https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=1200&q=85" alt="Misty hills"></div>
+    <div class="og1"></div><div class="og2"></div><div class="ls"></div>
+  </div>
+  <div style="position:relative;z-index:6;max-width:52vw">
+    <p class="eb rv" data-d="0">Mountain Ranges of the Peninsula</p>
+    <div class="cs" id="t9" style="font-family:'Archivo Black',sans-serif;font-size:clamp(2.5rem,8vw,6.5rem);line-height:.9">THE GHATS</div>
+    <p class="rv" data-d="250" style="font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(.8rem,1.2vw,1rem);color:var(--gold);margin:.5rem 0 .8rem">One of Earth's 8 UN-classified Biodiversity Hotspots</p>
+    <div style="display:flex;flex-direction:column;gap:.8rem">
+      <div class="rl" data-d="150" style="padding:1.1rem 1.2rem;background:rgba(245,240,232,.03);border:1px solid rgba(245,240,232,.07);border-left:2px solid var(--sage)">
+        <h3 style="font-family:'Archivo Black',sans-serif;font-size:clamp(.88rem,1.5vw,1.2rem);color:var(--sage);letter-spacing:.03em;margin-bottom:.45rem">🌿 WESTERN GHATS</h3>
+        <p style="font-family:'DM Sans',sans-serif;font-size:clamp(.6rem,.88vw,.74rem);color:var(--dim);font-weight:300;line-height:1.7">~1,600 km across 6 states · Avg 900m; peaks exceed 2,695m · Forces monsoon to release 2,000–5,000mm/season · UNESCO World Heritage Site</p>
+      </div>
+      <div class="rl" data-d="300" style="padding:1.1rem 1.2rem;background:rgba(245,240,232,.03);border:1px solid rgba(245,240,232,.07);border-left:2px solid var(--cyan)">
+        <h3 style="font-family:'Archivo Black',sans-serif;font-size:clamp(.88rem,1.5vw,1.2rem);color:var(--cyan);letter-spacing:.03em;margin-bottom:.45rem">🗻 EASTERN GHATS</h3>
+        <p style="font-family:'DM Sans',sans-serif;font-size:clamp(.6rem,.88vw,.74rem);color:var(--dim);font-weight:300;line-height:1.7">Discontinuous — cut through by mighty rivers · Avg ~300m · Both Ghats meet at the <strong style="color:var(--paper)">Nilgiri Hills</strong> (TN/KA/KL)</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem">
+        <div class="sc s rs" data-d="400" style="padding:.9rem 1rem"><div class="sv" style="font-size:1.8rem">1 of 8</div><div class="sd">UN biodiversity hotspots on Earth</div></div>
+        <div class="sc c rs" data-d="500" style="padding:.9rem 1rem"><div class="sv" style="font-size:1.8rem">5,000mm</div><div class="sd">Max monsoon rainfall on western slopes per season</div></div>
+        <div class="sc e rs" data-d="600" style="padding:.9rem 1rem"><div class="sv" style="font-size:1.6rem">Nilgiri</div><div class="sd">Where both Ghats meet — TN / KA / KL border</div></div>
+      </div>
+    </div>
+  </div>
+  <p class="pc">Western Ghats mist, Kerala</p>
+</div>
+
+<div class="slide" id="s10">
+  <div class="photo-bg pm">
+    <div class="pl"><img src="https://images.unsplash.com/photo-1546156929-a4c0ac411f47?w=1920&q=85" alt="India landscape"></div>
+    <div class="pl"><img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1920&q=85" alt="India coast"></div>
+    <div class="og1"></div><div class="og2"></div><div class="og3"></div><div class="ls"></div>
+  </div>
+  <div style="position:relative;z-index:6;width:100%">
+    <p class="eb rv" data-d="0">Summary</p>
+    <div class="cs" id="t10" style="font-family:'Archivo Black',sans-serif;font-size:clamp(2rem,5.5vw,4.5rem);line-height:.9;margin-bottom:.3rem">5 THINGS TO REMEMBER</div>
+    <hr class="rl-f rw" data-d="300" style="margin-bottom:.7rem">
+    <div style="display:flex;flex-direction:column;gap:.5rem">
+      <div class="tw rl" data-d="150" style="border-left-color:var(--blue)"><span class="tw-n" style="color:var(--blue)">01</span><span class="tw-t" style="color:var(--blue)">7TH LARGEST</span><span class="tw-b">3.29M km² — bigger than Western Europe, 7,517 km coastline</span></div>
+      <div class="tw rl" data-d="260" style="border-left-color:var(--cyan)"><span class="tw-n" style="color:var(--cyan)">02</span><span class="tw-t" style="color:var(--cyan)">SIX LANDSCAPES</span><span class="tw-b">Himalayas · Plains · Plateau · Desert · Coast · Islands</span></div>
+      <div class="tw rl" data-d="370" style="border-left-color:var(--ember)"><span class="tw-n" style="color:var(--ember)">03</span><span class="tw-t" style="color:var(--ember)">TWO RIVER TYPES</span><span class="tw-b">Himalayan (perennial) vs Peninsular (seasonal) — 70% to Bay of Bengal</span></div>
+      <div class="tw rl" data-d="480" style="border-left-color:var(--sage)"><span class="tw-n" style="color:var(--sage)">04</span><span class="tw-t" style="color:var(--sage)">SIX CLIMATE ZONES</span><span class="tw-b">Equatorial rainforest to arctic tundra — unmatched diversity</span></div>
+      <div class="tw rl" data-d="590" style="border-left-color:var(--gold)"><span class="tw-n" style="color:var(--gold)">05</span><span class="tw-t" style="color:var(--gold)">MONSOON IS EVERYTHING</span><span class="tw-b">80% of rain · 600M farmers · 20% of GDP</span></div>
+    </div>
+    <p class="rbl" data-d="800" style="font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(1.2rem,2vw,1.6rem);color:var(--gold);margin-top:1.2rem;text-align:center">"India is the cradle of the human race, the birthplace of human speech, the mother of history, the grandmother of legend, and the great grandmother of tradition."<br><span style="font-family:'DM Sans',sans-serif;font-size:clamp(.6rem,.85vw,.72rem);color:var(--dim);font-style:normal">— Mark Twain</span></p>
+    <p class="rv" data-d="950" style="font-family:'Space Mono',monospace;font-size:.48rem;letter-spacing:.15em;color:var(--dimmer);margin-top:.8rem;text-align:center">SOURCES: WIKIPEDIA · BRITANNICA · NATIONAL GEOGRAPHIC · PBS · GOVT OF INDIA</p>
+  </div>
+</div>
+</div>
+
+<script>
+const cv=document.getElementById('bgCanvas'),cx=cv.getContext('2d');
+let W,H;
+const rs=()=>{W=cv.width=innerWidth;H=cv.height=innerHeight;};
+rs();addEventListener('resize',rs);
+const particles=Array.from({length:220},()=>{
+  const cl=[[10,132,255],[0,199,190],[232,184,75],[255,107,43],[79,70,229]];
+  const c=cl[Math.floor(Math.random()*cl.length)];
+  return {x:Math.random()*2000,y:Math.random()*1200,vx:(Math.random()-.5)*.45,vy:(Math.random()-.5)*.45,r:Math.random()*2+.2,a:Math.random()*.5+.03,c};
+});
+let mx=innerWidth/2,my=innerHeight/2;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+(function fr(){cx.clearRect(0,0,W,H);
+  for(let i=0;i<particles.length;i++){const p=particles[i];
+    for(let j=i+1;j<particles.length;j++){const q=particles[j],dx=p.x-q.x,dy=p.y-q.y,d=Math.hypot(dx,dy);
+      if(d<170){cx.beginPath();cx.moveTo(p.x,p.y);cx.lineTo(q.x,q.y);cx.strokeStyle=`rgba(${p.c[0]},${p.c[1]},${p.c[2]},.${Math.floor((1-d/170)*7)})`;cx.lineWidth=.5;cx.stroke();}}
+    const dx=mx-p.x,dy=my-p.y,d=Math.hypot(dx,dy);
+    if(d<300){p.vx+=dx/d*.022;p.vy+=dy/d*.022;}
+    const sp=Math.hypot(p.vx,p.vy);if(sp>1.1){p.vx*=1.1/sp;p.vy*=1.1/sp;}
+    p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;
+    cx.beginPath();cx.arc(p.x,p.y,p.r,0,Math.PI*2);cx.fillStyle=`rgba(${p.c[0]},${p.c[1]},${p.c[2]},${p.a})`;cx.fill();}
+  requestAnimationFrame(fr);})();
+
+function sp(el){
+  if(!el||el.dataset.sp)return;el.dataset.sp='1';
+  const t=el.textContent;el.textContent='';
+  [...t].forEach(ch=>{const s=document.createElement('span');s.className=ch===' '?'sp':'ch';s.textContent=ch;el.appendChild(s);});
+}
+
+const sl=document.querySelectorAll('.slide'),N=sl.length;
+let cu=0,bs=false,ap=false,apTimer=null;
+const pr=document.getElementById('prg'),pd=document.getElementById('prd'),sn=document.getElementById('sn'),
+      hi=document.getElementById('hi'),ct=document.getElementById('ct'),slEl=document.getElementById('sl'),
+      goEl=document.getElementById('go'),rgo=document.getElementById('rgo'),lk=document.getElementById('lk'),
+      rw=document.getElementById('rw'),vt=document.getElementById('vt'),pt=document.getElementById('pt'),
+      cT=document.getElementById('cT'),cB=document.getElementById('cB');
+
+const st={s1:['t1-g','t1-o','t1-i'],s2:['t2-1','t2-c','t2-e','t2-l'],s3:['t3-7'],s4:['t4'],s5:['t5'],s6:['t6'],s7:['t7'],s8:['t8'],s9:['t9'],s10:['t10']};
+
+const cfI={};
+function sCF(slide){
+  slide.querySelectorAll('.photo-bg,.photo-right').forEach(container=>{
+    const layers=container.querySelectorAll('.pl');
+    if(layers.length<2)return;
+    const sid=slide.id+'_'+Math.random();
+    cfI[sid]=setInterval(()=>{
+      let cur=container.querySelector('.pl.active');
+      if(!cur)cur=layers[0];cur.classList.remove('active');
+      let nxt=cur.nextElementSibling;
+      while(nxt&&!nxt.classList.contains('pl'))nxt=nxt.nextElementSibling;
+      if(!nxt)nxt=layers[0];nxt.classList.add('active');
+    },5500+Math.random()*3000);
+  });
+}
+function xCF(slide){Object.keys(cfI).forEach(k=>{if(k.startsWith(slide.id)){clearInterval(cfI[k]);delete cfI[k];}});}
+
+// ── Audio ──
+let actx=null,urgentPlayed=false;
+function iA(){if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();if(actx.state==='suspended')actx.resume();}
+function playTrans(){try{iA();const t=actx.currentTime,dur=.35;
+  const n=actx.createBufferSource(),buf=actx.createBuffer(1,actx.sampleRate*dur,actx.sampleRate),d=buf.getChannelData(0);
+  for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,3);
+  n.buffer=buf;const f=actx.createBiquadFilter();f.type='bandpass';f.frequency.value=900;
+  f.frequency.exponentialRampToValueAtTime(120,t+dur);f.Q.value=.8;
+  const g=actx.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.05,t+.04);
+  g.gain.exponentialRampToValueAtTime(.001,t+dur);n.connect(f);f.connect(g);g.connect(actx.destination);n.start(t);n.stop(t+dur);
+}catch(e){}}
+function playUrgent(){try{iA();const t=actx.currentTime;
+  [660,523].forEach((freq,i)=>{const o=actx.createOscillator();o.type='sine';o.frequency.value=freq;
+    const g=actx.createGain();g.gain.setValueAtTime(0,t+i*.15);g.gain.linearRampToValueAtTime(.055,t+i*.15+.04);
+    g.gain.exponentialRampToValueAtTime(.001,t+i*.15+.35);o.connect(g);g.connect(actx.destination);
+    o.start(t+i*.15);o.stop(t+i*.15+.35);});
+}catch(e){}}
+
+// ── Timer ──
+let ts=false,tmEl=null,td=null,tr=null,ti=null,t0=0;
+const TD=300;
+function iT(){tmEl=document.getElementById('tm');td=document.getElementById('td');tr=document.getElementById('tr');}
+function sT(){
+  if(ts)return;ts=true;t0=Date.now();
+  tmEl.classList.add('visible');
+  (function tk(){
+    const e=Math.floor((Date.now()-t0)/1000),l=Math.max(TD-e,0);
+    td.textContent=Math.floor(l/60)+':'+String(l%60).padStart(2,'0');
+    const f=l/TD;tr.style.strokeDashoffset=188.5*(1-f);
+    if(f>.5)tr.style.stroke='var(--sage)';
+    else if(f>.25){tr.style.stroke='var(--gold)';tmEl.classList.remove('warn');}
+    else if(f>.1){tr.style.stroke='var(--ember)';tmEl.classList.add('warn');cT.classList.add('urgent');cB.classList.add('urgent');}
+    else{if(!urgentPlayed){playUrgent();urgentPlayed=true;}tr.style.stroke='var(--rose)';tmEl.classList.add('warn');cT.classList.add('urgent');cB.classList.add('urgent');}
+    if(l>0)ti=setTimeout(tk,100);
+  })();
+}
+function xT(){if(ti){clearTimeout(ti);ti=null;}}
+
+// ── Atmosphere per slide ──
+const atm=[
+  {c1:'rgba(10,132,255,.25)',c2:'rgba(0,199,190,.2)',c3:'rgba(232,184,75,.12)',c4:'rgba(79,70,229,.15)'},
+  {c1:'rgba(0,199,190,.25)',c2:'rgba(10,132,255,.18)',c3:'rgba(232,184,75,.1)',c4:'rgba(255,107,43,.12)'},
+  {c1:'rgba(232,184,75,.22)',c2:'rgba(255,107,43,.18)',c3:'rgba(10,132,255,.1)',c4:'rgba(79,70,229,.1)'},
+  {c1:'rgba(0,199,190,.25)',c2:'rgba(10,132,255,.2)',c3:'rgba(255,255,255,.08)',c4:'rgba(79,70,229,.12)'},
+  {c1:'rgba(10,132,255,.22)',c2:'rgba(232,184,75,.15)',c3:'rgba(0,199,190,.1)',c4:'rgba(255,107,43,.1)'},
+  {c1:'rgba(0,199,190,.25)',c2:'rgba(10,132,255,.18)',c3:'rgba(232,184,75,.1)',c4:'rgba(79,70,229,.12)'},
+  {c1:'rgba(52,199,89,.22)',c2:'rgba(0,199,190,.18)',c3:'rgba(10,132,255,.1)',c4:'rgba(232,184,75,.1)'},
+  {c1:'rgba(10,132,255,.25)',c2:'rgba(232,184,75,.18)',c3:'rgba(0,199,190,.1)',c4:'rgba(255,107,43,.12)'},
+  {c1:'rgba(52,199,89,.22)',c2:'rgba(0,199,190,.2)',c3:'rgba(79,70,229,.1)',c4:'rgba(10,132,255,.1)'},
+  {c1:'rgba(232,184,75,.22)',c2:'rgba(10,132,255,.18)',c3:'rgba(0,199,190,.1)',c4:'rgba(255,107,43,.1)'}
+];
+
+function setAtm(idx){
+  const a=atm[idx]||atm[0];
+  document.getElementById('fb1').style.background=`radial-gradient(circle,${a.c1},transparent 70%)`;
+  document.getElementById('fb2').style.background=`radial-gradient(circle,${a.c2},transparent 70%)`;
+  document.getElementById('fb3').style.background=`radial-gradient(circle,${a.c3},transparent 70%)`;
+  document.getElementById('fb4').style.background=`radial-gradient(circle,${a.c4},transparent 70%)`;
+}
+
+// ── Dots ──
+function bDots(){
+  const dots=document.getElementById('dots');dots.innerHTML='';
+  for(let i=0;i<N;i++){const d=document.createElement('div');d.className='dt'+(i===0?' da':'');d.dataset.i=i;
+    d.addEventListener('click',()=>go(i));dots.appendChild(d);}
+  dots.classList.add('visible');
+}
+function uDots(idx){
+  document.querySelectorAll('.dt').forEach((d,i)=>{d.className='dt'+(i===idx?' da':'');});
+}
+
+// ── Slide Reveal ──
+function rev(slide){
+  const sid=slide.id;
+  (st[sid]||[]).forEach((id,gi)=>{const el=slide.querySelector('#'+id);if(!el)return;sp(el);
+    const ch=el.querySelectorAll('.ch');ch.forEach((c,i)=>{setTimeout(()=>c.classList.add('in'),180+gi*180+i*42);});});
+  slide.querySelectorAll('.rv,.rl,.rr,.rs,.rw,.rb,.rbl,.rzo').forEach(el=>{const d=parseInt(el.dataset.d||el.dataset.delay||0);setTimeout(()=>el.classList.add('in'),d+200);});
+  slide.querySelectorAll('.ctr[data-t]').forEach(el=>{const t=parseFloat(el.dataset.t),s=el.dataset.s||'',is=Number.isInteger(t),du=1300,st=performance.now();
+    (function tk(no){const p=Math.min((no-st)/du,1),e=1-Math.pow(1-p,3),v=t*e;el.textContent=(is?Math.round(v).toLocaleString():v.toFixed(2))+s;if(p<1)requestAnimationFrame(tk);})(performance.now());});
+  setTimeout(()=>sCF(slide),600);
+}
+function rst(slide){
+  slide.querySelectorAll('.ch').forEach(c=>c.classList.remove('in'));
+  slide.querySelectorAll('.rv,.rl,.rr,.rs,.rw,.rb,.rbl,.rzo').forEach(el=>el.classList.remove('in'));
+  slide.querySelectorAll('.ctr[data-t]').forEach(el=>el.textContent='—');xCF(slide);
+}
+
+const TR=['curtain','glitch','radial','lightleak','venetian','rgb','scanline','portal','cinematic'];
+
+function clrTr(){
+  ct.classList.remove('close','open');ct.querySelectorAll('.ctc').forEach(c=>{c.style.transform='';c.style.transitionDelay='';});
+  goEl.classList.remove('active');goEl.innerHTML='';rgo.classList.remove('active');lk.classList.remove('active');
+  rw.classList.remove('active');rw.style.clipPath='';vt.classList.remove('active');vt.innerHTML='';
+  pt.classList.remove('active');slEl.style.opacity='0';slEl.style.top='0';  cT.classList.remove('active','urgent');cB.classList.remove('active','urgent');
+}
+
+function swp(idx){
+  sl[cu].classList.remove('active');rst(sl[cu]);cu=idx;
+  sl[cu].classList.add('active');
+  if(cu>=1&&!ts)sT();
+  if(cu>0)hi.classList.remove('show');
+  const n=cu+1,p=n/N*100;
+  pr.style.width=p+'%';pd.style.left='calc('+p+'% - 5px)';
+  sn.textContent=String(n).padStart(2,'0')+' / '+String(N).padStart(2,'0');
+  setAtm(cu);uDots(cu);rev(sl[cu]);
+}
+
+function runTr(type,onMid,onDone){
+  switch(type){
+    case'curtain':{ct.classList.remove('open');ct.classList.add('close');setTimeout(()=>{onMid();ct.classList.remove('close');ct.classList.add('open');setTimeout(()=>{ct.classList.remove('open');onDone();},550);},500);break;}
+    case'glitch':{for(let i=0;i<40;i++){const r=document.createElement('div');r.className='gr '+['r','g','b'][Math.floor(Math.random()*3)];r.style.top=(Math.random()*100)+'%';r.style.height=(Math.random()*8+1)+'px';r.style.animationDelay=(Math.random()*.35)+'s';goEl.appendChild(r);}goEl.classList.add('active');cT.classList.add('active');cB.classList.add('active');setTimeout(()=>{onMid();setTimeout(()=>{cT.classList.remove('active');cB.classList.remove('active');goEl.classList.remove('active');onDone();},350);},380);break;}
+    case'radial':{rw.classList.add('active');setTimeout(()=>{onMid();},380);setTimeout(()=>{rw.classList.remove('active');rw.style.clipPath='';onDone();},850);break;}
+    case'lightleak':{lk.classList.add('active');const d=document.querySelector('#deck');d.style.transition='opacity .3s ease';d.style.opacity='0';setTimeout(()=>{onMid();d.style.opacity='1';setTimeout(()=>{lk.classList.remove('active');d.style.transition='';onDone();},600);},280);break;}
+    case'venetian':{vt.classList.add('active');for(let i=0;i<18;i++){const s=document.createElement('div');s.className='vs';s.style.height=(100/18)+'%';s.style.top=(i*100/18)+'%';s.style.animationDelay=(i*0.035)+'s';vt.appendChild(s);}setTimeout(()=>{onMid();},380);setTimeout(()=>{vt.classList.remove('active');vt.innerHTML='';onDone();},800);break;}
+    case'rgb':{rgo.classList.add('active');setTimeout(()=>{onMid();},280);setTimeout(()=>{rgo.classList.remove('active');onDone();},650);break;}
+    case'scanline':{slEl.style.transition='none';slEl.style.opacity='0';slEl.style.top='0';requestAnimationFrame(()=>{slEl.style.transition='top .15s linear,opacity .05s';slEl.style.opacity='1';slEl.style.top='100vh';});setTimeout(()=>{onMid();setTimeout(()=>{slEl.style.opacity='0';onDone();},250);},200);break;}
+    case'portal':{pt.classList.add('active');setTimeout(()=>{onMid();},400);setTimeout(()=>{pt.classList.remove('active');onDone();},900);break;}
+    case'cinematic':{cT.classList.add('active');cB.classList.add('active');const d=document.querySelector('#deck');d.style.transition='opacity .4s ease';d.style.opacity='0';setTimeout(()=>{onMid();d.style.opacity='1';setTimeout(()=>{cT.classList.remove('active');cB.classList.remove('active');d.style.transition='';onDone();},600);},400);break;}
+    default:{onMid();onDone();}
+  }
+}
+
+function go(idx){
+  if(idx<0||idx>=N||bs)return;bs=true;
+  if(ap&&apTimer){clearTimeout(apTimer);apTimer=null;}
+  runTr(TR[cu]||'curtain',()=>{swp(idx);},()=>{if(ap)scheduleAuto();else playTrans();bs=false;});
+}
+
+function scheduleAuto(){
+  if(!ap)return;
+  const elapsed=Math.floor((Date.now()-t0)/1000);
+  const perSlide=TD/N;
+  const nextTime=Math.ceil((elapsed+1)/perSlide)*perSlide-elapsed; // next slot boundary
+  if(cu<N-1){apTimer=setTimeout(()=>{if(ap)go(cu+1);},Math.max(1000,nextTime*1000));}
+}
+
+const nx=()=>go(cu+1),pv=()=>go(cu-1);
+document.addEventListener('click',()=>iA(),{once:true});
+document.addEventListener('keydown',e=>{iA();
+  if(e.key==='ArrowRight'||e.key==='ArrowDown'||e.key===' '){e.preventDefault();nx();}
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp'){e.preventDefault();pv();}
+  if(e.key==='f'||e.key==='F')tf();
+  if(e.key==='p'||e.key==='P'){
+    ap=!ap;
+    if(ap){if(t0)scheduleAuto();hi.textContent='⏵ AUTO-PILOT';hi.classList.add('show');}
+    else{hi.textContent='SPACE · ← → · CLICK · P = AUTO';hi.classList.add('show');
+      if(apTimer){clearTimeout(apTimer);apTimer=null;}}
+  }
+});
+document.addEventListener('click',e=>{if(e.target.closest('#fsb')||e.target.closest('.dt'))return;e.clientX>innerWidth/2?nx():pv();});
+let tx=0;
+addEventListener('touchstart',e=>tx=e.touches[0].clientX,{passive:true});
+addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>40){dx<0?nx():pv();}},{passive:true});
+function tf(){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen().catch(()=>{});document.getElementById('fsb').textContent=document.fullscreenElement?'✕ EXIT':'⛶ FS';}
+
+iT();bDots();setAtm(0);rev(sl[0]);
+</script>
+</body>
+</html>
