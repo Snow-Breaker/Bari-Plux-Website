@@ -1,0 +1,1787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Norsk Kalender · Norwegian Calendar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ═══ TOKENS ═══ */
+:root{
+  --bg:#04060e;--s1:#080b16;--s2:#0b0f1e;--s3:#0f1424;--s4:#13192c;--s5:#182034;
+  --bord:rgba(255,255,255,.072);--bord2:rgba(255,255,255,.04);
+  --t1:#cdd8f0;--t2:#7a90b4;--t3:#435470;--t4:#253048;
+  --red:#d93a2e;--red2:#f55a4a;--rbg:rgba(217,58,46,.1);--rrim:rgba(217,58,46,.25);
+  --vio:#6b58c8;--vio2:#9080e4;--vbg:rgba(107,88,200,.1);--vrim:rgba(107,88,200,.22);
+  --grn:#178a68;--grn2:#24bb96;--gbg:rgba(23,138,104,.1);--grim:rgba(23,138,104,.22);
+  --gld:#b87c18;--gld2:#e0a830;--gldbg:rgba(184,124,24,.1);--gldrim:rgba(184,124,24,.24);
+  --moon:#a88830;--moonbg:rgba(168,136,48,.1);
+  --blu:#1f5ec8;--blu2:#4a8ef5;--bbg:rgba(31,94,200,.12);--brim:rgba(31,94,200,.35);
+  --f-d:'Playfair Display',serif;
+  --f-u:'Plus Jakarta Sans',sans-serif;
+  --f-m:'JetBrains Mono',monospace;
+  --f-fa:'Vazirmatn',sans-serif;
+  --fs-xs:10px;--fs-sm:12px;--fs-md:14px;--fs-lg:16px;--fs-xl:20px;--fs-2xl:28px;--fs-3xl:42px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;height:100%;}
+body{background:var(--bg);color:var(--t1);font-family:var(--f-u);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;position:relative;}
+body.fa{font-family:var(--f-fa);direction:rtl;}
+
+/* ═══ AURORA ═══ */
+#cvs{position:fixed;inset:0;z-index:0;pointer-events:none;display:block;}
+
+/* ═══ LAYOUT ═══ */
+.wrap{position:relative;z-index:1;max-width:1500px;margin:0 auto;padding:0 20px 80px;}
+
+/* ═══ NAVBAR ═══ */
+.nav{position:sticky;top:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:12px 20px;margin:0 -20px;background:rgba(4,6,14,.92);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);border-bottom:1px solid var(--bord);gap:8px;flex-wrap:wrap;}
+.nav-L{display:flex;align-items:center;gap:10px;}
+.nav-flag{font-size:20px;line-height:1;flex-shrink:0;}
+.nav-tt{font-size:11px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:var(--t2);}
+.nav-sb{font-family:var(--f-m);font-size:9px;color:var(--t4);letter-spacing:1px;margin-top:1px;}
+body.fa .nav-tt,.nav-sb{font-family:var(--f-fa);}
+.nav-R{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.pg{display:flex;background:var(--s2);border:1px solid var(--bord);border-radius:50px;padding:3px;gap:1px;}
+.pgb{border:none;background:transparent;color:var(--t3);font-family:var(--f-u);font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:5px 11px;border-radius:50px;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.pgb.on{background:linear-gradient(135deg,#162866,#1e1258);color:#9dc0ff;box-shadow:0 2px 10px rgba(26,68,180,.3);}
+body.fa .pgb{font-family:var(--f-fa);}
+.yr-sel{display:flex;background:var(--s2);border:1px solid var(--bord);border-radius:50px;padding:3px;gap:1px;}
+.yrb{border:none;background:transparent;color:var(--t3);font-family:var(--f-m);font-size:10px;font-weight:600;padding:5px 11px;border-radius:50px;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.yrb.on{background:var(--s4);color:var(--gld2);border:1px solid var(--gldrim);}
+.expbtn{display:flex;align-items:center;gap:5px;border:1px solid var(--gldrim);background:var(--gldbg);color:var(--gld2);font-family:var(--f-u);font-size:9.5px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;padding:7px 13px;border-radius:50px;cursor:pointer;transition:all .2s;flex-shrink:0;}
+.expbtn:hover{background:rgba(184,124,24,.2);box-shadow:0 0 20px rgba(184,124,24,.2);}
+.expbtn svg{width:11px;height:11px;flex-shrink:0;}
+body.fa .expbtn{font-family:var(--f-fa);}
+
+/* ═══ TIMER WIDGET ═══ */
+.timer-bar{display:flex;align-items:center;justify-content:space-between;padding:11px 20px;background:linear-gradient(90deg,rgba(31,94,200,.07),rgba(107,88,200,.07));border-bottom:1px solid var(--bord);flex-wrap:wrap;gap:8px;}
+.timer-L{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+.timer-clock{font-family:var(--f-m);font-size:22px;font-weight:500;color:var(--t1);letter-spacing:2px;line-height:1;}
+.timer-date{font-family:var(--f-m);font-size:10px;color:var(--t3);letter-spacing:.5px;}
+body.fa .timer-date{font-family:var(--f-fa);letter-spacing:0;}
+.timer-tz{display:flex;gap:5px;flex-wrap:wrap;}
+.tz-badge{font-family:var(--f-m);font-size:9px;padding:2px 8px;border-radius:50px;border:1px solid var(--bord);color:var(--t3);}
+.tz-badge.active{border-color:var(--brim);color:var(--blu2);background:var(--bbg);}
+.timer-R{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.next-evt{font-size:11px;color:var(--t2);padding:5px 10px;background:var(--s2);border:1px solid var(--bord);border-radius:6px;}
+body.fa .next-evt{font-family:var(--f-fa);}
+.next-evt strong{color:var(--gld2);}
+.countdown{font-family:var(--f-m);font-size:10px;color:var(--grn2);background:var(--gbg);border:1px solid var(--grim);padding:4px 10px;border-radius:6px;white-space:nowrap;}
+
+/* ═══ HERO ═══ */
+.hero{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;padding:48px 0 38px;border-bottom:1px solid var(--bord);}
+.hero-ey{font-family:var(--f-m);font-size:10.5px;color:var(--gld2);letter-spacing:2.5px;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:9px;}
+.hero-ey::before{content:'';width:26px;height:1px;background:linear-gradient(90deg,var(--gld2),transparent);flex-shrink:0;}
+body.fa .hero-ey::before{display:none;}
+body.fa .hero-ey::after{content:'';width:26px;height:1px;background:linear-gradient(270deg,var(--gld2),transparent);flex-shrink:0;}
+.hero-h1{font-family:var(--f-d);font-size:clamp(44px,6vw,86px);font-weight:400;line-height:.9;letter-spacing:-2px;margin-bottom:16px;}
+.hero-h1 em{font-style:italic;background:linear-gradient(115deg,#f0c060 0%,#fde488 42%,#c88820 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+body.fa .hero-h1{font-family:var(--f-fa);font-size:clamp(38px,5.5vw,78px);letter-spacing:0;line-height:1.05;}
+.hero-desc{font-size:13px;color:var(--t2);line-height:1.8;max-width:440px;font-weight:400;}
+body.fa .hero-desc{font-family:var(--f-fa);}
+.hero-R{display:flex;flex-direction:column;gap:9px;}
+.stats-g{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
+.stc{background:var(--s2);border:1px solid var(--bord);border-radius:12px;padding:15px 16px;transition:all .2s;}
+.stc:hover{border-color:rgba(255,255,255,.1);transform:translateY(-1px);}
+.stc-n{font-family:var(--f-d);font-size:36px;font-weight:700;letter-spacing:-1.5px;line-height:1;margin-bottom:3px;}
+.stc-n.r{color:var(--red2)}.stc-n.v{color:var(--vio2)}.stc-n.b{color:var(--blu2)}.stc-n.g{color:var(--grn2)}
+.stc-l{font-size:10px;color:var(--t3);letter-spacing:.3px;}
+body.fa .stc-l{font-family:var(--f-fa);}
+.qf-row{display:flex;background:var(--s2);border:1px solid var(--bord);border-radius:12px;overflow:hidden;}
+.qfi{flex:1;padding:9px 12px;border-right:1px solid var(--bord);}
+.qfi:last-child{border-right:none;}
+body.fa .qfi{border-right:none;border-left:1px solid var(--bord);}
+body.fa .qfi:last-child{border-left:none;}
+.qfi-k{font-family:var(--f-m);font-size:8px;color:var(--t4);letter-spacing:1px;text-transform:uppercase;margin-bottom:3px;}
+.qfi-v{font-size:11px;font-weight:600;color:var(--t1);}
+body.fa .qfi-v{font-family:var(--f-fa);}
+
+/* ═══ UPCOMING / YM / LEGEND ═══ */
+.sec-lbl{display:flex;align-items:center;gap:9px;font-family:var(--f-m);font-size:9px;color:var(--t3);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;}
+.sec-lbl .dot{width:5px;height:5px;border-radius:50%;background:var(--grn2);animation:blink 2s infinite;flex-shrink:0;}
+.sec-lbl .rule{flex:1;height:1px;background:linear-gradient(90deg,var(--bord),transparent);}
+body.fa .sec-lbl .rule{background:linear-gradient(270deg,var(--bord),transparent);}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+.sec{margin:20px 0 0;}
+.ev-row{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;}
+.ev-row::-webkit-scrollbar{height:3px;}
+.ev-row::-webkit-scrollbar-thumb{background:var(--s5);border-radius:2px;}
+.evc{flex-shrink:0;min-width:162px;max-width:180px;background:var(--s2);border:1px solid var(--bord);border-radius:9px;padding:12px 14px;position:relative;overflow:hidden;transition:transform .15s,border-color .18s;}
+.evc::before{content:'';position:absolute;top:0;left:0;width:2px;height:100%;}
+body.fa .evc::before{left:auto;right:0;}
+.evc.r::before{background:var(--red2)}.evc.g::before{background:var(--grn2)}.evc.p::before{background:var(--gld2)}.evc.m::before{background:var(--moon)}
+.evc:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.1);}
+.evc-dt{font-family:var(--f-m);font-size:8.5px;color:var(--t3);margin-bottom:4px;}
+.evc-nm{font-size:11.5px;font-weight:600;color:var(--t1);line-height:1.3;}
+body.fa .evc-nm{font-family:var(--f-fa);}
+.evc-dl{font-size:9.5px;font-weight:600;margin-top:5px;}
+.evc-dl.r{color:var(--red2)}.evc-dl.g{color:var(--grn2)}.evc-dl.p{color:var(--gld2)}.evc-dl.m{color:var(--moon)}.evc-dl.past{color:var(--t4)}.evc-dl.now{color:var(--grn2)}
+
+/* year map */
+.ym{background:var(--s1);border:1px solid var(--bord);border-radius:14px;padding:14px 18px;margin-top:12px;overflow-x:auto;}
+.ym-inner{display:flex;gap:5px;min-width:max-content;}
+.ymc{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 8px;border-radius:7px;border:1px solid transparent;cursor:pointer;transition:all .17s;}
+.ymc:hover{background:var(--s3);}
+.ymc.on{background:var(--s3);border-color:var(--bord2);}
+.ymc-n{font-family:var(--f-m);font-size:7.5px;color:var(--t4);letter-spacing:.8px;text-transform:uppercase;text-align:center;}
+.ymc-g{display:grid;grid-template-columns:repeat(7,6px);gap:1px;}
+.yd{width:6px;height:6px;border-radius:1px;background:rgba(255,255,255,.03);}
+.yd.h{background:rgba(217,58,46,.55)}.yd.w{background:rgba(107,88,200,.28)}.yd.i{background:rgba(23,138,104,.5)}.yd.p{background:rgba(184,124,24,.55)}.yd.m{background:rgba(168,136,48,.4)}.yd.t{background:var(--blu2);box-shadow:0 0 3px var(--blu2)}.yd.e{background:transparent}
+
+/* legend */
+.legend{display:flex;flex-wrap:wrap;align-items:center;gap:5px 14px;padding:11px 15px;background:var(--s1);border:1px solid var(--bord);border-radius:12px;margin-top:10px;}
+.lgi{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--t2);font-weight:500;}
+.lgd{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.lgd.r{background:var(--red2)}.lgd.v{background:var(--vio2)}.lgd.g{background:var(--grn2)}.lgd.p{background:var(--gld2)}.lgd.b{background:var(--blu2)}.lgd.m{background:var(--moon)}
+.lgsep{width:1px;height:12px;background:var(--bord);}
+
+/* ═══ TOOLBAR ═══ */
+.toolbar{margin-top:14px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.srch{position:relative;flex:1;min-width:160px;max-width:280px;}
+.srch svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:12px;height:12px;color:var(--t3);pointer-events:none;}
+body.fa .srch svg{left:auto;right:10px;}
+.srch-in{width:100%;background:var(--s2);border:1px solid var(--bord);border-radius:50px;color:var(--t1);font-family:var(--f-u);font-size:12px;padding:7px 13px 7px 30px;outline:none;transition:border-color .2s;}
+body.fa .srch-in{font-family:var(--f-fa);padding:7px 30px 7px 13px;}
+.srch-in::placeholder{color:var(--t4);}
+.srch-in:focus{border-color:rgba(31,94,200,.35);}
+.chips{display:flex;gap:5px;flex-wrap:wrap;}
+.chip{border:1px solid var(--bord);background:var(--s2);color:var(--t2);font-family:var(--f-u);font-size:10px;font-weight:600;padding:5px 11px;border-radius:50px;cursor:pointer;transition:all .17s;white-space:nowrap;}
+body.fa .chip{font-family:var(--f-fa);}
+.chip.on.all{background:var(--s4);border-color:var(--bord2);color:var(--t1);}
+.chip.on.r{background:var(--rbg);border-color:var(--rrim);color:var(--red2);}
+.chip.on.v{background:var(--vbg);border-color:var(--vrim);color:var(--vio2);}
+.chip.on.g{background:var(--gbg);border-color:var(--grim);color:var(--grn2);}
+.chip.on.p{background:var(--gldbg);border-color:var(--gldrim);color:var(--gld2);}
+.chip.on.m{background:var(--moonbg);border-color:rgba(168,136,48,.25);color:var(--moon);}
+
+/* ═══ CALENDAR GRID — 3 cols ═══ */
+#grid-all{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px;}
+.mc{background:var(--s1);border:1px solid var(--bord);border-radius:14px;overflow:visible;transition:border-color .2s,box-shadow .2s,transform .2s;animation:fup .4s both;}
+.mc:hover{border-color:rgba(255,255,255,.1);box-shadow:0 8px 36px rgba(0,0,0,.4);transform:translateY(-2px);}
+@keyframes fup{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+.mc:nth-child(1){animation-delay:.04s}.mc:nth-child(2){animation-delay:.07s}.mc:nth-child(3){animation-delay:.1s}
+.mc:nth-child(4){animation-delay:.13s}.mc:nth-child(5){animation-delay:.16s}.mc:nth-child(6){animation-delay:.19s}
+.mc:nth-child(7){animation-delay:.22s}.mc:nth-child(8){animation-delay:.25s}.mc:nth-child(9){animation-delay:.28s}
+.mc:nth-child(10){animation-delay:.31s}.mc:nth-child(11){animation-delay:.34s}.mc:nth-child(12){animation-delay:.37s}
+.mc-hd{padding:13px 14px 9px;background:linear-gradient(148deg,var(--s2) 0%,var(--s3) 100%);border-bottom:1px solid var(--bord);border-radius:14px 14px 0 0;display:flex;justify-content:space-between;align-items:flex-end;position:relative;overflow:hidden;}
+.mc-big{position:absolute;right:7px;top:0;font-family:var(--f-d);font-size:58px;font-weight:900;color:rgba(255,255,255,.024);letter-spacing:-3px;line-height:1;user-select:none;pointer-events:none;}
+body.fa .mc-big{right:auto;left:7px;}
+.mc-mn{font-family:var(--f-d);font-size:17px;font-weight:600;letter-spacing:-.2px;line-height:1;}
+body.fa .mc-mn{font-family:var(--f-fa);font-size:15px;}
+.mc-ms{font-family:var(--f-m);font-size:8px;color:var(--t4);margin-top:3px;letter-spacing:.5px;}
+.mc-ec{font-family:var(--f-m);font-size:8px;padding:2px 6px;border-radius:50px;border:1px solid var(--bord2);color:var(--t3);background:rgba(255,255,255,.016);}
+.mc-pills{display:flex;flex-wrap:wrap;gap:2px;padding:6px 11px;border-bottom:1px solid var(--bord);min-height:25px;align-items:center;}
+.mcp{font-size:7.5px;font-weight:700;padding:1.5px 5px;border-radius:50px;white-space:nowrap;}
+.mcp.r{background:var(--rbg);color:var(--red2);border:1px solid var(--rrim);}
+.mcp.g{background:var(--gbg);color:var(--grn2);border:1px solid var(--grim);}
+.mcp.p{background:var(--gldbg);color:var(--gld2);border:1px solid var(--gldrim);}
+.mc-dn{display:grid;grid-template-columns:repeat(7,1fr);padding:5px 9px 2px;gap:1px;}
+.dnh{text-align:center;font-family:var(--f-m);font-size:7px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--t4);padding:2px 0;}
+.dnh.we{color:rgba(144,128,228,.55);}
+.mc-dg-wrap{overflow:hidden;border-radius:0 0 14px 14px;}
+.mc-dg{display:grid;grid-template-columns:repeat(7,1fr);padding:2px 9px 11px;gap:2px;}
+
+/* ═══ DAY CELL ═══ */
+.dc{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:5px;cursor:pointer;position:relative;transition:background .12s;min-height:26px;}
+.dc:hover:not(.dc-e){background:rgba(255,255,255,.05);}
+.dc-e{pointer-events:none;cursor:default;}
+.dcn{font-size:10.5px;font-weight:500;line-height:1;position:relative;z-index:1;color:var(--t1);}
+.dcm{font-size:6px;margin-top:.5px;line-height:1;}
+.dc-dots{display:flex;gap:1px;margin-top:1px;}
+.dc-dot{width:3px;height:3px;border-radius:50%;}
+.dc-dot.r{background:var(--red2)}.dc-dot.g{background:var(--grn2)}.dc-dot.p{background:var(--gld2)}.dc-dot.m{background:var(--moon)}
+.dc.we{background:var(--vbg);}.dc.we .dcn{color:var(--vio2);}
+.dc.hol{background:var(--rbg);}.dc.hol .dcn{color:var(--red2);font-weight:700;}
+.dc.isl{background:var(--gbg);}.dc.isl .dcn{color:var(--grn2);font-weight:700;}
+.dc.pers{background:var(--gldbg);}.dc.pers .dcn{color:var(--gld2);font-weight:700;}
+.dc.multi{background:linear-gradient(135deg,var(--rbg),var(--gldbg));}.dc.multi .dcn{color:var(--gld2);font-weight:700;}
+.dc.ms{}.dc.ms .dcn{color:var(--moon);}
+.dc.tod{background:var(--bbg);outline:1.5px solid rgba(31,94,200,.42);}.dc.tod .dcn{color:var(--blu2);font-weight:700;}
+
+/* ═══ TOOLTIP ═══ */
+#tipbox{position:fixed;z-index:9999;pointer-events:none;opacity:0;transition:opacity .14s;max-width:260px;min-width:170px;}
+#tipbox.vis{opacity:1;}
+.tb-inner{background:#050912;border:1px solid rgba(255,255,255,.13);border-radius:11px;padding:12px 15px;box-shadow:0 20px 64px rgba(0,0,0,.9),0 0 0 1px rgba(255,255,255,.04);}
+.tb-arrow{position:absolute;left:50%;transform:translateX(-50%);width:0;height:0;}
+.tip-up .tb-arrow{top:100%;border-left:6px solid transparent;border-right:6px solid transparent;border-top:7px solid #050912;}
+.tip-dn .tb-arrow{bottom:100%;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:7px solid #050912;}
+.tip-evt{padding-bottom:9px;margin-bottom:9px;border-bottom:1px solid rgba(255,255,255,.07);}
+.tip-evt:last-child{padding-bottom:0;margin-bottom:0;border-bottom:none;}
+.tip-ttl{font-size:12px;font-weight:700;line-height:1.3;margin-bottom:3px;}
+body.fa .tip-ttl{font-family:var(--f-fa);}
+.tip-desc{font-size:10px;color:rgba(170,194,240,.75);line-height:1.6;}
+body.fa .tip-desc{font-family:var(--f-fa);font-size:11px;}
+.tip-date{font-family:var(--f-m);font-size:8.5px;color:var(--t3);margin-top:5px;}
+
+/* ═══ SINGLE MONTH ═══ */
+#grid-single{display:none;margin-top:16px;}
+#grid-single.show{display:block;}
+#grid-all.hide{display:none;}
+.sv-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;gap:14px;}
+.sv-nb{width:38px;height:38px;border-radius:50%;border:1px solid var(--bord);background:var(--s2);color:var(--t2);cursor:pointer;transition:all .18s;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.sv-nb:hover{background:var(--s3);color:var(--t1);}
+.sv-nb svg{width:13px;height:13px;}
+.sv-ttl{font-family:var(--f-d);font-size:32px;font-weight:400;letter-spacing:-1px;text-align:center;line-height:1;}
+.sv-ttl em{font-style:italic;color:var(--gld2);}
+body.fa .sv-ttl{font-family:var(--f-fa);letter-spacing:0;}
+.sv-card{background:var(--s1);border:1px solid var(--bord);border-radius:14px;overflow:hidden;box-shadow:0 18px 56px rgba(0,0,0,.48);}
+.sv-dn{display:grid;grid-template-columns:repeat(7,1fr);background:var(--s2);border-bottom:1px solid var(--bord);padding:10px 18px 6px;gap:2px;}
+.sv-dnc{text-align:center;font-family:var(--f-m);font-size:10px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--t3);padding:2px 0;}
+.sv-dnc.we{color:rgba(144,128,228,.5);}
+.sv-dg{display:grid;grid-template-columns:repeat(7,1fr);padding:10px 18px 20px;gap:4px;}
+.sdc{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:10px;cursor:pointer;position:relative;min-height:50px;transition:background .14s;}
+.sdc:hover:not(.sdc-e){background:rgba(255,255,255,.04);}
+.sdc-e{pointer-events:none;cursor:default;}
+.sdc-n{font-size:16px;font-weight:500;line-height:1;color:var(--t1);}
+.sdc-m{font-size:10px;margin-top:2px;}
+.sdc-s{font-size:8px;color:var(--t2);margin-top:1px;line-height:1.3;max-width:90%;text-align:center;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+body.fa .sdc-s{font-family:var(--f-fa);}
+.sdc.we{background:var(--vbg);}.sdc.we .sdc-n{color:var(--vio2);}
+.sdc.hol{background:var(--rbg);outline:1px solid var(--rrim);}.sdc.hol .sdc-n{color:var(--red2);font-weight:700;}
+.sdc.isl{background:var(--gbg);outline:1px solid var(--grim);}.sdc.isl .sdc-n{color:var(--grn2);font-weight:700;}
+.sdc.pers{background:var(--gldbg);outline:1px solid var(--gldrim);}.sdc.pers .sdc-n{color:var(--gld2);font-weight:700;}
+.sdc.multi{background:linear-gradient(135deg,var(--rbg),var(--gldbg));outline:1px solid var(--gldrim);}.sdc.multi .sdc-n{color:var(--gld2);font-weight:700;}
+.sdc.tod{background:var(--bbg);outline:2px solid rgba(31,94,200,.42);}.sdc.tod .sdc-n{color:var(--blu2);font-weight:700;}
+
+/* ═══ INFO CARDS ═══ */
+.inf-wrap{margin-top:36px;}
+.inf-hd{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.inf-h2{font-family:var(--f-d);font-size:24px;font-weight:600;letter-spacing:-.3px;white-space:nowrap;}
+body.fa .inf-h2{font-family:var(--f-fa);font-size:20px;}
+.inf-rule{flex:1;height:1px;background:linear-gradient(90deg,var(--bord),transparent);}
+body.fa .inf-rule{background:linear-gradient(270deg,var(--bord),transparent);}
+.hol-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(288px,1fr));gap:9px;}
+.hc{background:var(--s1);border:1px solid var(--bord);border-radius:9px;padding:13px 15px;display:flex;gap:12px;align-items:flex-start;transition:all .17s;}
+.hc:hover{border-color:rgba(255,255,255,.1);}
+body:not(.fa) .hc:hover{transform:translateX(2px);}
+body.fa .hc:hover{transform:translateX(-2px);}
+.hcc{flex-shrink:0;width:48px;border-radius:7px;padding:6px 4px;text-align:center;}
+.hcc.n{background:var(--rbg);border:1px solid var(--rrim);}
+.hcc.i{background:var(--gbg);border:1px solid var(--grim);}
+.hcc.p{background:var(--gldbg);border:1px solid var(--gldrim);}
+.hcc-d{font-family:var(--f-d);font-size:20px;font-weight:700;line-height:1;}
+.hcc.n .hcc-d{color:var(--red2)}.hcc.i .hcc-d{color:var(--grn2)}.hcc.p .hcc-d{color:var(--gld2)}
+.hcc-m{font-family:var(--f-m);font-size:8px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;}
+.hcc-dw{font-family:var(--f-m);font-size:7.5px;color:var(--t4);margin-top:1px;}
+.hcb-nm{font-size:12px;font-weight:700;color:var(--t1);line-height:1.3;}
+body.fa .hcb-nm{font-family:var(--f-fa);}
+.hcb-alt{font-size:10px;color:var(--t3);margin-top:1px;font-style:italic;}
+.hcb-ds{font-size:10.5px;color:var(--t2);margin-top:5px;line-height:1.6;}
+body.fa .hcb-ds{font-family:var(--f-fa);font-size:11.5px;}
+.hcb-tags{display:flex;flex-wrap:wrap;gap:3px;margin-top:6px;}
+.hct{font-size:8px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:50px;}
+.hct.n{background:var(--rbg);color:var(--red2);border:1px solid var(--rrim);}
+.hct.i{background:var(--gbg);color:var(--grn2);border:1px solid var(--grim);}
+.hct.p{background:var(--gldbg);color:var(--gld2);border:1px solid var(--gldrim);}
+.hct.a{background:var(--moonbg);color:var(--moon);border:1px solid rgba(168,136,48,.25);}
+.moon-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:8px;}
+.moonc{background:var(--s1);border:1px solid var(--bord);border-radius:9px;padding:13px 15px;display:flex;gap:10px;align-items:center;transition:border-color .17s;}
+.moonc:hover{border-color:rgba(168,136,48,.25);}
+.moonico{font-size:24px;flex-shrink:0;}
+.moonnm{font-size:11px;font-weight:700;color:var(--moon);margin-bottom:2px;}
+body.fa .moonnm{font-family:var(--f-fa);}
+.moonds{font-size:10px;color:var(--t3);line-height:1.5;}
+body.fa .moonds{font-family:var(--f-fa);}
+
+/* ═══ FOOTER ═══ */
+.footer{margin-top:48px;padding:20px 0 14px;border-top:1px solid var(--bord);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.footer-t{font-size:10.5px;color:var(--t4);line-height:1.8;}
+.footer-t a{color:var(--gld2);text-decoration:none;}
+.footer-t a:hover{text-decoration:underline;}
+body.fa .footer-t{font-family:var(--f-fa);}
+.footer-badge{font-family:var(--f-d);font-size:13px;font-style:italic;color:var(--t4);}
+
+/* ═══ MODAL ═══ */
+.overlay{position:fixed;inset:0;z-index:9999;background:rgba(3,5,12,.94);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .25s;}
+.overlay.open{opacity:1;pointer-events:auto;}
+.modal{background:var(--s2);border:1px solid var(--bord2);border-radius:18px;padding:26px 28px;max-width:420px;width:100%;box-shadow:0 40px 100px rgba(0,0,0,.9);transform:translateY(14px);transition:transform .25s;}
+.overlay.open .modal{transform:translateY(0);}
+.modal-h{font-family:var(--f-d);font-size:21px;font-weight:600;letter-spacing:-.3px;margin-bottom:4px;}
+body.fa .modal-h{font-family:var(--f-fa);}
+.modal-s{font-size:11.5px;color:var(--t3);margin-bottom:18px;line-height:1.6;}
+body.fa .modal-s{font-family:var(--f-fa);}
+.exp-opts{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px;}
+.eopt{background:var(--s3);border:1px solid var(--bord);border-radius:11px;padding:18px 14px;cursor:pointer;transition:all .18s;text-align:center;}
+.eopt:hover{border-color:var(--gldrim);background:var(--s4);transform:translateY(-1px);}
+.eopt-ico{font-size:26px;margin-bottom:7px;}
+.eopt-nm{font-size:12px;font-weight:700;color:var(--t1);margin-bottom:3px;}
+body.fa .eopt-nm{font-family:var(--f-fa);}
+.eopt-ds{font-size:9.5px;color:var(--t3);line-height:1.5;}
+body.fa .eopt-ds{font-family:var(--f-fa);}
+.modal-close{width:100%;border:1px solid var(--bord);background:transparent;color:var(--t3);font-family:var(--f-u);font-size:11.5px;padding:9px;border-radius:8px;cursor:pointer;transition:all .17s;}
+body.fa .modal-close{font-family:var(--f-fa);}
+.modal-close:hover{background:var(--s3);color:var(--t1);}
+
+/* ═══════════════════════════════════════════
+   PRINT — PROFESSIONAL EDITION
+   ═══════════════════════════════════════════ */
+#pc{
+  position:fixed;left:-9999px;top:0;z-index:-1;
+  width:794px;background:#fff;
+  font-family:'Plus Jakarta Sans',sans-serif;
+}
+#pc.fa{font-family:'Vazirmatn',sans-serif;direction:rtl;}
+
+/* ── SHARED TOKENS ── */
+.pc-page{
+  width:794px;height:1123px;
+  background:#fff;
+  box-sizing:border-box;
+  overflow:hidden;
+  display:flex;flex-direction:column;
+  font-family:'Plus Jakarta Sans',sans-serif;
+}
+.pc-page.p2{
+  page-break-before:always;
+  height:auto;min-height:1123px;
+  overflow:visible;
+}
+
+/* ══ PAGE 1 ══════════════════════════════════ */
+
+/* ── Header strip ── */
+.pch{
+  /* deep navy with subtle warm tint */
+  background:#07112a;
+  padding:0 24px;
+  height:62px;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;
+  position:relative;
+  overflow:hidden;
+}
+/* Decorative rule at bottom of header */
+.pch::after{
+  content:'';
+  position:absolute;bottom:0;left:0;right:0;
+  height:2px;
+  background:linear-gradient(90deg,transparent 0%,#c8982a 20%,#f0d070 50%,#c8982a 80%,transparent 100%);
+}
+/* Subtle vertical stripe texture on header */
+.pch::before{
+  content:'';
+  position:absolute;inset:0;
+  background:repeating-linear-gradient(90deg,rgba(255,255,255,.012) 0px,rgba(255,255,255,.012) 1px,transparent 1px,transparent 40px);
+  pointer-events:none;
+}
+.pch-L{display:flex;align-items:center;gap:13px;position:relative;z-index:1;}
+.pch-flag{
+  width:44px;height:30px;
+  border-radius:3px;overflow:hidden;flex-shrink:0;
+  border:1px solid rgba(255,255,255,.18);
+  box-shadow:0 2px 8px rgba(0,0,0,.45),0 0 0 1px rgba(255,255,255,.06);
+}
+.pch-flag img{width:100%;height:100%;object-fit:cover;display:block;}
+.pch-wordmark{display:flex;flex-direction:column;gap:3px;}
+.pch-title{
+  font-family:'Playfair Display',serif;
+  font-size:24px;font-weight:700;
+  color:#f0ece4;letter-spacing:-.5px;line-height:1;
+}
+.pch-title em{font-style:italic;color:#e8c870;}
+.pch-sub{
+  font-family:'JetBrains Mono',monospace;
+  font-size:7.5px;font-weight:500;
+  color:rgba(255,255,255,.38);
+  letter-spacing:2px;text-transform:uppercase;
+}
+.pch-R{display:flex;flex-direction:column;align-items:flex-end;gap:5px;position:relative;z-index:1;}
+.pch-year-badge{
+  font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;
+  color:#e8c870;letter-spacing:1px;
+  background:rgba(232,200,112,.1);
+  border:1px solid rgba(232,200,112,.28);
+  border-radius:4px;padding:3px 10px;
+}
+.pch-tags{display:flex;gap:3px;flex-wrap:wrap;justify-content:flex-end;max-width:340px;}
+.pch-tag{
+  font-family:'JetBrains Mono',monospace;font-size:5.5px;font-weight:600;
+  letter-spacing:.8px;text-transform:uppercase;
+  padding:2px 5px;border-radius:2px;
+  border:1px solid rgba(255,255,255,.1);
+  color:rgba(255,255,255,.35);
+  white-space:nowrap;
+}
+.pch-tag.t-red{border-color:rgba(200,80,60,.35);color:rgba(220,130,120,.75);}
+.pch-tag.t-grn{border-color:rgba(40,160,120,.35);color:rgba(80,200,160,.7);}
+.pch-tag.t-gld{border-color:rgba(200,160,40,.35);color:rgba(230,200,100,.7);}
+.pch-tag.t-blu{border-color:rgba(80,130,220,.35);color:rgba(120,170,240,.7);}
+/* year pill used inside header */
+.pch-year-pill{
+  font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;
+  color:rgba(255,255,255,.38);letter-spacing:.5px;margin-top:2px;
+}
+/* multi-event dot indicators inside day cells */
+.pcd-dots{display:flex;gap:1.5px;justify-content:center;margin-top:1px;flex-shrink:0;}
+.pcd-dot{width:2px;height:2px;border-radius:50%;flex-shrink:0;}
+.pcd-dot.dh{background:#c02010;}.pcd-dot.di{background:#0a7852;}.pcd-dot.dp{background:#c09020;}.pcd-dot.dm{background:#806810;}
+
+/* ── Month grid body ── */
+.pc-body{
+  flex:1;min-height:0;
+  padding:10px 16px 0;
+  display:flex;flex-direction:column;
+  background:#fafbfd;
+}
+.pc-mgrid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  grid-template-rows:repeat(4,1fr);
+  gap:6px;
+  flex:1;min-height:0;
+  min-width:0;
+}
+/* ── Month card ── */
+.pcmo{
+  background:#fff;
+  border:1px solid #e2e8f4;
+  border-radius:6px;
+  overflow:hidden;
+  display:flex;flex-direction:column;
+  box-shadow:0 1px 4px rgba(7,17,42,.07),0 0 0 1px rgba(7,17,42,.02);
+  min-width:0;
+  min-height:0;
+  width:100%;
+}
+
+/* Month header inside card */
+.pcmo-hd{
+  padding:5px 8px 4px;
+  border-bottom:1px solid #e8edf6;
+  flex-shrink:0;
+  /* Left colored accent block */
+  position:relative;
+  background:#f3f6fc;
+}
+/* Top micro-border accent */
+.pcmo-hd::before{
+  content:'';
+  position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,#1a3a8a 0%,#4870d0 50%,transparent 100%);
+}
+.pcmo-top{
+  display:flex;align-items:baseline;justify-content:space-between;
+  margin-bottom:3px;margin-top:1px;
+}
+.pcmo-name{
+  font-family:'Playfair Display',serif;
+  font-size:11px;font-weight:700;
+  color:#07112a;letter-spacing:-.1px;
+}
+.pcmo-fa .pcmo-name{font-family:'Vazirmatn',sans-serif;font-size:10px;}
+.pcmo-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:6px;color:#c0c8dc;font-weight:700;letter-spacing:.5px;
+}
+
+/* Holiday pills */
+.pcmo-pills{
+  display:flex;flex-wrap:wrap;gap:2px;
+  min-height:13px;align-items:center;
+}
+.pcmo-pill{
+  font-family:'JetBrains Mono',monospace;
+  font-size:5px;font-weight:700;
+  padding:1px 4px;border-radius:2px;
+  white-space:nowrap;line-height:1.6;
+  letter-spacing:.2px;text-transform:uppercase;
+}
+.pcmo-pill.ph{background:#fde8e6;color:#8b1a0c;border:1px solid #f0b8b2;}
+.pcmo-pill.pi{background:#e2f2ec;color:#0c5c3a;border:1px solid #a0d8c0;}
+.pcmo-pill.pp{background:#fdf0dc;color:#6b4000;border:1px solid #e0c070;}
+
+/* Day name row */
+.pcr{
+  display:grid;grid-template-columns:repeat(7,1fr);
+  padding:2px 5px 1px;
+  background:#edf0f8;
+  border-bottom:1px solid #e2e8f4;
+  overflow:hidden;
+  min-width:0;
+}
+.pcrc{
+  text-align:center;
+  font-family:'JetBrains Mono',monospace;
+  font-size:4.5px;font-weight:800;
+  color:#7880a0;letter-spacing:.5px;
+  padding:2px 0;text-transform:uppercase;
+  min-width:0;
+}
+.pcrc.we{color:#5050a8;}
+
+/* Day cells */
+.pcdg{
+  display:grid;grid-template-columns:repeat(7,1fr);
+  grid-auto-rows:minmax(0,1fr);
+  padding:2px 4px 3px;gap:1px;flex:1;
+  overflow:hidden;
+  min-width:0;
+  min-height:0;
+}
+.pcd{
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  border-radius:2px;
+  min-width:0;overflow:hidden;
+  width:100%;
+  min-height:0;
+}
+.pcd-n{
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:6px;font-weight:500;line-height:1;color:#1a2540;
+  white-space:nowrap;flex-shrink:0;
+}
+.pcd-m{font-size:2.5px;margin-top:.5px;line-height:1;flex-shrink:0;}
+
+/* Day states */
+.pcd.pw .pcd-n{color:#4040a0;font-weight:500;}
+.pcd.pw{background:rgba(80,64,180,.07);}
+.pcd.ph{background:rgba(180,28,14,.11);}.pcd.ph .pcd-n{color:#8b1a0c;font-weight:800;}
+.pcd.pi{background:rgba(12,92,58,.11);}.pcd.pi .pcd-n{color:#0c5c3a;font-weight:800;}
+.pcd.pp{background:rgba(160,100,0,.12);}.pcd.pp .pcd-n{color:#6b4000;font-weight:800;}
+.pcd.pml{background:linear-gradient(135deg,rgba(180,28,14,.1),rgba(160,100,0,.11));}.pcd.pml .pcd-n{color:#6b4000;font-weight:800;}
+.pcd.pm .pcd-n{color:#7a6010;font-weight:500;}
+
+/* ── Legend strip ── */
+.pc-leg{
+  display:flex;align-items:center;gap:5px 16px;flex-wrap:wrap;
+  margin:7px 16px 0;
+  padding:5px 11px;
+  background:#07112a;
+  border-radius:4px;
+  flex-shrink:0;
+}
+.pcli{
+  display:flex;align-items:center;gap:5px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:6px;color:rgba(255,255,255,.52);
+  font-weight:600;letter-spacing:.3px;text-transform:uppercase;
+}
+.pcld{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.pcld.r{background:#d04030}.pcld.v{background:#6858c8}.pcld.g{background:#1a9870}.pcld.p{background:#c09020}.pcld.m{background:#a08828}
+.pclsep{width:1px;height:9px;background:rgba(255,255,255,.12);flex-shrink:0;}
+
+/* ── Page 1 footer ── */
+.pc-foot1{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:6px 24px 9px;
+  background:#fafbfd;
+  border-top:1px solid #e2e8f4;
+  margin-top:7px;flex-shrink:0;
+}
+.pc-foot-src{
+  font-family:'JetBrains Mono',monospace;
+  font-size:6px;color:#b8c0d4;letter-spacing:.3px;
+}
+.pc-foot-pg{
+  font-family:'Playfair Display',serif;
+  font-size:8px;font-style:italic;color:#b8c0d4;
+}
+
+/* ══ PAGE 2 ══════════════════════════════════ */
+
+/* ── Page 2 header strip ── same style as p1 ── */
+.pc-p2-hd{
+  background:#07112a;
+  padding:0 24px;
+  height:62px;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;
+  position:relative;overflow:hidden;
+}
+.pc-p2-hd::after{
+  content:'';
+  position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent 0%,#c8982a 20%,#f0d070 50%,#c8982a 80%,transparent 100%);
+}
+.pc-p2-hd::before{
+  content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(90deg,rgba(255,255,255,.012) 0px,rgba(255,255,255,.012) 1px,transparent 1px,transparent 40px);
+}
+.pc-p2-L{display:flex;align-items:center;gap:13px;position:relative;z-index:1;}
+.pc-p2-wordmark{display:flex;flex-direction:column;gap:3px;}
+.pc-p2-title{
+  font-family:'Playfair Display',serif;
+  font-size:20px;font-weight:700;
+  color:#f0ece4;letter-spacing:-.4px;line-height:1;
+}
+.pc-p2-title em{font-style:italic;color:#e8c870;}
+.pc-p2-sub{
+  font-family:'JetBrains Mono',monospace;
+  font-size:7px;font-weight:500;
+  color:rgba(255,255,255,.35);
+  letter-spacing:1.8px;text-transform:uppercase;
+}
+
+/* ── Holiday cards section ── */
+.pc-hol-body{
+  flex:1;
+  padding:12px 16px 0;
+  background:#fafbfd;
+  overflow:visible;
+}
+
+/* Section label above grid */
+.pc-hol-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:7px;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;
+  color:#8890a8;
+  margin-bottom:8px;
+  display:flex;align-items:center;gap:8px;
+}
+.pc-hol-label::after{
+  content:'';flex:1;height:1px;
+  background:linear-gradient(90deg,#d8dff0,transparent);
+}
+
+.pc-hol-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:7px;
+}
+
+/* ── Holiday card ── */
+.pc-hc{
+  background:#fff;
+  border:1px solid #e2e8f4;
+  border-radius:5px;
+  overflow:hidden;
+  break-inside:avoid;
+  box-shadow:0 1px 4px rgba(7,17,42,.06);
+  display:flex;flex-direction:column;
+}
+/* Top accent line per type */
+.pc-hc.hn::before,
+.pc-hc.hi::before,
+.pc-hc.hp::before{
+  content:'';display:block;height:2.5px;flex-shrink:0;
+}
+.pc-hc.hn::before{background:linear-gradient(90deg,#c02010,#e04030);}
+.pc-hc.hi::before{background:linear-gradient(90deg,#0a6e42,#1a9870);}
+.pc-hc.hp::before{background:linear-gradient(90deg,#b07010,#d09030);}
+
+.pc-hc-top{display:flex;align-items:stretch;}
+.pc-hc-date{
+  flex-shrink:0;width:40px;
+  padding:7px 3px;
+  text-align:center;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  border-right:1px solid #e8edf6;
+}
+.pc-hc.hn .pc-hc-date{background:#fde6e4;}
+.pc-hc.hi .pc-hc-date{background:#e0f4ec;}
+.pc-hc.hp .pc-hc-date{background:#fdf0dc;}
+.pc-hc-dd{
+  font-family:'Playfair Display',serif;
+  font-size:17px;font-weight:700;line-height:1;
+}
+.pc-hc.hn .pc-hc-dd{color:#8b1a0c;}
+.pc-hc.hi .pc-hc-dd{color:#0c5c3a;}
+.pc-hc.hp .pc-hc-dd{color:#6b4000;}
+.pc-hc-dm{
+  font-family:'JetBrains Mono',monospace;
+  font-size:5.5px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.6px;margin-top:2px;
+}
+.pc-hc.hn .pc-hc-dm{color:#b83020;}
+.pc-hc.hi .pc-hc-dm{color:#157050;}
+.pc-hc.hp .pc-hc-dm{color:#9a6010;}
+.pc-hc-dw{
+  font-family:'JetBrains Mono',monospace;
+  font-size:5px;color:#c0c8dc;margin-top:1px;
+}
+
+.pc-hc-body{padding:7px 8px;flex:1;display:flex;flex-direction:column;}
+.pc-hc-name{
+  font-size:8.5px;font-weight:700;
+  color:#07112a;line-height:1.4;
+}
+.pc-hc-fa .pc-hc-name{font-family:'Vazirmatn',sans-serif;font-size:8px;}
+.pc-hc-alt{
+  font-size:7px;color:#9098b4;font-style:italic;
+  margin-top:1px;margin-bottom:3px;
+}
+.pc-hc-tags{display:flex;flex-wrap:wrap;gap:2px;margin-top:3px;}
+.pc-hc-tag{
+  font-family:'JetBrains Mono',monospace;
+  font-size:5px;font-weight:700;letter-spacing:.4px;
+  text-transform:uppercase;padding:1.5px 5px;border-radius:2px;
+}
+.pc-hc-tag.hn{background:#fde6e4;color:#8b1a0c;border:1px solid #f0b0a8;}
+.pc-hc-tag.hi{background:#e0f4ec;color:#0c5c3a;border:1px solid #90d8b8;}
+.pc-hc-tag.hp{background:#fdf0dc;color:#6b4000;border:1px solid #d8c060;}
+.pc-hc-tag.ha{background:#f5f0e4;color:#7a6010;border:1px solid #d0c070;}
+
+.pc-hc-desc{
+  font-size:6.5px;color:#4a5470;line-height:1.7;
+  margin-top:5px;padding-top:5px;
+  border-top:1px solid #eef1f8;
+  flex:1;
+}
+.pc-hc-fa .pc-hc-desc{font-family:'Vazirmatn',sans-serif;font-size:7px;}
+
+/* ── Page 2 footer ── */
+.pc-foot2{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:6px 24px 10px;
+  background:#fafbfd;
+  border-top:1px solid #e2e8f4;
+  margin-top:14px;flex-shrink:0;
+}
+
+/* ═══ RESPONSIVE ═══ */
+@media(max-width:1100px){#grid-all{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:640px){
+  #grid-all{grid-template-columns:1fr;}
+  .hero{grid-template-columns:1fr;}
+  .stats-g{grid-template-columns:repeat(2,1fr);}
+  .hero-h1{font-size:44px;}
+  .exp-opts{grid-template-columns:1fr;}
+  .hol-g{grid-template-columns:1fr;}
+  .timer-bar{flex-direction:column;align-items:flex-start;}
+  .timer-clock{font-size:28px;}
+  .nav{flex-wrap:wrap;}
+  .sv-dg{padding:8px 12px 16px;gap:3px;}
+}
+@media(max-width:400px){
+  .wrap{padding:0 12px 60px;}
+  .nav{padding:10px 12px;}
+  .timer-bar{padding:10px 12px;}
+}
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--s5);border-radius:2px;}
+</style>
+</head>
+<body>
+
+<canvas id="cvs"></canvas>
+<div id="tipbox" class="tip-up"><div class="tb-inner" id="tb-inner"></div><div class="tb-arrow"></div></div>
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="modal-h" id="m-h">Export Calendar</div>
+    <div class="modal-s" id="m-s">Export your calendar as a print-ready A4 document.</div>
+    <div class="exp-opts">
+      <div class="eopt" onclick="doExport('print')">
+        <div class="eopt-ico">🖨️</div>
+        <div class="eopt-nm" id="m-o1">Print / PDF</div>
+        <div class="eopt-ds" id="m-o1d">Open print dialog<br>Save as PDF or A4</div>
+      </div>
+      <div class="eopt" onclick="doExport('new')">
+        <div class="eopt-ico">🖼️</div>
+        <div class="eopt-nm" id="m-o2">A4 Preview</div>
+        <div class="eopt-ds" id="m-o2d">Full calendar in a<br>clean new window</div>
+      </div>
+    </div>
+    <button class="modal-close" id="m-cls" onclick="closeModal()">Cancel</button>
+  </div>
+</div>
+<div id="pc"></div>
+
+<div class="wrap">
+  <nav class="nav">
+    <div class="nav-L">
+      <div class="nav-flag">🇳🇴</div>
+      <div>
+        <div class="nav-tt" id="nav-tt">Norsk Kalender</div>
+        <div class="nav-sb" id="nav-sb">Official Holidays · Moon Phases</div>
+      </div>
+    </div>
+    <div class="nav-R">
+      <div class="pg">
+        <button class="pgb on" onclick="setLang('en')">EN</button>
+        <button class="pgb" onclick="setLang('no')">NO</button>
+        <button class="pgb" onclick="setLang('fa')">FA</button>
+      </div>
+      <div class="yr-sel" id="yr-sel"></div>
+      <div class="pg">
+        <button class="pgb on" id="vb-all" onclick="setView('all')">⊞ <span id="vt-all">All</span></button>
+        <button class="pgb" id="vb-one" onclick="setView('single')">◻ <span id="vt-one">Month</span></button>
+      </div>
+      <button class="expbtn" onclick="openModal()">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 1v8M5 6l3 3 3-3M2 11v3h12v-3"/></svg>
+        <span id="exp-t">Export</span>
+      </button>
+    </div>
+  </nav>
+
+  <div class="timer-bar">
+    <div class="timer-L">
+      <div>
+        <div class="timer-clock" id="t-clock">--:--:--</div>
+        <div class="timer-date" id="t-date">—</div>
+      </div>
+      <div class="timer-tz">
+        <div class="tz-badge" id="tz-cet">CET UTC+1</div>
+        <div class="tz-badge" id="tz-cest">CEST UTC+2</div>
+      </div>
+    </div>
+    <div class="timer-R">
+      <div class="next-evt" id="t-next"></div>
+      <div class="countdown" id="t-cd"></div>
+    </div>
+  </div>
+
+  <section class="hero">
+    <div>
+      <div class="hero-ey" id="h-ey">Kingdom of Norway</div>
+      <h1 class="hero-h1" id="h-h1"><span>Norsk</span><br><em>Kalender</em></h1>
+      <p class="hero-desc" id="h-desc">Official Norwegian public holidays, Islamic feasts, Persian celebrations and lunar moon phases for 2025, 2026 and 2027.</p>
+    </div>
+    <div class="hero-R">
+      <div class="stats-g" id="stats"></div>
+      <div class="qf-row" id="qfrow"></div>
+    </div>
+  </section>
+
+  <div class="sec">
+    <div class="sec-lbl"><div class="dot"></div><span id="sl-up">Upcoming Events</span><div class="rule"></div></div>
+    <div class="ev-row" id="ev-row"></div>
+  </div>
+
+  <div class="ym"><div class="ym-inner" id="ym-inner"></div></div>
+  <div class="legend" id="legend"></div>
+
+  <div class="toolbar">
+    <div class="srch">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="6.5" cy="6.5" r="5.5"/><line x1="10.5" y1="10.5" x2="14.5" y2="14.5"/></svg>
+      <input class="srch-in" id="srch" type="text" oninput="doSearch(this.value)">
+    </div>
+    <div class="chips" id="chips"></div>
+  </div>
+
+  <div id="grid-all"></div>
+  <div id="grid-single">
+    <div class="sv-nav">
+      <button class="sv-nb" onclick="navM(-1)"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="10 3 5 8 10 13"/></svg></button>
+      <div class="sv-ttl" id="sv-ttl"></div>
+      <button class="sv-nb" onclick="navM(1)"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 3 11 8 6 13"/></svg></button>
+    </div>
+    <div class="sv-card">
+      <div class="sv-dn" id="sv-dn"></div>
+      <div class="sv-dg" id="sv-dg"></div>
+    </div>
+  </div>
+
+  <div class="inf-wrap">
+    <div class="inf-hd"><h2 class="inf-h2" id="inf-h2">Holidays 2026</h2><div class="inf-rule"></div></div>
+    <div class="hol-g" id="hol-g"></div>
+  </div>
+  <div class="inf-wrap">
+    <div class="inf-hd"><h2 class="inf-h2" id="moon-h2">🌙 Moon Phases</h2><div class="inf-rule"></div></div>
+    <div class="moon-g" id="moon-g"></div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-t" id="ftxt"></div>
+    <div class="footer-badge">Norsk Kalender <em>2025–2027</em></div>
+  </footer>
+</div>
+
+<script>
+/* ══ AURORA ══ */
+(()=>{
+  const c=document.getElementById('cvs');
+  const x=c.getContext('2d');
+  let W,H,t=0;
+  const O=[
+    {x:.12,y:.1,r:.42,h:218,a:.08},{x:.8,y:.22,r:.36,h:262,a:.06},
+    {x:.48,y:.72,r:.38,h:185,a:.05},{x:.28,y:.5,r:.3,h:198,a:.04},
+    {x:.68,y:.58,r:.26,h:145,a:.045},
+  ];
+  const S=[];for(let i=0;i<110;i++)S.push({x:Math.random(),y:Math.random(),s:Math.random()*1.1+.3,o:Math.random()*.55+.18,sp:Math.random()*.012+.004});
+  const rsz=()=>{W=c.width=window.innerWidth;H=c.height=window.innerHeight;};
+  window.addEventListener('resize',rsz,{passive:true});rsz();
+  const fr=()=>{
+    t+=.003;x.clearRect(0,0,W,H);
+    O.forEach((o,i)=>{
+      const ox=W*(o.x+Math.sin(t*.65+i)*.08);
+      const oy=H*(o.y+Math.cos(t*.5+i*1.2)*.07);
+      const rad=Math.min(W,H)*o.r*(1+Math.sin(t*.38+i)*.055);
+      const g=x.createRadialGradient(ox,oy,0,ox,oy,rad);
+      const a=o.a*(.78+Math.sin(t*.55+i*.9)*.22);
+      g.addColorStop(0,`hsla(${o.h},68%,54%,${a})`);
+      g.addColorStop(.55,`hsla(${o.h+22},58%,42%,${a*.45})`);
+      g.addColorStop(1,`hsla(${o.h+45},48%,32%,0)`);
+      x.fillStyle=g;x.beginPath();
+      x.ellipse(ox,oy,rad,rad*.68,t*.09+i,0,Math.PI*2);x.fill();
+    });
+    x.strokeStyle='rgba(255,255,255,0.018)';x.lineWidth=1;
+    for(let gx=0;gx<W;gx+=80){x.beginPath();x.moveTo(gx,0);x.lineTo(gx,H);x.stroke();}
+    for(let gy=0;gy<H;gy+=80){x.beginPath();x.moveTo(0,gy);x.lineTo(W,gy);x.stroke();}
+    S.forEach(s=>{
+      s.o+=s.sp;if(s.o>1||s.o<.12)s.sp*=-1;
+      x.fillStyle=`rgba(200,220,255,${s.o*.42})`;
+      x.beginPath();x.arc(s.x*W,s.y*H,s.s,0,Math.PI*2);x.fill();
+    });
+    requestAnimationFrame(fr);
+  };fr();
+})();
+
+/* ══ DATA ══ */
+function easter(y){
+  const a=y%19,b=Math.floor(y/100),c=y%100;
+  const d=Math.floor(b/4),e=b%4,f=Math.floor((b+8)/25),g=Math.floor((b-f+1)/3),h=(19*a+b-d-g+15)%30;
+  const i=Math.floor(c/4),k=c%4,l=(32+2*e+2*i-h-k)%7;
+  const m=Math.floor((a+11*h+22*l)/451);
+  const mo=Math.floor((h+l-7*m+114)/31);
+  const day=((h+l-7*m+114)%31)+1;
+  return new Date(y,mo-1,day);
+}
+function addDays(d,n){const r=new Date(d);r.setDate(r.getDate()+n);return r;}
+function fmtKey(dt){return `${dt.getMonth()+1}-${dt.getDate()}`;}
+
+function buildHOL(y){
+  const E=easter(y);
+  const h={};
+  const set=(dt,d)=>{h[fmtKey(dt)]=d;};
+  set(new Date(y,0,1),{en:"New Year's Day",no:"Nyttårsdag",fa:"سال نو میلادی",de_en:"The first day of the year. All public offices, banks and most businesses are closed.",de_no:"Årets første dag. Offentlige kontorer, banker og de fleste bedrifter er stengt.",de_fa:"اول ژانویه. ادارات دولتی، بانک‌ها و اکثر مشاغل در نروژ تعطیل‌اند."});
+  set(addDays(E,-3),{en:"Maundy Thursday",no:"Skjærtorsdag",fa:"پنجشنبه مقدس",de_en:"Thursday before Easter. Commemorates Jesus's Last Supper with his disciples.",de_no:"Torsdag før påske. Minnedag for Jesu siste nattverd med disiplene.",de_fa:"پنجشنبه قبل از عید پاک. یادبود شام آخر حضرت عیسی با حواریون."});
+  set(addDays(E,-2),{en:"Good Friday",no:"Langfredag",fa:"جمعه مقدس",de_en:"Commemorates the crucifixion of Jesus Christ. Most solemn day of the Christian year.",de_no:"Minnedag for Jesu Kristi korsfestelse. Den mest høytidelige dagen i det kristne år.",de_fa:"یادبود مصلوب شدن حضرت عیسی. مقدس‌ترین روز تقویم مسیحی."});
+  set(E,{en:"Easter Sunday",no:"Første påskedag",fa:"یکشنبه عید پاک",de_en:"Celebrates the resurrection of Jesus. Most important Christian feast.",de_no:"Feirer Jesu oppstandelse. Viktigste kristne høytid.",de_fa:"جشن رستاخیز حضرت عیسی. مهم‌ترین عید مسیحی."});
+  set(addDays(E,1),{en:"Easter Monday",no:"Andre påskedag",fa:"دوشنبه عید پاک",de_en:"Second day of Easter. Public holiday across all Nordic countries.",de_no:"Andre dag i påsken. Offentlig helligdag i alle nordiske land.",de_fa:"روز دوم عید پاک. تعطیل رسمی در تمام کشورهای اسکاندیناوی."});
+  set(new Date(y,4,1),{en:"Labour Day",no:"Arbeidernes dag",fa:"روز کارگر",de_en:"International Workers' Day. Celebrated since 1890 with marches in Oslo.",de_no:"Internasjonal arbeiderdag. Feiret siden 1890 med tog i Oslo.",de_fa:"روز جهانی کارگر. از ۱۸۹۰ با راهپیمایی در اسلو جشن گرفته می‌شود."});
+  set(addDays(E,39),{en:"Ascension Day",no:"Kristi himmelfartsdag",fa:"روز صعود مسیح",de_en:"39 days after Easter. Marks Jesus ascending into heaven.",de_no:"39 dager etter påske. Markerer Jesu himmelfart.",de_fa:"۳۹ روز پس از عید پاک. صعود حضرت عیسی به آسمان."});
+  set(new Date(y,4,17),{en:"Constitution Day",no:"Grunnlovsdagen",fa:"روز قانون اساسی",de_en:"Norway's National Day. Constitution signed May 17, 1814 in Eidsvoll. Celebrated with children's parades and national costumes (bunad).",de_no:"Norges nasjonaldag. Grunnloven ble undertegnet 17. mai 1814 på Eidsvoll. Feiret med barnetog og bunad.",de_fa:"روز ملی نروژ. قانون اساسی در ۱۷ مه ۱۸۱۴ امضا شد. با رژه کودکان و لباس ملی (بوناد) جشن گرفته می‌شود."});
+  set(addDays(E,49),{en:"Whit Sunday (Pentecost)",no:"Første pinsedag",fa:"یکشنبه پنطیکاست",de_en:"50 days after Easter. Commemorates the Holy Spirit descending upon the Apostles.",de_no:"50 dager etter påske. Minnedag for Den hellige ånds komme over apostlene.",de_fa:"۵۰ روز پس از عید پاک. یادبود نزول روح‌القدس بر حواریون."});
+  set(addDays(E,50),{en:"Whit Monday",no:"Andre pinsedag",fa:"دوشنبه پنطیکاست",de_en:"Day after Pentecost. Second consecutive public holiday of the Pentecost weekend.",de_no:"Dagen etter første pinsedag. Andre offentlige helligdag i pinsehelgen.",de_fa:"روز بعد از پنطیکاست. دومین تعطیل رسمی آخر هفته پنطیکاست."});
+  set(new Date(y,11,25),{en:"Christmas Day",no:"Første juledag",fa:"روز اول کریسمس",de_en:"Birth of Jesus Christ. Celebrated with family gatherings, julenisse and traditional Norwegian food.",de_no:"Jesu Kristi fødsel. Feiret med familiemøter, julenisse og tradisjonell mat.",de_fa:"تولد حضرت عیسی. با جمع‌های خانوادگی، بابانوئل و غذاهای سنتی نروژی جشن گرفته می‌شود."});
+  set(new Date(y,11,26),{en:"Boxing Day",no:"Andre juledag",fa:"روز دوم کریسمس",de_en:"Second day of Christmas celebrations.",de_no:"Den andre juledagen.",de_fa:"روز دوم کریسمس."});
+  return h;
+}
+
+const ISL_DATA={
+  2025:{"3-30":{en:"Eid al-Fitr",no:"Id al-Fitr",fa:"عید فطر",approx:true,de_en:"End of Ramadan. 3-day celebration. Approx. date.",de_no:"Slutten på Ramadan. Tre dager med feiring. Ca. dato.",de_fa:"پایان ماه رمضان. جشن سه روزه. تاریخ تقریبی."},"6-7":{en:"Eid al-Adha",no:"Id al-Adha",fa:"عید قربان",approx:true,de_en:"Feast of Sacrifice. Coincides with Hajj pilgrimage. Approx. date.",de_no:"Offerets fest. Sammenfaller med Hajj-pilegrimsreisen. Ca. dato.",de_fa:"عید قربانی. مقارن با حج. تاریخ تقریبی."}},
+  2026:{"3-20":{en:"Eid al-Fitr",no:"Id al-Fitr",fa:"عید فطر",approx:true,de_en:"End of Ramadan. 3-day celebration after a month of fasting. Approx. date.",de_no:"Slutten på Ramadan. Tre dager med feiring etter en måneds faste. Ca. dato.",de_fa:"پایان ماه رمضان. سه روز جشن. تاریخ تقریبی."},"5-27":{en:"Eid al-Adha",no:"Id al-Adha",fa:"عید قربان",approx:true,de_en:"Feast of Sacrifice. Commemorates Ibrahim's willingness to sacrifice his son. Approx. date.",de_no:"Offerets fest. Minnes Ibrahims vilje til å ofre sin sønn. Ca. dato.",de_fa:"عید قربانی. یادبود آمادگی حضرت ابراهیم. تاریخ تقریبی."}},
+  2027:{"3-10":{en:"Eid al-Fitr",no:"Id al-Fitr",fa:"عید فطر",approx:true,de_en:"End of Ramadan. Approx. date.",de_no:"Slutten på Ramadan. Ca. dato.",de_fa:"پایان ماه رمضان. تاریخ تقریبی."},"5-17":{en:"Eid al-Adha",no:"Id al-Adha",fa:"عید قربان",approx:true,de_en:"Feast of Sacrifice. Approx. date.",de_no:"Offerets fest. Ca. dato.",de_fa:"عید قربانی. تاریخ تقریبی."}}
+};
+
+const PERS_DATA={
+  2025:{"3-20":{en:"Nowruz — Persian New Year",no:"Nouruz — Persisk nyttår",fa:"نوروز — سال نو ایرانی",de_en:"Persian New Year & first day of spring (spring equinox). Over 3,000 years old, celebrated by 300+ million people worldwide.",de_no:"Persisk nyttår og vårens første dag. Over 3000 år gammel feiring av over 300 millioner mennesker.",de_fa:"سال نو ایرانی و آغاز بهار. بیش از سه هزار سال قدمت، توسط بیش از ۳۰۰ میلیون نفر در سراسر جهان."},"12-21":{en:"Yalda Night",no:"Yalda-natt",fa:"شب یلدا",de_en:"The longest night of the year (winter solstice). Ancient Iranian celebration of light's victory over darkness. Families gather to read Hafez poetry, eat pomegranates and watermelon.",de_no:"Årets lengste natt (vintersolverv). Gammel iransk feiring. Familier samles, leser Hafez-poesi og spiser granatepler.",de_fa:"بلندترین شب سال. جشن کهن ایرانی. خانواده‌ها دور هم جمع می‌شوند، شعر حافظ می‌خوانند و انار و هندوانه می‌خورند."}},
+  2026:{"3-20":{en:"Nowruz — Persian New Year",no:"Nouruz — Persisk nyttår",fa:"نوروز — سال نو ایرانی",de_en:"Persian New Year & first day of spring. Over 3,000 years old, celebrated by 300+ million people worldwide.",de_no:"Persisk nyttår og vårens første dag. Over 3000 år gammel.",de_fa:"سال نو ایرانی و آغاز بهار. بیش از سه هزار سال قدمت."},"12-21":{en:"Yalda Night",no:"Yalda-natt",fa:"شب یلدا",de_en:"The longest night of the year (winter solstice). Families gather for Hafez poetry, pomegranates and stories.",de_no:"Årets lengste natt. Familier samles til Hafez-poesi, granatepler og historier.",de_fa:"بلندترین شب سال. خانواده‌ها دور هم جمع می‌شوند، شعر حافظ می‌خوانند."}},
+  2027:{"3-20":{en:"Nowruz — Persian New Year",no:"Nouruz — Persisk nyttår",fa:"نوروز — سال نو ایرانی",de_en:"Persian New Year & first day of spring. Over 3,000 years old.",de_no:"Persisk nyttår og vårens første dag.",de_fa:"سال نو ایرانی و آغاز بهار."},"12-21":{en:"Yalda Night",no:"Yalda-natt",fa:"شب یلدا",de_en:"The longest night of the year (winter solstice).",de_no:"Årets lengste natt.",de_fa:"بلندترین شب سال."}}
+};
+
+const SHAMSI={2025:1403,2026:1404,2027:1405};
+
+const MOON_DATA={
+  2025:{"1-13":"🌕","1-21":"🌗","1-29":"🌑","2-5":"🌓","2-12":"🌕","2-20":"🌗","2-28":"🌑","3-6":"🌓","3-14":"🌕","3-22":"🌗","3-29":"🌑","4-5":"🌓","4-13":"🌕","4-21":"🌗","4-27":"🌑","5-4":"🌓","5-12":"🌕","5-20":"🌗","5-27":"🌑","6-2":"🌓","6-11":"🌕","6-19":"🌗","6-25":"🌑","7-2":"🌓","7-10":"🌕","7-18":"🌗","7-24":"🌑","7-31":"🌓","8-9":"🌕","8-16":"🌗","8-23":"🌑","8-30":"🌓","9-7":"🌕","9-14":"🌗","9-21":"🌑","9-29":"🌓","10-7":"🌕","10-13":"🌗","10-21":"🌑","10-29":"🌓","11-5":"🌕","11-12":"🌗","11-20":"🌑","11-28":"🌓","12-4":"🌕","12-11":"🌗","12-20":"🌑","12-27":"🌓"},
+  2026:{"1-3":"🌕","1-10":"🌗","1-18":"🌑","1-25":"🌓","2-1":"🌕","2-9":"🌗","2-17":"🌑","2-24":"🌓","3-3":"🌕","3-11":"🌗","3-18":"🌑","3-25":"🌓","4-1":"🌕","4-10":"🌗","4-17":"🌑","4-24":"🌓","5-1":"🌕","5-9":"🌗","5-17":"🌑","5-23":"🌓","5-31":"🌕","6-7":"🌗","6-15":"🌑","6-22":"🌓","6-29":"🌕","7-7":"🌗","7-15":"🌑","7-21":"🌓","7-29":"🌕","8-5":"🌗","8-13":"🌑","8-20":"🌓","8-27":"🌕","9-4":"🌗","9-12":"🌑","9-19":"🌓","9-26":"🌕","10-3":"🌗","10-11":"🌑","10-19":"🌓","10-25":"🌕","11-2":"🌗","11-9":"🌑","11-18":"🌓","11-24":"🌕","12-1":"🌗","12-9":"🌑","12-17":"🌓","12-23":"🌕","12-31":"🌗"},
+  2027:{"1-7":"🌕","1-15":"🌗","1-22":"🌑","1-29":"🌓","2-6":"🌕","2-14":"🌗","2-20":"🌑","2-28":"🌓","3-8":"🌕","3-15":"🌗","3-22":"🌑","3-29":"🌓","4-6":"🌕","4-13":"🌗","4-20":"🌑","4-28":"🌓","5-6":"🌕","5-13":"🌗","5-20":"🌑","5-27":"🌓","6-4":"🌕","6-11":"🌗","6-18":"🌑","6-26":"🌓","7-4":"🌕","7-10":"🌗","7-18":"🌑","7-25":"🌓","8-2":"🌕","8-9":"🌗","8-17":"🌑","8-24":"🌓","8-31":"🌕","9-8":"🌗","9-15":"🌑","9-22":"🌓","9-30":"🌕","10-7":"🌗","10-15":"🌑","10-22":"🌓","10-30":"🌕","11-6":"🌗","11-13":"🌑","11-20":"🌓","11-28":"🌕","12-6":"🌗","12-13":"🌑","12-20":"🌓","12-28":"🌕"}
+};
+
+/* ══ STATE ══ */
+let lang='en', selYear=2026, viewMode='all', curM=new Date().getMonth();
+const TODAY=new Date();
+const todayY=TODAY.getFullYear();
+const isCY=(y)=>y===todayY;
+
+/* ══ TRANSLATIONS ══ */
+const TX={
+  en:{
+    navTt:"Norsk Kalender",navSb:"Official Holidays · Moon Phases",
+    ey:"Kingdom of Norway",h1n:"Norsk",h1em:"Kalender",
+    desc:"Official Norwegian public holidays, Islamic feasts, Persian celebrations and lunar moon phases for 2025, 2026 and 2027.",
+    sH:"Public Holidays",sW:"Weekends",sWD:"Work Days",sI:"Islamic & Persian",
+    qA:"Next holiday",qB:"Weeks left",qC:"Nowruz",qD:"Yalda",
+    up:"Upcoming Events",vAll:"All",vOne:"Month",expT:"Export",
+    mH:"Export Calendar",mS:"Export as a high-quality A4 document.",
+    o1:"Print / PDF",o1d:"Open print dialog\nSave as PDF or A4",
+    o2:"A4 Preview",o2d:"Full calendar in a\nclean window",mCls:"Cancel",
+    inH:"🇳🇴 Holidays & Celebrations",moonH:"🌙 Moon Phases",
+    srPH:"Search events…",
+    chips:["All","Holidays","Weekends","Islamic","Persian","Moon"],
+    days:["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
+    months:["January","February","March","April","May","June","July","August","September","October","November","December"],
+    mAb:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
+    dFull:["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
+    badge:{off:"Official",isl:"Islamic Feast",per:"Persian",approx:"Approx."},
+    moon:[{i:"🌑",n:"New Moon",d:"Not visible. Start of lunar month."},{i:"🌓",n:"First Quarter",d:"Right half lit. Waxing."},{i:"🌕",n:"Full Moon",d:"Fully illuminated. High tides."},{i:"🌗",n:"Last Quarter",d:"Left half lit. Waning."}],
+    inDays:"in {n} days",today:"Today",past:"{n}d ago",
+    foot:`<a href="https://lovdata.no">Lovdata.no</a> (Public Holidays) · <a href="https://islamsk.no">Islamsk Råd Norge</a> (Islamic) · Astronomical moon data · Persian calendar`,
+    pcMeta:"Norwegian Calendar {Y} · Public Holidays · Moon Phases · Islamic Feasts · Persian Events",
+    pcLeg:["Public Holiday","Weekend","Islamic Feast","Persian","Today","Moon"],
+    pcP2Title:"Holidays & Celebrations — Details",
+    nextEvt:"Next:",countIn:"in",stNow:"NOW",shamsi:"Shamsi",cet:"CET",cest:"CEST",
+  },
+  no:{
+    navTt:"Norsk Kalender",navSb:"Offentlige helligdager · Månefaser",
+    ey:"Kongeriket Norge",h1n:"Norsk",h1em:"Kalender",
+    desc:"Offisielle norske helligdager, islamske høytider, persiske feiringer og månefaser for 2025, 2026 og 2027.",
+    sH:"Helligdager",sW:"Helgedager",sWD:"Arbeidsdager",sI:"Islamsk & Persisk",
+    qA:"Neste helligdag",qB:"Gjenstående uker",qC:"Nouruz",qD:"Yalda",
+    up:"Kommende hendelser",vAll:"Alle",vOne:"Månedvis",expT:"Eksporter",
+    mH:"Eksporter kalender",mS:"Eksporter som utskriftsklart A4-dokument.",
+    o1:"Skriv ut / PDF",o1d:"Åpne utskriftsdialog\nLagre som PDF",
+    o2:"A4-forhåndsvisning",o2d:"Full kalender i et\nrent vindu",mCls:"Avbryt",
+    inH:"🇳🇴 Helligdager og feiringer",moonH:"🌙 Månefaser",
+    srPH:"Søk hendelser…",
+    chips:["Alle","Helligdager","Helger","Islamsk","Persisk","Månefaser"],
+    days:["Man","Tir","Ons","Tor","Fre","Lør","Søn"],
+    months:["Januar","Februar","Mars","April","Mai","Juni","Juli","August","September","Oktober","November","Desember"],
+    mAb:["Jan","Feb","Mar","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Des"],
+    dFull:["søndag","mandag","tirsdag","onsdag","torsdag","fredag","lørdag"],
+    badge:{off:"Offisiell",isl:"Islamsk høytid",per:"Persisk",approx:"Ca."},
+    moon:[{i:"🌑",n:"Nymåne",d:"Usynlig. Start av månedssyklusen."},{i:"🌓",n:"Første kvarter",d:"Høyre halvdel opplyst."},{i:"🌕",n:"Fullmåne",d:"Fullt opplyst. Høyvann."},{i:"🌗",n:"Siste kvarter",d:"Venstre halvdel opplyst."}],
+    inDays:"om {n} dager",today:"I dag",past:"for {n}d siden",
+    foot:`<a href="https://lovdata.no">Lovdata.no</a> (Helligdager) · <a href="https://islamsk.no">Islamsk Råd Norge</a> · Astronomiske månefasedata · Persisk kalender`,
+    pcMeta:"Norsk Kalender {Y} · Helligdager · Månefaser · Islamske høytider",
+    pcLeg:["Helligdag","Helgedag","Islamsk","Persisk","I dag","Månefase"],
+    pcP2Title:"Helligdager & Feiringer — Detaljer",
+    nextEvt:"Neste:",countIn:"om",stNow:"NÅ",shamsi:"Shamsi",cet:"CET",cest:"CEST",
+  },
+  fa:{
+    navTt:"تقویم نروژ",navSb:"تعطیلات رسمی · فازهای ماه",
+    ey:"پادشاهی نروژ",h1n:"تقویم",h1em:"نروژ",
+    desc:"تعطیلات رسمی نروژ، اعیاد اسلامی، جشن‌های ایرانی و فازهای ماه برای سال‌های ۲۰۲۵، ۲۰۲۶ و ۲۰۲۷.",
+    sH:"تعطیلات رسمی",sW:"آخر هفته",sWD:"روزهای کاری",sI:"اسلامی و ایرانی",
+    qA:"تعطیل بعدی",qB:"هفته‌های باقی‌مانده",qC:"نوروز",qD:"یلدا",
+    up:"رویدادهای پیش رو",vAll:"همه",vOne:"ماهانه",expT:"خروجی",
+    mH:"خروجی تقویم",mS:"تقویم را به صورت سند A4 آماده چاپ صادر کنید.",
+    o1:"چاپ / PDF",o1d:"باز کردن کادر چاپ\nذخیره PDF",
+    o2:"پیش‌نمایش A4",o2d:"تقویم کامل در یک\nپنجره تمیز",mCls:"انصراف",
+    inH:"🇳🇴 تعطیلات و جشن‌ها",moonH:"🌙 فازهای ماه",
+    srPH:"جستجوی رویدادها…",
+    chips:["همه","تعطیلات","آخر هفته","اسلامی","ایرانی","ماه"],
+    days:["دوشنبه","سه‌شنبه","چهارشنبه","پنجشنبه","جمعه","شنبه","یکشنبه"],
+    months:["ژانویه","فوریه","مارس","آوریل","مه","ژوئن","ژوئیه","اوت","سپتامبر","اکتبر","نوامبر","دسامبر"],
+    mAb:["ژان","فور","مار","آور","مه","ژون","ژوئ","اوت","سپت","اکت","نوو","دسم"],
+    dFull:["یکشنبه","دوشنبه","سه‌شنبه","چهارشنبه","پنجشنبه","جمعه","شنبه"],
+    badge:{off:"رسمی",isl:"عید اسلامی",per:"ایرانی",approx:"تقریبی"},
+    moon:[{i:"🌑",n:"هلال ماه",d:"ماه دیده نمی‌شود. آغاز ماه قمری."},{i:"🌓",n:"ربع اول",d:"نیمه راست روشن."},{i:"🌕",n:"ماه کامل",d:"کاملاً روشن."},{i:"🌗",n:"ربع آخر",d:"نیمه چپ روشن."}],
+    inDays:"تا {n} روز",today:"امروز",past:"{n} روز پیش",
+    foot:`<a href="https://lovdata.no">Lovdata.no</a> (تعطیلات) · <a href="https://islamsk.no">شورای اسلامی نروژ</a> · داده‌های نجومی · تقویم ایرانی`,
+    pcMeta:"تقویم نروژ {Y} · تعطیلات · فازهای ماه · اعیاد اسلامی",
+    pcLeg:["تعطیل رسمی","آخر هفته","عید اسلامی","ایرانی","امروز","ماه"],
+    pcP2Title:"تعطیلات و جشن‌ها — توضیحات",
+    nextEvt:"بعدی:",countIn:"تا",stNow:"الان",shamsi:"شمسی",cet:"CET",cest:"CEST",
+  }
+};
+
+/* ══ TIMER ══ */
+function getCETInfo(){
+  const now=new Date();
+  const y=now.getFullYear();
+  const mar=new Date(y,2,31);mar.setDate(mar.getDate()-mar.getDay());
+  const oct=new Date(y,9,31);oct.setDate(oct.getDate()-oct.getDay());
+  const isCEST=now>=mar&&now<oct;
+  const off=isCEST?2:1;
+  const localMs=now.getTime()+now.getTimezoneOffset()*60000+off*3600000;
+  return {time:new Date(localMs),isCEST,off};
+}
+
+function updateTimer(){
+  const t=TX[lang];
+  const {time,isCEST}=getCETInfo();
+  const hh=String(time.getHours()).padStart(2,'0');
+  const mm=String(time.getMinutes()).padStart(2,'0');
+  const ss=String(time.getSeconds()).padStart(2,'0');
+  document.getElementById('t-clock').textContent=`${hh}:${mm}:${ss}`;
+  const days=t.dFull||TX.en.dFull;
+  const months=(TX[lang]||TX.en).months;
+  const shamsi=SHAMSI[selYear]||'';
+  const shamsiStr=lang==='fa'?` · ${shamsi} شمسی`:` · Shamsi ${shamsi}`;
+  document.getElementById('t-date').textContent=
+    `${days[time.getDay()]}, ${time.getDate()} ${months[time.getMonth()]} ${time.getFullYear()}${shamsiStr}`;
+  document.getElementById('tz-cet').className='tz-badge'+(isCEST?'':' active');
+  document.getElementById('tz-cest').className='tz-badge'+(isCEST?' active':'');
+  document.getElementById('tz-cet').textContent=`CET UTC+1`;
+  document.getElementById('tz-cest').textContent=`CEST UTC+2`;
+  const HOL=buildHOL(selYear);
+  const ISL=ISL_DATA[selYear]||{};
+  const PER=PERS_DATA[selYear]||{};
+  const allEvts=[];
+  [...Object.entries(HOL),...Object.entries(ISL),...Object.entries(PER)].forEach(([k,v])=>{
+    const[mo,d]=k.split('-').map(Number);
+    const dt=new Date(selYear,mo-1,d);
+    allEvts.push({dt,nm:v[lang]||v.en});
+  });
+  allEvts.sort((a,b)=>a.dt-b.dt);
+  const now2=new Date();
+  let nxt=allEvts.find(e=>e.dt>=new Date(now2.getFullYear(),now2.getMonth(),now2.getDate()));
+  if(nxt){
+    const diff=nxt.dt-new Date(now2.getFullYear(),now2.getMonth(),now2.getDate(),0,0,0);
+    const ddays=Math.round(diff/86400000);
+    const nm=nxt.nm.length>22?nxt.nm.substring(0,20)+'…':nxt.nm;
+    document.getElementById('t-next').innerHTML=`<strong>${t.nextEvt}</strong> ${nm}`;
+    if(ddays===0) document.getElementById('t-cd').textContent=t.stNow;
+    else{
+      const msLeft=nxt.dt.getTime()-now2.getTime();
+      const totalSec=Math.floor(msLeft/1000);
+      const ds=Math.floor(totalSec/86400),hs=Math.floor((totalSec%86400)/3600),ms2=Math.floor((totalSec%3600)/60),sc=totalSec%60;
+      document.getElementById('t-cd').textContent=`${t.countIn} ${ds}d ${String(hs).padStart(2,'0')}:${String(ms2).padStart(2,'0')}:${String(sc).padStart(2,'0')}`;
+    }
+  }
+}
+setInterval(updateTimer,1000);
+
+/* ══ RENDER ══ */
+function render(){
+  const t=TX[lang],fa=lang==='fa';
+  document.body.className=fa?'fa':'';
+  document.getElementById('nav-tt').textContent=t.navTt;
+  document.getElementById('nav-sb').textContent=t.navSb;
+  document.getElementById('h-ey').textContent=t.ey;
+  const hh=document.getElementById('h-h1');
+  hh.innerHTML=fa?`<em>${t.h1n}</em><br><span>${t.h1em}</span>`:`<span>${t.h1n}</span><br><em>${t.h1em}</em>`;
+  document.getElementById('h-desc').textContent=t.desc;
+  document.getElementById('sl-up').textContent=t.up;
+  document.getElementById('vt-all').textContent=t.vAll;
+  document.getElementById('vt-one').textContent=t.vOne;
+  document.getElementById('exp-t').textContent=t.expT;
+  document.getElementById('m-h').textContent=t.mH;
+  document.getElementById('m-s').textContent=t.mS;
+  document.getElementById('m-o1').textContent=t.o1;
+  document.getElementById('m-o1d').innerHTML=t.o1d.replace('\n','<br>');
+  document.getElementById('m-o2').textContent=t.o2;
+  document.getElementById('m-o2d').innerHTML=t.o2d.replace('\n','<br>');
+  document.getElementById('m-cls').textContent=t.mCls;
+  document.getElementById('srch').placeholder=t.srPH;
+  document.getElementById('inf-h2').textContent=`${t.inH} ${selYear}`;
+  document.getElementById('moon-h2').textContent=t.moonH;
+  document.getElementById('ftxt').innerHTML=t.foot;
+  renderYrSel();
+  renderStats(t);
+  renderUpcoming(t);
+  renderYM(t);
+  renderLegend(t);
+  renderChips(t);
+  renderGrid(t);
+  renderSingle(t);
+  renderHolCards(t);
+  renderMoonGuide(t);
+  updateTimer();
+}
+
+function renderYrSel(){
+  const div=document.getElementById('yr-sel');
+  div.innerHTML='';
+  [2025,2026,2027].forEach(y=>{
+    const b=document.createElement('button');
+    b.className='yrb'+(y===selYear?' on':'');
+    const sh=SHAMSI[y]||'';
+    b.textContent=lang==='fa'?`${y} (${sh})`:`${y}`;
+    b.onclick=()=>{selYear=y;render();};
+    div.appendChild(b);
+  });
+}
+
+function renderStats(t){
+  const HOL=buildHOL(selYear);
+  let h=0,we=0,wd=0;
+  for(let m=0;m<12;m++){
+    const dim=new Date(selYear,m+1,0).getDate();
+    for(let d=1;d<=dim;d++){
+      const dow=new Date(selYear,m,d).getDay();
+      const k=`${m+1}-${d}`;
+      if(HOL[k])h++;
+      if(dow===0||dow===6)we++;
+      else if(!HOL[k])wd++;
+    }
+  }
+  const ISL=ISL_DATA[selYear]||{};
+  const PER=PERS_DATA[selYear]||{};
+  const ic=Object.keys(ISL).length+Object.keys(PER).length;
+  document.getElementById('stats').innerHTML=`
+    <div class="stc"><div class="stc-n r">${h}</div><div class="stc-l">${t.sH}</div></div>
+    <div class="stc"><div class="stc-n v">${we}</div><div class="stc-l">${t.sW}</div></div>
+    <div class="stc"><div class="stc-n b">${wd}</div><div class="stc-l">${t.sWD}</div></div>
+    <div class="stc"><div class="stc-n g">${ic}</div><div class="stc-l">${t.sI}</div></div>
+  `;
+  const HOL2=buildHOL(selYear);
+  let nextH='—';
+  const nowDate=new Date(TODAY.getFullYear(),TODAY.getMonth(),TODAY.getDate());
+  for(const[k] of Object.entries(HOL2).sort((a,b)=>{
+    const[am,ad]=a[0].split('-').map(Number),[bm,bd]=b[0].split('-').map(Number);return am!==bm?am-bm:ad-bd;
+  })){
+    const[mo,d]=k.split('-').map(Number);
+    const dt=new Date(selYear,mo-1,d);
+    if(dt>=nowDate){nextH=`${d} ${t.mAb[mo-1]}`;break;}
+  }
+  const wl=Math.max(0,Math.round((new Date(`${selYear}-12-31`)-TODAY)/604800000));
+  const sh=SHAMSI[selYear]||'';
+  document.getElementById('qfrow').innerHTML=`
+    <div class="qfi"><div class="qfi-k">${t.qA}</div><div class="qfi-v">${nextH}</div></div>
+    <div class="qfi"><div class="qfi-k">${t.qB}</div><div class="qfi-v">${wl}</div></div>
+    <div class="qfi"><div class="qfi-k">${lang==='fa'?'سال شمسی':t.shamsi||'Shamsi'}</div><div class="qfi-v">${sh}</div></div>
+    <div class="qfi" style="border:none"><div class="qfi-k">${t.qC}</div><div class="qfi-v">${lang==='fa'?'۲۰ مارس':'20 Mar'}</div></div>
+  `;
+}
+
+function renderUpcoming(t){
+  const HOL=buildHOL(selYear);
+  const ISL=ISL_DATA[selYear]||{};
+  const PER=PERS_DATA[selYear]||{};
+  const evs=[];
+  const add=(obj,cls)=>Object.entries(obj).forEach(([k,v])=>{
+    const[mo,d]=k.split('-').map(Number);
+    const dt=new Date(selYear,mo-1,d);
+    const delta=Math.round((dt-TODAY)/86400000);
+    evs.push({dt,delta,mo,d,v,k,cls});
+  });
+  add(HOL,'r');add(ISL,'g');add(PER,'p');
+  evs.sort((a,b)=>Math.abs(a.delta)-Math.abs(b.delta));
+  document.getElementById('ev-row').innerHTML=evs.slice(0,12).map(ev=>{
+    const nm=ev.v[lang]||ev.v.en;
+    const dow=t.dFull[ev.dt.getDay()];
+    let ds,dc;
+    if(ev.delta===0){ds=t.today;dc='now';}
+    else if(ev.delta>0){ds=t.inDays.replace('{n}',ev.delta);dc=ev.cls;}
+    else{ds=t.past.replace('{n}',-ev.delta);dc='past';}
+    return `<div class="evc ${ev.cls}"><div class="evc-dt">${dow}, ${ev.d} ${t.mAb[ev.mo-1]}</div><div class="evc-nm">${nm}</div><div class="evc-dl ${dc}">${ds}</div></div>`;
+  }).join('');
+}
+
+function renderYM(t){
+  const HOL=buildHOL(selYear);
+  const ISL=ISL_DATA[selYear]||{};
+  const PER=PERS_DATA[selYear]||{};
+  const MOON=MOON_DATA[selYear]||{};
+  const inn=document.getElementById('ym-inner');
+  inn.innerHTML='';
+  for(let m=0;m<12;m++){
+    const dim=new Date(selYear,m+1,0).getDate();
+    const fd=new Date(selYear,m,1).getDay();
+    const off=fd===0?6:fd-1;
+    const isC=isCY(selYear)&&TODAY.getMonth()===m;
+    let dots='';
+    for(let i=0;i<off;i++) dots+=`<div class="yd e"></div>`;
+    for(let d=1;d<=dim;d++){
+      const dw=new Date(selYear,m,d).getDay();
+      const k=`${m+1}-${d}`;
+      const iT=isCY(selYear)&&TODAY.getMonth()===m&&TODAY.getDate()===d;
+      let c='';
+      if(iT)c='t';
+      else if(HOL[k])c='h';
+      else if(ISL[k])c='i';
+      else if(PER[k])c='p';
+      else if(MOON[k])c='m';
+      else if(dw===0||dw===6)c='w';
+      dots+=`<div class="yd ${c}"></div>`;
+    }
+    const el=document.createElement('div');
+    el.className=`ymc${isC?' on':''}`;
+    el.onclick=()=>{curM=m;setView('single');};
+    el.innerHTML=`<div class="ymc-n">${t.mAb[m]}</div><div class="ymc-g">${dots}</div>`;
+    inn.appendChild(el);
+  }
+}
+
+function renderLegend(t){
+  document.getElementById('legend').innerHTML=`
+    <div class="lgi"><div class="lgd r"></div>${t.badge.off}</div>
+    <div class="lgsep"></div>
+    <div class="lgi"><div class="lgd v"></div>${t.days[5]}/${t.days[6]}</div>
+    <div class="lgsep"></div>
+    <div class="lgi"><div class="lgd g"></div>${t.badge.isl}</div>
+    <div class="lgsep"></div>
+    <div class="lgi"><div class="lgd p"></div>${t.badge.per}</div>
+    <div class="lgsep"></div>
+    <div class="lgi"><div class="lgd b"></div>${lang==='fa'?'امروز':lang==='no'?'I dag':'Today'}</div>
+    <div class="lgsep"></div>
+    <div class="lgi"><div class="lgd m"></div>🌑🌓🌕🌗</div>
+  `;
+}
+
+function renderChips(t){
+  const ds=[{id:'all',cl:'all'},{id:'h',cl:'r'},{id:'we',cl:'v'},{id:'i',cl:'g'},{id:'p',cl:'p'},{id:'m',cl:'m'}];
+  document.getElementById('chips').innerHTML=ds.map((c,i)=>
+    `<button class="chip ${c.cl}${i===0?' on':''}" onclick="onChip(this,'${c.id}')">${t.chips[i]}</button>`
+  ).join('');
+}
+function onChip(el){
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
+  el.classList.add('on');
+}
+
+function renderGrid(t){
+  const g=document.getElementById('grid-all');
+  g.innerHTML='';
+  for(let m=0;m<12;m++) g.appendChild(buildMC(m,t));
+}
+
+function buildMC(m,t){
+  const HOL=buildHOL(selYear);
+  const ISL=ISL_DATA[selYear]||{};
+  const PER=PERS_DATA[selYear]||{};
+  const dim=new Date(selYear,m+1,0).getDate();
+  const fd=new Date(selYear,m,1).getDay();
+  const off=fd===0?6:fd-1;
+  const fa=lang==='fa';
+  const pills=[];
+  let ec=0;
+  for(let d=1;d<=dim;d++){
+    const k=`${m+1}-${d}`;
+    if(HOL[k]){pills.push({cl:'r',nm:HOL[k][lang]||HOL[k].en});ec++;}
+    if(ISL[k]){pills.push({cl:'g',nm:ISL[k][lang]||ISL[k].en});ec++;}
+    if(PER[k]){pills.push({cl:'p',nm:PER[k][lang]||PER[k].en});ec++;}
+  }
+  const uniq=[...new Map(pills.map(p=>[p.nm,p])).values()].slice(0,3);
+  const card=document.createElement('div');
+  card.className='mc';
+  card.innerHTML=`
+    <div class="mc-hd">
+      <div class="mc-big">${String(m+1).padStart(2,'0')}</div>
+      <div><div class="mc-mn">${t.months[m]}</div><div class="mc-ms">${selYear}</div></div>
+      ${ec?`<div class="mc-ec">${ec} ev</div>`:''}
+    </div>
+    <div class="mc-pills">${uniq.map(p=>`<span class="mcp ${p.cl}">${p.nm}</span>`).join('')||'<span style="font-size:7.5px;color:var(--t4)">&nbsp;</span>'}</div>
+    <div class="mc-dn">${t.days.map((n,i)=>`<div class="dnh${i>=5?' we':''}">${n.substring(0,2)}</div>`).join('')}</div>
+    <div class="mc-dg-wrap"><div class="mc-dg" id="mcdg-${m}"></div></div>
+  `;
+  const dg=card.querySelector(`#mcdg-${m}`);
+  for(let i=0;i<off;i++){const e=document.createElement('div');e.className='dc dc-e';dg.appendChild(e);}
+  for(let d=1;d<=dim;d++) dg.appendChild(buildDC(m,d,t,false));
+  return card;
+}
+
+function buildDC(m,d,t,large){
+  const HOL=buildHOL(selYear);
+  const ISL=ISL_DATA[selYear]||{};
+  const PER=PERS_DATA[selYear]||{};
+  const MOON=MOON_DATA[selYear]||{};
+  const dow=new Date(selYear,m,d).getDay();
+  const k=`${m+1}-${d}`;
+  const isWE=dow===0||dow===6;
+  const isH=!!HOL[k],isI=!!ISL[k],isP=!!PER[k];
+  const isMulti=(isH&&(isI||isP))||(isI&&isP);
+  const isT=isCY(selYear)&&TODAY.getMonth()===m&&TODAY.getDate()===d;
+  const moon=MOON[k]||'';
+  const pre=large?'sdc':'dc';
+  let cls=pre;
+  if(isMulti)cls+=' multi';
+  else if(isH)cls+=' hol';
+  else if(isI)cls+=' isl';
+  else if(isP)cls+=' pers';
+  else if(isWE)cls+=' we';
+  if(isT)cls+=' tod';
+  if(!large&&!isH&&!isI&&!isP&&!isWE&&moon)cls+=' ms';
+  const el=document.createElement('div');
+  el.className=cls;
+  const dotList=[];
+  if(!large){
+    if(isH)dotList.push('r');
+    if(isI)dotList.push('g');
+    if(isP)dotList.push('p');
+    if(moon&&!isH&&!isI&&!isP)dotList.push('m');
+  }
+  let sub='';
+  if(large){
+    const labels=[];
+    if(isH)labels.push(HOL[k][lang]||HOL[k].en);
+    if(isI)labels.push(ISL[k][lang]||ISL[k].en);
+    if(isP)labels.push(PER[k][lang]||PER[k].en);
+    sub=labels.join(' · ');
+  }
+  if(large){
+    el.innerHTML=`<div class="sdc-n">${d}</div>${moon?`<div class="sdc-m">${moon}</div>`:''}${sub?`<div class="sdc-s">${sub}</div>`:''}`;
+  } else {
+    const dotsHtml=dotList.length>1?`<div class="dc-dots">${dotList.map(c=>`<div class="dc-dot ${c}"></div>`).join('')}</div>`:'';
+    el.innerHTML=`<div class="dcn">${d}</div>${moon?`<div class="dcm">${moon}</div>`:''}${dotsHtml}`;
+  }
+  const hasEvt=isH||isI||isP||moon;
+  if(hasEvt){
+    const _m=m,_d=d,_k=k;
+    el.addEventListener('mouseenter',()=>positionTip(el,_k,_m,_d));
+    el.addEventListener('mouseleave',()=>closeTip());
+    el.addEventListener('click',(e)=>{
+      e.stopPropagation();
+      if(tipbox._srcEl===el && tipbox.classList.contains('vis')){closeTip();}
+      else{positionTip(el,_k,_m,_d);}
+    });
+  }
+  return el;
+}
+
+/* ═══ TOOLTIP ENGINE ═══ */
+const tipbox=document.getElementById('tipbox');
+const tbInner=document.getElementById('tb-inner');
+let _tipTO=null,_autoTO=null;
+tipbox._srcEl=null;
+function closeTip(){clearTimeout(_tipTO);clearTimeout(_autoTO);tipbox._srcEl=null;tipbox.classList.remove('vis');tipbox.style.opacity='0';}
+function buildTipHTML(k,m,d){
+  const t=TX[lang];
+  const HOL=buildHOL(selYear);
+  const ISL=ISL_DATA[selYear]||{};
+  const PER=PERS_DATA[selYear]||{};
+  const MOON=MOON_DATA[selYear]||{};
+  const dow=new Date(selYear,m,d).getDay();
+  const cols={r:'var(--red2)',g:'var(--grn2)',p:'var(--gld2)',m:'var(--moon)'};
+  const evts=[];
+  if(HOL[k]) evts.push({d:HOL[k],cl:'r'});
+  if(ISL[k]) evts.push({d:ISL[k],cl:'g'});
+  if(PER[k]) evts.push({d:PER[k],cl:'p'});
+  if(MOON[k]){
+    const mn=t.moon.find(x=>x.i===MOON[k]);
+    const label=MOON[k]+' '+(mn?mn.n:'');
+    evts.push({d:{[lang]:label,en:label},cl:'m',noDesc:true});
+  }
+  if(!evts.length) return '';
+  const dtStr=`${t.dFull[dow]}, ${d} ${t.mAb[m]} ${selYear}`;
+  return evts.map(ev=>`<div class="tip-evt">
+    <div class="tip-ttl" style="color:${cols[ev.cl]}">${ev.d[lang]||ev.d.en}</div>
+    ${!ev.noDesc&&(ev.d[`de_${lang}`]||ev.d.de_en)?`<div class="tip-desc">${ev.d[`de_${lang}`]||ev.d.de_en}</div>`:''}
+    <div class="tip-date">${dtStr}</div>
+  </div>`).join('');
+}
+function positionTip(el,k,m,d){
+  clearTimeout(_tipTO);clearTimeout(_autoTO);
+  const html=buildTipHTML(k,m,d);
+  if(!html){closeTip();return;}
+  tbInner.innerHTML=html;
+  tipbox._srcEl=el;
+  tipbox.style.cssText='position:fixed;left:0;top:0;visibility:hidden;opacity:0;pointer-events:none;max-width:260px;min-width:170px;z-index:9999;';
+  const tW=tipbox.offsetWidth||240;
+  const tH=tipbox.offsetHeight||110;
+  const rect=el.getBoundingClientRect();
+  const vW=window.innerWidth,vH=window.innerHeight;
+  const PAD=10,GAP=10;
+  let lx=rect.left+rect.width/2-tW/2;
+  lx=Math.max(PAD,Math.min(lx,vW-tW-PAD));
+  let ty,above=true;
+  if(rect.top-tH-GAP>=PAD){ty=rect.top-tH-GAP;}
+  else{ty=rect.bottom+GAP;above=false;}
+  ty=Math.max(PAD,Math.min(ty,vH-tH-PAD));
+  const arrowEl=tipbox.querySelector('.tb-arrow');
+  if(arrowEl){
+    const arrX=rect.left+rect.width/2-lx;
+    arrowEl.style.left=Math.max(14,Math.min(arrX,tW-14))+'px';
+    arrowEl.style.transform='none';
+  }
+  tipbox.className=above?'tip-up':'tip-dn';
+  tipbox.style.cssText=`position:fixed;left:${lx}px;top:${ty}px;visibility:visible;opacity:0;pointer-events:none;z-index:9999;max-width:260px;min-width:170px;transition:opacity .15s;`;
+  requestAnimationFrame(()=>{tipbox.style.opacity='1';tipbox.classList.add('vis');});
+  _autoTO=setTimeout(closeTip,4000);
+}
+document.addEventListener('click',()=>closeTip());
+document.addEventListener('touchstart',(e)=>{if(tipbox._srcEl&&!tipbox._srcEl.contains(e.target)&&!tipbox.contains(e.target)){closeTip();}},{passive:true});
+document.addEventListener('scroll',()=>closeTip(),{passive:true});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeTip();});
+
+/* ── single month ── */
+function renderSingle(t){
+  const fa=lang==='fa';
+  document.getElementById('sv-ttl').innerHTML=`${t.months[curM]} <em>${selYear}</em>`;
+  document.getElementById('sv-dn').innerHTML=t.days.map((n,i)=>`<div class="sv-dnc${i>=5?' we':''}">${n}</div>`).join('');
+  const sg=document.getElementById('sv-dg');sg.innerHTML='';
+  const fd=new Date(selYear,curM,1).getDay();
+  const off=fd===0?6:fd-1;
+  const dim=new Date(selYear,curM+1,0).getDate();
+  for(let i=0;i<off;i++){const e=document.createElement('div');e.className='sdc sdc-e';sg.appendChild(e);}
+  for(let d=1;d<=dim;d++) sg.appendChild(buildDC(curM,d,t,true));
+  document.querySelectorAll('.ymc').forEach((el,i)=>el.classList.toggle('on',i===curM));
+}
+
+function renderHolCards(t){
+  const HOL=buildHOL(selYear);
+  const ISL=ISL_DATA[selYear]||{};
+  const PER=PERS_DATA[selYear]||{};
+  const all=[
+    ...Object.entries(HOL).map(([k,v])=>({k,v,tp:'n'})),
+    ...Object.entries(ISL).map(([k,v])=>({k,v,tp:'i'})),
+    ...Object.entries(PER).map(([k,v])=>({k,v,tp:'p'})),
+  ].sort((a,b)=>{const[am,ad]=a.k.split('-').map(Number),[bm,bd]=b.k.split('-').map(Number);return am!==bm?am-bm:ad-bd;});
+  document.getElementById('hol-g').innerHTML=all.map(({k,v,tp})=>{
+    const[mo,d]=k.split('-').map(Number);
+    const nm=v[lang]||v.en;
+    const de=v[`de_${lang}`]||v.de_en||'';
+    const dow=new Date(selYear,mo-1,d).getDay();
+    const alt=lang!=='no'?(v.no||''):lang!=='en'?(v.en||''):'';
+    const tags=tp==='n'?`<span class="hct n">${t.badge.off}</span>`
+      :tp==='i'?`<span class="hct i">${t.badge.isl}</span>${v.approx?`<span class="hct a">${t.badge.approx}</span>`:''}`
+      :`<span class="hct p">${t.badge.per}</span>`;
+    return `<div class="hc">
+      <div class="hcc ${tp}">
+        <div class="hcc-d">${d}</div>
+        <div class="hcc-m">${t.mAb[mo-1]}</div>
+        <div class="hcc-dw">${t.dFull[dow]}</div>
+      </div>
+      <div>
+        <div class="hcb-nm">${nm}</div>
+        ${alt&&alt!==nm?`<div class="hcb-alt">${alt}</div>`:''}
+        ${de?`<div class="hcb-ds">${de}</div>`:''}
+        <div class="hcb-tags">${tags}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderMoonGuide(t){
+  document.getElementById('moon-g').innerHTML=t.moon.map(p=>`
+    <div class="moonc"><div class="moonico">${p.i}</div><div><div class="moonnm">${p.n}</div><div class="moonds">${p.d}</div></div></div>`).join('');
+}
+
+function doSearch(v){}
+
+/* ══ VIEW ══ */
+function setView(v){
+  viewMode=v;
+  document.getElementById('vb-all').classList.toggle('on',v==='all');
+  document.getElementById('vb-one').classList.toggle('on',v==='single');
+  document.getElementById('grid-all').classList.toggle('hide',v==='single');
+  document.getElementById('grid-single').classList.toggle('show',v==='single');
+  if(v==='single')renderSingle(TX[lang]);
+}
+function navM(d){curM=(curM+d+12)%12;renderSingle(TX[lang]);}
+
+/* ══ LANG ══ */
+function setLang(l){
+  lang=l;
+  document.querySelectorAll('.pgb').forEach(b=>{
+    if((b.getAttribute('onclick')||'').includes(`'${l}'`))b.classList.add('on');
+    else if((b.getAttribute('onclick')||'').includes('setLang'))b.classList.remove('on');
+  });
+  render();
+}
+
+/* ══ MODAL ══ */
+function openModal(){document.getElementById('overlay').classList.add('open');}
+function closeModal(){document.getElementById('overlay').classList.remove('open');}
+document.getElementById('overlay').addEventListener('click',e=>{if(e.target.id==='overlay')closeModal();});
+
+/* ══ EXPORT — PROFESSIONAL PRINT ══ */
+function buildPC(){
+  const t=TX[lang],fa=lang==='fa';
+  const HOL=buildHOL(selYear);
+  const ISL=ISL_DATA[selYear]||{};
+  const PER=PERS_DATA[selYear]||{};
+  const MOON=MOON_DATA[selYear]||{};
+  const sh=SHAMSI[selYear]||'';
+
+  // Day name abbreviations for print
+  const dn=fa?['د','س','چ','پ','ج','ش','ی']:lang==='no'?['M','T','O','T','F','L','S']:['M','T','W','T','F','S','S'];
+
+  // ── PAGE 1: Calendar Grid ──
+  let mHtml='';
+  for(let m=0;m<12;m++){
+    const dim=new Date(selYear,m+1,0).getDate();
+    const fd=new Date(selYear,m,1).getDay();
+    const off=fd===0?6:fd-1;
+
+    // Collect pills for this month — short names for print
+    const pillsArr=[];
+    // Short name helper: max 18 chars
+    const short=(s)=>s.length>18?s.substring(0,16)+'…':s;
+    for(let d=1;d<=dim;d++){
+      const k=`${m+1}-${d}`;
+      if(HOL[k]) pillsArr.push({cl:'ph',nm:short(HOL[k][lang]||HOL[k].en)});
+      if(ISL[k]) pillsArr.push({cl:'pi',nm:short(ISL[k][lang]||ISL[k].en)});
+      if(PER[k]) pillsArr.push({cl:'pp',nm:short(PER[k][lang]||PER[k].en)});
+    }
+    const uniqPills=[...new Map(pillsArr.map(p=>[p.nm,p])).values()];
+
+    // Build day cells
+    let cells='';
+    for(let i=0;i<off;i++) cells+=`<div class="pcd"></div>`;
+    for(let d=1;d<=dim;d++){
+      const dw=new Date(selYear,m,d).getDay();
+      const k=`${m+1}-${d}`;
+      const isWE=dw===0||dw===6;
+      const isH=!!HOL[k],isI=!!ISL[k],isP=!!PER[k];
+      const isMulti=(isH&&(isI||isP))||(isI&&isP);
+      const moon=MOON[k]||'';
+      let c='pcd';
+      if(isMulti)c+=' pml';
+      else if(isH)c+=' ph';
+      else if(isI)c+=' pi';
+      else if(isP)c+=' pp';
+      else if(isWE)c+=' pw';
+      if(!isH&&!isI&&!isP&&!isWE&&moon)c+=' pm';
+      let dots='';
+      if(isH||isI||isP||moon){
+        dots='<div class="pcd-dots">';
+        if(isH) dots+='<div class="pcd-dot dh"></div>';
+        if(isI) dots+='<div class="pcd-dot di"></div>';
+        if(isP) dots+='<div class="pcd-dot dp"></div>';
+        if(!isH&&!isI&&!isP&&moon) dots+='<div class="pcd-dot dm"></div>';
+        dots+='</div>';
+      }
+      cells+=`<div class="${c}"><div class="pcd-n">${d}</div>${dots}</div>`;
+    }
+
+    const pillsHtml=uniqPills.length
+      ? uniqPills.map(p=>`<span class="pcmo-pill ${p.cl}">${p.nm}</span>`).join('')
+      : `<span style="font-size:6px;color:#ccc;">—</span>`;
+
+    mHtml+=`<div class="pcmo${fa?' pcmo-fa':''}">
+      <div class="pcmo-hd">
+        <div class="pcmo-top">
+          <div class="pcmo-name">${t.months[m]}</div>
+          <div class="pcmo-num">${String(m+1).padStart(2,'0')}</div>
+        </div>
+        <div class="pcmo-pills">${pillsHtml}</div>
+      </div>
+      <div class="pcr">${dn.map((n,i)=>`<div class="pcrc${i>=5?' we':''}">${n}</div>`).join('')}</div>
+      <div class="pcdg">${cells}</div>
+    </div>`;
+  }
+
+  const leg=t.pcLeg;
+  const legendHtml=`
+    <div class="pcli"><div class="pcld r"></div>${leg[0]}</div>
+    <div class="pclsep"></div>
+    <div class="pcli"><div class="pcld v"></div>${leg[1]}</div>
+    <div class="pclsep"></div>
+    <div class="pcli"><div class="pcld g"></div>${leg[2]}</div>
+    <div class="pclsep"></div>
+    <div class="pcli"><div class="pcld p"></div>${leg[3]}</div>
+    <div class="pclsep"></div>
+    <div class="pcli"><div class="pcld m"></div>🌙 ${leg[5]}</div>
+  `;
+
+  const flagImg=`<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Flag_of_Norway.svg/1280px-Flag_of_Norway.svg.png" alt="Norway">`;
+
+  const page1=`<div class="pc-page">
+    <div class="pch">
+      <div class="pch-L">
+        <div class="pch-flag">${flagImg}</div>
+        <div class="pch-wordmark">
+          <div class="pch-title">${fa?`<em>تقویم</em> نروژ`:lang==='no'?`Norsk <em>Kalender</em>`:`Norsk <em>Calendar</em>`}</div>
+          <div class="pch-sub">${fa?`تقویم رسمی نروژ ${selYear}`:lang==='no'?`Offisiell norsk kalender ${selYear}`:`Official Norwegian Calendar ${selYear}`}</div>
+        </div>
+      </div>
+      <div class="pch-R">
+        <div class="pch-year-badge">${selYear}</div>
+        <div class="pch-tags">
+          <span class="pch-tag t-red">${fa?'تعطیلات رسمی':lang==='no'?'Helligdager':'Public Holidays'}</span>
+          <span class="pch-tag t-blu">${fa?'فازهای ماه':lang==='no'?'Månefaser':'Moon Phases'}</span>
+          <span class="pch-tag t-grn">${fa?'اعیاد اسلامی':lang==='no'?'Islamske høytider':'Islamic Feasts'}</span>
+          <span class="pch-tag t-gld">${fa?'مناسبت‌های ایرانی':lang==='no'?'Persiske hendelser':'Persian Events'}</span>
+        </div>
+      </div>
+    </div>
+    <div class="pc-body">
+      <div class="pc-mgrid">${mHtml}</div>
+      <div class="pc-leg">${legendHtml}</div>
+    </div>
+    <div class="pc-foot1">
+      <div class="pc-foot-src">lovdata.no · islamsk.no · astronomical data · persian calendar</div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:6px;color:#8890a8;letter-spacing:.5px;">Developed by <strong style="color:#b0a060;letter-spacing:.3px;">Bari Plux</strong> · bariplux.com</div>
+        <div class="pc-foot-pg">Norsk Kalender ${selYear} — 1 / 2</div>
+      </div>
+    </div>
+  </div>`;
+
+  // ── PAGE 2: Holiday Details ──
+  const allHols=[
+    ...Object.entries(HOL).map(([k,v])=>({k,v,tp:'hn'})),
+    ...Object.entries(ISL).map(([k,v])=>({k,v,tp:'hi'})),
+    ...Object.entries(PER).map(([k,v])=>({k,v,tp:'hp'})),
+  ].sort((a,b)=>{
+    const[am,ad]=a.k.split('-').map(Number),[bm,bd]=b.k.split('-').map(Number);
+    return am!==bm?am-bm:ad-bd;
+  });
+
+  let holCardsHtml='';
+  for(const {k,v,tp} of allHols){
+    const[mo,d]=k.split('-').map(Number);
+    const nm=v[lang]||v.en;
+    const de=v[`de_${lang}`]||v.de_en||'';
+    const dow=new Date(selYear,mo-1,d).getDay();
+    const alt=lang==='fa'?(v.en||''):lang==='en'?(v.no||''):(v.en||'');
+    const tagMap={hn:t.badge.off,hi:t.badge.isl,hp:t.badge.per};
+    const tagHtml=`<span class="pc-hc-tag ${tp}">${tagMap[tp]}</span>${(tp==='hi'&&v.approx)?`<span class="pc-hc-tag ha">${t.badge.approx}</span>`:''}`;
+
+    holCardsHtml+=`<div class="pc-hc ${tp}${fa?' pc-hc-fa':''}">
+      <div class="pc-hc-top">
+        <div class="pc-hc-date">
+          <div class="pc-hc-dd">${d}</div>
+          <div class="pc-hc-dm">${t.mAb[mo-1]}</div>
+          <div class="pc-hc-dw">${t.dFull[dow].substring(0,3)}</div>
+        </div>
+        <div class="pc-hc-body">
+          <div class="pc-hc-name">${nm}</div>
+          ${alt&&alt!==nm?`<div class="pc-hc-alt">${alt}</div>`:''}
+          <div class="pc-hc-tags">${tagHtml}</div>
+          ${de?`<div class="pc-hc-desc">${de}</div>`:''}
+        </div>
+      </div>
+    </div>`;
+  }
+
+  const page2=`<div class="pc-page p2">
+    <div class="pc-p2-hd">
+      <div class="pc-p2-L">
+        <div class="pch-flag">${flagImg}</div>
+        <div>
+          <div class="pc-p2-title">${fa?`تعطیلات و جشن‌ها — <em>${selYear}</em>`:lang==='no'?`Helligdager & Feiringer — <em>${selYear}</em>`:`Holidays & Celebrations — <em>${selYear}</em>`}</div>
+          <div class="pc-p2-sub">${t.pcMeta.replace('{Y}',selYear)}</div>
+        </div>
+      </div>
+      <div class="pch-year-pill">${selYear}</div>
+    </div>
+    <div class="pc-hol-body">
+      <div class="pc-hol-grid">${holCardsHtml}</div>
+    </div>
+    <div class="pc-foot2">
+      <div class="pc-foot-src">lovdata.no · islamsk.no · astronomical data · persian calendar</div>
+      <div class="pc-foot-pg">Norsk Kalender ${selYear} — 2 / 2</div>
+    </div>
+  </div>`;
+
+  const pc=document.getElementById('pc');
+  pc.className=fa?'fa':'';
+  pc.innerHTML=page1+page2;
+  return pc;
+}
+
+function doExport(type){
+  closeModal();
+  const pc=buildPC();
+  const fa=lang==='fa';
+  let css='';
+  try{css=Array.from(document.styleSheets).map(s=>{try{return Array.from(s.cssRules).map(r=>r.cssText).join('\n');}catch(e){return '';}}).join('\n');}catch(e){}
+  const autoprint=(type==='print');
+  const html=`<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<title>Norsk Kalender ${selYear}</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:794px;background:#fff;font-family:'Plus Jakarta Sans',${fa?"'Vazirmatn',":''}sans-serif;${fa?'direction:rtl;':''}}
+${css}
+#pc{position:static!important;left:0!important;top:0!important;z-index:auto!important;display:block!important;width:794px!important;background:#fff!important;}
+.pc-page{page-break-after:always;break-after:page;}
+.pc-page:last-child{page-break-after:auto;break-after:auto;}
+/* ── LAYOUT SAFETY OVERRIDES ── */
+.pc-mgrid{display:grid!important;grid-template-columns:repeat(3,1fr)!important;grid-template-rows:repeat(4,1fr)!important;gap:6px!important;flex:1!important;min-height:0!important;}
+.pcmo{display:flex!important;flex-direction:column!important;min-height:0!important;overflow:hidden!important;}
+.pcdg{display:grid!important;grid-template-columns:repeat(7,1fr)!important;grid-auto-rows:minmax(0,1fr)!important;flex:1!important;min-height:0!important;overflow:hidden!important;padding:2px 4px 3px!important;gap:1px!important;}
+.pcd{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;min-height:0!important;overflow:hidden!important;aspect-ratio:unset!important;}
+.pcd-n{font-size:6px!important;line-height:1!important;white-space:nowrap!important;flex-shrink:0!important;}
+.pcd-m{font-size:2.5px!important;margin-top:.5px!important;flex-shrink:0!important;}
+.pcd-dots{margin-top:1px!important;flex-shrink:0!important;}
+.pcd-dot{width:2px!important;height:2px!important;}
+@media print{
+  @page{size:A4 portrait;margin:0;}
+  html,body{width:210mm;}
+  img{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .pc-page{page-break-after:always;break-after:page;}
+  .pc-page:last-child{page-break-after:auto;break-after:auto;}
+  .pch,.pc-p2-hd{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+}
+</style></head><body>
+${pc.outerHTML}
+${autoprint?`<script>
+var imgs=document.images,loaded=0,total=imgs.length;
+if(total===0){setTimeout(window.print,800);}
+else{for(var i=0;i<total;i++){imgs[i].addEventListener('load',function(){loaded++;if(loaded===total)setTimeout(window.print,600);});if(imgs[i].complete){loaded++;if(loaded===total)setTimeout(window.print,600);}}}
+<\/script>`:''}
+</body></html>`;
+  const w=window.open('','_blank','width=860,height=1240');
+  if(!w){alert('Please allow popups.');return;}
+  w.document.open();w.document.write(html);w.document.close();
+}
+
+/* ══ INIT ══ */
+curM=TODAY.getMonth();
+render();
+</script>
+</body>
+</html>
