@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Norsk Kalender · Norwegian Calendar</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Vazirmatn:wght@300;400;500;600;700;800;900&family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Kufi+Arabic:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 /* ═══ TOKENS ═══ */
 :root{
@@ -22,12 +22,15 @@
   --f-u:'Plus Jakarta Sans',sans-serif;
   --f-m:'JetBrains Mono',monospace;
   --f-fa:'Vazirmatn',sans-serif;
+  --f-fa-display:'Amiri',serif;
+  --f-fa-ui:'Noto Kufi Arabic',sans-serif;
   --fs-xs:10px;--fs-sm:12px;--fs-md:14px;--fs-lg:16px;--fs-xl:20px;--fs-2xl:28px;--fs-3xl:42px;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;height:100%;}
 body{background:var(--bg);color:var(--t1);font-family:var(--f-u);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;position:relative;}
 body.fa{font-family:var(--f-fa);direction:rtl;}
+body.fa h1,body.fa .hero-h1,body.fa .sv-ttl,body.fa .inf-h2{font-family:var(--f-fa-display);}
 
 /* ═══ AURORA ═══ */
 #cvs{position:fixed;inset:0;z-index:0;pointer-events:none;display:block;}
@@ -315,423 +318,245 @@ body.fa .modal-close{font-family:var(--f-fa);}
 .modal-close:hover{background:var(--s3);color:var(--t1);}
 
 /* ═══════════════════════════════════════════
-   PRINT — PROFESSIONAL EDITION
+   PRINT — PREMIUM EDITION v4
    ═══════════════════════════════════════════ */
-#pc{
-  position:fixed;left:-9999px;top:0;z-index:-1;
-  width:794px;background:#fff;
-  font-family:'Plus Jakarta Sans',sans-serif;
-}
+#pc{position:fixed;left:-9999px;top:0;z-index:-1;width:794px;background:#f3f5fb;font-family:'Plus Jakarta Sans',sans-serif;}
 #pc.fa{font-family:'Vazirmatn',sans-serif;direction:rtl;}
 
-/* ── SHARED TOKENS ── */
 .pc-page{
-  width:794px;height:1123px;
-  background:#fff;
-  box-sizing:border-box;
-  overflow:hidden;
-  display:flex;flex-direction:column;
-  font-family:'Plus Jakarta Sans',sans-serif;
+  width:794px;height:1123px;background:#f3f5fb;
+  box-sizing:border-box;overflow:hidden;
+  display:flex;flex-direction:column;font-family:'Plus Jakarta Sans',sans-serif;
 }
-.pc-page.p2{
-  page-break-before:always;
-  height:auto;min-height:1123px;
-  overflow:visible;
-}
+.pc-page.p2{page-break-before:always;height:auto;min-height:1123px;overflow:visible;background:#f8f9fc;}
 
-/* ══ PAGE 1 ══════════════════════════════════ */
-
-/* ── Header strip ── */
+/* ═══ HEADER ══════════════════════════════════════ */
 .pch{
-  /* deep navy with subtle warm tint */
-  background:#07112a;
-  padding:0 24px;
-  height:62px;
+  background:linear-gradient(100deg,#050e24 0%,#0a1835 60%,#0c1c3a 100%);
+  padding:0 20px;height:50px;
   display:flex;align-items:center;justify-content:space-between;
-  flex-shrink:0;
-  position:relative;
-  overflow:hidden;
+  flex-shrink:0;position:relative;overflow:hidden;
 }
-/* Decorative rule at bottom of header */
-.pch::after{
-  content:'';
-  position:absolute;bottom:0;left:0;right:0;
-  height:2px;
-  background:linear-gradient(90deg,transparent 0%,#c8982a 20%,#f0d070 50%,#c8982a 80%,transparent 100%);
-}
-/* Subtle vertical stripe texture on header */
-.pch::before{
-  content:'';
-  position:absolute;inset:0;
-  background:repeating-linear-gradient(90deg,rgba(255,255,255,.012) 0px,rgba(255,255,255,.012) 1px,transparent 1px,transparent 40px);
-  pointer-events:none;
-}
-.pch-L{display:flex;align-items:center;gap:13px;position:relative;z-index:1;}
-.pch-flag{
-  width:44px;height:30px;
-  border-radius:3px;overflow:hidden;flex-shrink:0;
-  border:1px solid rgba(255,255,255,.18);
-  box-shadow:0 2px 8px rgba(0,0,0,.45),0 0 0 1px rgba(255,255,255,.06);
-}
+.pch::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1.5px;
+  background:linear-gradient(90deg,transparent 0%,#b8881a 15%,#f0d060 50%,#b8881a 85%,transparent 100%);}
+.pch::before{content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(110deg,rgba(255,255,255,.018) 0px,rgba(255,255,255,.018) 1px,transparent 1px,transparent 28px);}
+.pch-L{display:flex;align-items:center;gap:10px;position:relative;z-index:1;}
+.pch-flag{width:32px;height:22px;border-radius:2px;overflow:hidden;flex-shrink:0;border:1px solid rgba(255,255,255,.25);box-shadow:0 1px 6px rgba(0,0,0,.5);}
 .pch-flag img{width:100%;height:100%;object-fit:cover;display:block;}
-.pch-wordmark{display:flex;flex-direction:column;gap:3px;}
-.pch-title{
-  font-family:'Playfair Display',serif;
-  font-size:24px;font-weight:700;
-  color:#f0ece4;letter-spacing:-.5px;line-height:1;
-}
-.pch-title em{font-style:italic;color:#e8c870;}
-.pch-sub{
-  font-family:'JetBrains Mono',monospace;
-  font-size:7.5px;font-weight:500;
-  color:rgba(255,255,255,.38);
-  letter-spacing:2px;text-transform:uppercase;
-}
-.pch-R{display:flex;flex-direction:column;align-items:flex-end;gap:5px;position:relative;z-index:1;}
-.pch-year-badge{
-  font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;
-  color:#e8c870;letter-spacing:1px;
-  background:rgba(232,200,112,.1);
-  border:1px solid rgba(232,200,112,.28);
-  border-radius:4px;padding:3px 10px;
-}
-.pch-tags{display:flex;gap:3px;flex-wrap:wrap;justify-content:flex-end;max-width:340px;}
-.pch-tag{
-  font-family:'JetBrains Mono',monospace;font-size:5.5px;font-weight:600;
-  letter-spacing:.8px;text-transform:uppercase;
-  padding:2px 5px;border-radius:2px;
-  border:1px solid rgba(255,255,255,.1);
-  color:rgba(255,255,255,.35);
-  white-space:nowrap;
-}
-.pch-tag.t-red{border-color:rgba(200,80,60,.35);color:rgba(220,130,120,.75);}
-.pch-tag.t-grn{border-color:rgba(40,160,120,.35);color:rgba(80,200,160,.7);}
-.pch-tag.t-gld{border-color:rgba(200,160,40,.35);color:rgba(230,200,100,.7);}
-.pch-tag.t-blu{border-color:rgba(80,130,220,.35);color:rgba(120,170,240,.7);}
-/* year pill used inside header */
-.pch-year-pill{
-  font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;
-  color:rgba(255,255,255,.38);letter-spacing:.5px;margin-top:2px;
-}
-/* multi-event dot indicators inside day cells */
-.pcd-dots{display:flex;gap:1.5px;justify-content:center;margin-top:1px;flex-shrink:0;}
-.pcd-dot{width:2px;height:2px;border-radius:50%;flex-shrink:0;}
-.pcd-dot.dh{background:#c02010;}.pcd-dot.di{background:#0a7852;}.pcd-dot.dp{background:#c09020;}.pcd-dot.dm{background:#806810;}
+.pch-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:#f2eee8;letter-spacing:-.3px;line-height:1;}
+.pch-title em{font-style:italic;color:#e8c560;}
+.pch-yr{font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:700;color:#e8c560;letter-spacing:.8px;background:rgba(232,197,96,.1);border:1px solid rgba(232,197,96,.22);border-radius:2px;padding:2px 7px;margin-left:8px;vertical-align:middle;display:inline-block;}
+.pch-R{display:flex;align-items:center;gap:10px;position:relative;z-index:1;}
+.pch-leg{display:flex;align-items:center;gap:5px;}
+.pch-li{display:flex;align-items:center;gap:2.5px;font-family:'JetBrains Mono',monospace;font-size:5.5px;color:rgba(255,255,255,.42);font-weight:700;letter-spacing:.3px;text-transform:uppercase;white-space:nowrap;}
+.pch-ld{width:5px;height:5px;border-radius:50%;flex-shrink:0;}
+.pch-ld.r{background:#d04030}.pch-ld.v{background:#5848b8}.pch-ld.g{background:#1a9070}.pch-ld.rm{background:#7248c0}.pch-ld.p{background:#b88820}.pch-ld.m{background:#9a8020}
+.pch-sep{width:1px;height:8px;background:rgba(255,255,255,.12);flex-shrink:0;}
+.pch-credit{font-family:'JetBrains Mono',monospace;font-size:4.5px;color:rgba(255,255,255,.2);letter-spacing:.3px;border-left:1px solid rgba(255,255,255,.1);padding-left:8px;}
+.pch-credit strong{color:rgba(225,198,90,.45);letter-spacing:.3px;}
 
-/* ── Month grid body ── */
-.pc-body{
-  flex:1;min-height:0;
-  padding:10px 16px 0;
-  display:flex;flex-direction:column;
-  background:#fafbfd;
-}
-.pc-mgrid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  grid-template-rows:repeat(4,1fr);
-  gap:6px;
-  flex:1;min-height:0;
-  min-width:0;
-}
-/* ── Month card ── */
+/* ═══ BODY & GRID ══════════════════════════════════ */
+.pc-body{flex:1;min-height:0;padding:8px 14px 7px;display:flex;flex-direction:column;background:#f3f5fb;}
+.pc-mgrid{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(4,1fr);gap:6px;flex:1;min-height:0;min-width:0;}
+
+/* ═══ MONTH CARD ══════════════════════════════════ */
 .pcmo{
-  background:#fff;
-  border:1px solid #e2e8f4;
-  border-radius:6px;
-  overflow:hidden;
-  display:flex;flex-direction:column;
-  box-shadow:0 1px 4px rgba(7,17,42,.07),0 0 0 1px rgba(7,17,42,.02);
-  min-width:0;
-  min-height:0;
-  width:100%;
+  background:#fff;border:1px solid #dde5f2;border-radius:5px;
+  overflow:hidden;display:flex;flex-direction:column;
+  box-shadow:0 1px 4px rgba(5,14,36,.06),0 0 0 1px rgba(5,14,36,.02);
+  min-width:0;min-height:0;width:100%;
 }
 
-/* Month header inside card */
+/* Month header */
 .pcmo-hd{
-  padding:5px 8px 4px;
-  border-bottom:1px solid #e8edf6;
-  flex-shrink:0;
-  /* Left colored accent block */
-  position:relative;
-  background:#f3f6fc;
+  padding:5px 8px 4px;border-bottom:1px solid #e0e8f4;
+  flex-shrink:0;position:relative;overflow:hidden;
 }
-/* Top micro-border accent */
-.pcmo-hd::before{
-  content:'';
-  position:absolute;top:0;left:0;right:0;height:2px;
-  background:linear-gradient(90deg,#1a3a8a 0%,#4870d0 50%,transparent 100%);
+/* Thin top accent colored by season */
+.pcmo-hd::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+/* Faint large month-number watermark */
+.pcmo-hd::after{
+  content:attr(data-num);
+  position:absolute;right:5px;top:-3px;
+  font-family:'Playfair Display',serif;font-size:46px;font-weight:900;
+  color:rgba(5,14,36,.04);line-height:1;pointer-events:none;user-select:none;
 }
-.pcmo-top{
-  display:flex;align-items:baseline;justify-content:space-between;
-  margin-bottom:3px;margin-top:1px;
-}
-.pcmo-name{
-  font-family:'Playfair Display',serif;
-  font-size:11px;font-weight:700;
-  color:#07112a;letter-spacing:-.1px;
-}
-.pcmo-fa .pcmo-name{font-family:'Vazirmatn',sans-serif;font-size:10px;}
-.pcmo-num{
-  font-family:'JetBrains Mono',monospace;
-  font-size:6px;color:#c0c8dc;font-weight:700;letter-spacing:.5px;
-}
+/* ── Season: Winter (Jan=0, Feb=1, Dec=11) ── */
+.s-win{background:#f4f7fd;}
+.s-win::before{background:linear-gradient(90deg,#2858a8,#7aaae8 60%,transparent 100%);}
+.s-win .pcmo-name{color:#1a3870;}
+.s-win .pcmo-num{color:#80a8e0;}
+/* ── Season: Spring (Mar=2, Apr=3, May=4) ── */
+.s-spr{background:#f2f9f4;}
+.s-spr::before{background:linear-gradient(90deg,#257840,#5aaa70 60%,transparent 100%);}
+.s-spr .pcmo-name{color:#174828;}
+.s-spr .pcmo-num{color:#78b890;}
+/* ── Season: Summer (Jun=5, Jul=6, Aug=7) ── */
+.s-sum{background:#faf6ec;}
+.s-sum::before{background:linear-gradient(90deg,#906018,#d4a030 60%,transparent 100%);}
+.s-sum .pcmo-name{color:#583808;}
+.s-sum .pcmo-num{color:#c09838;}
+/* ── Season: Autumn (Sep=8, Oct=9, Nov=10) ── */
+.s-aut{background:#f8f2ef;}
+.s-aut::before{background:linear-gradient(90deg,#783020,#c05838 60%,transparent 100%);}
+.s-aut .pcmo-name{color:#4a1c0c;}
+.s-aut .pcmo-num{color:#b87060;}
 
-/* Holiday pills */
-.pcmo-pills{
-  display:flex;flex-wrap:wrap;gap:2px;
-  min-height:13px;align-items:center;
-}
-.pcmo-pill{
-  font-family:'JetBrains Mono',monospace;
-  font-size:5px;font-weight:700;
-  padding:1px 4px;border-radius:2px;
-  white-space:nowrap;line-height:1.6;
-  letter-spacing:.2px;text-transform:uppercase;
-}
-.pcmo-pill.ph{background:#fde8e6;color:#8b1a0c;border:1px solid #f0b8b2;}
-.pcmo-pill.pi{background:#e2f2ec;color:#0c5c3a;border:1px solid #a0d8c0;}
-.pcmo-pill.pp{background:#fdf0dc;color:#6b4000;border:1px solid #e0c070;}
+.pcmo-top{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:3px;margin-top:2px;position:relative;z-index:1;}
+.pcmo-name{font-family:'Playfair Display',serif;font-size:10.5px;font-weight:700;letter-spacing:-.1px;}
+.pcmo-fa .pcmo-name{font-family:'Amiri',serif;font-size:11px;font-weight:700;}
+.pcmo-num{font-family:'JetBrains Mono',monospace;font-size:5px;font-weight:700;letter-spacing:.5px;}
+/* Season name label in top-right of month header */
+.pcmo-sn{font-family:'JetBrains Mono',monospace;font-size:5px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;opacity:.75;}
 
-/* Day name row */
+.pcmo-pills{display:flex;flex-wrap:nowrap;gap:2px;min-height:11px;align-items:center;position:relative;z-index:1;overflow:hidden;}
+.pcmo-pill{font-family:'JetBrains Mono',monospace;font-size:4.5px;font-weight:700;padding:1px 3.5px;border-radius:2px;white-space:nowrap;line-height:1.5;letter-spacing:.15px;text-transform:uppercase;flex-shrink:0;}
+.pcmo-pill.ph{background:#fce8e6;color:#7a1208;border:1px solid #f0b0a8;}
+.pcmo-pill.pi{background:#e0f2ea;color:#0a5030;border:1px solid #90d0b0;}
+.pcmo-pill.pp{background:#fdf0d8;color:#603800;border:1px solid #d8b858;}
+.pcmo-pill.pr{background:#ece8fc;color:#3c1090;border:1px solid #b0a0e8;}
+
+/* ═══ DAY NAME ROW ══════════════════════════════════ */
 .pcr{
-  display:grid;grid-template-columns:repeat(7,1fr);
-  padding:2px 5px 1px;
-  background:#edf0f8;
-  border-bottom:1px solid #e2e8f4;
-  overflow:hidden;
-  min-width:0;
+  display:grid;grid-template-columns:18px repeat(7,1fr);
+  padding:3px 5px 2px;
+  background:#e8eef8;
+  border-bottom:1px solid #d8e2f0;
+  overflow:hidden;min-width:0;
 }
 .pcrc{
-  text-align:center;
-  font-family:'JetBrains Mono',monospace;
-  font-size:4.5px;font-weight:800;
-  color:#7880a0;letter-spacing:.5px;
-  padding:2px 0;text-transform:uppercase;
-  min-width:0;
+  text-align:center;font-family:'JetBrains Mono',monospace;
+  font-size:6.5px;font-weight:800;color:#606880;
+  letter-spacing:.2px;padding:2px 0;text-transform:uppercase;min-width:0;
 }
-.pcrc.we{color:#5050a8;}
+.pcrc.we{color:#4848a0;}
+.pcrc.wk{color:#9090b0;font-size:5px;letter-spacing:0;font-weight:700;}
 
-/* Day cells */
+/* ═══ DAY CELLS ══════════════════════════════════ */
 .pcdg{
-  display:grid;grid-template-columns:repeat(7,1fr);
+  display:grid;grid-template-columns:18px repeat(7,1fr);
   grid-auto-rows:minmax(0,1fr);
-  padding:2px 4px 3px;gap:1px;flex:1;
-  overflow:hidden;
-  min-width:0;
-  min-height:0;
+  padding:2px 4px 3px;gap:1.5px;flex:1;
+  overflow:hidden;min-width:0;min-height:0;
+}
+/* Week number cell in print grid */
+.pcd-wk{
+  display:flex;align-items:center;justify-content:center;
+  font-family:'JetBrains Mono',monospace;font-size:5px;font-weight:700;
+  color:#a0a8c0;background:rgba(100,110,180,.06);
+  border-radius:2px;min-height:0;border-right:1px solid #e8eef8;
+  line-height:1;
 }
 .pcd{
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  border-radius:2px;
-  min-width:0;overflow:hidden;
-  width:100%;
-  min-height:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  border-radius:3px;min-width:0;overflow:hidden;width:100%;min-height:0;
 }
 .pcd-n{
   font-family:'Plus Jakarta Sans',sans-serif;
-  font-size:6px;font-weight:500;line-height:1;color:#1a2540;
-  white-space:nowrap;flex-shrink:0;
+  font-size:9px;font-weight:600;line-height:1;color:#18223c;flex-shrink:0;
 }
-.pcd-m{font-size:2.5px;margin-top:.5px;line-height:1;flex-shrink:0;}
+.pcd.pw{background:rgba(72,56,170,.07);}.pcd.pw .pcd-n{color:#3030a0;font-weight:500;}
+.pcd.ph{background:rgba(170,20,8,.13);}.pcd.ph .pcd-n{color:#7a1208;font-weight:800;}
+.pcd.pi{background:rgba(10,80,48,.12);}.pcd.pi .pcd-n{color:#0a5030;font-weight:800;}
+.pcd.pp{background:rgba(150,90,0,.12);}.pcd.pp .pcd-n{color:#603800;font-weight:800;}
+.pcd.pr{background:rgba(90,48,190,.08);}.pcd.pr .pcd-n{color:#3c1090;font-weight:700;}
+.pcd.pml{background:linear-gradient(135deg,rgba(170,20,8,.12),rgba(150,90,0,.11));}.pcd.pml .pcd-n{color:#7a1208;font-weight:800;}
+.pcd.pm .pcd-n{color:#706010;font-weight:500;}
+.pcd-m{font-size:6px;line-height:1;flex-shrink:0;margin-top:0;}
+.pcd-dots{display:flex;gap:1.5px;justify-content:center;margin-top:1.5px;flex-shrink:0;}
+.pcd-dot{width:2.5px;height:2.5px;border-radius:50%;flex-shrink:0;}
+.pcd-dot.dh{background:#b01808;}.pcd-dot.di{background:#0a7048;}.pcd-dot.dp{background:#b88020;}.pcd-dot.dr{background:#5830b0;}.pcd-dot.dm{background:#706010;}
 
-/* Day states */
-.pcd.pw .pcd-n{color:#4040a0;font-weight:500;}
-.pcd.pw{background:rgba(80,64,180,.07);}
-.pcd.ph{background:rgba(180,28,14,.11);}.pcd.ph .pcd-n{color:#8b1a0c;font-weight:800;}
-.pcd.pi{background:rgba(12,92,58,.11);}.pcd.pi .pcd-n{color:#0c5c3a;font-weight:800;}
-.pcd.pp{background:rgba(160,100,0,.12);}.pcd.pp .pcd-n{color:#6b4000;font-weight:800;}
-.pcd.pml{background:linear-gradient(135deg,rgba(180,28,14,.1),rgba(160,100,0,.11));}.pcd.pml .pcd-n{color:#6b4000;font-weight:800;}
-.pcd.pm .pcd-n{color:#7a6010;font-weight:500;}
-
-/* ── Legend strip ── */
-.pc-leg{
-  display:flex;align-items:center;gap:5px 16px;flex-wrap:wrap;
-  margin:7px 16px 0;
-  padding:5px 11px;
-  background:#07112a;
-  border-radius:4px;
-  flex-shrink:0;
-}
-.pcli{
-  display:flex;align-items:center;gap:5px;
-  font-family:'JetBrains Mono',monospace;
-  font-size:6px;color:rgba(255,255,255,.52);
-  font-weight:600;letter-spacing:.3px;text-transform:uppercase;
-}
-.pcld{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
-.pcld.r{background:#d04030}.pcld.v{background:#6858c8}.pcld.g{background:#1a9870}.pcld.p{background:#c09020}.pcld.m{background:#a08828}
-.pclsep{width:1px;height:9px;background:rgba(255,255,255,.12);flex-shrink:0;}
-
-/* ── Page 1 footer ── */
-.pc-foot1{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:6px 24px 9px;
-  background:#fafbfd;
-  border-top:1px solid #e2e8f4;
-  margin-top:7px;flex-shrink:0;
-}
-.pc-foot-src{
-  font-family:'JetBrains Mono',monospace;
-  font-size:6px;color:#b8c0d4;letter-spacing:.3px;
-}
-.pc-foot-pg{
-  font-family:'Playfair Display',serif;
-  font-size:8px;font-style:italic;color:#b8c0d4;
-}
-
-/* ══ PAGE 2 ══════════════════════════════════ */
-
-/* ── Page 2 header strip ── same style as p1 ── */
+/* ═══ PAGE 2 HEADER ══════════════════════════════════ */
 .pc-p2-hd{
-  background:#07112a;
-  padding:0 24px;
-  height:62px;
+  background:linear-gradient(100deg,#050e24 0%,#0a1835 60%,#0c1c3a 100%);
+  padding:0 20px;height:50px;
   display:flex;align-items:center;justify-content:space-between;
-  flex-shrink:0;
+  flex-shrink:0;position:relative;overflow:hidden;
+}
+.pc-p2-hd::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1.5px;
+  background:linear-gradient(90deg,transparent 0%,#b8881a 15%,#f0d060 50%,#b8881a 85%,transparent 100%);}
+.pc-p2-hd::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(110deg,rgba(255,255,255,.018) 0px,rgba(255,255,255,.018) 1px,transparent 1px,transparent 28px);}
+.pc-p2-L{display:flex;align-items:center;gap:10px;position:relative;z-index:1;}
+.pc-p2-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:#f2eee8;letter-spacing:-.3px;line-height:1;}
+.pc-p2-title em{font-style:italic;color:#e8c560;}
+.pc-p2-sub{font-family:'JetBrains Mono',monospace;font-size:5.5px;color:rgba(255,255,255,.28);letter-spacing:1.5px;text-transform:uppercase;margin-top:3px;}
+.pch-year-pill{font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:700;color:#e8c560;letter-spacing:.8px;background:rgba(232,197,96,.1);border:1px solid rgba(232,197,96,.22);border-radius:2px;padding:2px 8px;position:relative;z-index:1;}
+
+/* ═══ PAGE 2 BODY ══════════════════════════════════ */
+.pc-hol-body{flex:1;padding:10px 14px 0;background:#f8f9fc;overflow:visible;}
+
+/* Ramadan banner */
+.pc-ram-banner{
+  display:flex;align-items:center;gap:14px;
+  background:linear-gradient(100deg,#1a0840 0%,#2a1060 100%);
+  border:1px solid rgba(140,100,230,.3);
+  border-radius:5px;padding:9px 14px;margin-bottom:10px;
   position:relative;overflow:hidden;
 }
-.pc-p2-hd::after{
-  content:'';
-  position:absolute;bottom:0;left:0;right:0;height:2px;
-  background:linear-gradient(90deg,transparent 0%,#c8982a 20%,#f0d070 50%,#c8982a 80%,transparent 100%);
-}
-.pc-p2-hd::before{
-  content:'';position:absolute;inset:0;
-  background:repeating-linear-gradient(90deg,rgba(255,255,255,.012) 0px,rgba(255,255,255,.012) 1px,transparent 1px,transparent 40px);
-}
-.pc-p2-L{display:flex;align-items:center;gap:13px;position:relative;z-index:1;}
-.pc-p2-wordmark{display:flex;flex-direction:column;gap:3px;}
-.pc-p2-title{
-  font-family:'Playfair Display',serif;
-  font-size:20px;font-weight:700;
-  color:#f0ece4;letter-spacing:-.4px;line-height:1;
-}
-.pc-p2-title em{font-style:italic;color:#e8c870;}
-.pc-p2-sub{
-  font-family:'JetBrains Mono',monospace;
-  font-size:7px;font-weight:500;
-  color:rgba(255,255,255,.35);
-  letter-spacing:1.8px;text-transform:uppercase;
-}
+.pc-ram-banner::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,rgba(140,100,230,.03) 0px,rgba(140,100,230,.03) 1px,transparent 1px,transparent 8px);}
+.pc-ram-icon{font-size:22px;flex-shrink:0;position:relative;z-index:1;}
+.pc-ram-body{flex:1;position:relative;z-index:1;}
+.pc-ram-title{font-family:'Playfair Display',serif;font-size:12px;font-weight:700;color:#d0b0ff;line-height:1;margin-bottom:2px;}
+.pc-ram-title em{font-style:italic;color:#e8c560;}
+.pc-ram-desc{font-family:'JetBrains Mono',monospace;font-size:6px;color:rgba(200,180,255,.6);letter-spacing:.3px;}
+.pc-ram-dates{display:flex;gap:6px;margin-top:5px;}
+.pc-ram-date-block{background:rgba(140,100,230,.15);border:1px solid rgba(140,100,230,.25);border-radius:3px;padding:3px 9px;text-align:center;}
+.pc-ram-date-block .rdb-label{font-family:'JetBrains Mono',monospace;font-size:5px;color:rgba(200,180,255,.5);text-transform:uppercase;letter-spacing:.5px;}
+.pc-ram-date-block .rdb-val{font-family:'Playfair Display',serif;font-size:10px;font-weight:700;color:#c8a0f8;line-height:1.2;}
+.pc-ram-duration{background:rgba(140,100,230,.12);border:1px solid rgba(140,100,230,.2);border-radius:3px;padding:3px 9px;text-align:center;align-self:center;}
+.pc-ram-duration .rdb-label{font-family:'JetBrains Mono',monospace;font-size:5px;color:rgba(200,180,255,.5);text-transform:uppercase;letter-spacing:.5px;}
+.pc-ram-duration .rdb-val{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;color:#b090e8;}
 
-/* ── Holiday cards section ── */
-.pc-hol-body{
-  flex:1;
-  padding:12px 16px 0;
-  background:#fafbfd;
-  overflow:visible;
+/* Holiday section label */
+.pc-hol-section-lbl{
+  font-family:'JetBrains Mono',monospace;font-size:6.5px;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;color:#8090b0;
+  display:flex;align-items:center;gap:8px;margin-bottom:7px;
 }
+.pc-hol-section-lbl::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,#c8d4e8,transparent);}
 
-/* Section label above grid */
-.pc-hol-label{
-  font-family:'JetBrains Mono',monospace;
-  font-size:7px;font-weight:700;
-  letter-spacing:2px;text-transform:uppercase;
-  color:#8890a8;
-  margin-bottom:8px;
-  display:flex;align-items:center;gap:8px;
-}
-.pc-hol-label::after{
-  content:'';flex:1;height:1px;
-  background:linear-gradient(90deg,#d8dff0,transparent);
-}
+.pc-hol-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;}
 
-.pc-hol-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:7px;
-}
-
-/* ── Holiday card ── */
-.pc-hc{
-  background:#fff;
-  border:1px solid #e2e8f4;
-  border-radius:5px;
-  overflow:hidden;
-  break-inside:avoid;
-  box-shadow:0 1px 4px rgba(7,17,42,.06);
-  display:flex;flex-direction:column;
-}
-/* Top accent line per type */
-.pc-hc.hn::before,
-.pc-hc.hi::before,
-.pc-hc.hp::before{
-  content:'';display:block;height:2.5px;flex-shrink:0;
-}
-.pc-hc.hn::before{background:linear-gradient(90deg,#c02010,#e04030);}
-.pc-hc.hi::before{background:linear-gradient(90deg,#0a6e42,#1a9870);}
-.pc-hc.hp::before{background:linear-gradient(90deg,#b07010,#d09030);}
-
+/* Holiday card */
+.pc-hc{background:#fff;border:1px solid #dde5f2;border-radius:4px;overflow:hidden;break-inside:avoid;box-shadow:0 1px 3px rgba(5,14,36,.05);display:flex;flex-direction:column;}
+.pc-hc.hn::before,.pc-hc.hi::before,.pc-hc.hp::before{content:'';display:block;height:2px;flex-shrink:0;}
+.pc-hc.hn::before{background:linear-gradient(90deg,#a01808,#d83828);}
+.pc-hc.hi::before{background:linear-gradient(90deg,#087040,#18a060);}
+.pc-hc.hp::before{background:linear-gradient(90deg,#906010,#c89030);}
+.pc-hc.hr::before{content:'';display:block;height:2px;flex-shrink:0;background:linear-gradient(90deg,#4820a0,#8050d8);}
+.pc-hc.hr .pc-hc-date{background:#ede8fc;}
+.pc-hc.hr .pc-hc-dd{color:#3c1090;}
+.pc-hc.hr .pc-hc-dm{color:#6040b8;}
+.pc-hc-tag.hr{background:#ede8fc;color:#3c1090;border:1px solid #b0a0e8;}
 .pc-hc-top{display:flex;align-items:stretch;}
-.pc-hc-date{
-  flex-shrink:0;width:40px;
-  padding:7px 3px;
-  text-align:center;
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  border-right:1px solid #e8edf6;
-}
-.pc-hc.hn .pc-hc-date{background:#fde6e4;}
-.pc-hc.hi .pc-hc-date{background:#e0f4ec;}
-.pc-hc.hp .pc-hc-date{background:#fdf0dc;}
-.pc-hc-dd{
-  font-family:'Playfair Display',serif;
-  font-size:17px;font-weight:700;line-height:1;
-}
-.pc-hc.hn .pc-hc-dd{color:#8b1a0c;}
-.pc-hc.hi .pc-hc-dd{color:#0c5c3a;}
-.pc-hc.hp .pc-hc-dd{color:#6b4000;}
-.pc-hc-dm{
-  font-family:'JetBrains Mono',monospace;
-  font-size:5.5px;font-weight:700;
-  text-transform:uppercase;letter-spacing:.6px;margin-top:2px;
-}
-.pc-hc.hn .pc-hc-dm{color:#b83020;}
-.pc-hc.hi .pc-hc-dm{color:#157050;}
-.pc-hc.hp .pc-hc-dm{color:#9a6010;}
-.pc-hc-dw{
-  font-family:'JetBrains Mono',monospace;
-  font-size:5px;color:#c0c8dc;margin-top:1px;
-}
-
-.pc-hc-body{padding:7px 8px;flex:1;display:flex;flex-direction:column;}
-.pc-hc-name{
-  font-size:8.5px;font-weight:700;
-  color:#07112a;line-height:1.4;
-}
-.pc-hc-fa .pc-hc-name{font-family:'Vazirmatn',sans-serif;font-size:8px;}
-.pc-hc-alt{
-  font-size:7px;color:#9098b4;font-style:italic;
-  margin-top:1px;margin-bottom:3px;
-}
+.pc-hc-date{flex-shrink:0;width:38px;padding:5px 2px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;border-right:1px solid #e8eff8;}
+.pc-hc.hn .pc-hc-date{background:#fce8e6;}.pc-hc.hi .pc-hc-date{background:#e0f2ea;}.pc-hc.hp .pc-hc-date{background:#fdf0d8;}
+.pc-hc-dd{font-family:'Playfair Display',serif;font-size:15px;font-weight:700;line-height:1;}
+.pc-hc.hn .pc-hc-dd{color:#7a1208;}.pc-hc.hi .pc-hc-dd{color:#0a5030;}.pc-hc.hp .pc-hc-dd{color:#603800;}
+.pc-hc-dm{font-family:'JetBrains Mono',monospace;font-size:5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-top:2px;}
+.pc-fa .pc-hc-dm{font-family:'Vazirmatn',sans-serif;font-size:6px;letter-spacing:0;text-transform:none;}
+.pc-hc.hn .pc-hc-dm{color:#b03020;}.pc-hc.hi .pc-hc-dm{color:#107050;}.pc-hc.hp .pc-hc-dm{color:#906010;}
+.pc-hc-dw{font-family:'JetBrains Mono',monospace;font-size:4.5px;color:#b0bcd4;margin-top:1px;}
+.pc-hc-body{padding:5px 7px;flex:1;display:flex;flex-direction:column;}
+.pc-hc-name{font-size:7.5px;font-weight:700;color:#05122a;line-height:1.4;}
+.pc-hc-fa .pc-hc-name{font-family:'Vazirmatn',sans-serif;font-size:7px;}
+.pc-fa .pch-title,.pc-fa .pc-p2-title{font-family:'Amiri',serif;}
+.pc-hc-alt{font-size:6px;color:#8090b0;font-style:italic;margin-top:1px;}
 .pc-hc-tags{display:flex;flex-wrap:wrap;gap:2px;margin-top:3px;}
-.pc-hc-tag{
-  font-family:'JetBrains Mono',monospace;
-  font-size:5px;font-weight:700;letter-spacing:.4px;
-  text-transform:uppercase;padding:1.5px 5px;border-radius:2px;
-}
-.pc-hc-tag.hn{background:#fde6e4;color:#8b1a0c;border:1px solid #f0b0a8;}
-.pc-hc-tag.hi{background:#e0f4ec;color:#0c5c3a;border:1px solid #90d8b8;}
-.pc-hc-tag.hp{background:#fdf0dc;color:#6b4000;border:1px solid #d8c060;}
-.pc-hc-tag.ha{background:#f5f0e4;color:#7a6010;border:1px solid #d0c070;}
+.pc-hc-tag{font-family:'JetBrains Mono',monospace;font-size:4.5px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;padding:1px 4px;border-radius:2px;}
+.pc-hc-tag.hn{background:#fce8e6;color:#7a1208;border:1px solid #f0b0a8;}
+.pc-hc-tag.hi{background:#e0f2ea;color:#0a5030;border:1px solid #88d0b0;}
+.pc-hc-tag.hp{background:#fdf0d8;color:#603800;border:1px solid #d8b858;}
+.pc-hc-tag.ha{background:#f4f0e0;color:#706018;border:1px solid #c8c060;}
+.pc-hc-desc{font-size:6px;color:#485070;line-height:1.6;margin-top:4px;padding-top:4px;border-top:1px solid #eef1f8;flex:1;}
+.pc-hc-fa .pc-hc-desc{font-family:'Vazirmatn',sans-serif;font-size:6.5px;}
 
-.pc-hc-desc{
-  font-size:6.5px;color:#4a5470;line-height:1.7;
-  margin-top:5px;padding-top:5px;
-  border-top:1px solid #eef1f8;
-  flex:1;
-}
-.pc-hc-fa .pc-hc-desc{font-family:'Vazirmatn',sans-serif;font-size:7px;}
-
-/* ── Page 2 footer ── */
-.pc-foot2{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:6px 24px 10px;
-  background:#fafbfd;
-  border-top:1px solid #e2e8f4;
-  margin-top:14px;flex-shrink:0;
-}
+/* Page 2 footer */
+.pc-foot2{display:flex;align-items:center;justify-content:space-between;padding:5px 18px 7px;background:#f8f9fc;border-top:1px solid #dde5f2;margin-top:10px;flex-shrink:0;}
+.pc-foot-src{font-family:'JetBrains Mono',monospace;font-size:5.5px;color:#a0aac0;letter-spacing:.3px;}
+.pc-foot-pg{font-family:'Playfair Display',serif;font-size:7px;font-style:italic;color:#a0aac0;}
 
 /* ═══ RESPONSIVE ═══ */
 @media(max-width:1100px){#grid-all{grid-template-columns:repeat(2,1fr);}}
@@ -961,16 +786,23 @@ const ISL_DATA={
 };
 
 const PERS_DATA={
-  2025:{"3-20":{en:"Nowruz — Persian New Year",no:"Nouruz — Persisk nyttår",fa:"نوروز — سال نو ایرانی",de_en:"Persian New Year & first day of spring (spring equinox). Over 3,000 years old, celebrated by 300+ million people worldwide.",de_no:"Persisk nyttår og vårens første dag. Over 3000 år gammel feiring av over 300 millioner mennesker.",de_fa:"سال نو ایرانی و آغاز بهار. بیش از سه هزار سال قدمت، توسط بیش از ۳۰۰ میلیون نفر در سراسر جهان."},"12-21":{en:"Yalda Night",no:"Yalda-natt",fa:"شب یلدا",de_en:"The longest night of the year (winter solstice). Ancient Iranian celebration of light's victory over darkness. Families gather to read Hafez poetry, eat pomegranates and watermelon.",de_no:"Årets lengste natt (vintersolverv). Gammel iransk feiring. Familier samles, leser Hafez-poesi og spiser granatepler.",de_fa:"بلندترین شب سال. جشن کهن ایرانی. خانواده‌ها دور هم جمع می‌شوند، شعر حافظ می‌خوانند و انار و هندوانه می‌خورند."}},
-  2026:{"3-20":{en:"Nowruz — Persian New Year",no:"Nouruz — Persisk nyttår",fa:"نوروز — سال نو ایرانی",de_en:"Persian New Year & first day of spring. Over 3,000 years old, celebrated by 300+ million people worldwide.",de_no:"Persisk nyttår og vårens første dag. Over 3000 år gammel.",de_fa:"سال نو ایرانی و آغاز بهار. بیش از سه هزار سال قدمت."},"12-21":{en:"Yalda Night",no:"Yalda-natt",fa:"شب یلدا",de_en:"The longest night of the year (winter solstice). Families gather for Hafez poetry, pomegranates and stories.",de_no:"Årets lengste natt. Familier samles til Hafez-poesi, granatepler og historier.",de_fa:"بلندترین شب سال. خانواده‌ها دور هم جمع می‌شوند، شعر حافظ می‌خوانند."}},
-  2027:{"3-20":{en:"Nowruz — Persian New Year",no:"Nouruz — Persisk nyttår",fa:"نوروز — سال نو ایرانی",de_en:"Persian New Year & first day of spring. Over 3,000 years old.",de_no:"Persisk nyttår og vårens første dag.",de_fa:"سال نو ایرانی و آغاز بهار."},"12-21":{en:"Yalda Night",no:"Yalda-natt",fa:"شب یلدا",de_en:"The longest night of the year (winter solstice).",de_no:"Årets lengste natt.",de_fa:"بلندترین شب سال."}}
+  2025:{"3-20":{en:"Nowruz — Persian New Year",no:"Nouruz — Persisk nyttår",fa:"نوروز — سال نو فارسی",de_en:"Persian New Year & first day of spring (spring equinox). Over 3,000 years old, celebrated by 300+ million people worldwide.",de_no:"Persisk nyttår og vårens første dag. Over 3000 år gammel feiring av over 300 millioner mennesker.",de_fa:"سال نو فارسی و آغاز بهار. بیش از سه هزار سال قدمت، توسط بیش از ۳۰۰ میلیون نفر در سراسر جهان."},"12-21":{en:"Yalda Night",no:"Yalda-natt",fa:"شب یلدا",de_en:"The longest night of the year (winter solstice). Ancient Iranian celebration of light's victory over darkness. Families gather to read Hafez poetry, eat pomegranates and watermelon.",de_no:"Årets lengste natt (vintersolverv). Gammel iransk feiring. Familier samles, leser Hafez-poesi og spiser granatepler.",de_fa:"بلندترین شب سال. جشن کهن ایرانی. خانواده‌ها دور هم جمع می‌شوند، شعر حافظ می‌خوانند و انار و هندوانه می‌خورند."}},
+  2026:{"3-20":{en:"Nowruz — Persian New Year",no:"Nouruz — Persisk nyttår",fa:"نوروز — سال نو فارسی",de_en:"Persian New Year & first day of spring. Over 3,000 years old, celebrated by 300+ million people worldwide.",de_no:"Persisk nyttår og vårens første dag. Over 3000 år gammel.",de_fa:"سال نو فارسی و آغاز بهار. بیش از سه هزار سال قدمت."},"12-21":{en:"Yalda Night",no:"Yalda-natt",fa:"شب یلدا",de_en:"The longest night of the year (winter solstice). Families gather for Hafez poetry, pomegranates and stories.",de_no:"Årets lengste natt. Familier samles til Hafez-poesi, granatepler og historier.",de_fa:"بلندترین شب سال. خانواده‌ها دور هم جمع می‌شوند، شعر حافظ می‌خوانند."}},
+  2027:{"3-20":{en:"Nowruz — Persian New Year",no:"Nouruz — Persisk nyttår",fa:"نوروز — سال نو فارسی",de_en:"Persian New Year & first day of spring. Over 3,000 years old.",de_no:"Persisk nyttår og vårens første dag.",de_fa:"سال نو فارسی و آغاز بهار."},"12-21":{en:"Yalda Night",no:"Yalda-natt",fa:"شب یلدا",de_en:"The longest night of the year (winter solstice).",de_no:"Årets lengste natt.",de_fa:"بلندترین شب سال."}}
 };
 
 const SHAMSI={2025:1403,2026:1404,2027:1405};
 
+// Ramadan approximate dates (aligned with ISL_DATA Eid al-Fitr dates)
+const RAMADAN_DATA={
+  2025:{start:new Date(2025,1,28),end:new Date(2025,2,29)},  // Feb 28 – Mar 29
+  2026:{start:new Date(2026,1,18),end:new Date(2026,2,19)},  // Feb 18 – Mar 19
+  2027:{start:new Date(2027,1,7), end:new Date(2027,2,8)},   // Feb 7  – Mar 8
+};
+
 const MOON_DATA={
   2025:{"1-13":"🌕","1-21":"🌗","1-29":"🌑","2-5":"🌓","2-12":"🌕","2-20":"🌗","2-28":"🌑","3-6":"🌓","3-14":"🌕","3-22":"🌗","3-29":"🌑","4-5":"🌓","4-13":"🌕","4-21":"🌗","4-27":"🌑","5-4":"🌓","5-12":"🌕","5-20":"🌗","5-27":"🌑","6-2":"🌓","6-11":"🌕","6-19":"🌗","6-25":"🌑","7-2":"🌓","7-10":"🌕","7-18":"🌗","7-24":"🌑","7-31":"🌓","8-9":"🌕","8-16":"🌗","8-23":"🌑","8-30":"🌓","9-7":"🌕","9-14":"🌗","9-21":"🌑","9-29":"🌓","10-7":"🌕","10-13":"🌗","10-21":"🌑","10-29":"🌓","11-5":"🌕","11-12":"🌗","11-20":"🌑","11-28":"🌓","12-4":"🌕","12-11":"🌗","12-20":"🌑","12-27":"🌓"},
-  2026:{"1-3":"🌕","1-10":"🌗","1-18":"🌑","1-25":"🌓","2-1":"🌕","2-9":"🌗","2-17":"🌑","2-24":"🌓","3-3":"🌕","3-11":"🌗","3-18":"🌑","3-25":"🌓","4-1":"🌕","4-10":"🌗","4-17":"🌑","4-24":"🌓","5-1":"🌕","5-9":"🌗","5-17":"🌑","5-23":"🌓","5-31":"🌕","6-7":"🌗","6-15":"🌑","6-22":"🌓","6-29":"🌕","7-7":"🌗","7-15":"🌑","7-21":"🌓","7-29":"🌕","8-5":"🌗","8-13":"🌑","8-20":"🌓","8-27":"🌕","9-4":"🌗","9-12":"🌑","9-19":"🌓","9-26":"🌕","10-3":"🌗","10-11":"🌑","10-19":"🌓","10-25":"🌕","11-2":"🌗","11-9":"🌑","11-18":"🌓","11-24":"🌕","12-1":"🌗","12-9":"🌑","12-17":"🌓","12-23":"🌕","12-31":"🌗"},
+  2026:{"1-3":"🌕","1-10":"🌗","1-18":"🌑","1-26":"🌓","2-1":"🌕","2-9":"🌗","2-17":"🌑","2-24":"🌓","3-3":"🌕","3-11":"🌗","3-19":"🌑","3-25":"🌓","4-2":"🌓","4-10":"🌗","4-17":"🌑","4-24":"🌓","5-1":"🌕","5-9":"🌗","5-16":"🌑","5-23":"🌓","5-31":"🌕","6-8":"🌓","6-15":"🌑","6-21":"🌓","6-30":"🌕","7-7":"🌗","7-15":"🌑","7-21":"🌓","7-29":"🌕","8-6":"🌗","8-12":"🌑","8-20":"🌓","8-28":"🌕","9-4":"🌗","9-11":"🌑","9-18":"🌓","9-26":"🌕","10-3":"🌗","10-10":"🌑","10-18":"🌓","10-26":"🌕","11-1":"🌗","11-9":"🌑","11-17":"🌓","11-24":"🌕","12-1":"🌗","12-9":"🌑","12-17":"🌓","12-23":"🌕","12-30":"🌗"},
   2027:{"1-7":"🌕","1-15":"🌗","1-22":"🌑","1-29":"🌓","2-6":"🌕","2-14":"🌗","2-20":"🌑","2-28":"🌓","3-8":"🌕","3-15":"🌗","3-22":"🌑","3-29":"🌓","4-6":"🌕","4-13":"🌗","4-20":"🌑","4-28":"🌓","5-6":"🌕","5-13":"🌗","5-20":"🌑","5-27":"🌓","6-4":"🌕","6-11":"🌗","6-18":"🌑","6-26":"🌓","7-4":"🌕","7-10":"🌗","7-18":"🌑","7-25":"🌓","8-2":"🌕","8-9":"🌗","8-17":"🌑","8-24":"🌓","8-31":"🌕","9-8":"🌗","9-15":"🌑","9-22":"🌓","9-30":"🌕","10-7":"🌗","10-15":"🌑","10-22":"🌓","10-30":"🌕","11-6":"🌗","11-13":"🌑","11-20":"🌓","11-28":"🌕","12-6":"🌗","12-13":"🌑","12-20":"🌓","12-28":"🌕"}
 };
 
@@ -1550,128 +1382,205 @@ function buildPC(){
   const ISL=ISL_DATA[selYear]||{};
   const PER=PERS_DATA[selYear]||{};
   const MOON=MOON_DATA[selYear]||{};
-  const sh=SHAMSI[selYear]||'';
+  const RAM=RAMADAN_DATA[selYear]||null;
 
-  // Day name abbreviations for print
+  // Ramadan: only mark the start day
+  const isRamStart=(m,d)=>{
+    if(!RAM) return false;
+    return RAM.start.getMonth()===m && RAM.start.getDate()===d;
+  };
+  // Months that contain Ramadan (for pill display)
+  const ramMonths=RAM?new Set([RAM.start.getMonth(),RAM.end.getMonth()]):new Set();
+
+  // Season class per month index
+  const season=(m)=>(m===0||m===1||m===11)?'s-win':(m<=4)?'s-spr':(m<=7)?'s-sum':'s-aut';
+
+  // Day name abbreviations (single letter)
   const dn=fa?['د','س','چ','پ','ج','ش','ی']:lang==='no'?['M','T','O','T','F','L','S']:['M','T','W','T','F','S','S'];
 
-  // ── PAGE 1: Calendar Grid ──
+  const monthNames_en=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const monthAb_en=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+  // ── PAGE 1 ──────────────────────────────────────
   let mHtml='';
   for(let m=0;m<12;m++){
     const dim=new Date(selYear,m+1,0).getDate();
     const fd=new Date(selYear,m,1).getDay();
     const off=fd===0?6:fd-1;
+    const sn=season(m);
+    const mNum=String(m+1).padStart(2,'0');
+    // Season label (short, language-aware)
+    const seasonLabels={
+      en:['Winter','Spring','Summer','Autumn'],
+      no:['Vinter','Vår','Sommer','Høst'],
+      fa:['زمستان','بهار','تابستان','پاییز']
+    };
+    const snIdx={'s-win':0,'s-spr':1,'s-sum':2,'s-aut':3}[sn];
+    const snLabel=(seasonLabels[lang]||seasonLabels.en)[snIdx];
 
-    // Collect pills for this month — short names for print
+    // Pills - very short names to fit one line
     const pillsArr=[];
-    // Short name helper: max 18 chars
-    const short=(s)=>s.length>18?s.substring(0,16)+'…':s;
+    const short=(s)=>{
+      // Ultra-short abbreviations for known events
+      const abbr={
+        "New Year's Day":"New Year","Nyttårsdag":"Nyttår","سال نو میلادی":"سال نو",
+        "Maundy Thursday":"Maundy Thu","Skjærtorsdag":"Skjærtors","پنجشنبه مقدس":"پنج.مقدس",
+        "Good Friday":"Good Fri","Langfredag":"Langfre","جمعه مقدس":"ج.مقدس",
+        "Easter Sunday":"Easter","Første påskedag":"Påskedag","یکشنبه عید پاک":"عید پاک",
+        "Easter Monday":"E.Monday","Andre påskedag":"A.Påske","دوشنبه عید پاک":"د.عید پاک",
+        "Labour Day":"Labour","Arbeidernes dag":"Arbeider","روز کارگر":"کارگر",
+        "Ascension Day":"Ascension","Kristi himmelfartsdag":"Himmel","روز صعود مسیح":"صعود",
+        "Constitution Day":"17.Mai","Grunnlovsdagen":"Grunnlov","روز قانون اساسی":"قانون اساسی",
+        "Whit Sunday (Pentecost)":"Pentecost","Første pinsedag":"Pinsedag","یکشنبه پنطیکاست":"پنطیکاست",
+        "Whit Monday":"Whit Mon","Andre pinsedag":"A.Pinse","دوشنبه پنطیکاست":"د.پنطیکاست",
+        "Christmas Day":"Christmas","Første juledag":"Juledag","روز اول کریسمس":"کریسمس",
+        "Boxing Day":"Boxing Day","Andre juledag":"A.Jule","روز دوم کریسمس":"د.کریسمس",
+        "Eid al-Fitr":"Eid al-Fitr","Id al-Fitr":"Id al-Fitr","عید فطر":"عید فطر",
+        "Eid al-Adha":"Eid al-Adha","Id al-Adha":"Id al-Adha","عید قربان":"عید قربان",
+        "Nowruz — Persian New Year":"Nowruz","Nouruz — Persisk nyttår":"Nouruz","نوروز — سال نو فارسی":"نوروز",
+        "Yalda Night":"Yalda","Yalda-natt":"Yalda","شب یلدا":"یلدا"
+      };
+      return abbr[s]||(s.length>14?s.substring(0,12)+'…':s);
+    };
     for(let d=1;d<=dim;d++){
       const k=`${m+1}-${d}`;
       if(HOL[k]) pillsArr.push({cl:'ph',nm:short(HOL[k][lang]||HOL[k].en)});
       if(ISL[k]) pillsArr.push({cl:'pi',nm:short(ISL[k][lang]||ISL[k].en)});
       if(PER[k]) pillsArr.push({cl:'pp',nm:short(PER[k][lang]||PER[k].en)});
     }
+    if(ramMonths.has(m)) pillsArr.unshift({cl:'pr',nm:fa?'رمضان':lang==='no'?'Ramadan':'Ramadan'});
     const uniqPills=[...new Map(pillsArr.map(p=>[p.nm,p])).values()];
 
-    // Build day cells
+    // ISO week number helper
+    const isoWeek=(yr,mo,day)=>{
+      const d=new Date(yr,mo,day);
+      d.setHours(0,0,0,0);
+      d.setDate(d.getDate()+4-(d.getDay()||7));
+      const y0=new Date(d.getFullYear(),0,1);
+      return Math.ceil(((d-y0)/86400000+1)/7);
+    };
+
+    // Day cells — with ISO week number column
     let cells='';
-    for(let i=0;i<off;i++) cells+=`<div class="pcd"></div>`;
-    for(let d=1;d<=dim;d++){
-      const dw=new Date(selYear,m,d).getDay();
-      const k=`${m+1}-${d}`;
-      const isWE=dw===0||dw===6;
-      const isH=!!HOL[k],isI=!!ISL[k],isP=!!PER[k];
-      const isMulti=(isH&&(isI||isP))||(isI&&isP);
-      const moon=MOON[k]||'';
-      let c='pcd';
-      if(isMulti)c+=' pml';
-      else if(isH)c+=' ph';
-      else if(isI)c+=' pi';
-      else if(isP)c+=' pp';
-      else if(isWE)c+=' pw';
-      if(!isH&&!isI&&!isP&&!isWE&&moon)c+=' pm';
-      let dots='';
-      if(isH||isI||isP||moon){
-        dots='<div class="pcd-dots">';
-        if(isH) dots+='<div class="pcd-dot dh"></div>';
-        if(isI) dots+='<div class="pcd-dot di"></div>';
-        if(isP) dots+='<div class="pcd-dot dp"></div>';
-        if(!isH&&!isI&&!isP&&moon) dots+='<div class="pcd-dot dm"></div>';
-        dots+='</div>';
+    let lastWeek=-1;
+    // Total slots = off empty + dim days
+    const totalSlots=off+dim;
+    for(let slot=0;slot<totalSlots;slot++){
+      const colPos=slot%7;
+      // At start of each row (col 0), insert week number cell
+      if(colPos===0){
+        // For pre-month empty slots, calculate week from day 1; otherwise from actual day
+        const firstDayOfRow=slot-off+1;
+        const dayForWeek=Math.max(1,Math.min(firstDayOfRow,dim));
+        const wn=isoWeek(selYear,m,dayForWeek);
+        if(wn!==lastWeek){
+          cells+=`<div class="pcd-wk">${wn}</div>`;
+          lastWeek=wn;
+        } else {
+          cells+=`<div class="pcd-wk"></div>`;
+        }
       }
-      cells+=`<div class="${c}"><div class="pcd-n">${d}</div>${dots}</div>`;
+      if(slot<off){
+        cells+=`<div class="pcd"></div>`;
+      } else {
+        const d=slot-off+1;
+        const dw=new Date(selYear,m,d).getDay();
+        const k=`${m+1}-${d}`;
+        const isWE=dw===0||dw===6;
+        const isH=!!HOL[k],isI=!!ISL[k],isP=!!PER[k];
+        const isR=isRamStart(m,d)&&!isI;
+        const isMulti=(isH&&(isI||isP))||(isI&&isP);
+        const moon=MOON[k]||'';
+        let c='pcd';
+        if(isMulti)  c+=' pml';
+        else if(isH) c+=' ph';
+        else if(isI) c+=' pi';
+        else if(isR) c+=' pr';
+        else if(isP) c+=' pp';
+        else if(isWE)c+=' pw';
+        if(!isH&&!isI&&!isP&&!isR&&!isWE&&moon) c+=' pm';
+        let dots='';
+        if(isH||isI||isP||isR||moon){
+          dots='<div class="pcd-dots">';
+          if(isH) dots+='<div class="pcd-dot dh"></div>';
+          if(isI) dots+='<div class="pcd-dot di"></div>';
+          if(isR) dots+='<div class="pcd-dot dr"></div>';
+          if(isP) dots+='<div class="pcd-dot dp"></div>';
+          dots+='</div>';
+        }
+        const moonHtml=moon?`<div class="pcd-m">${moon}</div>`:'';
+        cells+=`<div class="${c}"><div class="pcd-n">${d}</div>${moonHtml}${dots}</div>`;
+      }
     }
 
     const pillsHtml=uniqPills.length
       ? uniqPills.map(p=>`<span class="pcmo-pill ${p.cl}">${p.nm}</span>`).join('')
-      : `<span style="font-size:6px;color:#ccc;">—</span>`;
+      : `<span style="font-size:5px;color:#c0c8dc;">—</span>`;
 
     mHtml+=`<div class="pcmo${fa?' pcmo-fa':''}">
-      <div class="pcmo-hd">
+      <div class="pcmo-hd ${sn}" data-num="${mNum}">
         <div class="pcmo-top">
           <div class="pcmo-name">${t.months[m]}</div>
-          <div class="pcmo-num">${String(m+1).padStart(2,'0')}</div>
+          <div class="pcmo-sn ${sn}">${snLabel}</div>
         </div>
         <div class="pcmo-pills">${pillsHtml}</div>
       </div>
-      <div class="pcr">${dn.map((n,i)=>`<div class="pcrc${i>=5?' we':''}">${n}</div>`).join('')}</div>
+      <div class="pcr"><div class="pcrc wk">W</div>${dn.map((n,i)=>`<div class="pcrc${i>=5?' we':''}">${n}</div>`).join('')}</div>
       <div class="pcdg">${cells}</div>
     </div>`;
   }
 
-  const leg=t.pcLeg;
-  const legendHtml=`
-    <div class="pcli"><div class="pcld r"></div>${leg[0]}</div>
-    <div class="pclsep"></div>
-    <div class="pcli"><div class="pcld v"></div>${leg[1]}</div>
-    <div class="pclsep"></div>
-    <div class="pcli"><div class="pcld g"></div>${leg[2]}</div>
-    <div class="pclsep"></div>
-    <div class="pcli"><div class="pcld p"></div>${leg[3]}</div>
-    <div class="pclsep"></div>
-    <div class="pcli"><div class="pcld m"></div>🌙 ${leg[5]}</div>
-  `;
-
   const flagImg=`<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Flag_of_Norway.svg/1280px-Flag_of_Norway.svg.png" alt="Norway">`;
+  const leg=t.pcLeg;
+  const ramLabel=fa?'رمضان':lang==='no'?'Ramadan':'Ramadan';
+  const creditStr=fa?'ساخته <strong>Bari Plux</strong>':'By <strong>Bari Plux</strong>';
 
   const page1=`<div class="pc-page">
     <div class="pch">
       <div class="pch-L">
         <div class="pch-flag">${flagImg}</div>
-        <div class="pch-wordmark">
-          <div class="pch-title">${fa?`<em>تقویم</em> نروژ`:lang==='no'?`Norsk <em>Kalender</em>`:`Norsk <em>Calendar</em>`}</div>
-          <div class="pch-sub">${fa?`تقویم رسمی نروژ ${selYear}`:lang==='no'?`Offisiell norsk kalender ${selYear}`:`Official Norwegian Calendar ${selYear}`}</div>
-        </div>
+        <div class="pch-title">${fa?`<em>تقویم</em> نروژ`:lang==='no'?`Norsk <em>Kalender</em>`:`Norsk <em>Calendar</em>`}<span class="pch-yr">${selYear}</span></div>
       </div>
       <div class="pch-R">
-        <div class="pch-year-badge">${selYear}</div>
-        <div class="pch-tags">
-          <span class="pch-tag t-red">${fa?'تعطیلات رسمی':lang==='no'?'Helligdager':'Public Holidays'}</span>
-          <span class="pch-tag t-blu">${fa?'فازهای ماه':lang==='no'?'Månefaser':'Moon Phases'}</span>
-          <span class="pch-tag t-grn">${fa?'اعیاد اسلامی':lang==='no'?'Islamske høytider':'Islamic Feasts'}</span>
-          <span class="pch-tag t-gld">${fa?'مناسبت‌های ایرانی':lang==='no'?'Persiske hendelser':'Persian Events'}</span>
+        <div class="pch-leg">
+          <div class="pch-li"><div class="pch-ld r"></div>${leg[0]}</div>
+          <div class="pch-sep"></div>
+          <div class="pch-li"><div class="pch-ld v"></div>${leg[1]}</div>
+          <div class="pch-sep"></div>
+          <div class="pch-li"><div class="pch-ld g"></div>${leg[2]}</div>
+          <div class="pch-sep"></div>
+          <div class="pch-li"><div class="pch-ld rm"></div>${ramLabel}</div>
+          <div class="pch-sep"></div>
+          <div class="pch-li"><div class="pch-ld p"></div>${leg[3]}</div>
+          <div class="pch-sep"></div>
+          <div class="pch-li"><div class="pch-ld m"></div>🌙</div>
         </div>
+        <div class="pch-credit">${creditStr} · bariplux.com</div>
       </div>
     </div>
     <div class="pc-body">
       <div class="pc-mgrid">${mHtml}</div>
-      <div class="pc-leg">${legendHtml}</div>
-    </div>
-    <div class="pc-foot1">
-      <div class="pc-foot-src">lovdata.no · islamsk.no · astronomical data · persian calendar</div>
-      <div style="display:flex;align-items:center;gap:12px;">
-        <div style="font-family:'JetBrains Mono',monospace;font-size:6px;color:#8890a8;letter-spacing:.5px;">Developed by <strong style="color:#b0a060;letter-spacing:.3px;">Bari Plux</strong> · bariplux.com</div>
-        <div class="pc-foot-pg">Norsk Kalender ${selYear} — 1 / 2</div>
-      </div>
     </div>
   </div>`;
 
-  // ── PAGE 2: Holiday Details ──
+  // ── PAGE 2 ──────────────────────────────────────
+
+  // Build sorted list including Ramadan as a card entry
+  const ramEntry=RAM?[{
+    k:`${RAM.start.getMonth()+1}-${RAM.start.getDate()}`,
+    v:{en:'Ramadan',no:'Ramadan',fa:'رمضان',
+       de_en:`The holy month of fasting in Islam. Start: ${RAM?RAM.start.getDate():''} ${RAM?TX[lang].mAb[RAM.start.getMonth()]:''} · End: ${RAM?RAM.end.getDate():''} ${RAM?TX[lang].mAb[RAM.end.getMonth()]:''} · ${RAM?Math.round((RAM.end-RAM.start)/86400000)+1:''} days. Date is approximate.`,
+       de_no:`Den hellige fastingsmåneden i islam. Start: ${RAM?RAM.start.getDate():''} ${RAM?TX[lang].mAb[RAM.start.getMonth()]:''} · Slutt: ${RAM?RAM.end.getDate():''} ${RAM?TX[lang].mAb[RAM.end.getMonth()]:''} · ${RAM?Math.round((RAM.end-RAM.start)/86400000)+1:''} dager. Dato er omtrentlig.`,
+       de_fa:`ماه مقدس روزه‌داری در اسلام. آغاز: ${RAM?RAM.start.getDate():''} ${RAM?TX[lang].mAb[RAM.start.getMonth()]:''} · پایان: ${RAM?RAM.end.getDate():''} ${RAM?TX[lang].mAb[RAM.end.getMonth()]:''} · ${RAM?Math.round((RAM.end-RAM.start)/86400000)+1:''} روز. تاریخ تقریبی.`,
+       approx:true},
+    tp:'hr'
+  }]:[];
+
   const allHols=[
     ...Object.entries(HOL).map(([k,v])=>({k,v,tp:'hn'})),
     ...Object.entries(ISL).map(([k,v])=>({k,v,tp:'hi'})),
     ...Object.entries(PER).map(([k,v])=>({k,v,tp:'hp'})),
+    ...ramEntry,
   ].sort((a,b)=>{
     const[am,ad]=a.k.split('-').map(Number),[bm,bd]=b.k.split('-').map(Number);
     return am!==bm?am-bm:ad-bd;
@@ -1680,13 +1589,12 @@ function buildPC(){
   let holCardsHtml='';
   for(const {k,v,tp} of allHols){
     const[mo,d]=k.split('-').map(Number);
-    const nm=v[lang]||v.en;
+    const nm=(tp==='hr'?(fa?'🌙 رمضان':lang==='no'?'🌙 Ramadan':'🌙 Ramadan'):(v[lang]||v.en));
     const de=v[`de_${lang}`]||v.de_en||'';
     const dow=new Date(selYear,mo-1,d).getDay();
     const alt=lang==='fa'?(v.en||''):lang==='en'?(v.no||''):(v.en||'');
-    const tagMap={hn:t.badge.off,hi:t.badge.isl,hp:t.badge.per};
-    const tagHtml=`<span class="pc-hc-tag ${tp}">${tagMap[tp]}</span>${(tp==='hi'&&v.approx)?`<span class="pc-hc-tag ha">${t.badge.approx}</span>`:''}`;
-
+    const tagMap={hn:t.badge.off,hi:t.badge.isl,hp:t.badge.per,hr:fa?'اسلامی':lang==='no'?'Islamsk':'Islamic'};
+    const tagHtml=`<span class="pc-hc-tag ${tp}">${tagMap[tp]}</span>${(tp==='hi'||tp==='hr')&&v.approx?`<span class="pc-hc-tag ha">${t.badge.approx}</span>`:''}`;
     holCardsHtml+=`<div class="pc-hc ${tp}${fa?' pc-hc-fa':''}">
       <div class="pc-hc-top">
         <div class="pc-hc-date">
@@ -1704,28 +1612,40 @@ function buildPC(){
     </div>`;
   }
 
+  const p2TitleStr=fa?`تعطیلات و جشن‌ها — <em>${selYear}</em>`:
+    lang==='no'?`Helligdager & Feiringer — <em>${selYear}</em>`:
+    `Holidays & Celebrations — <em>${selYear}</em>`;
+  const p2SubStr=fa?'تقویم رسمی نروژ · رمضان · bariplux.com':
+    lang==='no'?'Offisiell norsk kalender · Ramadan · bariplux.com':
+    'Official Norwegian Calendar · Ramadan · bariplux.com';
+  const holLblStr=fa?'تعطیلات و مناسبت‌ها':lang==='no'?'Helligdager og høytider':'Holidays & Celebrations';
+
   const page2=`<div class="pc-page p2">
     <div class="pc-p2-hd">
       <div class="pc-p2-L">
         <div class="pch-flag">${flagImg}</div>
         <div>
-          <div class="pc-p2-title">${fa?`تعطیلات و جشن‌ها — <em>${selYear}</em>`:lang==='no'?`Helligdager & Feiringer — <em>${selYear}</em>`:`Holidays & Celebrations — <em>${selYear}</em>`}</div>
-          <div class="pc-p2-sub">${t.pcMeta.replace('{Y}',selYear)}</div>
+          <div class="pc-p2-title">${p2TitleStr}</div>
+          <div class="pc-p2-sub">${p2SubStr}</div>
         </div>
       </div>
       <div class="pch-year-pill">${selYear}</div>
     </div>
     <div class="pc-hol-body">
+      <div class="pc-hol-section-lbl">${holLblStr}</div>
       <div class="pc-hol-grid">${holCardsHtml}</div>
     </div>
     <div class="pc-foot2">
-      <div class="pc-foot-src">lovdata.no · islamsk.no · astronomical data · persian calendar</div>
-      <div class="pc-foot-pg">Norsk Kalender ${selYear} — 2 / 2</div>
+      <div class="pc-foot-src">lovdata.no · islamsk.no · astronomical data · persian calendar · ramadan</div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:5.5px;color:#8090b0;letter-spacing:.3px;">Bari Plux · bariplux.com</span>
+        <div class="pc-foot-pg">Norsk Kalender ${selYear} — 2 / 2</div>
+      </div>
     </div>
   </div>`;
 
   const pc=document.getElementById('pc');
-  pc.className=fa?'fa':'';
+  pc.className=fa?'fa pc-fa':'';
   pc.innerHTML=page1+page2;
   return pc;
 }
@@ -1737,45 +1657,77 @@ function doExport(type){
   let css='';
   try{css=Array.from(document.styleSheets).map(s=>{try{return Array.from(s.cssRules).map(r=>r.cssText).join('\n');}catch(e){return '';}}).join('\n');}catch(e){}
   const autoprint=(type==='print');
+
+  const overrides=`
+*{box-sizing:border-box!important;}
+html,body{width:794px;background:#f3f5fb;font-family:'Plus Jakarta Sans',${fa?"'Vazirmatn',":''}sans-serif;${fa?'direction:rtl;':''}}
+${fa?`.pc-fa .pch-title,.pc-fa .pc-p2-title{font-family:'Amiri',serif;}
+.pc-fa .pcmo-name{font-family:'Amiri',serif;font-size:11px;font-weight:700;}
+.pc-fa .pc-hc-name{font-family:'Vazirmatn',sans-serif;}
+.pc-fa .pc-hc-desc{font-family:'Vazirmatn',sans-serif;font-size:6.5px;}
+.pc-fa .pcd-n{font-family:'Noto Kufi Arabic',sans-serif;}`:''}
+#pc{position:static!important;left:0!important;top:0!important;z-index:auto!important;display:block!important;width:794px!important;background:#f3f5fb!important;}
+/* Page containers */
+.pc-page{width:794px!important;height:1123px!important;overflow:hidden!important;display:flex!important;flex-direction:column!important;page-break-after:always;break-after:page;background:#f3f5fb!important;}
+.pc-page.p2{height:auto!important;min-height:1123px!important;overflow:visible!important;page-break-after:auto;break-after:auto;background:#f8f9fc!important;}
+/* Header */
+.pch,.pc-p2-hd{height:50px!important;flex-shrink:0!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+/* Body */
+.pc-body{flex:1!important;min-height:0!important;display:flex!important;flex-direction:column!important;padding:8px 14px 7px!important;background:#f3f5fb!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+/* Grid */
+.pc-mgrid{display:grid!important;grid-template-columns:repeat(3,1fr)!important;grid-template-rows:repeat(4,1fr)!important;gap:6px!important;flex:1!important;min-height:0!important;}
+.pcmo{display:flex!important;flex-direction:column!important;min-height:0!important;overflow:hidden!important;}
+/* Seasonal headers */
+.s-win,.s-spr,.s-sum,.s-aut{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+.s-win{background:#f4f7fd!important;}.s-spr{background:#f2f9f4!important;}.s-sum{background:#faf6ec!important;}.s-aut{background:#f8f2ef!important;}
+.s-win .pcmo-name{color:#1a3870!important;}.s-spr .pcmo-name{color:#174828!important;}.s-sum .pcmo-name{color:#583808!important;}.s-aut .pcmo-name{color:#4a1c0c!important;}
+/* Day name row */
+.pcr{background:#e8eef8!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;display:grid!important;grid-template-columns:18px repeat(7,1fr)!important;}
+.pcrc{font-size:6.5px!important;font-weight:800!important;}
+.pcrc.wk{font-size:5px!important;font-weight:700!important;color:#9090b0!important;}
+/* Day cells */
+.pcdg{display:grid!important;grid-template-columns:18px repeat(7,1fr)!important;grid-auto-rows:minmax(0,1fr)!important;flex:1!important;min-height:0!important;overflow:hidden!important;padding:2px 4px 3px!important;gap:1.5px!important;}
+/* Week number cells */
+.pcd-wk{display:flex!important;align-items:center!important;justify-content:center!important;font-family:'JetBrains Mono',monospace!important;font-size:5px!important;font-weight:700!important;color:#a0a8c0!important;background:rgba(100,110,180,.06)!important;border-radius:2px!important;border-right:1px solid #e8eef8!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+.pcd{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;min-height:0!important;overflow:hidden!important;aspect-ratio:unset!important;width:100%!important;}
+.pcd-n{font-size:9px!important;font-weight:600!important;line-height:1!important;flex-shrink:0!important;}
+.pcd-m{font-size:6px!important;line-height:1!important;flex-shrink:0!important;margin-top:0!important;}
+.pcd.ph{background:rgba(170,20,8,.13)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+.pcd.pi{background:rgba(10,80,48,.12)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+.pcd.pp{background:rgba(150,90,0,.12)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+.pcd.pr{background:rgba(90,48,190,.08)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+.pcd.pw{background:rgba(72,56,170,.07)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+/* Ramadan banner */
+.pc-ram-banner{-webkit-print-color-adjust:exact;print-color-adjust:exact;background:linear-gradient(100deg,#1a0840 0%,#2a1060 100%)!important;}
+/* Page 2 */
+.pc-hol-body{background:#f8f9fc!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+.pc-hc-date{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+.pc-hc.hn .pc-hc-date{background:#fce8e6!important;}.pc-hc.hi .pc-hc-date{background:#e0f2ea!important;}.pc-hc.hp .pc-hc-date{background:#fdf0d8!important;}
+@media print{
+  @page{size:A4 portrait;margin:0mm;}
+  html,body{width:210mm;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .pc-page{width:210mm!important;height:297mm!important;page-break-after:always;break-after:page;overflow:hidden!important;}
+  .pc-page.p2{height:auto!important;min-height:297mm!important;overflow:visible!important;page-break-after:auto;break-after:auto;}
+}`;
+
   const html=`<!DOCTYPE html><html><head>
 <meta charset="UTF-8">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-<title>Norsk Kalender ${selYear}</title>
-<style>
-*{box-sizing:border-box;margin:0;padding:0;}
-html,body{width:794px;background:#fff;font-family:'Plus Jakarta Sans',${fa?"'Vazirmatn',":''}sans-serif;${fa?'direction:rtl;':''}}
-${css}
-#pc{position:static!important;left:0!important;top:0!important;z-index:auto!important;display:block!important;width:794px!important;background:#fff!important;}
-.pc-page{page-break-after:always;break-after:page;}
-.pc-page:last-child{page-break-after:auto;break-after:auto;}
-/* ── LAYOUT SAFETY OVERRIDES ── */
-.pc-mgrid{display:grid!important;grid-template-columns:repeat(3,1fr)!important;grid-template-rows:repeat(4,1fr)!important;gap:6px!important;flex:1!important;min-height:0!important;}
-.pcmo{display:flex!important;flex-direction:column!important;min-height:0!important;overflow:hidden!important;}
-.pcdg{display:grid!important;grid-template-columns:repeat(7,1fr)!important;grid-auto-rows:minmax(0,1fr)!important;flex:1!important;min-height:0!important;overflow:hidden!important;padding:2px 4px 3px!important;gap:1px!important;}
-.pcd{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;min-height:0!important;overflow:hidden!important;aspect-ratio:unset!important;}
-.pcd-n{font-size:6px!important;line-height:1!important;white-space:nowrap!important;flex-shrink:0!important;}
-.pcd-m{font-size:2.5px!important;margin-top:.5px!important;flex-shrink:0!important;}
-.pcd-dots{margin-top:1px!important;flex-shrink:0!important;}
-.pcd-dot{width:2px!important;height:2px!important;}
-@media print{
-  @page{size:A4 portrait;margin:0;}
-  html,body{width:210mm;}
-  img{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
-  .pc-page{page-break-after:always;break-after:page;}
-  .pc-page:last-child{page-break-after:auto;break-after:auto;}
-  .pch,.pc-p2-hd{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
-}
-</style></head><body>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Vazirmatn:wght@300;400;500;600;700;800;900&family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Kufi+Arabic:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<title>Norsk Kalender ${selYear} — Bari Plux</title>
+<style>${css}${overrides}</style></head><body>
 ${pc.outerHTML}
 ${autoprint?`<script>
-var imgs=document.images,loaded=0,total=imgs.length;
-if(total===0){setTimeout(window.print,800);}
-else{for(var i=0;i<total;i++){imgs[i].addEventListener('load',function(){loaded++;if(loaded===total)setTimeout(window.print,600);});if(imgs[i].complete){loaded++;if(loaded===total)setTimeout(window.print,600);}}}
+var imgs=document.images,loaded=0,total=imgs.length,done=0;
+function tryPrint(){setTimeout(window.print,750);}
+if(total===0){tryPrint();}
+else{for(var i=0;i<total;i++){imgs[i].addEventListener('load',function(){done++;if(done>=total)tryPrint();});imgs[i].addEventListener('error',function(){done++;if(done>=total)tryPrint();});if(imgs[i].complete){done++;}}if(done>=total)tryPrint();}
 <\/script>`:''}
 </body></html>`;
+
   const w=window.open('','_blank','width=860,height=1240');
-  if(!w){alert('Please allow popups.');return;}
+  if(!w){alert('Please allow popups to export the calendar.');return;}
   w.document.open();w.document.write(html);w.document.close();
 }
 
