@@ -677,6 +677,8 @@ let db = null, _currentUser = null;
 let usersListener = null, reportsListener = null;
 let _confirmAction = null;
 
+firebase.initializeApp(firebaseConfig);
+
 async function sha256(msg) {
     const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(msg));
     return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
@@ -734,6 +736,7 @@ async function checkPassword() {
     btn.disabled=true; btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Checking...';
     try {
         if(await sha256(val)===ADMIN_HASH) {
+            await firebase.auth().signInWithEmailAndPassword('mister.attaye@gmail.com', val);
             sessionStorage.setItem('bp_admin','1');
             document.getElementById('gate').classList.add('hidden');
             document.getElementById('app').classList.add('show');
@@ -744,12 +747,29 @@ async function checkPassword() {
             document.getElementById('gateInput').value='';
             setTimeout(()=>e.classList.remove('show'),2200);
         }
-    } catch(e){console.error(e);}
+    } catch(e){
+        if(e.code==='auth/user-not-found'||e.code==='auth/wrong-password') {
+            const e2=document.getElementById('gateError');
+            e2.innerHTML='<i class="fas fa-times-circle"></i> Admin account not found or wrong password';
+            e2.classList.add('show');
+            document.getElementById('gateInput').value='';
+            setTimeout(()=>e2.classList.remove('show'),3200);
+        } else if(e.code==='auth/invalid-email') {
+            const e2=document.getElementById('gateError');
+            e2.innerHTML='<i class="fas fa-times-circle"></i> Admin email not configured';
+            e2.classList.add('show');
+            document.getElementById('gateInput').value='';
+            setTimeout(()=>e2.classList.remove('show'),3200);
+        } else {
+            console.error(e);
+        }
+    }
     btn.disabled=false; btn.innerHTML='<i class="fas fa-unlock-alt"></i> Enter';
 }
 document.getElementById('gateInput').addEventListener('keydown',e=>{ if(e.key==='Enter') checkPassword(); });
 function logout() {
     sessionStorage.removeItem('bp_admin');
+    firebase.auth().signOut();
     document.getElementById('gate').classList.remove('hidden');
     document.getElementById('app').classList.remove('show');
     document.getElementById('gateInput').value='';
@@ -758,7 +778,6 @@ function logout() {
 }
 
 function initApp() {
-    if(!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     db = firebase.database();
     loadUsers();
     db.ref('bugReports').on('value', snap => {
@@ -1299,11 +1318,15 @@ document.addEventListener('keydown', e=>{
     }
 });
 
-if(sessionStorage.getItem('bp_admin')==='1') {
-    document.getElementById('gate').classList.add('hidden');
-    document.getElementById('app').classList.add('show');
-    initApp();
-}
+firebase.auth().onAuthStateChanged(user => {
+    if(user && sessionStorage.getItem('bp_admin')==='1') {
+        document.getElementById('gate').classList.add('hidden');
+        document.getElementById('app').classList.add('show');
+        initApp();
+    } else {
+        sessionStorage.removeItem('bp_admin');
+    }
+});
 </script>
 </body>
 </html>
