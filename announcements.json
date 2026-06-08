@@ -1,5 +1,13 @@
 [
   {
+    "id": "Developer Team",
+    "title": "PLUX Developer Team",
+    "description": "We would like to inform everyone that the Bari Plux Tool update will resume tomorrow, and we will continue working towards a better and more awesome update than ever! We ask all contacts and community members to let us know about the program's problems, suggestions, and expectations so that we can provide the best product. Please share your comments now while there is still time; otherwise, subsequent requests will be deferred to secondary updates.",
+    "status": "New",
+    "date": "2026-06-09",
+    "timestamp": 1776000000
+  },
+  {
     "id": "Help service",
     "title": "PLUX Help Service",
     "description": "Dear user, we are monitoring all the problems of Bari Plux Tool. If you encounter any problem or bug in the program, please inform us through the Contact -> Report section or via our social media apps.",
