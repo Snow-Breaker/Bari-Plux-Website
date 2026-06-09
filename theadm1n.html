@@ -748,7 +748,7 @@ async function checkPassword() {
             setTimeout(()=>e.classList.remove('show'),2200);
         }
     } catch(e){
-        if(e.code==='auth/user-not-found'||e.code==='auth/wrong-password') {
+        if(e.code==='auth/user-not-found'||e.code==='auth/wrong-password'||e.code==='auth/invalid-login-credentials') {
             const e2=document.getElementById('gateError');
             e2.innerHTML='<i class="fas fa-times-circle"></i> Admin account not found or wrong password';
             e2.classList.add('show');
