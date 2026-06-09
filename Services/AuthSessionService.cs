@@ -8,6 +8,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Win32;
 using Serilog;
+using BariPluxTool.Infrastructure;
 
 namespace BariPluxTool.Services
 {
@@ -185,7 +186,12 @@ namespace BariPluxTool.Services
 
             try
             {
+                // SECURITY: get Firebase auth token before reading session (rules require auth != null)
+                var fbToken = await GetFirebaseTokenAsync();
+
                 var url = $"{FirebaseDbUrl}/sessions/{_currentUser.Id}/{_currentUser.SessionId}.json";
+                if (!string.IsNullOrEmpty(fbToken))
+                    url += $"?auth={fbToken}";
                 var json = await SharedHttpClient.Instance.GetStringAsync(url);
                 if (string.IsNullOrEmpty(json) || json == "null")
                     return false;
@@ -270,6 +276,13 @@ namespace BariPluxTool.Services
                 user.SessionId = Guid.NewGuid().ToString("N");
             SaveSession();
             _ = WriteSessionToFirebaseAsync();
+
+            // Fire-and-forget Discord notification for new user registration
+            var notifier = ServiceBootstrapper.GetService<DiscordNotificationService>();
+            if (notifier != null)
+            {
+                _ = notifier.NotifyNewUserAsync(user.Email, user.Id, user.LoginMethod);
+            }
         }
 
         public void ClearSession()
@@ -353,7 +366,12 @@ namespace BariPluxTool.Services
 
                 _logger.Information("[ClaimToken] Attempting to claim token for uid={Uid}", uid);
 
+                // SECURITY: get Firebase auth token before reading pending_tokens (rules require auth != null)
+                var fbToken = await GetFirebaseTokenAsync();
+
                 var tokenUrl = $"{FirebaseDbUrl}/pending_tokens/{uid}/{sessionId}.json";
+                if (!string.IsNullOrEmpty(fbToken))
+                    tokenUrl += $"?auth={fbToken}";
                 var json = await SharedHttpClient.Instance.GetStringAsync(tokenUrl);
                 if (string.IsNullOrEmpty(json) || json == "null")
                 {

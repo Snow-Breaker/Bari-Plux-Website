@@ -792,8 +792,7 @@
                 const isDiscord = user.loginMethod === 'discord';
                 const nodePath = isDiscord ? 'discordUsers/' + user.id : 'users/' + user.id;
 
-                const userRef = database.ref(nodePath);
-                userRef.set({
+                const data = {
                     name: user.name,
                     email: user.email,
                     loginMethod: user.loginMethod,
@@ -805,19 +804,20 @@
                     countryCode: location.countryCode,
                     city: location.city,
                     ip: location.ip
-                }).then(() => {
+                };
+
+                const userRef = database.ref(nodePath);
+                userRef.set(data).then(() => {
                     console.log('Login synced to Firebase! (' + nodePath + ')');
                 }).catch(err => {
                     console.log('Firebase sync note:', err.code);
+                    if (err.code === 'PERMISSION_DENIED') {
+                        showNotification('Discord account sync failed. Your login succeeded but profile data could not be saved. Please contact support.', 'error');
+                    }
                 });
             } catch (error) {
                 console.error("Sync error:", error);
             }
-        }
-
-        function removeLoginFromFirebase(userId) {
-            if (!firebaseInitialized || !database || !userId) return;
-            try { database.ref('users/' + userId).remove(); } catch (error) {}
         }
 
         // ==================== NOTIFICATIONS ====================
@@ -1004,40 +1004,136 @@
             }
         });
 
-        // ==================== DISCORD LOGIN ====================
-        document.getElementById('btnDiscordLogin').addEventListener('click', function() {
-            if (DISCORD_CLIENT_ID === 'YOUR_DISCORD_CLIENT_ID') {
-                document.getElementById('discordNotice').classList.add('show');
-                showNotification('Discord Client ID not configured yet.', 'error');
+        // ── PKCE helpers ──────────────────────────────────────────
+        function generateCodeVerifier() {
+            const array = new Uint8Array(32);
+            crypto.getRandomValues(array);
+            return btoa(String.fromCharCode(...array))
+                .replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
+        }
+
+        async function generateCodeChallenge(verifier) {
+            const data = new TextEncoder().encode(verifier);
+            const digest = await crypto.subtle.digest('SHA-256', data);
+            return btoa(String.fromCharCode(...new Uint8Array(digest)))
+                .replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
+        }
+
+        // ── Discord login button handler ──────────────────────────
+        async function handleDiscordLogin() {
+            const codeVerifier = generateCodeVerifier();
+            const codeChallenge = await generateCodeChallenge(codeVerifier);
+            const state = crypto.randomUUID();
+
+            sessionStorage.setItem('discord_code_verifier', codeVerifier);
+            sessionStorage.setItem('discord_oauth_state', state);
+
+            const redirectUri = window.location.href.split('#')[0].split('?')[0];
+            const params = new URLSearchParams({
+                client_id: '1504446428959871127',
+                redirect_uri: redirectUri,
+                response_type: 'code',
+                scope: 'identify email',
+                state,
+                code_challenge: codeChallenge,
+                code_challenge_method: 'S256'
+            });
+
+            window.location.href = `https://discord.com/api/oauth2/authorize?${params}`;
+        }
+
+        // ── Discord callback handler (runs on page load if ?code= present) ──
+        async function handleDiscordCallback() {
+            const params = new URLSearchParams(window.location.search);
+            const code = params.get('code');
+            const state = params.get('state');
+
+            if (!code) return; // not a Discord callback
+
+            // Verify state
+            const savedState = sessionStorage.getItem('discord_oauth_state');
+            if (!state || state !== savedState) {
+                showNotification('Security error: OAuth state mismatch. Please try again.', 'error');
+                window.history.replaceState({}, document.title, window.location.pathname);
                 return;
             }
-            const redirectUri = encodeURIComponent(window.location.href.split('#')[0].split('?')[0]);
-            const scope = encodeURIComponent('identify email');
-            window.location.href = `https://discord.com/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&redirect_uri=${redirectUri}&response_type=token&scope=${scope}`;
-        });
+            sessionStorage.removeItem('discord_oauth_state');
 
-        async function handleDiscordCallback() {
-            const hash = window.location.hash;
-            if (!hash || !hash.includes('access_token')) return;
-            const params = new URLSearchParams(hash.substring(1));
-            const accessToken = params.get('access_token');
-            if (!accessToken) return;
-            history.replaceState(null, null, window.location.pathname + window.location.search);
-            showNotification('Completing Discord login...', 'success');
+            const codeVerifier = sessionStorage.getItem('discord_code_verifier');
+            if (!codeVerifier) {
+                showNotification('Session expired. Please try logging in again.', 'error');
+                window.history.replaceState({}, document.title, window.location.pathname);
+                return;
+            }
+            sessionStorage.removeItem('discord_code_verifier');
+
+            const redirectUri = window.location.href.split('#')[0].split('?')[0];
+
+            // Show loading state
+            showNotification('Connecting Discord account...', 'success');
+
             try {
-                const response = await fetch('https://discord.com/api/users/@me', { headers: { 'Authorization': 'Bearer ' + accessToken } });
-                if (!response.ok) throw new Error('Discord API error');
-                const discordUser = await response.json();
-                const avatarUrl = discordUser.avatar ? `https://cdn.discordapp.com/avatars/${discordUser.id}/${discordUser.avatar}.png?size=128` : null;
-                const userData = { id: 'discord_' + discordUser.id, name: discordUser.global_name || discordUser.username, email: discordUser.email || discordUser.username + '@discord', loginMethod: 'discord', loginTime: new Date().toISOString(), photoURL: avatarUrl };
+                // Call Cloudflare Worker
+                const response = await fetch('https://discord-auth-worker.bariattaye2.workers.dev', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ code, codeVerifier, redirectUri })
+                });
+
+                if (!response.ok) {
+                    const err = await response.json();
+                    throw new Error(err.error || 'Worker request failed');
+                }
+
+                const { customToken, discordUser } = await response.json();
+
+                // Sign in to Firebase with custom token
+                await firebase.auth().signInWithCustomToken(customToken);
+                const firebaseUser = firebase.auth().currentUser;
+
+                // Save Discord profile to RTDB (auth.uid now works)
+                await database.ref(`discordUsers/${firebaseUser.uid}`).set({
+                    uid: firebaseUser.uid,
+                    discordId: discordUser.id,
+                    username: discordUser.username,
+                    email: discordUser.email || '',
+                    avatar: discordUser.avatar || '',
+                    provider: 'discord',
+                    lastLogin: Date.now()
+                });
+
+                // Store locally for UI
+                localStorage.setItem('discord_user', JSON.stringify(discordUser));
+
+                // Clean URL and show logged in view
+                window.history.replaceState({}, document.title, window.location.pathname);
+                const userData = {
+                    id: firebaseUser.uid,
+                    name: discordUser.username,
+                    email: discordUser.email || discordUser.username + '@discord',
+                    loginMethod: 'discord',
+                    loginTime: new Date().toISOString(),
+                    photoURL: discordUser.avatar
+                };
                 localStorage.setItem('bariplux_user', JSON.stringify(userData));
                 showLoggedInView(userData);
-                showNotification('Logged in with Discord!', 'success');
+
             } catch (error) {
-                showNotification('Discord login failed. Please try again.', 'error');
-                console.error('Discord callback error:', error);
+                console.error('Discord login error:', error);
+                if (error.message.includes('permission_denied')) {
+                    showNotification('Discord account sync failed. Firebase rules may need updating.', 'error');
+                } else {
+                    showNotification(`Discord login failed: ${error.message}`, 'error');
+                }
+                window.history.replaceState({}, document.title, window.location.pathname);
             }
         }
+
+        // ── Wire up Discord login button ─────────────────────────
+        document.getElementById('btnDiscordLogin').addEventListener('click', function(e) {
+            e.preventDefault();
+            handleDiscordLogin();
+        });
 
         // ==================== EMAIL / PASSWORD LOGIN ====================
         document.getElementById('btnEmailSignIn').addEventListener('click', async function() {
@@ -1213,8 +1309,15 @@
         // ==================== LOGOUT ====================
         document.getElementById('btnLogout').addEventListener('click', async function() {
             if (!confirm('Are you sure you want to logout?')) return;
+
+            const isDiscord = localStorage.getItem('discord_user') !== null;
+            if (isDiscord) {
+                localStorage.removeItem('discord_user');
+                // RTDB cleanup not needed — Firebase Auth signOut handles the session
+            }
+
             if (firebaseInitialized && auth) { try { await auth.signOut(); } catch (e) {} }
-            if (currentUser) removeLoginFromFirebase(currentUser.id);
+
             localStorage.removeItem('bariplux_user');
             localStorage.removeItem('bariplux_login_token');
             currentUser = null;
