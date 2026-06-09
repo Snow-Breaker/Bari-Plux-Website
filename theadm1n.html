@@ -268,6 +268,8 @@
 
         .realtime-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--success); box-shadow: 0 0 6px var(--success); display: inline-block; animation: pulse2 2s ease-in-out infinite; }
         @keyframes pulse2 { 0%,100%{opacity:1;box-shadow:0 0 6px var(--success)} 50%{opacity:0.5;box-shadow:0 0 12px var(--success)} }
+        .db-banner { display:none; align-items:center; gap:10px; padding:10px 20px; background:#FFF3CD; color:#856404; font-size:0.85rem; font-weight:500; border-bottom:1px solid #FFEAA7; }
+        .db-banner.show { display:flex; }
 
         .cards-wrap { display: none; flex-direction: column; gap: 10px; }
         .user-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 16px; cursor: pointer; transition: all 0.2s; animation: fadeUp 0.35s ease both; }
@@ -364,6 +366,8 @@
             </button>
         </div>
     </div>
+
+    <div id="dbBanner" class="db-banner"><i class="fas fa-exclamation-triangle"></i> Cannot reach Firebase database. User data will not load until connection is restored.</div>
 
     <div class="main">
         <div class="tabs">
@@ -779,6 +783,13 @@ function logout() {
 
 function initApp() {
     db = firebase.database();
+    db.ref('.info/connected').on('value',s=>{
+        const connected=s.val()===true;
+        const rtDot=document.getElementById('realtime-dot');
+        const dbBanner=document.getElementById('dbBanner');
+        if(rtDot){rtDot.style.background=connected?'var(--success)':'#F44336';rtDot.title=connected?'DB Connected':'DB Offline';}
+        if(dbBanner)dbBanner.classList.toggle('show',!connected);
+    });
     loadUsers();
     db.ref('bugReports').on('value', snap => {
         const data = snap.val()||{};
@@ -794,10 +805,16 @@ function loadUsers() {
     btn.classList.add('spinning');
     if(!db) { btn.classList.remove('spinning'); return; }
 
-    Promise.all([
+    const tbody=document.getElementById('usersTableBody');
+    tbody.innerHTML='<tr class="state-row"><td colspan="7"><div class="state-icon" style="font-size:1.5rem;">⏳</div><div>Loading users from database...</div></td></tr>';
+    const mc=document.getElementById('mobileCards');
+    if(mc) mc.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted);"><div style="font-size:2rem;margin-bottom:8px;">⏳</div><div>Loading users...</div></div>';
+
+    const timeout=new Promise((_,rej)=>setTimeout(()=>rej(new Error('TIMEOUT: Firebase did not respond in 10 seconds')),10000));
+    Promise.race([Promise.all([
         db.ref('users').once('value'),
         db.ref('discordUsers').once('value')
-    ]).then(([us, ds]) => {
+    ]), timeout]).then(([us, ds]) => {
         const parse = snap => {
             const d=snap.val();
             if(!d) return [];
@@ -807,7 +824,7 @@ function loadUsers() {
                 loginTime:u.loginTime||null, lastActive:u.lastActive||null,
                 photoURL:u.photoURL||null, platform:u.platform||'website',
                 country:u.country||null, countryCode:u.countryCode||null,
-                city:u.city||null, ip:u.ip||null,  // ✅ IP اضافه شد
+                city:u.city||null, ip:u.ip||null,
                 blocked:u.blocked===true, forceLogout:u.forceLogout||null
             }));
         };
@@ -817,8 +834,25 @@ function loadUsers() {
         allUsers.sort((a,b)=>(b.lastActive||0)-(a.lastActive||0));
         updateUserStats(); userPage=1; renderUsers();
         document.getElementById('lastUpdated').textContent='Last updated: '+new Date().toLocaleTimeString();
-    }).catch(e=>{ console.error(e); showToast('⚠️ Failed to load users','danger'); })
-    .finally(()=>btn.classList.remove('spinning'));
+    }).catch(e=>{
+        console.error(e);
+        const isPermDenied=String(e.message||e).includes('permission_denied')||e.code==='PERMISSION_DENIED';
+        const errMsg=isPermDenied
+            ? '🔒 Access denied. The Firebase Database Rules are blocking this read. Check that the admin UID in rules matches this account\'s Firebase Auth UID.'
+            : '⚠️ Failed to load users';
+        showToast(errMsg,'danger');
+        tbody.innerHTML='<tr class="state-row"><td colspan="7">'
+            +'<div class="state-icon">⚠️</div>'
+            +'<div style="color:#F44336;font-weight:600;">'+(isPermDenied?'Access Denied':'Failed to load users')+'</div>'
+            +'<div style="font-size:0.8rem;margin-top:6px;color:var(--muted);">'+(e.code||e.message||'Unknown error')+'</div>'
+            +'<button onclick="loadUsers()" style="margin-top:12px;padding:8px 20px;background:var(--accent);color:white;border:none;border-radius:8px;cursor:pointer;font-family:\'Poppins\',sans-serif;font-size:0.82rem;">↺ Retry</button>'
+            +'</td></tr>';
+        if(mc) mc.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted);">'
+            +'<div style="font-size:2rem;margin-bottom:8px;">⚠️</div>'
+            +'<div style="color:#F44336;font-weight:600;">'+(isPermDenied?'Access Denied':'Failed to load users')+'</div>'
+            +'<button onclick="loadUsers()" style="margin-top:12px;padding:8px 20px;background:var(--accent);color:white;border:none;border-radius:8px;cursor:pointer;font-family:\'Poppins\',sans-serif;font-size:0.82rem;">↺ Retry</button>'
+            +'</div>';
+    }).finally(()=>btn.classList.remove('spinning'));
 }
 
 function updateUserStats() {
