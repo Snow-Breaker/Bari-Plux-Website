@@ -736,8 +736,8 @@ async function checkPassword() {
     btn.disabled=true; btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Checking...';
     try {
         if(await sha256(val)===ADMIN_HASH) {
-            await firebase.auth().signInWithEmailAndPassword('mister.attaye@gmail.com', val);
             sessionStorage.setItem('bp_admin','1');
+            await firebase.auth().signInWithEmailAndPassword('mister.attaye@gmail.com', val);
             document.getElementById('gate').classList.add('hidden');
             document.getElementById('app').classList.add('show');
             initApp();
