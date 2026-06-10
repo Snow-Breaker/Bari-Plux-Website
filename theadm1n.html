@@ -53,6 +53,12 @@
         .gate-btn { width: 100%; padding: 13px; background: linear-gradient(135deg, var(--accent), var(--accent2)); color: white; border: none; border-radius: var(--r); font-family: 'Poppins', sans-serif; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.3s; }
         .gate-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(108,99,255,0.3); }
         .gate-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .gate-divider { display: flex; align-items: center; gap: 12px; margin: 18px 0; font-size: 0.75rem; color: var(--muted); }
+        .gate-divider::before, .gate-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+        .btn-google { width: 100%; padding: 12px; background: white; color: #333; border: none; border-radius: var(--r); font-family: 'Poppins', sans-serif; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .btn-google:hover { background: #f5f5f5; transform: translateY(-1px); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .btn-google:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .btn-google img { width: 18px; height: 18px; }
         .gate-error { color: var(--danger); font-size: 0.83rem; margin-top: 10px; text-align: center; display: none; }
         .gate-error.show { display: block; animation: shake 0.4s ease; }
         @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
@@ -343,6 +349,11 @@
             <i class="fas fa-unlock-alt"></i> Enter
         </button>
         <div class="gate-error" id="gateError"><i class="fas fa-times-circle"></i> Incorrect password</div>
+        <div class="gate-divider">or</div>
+        <button id="btnGoogleLogin" class="btn-google">
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+            Sign in with Google
+        </button>
     </div>
 </div>
 
@@ -662,6 +673,7 @@
 
 <script>
 const ADMIN_HASH = '677a05115bca1efb77c9a6677de4af6f7cab101b221c0d0d0c5b021ae79d098c';
+const ADMIN_EMAIL = 'mister.attaye@gmail.com';
 
 const firebaseConfig = {
     apiKey: "AIzaSyBH_t3Uue7fbb-DahwjSJGjG2-quCqiLEs",
@@ -770,6 +782,37 @@ async function checkPassword() {
     btn.innerHTML = '<i class="fas fa-unlock-alt"></i> Enter';
 }
 document.getElementById('gateInput').addEventListener('keydown',e=>{ if(e.key==='Enter') checkPassword(); });
+
+// ==================== GOOGLE SIGN-IN ====================
+document.getElementById('btnGoogleLogin').addEventListener('click', async function() {
+    const btn = this;
+    if (!firebase.auth) return showToast('Firebase not available', 'danger');
+    const provider = new firebase.auth.GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: 'select_account' });
+    btn.disabled = true;
+    btn.innerHTML = '<div class="loading-spinner" style="border-color:#999;border-top-color:#333;width:16px;height:16px;border-width:2px;"></div> Redirecting...';
+    try {
+        const result = await firebase.auth().signInWithPopup(provider);
+        const user = result.user;
+        if (user.email !== ADMIN_EMAIL) {
+            showToast('Access denied: ' + user.email + ' is not authorized', 'danger');
+            await firebase.auth().signOut();
+            btn.disabled = false;
+            btn.innerHTML = '<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"> Sign in with Google';
+            return;
+        }
+        sessionStorage.setItem('bp_admin', '1');
+        document.getElementById('gate').classList.add('hidden');
+        document.getElementById('app').classList.add('show');
+        initApp();
+    } catch (error) {
+        btn.disabled = false;
+        btn.innerHTML = '<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"> Sign in with Google';
+        if (error.code !== 'auth/popup-closed-by-user')
+            showToast('Google login failed: ' + error.message, 'danger');
+    }
+});
+
 function logout() {
     sessionStorage.removeItem('bp_admin');
     firebase.auth().signOut();
@@ -784,8 +827,8 @@ function initApp() {
     db = firebase.database();
 
     const currentUser = firebase.auth().currentUser;
-    if (!currentUser || currentUser.uid !== 'ZHMxN5tZkNgLcxFnp98QUqfvw963') {
-        console.error('initApp: wrong user or not authenticated', currentUser?.uid);
+    if (!currentUser || (currentUser.uid !== 'ZHMxN5tZkNgLcxFnp98QUqfvw963' && currentUser.email !== ADMIN_EMAIL)) {
+        console.error('initApp: wrong user or not authenticated', currentUser?.uid, currentUser?.email);
         const tbody = document.getElementById('usersTableBody');
         if (tbody) tbody.innerHTML = `
             <tr class="state-row"><td colspan="7">
@@ -1371,13 +1414,12 @@ document.addEventListener('keydown', e=>{
 
 firebase.auth().onAuthStateChanged(user => {
     setTimeout(() => {
-        if (user &&
-            user.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' &&
-            sessionStorage.getItem('bp_admin') === '1') {
+        const isAdmin = user?.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || user?.email === ADMIN_EMAIL;
+        if (user && isAdmin && sessionStorage.getItem('bp_admin') === '1') {
             document.getElementById('gate').classList.add('hidden');
             document.getElementById('app').classList.add('show');
             initApp();
-        } else if (!user || user.uid !== 'ZHMxN5tZkNgLcxFnp98QUqfvw963') {
+        } else if (!user || !isAdmin) {
             sessionStorage.removeItem('bp_admin');
         }
     }, 100);
