@@ -366,46 +366,89 @@ namespace BariPluxTool.Services
 
                 _logger.Information("[ClaimToken] Attempting to claim token for uid={Uid}", uid);
 
-                // SECURITY: get Firebase auth token before reading pending_tokens (rules require auth != null)
-                var fbToken = await GetFirebaseTokenAsync();
-
+                // pending_tokens read is public — no auth token needed
                 var tokenUrl = $"{FirebaseDbUrl}/pending_tokens/{uid}/{sessionId}.json";
-                if (!string.IsNullOrEmpty(fbToken))
-                    tokenUrl += $"?auth={fbToken}";
                 var json = await SharedHttpClient.Instance.GetStringAsync(tokenUrl);
+                _logger?.Information("[ClaimToken] Firebase read result: {Json}", json);
+                System.Windows.Application.Current?.Dispatcher.Invoke(() =>
+                    System.Windows.MessageBox.Show(
+                        $"Firebase JSON:\n{json}\n\nUID: {uid}\nSession: {sessionId}",
+                        "Debug — ClaimToken Read"));
                 if (string.IsNullOrEmpty(json) || json == "null")
                 {
+                    System.Windows.Application.Current?.Dispatcher.Invoke(() =>
+                        System.Windows.MessageBox.Show("EARLY EXIT: json is null/empty", "Debug Step 1"));
                     _logger.Warning("[ClaimToken] Token not found in Firebase");
                     return false;
                 }
+                System.Windows.Application.Current?.Dispatcher.Invoke(() =>
+                    System.Windows.MessageBox.Show("Step 1 OK: json has data", "Debug Step 1"));
 
                 using var doc = JsonDocument.Parse(json);
                 var root = doc.RootElement;
 
                 if (root.TryGetProperty("claimed", out var claimedEl) && claimedEl.GetBoolean())
                 {
+                    System.Windows.Application.Current?.Dispatcher.Invoke(() =>
+                        System.Windows.MessageBox.Show("EARLY EXIT: token already claimed", "Debug Step 2"));
                     _logger.Warning("[ClaimToken] Token already claimed");
                     return false;
                 }
+                System.Windows.Application.Current?.Dispatcher.Invoke(() =>
+                    System.Windows.MessageBox.Show("Step 2 OK: not yet claimed", "Debug Step 2"));
 
                 var serverNow = await ServerTimeService.Instance.GetServerTimeAsync();
 
                 if (root.TryGetProperty("expires_at", out var expiresEl))
                 {
                     var expiresAt = DateTimeOffset.FromUnixTimeMilliseconds(expiresEl.GetInt64()).UtcDateTime;
+                    System.Windows.Application.Current?.Dispatcher.Invoke(() =>
+                        System.Windows.MessageBox.Show(
+                            $"Step 3: expiry check.\nserverNow={serverNow}\nexpiresAt={expiresAt}",
+                            "Debug Step 3"));
                     if (serverNow > expiresAt)
                     {
+                        System.Windows.Application.Current?.Dispatcher.Invoke(() =>
+                            System.Windows.MessageBox.Show("EARLY EXIT: token expired", "Debug Step 3"));
                         _logger.Warning("[ClaimToken] Token expired");
                         return false;
                     }
                 }
 
-                var token = await GetFirebaseTokenAsync();
-                if (!string.IsNullOrEmpty(token))
+                try
                 {
-                    var patchUrl = $"{FirebaseDbUrl}/pending_tokens/{uid}/{sessionId}/claimed.json?auth={token}";
-                    var patchContent = new StringContent("true", Encoding.UTF8, "application/json");
-                    await SharedHttpClient.Instance.PutAsync(patchUrl, patchContent);
+                    System.Windows.Application.Current?.Dispatcher.Invoke(() =>
+                        System.Windows.MessageBox.Show("Entering Step 4 block", "Debug Step 4a"));
+
+                    var writeToken = await GetFirebaseTokenAsync();
+
+                    System.Windows.Application.Current?.Dispatcher.Invoke(() =>
+                        System.Windows.MessageBox.Show(
+                            $"writeToken present: {!string.IsNullOrEmpty(writeToken)}",
+                            "Debug Step 4b"));
+
+                    var patchUrl = $"{FirebaseDbUrl}/pending_tokens/{uid}/{sessionId}/claimed.json";
+                    if (!string.IsNullOrEmpty(writeToken))
+                        patchUrl += $"?auth={writeToken}";
+
+                    System.Windows.Application.Current?.Dispatcher.Invoke(() =>
+                        System.Windows.MessageBox.Show(
+                            $"About to PUT to:\n{patchUrl.Split('?')[0]}",
+                            "Debug Step 4c"));
+
+                    var putResponse = await SharedHttpClient.Instance.PutAsync(
+                        patchUrl, new StringContent("true", System.Text.Encoding.UTF8, "application/json"));
+
+                    System.Windows.Application.Current?.Dispatcher.Invoke(() =>
+                        System.Windows.MessageBox.Show(
+                            $"PUT status: {putResponse.StatusCode}\nBody: {await putResponse.Content.ReadAsStringAsync()}",
+                            "Debug Step 5"));
+
+                    if (!putResponse.IsSuccessStatusCode)
+                    {
+                        _logger?.Error("[ClaimToken] PUT failed: {Status}", putResponse.StatusCode);
+                        return false;
+                    }
 
                     _ = Task.Delay(60_000).ContinueWith(async _ =>
                     {
@@ -421,6 +464,18 @@ namespace BariPluxTool.Services
                         catch { }
                     });
                 }
+                catch (Exception ex)
+                {
+                    System.Windows.Application.Current?.Dispatcher.Invoke(() =>
+                        System.Windows.MessageBox.Show(
+                            $"EXCEPTION between Step 3 and 4:\n{ex.GetType().Name}\n{ex.Message}\n\nStack:\n{ex.StackTrace?[..Math.Min(500, ex.StackTrace?.Length ?? 0)]}",
+                            "Debug — Exception Caught"));
+                    _logger?.Error(ex, "[ClaimToken] Exception after expiry check");
+                    return false;
+                }
+
+                System.Windows.Application.Current?.Dispatcher.Invoke(() =>
+                    System.Windows.MessageBox.Show("Step 6: proceeding to session creation", "Debug Step 6"));
 
                 var email = root.TryGetProperty("email", out var emailEl) ? emailEl.GetString() ?? "" : "";
                 var name = root.TryGetProperty("name", out var nameEl) ? nameEl.GetString() ?? "User" : "User";
