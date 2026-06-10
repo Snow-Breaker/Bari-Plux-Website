@@ -1,0 +1,47 @@
+{
+  "rules": {
+    "app_config": {
+      ".read": true,
+      ".write": false
+    },
+    "users": {
+      ".read": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963'",
+      "$uid": {
+        ".read": "auth.uid === $uid",
+        ".write": "auth.uid === $uid"
+      }
+    },
+    "discordUsers": {
+      ".read": "auth != null && auth.uid === 'o2hD76smAygVFJlO3Uu8jDdcatW2'",
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+    "sessions": {
+      "$uid": {
+        "$sessionId": {
+          ".read": "auth.uid === $uid",
+          ".write": "auth.uid === $uid"
+        }
+      }
+    },
+    "pending_tokens": {
+      "$uid": {
+        "$sessionId": {
+          ".read": "auth.uid === $uid",
+          ".write": "auth.uid === $uid"
+        }
+      }
+    },
+    "bugReports": {
+      ".read": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963'",
+      ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963'",
+      ".indexOn": ["status", "timestamp"]
+    },
+    "serverTime": {
+      ".read": true,
+      ".write": false
+    }
+  }
+}
