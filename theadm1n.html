@@ -734,41 +734,40 @@ function toggleEye() {
     ic.className='fas fa-eye'+(i.type==='text'?'-slash':'');
 }
 async function checkPassword() {
-    const val=document.getElementById('gateInput').value;
-    if(!val) return;
-    const btn=document.getElementById('gateBtn');
-    btn.disabled=true; btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Checking...';
+    const val = document.getElementById('gateInput').value;
+    if (!val) return;
+    const btn = document.getElementById('gateBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking...';
     try {
-        if(await sha256(val)===ADMIN_HASH) {
-            sessionStorage.setItem('bp_admin','1');
+        if (await sha256(val) === ADMIN_HASH) {
+            sessionStorage.setItem('bp_admin', '1');
+
+            await firebase.auth().signOut();
+
             await firebase.auth().signInWithEmailAndPassword('mister.attaye@gmail.com', val);
+
             document.getElementById('gate').classList.add('hidden');
             document.getElementById('app').classList.add('show');
             initApp();
         } else {
-            const e=document.getElementById('gateError');
+            const e = document.getElementById('gateError');
             e.classList.add('show');
-            document.getElementById('gateInput').value='';
-            setTimeout(()=>e.classList.remove('show'),2200);
+            document.getElementById('gateInput').value = '';
+            setTimeout(() => e.classList.remove('show'), 2200);
         }
-    } catch(e){
-        if(e.code==='auth/user-not-found'||e.code==='auth/wrong-password'||e.code==='auth/invalid-login-credentials') {
-            const e2=document.getElementById('gateError');
-            e2.innerHTML='<i class="fas fa-times-circle"></i> Admin account not found or wrong password';
+    } catch(e) {
+        console.error('checkPassword error:', e);
+        if (e.code === 'auth/wrong-password' || e.code === 'auth/invalid-login-credentials') {
+            const e2 = document.getElementById('gateError');
+            e2.innerHTML = '<i class="fas fa-times-circle"></i> Wrong password';
             e2.classList.add('show');
-            document.getElementById('gateInput').value='';
-            setTimeout(()=>e2.classList.remove('show'),3200);
-        } else if(e.code==='auth/invalid-email') {
-            const e2=document.getElementById('gateError');
-            e2.innerHTML='<i class="fas fa-times-circle"></i> Admin email not configured';
-            e2.classList.add('show');
-            document.getElementById('gateInput').value='';
-            setTimeout(()=>e2.classList.remove('show'),3200);
-        } else {
-            console.error(e);
+            document.getElementById('gateInput').value = '';
+            setTimeout(() => e2.classList.remove('show'), 2200);
         }
     }
-    btn.disabled=false; btn.innerHTML='<i class="fas fa-unlock-alt"></i> Enter';
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-unlock-alt"></i> Enter';
 }
 document.getElementById('gateInput').addEventListener('keydown',e=>{ if(e.key==='Enter') checkPassword(); });
 function logout() {
@@ -783,6 +782,24 @@ function logout() {
 
 function initApp() {
     db = firebase.database();
+
+    const currentUser = firebase.auth().currentUser;
+    if (!currentUser || currentUser.uid !== 'ZHMxN5tZkNgLcxFnp98QUqfvw963') {
+        console.error('initApp: wrong user or not authenticated', currentUser?.uid);
+        const tbody = document.getElementById('usersTableBody');
+        if (tbody) tbody.innerHTML = `
+            <tr class="state-row"><td colspan="7">
+                <div class="state-icon">🔒</div>
+                <div style="color:var(--danger);font-weight:600;">
+                    Authentication error. Please refresh and log in again.
+                </div>
+                <button onclick="logout()" style="margin-top:12px;padding:8px 20px;
+                    background:var(--accent);color:white;border:none;border-radius:8px;
+                    cursor:pointer;">↺ Re-login</button>
+            </td></tr>`;
+        return;
+    }
+
     db.ref('.info/connected').on('value',s=>{
         const connected=s.val()===true;
         const rtDot=document.getElementById('realtime-dot');
@@ -1353,13 +1370,17 @@ document.addEventListener('keydown', e=>{
 });
 
 firebase.auth().onAuthStateChanged(user => {
-    if(user && sessionStorage.getItem('bp_admin')==='1') {
-        document.getElementById('gate').classList.add('hidden');
-        document.getElementById('app').classList.add('show');
-        initApp();
-    } else {
-        sessionStorage.removeItem('bp_admin');
-    }
+    setTimeout(() => {
+        if (user &&
+            user.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' &&
+            sessionStorage.getItem('bp_admin') === '1') {
+            document.getElementById('gate').classList.add('hidden');
+            document.getElementById('app').classList.add('show');
+            initApp();
+        } else if (!user || user.uid !== 'ZHMxN5tZkNgLcxFnp98QUqfvw963') {
+            sessionStorage.removeItem('bp_admin');
+        }
+    }, 100);
 });
 </script>
 </body>
