@@ -582,18 +582,6 @@
             }
         }
 
-        // ==================== PROTOCOL URL LAUNCHER ====================
-        function tryProtocolUrls(base64Claim) {
-            const appUrls = ['baripluxtool://login?token=' + base64Claim, 'bptv2://login?token=' + base64Claim];
-            let tried = 0;
-            function tryNext() {
-                if (tried >= appUrls.length) return;
-                window.location.href = appUrls[tried++];
-                setTimeout(tryNext, 1000);
-            }
-            tryNext();
-        }
-
         // ==================== DESKTOP LOGIN FLOW ====================
         let activeTokenListener = null;
         let activeTimeoutId = null;
@@ -609,73 +597,114 @@
             }
         }
 
-        function showDesktopConnectingView() {
-            const view = document.getElementById('loggedInView');
-            if (!view) return;
+        function showDesktopConnectingView(base64Claim) {
             document.getElementById('loginFormView').style.display = 'none';
-            view.classList.add('active');
-            view.innerHTML =
-                '<div class="app-signing-in" style="display:block;text-align:center;padding:28px 12px;">' +
-                    '<div class="loading-spinner" style="margin:0 auto 14px;width:28px;height:28px;border-width:3px;"></div>' +
-                    '<p style="color:var(--muted);font-size:0.95rem;">🔗 Connecting to Bari Plux App...</p>' +
-                    '<p class="desktop-status-sub" id="desktopStatusSub" style="font-size:0.85rem;color:var(--muted);margin-top:8px;">Waiting for the app to respond...</p>' +
-                    '<div id="desktopActions" style="margin-top:16px;display:none;gap:10px;justify-content:center;flex-wrap:wrap;"></div>' +
-                '</div>';
+            document.getElementById('loggedInView').classList.add('active');
+            document.getElementById('loggedInView').innerHTML = `
+                <div style="text-align:center;padding:30px 20px;">
+                    <div style="font-size:2.5rem;margin-bottom:12px;">🔗</div>
+                    <div style="font-size:1.1rem;font-weight:600;margin-bottom:8px;">
+                        Ready to open Bari Plux App
+                    </div>
+                    <div style="color:var(--muted);font-size:0.9rem;margin-bottom:24px;">
+                        Click the button below to launch the app and complete sign-in.
+                    </div>
+                    <a href="baripluxtool://login?token=${base64Claim}"
+                       id="openAppBtn"
+                       style="display:inline-block;padding:14px 32px;background:var(--accent);
+                              color:white;border-radius:12px;font-weight:600;font-size:1rem;
+                              text-decoration:none;margin-bottom:12px;">
+                        🚀 Open Bari Plux App
+                    </a>
+                    <br>
+                    <a href="bptv2://login?token=${base64Claim}"
+                       style="font-size:0.8rem;color:var(--muted);margin-top:8px;display:inline-block;">
+                        Try alternate link
+                    </a>
+                    <div id="openAppStatus" style="margin-top:20px;color:var(--muted);font-size:0.85rem;">
+                        <div class="loading-spinner" style="margin:0 auto 8px;"></div>
+                        Waiting for app to respond...
+                    </div>
+                </div>
+            `;
         }
 
         function showDesktopClaimedView() {
-            const view = document.getElementById('loggedInView');
-            if (!view) return;
-            view.innerHTML =
-                '<div class="app-signing-in" style="display:block;text-align:center;padding:28px 12px;">' +
-                    '<div style="font-size:3rem;margin-bottom:12px;">✅</div>' +
-                    '<p style="color:var(--success);font-size:1rem;font-weight:600;">Successfully signed in!</p>' +
-                    '<p style="font-size:0.85rem;color:var(--muted);margin-top:8px;">You can close this tab.</p>' +
-                '</div>';
+            const status = document.getElementById('openAppStatus');
+            const btn = document.getElementById('openAppBtn');
+            if (btn) {
+                btn.style.opacity = '0.5';
+                btn.style.pointerEvents = 'none';
+            }
+            if (status) {
+                status.innerHTML = `
+                    <span style="color:var(--success,#4CAF50);font-weight:600;font-size:1rem;">
+                        ✅ Successfully signed in!
+                    </span>
+                    <br>
+                    <span style="font-size:0.85rem;color:var(--muted);margin-top:4px;display:block;">
+                        You can close this tab.
+                    </span>
+                `;
+            }
         }
 
         function showDesktopTokenError(retryFn) {
-            const statusSub = document.getElementById('desktopStatusSub');
-            const actions = document.getElementById('desktopActions');
-            if (statusSub) {
-                statusSub.innerHTML = '⚠️ Could not create login token. Please check your internet connection and try again.';
-                statusSub.style.color = 'var(--danger)';
-            }
-            if (actions) {
-                actions.style.display = 'flex';
-                actions.innerHTML =
-                    '<button onclick="(' + retryFn.toString() + ')()" style="padding:10px 20px;background:var(--accent);color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;"><i class="fas fa-redo"></i> Retry</button>';
+            const status = document.getElementById('openAppStatus');
+            if (status) {
+                status.innerHTML = `
+                    <span style="color:var(--danger);font-weight:600;">
+                        ⚠️ Could not create login token.
+                    </span>
+                    <br>
+                    <span style="font-size:0.8rem;color:var(--muted);">
+                        Check your internet connection and try again.
+                    </span>
+                    <br><br>
+                    <button onclick="(${retryFn.toString()})()"
+                        style="padding:10px 24px;background:var(--accent);color:white;
+                               border:none;border-radius:8px;cursor:pointer;
+                               font-family:'Poppins',sans-serif;font-size:0.85rem;">
+                        ↺ Retry
+                    </button>
+                `;
             }
         }
 
         function showDesktopTimeoutView(base64Claim, retryFn) {
             cleanupDesktopLogin();
-            const statusSub = document.getElementById('desktopStatusSub');
-            const actions = document.getElementById('desktopActions');
-            if (statusSub) {
-                statusSub.innerHTML = '⏱️ The app did not respond. Please try opening the app manually.';
-                statusSub.style.color = 'var(--warning)';
+            const status = document.getElementById('openAppStatus');
+            const btn = document.getElementById('openAppBtn');
+            if (btn) btn.style.opacity = '0.5';
+            if (status) {
+                status.innerHTML = `
+                    <span style="color:var(--warning,#FFA000);font-weight:600;">
+                        ⏱️ The app did not respond.
+                    </span>
+                    <br>
+                    <span style="font-size:0.8rem;color:var(--muted);">
+                        Make sure Bari Plux is installed and running.
+                    </span>
+                    <br><br>
+                    <button onclick="navigator.clipboard.writeText('BPTV2_LOGIN:${base64Claim}').then(()=>this.textContent='✅ Copied!')"
+                        style="padding:8px 18px;background:var(--glass-bg);color:var(--text);
+                               border:1px solid var(--glass-border);border-radius:8px;
+                               cursor:pointer;font-family:'Poppins',sans-serif;
+                               font-size:0.82rem;margin-right:8px;">
+                        📋 Copy Token
+                    </button>
+                    <button onclick="(${retryFn.toString()})()"
+                        style="padding:8px 18px;background:var(--accent);color:white;
+                               border:none;border-radius:8px;cursor:pointer;
+                               font-family:'Poppins',sans-serif;font-size:0.82rem;">
+                        ↺ Retry
+                    </button>
+                `;
             }
-            if (actions) {
-                actions.style.display = 'flex';
-                actions.innerHTML =
-                    '<button onclick="(' + retryFn.toString() + ')()" style="padding:10px 20px;background:var(--accent);color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;"><i class="fas fa-redo"></i> Retry</button>' +
-                    '<button id="timeoutCopyBtn" onclick="copyTimeoutToken(\'' + base64Claim.replace(/'/g, "\\'") + '\')" style="padding:10px 20px;background:var(--accent-2);color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;"><i class="fas fa-copy"></i> Copy Token</button>';
-            }
-        }
-
-        function copyTimeoutToken(base64Claim) {
-            const token = 'BPTV2_LOGIN:' + base64Claim;
-            navigator.clipboard.writeText(token).then(() => {
-                showNotification('Token copied to clipboard!', 'success');
-            }).catch(() => {
-                showNotification('Could not copy token automatically.', 'error');
-            });
         }
 
         function startDesktopLoginFlow(user) {
             cleanupDesktopLogin();
-            showDesktopConnectingView();
 
             createPendingToken(user).then(claimToken => {
                 if (!claimToken) {
@@ -688,10 +717,12 @@
                 const uid = parts[0];
                 const sessionId = parts[1];
 
-                tryProtocolUrls(base64Claim);
+                // Show UI with clickable button (browser requires user gesture for protocol links)
+                showDesktopConnectingView(base64Claim);
 
                 if (!database) {
-                    showDesktopTimeoutView(base64Claim, function() { startDesktopLoginFlow(user); });
+                    document.getElementById('openAppStatus').innerHTML =
+                        '<span style="color:var(--danger);">⚠️ Database unavailable — token polling disabled.</span>';
                     return;
                 }
 
@@ -1030,6 +1061,11 @@
             const codeChallenge = await generateCodeChallenge(codeVerifier);
             const state = crypto.randomUUID();
 
+            // Save desktop flow state before leaving the page
+            if (isDesktopFlow()) {
+                sessionStorage.setItem('discord_desktop_flow', '1');
+            }
+
             sessionStorage.setItem('discord_code_verifier', codeVerifier);
             sessionStorage.setItem('discord_oauth_state', state);
 
@@ -1071,6 +1107,11 @@
                 return;
             }
             sessionStorage.removeItem('discord_code_verifier');
+
+            // Save desktop flag BEFORE replaceState strips ?desktop=1
+            const wasDesktopFlow = params.get('desktop') === '1' ||
+                                   sessionStorage.getItem('discord_desktop_flow') === '1';
+            sessionStorage.removeItem('discord_desktop_flow');
 
             const redirectUri = window.location.href.split('#')[0].split('?')[0];
 
@@ -1114,7 +1155,7 @@
                 // Store locally for UI
                 localStorage.setItem('discord_user', JSON.stringify(discordUser));
 
-                // Clean URL and show logged in view
+                // Clean URL
                 window.history.replaceState({}, document.title, window.location.pathname);
                 const userData = {
                     id: firebaseUser.uid,
@@ -1125,7 +1166,13 @@
                     photoURL: discordUser.avatar
                 };
                 localStorage.setItem('bariplux_user', JSON.stringify(userData));
-                showLoggedInView(userData);
+
+                // Restore desktop flow context if needed
+                if (wasDesktopFlow) {
+                    startDesktopLoginFlow(userData);
+                } else {
+                    showLoggedInView(userData);
+                }
 
             } catch (error) {
                 console.error('Discord login error:', error);
