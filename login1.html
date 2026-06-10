@@ -786,6 +786,8 @@
         // ==================== FIREBASE DATABASE SYNC ====================
         async function syncLoginToFirebase(user) {
             if (!firebaseInitialized || !database) return;
+            // Discord users are synced in handleDiscordCallback() — skip here
+            if (user.loginMethod === 'discord') return;
             try {
                 const location = await fetchLocation();
 
@@ -941,6 +943,8 @@
             if (firebaseInitialized && auth) {
                 auth.onAuthStateChanged((user) => {
                     if (user) {
+                        // Discord users are handled by handleDiscordCallback() — skip here
+                        if (user.uid.startsWith('discord_')) return;
                         const name = user.displayName || (user.email ? user.email.split('@')[0] : user.uid);
                         const firebaseUser = { id: user.uid, name, email: user.email, loginMethod: user.providerData[0]?.providerId || 'firebase', loginTime: new Date().toISOString(), photoURL: user.photoURL };
                         localStorage.setItem('bariplux_user', JSON.stringify(firebaseUser));
