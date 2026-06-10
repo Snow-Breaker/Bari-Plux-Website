@@ -25,8 +25,12 @@ namespace BariPluxTool.Services
 
         public static bool IsPrimaryInstance => _isPrimary;
 
+        [System.Runtime.InteropServices.DllImport("kernel32.dll", CharSet = System.Runtime.InteropServices.CharSet.Auto)]
+        private static extern IntPtr GetCommandLine();
+
         public static string? ExtractProtocolUrl(string[] args)
         {
+            // First check normal args
             foreach (var arg in args)
             {
                 if (string.IsNullOrWhiteSpace(arg))
@@ -36,6 +40,16 @@ namespace BariPluxTool.Services
                     arg.StartsWith("bptv2://", StringComparison.OrdinalIgnoreCase))
                     return arg;
             }
+
+            // Fallback: parse raw Windows command line
+            var cmdLinePtr = GetCommandLine();
+            var cmdLine = System.Runtime.InteropServices.Marshal.PtrToStringAuto(cmdLinePtr) ?? string.Empty;
+
+            var match = System.Text.RegularExpressions.Regex.Match(
+                cmdLine, @"(baripluxtool://\S+|bptv2://\S+)");
+
+            if (match.Success)
+                return match.Value.Trim('"');
 
             return null;
         }

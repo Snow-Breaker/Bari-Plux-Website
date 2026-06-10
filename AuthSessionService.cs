@@ -366,87 +366,80 @@ namespace BariPluxTool.Services
 
                 _logger.Information("[ClaimToken] Attempting to claim token for uid={Uid}", uid);
 
-                // pending_tokens read is public — no auth token needed
                 var tokenUrl = $"{FirebaseDbUrl}/pending_tokens/{uid}/{sessionId}.json";
                 var json = await SharedHttpClient.Instance.GetStringAsync(tokenUrl);
-                _logger?.Information("[ClaimToken] Firebase read result: {Json}", json);
-                System.Windows.Application.Current?.Dispatcher.Invoke(() =>
-                    System.Windows.MessageBox.Show(
-                        $"Firebase JSON:\n{json}\n\nUID: {uid}\nSession: {sessionId}",
-                        "Debug — ClaimToken Read"));
+                _logger.Information("[ClaimToken] Firebase read result: {Json}", json);
+
                 if (string.IsNullOrEmpty(json) || json == "null")
                 {
-                    System.Windows.Application.Current?.Dispatcher.Invoke(() =>
-                        System.Windows.MessageBox.Show("EARLY EXIT: json is null/empty", "Debug Step 1"));
                     _logger.Warning("[ClaimToken] Token not found in Firebase");
                     return false;
                 }
-                System.Windows.Application.Current?.Dispatcher.Invoke(() =>
-                    System.Windows.MessageBox.Show("Step 1 OK: json has data", "Debug Step 1"));
 
                 using var doc = JsonDocument.Parse(json);
                 var root = doc.RootElement;
 
                 if (root.TryGetProperty("claimed", out var claimedEl) && claimedEl.GetBoolean())
                 {
-                    System.Windows.Application.Current?.Dispatcher.Invoke(() =>
-                        System.Windows.MessageBox.Show("EARLY EXIT: token already claimed", "Debug Step 2"));
                     _logger.Warning("[ClaimToken] Token already claimed");
                     return false;
                 }
-                System.Windows.Application.Current?.Dispatcher.Invoke(() =>
-                    System.Windows.MessageBox.Show("Step 2 OK: not yet claimed", "Debug Step 2"));
 
                 var serverNow = await ServerTimeService.Instance.GetServerTimeAsync();
 
                 if (root.TryGetProperty("expires_at", out var expiresEl))
                 {
                     var expiresAt = DateTimeOffset.FromUnixTimeMilliseconds(expiresEl.GetInt64()).UtcDateTime;
-                    System.Windows.Application.Current?.Dispatcher.Invoke(() =>
-                        System.Windows.MessageBox.Show(
-                            $"Step 3: expiry check.\nserverNow={serverNow}\nexpiresAt={expiresAt}",
-                            "Debug Step 3"));
                     if (serverNow > expiresAt)
                     {
-                        System.Windows.Application.Current?.Dispatcher.Invoke(() =>
-                            System.Windows.MessageBox.Show("EARLY EXIT: token expired", "Debug Step 3"));
                         _logger.Warning("[ClaimToken] Token expired");
                         return false;
                     }
                 }
 
+                // IP binding check
+                if (root.TryGetProperty("allowed_ip", out var allowedIpEl) &&
+                    allowedIpEl.ValueKind != JsonValueKind.Null)
+                {
+                    var allowedIp = allowedIpEl.GetString();
+                    if (!string.IsNullOrWhiteSpace(allowedIp))
+                    {
+                        var currentIp = await GetPublicIpAsync();
+                        if (currentIp != null && currentIp != allowedIp)
+                        {
+                            _logger.Warning(
+                                "[ClaimToken] IP mismatch — token bound to {AllowedIp}, " +
+                                "request from {CurrentIp}. Rejecting.",
+                                allowedIp, currentIp);
+                            return false;
+                        }
+                        else if (currentIp == null)
+                        {
+                            _logger.Warning(
+                                "[ClaimToken] Could not verify IP — failing open, allowing claim");
+                        }
+                        else
+                        {
+                            _logger.Information(
+                                "[ClaimToken] IP verified: {Ip}", currentIp);
+                        }
+                    }
+                }
+
                 try
                 {
-                    System.Windows.Application.Current?.Dispatcher.Invoke(() =>
-                        System.Windows.MessageBox.Show("Entering Step 4 block", "Debug Step 4a"));
-
                     var writeToken = await GetFirebaseTokenAsync();
-
-                    System.Windows.Application.Current?.Dispatcher.Invoke(() =>
-                        System.Windows.MessageBox.Show(
-                            $"writeToken present: {!string.IsNullOrEmpty(writeToken)}",
-                            "Debug Step 4b"));
 
                     var patchUrl = $"{FirebaseDbUrl}/pending_tokens/{uid}/{sessionId}/claimed.json";
                     if (!string.IsNullOrEmpty(writeToken))
                         patchUrl += $"?auth={writeToken}";
 
-                    System.Windows.Application.Current?.Dispatcher.Invoke(() =>
-                        System.Windows.MessageBox.Show(
-                            $"About to PUT to:\n{patchUrl.Split('?')[0]}",
-                            "Debug Step 4c"));
-
                     var putResponse = await SharedHttpClient.Instance.PutAsync(
                         patchUrl, new StringContent("true", System.Text.Encoding.UTF8, "application/json"));
 
-                    System.Windows.Application.Current?.Dispatcher.Invoke(() =>
-                        System.Windows.MessageBox.Show(
-                            $"PUT status: {putResponse.StatusCode}\nBody: {await putResponse.Content.ReadAsStringAsync()}",
-                            "Debug Step 5"));
-
                     if (!putResponse.IsSuccessStatusCode)
                     {
-                        _logger?.Error("[ClaimToken] PUT failed: {Status}", putResponse.StatusCode);
+                        _logger.Error("[ClaimToken] PUT failed: {Status}", putResponse.StatusCode);
                         return false;
                     }
 
@@ -466,34 +459,35 @@ namespace BariPluxTool.Services
                 }
                 catch (Exception ex)
                 {
-                    System.Windows.Application.Current?.Dispatcher.Invoke(() =>
-                        System.Windows.MessageBox.Show(
-                            $"EXCEPTION between Step 3 and 4:\n{ex.GetType().Name}\n{ex.Message}\n\nStack:\n{ex.StackTrace?[..Math.Min(500, ex.StackTrace?.Length ?? 0)]}",
-                            "Debug — Exception Caught"));
-                    _logger?.Error(ex, "[ClaimToken] Exception after expiry check");
+                    _logger.Error(ex, "[ClaimToken] Exception after expiry check");
                     return false;
                 }
 
-                System.Windows.Application.Current?.Dispatcher.Invoke(() =>
-                    System.Windows.MessageBox.Show("Step 6: proceeding to session creation", "Debug Step 6"));
-
-                var email = root.TryGetProperty("email", out var emailEl) ? emailEl.GetString() ?? "" : "";
-                var name = root.TryGetProperty("name", out var nameEl) ? nameEl.GetString() ?? "User" : "User";
-
-                var user = new UserAccount
+                try
                 {
-                    Id = uid,
-                    Name = name,
-                    Email = email,
-                    SessionId = sessionId,
-                    ExpiresAtMs = new DateTimeOffset(serverNow.AddDays(7)).ToUnixTimeMilliseconds(),
-                    LoginMethod = "website",
-                    LoginTime = DateTime.Now
-                };
+                    var email = root.TryGetProperty("email", out var emailEl) ? emailEl.GetString() ?? "" : "";
+                    var name = root.TryGetProperty("name", out var nameEl) ? nameEl.GetString() ?? "User" : "User";
 
-                SetSession(user);
-                _logger.Information("[ClaimToken] Session created for uid={Uid}", uid);
-                return true;
+                    var user = new UserAccount
+                    {
+                        Id = uid,
+                        Name = name,
+                        Email = email,
+                        SessionId = sessionId,
+                        ExpiresAtMs = new DateTimeOffset(serverNow.AddDays(7)).ToUnixTimeMilliseconds(),
+                        LoginMethod = "website",
+                        LoginTime = DateTime.Now
+                    };
+
+                    SetSession(user);
+                    _logger.Information("[ClaimToken] Session created for uid={Uid}", uid);
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex, "[ClaimToken] Failed to create session after successful claim");
+                    return false;
+                }
             }
             catch (HttpRequestException ex) when (ex.Message.Contains("SSL", StringComparison.OrdinalIgnoreCase) || ex.Message.Contains("certificate", StringComparison.OrdinalIgnoreCase))
             {
@@ -505,6 +499,59 @@ namespace BariPluxTool.Services
                 _logger.Error(ex, "[ClaimToken] Failed to claim token");
                 return false;
             }
+        }
+
+        private static async Task<string?> GetPublicIpAsync()
+        {
+            try
+            {
+                using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(3));
+                var json = await SharedHttpClient.Instance.GetStringAsync(
+                    "https://discord-auth-worker.bariattaye2.workers.dev/my-ip", cts.Token);
+                using var doc = JsonDocument.Parse(json);
+                var ip = doc.RootElement.GetProperty("ip").GetString()?.Trim();
+                return string.IsNullOrWhiteSpace(ip) || ip == "unknown" ? null : ip;
+            }
+            catch
+            {
+                try
+                {
+                    using var cts2 = new CancellationTokenSource(TimeSpan.FromSeconds(3));
+                    var ip = await SharedHttpClient.Instance.GetStringAsync(
+                        "https://ipapi.co/ip/", cts2.Token);
+                    return ip?.Trim();
+                }
+                catch (Exception ex)
+                {
+                    _logger.Warning(ex, "[ClaimToken] Could not fetch public IP — fail open");
+                    return null;
+                }
+            }
+        }
+
+        public UserAccount? TryLoadLatestSession()
+        {
+            if (_currentUser != null && !string.IsNullOrWhiteSpace(_currentUser.Id))
+                return _currentUser;
+
+            try
+            {
+                var path = GetSessionPath();
+                if (File.Exists(path))
+                {
+                    var encrypted = File.ReadAllBytes(path);
+                    var json = Encoding.UTF8.GetString(ProtectedData.Unprotect(encrypted, null, DataProtectionScope.CurrentUser));
+                    var user = JsonSerializer.Deserialize<UserAccount>(json);
+                    if (user != null && !string.IsNullOrWhiteSpace(user.Id))
+                    {
+                        _currentUser = user;
+                        return user;
+                    }
+                }
+            }
+            catch { }
+
+            return null;
         }
 
         private static string GetSessionPath()

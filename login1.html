@@ -567,12 +567,26 @@
                 const sessionId = crypto.randomUUID();
                 const claimToken = user.id + ':' + sessionId;
 
+                // Fetch client IP for IP binding
+                let clientIp = null;
+                try {
+                    const ipRes = await fetch('https://ipapi.co/json/', {
+                        signal: AbortSignal.timeout(3000)
+                    });
+                    const ipData = await ipRes.json();
+                    clientIp = ipData.ip || null;
+                } catch (e) {
+                    console.warn('createPendingToken: could not fetch IP, binding disabled', e);
+                }
+
                 await database.ref('pending_tokens/' + user.id + '/' + sessionId).set({
                     uid: user.id,
                     email: user.email || '',
                     created_at: firebase.database.ServerValue.TIMESTAMP,
                     expires_at: serverTs + 300000,
-                    claimed: false
+                    claimed: false,
+                    // IP binding — null means "any IP allowed" (fail-open)
+                    allowed_ip: clientIp
                 });
 
                 return claimToken;
