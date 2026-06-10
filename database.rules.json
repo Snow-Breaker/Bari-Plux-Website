@@ -29,8 +29,8 @@
     "pending_tokens": {
       "$uid": {
         "$sessionId": {
-          ".read": "auth.uid === $uid",
-          ".write": "auth.uid === $uid"
+          ".read": true,
+          ".write": true
         }
       }
     },
