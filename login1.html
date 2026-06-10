@@ -523,16 +523,7 @@
                     <strong>User ID:</strong> <span id="userId">---</span>
                 </div>
                 <div class="app-token-section" id="appTokenSection" style="display:none;">
-                    <h4><i class="fas fa-mobile-alt"></i> Use in Bari Plux App</h4>
-                    <div class="token-display">
-                        <input type="text" class="token-input" id="loginToken" readonly placeholder="Login token will appear here">
-                        <button class="copy-token-btn" id="copyTokenBtn"><i class="fas fa-copy"></i> Copy</button>
-                    </div>
-                    <div class="copied-msg" id="copiedMsg"><i class="fas fa-check"></i> Token copied! Paste it in the app to login.</div>
                     <div id="openAppStatus" style="margin-top:10px;display:none;"></div>
-                    <button class="open-app-btn" id="openAppBtn" style="margin-top: 10px; background: linear-gradient(135deg, #8B5CF6, #6366F1); color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 14px; width: 100%;">
-                        <i class="fas fa-external-link-alt"></i> Open Bari Plux App
-                    </button>
                 </div>
                 <button id="btnLogout" class="btn-logout"><i class="fas fa-sign-out-alt"></i> Logout</button>
                 <a href="index.html" class="back-home"><i class="fas fa-arrow-left"></i> Back to Home</a>
@@ -959,17 +950,40 @@
             } else {
                 createPendingToken(user).then(claimToken => {
                     if (claimToken) {
-                        const token = 'BPTV2_LOGIN:' + btoa(claimToken);
-                        document.getElementById('loginToken').value = token;
-                        localStorage.setItem('bariplux_login_token', token);
-                        if (tokenSection) tokenSection.style.display = 'block';
+                        const base64Claim = btoa(claimToken);
+                        localStorage.setItem('bariplux_login_token',
+                            'BPTV2_LOGIN:' + base64Claim);
+
+                        if (tokenSection) {
+                            tokenSection.style.display = 'block';
+                            const statusEl = document.getElementById('openAppStatus');
+                            if (statusEl) {
+                                statusEl.style.display = 'block';
+                                statusEl.innerHTML = `
+                                    <div style="text-align:center;padding:10px 0;">
+                                        <button onclick="handleOpenApp()"
+                                                style="display:inline-block;padding:12px 28px;
+                                                       background:var(--accent);color:white;
+                                                       border:none;border-radius:12px;
+                                                       font-weight:600;font-size:0.95rem;
+                                                       cursor:pointer;">
+                                            🚀 Open Bari Plux App
+                                        </button>
+                                        <div style="margin-top:10px;font-size:0.8rem;
+                                                    color:var(--muted);">
+                                            Click to launch the app and sign in automatically
+                                        </div>
+                                    </div>
+                                `;
+                            }
+                        }
                     } else {
                         if (tokenSection) {
                             tokenSection.style.display = 'block';
                             const statusEl = document.getElementById('openAppStatus');
                             if (statusEl) {
                                 statusEl.style.display = 'block';
-                                statusEl.innerHTML = '<span style="color:var(--danger);font-size:0.85rem;">⚠️ Token unavailable — database connection failed. Make sure Firebase Realtime Database is enabled in your project.</span>';
+                                statusEl.innerHTML = '<span style="color:var(--danger);font-size:0.85rem;">⚠️ Could not connect to server. Please check your internet connection.</span>';
                             }
                         }
                     }
@@ -1283,18 +1297,18 @@
             } else { showFormError('forgotError', 'Firebase is required for password reset'); }
         });
 
-        // ==================== COPY TOKEN ====================
-        document.getElementById('copyTokenBtn').addEventListener('click', function() {
-            const tokenInput = document.getElementById('loginToken');
-            tokenInput.select(); tokenInput.setSelectionRange(0, 99999);
-            navigator.clipboard.writeText(tokenInput.value).then(() => {
-                document.getElementById('copiedMsg').classList.add('active');
-                setTimeout(() => document.getElementById('copiedMsg').classList.remove('active'), 3000);
-            });
-        });
-
         // ==================== OPEN APP ====================
-        document.getElementById('openAppBtn').addEventListener('click', async function() {
+        function handleOpenApp() {
+            const storedUser = localStorage.getItem('bariplux_user');
+            if (!storedUser) { showNotification('Please login first!', 'error'); return; }
+            const loginToken = localStorage.getItem('bariplux_login_token');
+            if (!loginToken) { showNotification('No login token available', 'error'); return; }
+            const parts = loginToken.split(':BPTV2_LOGIN:');
+            const base64Claim = parts.length > 1 ? parts[1] : loginToken;
+            tryProtocolUrls(base64Claim);
+        }
+
+        document.getElementById('openAppBtn')?.addEventListener('click', async function() {
             const storedUser = localStorage.getItem('bariplux_user');
             if (!storedUser) { showNotification('Please login first!', 'error'); return; }
             try {
