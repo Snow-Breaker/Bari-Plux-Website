@@ -941,7 +941,8 @@
             if (firebaseInitialized && auth) {
                 auth.onAuthStateChanged((user) => {
                     if (user) {
-                        const firebaseUser = { id: user.uid, name: user.displayName || user.email.split('@')[0], email: user.email, loginMethod: user.providerData[0]?.providerId || 'firebase', loginTime: new Date().toISOString(), photoURL: user.photoURL };
+                        const name = user.displayName || (user.email ? user.email.split('@')[0] : user.uid);
+                        const firebaseUser = { id: user.uid, name, email: user.email, loginMethod: user.providerData[0]?.providerId || 'firebase', loginTime: new Date().toISOString(), photoURL: user.photoURL };
                         localStorage.setItem('bariplux_user', JSON.stringify(firebaseUser));
                         showLoggedInView(firebaseUser);
                     } else if (storedUser) {
@@ -1092,15 +1093,19 @@
                 const firebaseUser = firebase.auth().currentUser;
 
                 // Save Discord profile to RTDB (auth.uid now works)
-                await database.ref(`discordUsers/${firebaseUser.uid}`).set({
-                    uid: firebaseUser.uid,
-                    discordId: discordUser.id,
-                    username: discordUser.username,
-                    email: discordUser.email || '',
-                    avatar: discordUser.avatar || '',
-                    provider: 'discord',
-                    lastLogin: Date.now()
-                });
+                if (database) {
+                    await database.ref(`discordUsers/${firebaseUser.uid}`).set({
+                        uid: firebaseUser.uid,
+                        discordId: discordUser.id,
+                        username: discordUser.username,
+                        email: discordUser.email || '',
+                        avatar: discordUser.avatar || '',
+                        provider: 'discord',
+                        lastLogin: Date.now()
+                    });
+                } else {
+                    console.warn('Discord login: database not available, skipping RTDB profile save');
+                }
 
                 // Store locally for UI
                 localStorage.setItem('discord_user', JSON.stringify(discordUser));
