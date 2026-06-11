@@ -29,8 +29,8 @@
     "pending_tokens": {
       "$uid": {
         "$sessionId": {
-          ".read": true,
-          ".write": true
+          ".read": "auth != null",
+          ".write": "auth != null"
         }
       }
     },
