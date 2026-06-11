@@ -36,6 +36,8 @@ namespace BariPluxTool.Services
         private const string FirebaseApiKey = "AIzaSyBH_t3Uue7fbb-DahwjSJGjG2-quCqiLEs";
 
         private static string? _firebaseToken;
+        private static DateTime _firebaseTokenExpiry = DateTime.MinValue;
+        private const int FirebaseTokenLifetimeMinutes = 55;
 
         private UserAccount? _currentUser;
 
@@ -105,30 +107,42 @@ namespace BariPluxTool.Services
             SessionChanged?.Invoke();
         }
 
-        private async Task<string?> GetFirebaseTokenAsync()
+        private static async Task<string?> GetFirebaseTokenAsync()
         {
-            if (!string.IsNullOrEmpty(_firebaseToken)) return _firebaseToken;
+            if (!string.IsNullOrEmpty(_firebaseToken) &&
+                DateTime.UtcNow < _firebaseTokenExpiry)
+            {
+                return _firebaseToken;
+            }
 
             try
             {
-                var body = new StringContent("{\"returnSecureToken\":true}", Encoding.UTF8, "application/json");
+                var body = new StringContent("{\"returnSecureToken\":true}", System.Text.Encoding.UTF8, "application/json");
                 var response = await SharedHttpClient.Instance.PostAsync(
                     $"https://identitytoolkit.googleapis.com/v1/accounts:signUp?key={FirebaseApiKey}", body);
 
-                if (response.IsSuccessStatusCode)
+                if (!response.IsSuccessStatusCode)
                 {
-                    var json = await response.Content.ReadAsStringAsync();
-                    using var doc = JsonDocument.Parse(json);
-                    _firebaseToken = doc.RootElement.GetProperty("idToken").GetString();
-                    return _firebaseToken;
+                    _logger.Warning("[GetFirebaseToken] Failed: {Status}", response.StatusCode);
+                    return null;
                 }
+
+                var json = await response.Content.ReadAsStringAsync();
+                using var doc = JsonDocument.Parse(json);
+                _firebaseToken = doc.RootElement.GetProperty("idToken").GetString();
+                _firebaseTokenExpiry = DateTime.UtcNow.AddMinutes(FirebaseTokenLifetimeMinutes);
+
+                _logger.Information("[GetFirebaseToken] New anonymous token acquired, expires at {Expiry}", _firebaseTokenExpiry);
+
+                return _firebaseToken;
             }
             catch (Exception ex)
             {
-                _logger.Warning(ex, "Failed to get Firebase token");
+                _logger.Warning(ex, "[GetFirebaseToken] Exception");
+                _firebaseToken = null;
+                _firebaseTokenExpiry = DateTime.MinValue;
+                return null;
             }
-
-            return null;
         }
 
         public async Task WriteSessionToFirebaseAsync()
@@ -366,7 +380,11 @@ namespace BariPluxTool.Services
 
                 _logger.Information("[ClaimToken] Attempting to claim token for uid={Uid}", uid);
 
+                var fbToken = await GetFirebaseTokenAsync();
                 var tokenUrl = $"{FirebaseDbUrl}/pending_tokens/{uid}/{sessionId}.json";
+                if (!string.IsNullOrEmpty(fbToken))
+                    tokenUrl += $"?auth={fbToken}";
+
                 var json = await SharedHttpClient.Instance.GetStringAsync(tokenUrl);
                 _logger.Information("[ClaimToken] Firebase read result: {Json}", json);
 
