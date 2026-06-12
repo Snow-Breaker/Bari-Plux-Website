@@ -674,6 +674,9 @@
 <script>
 const ADMIN_HASH = '677a05115bca1efb77c9a6677de4af6f7cab101b221c0d0d0c5b021ae79d098c';
 const ADMIN_EMAIL = 'mister.attaye@gmail.com';
+const MAX_ATTEMPTS = 10;
+const LOCKOUT_KEY = 'bp_admin_lockout';
+const ATTEMPTS_KEY = 'bp_admin_attempts';
 
 const firebaseConfig = {
     apiKey: "AIzaSyBH_t3Uue7fbb-DahwjSJGjG2-quCqiLEs",
@@ -745,39 +748,90 @@ function toggleEye() {
     i.type=i.type==='password'?'text':'password';
     ic.className='fas fa-eye'+(i.type==='text'?'-slash':'');
 }
+function getAttemptState() {
+    const attempts = parseInt(sessionStorage.getItem(ATTEMPTS_KEY) || '0');
+    const lockoutUntil = parseInt(sessionStorage.getItem(LOCKOUT_KEY) || '0');
+    return { attempts, lockoutUntil };
+}
+function recordFailedAttempt() {
+    const { attempts } = getAttemptState();
+    const newAttempts = attempts + 1;
+    sessionStorage.setItem(ATTEMPTS_KEY, newAttempts.toString());
+    const delays = [0, 1000, 1000, 5000, 5000, 30000, 30000, 120000, 120000, 600000];
+    const delay = delays[Math.min(newAttempts, delays.length - 1)];
+    if (delay > 0) {
+        const lockoutUntil = Date.now() + delay;
+        sessionStorage.setItem(LOCKOUT_KEY, lockoutUntil.toString());
+    }
+    return { newAttempts, delay };
+}
+function resetAttempts() {
+    sessionStorage.removeItem(ATTEMPTS_KEY);
+    sessionStorage.removeItem(LOCKOUT_KEY);
+}
+function getRemainingLockout() {
+    const { lockoutUntil } = getAttemptState();
+    return Math.max(0, lockoutUntil - Date.now());
+}
 async function checkPassword() {
     const val = document.getElementById('gateInput').value;
     if (!val) return;
+
+    const remaining = getRemainingLockout();
+    if (remaining > 0) {
+        const seconds = Math.ceil(remaining / 1000);
+        const minutes = Math.floor(seconds / 60);
+        const timeStr = minutes > 0
+            ? `${minutes}m ${seconds % 60}s`
+            : `${seconds}s`;
+        showToast(`⏳ Too many attempts. Try again in ${timeStr}.`, 'danger');
+        return;
+    }
+
     const btn = document.getElementById('gateBtn');
     btn.disabled = true;
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking...';
+
     try {
         if (await sha256(val) === ADMIN_HASH) {
+            resetAttempts();
             sessionStorage.setItem('bp_admin', '1');
-
             await firebase.auth().signOut();
-
             await firebase.auth().signInWithEmailAndPassword('mister.attaye@gmail.com', val);
-
             document.getElementById('gate').classList.add('hidden');
             document.getElementById('app').classList.add('show');
             initApp();
         } else {
-            const e = document.getElementById('gateError');
-            e.classList.add('show');
+            const { newAttempts, delay } = recordFailedAttempt();
+            const errorEl = document.getElementById('gateError');
+            const remaining2 = getRemainingLockout();
+
+            if (remaining2 > 0) {
+                const seconds = Math.ceil(remaining2 / 1000);
+                const minutes = Math.floor(seconds / 60);
+                const timeStr = minutes > 0
+                    ? `${minutes}m ${seconds % 60}s`
+                    : `${seconds}s`;
+                errorEl.innerHTML = `
+                    <i class="fas fa-lock"></i>
+                    Too many attempts — locked for ${timeStr}`;
+            } else {
+                const attemptsLeft = MAX_ATTEMPTS - newAttempts;
+                errorEl.innerHTML = attemptsLeft > 0
+                    ? `<i class="fas fa-times-circle"></i>
+                       Wrong password (${attemptsLeft} attempts left)`
+                    : `<i class="fas fa-lock"></i> Account locked`;
+            }
+
+            errorEl.classList.add('show');
+            setTimeout(() => errorEl.classList.remove('show'), 3000);
             document.getElementById('gateInput').value = '';
-            setTimeout(() => e.classList.remove('show'), 2200);
         }
     } catch(e) {
         console.error('checkPassword error:', e);
-        if (e.code === 'auth/wrong-password' || e.code === 'auth/invalid-login-credentials') {
-            const e2 = document.getElementById('gateError');
-            e2.innerHTML = '<i class="fas fa-times-circle"></i> Wrong password';
-            e2.classList.add('show');
-            document.getElementById('gateInput').value = '';
-            setTimeout(() => e2.classList.remove('show'), 2200);
-        }
+        showToast('⚠️ Authentication error. Try again.', 'danger');
     }
+
     btn.disabled = false;
     btn.innerHTML = '<i class="fas fa-unlock-alt"></i> Enter';
 }
