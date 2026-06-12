@@ -22,7 +22,8 @@ namespace BariPluxTool
             },
             ["identitytoolkit.googleapis.com"] = new()
             {
-                "wtsQgnEEx2YF8IpZN75/D0dbyhzV5CBWdhbf1EezApg=",
+                "wtsQgnEEx2YF8IpZN75/D0dbyhzV5CBWdhbf1EezApg=", // previous key
+                "vd98YDrSDLq6G63gzOZD++MBT7neJpPwck//GYaKPsw="  // current key (June 2026)
             },
             ["bariplux.com"] = new()
             {
