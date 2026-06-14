@@ -14,17 +14,11 @@ namespace BariPluxTool
         public static readonly HttpClient Instance;
         public static readonly HttpClient LongRunningInstance;
 
+        // Only pin domains we control — these never rotate unexpectedly.
+        // Google/Firebase/Discord domains removed — they rotate frequently
+        // and are already secured by the system certificate store + TLS validation.
         private static readonly Dictionary<string, HashSet<string>> PinnedPublicKeys = new(StringComparer.OrdinalIgnoreCase)
         {
-            ["baripluxwebsite-default-rtdb.firebaseio.com"] = new()
-            {
-                "GSHFxGyXAl03gHntP1I044D4osC4Z4GXim8J55vWrAg=",
-            },
-            ["identitytoolkit.googleapis.com"] = new()
-            {
-                "wtsQgnEEx2YF8IpZN75/D0dbyhzV5CBWdhbf1EezApg=", // previous key
-                "vd98YDrSDLq6G63gzOZD++MBT7neJpPwck//GYaKPsw="  // current key (June 2026)
-            },
             ["bariplux.com"] = new()
             {
                 "WxwAkxu2VCYKwlSCCL0no6ExiCU9L5DrCWO9IBMijdM=",
@@ -77,35 +71,41 @@ namespace BariPluxTool
             X509Chain? chain,
             SslPolicyErrors sslPolicyErrors)
         {
-            if (sslPolicyErrors == SslPolicyErrors.None)
+            var host = requestMessage?.RequestUri?.Host;
+
+            // Unpinned domains: standard TLS validation only
+            if (host == null || !PinnedPublicKeys.ContainsKey(host))
             {
-                var host = requestMessage?.RequestUri?.Host;
-                if (host != null && PinnedPublicKeys.TryGetValue(host, out var allowedHashes))
-                {
-                    if (certificate != null && MatchPublicKey(certificate, allowedHashes))
-                        return true;
-
-                    if (chain != null)
-                    {
-                        foreach (var element in chain.ChainElements)
-                        {
-                            if (element.Certificate != null && MatchPublicKey(element.Certificate, allowedHashes))
-                                return true;
-                        }
-                    }
-
-                    var computedHash = certificate != null ? Convert.ToBase64String(SHA256.Create().ComputeHash(certificate.GetPublicKey())) : "null";
-                    Log.Warning("[CertPin] REJECTED {Host} — computed hash: {Hash} — expected one of: {Expected}", host, computedHash, string.Join(", ", allowedHashes));
-                    return false;
-                }
-
-                return true;
+                if (sslPolicyErrors != SslPolicyErrors.None)
+                    Log.Warning("[SharedHttpClient] SSL validation failed: {SslPolicyErrors} for {Host}", sslPolicyErrors, host);
+                return sslPolicyErrors == SslPolicyErrors.None;
             }
 
-            if (requestMessage?.RequestUri?.Host is "localhost" or "127.0.0.1")
+            // Pinned domains: require matching public key hash
+            if (sslPolicyErrors != SslPolicyErrors.None)
+            {
+                Log.Warning("[CertPin] SSL errors for pinned domain {Host}: {SslPolicyErrors}", host, sslPolicyErrors);
+                return false;
+            }
+
+            var allowedHashes = PinnedPublicKeys[host];
+            if (certificate != null && MatchPublicKey(certificate, allowedHashes))
                 return true;
 
-            Log.Error("[SharedHttpClient] SSL validation failed: {SslPolicyErrors} for {Host}", sslPolicyErrors, requestMessage?.RequestUri?.Host);
+            if (chain != null)
+            {
+                foreach (var element in chain.ChainElements)
+                {
+                    if (element.Certificate != null && MatchPublicKey(element.Certificate, allowedHashes))
+                        return true;
+                }
+            }
+
+            var computedHash = certificate != null
+                ? Convert.ToBase64String(SHA256.Create().ComputeHash(certificate.GetPublicKey()))
+                : "null";
+            Log.Warning("[CertPin] REJECTED {Host} — hash: {Hash} — expected: {Expected}",
+                host, computedHash, string.Join(", ", allowedHashes));
             return false;
         }
 

@@ -26,6 +26,7 @@
             --glass-strong: rgba(255,255,255,0.08);
             --glass-accent: rgba(108,99,255,0.12);
             --accent: #6C63FF;
+            --accent-rgb: 108, 99, 255;
             --accent-2: #00BFA6;
             --text: #e8eef8;
             --muted: rgba(232,238,248,0.65);
@@ -103,6 +104,7 @@
             --glass-strong: rgba(255,255,255,0.95);
             --glass-accent: rgba(108,99,255,08);
             --accent: #5748E8;
+            --accent-rgb: 87, 72, 232;
             --accent-2: #07bfa0;
             --text: #111827;
             --muted: rgba(17,24,39,0.6);
@@ -291,6 +293,15 @@
         .btn-logout { position: relative; overflow: hidden; }
         .btn-logout::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(244, 67, 54, 0.2), transparent); transition: left 0.5s ease; }
         .btn-logout:hover::before { left: 100%; }
+
+        @keyframes highlight-pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(var(--accent-rgb), 0.4); }
+            50% { box-shadow: 0 0 0 8px rgba(var(--accent-rgb), 0); }
+        }
+        .highlight-pulse {
+            animation: highlight-pulse 1s ease-in-out 3;
+            border: 2px solid var(--accent) !important;
+        }
 
         @media (max-width: 768px) {
             .login-container { max-width: 90%; padding: 25px; }
@@ -859,12 +870,13 @@
         }
 
         // ==================== NOTIFICATIONS ====================
-        function showNotification(message, type) {
+        function showNotification(message, type, duration) {
             const notification = document.createElement('div');
             notification.className = `notification ${type}`;
             notification.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i><span>${message}</span>`;
             document.body.appendChild(notification);
-            setTimeout(() => { notification.style.animation = 'slideIn 0.3s ease reverse forwards'; setTimeout(() => notification.remove(), 300); }, 2700);
+            const ms = duration || (type === 'error' ? 5000 : 2700);
+            setTimeout(() => { notification.style.animation = 'slideIn 0.3s ease reverse forwards'; setTimeout(() => notification.remove(), 300); }, ms);
         }
 
         function showFormError(id, msg) {
@@ -892,6 +904,55 @@
                 'auth/operation-not-allowed': 'This login method is not enabled in Firebase'
             };
             return messages[code] || 'An error occurred. Please try again';
+        }
+
+        const authErrorMessages = {
+            'auth/account-exists-with-different-credential': null,
+            'auth/popup-closed-by-user': 'Login cancelled. Please try again.',
+            'auth/popup-blocked': 'Popup was blocked. Please allow popups for this site.',
+            'auth/network-request-failed': '⚠️ Network error. Check your connection.',
+            'auth/too-many-requests': '⚠️ Too many attempts. Please wait a moment.',
+            'auth/user-disabled': '⚠️ This account has been disabled.',
+            'auth/cancelled-popup-request': null,
+        };
+
+        async function handleAuthError(error, context) {
+            console.error('Auth error [' + context + ']:', error);
+
+            if (error.code === 'auth/account-exists-with-different-credential') {
+                const email = error.customData?.email || '';
+                let providerName = 'another provider';
+                try {
+                    const methods = await firebase.auth().fetchSignInMethodsForEmail(email);
+                    providerName = methods.includes('google.com') ? 'Google' :
+                                  methods.includes('github.com') ? 'GitHub' :
+                                  methods[0] || 'another provider';
+                } catch (e) {}
+
+                showNotification(
+                    '⚠️ This email (' + email + ') is already linked to ' + providerName + '. ' +
+                    'Please sign in with ' + providerName + '.',
+                    'warning',
+                    8000
+                );
+
+                const btnId = providerName === 'Google' ? 'btnGoogleLogin' :
+                              providerName === 'GitHub' ? 'btnGitHubLogin' : null;
+                if (btnId) {
+                    const btn = document.getElementById(btnId);
+                    if (btn) {
+                        btn.classList.add('highlight-pulse');
+                        setTimeout(function() { btn.classList.remove('highlight-pulse'); }, 3000);
+                    }
+                }
+                return;
+            }
+
+            if (error.code === 'auth/cancelled-popup-request') return;
+
+            const message = authErrorMessages[error.code] ||
+                'Login failed: ' + error.message;
+            if (message) showNotification(message, 'error');
         }
 
         // ==================== TAB SWITCHING ====================
@@ -1036,7 +1097,7 @@
                 } catch (error) {
                     btn.disabled = false;
                     btn.innerHTML = '<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"> Sign in with Google';
-                    if (error.code !== 'auth/popup-closed-by-user') showNotification('Google login failed: ' + error.message, 'error');
+                    await handleAuthError(error, 'Google');
                 }
                 } else {
                     showNotification('Firebase is not available. Please ensure internet connection and try again.', 'error');
@@ -1060,8 +1121,7 @@
                 } catch (error) {
                     btn.disabled = false;
                     btn.innerHTML = '<i class="fab fa-github" style="font-size:1.2rem;"></i> Sign in with GitHub';
-                    if (error.code === 'auth/operation-not-allowed') showNotification('GitHub login not enabled yet.', 'error');
-                    else if (error.code !== 'auth/popup-closed-by-user') showNotification('GitHub login failed: ' + error.message, 'error');
+                    await handleAuthError(error, 'GitHub');
                 }
             } else {
                 showNotification('Firebase is not available. Please ensure internet connection and try again.', 'error');
