@@ -1,5 +1,9 @@
 {
   "rules": {
+    "admin": {
+      ".read": "auth != null && auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963'",
+      ".write": "auth != null && auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963'"
+    },
     "app_config": {
       ".read": true,
       ".write": false

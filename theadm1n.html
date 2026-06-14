@@ -372,6 +372,9 @@
             <button class="topbar-btn" onclick="exportUsers()">
                 <i class="fas fa-file-csv" style="color:var(--accent2);"></i> <span>Export CSV</span>
             </button>
+            <button class="topbar-btn" onclick="setupTotp()">
+                <i class="fas fa-shield-alt" style="color:#0f0;"></i> <span id="totpStatus">2FA</span>
+            </button>
             <button class="topbar-btn danger" onclick="logout()">
                 <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
             </button>
@@ -702,6 +705,36 @@ async function sha256(msg) {
     const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(msg));
     return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
 }
+async function base32Decode(s) {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+    s = s.replace(/=+$/, '').toUpperCase();
+    const bits = [];
+    for (const c of s) { const idx = chars.indexOf(c); if (idx === -1) continue; for (let i = 4; i >= 0; i--) bits.push((idx >> i) & 1); }
+    const bytes = [];
+    for (let i = 0; i + 7 < bits.length; i += 8) { let b = 0; for (let j = 0; j < 8; j++) b = (b << 1) | bits[i + j]; bytes.push(b); }
+    return new Uint8Array(bytes);
+}
+async function verifyTotp(secret, code) {
+    const now = Math.floor(Date.now() / 30000);
+    for (let offset = -1; offset <= 1; offset++) {
+        const counter = now + offset;
+        const cb = new Uint8Array(8); let tmp = counter;
+        for (let i = 7; i >= 0; i--) { cb[i] = tmp & 0xff; tmp >>>= 8; }
+        const key = await base32Decode(secret);
+        const kd = await crypto.subtle.importKey('raw', key, { name: 'HMAC', hash: 'SHA-1' }, false, ['sign']);
+        const hmac = new Uint8Array(await crypto.subtle.sign('HMAC', kd, cb));
+        const off = hmac[19] & 0xf;
+        const truncated = ((hmac[off] & 0x7f) << 24) | (hmac[off + 1] << 16) | (hmac[off + 2] << 8) | hmac[off + 3];
+        if (String(truncated % 1000000).padStart(6, '0') === code) return true;
+    }
+    return false;
+}
+function generateTotpSecret() {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+    const bytes = new Uint8Array(20); crypto.getRandomValues(bytes);
+    let secret = ''; for (const b of bytes) secret += chars[b & 0x1f];
+    return secret;
+}
 function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function fmtDate(v) { try { const d=new Date(v); return d.toLocaleDateString()+' '+d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}); } catch{return'—';} }
 function timeAgo(ts) {
@@ -795,12 +828,14 @@ async function checkPassword() {
     try {
         if (await sha256(val) === ADMIN_HASH) {
             resetAttempts();
-            sessionStorage.setItem('bp_admin', '1');
-            await firebase.auth().signOut();
-            await firebase.auth().signInWithEmailAndPassword('mister.attaye@gmail.com', val);
-            document.getElementById('gate').classList.add('hidden');
-            document.getElementById('app').classList.add('show');
-            initApp();
+            const totpSnap = await db.ref('admin/totp_enabled').once('value');
+            if (totpSnap.val() === true) {
+                showTotpVerificationStep(val);
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-unlock-alt"></i> Enter';
+                return;
+            }
+            await completePasswordLogin(val);
         } else {
             const { newAttempts, delay } = recordFailedAttempt();
             const errorEl = document.getElementById('gateError');
@@ -833,9 +868,58 @@ async function checkPassword() {
     }
 
     btn.disabled = false;
+    btn.disabled = false;
     btn.innerHTML = '<i class="fas fa-unlock-alt"></i> Enter';
 }
 document.getElementById('gateInput').addEventListener('keydown',e=>{ if(e.key==='Enter') checkPassword(); });
+
+async function completePasswordLogin(password) {
+    sessionStorage.setItem('bp_admin', '1');
+    await firebase.auth().signOut();
+    await firebase.auth().signInWithEmailAndPassword('mister.attaye@gmail.com', password);
+    document.getElementById('gate').classList.add('hidden');
+    document.getElementById('app').classList.add('show');
+    initApp();
+}
+function showTotpVerificationStep(password) {
+    const gateContent = document.querySelector('.gate-card') || document.getElementById('gate');
+    const step = document.createElement('div');
+    step.id = 'totpStep';
+    step.style.cssText = 'position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:var(--bg);border-radius:inherit;z-index:10;';
+    step.innerHTML = `
+        <div style="text-align:center;padding:32px;">
+            <div style="font-size:1.1rem;font-weight:600;margin-bottom:4px;">Two-Factor Authentication</div>
+            <div style="color:var(--muted);font-size:0.85rem;margin-bottom:24px;">Enter the 6-digit code from your authenticator app</div>
+            <input id="totpInput" type="text" maxlength="6" placeholder="000000" autocomplete="one-time-code"
+                   style="width:140px;text-align:center;font-size:1.5rem;letter-spacing:6px;padding:10px;border-radius:10px;border:1px solid var(--glass-border);background:var(--glass-bg);color:var(--text);font-family:monospace;margin-bottom:16px;display:block;margin-left:auto;margin-right:auto;"/>
+            <button id="totpVerifyBtn"
+                    style="padding:10px 28px;background:var(--accent);color:white;border:none;border-radius:10px;cursor:pointer;font-family:'Poppins',sans-serif;font-size:0.9rem;font-weight:600;margin-bottom:12px;"><i class="fas fa-shield-alt"></i> Verify</button>
+            <br>
+            <button id="totpBackBtn"
+                    style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:0.8rem;font-family:'Poppins',sans-serif;">← Back</button>
+            <div id="totpError" style="color:#F44336;font-size:0.82rem;margin-top:8px;display:none;">Invalid code. Please try again.</div>
+        </div>`;
+    gateContent.style.position = 'relative';
+    gateContent.appendChild(step);
+    document.getElementById('totpInput').focus();
+    document.getElementById('totpVerifyBtn').onclick = async () => {
+        const code = document.getElementById('totpInput').value;
+        if (code.length !== 6) return;
+        const snap = await db.ref('admin/totp_secret').once('value');
+        const secret = snap.val();
+        if (!secret) { showToast('2FA secret not found', 'danger'); return; }
+        if (await verifyTotp(secret, code)) {
+            gateContent.removeChild(step);
+            await completePasswordLogin(password);
+        } else {
+            document.getElementById('totpError').style.display = 'block';
+            document.getElementById('totpInput').value = '';
+            document.getElementById('totpInput').focus();
+        }
+    };
+    document.getElementById('totpInput').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('totpVerifyBtn').click(); });
+    document.getElementById('totpBackBtn').onclick = () => { gateContent.removeChild(step); };
+}
 
 // ==================== GOOGLE SIGN-IN ====================
 document.getElementById('btnGoogleLogin').addEventListener('click', async function() {
@@ -877,6 +961,46 @@ function logout() {
     if(reportsListener) { db.ref('bugReports').off(); }
 }
 
+async function setupTotp() {
+    const secret = generateTotpSecret();
+    const issuer = 'BariPlux Admin';
+    const account = 'mister.attaye@gmail.com';
+    const otpauthUrl = 'otpauth://totp/' + encodeURIComponent(issuer) + ':' + encodeURIComponent(account) + '?secret=' + secret + '&issuer=' + encodeURIComponent(issuer) + '&algorithm=SHA1&digits=6&period=30';
+    const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(otpauthUrl);
+    showTotpSetupModal(qrUrl, secret, otpauthUrl);
+}
+function showTotpSetupModal(qrUrl, secret) {
+    const modal = document.createElement('div');
+    modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.8);display:flex;align-items:center;justify-content:center;z-index:99999;font-family:\'Poppins\',sans-serif;';
+    modal.innerHTML = '<div style="background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:20px;padding:32px;max-width:400px;text-align:center;">' +
+        '<div style="font-size:1.5rem;font-weight:700;margin-bottom:8px;">🔐 Setup 2FA</div>' +
+        '<div style="color:var(--muted);font-size:0.85rem;margin-bottom:20px;">Scan this QR code with Google Authenticator or Authy</div>' +
+        '<img src="' + qrUrl + '" width="200" height="200" style="border-radius:12px;margin-bottom:16px;"/>' +
+        '<div style="font-size:0.75rem;color:var(--muted);margin-bottom:8px;">Or enter manually:</div>' +
+        '<div style="font-family:monospace;font-size:0.9rem;background:rgba(0,0,0,0.3);padding:8px 12px;border-radius:8px;margin-bottom:20px;letter-spacing:2px;word-break:break-all;">' + secret + '</div>' +
+        '<div style="font-size:0.85rem;margin-bottom:12px;">Enter the 6-digit code to confirm setup:</div>' +
+        '<input id="totpSetupCode" type="text" maxlength="6" placeholder="000000" style="width:120px;text-align:center;font-size:1.2rem;letter-spacing:4px;padding:8px;border-radius:8px;border:1px solid var(--glass-border);background:var(--glass-bg);color:var(--text);font-family:monospace;"/>' +
+        '<br><br>' +
+        '<button id="totpSetupConfirm" style="padding:10px 28px;background:var(--accent);color:white;border:none;border-radius:10px;cursor:pointer;font-family:\'Poppins\',sans-serif;font-size:0.9rem;font-weight:600;">Confirm & Enable 2FA</button>' +
+        '</div>';
+    document.body.appendChild(modal);
+    document.getElementById('totpSetupConfirm').onclick = async () => {
+        const code = document.getElementById('totpSetupCode').value;
+        if (!(await verifyTotp(secret, code))) {
+            showToast('Invalid code. Try again.', 'danger');
+            return;
+        }
+        const user = firebase.auth().currentUser;
+        if (user) {
+            await db.ref('admin/totp_secret').set(secret);
+            await db.ref('admin/totp_enabled').set(true);
+            document.body.removeChild(modal);
+            showToast('✅ 2FA enabled successfully!', 'success');
+            document.getElementById('totpStatus').textContent = '2FA ✓';
+        }
+    };
+}
+
 function initApp() {
     db = firebase.database();
 
@@ -904,6 +1028,9 @@ function initApp() {
         if(rtDot){rtDot.style.background=connected?'var(--success)':'#F44336';rtDot.title=connected?'DB Connected':'DB Offline';}
         if(dbBanner)dbBanner.classList.toggle('show',!connected);
     });
+    db.ref('admin/totp_enabled').once('value').then(snap => {
+        document.getElementById('totpStatus').textContent = snap.val() === true ? '2FA ✓' : '2FA';
+    }).catch(() => {});
     loadUsers();
     db.ref('bugReports').on('value', snap => {
         const data = snap.val()||{};
