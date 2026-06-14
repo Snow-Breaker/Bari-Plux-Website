@@ -559,7 +559,7 @@
         // ==================== PENDING TOKEN ====================
         async function createPendingToken(user) {
             if (!firebaseInitialized || !database) {
-                console.error('createPendingToken: Firebase database not initialized. databaseURL may be missing from firebaseConfig.');
+                console.error('[createPendingToken] Firebase database not initialized');
                 return null;
             }
             try {
@@ -567,7 +567,21 @@
                     .once('value').then(snap => Date.now() + snap.val());
 
                 const sessionId = crypto.randomUUID();
-                const claimToken = user.id + ':' + sessionId;
+
+                // Get Firebase ID token — try multiple approaches
+                let firebaseIdToken = null;
+                try {
+                    const fbUser = firebase.auth().currentUser;
+                    if (fbUser) {
+                        firebaseIdToken = await fbUser.getIdToken(true);
+                        console.log('[createPendingToken] Got Firebase idToken, length:',
+                            firebaseIdToken?.length);
+                    } else {
+                        console.warn('[createPendingToken] firebase.auth().currentUser is null');
+                    }
+                } catch (e) {
+                    console.error('[createPendingToken] getIdToken failed:', e);
+                }
 
                 // Fetch client IP for IP binding
                 let clientIp = null;
@@ -578,7 +592,7 @@
                     const ipData = await ipRes.json();
                     clientIp = ipData.ip || null;
                 } catch (e) {
-                    console.warn('createPendingToken: could not fetch IP, binding disabled', e);
+                    console.warn('[createPendingToken] could not fetch IP', e);
                 }
 
                 await database.ref('pending_tokens/' + user.id + '/' + sessionId).set({
@@ -587,13 +601,16 @@
                     created_at: firebase.database.ServerValue.TIMESTAMP,
                     expires_at: serverTs + 300000,
                     claimed: false,
-                    // IP binding — null means "any IP allowed" (fail-open)
-                    allowed_ip: clientIp
+                    allowed_ip: clientIp,
+                    firebase_id_token: firebaseIdToken,
+                    has_token: firebaseIdToken !== null
                 });
 
-                return claimToken;
+                console.log('[createPendingToken] Token written — has_id_token:',
+                    firebaseIdToken !== null);
+                return user.id + ':' + sessionId;
             } catch (e) {
-                console.error('Failed to create pending token:', e);
+                console.error('[createPendingToken] Failed:', e);
                 return null;
             }
         }
@@ -1255,6 +1272,14 @@
                     photoURL: discordUser.avatar
                 };
                 localStorage.setItem('bariplux_user', JSON.stringify(userData));
+
+                // Ensure Firebase Auth state is settled before proceeding
+                await new Promise(resolve => {
+                    const unsub = firebase.auth().onAuthStateChanged(u => {
+                        if (u) { unsub(); resolve(u); }
+                    });
+                    setTimeout(() => { unsub(); resolve(null); }, 3000);
+                });
 
                 if (wasDesktopFlow) {
                     startDesktopLoginFlow(userData);
