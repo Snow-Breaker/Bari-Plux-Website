@@ -12,7 +12,10 @@
       ".read": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963'",
       "$uid": {
         ".read": "auth.uid === $uid",
-        ".write": "auth.uid === $uid"
+        ".write": "auth.uid === $uid",
+        "role": {
+          ".validate": "newData.isString() && newData.val() matches /^(user|admin|developer|moderator)$/"
+        }
       }
     },
     "discordUsers": {
@@ -39,8 +42,8 @@
       }
     },
     "bugReports": {
-      ".read": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963'",
-      ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963'",
+      ".read": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || root.child('users/' + auth.uid + '/role').val() === 'admin'",
+      ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || root.child('users/' + auth.uid + '/role').val() === 'admin'",
       ".indexOn": ["status", "timestamp"]
     },
     "serverTime": {

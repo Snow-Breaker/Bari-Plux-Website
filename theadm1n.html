@@ -428,13 +428,14 @@
                             <th>User</th>
                             <th>Email</th>
                             <th>Method</th>
+                            <th>Role</th>
                             <th>Country</th>
                             <th>Login Time</th>
                             <th>Last Active</th>
                             <th></th>
                         </tr>
                     </thead>
-                    <tbody id="usersTableBody"><tr class="state-row"><td colspan="7"><div class="state-icon">🔐</div><div>Loading...</div></td></tr></tbody>
+                    <tbody id="usersTableBody"><tr class="state-row"><td colspan="8"><div class="state-icon">🔐</div><div>Loading...</div></td></tr></tbody>
                 </table>
                 <div class="pagination" id="usersPagination" style="display:none;"></div>
             </div>
@@ -566,6 +567,30 @@
             <button onclick="copyVal(_currentUser?.id,'ID')" style="flex:1;padding:9px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-family:'Poppins',sans-serif;font-size:0.8rem;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'"><i class="fas fa-copy"></i> Copy ID</button>
             <button onclick="copyVal(_currentUser?.email,'Email')" style="flex:1;padding:9px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-family:'Poppins',sans-serif;font-size:0.8rem;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'"><i class="fas fa-envelope"></i> Copy Email</button>
             <button onclick="copyVal(_currentUser?.ip,'IP')" style="flex:1;padding:9px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-family:'Poppins',sans-serif;font-size:0.8rem;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'"><i class="fas fa-network-wired"></i> Copy IP</button>
+        </div>
+        <div class="modal-section">
+            <h3><i class="fas fa-shield-alt"></i> Role Management</h3>
+            <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+                <div style="flex:1;min-width:200px;">
+                    <div style="font-size:11px;color:#718096;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px;">Current Role</div>
+                    <div id="modalCurrentRole" style="font-size:14px;"></div>
+                </div>
+                <div style="flex:1;min-width:200px;">
+                    <div style="font-size:11px;color:#718096;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px;">Assign New Role</div>
+                    <div style="display:flex;gap:8px;align-items:center;">
+                        <select id="modalRoleSelect" style="background:#1a2035;border:1px solid #2d3748;color:#E2E8F0;padding:6px 10px;border-radius:6px;font-size:13px;flex:1;cursor:pointer;">
+                            <option value="free">● FREE</option>
+                            <option value="pro">⭐ PRO</option>
+                            <option value="dev">🛠️ DEV</option>
+                            <option value="founder">👑 FOUNDER</option>
+                        </select>
+                        <button onclick="assignRole()" style="background:linear-gradient(135deg,#667EEA,#764BA2);color:white;border:none;padding:6px 16px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;">
+                            Assign
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div id="roleAssignedInfo" style="margin-top:8px;font-size:11px;color:#718096;"></div>
         </div>
         <div class="danger-zone">
             <div class="danger-zone-title"><i class="fas fa-shield-alt"></i> Admin Actions</div>
@@ -705,7 +730,7 @@ async function sha256(msg) {
     const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(msg));
     return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
 }
-async function base32Decode(s) {
+function base32Decode(s) {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
     s = s.replace(/=+$/, '').toUpperCase();
     const bits = [];
@@ -714,19 +739,25 @@ async function base32Decode(s) {
     for (let i = 0; i + 7 < bits.length; i += 8) { let b = 0; for (let j = 0; j < 8; j++) b = (b << 1) | bits[i + j]; bytes.push(b); }
     return new Uint8Array(bytes);
 }
-async function verifyTotp(secret, code) {
-    const now = Math.floor(Date.now() / 30000);
-    for (let offset = -1; offset <= 1; offset++) {
-        const counter = now + offset;
-        const cb = new Uint8Array(8); let tmp = counter;
-        for (let i = 7; i >= 0; i--) { cb[i] = tmp & 0xff; tmp >>>= 8; }
-        const key = await base32Decode(secret);
-        const kd = await crypto.subtle.importKey('raw', key, { name: 'HMAC', hash: 'SHA-1' }, false, ['sign']);
-        const hmac = new Uint8Array(await crypto.subtle.sign('HMAC', kd, cb));
-        const off = hmac[19] & 0xf;
-        const truncated = ((hmac[off] & 0x7f) << 24) | (hmac[off + 1] << 16) | (hmac[off + 2] << 8) | hmac[off + 3];
-        if (String(truncated % 1000000).padStart(6, '0') === code) return true;
+async function verifyTotp(secret, userCode) {
+    const timeStep = 30;
+    const now = Math.floor(Date.now() / 1000 / timeStep);
+    const keyBytes = base32Decode(secret);
+    const generated = [];
+    for (let delta = -2; delta <= 2; delta++) {
+        const timeBig = BigInt(now + delta);
+        const timeBuf = new ArrayBuffer(8);
+        new DataView(timeBuf).setBigUint64(0, timeBig, false);
+        const key = await crypto.subtle.importKey('raw', keyBytes, { name: 'HMAC', hash: 'SHA-1' }, false, ['sign']);
+        const sig = await crypto.subtle.sign('HMAC', key, timeBuf);
+        const sigBytes = new Uint8Array(sig);
+        const offset = sigBytes[sigBytes.length - 1] & 0x0f;
+        const code = (((sigBytes[offset] & 0x7f) << 24) | ((sigBytes[offset + 1] & 0xff) << 16) | ((sigBytes[offset + 2] & 0xff) << 8) | (sigBytes[offset + 3] & 0xff)) % 1000000;
+        const codeStr = code.toString().padStart(6, '0');
+        generated.push(codeStr);
+        if (codeStr === userCode.trim()) return true;
     }
+    console.error('TOTP mismatch — user entered:', userCode, '— generated codes:', generated.join(', '), '— secret first 4 chars:', secret.substring(0, 4));
     return false;
 }
 function generateTotpSecret() {
@@ -764,6 +795,23 @@ function avatarColor(m) {
 function countryFlag(code) {
     if(!code||code.length!==2) return '';
     return code.toUpperCase().replace(/./g,c=>String.fromCodePoint(c.charCodeAt(0)+127397));
+}
+function getRoleBadgeHtml(role) {
+    const roles = {
+        founder: { icon: '👑', label: 'FOUNDER', color: '#F6AD55', bg: 'rgba(246,173,85,0.15)' },
+        dev:     { icon: '🛠️', label: 'DEV',     color: '#68D391', bg: 'rgba(104,211,145,0.15)' },
+        pro:     { icon: '⭐', label: 'PRO',     color: '#63B3ED', bg: 'rgba(99,179,237,0.15)' },
+        free:    { icon: '●',  label: 'FREE',    color: '#718096', bg: 'rgba(113,128,150,0.15)' }
+    };
+    const r = roles[role?.toLowerCase()] || roles.free;
+    return `<span style="
+        display:inline-flex;align-items:center;gap:4px;
+        padding:2px 8px;border-radius:4px;
+        background:${r.bg};color:${r.color};
+        font-size:11px;font-weight:700;letter-spacing:0.5px;
+        border:1px solid ${r.color}33;">
+        ${r.icon} ${r.label}
+    </span>`;
 }
 function showToast(msg, type='') {
     const t=document.getElementById('toast');
@@ -1009,7 +1057,7 @@ function initApp() {
         console.error('initApp: wrong user or not authenticated', currentUser?.uid, currentUser?.email);
         const tbody = document.getElementById('usersTableBody');
         if (tbody) tbody.innerHTML = `
-            <tr class="state-row"><td colspan="7">
+            <tr class="state-row"><td colspan="8">
                 <div class="state-icon">🔒</div>
                 <div style="color:var(--danger);font-weight:600;">
                     Authentication error. Please refresh and log in again.
@@ -1047,7 +1095,7 @@ function loadUsers() {
     if(!db) { btn.classList.remove('spinning'); return; }
 
     const tbody=document.getElementById('usersTableBody');
-    tbody.innerHTML='<tr class="state-row"><td colspan="7"><div class="state-icon" style="font-size:1.5rem;">⏳</div><div>Loading users from database...</div></td></tr>';
+    tbody.innerHTML='<tr class="state-row"><td colspan="8"><div class="state-icon" style="font-size:1.5rem;">⏳</div><div>Loading users from database...</div></td></tr>';
     const mc=document.getElementById('mobileCards');
     if(mc) mc.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted);"><div style="font-size:2rem;margin-bottom:8px;">⏳</div><div>Loading users...</div></div>';
 
@@ -1066,7 +1114,8 @@ function loadUsers() {
                 photoURL:u.photoURL||null, platform:u.platform||'website',
                 country:u.country||null, countryCode:u.countryCode||null,
                 city:u.city||null, ip:u.ip||null,
-                blocked:u.blocked===true, forceLogout:u.forceLogout||null
+                blocked:u.blocked===true, forceLogout:u.forceLogout||null,
+                role:u.role||'free', roleAssignedAt:u.role_assigned_at||null, roleAssignedBy:u.role_assigned_by||null
             }));
         };
         const merged=[...parse(us),...parse(ds)];
@@ -1082,7 +1131,7 @@ function loadUsers() {
             ? '🔒 Access denied. The Firebase Database Rules are blocking this read. Check that the admin UID in rules matches this account\'s Firebase Auth UID.'
             : '⚠️ Failed to load users';
         showToast(errMsg,'danger');
-        tbody.innerHTML='<tr class="state-row"><td colspan="7">'
+        tbody.innerHTML='<tr class="state-row"><td colspan="8">'
             +'<div class="state-icon">⚠️</div>'
             +'<div style="color:#F44336;font-weight:600;">'+(isPermDenied?'Access Denied':'Failed to load users')+'</div>'
             +'<div style="font-size:0.8rem;margin-top:6px;color:var(--muted);">'+(e.code||e.message||'Unknown error')+'</div>'
@@ -1134,7 +1183,7 @@ function renderUsers() {
 
     const tbody=document.getElementById('usersTableBody');
     if(!filtered.length) {
-        tbody.innerHTML=`<tr class="state-row"><td colspan="7"><div class="state-icon">🔍</div><div>No users found.</div></td></tr>`;
+        tbody.innerHTML=`<tr class="state-row"><td colspan="8"><div class="state-icon">🔍</div><div>No users found.</div></td></tr>`;
         document.getElementById('usersPagination').style.display='none';
     } else {
         tbody.innerHTML=slice.map((u,i)=>{
@@ -1152,6 +1201,7 @@ function renderUsers() {
                 </div></td>
                 <td style="color:var(--muted);font-size:0.82rem;">${esc(u.email)}</td>
                 <td><span class="method-badge ${m.cls}">${m.icon} ${m.label}</span></td>
+                <td>${getRoleBadgeHtml(u.role || 'free')}</td>
                 <td><div class="country-cell">${flag?`<span class="country-flag">${flag}</span>`:''}<span>${esc(u.country||'—')}</span></div></td>
                 <td class="time-cell">${fmtDate(u.loginTime)}</td>
                 <td class="time-cell">${isOnline?'<span class="active-dot"></span>':''}<span>${u.lastActive?timeAgo(u.lastActive):'—'}</span></td>
@@ -1234,6 +1284,13 @@ function openUserModal(id) {
     document.getElementById('umLastActive').textContent=u.lastActive?fmtDate(u.lastActive):'—';
     if(u.photoURL) { document.getElementById('umPhotoSection').style.display=''; document.getElementById('umPhotoFull').src=u.photoURL; document.getElementById('umPhotoLink').href=u.photoURL; }
     else document.getElementById('umPhotoSection').style.display='none';
+    // Populate role section
+    document.getElementById('modalCurrentRole').innerHTML = getRoleBadgeHtml(u.role || 'free');
+    document.getElementById('modalRoleSelect').value = u.role || 'free';
+    const assignedInfo = u.roleAssignedAt
+        ? `Assigned ${new Date(u.roleAssignedAt).toLocaleDateString()}`
+        : 'Default role';
+    document.getElementById('roleAssignedInfo').textContent = assignedInfo;
     renderDangerBtns(u);
     document.getElementById('userModal').classList.add('show');
     document.body.style.overflow='hidden';
@@ -1328,6 +1385,35 @@ function updateLocalUser(userId, changes) {
     const u = allUsers.find(x=>x.id===userId);
     if(u) Object.assign(u, changes);
     if(_currentUser?.id===userId) Object.assign(_currentUser, changes);
+}
+
+async function assignRole() {
+    const userId = _currentUser?.id;
+    if (!userId) return;
+    const newRole = document.getElementById('modalRoleSelect').value;
+    const currentUser = firebase.auth().currentUser;
+    if (!currentUser) return showToast('Not authenticated', 'danger');
+
+    if (!confirm(`Assign role "${newRole.toUpperCase()}" to this user?`)) return;
+
+    try {
+        const userRef = await getCorrectRef(userId);
+        if (!userRef) { showToast('User not found in database', 'danger'); return; }
+        await userRef.update({
+            role: newRole,
+            role_assigned_at: new Date().toISOString(),
+            role_assigned_by: currentUser.uid
+        });
+
+        document.getElementById('modalCurrentRole').innerHTML = getRoleBadgeHtml(newRole);
+        document.getElementById('roleAssignedInfo').textContent = `Assigned ${new Date().toLocaleDateString()}`;
+
+        updateLocalUser(userId, { role: newRole, roleAssignedAt: new Date().toISOString(), roleAssignedBy: currentUser.uid });
+        renderUsers();
+        showToast(`Role updated to ${newRole.toUpperCase()} ✓`, 'success');
+    } catch (err) {
+        showToast('Failed to assign role: ' + err.message, 'danger');
+    }
 }
 
 function loadReports() {
