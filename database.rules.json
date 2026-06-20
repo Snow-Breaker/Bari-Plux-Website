@@ -1,25 +1,25 @@
 {
   "rules": {
     "admin": {
-      ".read": "auth != null && auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963'",
-      ".write": "auth != null && auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963'"
+      ".read": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'",
+      ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'"
     },
     "app_config": {
       ".read": true,
       ".write": false
     },
     "users": {
-      ".read": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963'",
+      ".read": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'",
       "$uid": {
         ".read": "auth.uid === $uid",
         ".write": "auth.uid === $uid",
         "role": {
-          ".validate": "newData.isString() && newData.val() matches /^(user|admin|developer|moderator)$/"
+          ".validate": "newData.isString() && newData.val().matches(/^(free|pro|dev|founder)$/)"
         }
       }
     },
     "discordUsers": {
-      ".read": "auth != null && auth.uid === 'o2hD76smAygVFJlO3Uu8jDdcatW2'",
+      ".read": "auth.uid === 'o2hD76smAygVFJlO3Uu8jDdcatW2' || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'",
       "$uid": {
         ".read": "auth != null && auth.uid === $uid",
         ".write": "auth != null && auth.uid === $uid"
@@ -42,9 +42,22 @@
       }
     },
     "bugReports": {
-      ".read": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || root.child('users/' + auth.uid + '/role').val() === 'admin'",
-      ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || root.child('users/' + auth.uid + '/role').val() === 'admin'",
+      ".read": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || root.child('users/' + auth.uid + '/role').val() === 'dev' || root.child('users/' + auth.uid + '/role').val() === 'founder'",
+      ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || root.child('users/' + auth.uid + '/role').val() === 'dev' || root.child('users/' + auth.uid + '/role').val() === 'founder'",
       ".indexOn": ["status", "timestamp"]
+    },
+    "feature_flags": {
+      ".read": true,
+      ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'",
+      "$featureKey": {
+        ".validate": "newData.hasChildren(['min_role', 'enabled'])",
+        "min_role": {
+          ".validate": "newData.isString() && newData.val().matches(/^(free|pro|dev|founder)$/)"
+        },
+        "enabled": {
+          ".validate": "newData.isBoolean()"
+        }
+      }
     },
     "serverTime": {
       ".read": true,

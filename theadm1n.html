@@ -325,6 +325,7 @@
             .user-card-body { grid-template-columns: 1fr; }
             .topbar-btn span { display: none; }
             .danger-btn { min-width: 100%; }
+            #featureFlagForm > div { grid-template-columns: 1fr !important; }
         }
         @media (min-width: 901px) {
             .cards-wrap { display: none !important; }
@@ -392,6 +393,9 @@
             <button class="tab-btn" onclick="switchTab('reports', this)">
                 <i class="fas fa-bug"></i> Bug Reports
                 <span class="tab-badge" id="reportsBadge"></span>
+            </button>
+            <button class="tab-btn" onclick="switchTab('featureFlags', this)">
+                <i class="fas fa-flag"></i> Feature Flags
             </button>
         </div>
 
@@ -499,6 +503,71 @@
             <div class="cards-wrap" id="reportsCards"></div>
             <div class="pagination" id="reportsPaginationMobile" style="display:none;"></div>
             <div class="last-updated" id="reportsLastUpdated"></div>
+        </div>
+
+        <div id="featureFlagsSection" style="display:none;">
+            <div class="stats-grid">
+                <div class="stat-card" style="animation-delay:0s"><div class="stat-icon total"><i class="fas fa-flag"></i></div><div><div class="stat-num" id="ffStatTotal">—</div><div class="stat-label">Total Flags</div></div></div>
+                <div class="stat-card" style="animation-delay:0.05s"><div class="stat-icon" style="background:rgba(76,175,80,0.15);color:#4CAF50;"><i class="fas fa-check"></i></div><div><div class="stat-num" id="ffStatEnabled">—</div><div class="stat-label">Enabled</div></div></div>
+                <div class="stat-card" style="animation-delay:0.1s"><div class="stat-icon" style="background:rgba(244,67,54,0.15);color:#F44336;"><i class="fas fa-times"></i></div><div><div class="stat-num" id="ffStatDisabled">—</div><div class="stat-label">Disabled</div></div></div>
+            </div>
+
+            <div class="toolbar">
+                <span class="toolbar-title">Feature Flags</span>
+                <button class="icon-btn teal" id="addFeatureFlagBtn" onclick="showFeatureFlagForm()"><i class="fas fa-plus"></i> Add Flag</button>
+            </div>
+
+            <div id="featureFlagForm" style="display:none;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px;margin-bottom:16px;animation:fadeUp 0.25s ease;">
+                <div style="font-size:0.9rem;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px;">
+                    <i class="fas fa-flag" style="color:var(--accent);"></i>
+                    <span id="ffFormTitle">Add Feature Flag</span>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:12px;align-items:end;">
+                    <div>
+                        <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Feature Key</div>
+                        <input type="text" id="ffKeyInput" placeholder="e.g. cloud_backup" style="width:100%;padding:9px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.82rem;">
+                        <div id="ffKeyError" style="font-size:0.72rem;color:var(--danger);margin-top:3px;display:none;">Only lowercase letters, numbers, and underscores allowed.</div>
+                    </div>
+                    <div>
+                        <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Minimum Role</div>
+                        <select id="ffRoleSelect" style="width:100%;padding:9px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Poppins',sans-serif;font-size:0.82rem;cursor:pointer;">
+                            <option value="free">● Free</option>
+                            <option value="pro">⭐ Pro</option>
+                            <option value="dev">🛠️ Dev</option>
+                            <option value="founder">👑 Founder</option>
+                        </select>
+                    </div>
+                    <div>
+                        <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">&nbsp;</div>
+                        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:9px 0;">
+                            <input type="checkbox" id="ffEnabledInput" checked style="width:16px;height:16px;cursor:pointer;accent-color:var(--accent);">
+                            <span style="font-size:0.85rem;">Enabled</span>
+                        </label>
+                    </div>
+                    <div style="display:flex;gap:6px;">
+                        <button class="action-btn view" id="ffSaveBtn" onclick="saveFeatureFlag()" style="padding:9px 16px;font-size:0.82rem;font-weight:600;"><i class="fas fa-save"></i> Save</button>
+                        <button class="action-btn" onclick="cancelFeatureFlagForm()" style="padding:9px 16px;font-size:0.82rem;"><i class="fas fa-times"></i> Cancel</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Key</th>
+                            <th>Min Role</th>
+                            <th>Enabled</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="featureFlagsTableBody"><tr class="state-row"><td colspan="5"><div class="state-icon">🏁</div><div>Loading...</div></td></tr></tbody>
+                </table>
+            </div>
+
+            <div class="cards-wrap" id="featureFlagsCards"></div>
+            <div class="last-updated" id="featureFlagsLastUpdated"></div>
         </div>
     </div>
 </div>
@@ -1655,12 +1724,179 @@ function downloadPreview() {
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
 }
 
+// ==================== FEATURE FLAGS ====================
+let _editingFFKey = null;
+
+function loadFeatureFlags() {
+    const tbody = document.getElementById('featureFlagsTableBody');
+    tbody.innerHTML = '<tr class="state-row"><td colspan="5"><div class="state-icon">⏳</div><div>Loading feature flags...</div></td></tr>';
+    db.ref('feature_flags').once('value').then(snap => {
+        const data = snap.val() || {};
+        const entries = Object.entries(data).map(([key, val]) => ({ key, ...val }));
+        document.getElementById('ffStatTotal').textContent = entries.length;
+        document.getElementById('ffStatEnabled').textContent = entries.filter(e => e.enabled !== false).length;
+        document.getElementById('ffStatDisabled').textContent = entries.filter(e => e.enabled === false).length;
+
+        if (!entries.length) {
+            tbody.innerHTML = '<tr class="state-row"><td colspan="5"><div class="state-icon">🏁</div><div>No feature flags configured.</div></td></tr>';
+            document.getElementById('featureFlagsCards').innerHTML = '<div style="text-align:center;padding:48px 20px;color:var(--muted);"><div style="font-size:2rem;margin-bottom:8px;opacity:0.35;">🏁</div>No feature flags configured.</div>';
+        } else {
+            entries.sort((a, b) => a.key.localeCompare(b.key));
+            tbody.innerHTML = entries.map((e, i) => {
+                const enabled = e.enabled !== false;
+                const toggleBtn = enabled
+                    ? `<button class="action-btn" onclick="toggleEnabled('${esc(e.key)}',false)" style="border-color:rgba(76,175,80,0.3);color:#4CAF50;"><i class="fas fa-toggle-on"></i> Enabled</button>`
+                    : `<button class="action-btn" onclick="toggleEnabled('${esc(e.key)}',true)" style="border-color:rgba(244,67,54,0.3);color:#F44336;"><i class="fas fa-toggle-off"></i> Disabled</button>`;
+                return `<tr style="animation-delay:${i*0.025}s">
+                    <td style="font-family:'JetBrains Mono',monospace;font-size:0.82rem;font-weight:600;">${esc(e.key)}</td>
+                    <td>${getRoleBadgeHtml(e.min_role || 'free')}</td>
+                    <td>${toggleBtn}</td>
+                    <td class="time-cell">${e.created_at ? fmtDate(e.created_at) : '—'}</td>
+                    <td style="white-space:nowrap;">
+                        <button class="action-btn view" onclick="showFeatureFlagForm('${esc(e.key)}')"><i class="fas fa-edit"></i></button>
+                        <button class="action-btn del" onclick="deleteFeatureFlag('${esc(e.key)}')"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>`;
+            }).join('');
+
+            document.getElementById('featureFlagsCards').innerHTML = entries.map((e, i) => {
+                const enabled = e.enabled !== false;
+                return `<div class="user-card" style="animation-delay:${i*0.03}s">
+                    <div class="user-card-header">
+                        <div style="font-weight:700;font-family:'JetBrains Mono',monospace;font-size:0.85rem;">${esc(e.key)}</div>
+                        <span style="font-size:0.72rem;padding:2px 8px;border-radius:4px;background:${enabled?'rgba(76,175,80,0.15)':'rgba(244,67,54,0.15)'};color:${enabled?'#4CAF50':'#F44336'};font-weight:700;">${enabled?'ON':'OFF'}</span>
+                    </div>
+                    <div class="user-card-body">
+                        <div class="user-card-field"><span class="uf-label">Min Role</span><span class="uf-value">${esc(e.min_role || 'free')}</span></div>
+                        <div class="user-card-field"><span class="uf-label">Created</span><span class="uf-value">${e.created_at ? fmtDate(e.created_at) : '—'}</span></div>
+                    </div>
+                    <div class="user-card-footer" style="gap:6px;">
+                        <button class="action-btn view" onclick="showFeatureFlagForm('${esc(e.key)}')"><i class="fas fa-edit"></i> Edit</button>
+                        <button class="action-btn" onclick="toggleEnabled('${esc(e.key)}',${!enabled})" style="${enabled?'border-color:rgba(244,67,54,0.3);color:#F44336;':'border-color:rgba(76,175,80,0.3);color:#4CAF50;'}">${enabled?'<i class="fas fa-toggle-off"></i> Disable':'<i class="fas fa-toggle-on"></i> Enable'}</button>
+                        <button class="action-btn del" onclick="deleteFeatureFlag('${esc(e.key)}')"><i class="fas fa-trash"></i> Delete</button>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+        document.getElementById('featureFlagsLastUpdated').textContent = 'Last updated: ' + new Date().toLocaleTimeString();
+    }).catch(e => {
+        console.error(e);
+        tbody.innerHTML = '<tr class="state-row"><td colspan="5"><div class="state-icon">⚠️</div><div>Failed to load feature flags.</div></td></tr>';
+        showToast('⚠️ Failed to load feature flags', 'danger');
+    });
+}
+
+function validateFeatureKey(key) {
+    return /^[a-z0-9_]+$/.test(key);
+}
+
+function showFeatureFlagForm(key) {
+    const form = document.getElementById('featureFlagForm');
+    const title = document.getElementById('ffFormTitle');
+    const keyInput = document.getElementById('ffKeyInput');
+    const roleSelect = document.getElementById('ffRoleSelect');
+    const enabledInput = document.getElementById('ffEnabledInput');
+    const keyError = document.getElementById('ffKeyError');
+
+    keyError.style.display = 'none';
+    if (key) {
+        _editingFFKey = key;
+        db.ref(`feature_flags/${key}`).once('value').then(snap => {
+            const data = snap.val() || {};
+            keyInput.value = key;
+            keyInput.disabled = true;
+            roleSelect.value = data.min_role || 'free';
+            enabledInput.checked = data.enabled !== false;
+            title.textContent = 'Edit Feature Flag';
+            form.style.display = 'block';
+            form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }).catch(e => showToast('⚠️ Failed to load flag data', 'danger'));
+    } else {
+        _editingFFKey = null;
+        keyInput.value = '';
+        keyInput.disabled = false;
+        roleSelect.value = 'free';
+        enabledInput.checked = true;
+        title.textContent = 'Add Feature Flag';
+        form.style.display = 'block';
+        form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        keyInput.focus();
+    }
+}
+
+function cancelFeatureFlagForm() {
+    document.getElementById('featureFlagForm').style.display = 'none';
+    document.getElementById('ffKeyError').style.display = 'none';
+    _editingFFKey = null;
+}
+
+async function saveFeatureFlag() {
+    const keyInput = document.getElementById('ffKeyInput');
+    const roleSelect = document.getElementById('ffRoleSelect');
+    const enabledInput = document.getElementById('ffEnabledInput');
+    const keyError = document.getElementById('ffKeyError');
+    const key = keyInput.value.trim();
+    const isEdit = _editingFFKey !== null;
+
+    if (!isEdit) {
+        if (!key) { showToast('⚠️ Feature key is required', 'danger'); keyInput.focus(); return; }
+        if (!validateFeatureKey(key)) {
+            keyError.style.display = 'block';
+            showToast('⚠️ Invalid key: only lowercase letters, numbers, underscores', 'danger');
+            return;
+        }
+    }
+    keyError.style.display = 'none';
+
+    const data = {
+        min_role: roleSelect.value,
+        enabled: enabledInput.checked,
+        updated_at: Date.now()
+    };
+    if (!isEdit) data.created_at = Date.now();
+
+    const saveKey = isEdit ? _editingFFKey : key;
+
+    try {
+        await db.ref(`feature_flags/${saveKey}`).update(data);
+        showToast(isEdit ? '✅ Flag updated' : '✅ Flag created', 'success');
+        cancelFeatureFlagForm();
+        loadFeatureFlags();
+    } catch (e) {
+        showToast('⚠️ Failed to save: ' + e.message, 'danger');
+    }
+}
+
+async function deleteFeatureFlag(key) {
+    if (!confirm(`Delete feature flag "${key}"? This cannot be undone.`)) return;
+    try {
+        await db.ref(`feature_flags/${key}`).remove();
+        showToast('🗑️ Flag deleted', 'success');
+        if (_editingFFKey === key) cancelFeatureFlagForm();
+        loadFeatureFlags();
+    } catch (e) {
+        showToast('⚠️ Failed to delete: ' + e.message, 'danger');
+    }
+}
+
+async function toggleEnabled(key, newVal) {
+    try {
+        await db.ref(`feature_flags/${key}/enabled`).set(newVal);
+        showToast(newVal ? '✅ Flag enabled' : '⛔ Flag disabled', 'success');
+        loadFeatureFlags();
+    } catch (e) {
+        showToast('⚠️ Failed to toggle: ' + e.message, 'danger');
+    }
+}
+
 function switchTab(tab, btn) {
     document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
     document.getElementById('usersSection').style.display=tab==='users'?'':'none';
     document.getElementById('reportsSection').style.display=tab==='reports'?'':'none';
+    document.getElementById('featureFlagsSection').style.display=tab==='featureFlags'?'':'none';
     if(tab==='reports') loadReports();
+    if(tab==='featureFlags') loadFeatureFlags();
 }
 
 document.addEventListener('keydown', e=>{
@@ -1673,6 +1909,7 @@ document.addEventListener('keydown', e=>{
         if(document.getElementById('userModal').classList.contains('show')){closeUserModal();return;}
     }
     if(confirm.classList.contains('show') && e.key==='Enter') { submitConfirm(); return; }
+    if(document.getElementById('featureFlagForm').style.display==='block' && e.key==='Enter' && e.target.id==='ffKeyInput') { saveFeatureFlag(); return; }
     if(preview.classList.contains('show')) {
         if(e.key==='ArrowLeft') prevImage();
         if(e.key==='ArrowRight') nextImage();
