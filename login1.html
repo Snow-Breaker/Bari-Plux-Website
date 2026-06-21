@@ -873,7 +873,7 @@
                 };
 
                 const userRef = database.ref(nodePath);
-                userRef.set(data).then(() => {
+                userRef.update(data).then(() => {
                     console.log('Login synced to Firebase! (' + nodePath + ')');
                 }).catch(err => {
                     console.log('Firebase sync note:', err.code);
@@ -1245,7 +1245,7 @@
 
                 // Fire-and-forget — profile write is non-critical, don't block UI
                 if (database) {
-                    database.ref(`discordUsers/${firebaseUser.uid}`).set({
+                    database.ref(`discordUsers/${firebaseUser.uid}`).update({
                         uid: firebaseUser.uid,
                         discordId: discordUser.id,
                         username: discordUser.username,
