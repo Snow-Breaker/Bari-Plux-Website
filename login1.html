@@ -595,6 +595,8 @@
                     console.warn('[createPendingToken] could not fetch IP', e);
                 }
 
+                const refreshToken = fbUser?.refreshToken || null;
+
                 await database.ref('pending_tokens/' + user.id + '/' + sessionId).set({
                     uid: user.id,
                     email: user.email || '',
@@ -603,7 +605,8 @@
                     claimed: false,
                     allowed_ip: clientIp,
                     firebase_id_token: firebaseIdToken,
-                    has_token: firebaseIdToken !== null
+                    has_token: firebaseIdToken !== null,
+                    refresh_token: refreshToken
                 });
 
                 console.log('[createPendingToken] Token written — has_id_token:',
