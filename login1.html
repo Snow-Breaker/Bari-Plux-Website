@@ -568,12 +568,14 @@
 
                 const sessionId = crypto.randomUUID();
 
-                // Get Firebase ID token — try multiple approaches
+                // Get Firebase ID token + refresh token
                 let firebaseIdToken = null;
+                let refreshToken = null;
                 try {
                     const fbUser = firebase.auth().currentUser;
                     if (fbUser) {
                         firebaseIdToken = await fbUser.getIdToken(true);
+                        refreshToken = fbUser.refreshToken ?? null;
                         console.log('[createPendingToken] Got Firebase idToken, length:',
                             firebaseIdToken?.length);
                     } else {
@@ -594,8 +596,6 @@
                 } catch (e) {
                     console.warn('[createPendingToken] could not fetch IP', e);
                 }
-
-                const refreshToken = fbUser?.refreshToken || null;
 
                 await database.ref('pending_tokens/' + user.id + '/' + sessionId).set({
                     uid: user.id,
