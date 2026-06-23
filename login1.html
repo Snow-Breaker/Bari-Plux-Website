@@ -586,15 +586,26 @@
                 }
 
                 // Fetch client IP for IP binding
+                // Primary: Cloudflare Worker's CF-Connecting-IP (same source app uses to verify)
+                // Fallback: ipapi.co if Worker call fails
                 let clientIp = null;
                 try {
-                    const ipRes = await fetch('https://ipapi.co/json/', {
+                    const ipRes = await fetch('https://discord-auth-worker.bariattaye2.workers.dev/my-ip', {
                         signal: AbortSignal.timeout(3000)
                     });
                     const ipData = await ipRes.json();
                     clientIp = ipData.ip || null;
                 } catch (e) {
-                    console.warn('[createPendingToken] could not fetch IP', e);
+                    console.warn('[createPendingToken] Worker IP fetch failed, trying fallback', e);
+                    try {
+                        const ipRes2 = await fetch('https://ipapi.co/json/', {
+                            signal: AbortSignal.timeout(3000)
+                        });
+                        const ipData2 = await ipRes2.json();
+                        clientIp = ipData2.ip || null;
+                    } catch (e2) {
+                        console.warn('[createPendingToken] could not fetch IP', e2);
+                    }
                 }
 
                 await database.ref('pending_tokens/' + user.id + '/' + sessionId).set({
