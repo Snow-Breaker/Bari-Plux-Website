@@ -645,6 +645,16 @@
                 // Encrypt tokens with AES-128-CBC using sessionId as key
                 const encryptedFirebaseIdToken = await encryptToken(firebaseIdToken, sessionId);
                 const encryptedRefreshToken = await encryptToken(refreshToken, sessionId);
+                console.log('[DIAG] encryptedFirebaseIdToken', {
+                    length: encryptedFirebaseIdToken?.length,
+                    first50: encryptedFirebaseIdToken?.substring(0, 50),
+                    last20: encryptedFirebaseIdToken?.slice(-20)
+                });
+                console.log('[DIAG] encryptedRefreshToken', {
+                    length: encryptedRefreshToken?.length,
+                    first50: encryptedRefreshToken?.substring(0, 50),
+                    last20: encryptedRefreshToken?.slice(-20)
+                });
 
                 await database.ref('pending_tokens/' + user.id + '/' + sessionId).set({
                     uid: user.id,
