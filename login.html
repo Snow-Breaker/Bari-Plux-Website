@@ -631,13 +631,13 @@
         // ==================== FIREBASE DATABASE SYNC ====================
         async function syncLoginToFirebase(user) {
             if (!firebaseInitialized || !database) return;
+            // Discord users have no Firebase Auth session in this page — writes are rejected by rules
+            if (user.loginMethod === 'discord') return;
+            const firebaseUser = firebase.auth().currentUser;
+            if (!firebaseUser) return;
             try {
                 const location = await fetchLocation();
-
-                const isDiscord = user.loginMethod === 'discord';
-                const nodePath = isDiscord ? 'discordUsers/' + user.id : 'users/' + user.id;
-
-                const userRef = database.ref(nodePath);
+                const userRef = database.ref('users/' + firebaseUser.uid);
                 userRef.set({
                     name: user.name,
                     email: user.email,
@@ -651,7 +651,7 @@
                     city: location.city,
                     ip: location.ip
                 }).then(() => {
-                    console.log('Login synced to Firebase! (' + nodePath + ')');
+                    console.log('Login synced to Firebase! (users/' + firebaseUser.uid + ')');
                 }).catch(err => {
                     console.log('Firebase sync note:', err.code);
                 });
@@ -662,7 +662,15 @@
 
         function removeLoginFromFirebase(userId) {
             if (!firebaseInitialized || !database || !userId) return;
-            try { database.ref('users/' + userId).remove(); } catch (error) {}
+            const currentUid = firebase.auth().currentUser?.uid;
+            if (currentUid && currentUid !== userId) {
+                console.warn('UID mismatch: skipping RTDB cleanup for', userId);
+                return;
+            }
+            try {
+                database.ref('users/' + userId).remove();
+                database.ref('discordUsers/' + userId).remove();
+            } catch (error) {}
         }
 
         // ==================== NOTIFICATIONS ====================
