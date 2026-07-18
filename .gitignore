@@ -1,0 +1,7 @@
+# Desktop app source files — these belong in the BPTV2 repo, not the website
+*.cs
+*.csproj
+*.sln
+*.xaml
+*.xaml.cs
+appsettings*.json

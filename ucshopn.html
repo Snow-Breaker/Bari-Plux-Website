@@ -816,11 +816,11 @@
             return;
         }
 
-        // Save information to localStorage
+        // Save registration flag (persistent), PII in sessionStorage only (cleared on tab close)
         localStorage.setItem('isRegistered', true);
-        localStorage.setItem('username', username);
-        localStorage.setItem('email', email);
-        localStorage.setItem('phone', phone);
+        sessionStorage.setItem('username', username);
+        sessionStorage.setItem('email', email);
+        sessionStorage.setItem('phone', phone);
 
         // Show main content
         document.getElementById('registration').style.display = 'none';

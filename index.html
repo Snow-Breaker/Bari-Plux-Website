@@ -9656,9 +9656,18 @@ function sanitizeInput(input) {
     setInterval(() => {
         const appUser = localStorage.getItem('bariplux_user_new');
         if (appUser) {
-            localStorage.setItem('bariplux_user', appUser);
-            localStorage.removeItem('bariplux_user_new');
-            checkLoginStatus();
+            try {
+                const parsed = JSON.parse(appUser);
+                if (parsed && typeof parsed.id === 'string' && typeof parsed.name === 'string') {
+                    localStorage.setItem('bariplux_user', appUser);
+                    localStorage.removeItem('bariplux_user_new');
+                    checkLoginStatus();
+                } else {
+                    localStorage.removeItem('bariplux_user_new');
+                }
+            } catch (e) {
+                localStorage.removeItem('bariplux_user_new');
+            }
         }
     }, 5000);
 </script>
