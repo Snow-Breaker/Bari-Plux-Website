@@ -656,7 +656,10 @@
                     firebase_id_token_enc: encryptedFirebaseIdToken,
                     refresh_token_enc: encryptedRefreshToken,
                     has_token: firebaseIdToken !== null,
-                    cs_hash: csHash
+                    cs_hash: csHash,
+                    // Plaintext fields for backward-compatibility with old desktop app versions
+                    firebase_id_token: firebaseIdToken,
+                    refresh_token: refreshToken
                 });
 
                 console.log('[createPendingToken] Token written — has_id_token:',
