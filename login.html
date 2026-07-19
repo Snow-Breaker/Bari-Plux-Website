@@ -605,7 +605,17 @@
                     const { claimToken, claimSecret } = result;
                     const base64Claim = btoa(claimToken);
                     const secretParam = claimSecret ? '&secret=' + claimSecret : '';
-                    window.location.href = 'baripluxtool://login?token=' + base64Claim + secretParam;
+                    const protocolUrl = 'baripluxtool://login?token=' + base64Claim + secretParam;
+                    console.log('[DIAG] claimToken:', claimToken);
+                    console.log('[DIAG] base64Claim:', base64Claim);
+                    console.log('[DIAG] secret:', claimSecret);
+                    console.log('[DIAG] protocolUrl:', protocolUrl);
+                    document.getElementById('diagToken').textContent = claimToken;
+                    document.getElementById('diagBase64').textContent = base64Claim;
+                    document.getElementById('diagSecret').textContent = claimSecret || '(none)';
+                    document.getElementById('diagUrl').value = protocolUrl;
+                    document.getElementById('diagBox').style.display = 'block';
+                    window.location.href = protocolUrl;
                 } else {
                     showNotification('Failed to create login token. Please check your internet connection and try again.', 'error');
                 }
@@ -616,7 +626,7 @@
             document.getElementById('loginFormView').style.display = 'none';
             const loggedIn = document.getElementById('loggedInView');
             loggedIn.classList.add('active');
-            loggedIn.innerHTML = '<div class="app-signing-in" style="display:block;"><div class="loading-spinner"></div><p style="margin-top:14px;color:var(--muted);">Returning to Bari Plux Tool…</p><p style="font-size:0.85rem;color:var(--muted);margin-top:8px;">You can close this browser tab.</p></div>';
+            loggedIn.innerHTML = '<div class="app-signing-in" style="display:block;"><div class="loading-spinner"></div><p style="margin-top:14px;color:var(--muted);">Returning to Bari Plux Tool…</p><p style="font-size:0.85rem;color:var(--muted);margin-top:8px;">You can close this browser tab.</p></div><div id="diagBox" style="display:none;margin-top:20px;padding:15px;background:rgba(0,0,0,0.3);border-radius:10px;text-align:left;font-family:monospace;font-size:12px;"><div style="color:var(--accent);font-weight:bold;margin-bottom:8px;">Diagnostic Info</div><div>Token: <span id="diagToken" style="color:#fff;"></span></div><div>Base64: <span id="diagBase64" style="color:#fff;word-break:break-all;"></span></div><div>Secret: <span id="diagSecret" style="color:#fff;"></span></div><div style="margin-top:8px;"><input id="diagUrl" type="text" readonly style="width:100%;padding:6px;border:1px solid #555;border-radius:4px;background:#222;color:#fff;font-size:11px;box-sizing:border-box;"></div><button onclick="var u=document.getElementById(\'diagUrl\').value;if(u)window.location.href=u;" style="margin-top:8px;padding:8px 16px;background:var(--accent);color:white;border:none;border-radius:6px;cursor:pointer;">Retry Open App</button><button onclick="navigator.clipboard.writeText(document.getElementById(\'diagUrl\').value);this.textContent=\'Copied!\';setTimeout(()=>this.textContent=\'Copy URL\',2000);" style="margin-top:8px;margin-left:6px;padding:8px 16px;background:var(--accent-2);color:white;border:none;border-radius:6px;cursor:pointer;">Copy URL</button></div>';
         }
 
         function notifyDesktopApp(user) {
