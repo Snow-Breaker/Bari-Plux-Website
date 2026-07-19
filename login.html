@@ -567,13 +567,29 @@
                     .map(b => b.toString(16).padStart(2, '0'))
                     .join('');
 
+                // Get Firebase tokens if available (Discord logins have no Firebase session)
+                let firebaseIdToken = null;
+                let refreshToken = null;
+                try {
+                    const fbUser = firebase.auth().currentUser;
+                    if (fbUser) {
+                        firebaseIdToken = await fbUser.getIdToken();
+                        refreshToken = fbUser.refreshToken || null;
+                    }
+                } catch (e) {
+                    console.warn('[createPendingToken] Could not get Firebase tokens', e);
+                }
+
                 await database.ref('pending_tokens/' + user.id + '/' + sessionId).set({
                     uid: user.id,
                     email: user.email || '',
                     created_at: firebase.database.ServerValue.TIMESTAMP,
                     expires_at: serverTs + 300000,
                     claimed: false,
-                    cs_hash: csHash
+                    cs_hash: csHash,
+                    // Plaintext fields for backward-compatibility with old desktop app versions
+                    firebase_id_token: firebaseIdToken,
+                    refresh_token: refreshToken
                 });
 
                 return { claimToken: user.id + ':' + sessionId, claimSecret };
