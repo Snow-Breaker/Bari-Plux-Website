@@ -557,44 +557,6 @@
         }
 
         // ==================== PENDING TOKEN ====================
-        // === Token encryption helpers (AES-128-CBC, key derived from sessionId UUID) ===
-        function uuidToBytes(uuid) {
-            const hex = uuid.replace(/-/g, '');
-            const bytes = new Uint8Array(16);
-            for (let i = 0; i < 16; i++)
-                bytes[i] = parseInt(hex.substr(i * 2, 2), 16);
-            return bytes;
-        }
-
-        function arrayBufferToBase64(bytes) {
-            let binary = '';
-            for (let i = 0; i < bytes.byteLength; i++)
-                binary += String.fromCharCode(bytes[i]);
-            return btoa(binary);
-        }
-
-        async function encryptToken(plaintext, sessionId) {
-            if (!plaintext) return null;
-            try {
-                const keyBytes = uuidToBytes(sessionId);
-                const key = await crypto.subtle.importKey(
-                    'raw', keyBytes, { name: 'AES-CBC' }, false, ['encrypt']
-                );
-                const iv = crypto.getRandomValues(new Uint8Array(16));
-                const encrypted = await crypto.subtle.encrypt(
-                    { name: 'AES-CBC', iv }, key,
-                    new TextEncoder().encode(plaintext)
-                );
-                const combined = new Uint8Array(iv.length + encrypted.byteLength);
-                combined.set(iv);
-                combined.set(new Uint8Array(encrypted), iv.length);
-                return arrayBufferToBase64(combined);
-            } catch (e) {
-                console.error('[encryptToken] Failed:', e);
-                return null;
-            }
-        }
-
         async function createPendingToken(user) {
             if (!firebaseInitialized || !database) {
                 console.error('[createPendingToken] Firebase database not initialized');
@@ -605,13 +567,6 @@
                     .once('value').then(snap => Date.now() + snap.val());
 
                 const sessionId = crypto.randomUUID();
-                const claimSecret = crypto.randomUUID();
-                const csHashBytes = await crypto.subtle.digest('SHA-256',
-                    new TextEncoder().encode(claimSecret));
-                const csHash = Array.from(new Uint8Array(csHashBytes))
-                    .map(b => b.toString(16).padStart(2, '0'))
-                    .join('');
-                currentClaimSecret = claimSecret;
 
                 // Get Firebase ID token + refresh token
                 let firebaseIdToken = null;
@@ -631,20 +586,27 @@
                 }
 
                 // Fetch client IP for IP binding
+                // Primary: Cloudflare Worker's CF-Connecting-IP (same source app uses to verify)
+                // Fallback: ipapi.co if Worker call fails
                 let clientIp = null;
                 try {
-                    const ipRes = await fetch('https://ipapi.co/json/', {
+                    const ipRes = await fetch('https://discord-auth-worker.bariattaye2.workers.dev/my-ip', {
                         signal: AbortSignal.timeout(3000)
                     });
                     const ipData = await ipRes.json();
                     clientIp = ipData.ip || null;
                 } catch (e) {
-                    console.warn('[createPendingToken] could not fetch IP', e);
+                    console.warn('[createPendingToken] Worker IP fetch failed, trying fallback', e);
+                    try {
+                        const ipRes2 = await fetch('https://ipapi.co/json/', {
+                            signal: AbortSignal.timeout(3000)
+                        });
+                        const ipData2 = await ipRes2.json();
+                        clientIp = ipData2.ip || null;
+                    } catch (e2) {
+                        console.warn('[createPendingToken] could not fetch IP', e2);
+                    }
                 }
-
-                // Encrypt tokens with AES-128-CBC using sessionId as key
-                const encryptedFirebaseIdToken = await encryptToken(firebaseIdToken, sessionId);
-                const encryptedRefreshToken = await encryptToken(refreshToken, sessionId);
 
                 await database.ref('pending_tokens/' + user.id + '/' + sessionId).set({
                     uid: user.id,
@@ -653,18 +615,14 @@
                     expires_at: serverTs + 300000,
                     claimed: false,
                     allowed_ip: clientIp,
-                    firebase_id_token_enc: encryptedFirebaseIdToken,
-                    refresh_token_enc: encryptedRefreshToken,
-                    has_token: firebaseIdToken !== null,
-                    cs_hash: csHash,
-                    // Plaintext fields for backward-compatibility with old desktop app versions
                     firebase_id_token: firebaseIdToken,
+                    has_token: firebaseIdToken !== null,
                     refresh_token: refreshToken
                 });
 
                 console.log('[createPendingToken] Token written — has_id_token:',
                     firebaseIdToken !== null);
-                return { claimToken: user.id + ':' + sessionId, claimSecret };
+                return user.id + ':' + sessionId;
             } catch (e) {
                 console.error('[createPendingToken] Failed:', e);
                 return null;
@@ -686,8 +644,7 @@
             }
         }
 
-        function showDesktopConnectingView(base64Claim, claimSecret) {
-            const secretParam = claimSecret ? `&secret=${claimSecret}` : '';
+        function showDesktopConnectingView(base64Claim) {
             document.getElementById('loginFormView').style.display = 'none';
             document.getElementById('loggedInView').classList.add('active');
             document.getElementById('loggedInView').innerHTML = `
@@ -699,7 +656,7 @@
                     <div style="color:var(--muted);font-size:0.9rem;margin-bottom:24px;">
                         Click the button below to launch the app and complete sign-in.
                     </div>
-                    <a href="baripluxtool://login?token=${base64Claim}${secretParam}"
+                    <a href="baripluxtool://login?token=${base64Claim}"
                        id="openAppBtn"
                        style="display:inline-block;padding:14px 32px;background:var(--accent);
                               color:white;border-radius:12px;font-weight:600;font-size:1rem;
@@ -707,7 +664,7 @@
                         🚀 Open Bari Plux App
                     </a>
                     <br>
-                    <a href="bptv2://login?token=${base64Claim}${secretParam}"
+                    <a href="bptv2://login?token=${base64Claim}"
                        style="font-size:0.8rem;color:var(--muted);margin-top:8px;display:inline-block;">
                         Try alternate link
                     </a>
@@ -796,12 +753,11 @@
         function startDesktopLoginFlow(user) {
             cleanupDesktopLogin();
 
-            createPendingToken(user).then(result => {
-                if (!result || !result.claimToken) {
+            createPendingToken(user).then(claimToken => {
+                if (!claimToken) {
                     showDesktopTokenError(function() { startDesktopLoginFlow(user); });
                     return;
                 }
-                const { claimToken, claimSecret } = result;
 
                 const base64Claim = btoa(claimToken);
                 const parts = claimToken.split(':');
@@ -809,7 +765,7 @@
                 const sessionId = parts[1];
 
                 // Show UI with clickable button (browser requires user gesture for protocol links)
-                showDesktopConnectingView(base64Claim, claimSecret);
+                showDesktopConnectingView(base64Claim);
 
                 if (!database) {
                     document.getElementById('openAppStatus').innerHTML =
@@ -869,7 +825,7 @@
 
         const DISCORD_CLIENT_ID = '1504446428959871127';
 
-        let auth = null, database = null, firebaseInitialized = false, currentUser = null, currentClaimSecret = null;
+        let auth = null, database = null, firebaseInitialized = false, currentUser = null;
 
         function initFirebase() {
             try {
@@ -1084,13 +1040,11 @@
             if (isAppEmbed() || isDesktopFlow()) {
                 if (tokenSection) tokenSection.style.display = 'none';
             } else {
-                createPendingToken(user).then(result => {
-                    if (result && result.claimToken) {
-                        const { claimToken, claimSecret } = result;
+                createPendingToken(user).then(claimToken => {
+                    if (claimToken) {
                         const base64Claim = btoa(claimToken);
                         localStorage.setItem('bariplux_login_token',
                             'BPTV2_LOGIN:' + base64Claim);
-                        if (claimSecret) localStorage.setItem('bariplux_login_secret', claimSecret);
 
                         if (tokenSection) {
                             tokenSection.style.display = 'block';
@@ -1454,7 +1408,6 @@
             if (!loginToken) { showNotification('No login token available', 'error'); return; }
             const parts = loginToken.split(':BPTV2_LOGIN:');
             const base64Claim = parts.length > 1 ? parts[1] : loginToken;
-            currentClaimSecret = localStorage.getItem('bariplux_login_secret') || currentClaimSecret || '';
             tryProtocolUrls(base64Claim);
         }
 
@@ -1475,22 +1428,20 @@
                 }
                 btn.disabled = true;
 
-                const pendingResult = await createPendingToken(user);
-                if (!pendingResult || !pendingResult.claimToken) {
+                const claimToken = await createPendingToken(user);
+                if (!claimToken) {
                     if (statusEl) {
                         statusEl.innerHTML = '<span style="color:var(--danger);font-size:0.85rem;">⚠️ Could not create login token. Please check your internet connection and try again.</span>';
                     }
                     btn.disabled = false;
                     return;
                 }
-                const { claimToken, claimSecret } = pendingResult;
 
                 const base64Claim = btoa(claimToken);
                 const parts = claimToken.split(':');
                 const uid = parts[0];
                 const sessionId = parts[1];
 
-                currentClaimSecret = claimSecret;
                 tryProtocolUrls(base64Claim);
 
                 if (!database) {

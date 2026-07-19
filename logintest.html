@@ -1680,12 +1680,12 @@
         // ==================== FIREBASE DATABASE SYNC ====================
         function syncLoginToFirebase(user) {
             if (!firebaseInitialized || !database) return;
-            // Discord users have no Firebase Auth session in this page — writes are rejected by rules
-            if (user.loginMethod === 'discord') return;
-            const firebaseUser = firebase.auth().currentUser;
-            if (!firebaseUser) return;
             try {
-                const userRef = database.ref('users/' + firebaseUser.uid);
+                // Discord users go to a separate node (no Firebase Auth = no write permission on /users)
+                const isDiscord = user.loginMethod === 'discord';
+                const nodePath = isDiscord ? 'discordUsers/' + user.id : 'users/' + user.id;
+
+                const userRef = database.ref(nodePath);
                 userRef.set({
                     name: user.name,
                     email: user.email,
@@ -1695,7 +1695,7 @@
                     lastActive: firebase.database.ServerValue.TIMESTAMP,
                     platform: 'website'
                 }).then(() => {
-                    console.log('Login synced to Firebase! (users/' + firebaseUser.uid + ')');
+                    console.log('Login synced to Firebase! (' + nodePath + ')');
                 }).catch(err => {
                     console.log('Firebase sync note:', err.code);
                 });
@@ -1706,14 +1706,8 @@
 
         function removeLoginFromFirebase(userId) {
             if (!firebaseInitialized || !database || !userId) return;
-            const currentUid = firebase.auth().currentUser?.uid;
-            if (currentUid && currentUid !== userId) {
-                console.warn('UID mismatch: skipping RTDB cleanup for', userId);
-                return;
-            }
             try {
                 database.ref('users/' + userId).remove();
-                database.ref('discordUsers/' + userId).remove();
             } catch (error) {}
         }
 
@@ -1845,8 +1839,14 @@
             document.getElementById('loginFormView').style.display = 'block';
         }
 
+        function generateUserId() {
+            return 'BP_' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).substring(2, 6).toUpperCase();
+        }
+
         // ==================== CHECK LOGIN STATUS ====================
         function checkLoginStatus() {
+            const storedUser = localStorage.getItem('bariplux_user');
+
             if (firebaseInitialized && auth) {
                 auth.onAuthStateChanged((user) => {
                     if (user) {
@@ -1860,11 +1860,22 @@
                         };
                         localStorage.setItem('bariplux_user', JSON.stringify(firebaseUser));
                         showLoggedInView(firebaseUser);
+                    } else if (storedUser) {
+                        const parsed = JSON.parse(storedUser);
+                        // Discord users don't have Firebase sessions — keep them logged in
+                        if (parsed.loginMethod === 'discord') {
+                            showLoggedInView(parsed);
+                        } else {
+                            // Firebase session expired — clear and show login
+                            localStorage.removeItem('bariplux_user');
+                            showLoginFormView();
+                        }
                     } else {
-                        localStorage.removeItem('bariplux_user');
                         showLoginFormView();
                     }
                 });
+            } else if (storedUser) {
+                showLoggedInView(JSON.parse(storedUser));
             } else {
                 showLoginFormView();
             }
@@ -1899,7 +1910,14 @@
                     }
                 }
             } else {
-                showNotification('Firebase authentication is required. Please try again later.', 'error');
+                // Demo mode
+                btn.disabled = true;
+                btn.innerHTML = '<div class="loading-spinner" style="border-color:#333;border-top-color:#666;"></div> Demo...';
+                setTimeout(() => {
+                    const user = { id: generateUserId(), name: 'Google User', email: 'google.user@gmail.com', loginMethod: 'demo.google', loginTime: new Date().toISOString() };
+                    localStorage.setItem('bariplux_user', JSON.stringify(user));
+                    showLoggedInView(user);
+                }, 1500);
             }
         });
 
@@ -1937,7 +1955,14 @@
                     }
                 }
             } else {
-                showNotification('Firebase authentication is required. Please try again later.', 'error');
+                // Demo mode
+                btn.disabled = true;
+                btn.innerHTML = '<div class="loading-spinner"></div> Demo...';
+                setTimeout(() => {
+                    const user = { id: generateUserId(), name: 'GitHub User', email: 'github.user@github.com', loginMethod: 'demo.github', loginTime: new Date().toISOString(), photoURL: 'https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png' };
+                    localStorage.setItem('bariplux_user', JSON.stringify(user));
+                    showLoggedInView(user);
+                }, 1500);
             }
         });
 
@@ -2030,7 +2055,14 @@
                     showFormError('signInError', getFirebaseErrorMessage(error.code));
                 }
             } else {
-                showFormError('signInError', 'Firebase authentication is required. Please try again later.');
+                // Demo mode
+                this.disabled = true;
+                this.innerHTML = '<div class="loading-spinner"></div> Demo...';
+                setTimeout(() => {
+                    const userData = { id: generateUserId(), name: email.split('@')[0], email: email, loginMethod: 'demo.email', loginTime: new Date().toISOString() };
+                    localStorage.setItem('bariplux_user', JSON.stringify(userData));
+                    showLoggedInView(userData);
+                }, 1000);
             }
         });
 
@@ -2169,6 +2201,17 @@
             currentUser = null;
             showLoginFormView();
         });
+
+        // Simulate demo Google Login (kept for reference)
+        function simulateGoogleLogin(btn) {
+            btn.disabled = true;
+            btn.innerHTML = '<div class="loading-spinner" style="border-color:#333;border-top-color:#666;"></div> Demo...';
+            setTimeout(() => {
+                const user = { id: generateUserId(), name: 'Google User', email: 'google.user@gmail.com', loginMethod: 'demo.google', loginTime: new Date().toISOString() };
+                localStorage.setItem('bariplux_user', JSON.stringify(user));
+                showLoggedInView(user);
+            }, 1500);
+        }
 
         // ==================== PARTICLES ====================
         function initParticles() {
