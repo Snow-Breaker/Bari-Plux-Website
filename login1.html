@@ -587,7 +587,7 @@
                 );
                 const combined = new Uint8Array(iv.length + encrypted.byteLength);
                 combined.set(iv);
-                combined.set(new Uint8Array(encrypted));
+                combined.set(new Uint8Array(encrypted), iv.length);
                 return arrayBufferToBase64(combined);
             } catch (e) {
                 console.error('[encryptToken] Failed:', e);
