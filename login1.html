@@ -633,6 +633,8 @@
                 await database.ref('pending_tokens/' + user.id + '/' + sessionId).set({
                     uid: user.id,
                     email: user.email || '',
+                    name: user.name || (user.email ? String(user.email).split('@')[0] : '') || 'User',
+                    photoURL: user.photoURL || null,
                     created_at: firebase.database.ServerValue.TIMESTAMP,
                     expires_at: serverTs + 300000,
                     claimed: false,
@@ -1285,6 +1287,7 @@
                         uid: firebaseUser.uid,
                         discordId: discordUser.id,
                         username: discordUser.username,
+                        displayName: discordUser.display_name || discordUser.global_name || discordUser.username,
                         email: discordUser.email || '',
                         avatar: discordUser.avatar || '',
                         provider: 'discord',
@@ -1301,7 +1304,7 @@
                 window.history.replaceState({}, document.title, window.location.pathname);
                 const userData = {
                     id: firebaseUser.uid,
-                    name: discordUser.username,
+                    name: discordUser.display_name || discordUser.global_name || discordUser.username,
                     email: discordUser.email || discordUser.username + '@discord',
                     loginMethod: 'discord',
                     loginTime: new Date().toISOString(),
