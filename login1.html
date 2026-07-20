@@ -913,6 +913,7 @@
                 const userRef = database.ref(nodePath);
                 userRef.update(data).then(() => {
                     console.log('Login synced to Firebase! (' + nodePath + ')');
+                    ensureJoinedAt(userRef, firebase.auth().currentUser);
                 }).catch(err => {
                     console.log('Firebase sync note:', err.code);
                     if (err.code === 'PERMISSION_DENIED') {
@@ -922,6 +923,25 @@
             } catch (error) {
                 console.error("Sync error:", error);
             }
+        }
+
+        /** Write joinedAt once — prefers Firebase Auth account creation time. Never overwrites. */
+        function ensureJoinedAt(userRef, authUser) {
+            if (!userRef) return;
+            userRef.child('joinedAt').once('value').then(function(snap) {
+                if (snap.exists()) return;
+                var ms = Date.now();
+                try {
+                    var created = authUser && authUser.metadata && authUser.metadata.creationTime;
+                    if (created) {
+                        var parsed = Date.parse(created);
+                        if (!isNaN(parsed) && parsed > 0) ms = parsed;
+                    }
+                } catch (e) { /* ignore */ }
+                return userRef.child('joinedAt').set(ms);
+            }).catch(function(err) {
+                console.warn('joinedAt ensure failed:', err && err.code);
+            });
         }
 
         // ==================== NOTIFICATIONS ====================
@@ -1283,7 +1303,8 @@
 
                 // Fire-and-forget — profile write is non-critical, don't block UI
                 if (database) {
-                    database.ref(`discordUsers/${firebaseUser.uid}`).update({
+                    const discordRef = database.ref(`discordUsers/${firebaseUser.uid}`);
+                    discordRef.update({
                         uid: firebaseUser.uid,
                         discordId: discordUser.id,
                         username: discordUser.username,
@@ -1292,6 +1313,8 @@
                         avatar: discordUser.avatar || '',
                         provider: 'discord',
                         lastLogin: Date.now()
+                    }).then(function() {
+                        ensureJoinedAt(discordRef, firebaseUser);
                     }).catch(function(err) {
                         console.warn('Discord profile sync failed:', err);
                     });
