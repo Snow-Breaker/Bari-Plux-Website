@@ -1049,7 +1049,8 @@
         /** Prefer redirect for desktop / when popup is unreliable (common cause of auth/internal-error). */
         async function signInWithOAuthProvider(provider, preferRedirect) {
             markDesktopFlowIfNeeded();
-            // Desktop (?desktop=1) must use popup — forced redirect caused Google 400 malformed.
+            // bariplux.com has NO /__/auth/handler (404). Redirect OAuth breaks with Google 400.
+            // Desktop + normal browser: popup only. Redirect only for WebView embeds.
             if (preferRedirect || isAppEmbed()) {
                 await auth.signInWithRedirect(provider);
                 return null;
@@ -1057,10 +1058,13 @@
             try {
                 return await auth.signInWithPopup(provider);
             } catch (error) {
-                if (error.code === 'auth/internal-error' || error.code === 'auth/popup-blocked') {
-                    console.warn('[OAuth] Popup failed (' + error.code + '); falling back to redirect');
-                    showNotification('Popup sign-in failed — switching to redirect…', 'warning', 3500);
-                    await auth.signInWithRedirect(provider);
+                if (error.code === 'auth/popup-blocked' || error.code === 'auth/internal-error') {
+                    console.warn('[OAuth] Popup failed:', error.code);
+                    showNotification(
+                        'Popup blocked — allow popups for bariplux.com (Brave Shields → allow popups), then try again.',
+                        'warning',
+                        8000
+                    );
                     return null;
                 }
                 throw error;
@@ -1212,7 +1216,6 @@
             const btn = this;
             if (firebaseInitialized && auth) {
                 const provider = new firebase.auth.GoogleAuthProvider();
-                provider.setCustomParameters({ prompt: 'select_account' });
                 btn.disabled = true;
                 btn.innerHTML = '<div class="loading-spinner" style="border-color:#333;border-top-color:#666;"></div> Redirecting...';
                 try {
