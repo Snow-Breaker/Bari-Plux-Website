@@ -1049,11 +1049,14 @@
         }
 
         /** Prefer redirect for desktop / when popup is unreliable (common cause of auth/internal-error). */
-        async function signInWithOAuthProvider(provider, preferRedirect) {
+                async function signInWithOAuthProvider(provider, preferRedirect) {
             markDesktopFlowIfNeeded();
-            // bariplux.com has NO /__/auth/handler (404). Redirect OAuth breaks with Google 400.
-            // Desktop + normal browser: popup only. Redirect only for WebView embeds.
-            if (preferRedirect || isAppEmbed()) {
+            // On firebaseapp.com/web.app we share authDomain — redirect is safe and avoids Brave
+            // popup cookie partitioning that lands on accounts.google.com/ServiceLogin?rart=… → Google 400.
+            // On bariplux.com (GitHub Pages) there is no /__/auth/handler — keep popup only.
+            const onFirebaseHost = /\.firebaseapp\.com$/i.test(location.hostname)
+                || /\.web\.app$/i.test(location.hostname);
+            if (preferRedirect || isAppEmbed() || (isDesktopFlow() && onFirebaseHost)) {
                 await auth.signInWithRedirect(provider);
                 return null;
             }
@@ -1062,8 +1065,13 @@
             } catch (error) {
                 if (error.code === 'auth/popup-blocked' || error.code === 'auth/internal-error') {
                     console.warn('[OAuth] Popup failed:', error.code);
+                    if (onFirebaseHost) {
+                        showNotification('Popup failed — switching to redirect…', 'warning', 2500);
+                        await auth.signInWithRedirect(provider);
+                        return null;
+                    }
                     showNotification(
-                        'Popup blocked — allow popups for bariplux.com (Brave Shields → allow popups), then try again.',
+                        'Popup blocked — allow popups, or open in Chrome. Brave Shields often break Google login.',
                         'warning',
                         8000
                     );
@@ -1218,6 +1226,10 @@
             const btn = this;
             if (firebaseInitialized && auth) {
                 const provider = new firebase.auth.GoogleAuthProvider();
+                // Avoid Brave/Google broken reauth (ServiceLogin?rart → 400 malformed)
+                provider.setCustomParameters({ prompt: 'select_account' });
+                provider.addScope('email');
+                provider.addScope('profile');
                 btn.disabled = true;
                 btn.innerHTML = '<div class="loading-spinner" style="border-color:#333;border-top-color:#666;"></div> Connecting...';
                 try {
