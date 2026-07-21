@@ -12,33 +12,11 @@
     
     <link rel="icon" type="image/x-icon" href="https://i.postimg.cc/65cjsvfQ/imglogo.png">
     
-    <!-- Domain-lock: block execution on cloned/phishing domains -->
-    <script>
-    (function(){var h=location.hostname;if(h!=='bariplux.com'&&h!=='localhost'&&h!=='127.0.0.1'&&!h.endsWith('.bariplux.com')){document.documentElement.innerHTML='';window.stop();location.replace('about:blank')}})();
-    </script>
-    
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-    
-    <!-- Security headers -->
-    <!-- script-src MUST allow apis.google.com — Firebase Google/GitHub popup loads it; blocking → auth/internal-error -->
-    <meta http-equiv="Content-Security-Policy" 
-      content="default-src 'self' https:; 
-               script-src 'self' https://www.gstatic.com https://cdn.jsdelivr.net https://apis.google.com https://www.googleapis.com https://accounts.google.com 'unsafe-inline' 'unsafe-eval'; 
-               style-src 'self' https://fonts.googleapis.com https://cdnjs.cloudflare.com 'unsafe-inline'; 
-               img-src 'self' https: data: blob:; 
-               font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; 
-               connect-src 'self' https: wss:; 
-               frame-src 'self' https: https://accounts.google.com https://*.firebaseapp.com https://*.google.com;
-               object-src 'none';
-               base-uri 'self';">
-    <meta http-equiv="Strict-Transport-Security" content="max-age=31536000; includeSubDomains">
-    <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <meta http-equiv="X-Frame-Options" content="DENY">
-    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
     
     <style>
         :root {
@@ -574,11 +552,61 @@
         }
 
         function isDesktopFlow() {
-            try { return new URLSearchParams(window.location.search).get('desktop') === '1'; }
-            catch (e) { return false; }
+            try {
+                if (new URLSearchParams(window.location.search).get('desktop') === '1') return true;
+                // Survives OAuth redirects that drop ?desktop=1
+                return sessionStorage.getItem('desktop_login_flow') === '1'
+                    || sessionStorage.getItem('discord_desktop_flow') === '1';
+            } catch (e) { return false; }
+        }
+
+        function markDesktopFlowIfNeeded() {
+            try {
+                if (new URLSearchParams(window.location.search).get('desktop') === '1') {
+                    sessionStorage.setItem('desktop_login_flow', '1');
+                }
+            } catch (e) {}
         }
 
         // ==================== PENDING TOKEN ====================
+        // === Token encryption helpers (AES-128-CBC, key derived from sessionId UUID) ===
+        function uuidToBytes(uuid) {
+            const hex = uuid.replace(/-/g, '');
+            const bytes = new Uint8Array(16);
+            for (let i = 0; i < 16; i++)
+                bytes[i] = parseInt(hex.substr(i * 2, 2), 16);
+            return bytes;
+        }
+
+        function arrayBufferToBase64(bytes) {
+            let binary = '';
+            for (let i = 0; i < bytes.byteLength; i++)
+                binary += String.fromCharCode(bytes[i]);
+            return btoa(binary);
+        }
+
+        async function encryptToken(plaintext, sessionId) {
+            if (!plaintext) return null;
+            try {
+                const keyBytes = uuidToBytes(sessionId);
+                const key = await crypto.subtle.importKey(
+                    'raw', keyBytes, { name: 'AES-CBC' }, false, ['encrypt']
+                );
+                const iv = crypto.getRandomValues(new Uint8Array(16));
+                const encrypted = await crypto.subtle.encrypt(
+                    { name: 'AES-CBC', iv }, key,
+                    new TextEncoder().encode(plaintext)
+                );
+                const combined = new Uint8Array(iv.length + encrypted.byteLength);
+                combined.set(iv, 0);
+                combined.set(new Uint8Array(encrypted), iv.length);
+                return arrayBufferToBase64(combined);
+            } catch (e) {
+                console.error('[encryptToken] Failed:', e);
+                return null;
+            }
+        }
+
         async function createPendingToken(user) {
             if (!firebaseInitialized || !database) {
                 console.error('[createPendingToken] Firebase database not initialized');
@@ -589,6 +617,13 @@
                     .once('value').then(snap => Date.now() + snap.val());
 
                 const sessionId = crypto.randomUUID();
+                const claimSecret = crypto.randomUUID();
+                const csHashBytes = await crypto.subtle.digest('SHA-256',
+                    new TextEncoder().encode(claimSecret));
+                const csHash = Array.from(new Uint8Array(csHashBytes))
+                    .map(b => b.toString(16).padStart(2, '0'))
+                    .join('');
+                currentClaimSecret = claimSecret;
 
                 // Get Firebase ID token + refresh token
                 let firebaseIdToken = null;
@@ -608,45 +643,37 @@
                 }
 
                 // Fetch client IP for IP binding
-                // Primary: Cloudflare Worker's CF-Connecting-IP (same source app uses to verify)
-                // Fallback: ipapi.co if Worker call fails
                 let clientIp = null;
                 try {
-                    const ipRes = await fetch('https://discord-auth-worker.bariattaye2.workers.dev/my-ip', {
+                    const ipRes = await fetch('https://ipapi.co/json/', {
                         signal: AbortSignal.timeout(3000)
                     });
                     const ipData = await ipRes.json();
                     clientIp = ipData.ip || null;
                 } catch (e) {
-                    console.warn('[createPendingToken] Worker IP fetch failed, trying fallback', e);
-                    try {
-                        const ipRes2 = await fetch('https://ipapi.co/json/', {
-                            signal: AbortSignal.timeout(3000)
-                        });
-                        const ipData2 = await ipRes2.json();
-                        clientIp = ipData2.ip || null;
-                    } catch (e2) {
-                        console.warn('[createPendingToken] could not fetch IP', e2);
-                    }
+                    console.warn('[createPendingToken] could not fetch IP', e);
                 }
+
+                // Encrypt tokens with AES-128-CBC using sessionId as key
+                const encryptedFirebaseIdToken = await encryptToken(firebaseIdToken, sessionId);
+                const encryptedRefreshToken = await encryptToken(refreshToken, sessionId);
 
                 await database.ref('pending_tokens/' + user.id + '/' + sessionId).set({
                     uid: user.id,
                     email: user.email || '',
-                    name: user.name || (user.email ? String(user.email).split('@')[0] : '') || 'User',
-                    photoURL: user.photoURL || null,
                     created_at: firebase.database.ServerValue.TIMESTAMP,
                     expires_at: serverTs + 300000,
                     claimed: false,
                     allowed_ip: clientIp,
-                    firebase_id_token: firebaseIdToken,
+                    firebase_id_token_enc: encryptedFirebaseIdToken,
+                    refresh_token_enc: encryptedRefreshToken,
                     has_token: firebaseIdToken !== null,
-                    refresh_token: refreshToken
+                    cs_hash: csHash
                 });
 
                 console.log('[createPendingToken] Token written — has_id_token:',
                     firebaseIdToken !== null);
-                return user.id + ':' + sessionId;
+                return { claimToken: user.id + ':' + sessionId, claimSecret };
             } catch (e) {
                 console.error('[createPendingToken] Failed:', e);
                 return null;
@@ -668,7 +695,8 @@
             }
         }
 
-        function showDesktopConnectingView(base64Claim) {
+        function showDesktopConnectingView(base64Claim, claimSecret) {
+            const secretParam = claimSecret ? `&secret=${claimSecret}` : '';
             document.getElementById('loginFormView').style.display = 'none';
             document.getElementById('loggedInView').classList.add('active');
             document.getElementById('loggedInView').innerHTML = `
@@ -680,7 +708,7 @@
                     <div style="color:var(--muted);font-size:0.9rem;margin-bottom:24px;">
                         Click the button below to launch the app and complete sign-in.
                     </div>
-                    <a href="baripluxtool://login?token=${base64Claim}"
+                    <a href="baripluxtool://login?token=${base64Claim}${secretParam}"
                        id="openAppBtn"
                        style="display:inline-block;padding:14px 32px;background:var(--accent);
                               color:white;border-radius:12px;font-weight:600;font-size:1rem;
@@ -688,7 +716,7 @@
                         🚀 Open Bari Plux App
                     </a>
                     <br>
-                    <a href="bptv2://login?token=${base64Claim}"
+                    <a href="bptv2://login?token=${base64Claim}${secretParam}"
                        style="font-size:0.8rem;color:var(--muted);margin-top:8px;display:inline-block;">
                         Try alternate link
                     </a>
@@ -701,6 +729,10 @@
         }
 
         function showDesktopClaimedView() {
+            try {
+                sessionStorage.removeItem('desktop_login_flow');
+                sessionStorage.removeItem('discord_desktop_flow');
+            } catch (e) {}
             const status = document.getElementById('openAppStatus');
             const btn = document.getElementById('openAppBtn');
             if (btn) {
@@ -777,11 +809,12 @@
         function startDesktopLoginFlow(user) {
             cleanupDesktopLogin();
 
-            createPendingToken(user).then(claimToken => {
-                if (!claimToken) {
+            createPendingToken(user).then(result => {
+                if (!result || !result.claimToken) {
                     showDesktopTokenError(function() { startDesktopLoginFlow(user); });
                     return;
                 }
+                const { claimToken, claimSecret } = result;
 
                 const base64Claim = btoa(claimToken);
                 const parts = claimToken.split(':');
@@ -789,7 +822,7 @@
                 const sessionId = parts[1];
 
                 // Show UI with clickable button (browser requires user gesture for protocol links)
-                showDesktopConnectingView(base64Claim);
+                showDesktopConnectingView(base64Claim, claimSecret);
 
                 if (!database) {
                     document.getElementById('openAppStatus').innerHTML =
@@ -849,7 +882,7 @@
 
         const DISCORD_CLIENT_ID = '1504446428959871127';
 
-        let auth = null, database = null, firebaseInitialized = false, currentUser = null;
+        let auth = null, database = null, firebaseInitialized = false, currentUser = null, currentClaimSecret = null;
 
         function initFirebase() {
             try {
@@ -913,7 +946,6 @@
                 const userRef = database.ref(nodePath);
                 userRef.update(data).then(() => {
                     console.log('Login synced to Firebase! (' + nodePath + ')');
-                    ensureJoinedAt(userRef, firebase.auth().currentUser);
                 }).catch(err => {
                     console.log('Firebase sync note:', err.code);
                     if (err.code === 'PERMISSION_DENIED') {
@@ -923,25 +955,6 @@
             } catch (error) {
                 console.error("Sync error:", error);
             }
-        }
-
-        /** Write joinedAt once — prefers Firebase Auth account creation time. Never overwrites. */
-        function ensureJoinedAt(userRef, authUser) {
-            if (!userRef) return;
-            userRef.child('joinedAt').once('value').then(function(snap) {
-                if (snap.exists()) return;
-                var ms = Date.now();
-                try {
-                    var created = authUser && authUser.metadata && authUser.metadata.creationTime;
-                    if (created) {
-                        var parsed = Date.parse(created);
-                        if (!isNaN(parsed) && parsed > 0) ms = parsed;
-                    }
-                } catch (e) { /* ignore */ }
-                return userRef.child('joinedAt').set(ms);
-            }).catch(function(err) {
-                console.warn('joinedAt ensure failed:', err && err.code);
-            });
         }
 
         // ==================== NOTIFICATIONS ====================
@@ -984,11 +997,14 @@
         const authErrorMessages = {
             'auth/account-exists-with-different-credential': null,
             'auth/popup-closed-by-user': 'Login cancelled. Please try again.',
-            'auth/popup-blocked': 'Popup was blocked. Please allow popups for this site.',
-            'auth/network-request-failed': '⚠️ Network error. Check your connection.',
+            'auth/popup-blocked': 'Popup was blocked. Please allow popups for this site, or try Discord.',
+            'auth/network-request-failed': '⚠️ Network error. Check your connection (or try Discord if Google is blocked).',
             'auth/too-many-requests': '⚠️ Too many attempts. Please wait a moment.',
             'auth/user-disabled': '⚠️ This account has been disabled.',
             'auth/cancelled-popup-request': null,
+            'auth/internal-error': '⚠️ Google/GitHub sign-in failed (popup/script blocked). Try again, allow popups, or use Discord.',
+            'auth/unauthorized-domain': '⚠️ This domain is not authorized for Firebase Auth. Contact support.',
+            'auth/operation-not-allowed': '⚠️ This sign-in method is disabled in Firebase. Try Discord or email.',
         };
 
         async function handleAuthError(error, context) {
@@ -1028,6 +1044,40 @@
             const message = authErrorMessages[error.code] ||
                 'Login failed: ' + error.message;
             if (message) showNotification(message, 'error');
+        }
+
+        /** Prefer redirect for desktop / when popup is unreliable (common cause of auth/internal-error). */
+        async function signInWithOAuthProvider(provider, preferRedirect) {
+            markDesktopFlowIfNeeded();
+            if (preferRedirect || isAppEmbed() || isDesktopFlow()) {
+                await auth.signInWithRedirect(provider);
+                return null;
+            }
+            try {
+                return await auth.signInWithPopup(provider);
+            } catch (error) {
+                if (error.code === 'auth/internal-error' || error.code === 'auth/popup-blocked') {
+                    console.warn('[OAuth] Popup failed (' + error.code + '); falling back to redirect');
+                    showNotification('Popup sign-in failed — switching to redirect…', 'warning', 3500);
+                    await auth.signInWithRedirect(provider);
+                    return null;
+                }
+                throw error;
+            }
+        }
+
+        function applyOAuthUser(user, loginMethod) {
+            const userData = {
+                id: user.uid,
+                name: user.displayName || (user.email ? user.email.split('@')[0] : 'User'),
+                email: user.email || '',
+                loginMethod: loginMethod || user.providerData[0]?.providerId || 'firebase',
+                loginTime: new Date().toISOString(),
+                photoURL: user.photoURL
+            };
+            localStorage.setItem('bariplux_user', JSON.stringify(userData));
+            showLoggedInView(userData);
+            return userData;
         }
 
         // ==================== TAB SWITCHING ====================
@@ -1084,11 +1134,13 @@
             if (isAppEmbed() || isDesktopFlow()) {
                 if (tokenSection) tokenSection.style.display = 'none';
             } else {
-                createPendingToken(user).then(claimToken => {
-                    if (claimToken) {
+                createPendingToken(user).then(result => {
+                    if (result && result.claimToken) {
+                        const { claimToken, claimSecret } = result;
                         const base64Claim = btoa(claimToken);
                         localStorage.setItem('bariplux_login_token',
                             'BPTV2_LOGIN:' + base64Claim);
+                        if (claimSecret) localStorage.setItem('bariplux_login_secret', claimSecret);
 
                         if (tokenSection) {
                             tokenSection.style.display = 'block';
@@ -1163,12 +1215,10 @@
                 btn.disabled = true;
                 btn.innerHTML = '<div class="loading-spinner" style="border-color:#333;border-top-color:#666;"></div> Redirecting...';
                 try {
-                    if (isAppEmbed()) { await auth.signInWithRedirect(provider); return; }
-                    const result = await auth.signInWithPopup(provider);
-                    const user = result.user;
-                    const userData = { id: user.uid, name: user.displayName, email: user.email, loginMethod: 'firebase.google', loginTime: new Date().toISOString(), photoURL: user.photoURL };
-                    localStorage.setItem('bariplux_user', JSON.stringify(userData));
-                    showLoggedInView(userData);
+                    const result = await signInWithOAuthProvider(provider, false);
+                    if (result && result.user) {
+                        applyOAuthUser(result.user, 'firebase.google');
+                    }
                 } catch (error) {
                     btn.disabled = false;
                     btn.innerHTML = '<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"> Sign in with Google';
@@ -1187,12 +1237,10 @@
                 btn.disabled = true;
                 btn.innerHTML = '<div class="loading-spinner"></div> Connecting...';
                 try {
-                    if (isAppEmbed()) { await auth.signInWithRedirect(provider); return; }
-                    const result = await auth.signInWithPopup(provider);
-                    const user = result.user;
-                    const userData = { id: user.uid, name: user.displayName || user.email?.split('@')[0] || 'GitHub User', email: user.email || '', loginMethod: 'github', loginTime: new Date().toISOString(), photoURL: user.photoURL };
-                    localStorage.setItem('bariplux_user', JSON.stringify(userData));
-                    showLoggedInView(userData);
+                    const result = await signInWithOAuthProvider(provider, false);
+                    if (result && result.user) {
+                        applyOAuthUser(result.user, 'github');
+                    }
                 } catch (error) {
                     btn.disabled = false;
                     btn.innerHTML = '<i class="fab fa-github" style="font-size:1.2rem;"></i> Sign in with GitHub';
@@ -1303,18 +1351,14 @@
 
                 // Fire-and-forget — profile write is non-critical, don't block UI
                 if (database) {
-                    const discordRef = database.ref(`discordUsers/${firebaseUser.uid}`);
-                    discordRef.update({
+                    database.ref(`discordUsers/${firebaseUser.uid}`).update({
                         uid: firebaseUser.uid,
                         discordId: discordUser.id,
                         username: discordUser.username,
-                        displayName: discordUser.display_name || discordUser.global_name || discordUser.username,
                         email: discordUser.email || '',
                         avatar: discordUser.avatar || '',
                         provider: 'discord',
                         lastLogin: Date.now()
-                    }).then(function() {
-                        ensureJoinedAt(discordRef, firebaseUser);
                     }).catch(function(err) {
                         console.warn('Discord profile sync failed:', err);
                     });
@@ -1327,7 +1371,7 @@
                 window.history.replaceState({}, document.title, window.location.pathname);
                 const userData = {
                     id: firebaseUser.uid,
-                    name: discordUser.display_name || discordUser.global_name || discordUser.username,
+                    name: discordUser.username,
                     email: discordUser.email || discordUser.username + '@discord',
                     loginMethod: 'discord',
                     loginTime: new Date().toISOString(),
@@ -1456,6 +1500,7 @@
             if (!loginToken) { showNotification('No login token available', 'error'); return; }
             const parts = loginToken.split(':BPTV2_LOGIN:');
             const base64Claim = parts.length > 1 ? parts[1] : loginToken;
+            currentClaimSecret = localStorage.getItem('bariplux_login_secret') || currentClaimSecret || '';
             tryProtocolUrls(base64Claim);
         }
 
@@ -1476,20 +1521,22 @@
                 }
                 btn.disabled = true;
 
-                const claimToken = await createPendingToken(user);
-                if (!claimToken) {
+                const pendingResult = await createPendingToken(user);
+                if (!pendingResult || !pendingResult.claimToken) {
                     if (statusEl) {
                         statusEl.innerHTML = '<span style="color:var(--danger);font-size:0.85rem;">⚠️ Could not create login token. Please check your internet connection and try again.</span>';
                     }
                     btn.disabled = false;
                     return;
                 }
+                const { claimToken, claimSecret } = pendingResult;
 
                 const base64Claim = btoa(claimToken);
                 const parts = claimToken.split(':');
                 const uid = parts[0];
                 const sessionId = parts[1];
 
+                currentClaimSecret = claimSecret;
                 tryProtocolUrls(base64Claim);
 
                 if (!database) {
@@ -1573,17 +1620,22 @@
         // ==================== INIT ====================
         document.addEventListener('DOMContentLoaded', () => {
             if (isAppEmbed()) document.body.classList.add('app-embed');
+            markDesktopFlowIfNeeded();
             initFirebase();
             handleDiscordCallback();
-            if (isAppEmbed() && firebaseInitialized && auth) {
+            if (firebaseInitialized && auth) {
                 auth.getRedirectResult().then((result) => {
                     if (result && result.user) {
-                        const u = result.user;
-                        const userData = { id: u.uid, name: u.displayName || (u.email ? u.email.split('@')[0] : 'User'), email: u.email || '', loginMethod: result.credential?.providerId || 'firebase', loginTime: new Date().toISOString(), photoURL: u.photoURL };
-                        localStorage.setItem('bariplux_user', JSON.stringify(userData));
-                        showLoggedInView(userData);
+                        const providerId = result.credential?.providerId || result.user.providerData[0]?.providerId || 'firebase';
+                        const method = providerId === 'google.com' ? 'firebase.google'
+                            : providerId === 'github.com' ? 'github'
+                            : providerId;
+                        applyOAuthUser(result.user, method);
                     }
-                }).catch(() => {});
+                }).catch((err) => {
+                    console.error('[getRedirectResult]', err);
+                    handleAuthError(err, 'Redirect');
+                });
             }
             checkLoginStatus();
             initParticles();

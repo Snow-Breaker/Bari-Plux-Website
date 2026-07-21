@@ -12,33 +12,11 @@
     
     <link rel="icon" type="image/x-icon" href="https://i.postimg.cc/65cjsvfQ/imglogo.png">
     
-    <!-- Domain-lock: block execution on cloned/phishing domains -->
-    <script>
-    (function(){var h=location.hostname;if(h!=='bariplux.com'&&h!=='localhost'&&h!=='127.0.0.1'&&!h.endsWith('.bariplux.com')){document.documentElement.innerHTML='';window.stop();location.replace('about:blank')}})();
-    </script>
-    
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-    
-    <!-- Security headers -->
-    <!-- script-src MUST allow apis.google.com — Firebase Google/GitHub popup loads it; blocking → auth/internal-error -->
-    <meta http-equiv="Content-Security-Policy" 
-      content="default-src 'self' https:; 
-               script-src 'self' https://www.gstatic.com https://cdn.jsdelivr.net https://apis.google.com https://www.googleapis.com https://accounts.google.com 'unsafe-inline' 'unsafe-eval'; 
-               style-src 'self' https://fonts.googleapis.com https://cdnjs.cloudflare.com 'unsafe-inline'; 
-               img-src 'self' https: data: blob:; 
-               font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; 
-               connect-src 'self' https: wss:; 
-               frame-src 'self' https: https://accounts.google.com https://*.firebaseapp.com https://*.google.com;
-               object-src 'none';
-               base-uri 'self';">
-    <meta http-equiv="Strict-Transport-Security" content="max-age=31536000; includeSubDomains">
-    <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <meta http-equiv="X-Frame-Options" content="DENY">
-    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
     
     <style>
         :root {
@@ -575,10 +553,47 @@
             catch (e) { return false; }
         }
 
+        async function createPendingToken(user) {
+            if (!firebaseInitialized || !database) return null;
+            try {
+                const serverTs = await firebase.database().ref('/.info/serverTimeOffset')
+                    .once('value').then(snap => Date.now() + snap.val());
+
+                const sessionId = crypto.randomUUID();
+                const claimSecret = crypto.randomUUID();
+                const csHashBytes = await crypto.subtle.digest('SHA-256',
+                    new TextEncoder().encode(claimSecret));
+                const csHash = Array.from(new Uint8Array(csHashBytes))
+                    .map(b => b.toString(16).padStart(2, '0'))
+                    .join('');
+
+                await database.ref('pending_tokens/' + user.id + '/' + sessionId).set({
+                    uid: user.id,
+                    email: user.email || '',
+                    created_at: firebase.database.ServerValue.TIMESTAMP,
+                    expires_at: serverTs + 300000,
+                    claimed: false,
+                    cs_hash: csHash
+                });
+
+                return { claimToken: user.id + ':' + sessionId, claimSecret };
+            } catch (e) {
+                console.error('Failed to create pending token:', e);
+                return null;
+            }
+        }
+
         function returnToDesktopApp(user) {
-            const userData = { id: user.id, name: user.name || 'User', email: user.email || '', loginTime: Date.now() };
-            const base64Token = btoa(unescape(encodeURIComponent(JSON.stringify(userData))));
-            window.location.href = 'baripluxtool://login?token=' + base64Token;
+            createPendingToken(user).then(result => {
+                if (result && result.claimToken) {
+                    const { claimToken, claimSecret } = result;
+                    const base64Claim = btoa(claimToken);
+                    const secretParam = claimSecret ? '&secret=' + claimSecret : '';
+                    window.location.href = 'baripluxtool://login?token=' + base64Claim + secretParam;
+                } else {
+                    showNotification('Failed to create login token. Please check your internet connection and try again.', 'error');
+                }
+            });
         }
 
         function showDesktopReturnView() {
@@ -660,7 +675,7 @@
                 const nodePath = isDiscord ? 'discordUsers/' + user.id : 'users/' + user.id;
 
                 const userRef = database.ref(nodePath);
-                userRef.set({
+                userRef.update({
                     name: user.name,
                     email: user.email,
                     loginMethod: user.loginMethod,
@@ -778,19 +793,21 @@
             if (isAppEmbed() || isDesktopFlow()) {
                 if (tokenSection) tokenSection.style.display = 'none';
             } else {
-                const token = btoa(JSON.stringify({ id: user.id, name: user.name, email: user.email, method: user.loginMethod, time: Date.now() }));
-                document.getElementById('loginToken').value = token;
-                localStorage.setItem('bariplux_login_token', token);
+                createPendingToken(user).then(result => {
+                    if (result && result.claimToken) {
+                        const { claimToken, claimSecret } = result;
+                        const token = 'BPTV2_LOGIN:' + btoa(claimToken);
+                        document.getElementById('loginToken').value = token;
+                        localStorage.setItem('bariplux_login_token', token);
+                        if (claimSecret) localStorage.setItem('bariplux_login_secret', claimSecret);
+                    }
+                });
             }
         }
 
         function showLoginFormView() {
             document.getElementById('loggedInView').classList.remove('active');
             document.getElementById('loginFormView').style.display = 'block';
-        }
-
-        function generateUserId() {
-            return 'BP_' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).substring(2, 6).toUpperCase();
         }
 
         // ==================== CHECK LOGIN STATUS ====================
@@ -832,15 +849,9 @@
                     btn.innerHTML = '<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"> Sign in with Google';
                     if (error.code !== 'auth/popup-closed-by-user') showNotification('Google login failed: ' + error.message, 'error');
                 }
-            } else {
-                btn.disabled = true;
-                btn.innerHTML = '<div class="loading-spinner" style="border-color:#333;border-top-color:#666;"></div> Demo...';
-                setTimeout(() => {
-                    const user = { id: generateUserId(), name: 'Google User', email: 'google.user@gmail.com', loginMethod: 'demo.google', loginTime: new Date().toISOString() };
-                    localStorage.setItem('bariplux_user', JSON.stringify(user));
-                    showLoggedInView(user);
-                }, 1500);
-            }
+                } else {
+                    showNotification('Firebase is not available. Please ensure internet connection and try again.', 'error');
+                }
         });
 
         // ==================== GITHUB LOGIN ====================
@@ -864,13 +875,7 @@
                     else if (error.code !== 'auth/popup-closed-by-user') showNotification('GitHub login failed: ' + error.message, 'error');
                 }
             } else {
-                btn.disabled = true;
-                btn.innerHTML = '<div class="loading-spinner"></div> Demo...';
-                setTimeout(() => {
-                    const user = { id: generateUserId(), name: 'GitHub User', email: 'github.user@github.com', loginMethod: 'demo.github', loginTime: new Date().toISOString(), photoURL: 'https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png' };
-                    localStorage.setItem('bariplux_user', JSON.stringify(user));
-                    showLoggedInView(user);
-                }, 1500);
+                showNotification('Firebase is not available. Please ensure internet connection and try again.', 'error');
             }
         });
 
@@ -930,13 +935,7 @@
                     showFormError('signInError', getFirebaseErrorMessage(error.code));
                 }
             } else {
-                this.disabled = true;
-                this.innerHTML = '<div class="loading-spinner"></div> Demo...';
-                setTimeout(() => {
-                    const userData = { id: generateUserId(), name: email.split('@')[0], email: email, loginMethod: 'demo.email', loginTime: new Date().toISOString() };
-                    localStorage.setItem('bariplux_user', JSON.stringify(userData));
-                    showLoggedInView(userData);
-                }, 1000);
+                showNotification('Firebase is not available. Please ensure internet connection and try again.', 'error');
             }
         });
 
@@ -1004,25 +1003,30 @@
         });
 
         // ==================== OPEN APP ====================
-        document.getElementById('openAppBtn').addEventListener('click', function() {
+        document.getElementById('openAppBtn').addEventListener('click', async function() {
             const storedUser = localStorage.getItem('bariplux_user');
             if (storedUser) {
                 try {
                     const user = JSON.parse(storedUser);
-                    const userData = { id: user.uid || user.id || 'user_' + Date.now(), name: user.displayName || user.name || user.email || 'User', email: user.email || '', loginTime: Date.now() };
-                    localStorage.setItem('bariplux_pending_login', JSON.stringify(userData));
-                    const base64Token = btoa(unescape(encodeURIComponent(JSON.stringify(userData))));
-                    const clipboardData = 'BPTV2_LOGIN:' + base64Token;
-                    navigator.clipboard.writeText(clipboardData).then(function() {
-                        const appUrls = ['baripluxtool://login?token=' + base64Token, 'bptv2://login?token=' + base64Token];
-                        let tried = 0;
-                        function tryNextUrl() {
-                            if (tried >= appUrls.length) { showNotification('Token copied! The app should open automatically.', 'success'); return; }
-                            window.location.href = appUrls[tried++];
-                            setTimeout(tryNextUrl, 800);
-                        }
-                        tryNextUrl();
-                    }).catch(function() { window.location.href = 'baripluxtool://login?token=' + base64Token; });
+                    const pendingResult = await createPendingToken(user);
+                    if (pendingResult && pendingResult.claimToken) {
+                        const { claimToken, claimSecret } = pendingResult;
+                        const base64Claim = btoa(claimToken);
+                        const secretParam = claimSecret ? '&secret=' + claimSecret : '';
+                        const clipboardData = 'BPTV2_LOGIN:' + base64Claim;
+                        navigator.clipboard.writeText(clipboardData).then(function() {
+                            const appUrls = ['baripluxtool://login?token=' + base64Claim + secretParam, 'bptv2://login?token=' + base64Claim + secretParam];
+                            let tried = 0;
+                            function tryNextUrl() {
+                                if (tried >= appUrls.length) { showNotification('Token copied! The app should open automatically.', 'success'); return; }
+                                window.location.href = appUrls[tried++];
+                                setTimeout(tryNextUrl, 800);
+                            }
+                            tryNextUrl();
+                        }).catch(function() { window.location.href = 'baripluxtool://login?token=' + base64Claim + secretParam; });
+                    } else {
+                        showNotification('Failed to create login token. Please check your internet connection and try again.', 'error');
+                    }
                 } catch (e) { showNotification('Error: ' + e.message, 'error'); }
             } else { showNotification('Please login first!', 'error'); }
         });
