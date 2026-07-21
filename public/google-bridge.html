@@ -40,7 +40,7 @@
     <div class="card" id="card">
         <div class="spin" id="spin"></div>
         <div id="status">Preparing Google sign-in…</div>
-        <div class="muted" id="hint" style="margin-top:10px;">Clears broken Google session (Brave rart 400), then signs in.</div>
+        <div class="muted" id="hint" style="margin-top:10px;">If Google shows 400, use Discord on the login page instead.</div>
     </div>
     <script>
         const firebaseConfig = {
@@ -189,12 +189,11 @@
 
         function showFail(msg) {
             sessionStorage.removeItem('google_bridge_pending');
-            sessionStorage.removeItem('google_logout_done');
             setStatus(
                 '<span class="err">' + (msg || 'Google sign-in failed') + '</span>' +
-                '<div class="muted" style="margin-top:10px;">Brave often breaks Google multi-account sessions (ServiceLogin?rart 400). Use Discord, or clear cookies for google.com.</div>' +
-                '<a class="btn" href="https://bariplux.com/login1.html?desktop=1">Use Discord instead</a>' +
-                '<a class="secondary" href="' + bridgeStartUrl({}) + '">Retry Google (fresh session)</a>',
+                '<div class="muted" style="margin-top:10px;">Google 400 in Brave is caused by broken Google account cookies (not Bari Plux). Use Discord to sign in.</div>' +
+                '<a class="btn" href="https://bariplux.com/login1.html?desktop=1&prefer=discord">Sign in with Discord</a>' +
+                '<a class="secondary" href="' + bridgeStartUrl({ retry: '1' }) + '">Retry Google</a>',
                 false
             );
         }
@@ -212,36 +211,25 @@
                 return;
             }
 
-            // Already signed in from a previous attempt on this host
             if (auth.currentUser && sessionStorage.getItem('google_bridge_pending') === '1') {
                 await finish(auth.currentUser);
                 return;
             }
 
             if (sessionStorage.getItem('google_bridge_pending') === '1') {
-                // Came back without a user — failed or cancelled
-                showFail('Google sign-in was cancelled or blocked (often Brave rart 400).');
+                showFail('Google sign-in was cancelled or blocked.');
                 return;
             }
 
-            // Step A: force Google logout first. Broken authuser/rart cookies cause
-            // GET accounts.google.com/ServiceLogin?rart=… → 400 even with valid OAuth clients.
-            const fresh = params.get('fresh') === '1';
-            if (!fresh) {
-                setStatus('Resetting Google session…', true);
-                const afterLogout = bridgeStartUrl({ fresh: '1' });
-                window.location.href = 'https://accounts.google.com/Logout?continue=' +
-                    encodeURIComponent(afterLogout);
-                return;
-            }
-
-            // Step B: start Firebase Google redirect on same authDomain host.
+            // Do NOT call accounts.google.com/Logout?continue=… — Google often returns
+            // 400 malformed when continue points at a non-Google host (firebaseapp.com).
             sessionStorage.setItem('google_bridge_pending', '1');
             setStatus('Redirecting to Google…', true);
+            document.getElementById('hint').textContent =
+                'If Google shows 400, go back and use Discord instead.';
             try { await auth.signOut(); } catch (e) { /* ignore */ }
             const provider = new firebase.auth.GoogleAuthProvider();
-            // consent + select_account avoids silent reauth on a half-logged multi-account profile
-            provider.setCustomParameters({ prompt: 'select_account consent' });
+            provider.setCustomParameters({ prompt: 'select_account' });
             provider.addScope('email');
             provider.addScope('profile');
             try {
