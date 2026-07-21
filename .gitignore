@@ -5,3 +5,6 @@
 *.xaml
 *.xaml.cs
 appsettings*.json
+
+.firebase/
+
