@@ -2,6 +2,8 @@
 <html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
     <title>Login | Bari Plux</title>
     <meta name="description" content="Login to your Bari Plux account">
@@ -1217,7 +1219,7 @@
             if (firebaseInitialized && auth) {
                 const provider = new firebase.auth.GoogleAuthProvider();
                 btn.disabled = true;
-                btn.innerHTML = '<div class="loading-spinner" style="border-color:#333;border-top-color:#666;"></div> Redirecting...';
+                btn.innerHTML = '<div class="loading-spinner" style="border-color:#333;border-top-color:#666;"></div> Connecting...';
                 try {
                     const result = await signInWithOAuthProvider(provider, false);
                     if (result && result.user) {
