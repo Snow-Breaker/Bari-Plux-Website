@@ -1288,31 +1288,20 @@
         // ==================== GOOGLE LOGIN ====================
         document.getElementById('btnGoogleLogin').addEventListener('click', async function() {
             const btn = this;
-            if (firebaseInitialized && auth) {
-                btn.disabled = true;
-                btn.innerHTML = '<div class="loading-spinner" style="border-color:#333;border-top-color:#666;"></div> Connecting...';
-                try {
-                    let result;
-                    try {
-                        result = await signInWithGoogleViaGis();
-                    } catch (gisErr) {
-                        console.warn('[Google] GIS failed, fallback Firebase OAuth:', gisErr);
-                        const provider = new firebase.auth.GoogleAuthProvider();
-                        provider.setCustomParameters({ prompt: 'select_account' });
-                        provider.addScope('email');
-                        provider.addScope('profile');
-                        result = await signInWithOAuthProvider(provider, false);
-                    }
-                    if (result && result.user) {
-                        applyOAuthUser(result.user, 'firebase.google');
-                    }
-                } catch (error) {
-                    btn.disabled = false;
-                    btn.innerHTML = '<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"> Sign in with Google';
-                    await handleAuthError(error, 'Google');
-                }
-            } else {
-                showNotification('Firebase is not available. Please ensure internet connection and try again.', 'error');
+            btn.disabled = true;
+            btn.innerHTML = '<div class="loading-spinner" style="border-color:#333;border-top-color:#666;"></div> Connecting...';
+            try {
+                markDesktopFlowIfNeeded();
+                const q = new URLSearchParams();
+                if (isDesktopFlow()) q.set('desktop', '1');
+                q.set('v', '20260721h');
+                q.set('return', window.location.href.split('#')[0]);
+                // Full-page Google on firebaseapp.com (has /__/auth/handler). Avoids Brave popup ServiceLogin?rart 400.
+                window.location.href = 'https://baripluxwebsite.firebaseapp.com/google-bridge.html?' + q.toString();
+            } catch (error) {
+                btn.disabled = false;
+                btn.innerHTML = '<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"> Sign in with Google';
+                showNotification('Google login failed: ' + (error.message || error) + ' — try Discord.', 'error');
             }
         });
 
