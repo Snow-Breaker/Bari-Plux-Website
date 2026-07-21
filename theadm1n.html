@@ -437,6 +437,7 @@
                             <th>Email</th>
                             <th>Method</th>
                             <th>Role</th>
+                            <th>App Ver</th>
                             <th>Country</th>
                             <th>Login Time</th>
                             <th>Last Active</th>
@@ -701,6 +702,8 @@
             <div class="modal-grid">
                 <div class="field"><span class="label">First Login</span><span class="value" id="umLoginTime"></span></div>
                 <div class="field"><span class="label">Last Active</span><span class="value" id="umLastActive"></span></div>
+                <div class="field"><span class="label">App Version</span><span class="value" id="umAppVersion" style="font-family:'JetBrains Mono',monospace;">—</span></div>
+                <div class="field"><span class="label">Platform</span><span class="value" id="umPlatformDetail">—</span></div>
             </div>
         </div>
         <div class="modal-section" id="umPhotoSection" style="display:none;">
@@ -1273,7 +1276,8 @@ function loadUsers() {
                 country:u.country||null, countryCode:u.countryCode||null,
                 city:u.city||null, ip:u.ip||null,
                 blocked:u.blocked===true, forceLogout:u.forceLogout||null,
-                role:u.role||'free', roleAssignedAt:u.role_assigned_at||null, roleAssignedBy:u.role_assigned_by||null
+                role:u.role||'free', roleAssignedAt:u.role_assigned_at||null, roleAssignedBy:u.role_assigned_by||null,
+                appVersion:u.appVersion||u.app_version||null
             }));
         };
         const merged=[...parse(us),...parse(ds)];
@@ -1341,7 +1345,7 @@ function renderUsers() {
 
     const tbody=document.getElementById('usersTableBody');
     if(!filtered.length) {
-        tbody.innerHTML=`<tr class="state-row"><td colspan="8"><div class="state-icon">🔍</div><div>No users found.</div></td></tr>`;
+        tbody.innerHTML=`<tr class="state-row"><td colspan="9"><div class="state-icon">🔍</div><div>No users found.</div></td></tr>`;
         document.getElementById('usersPagination').style.display='none';
     } else {
         tbody.innerHTML=slice.map((u,i)=>{
@@ -1360,6 +1364,7 @@ function renderUsers() {
                 <td style="color:var(--muted);font-size:0.82rem;">${esc(u.email)}</td>
                 <td><span class="method-badge ${m.cls}">${m.icon} ${m.label}</span></td>
                 <td>${getRoleBadgeHtml(u.role || 'free')}</td>
+                <td style="font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:var(--accent);">${esc(u.appVersion||'—')}</td>
                 <td><div class="country-cell">${flag?`<span class="country-flag">${flag}</span>`:''}<span>${esc(u.country||'—')}</span></div></td>
                 <td class="time-cell">${fmtDate(u.loginTime)}</td>
                 <td class="time-cell">${isOnline?'<span class="active-dot"></span>':''}<span>${u.lastActive?timeAgo(u.lastActive):'—'}</span></td>
@@ -1394,6 +1399,7 @@ function renderUsers() {
                     <div class="user-card-field"><span class="uf-label">Country</span><span class="uf-value">${flag?flag+' ':''} ${esc(u.country||'—')}</span></div>
                     <div class="user-card-field"><span class="uf-label">City</span><span class="uf-value">${esc(u.city||'—')}</span></div>
                     <div class="user-card-field"><span class="uf-label">IP Address</span><span class="uf-value" style="font-family:'JetBrains Mono',monospace;font-size:0.75rem;color:var(--accent2);">${esc(u.ip||'—')}</span></div>
+                    <div class="user-card-field"><span class="uf-label">App Version</span><span class="uf-value" style="font-family:'JetBrains Mono',monospace;">${esc(u.appVersion||'—')}</span></div>
                     <div class="user-card-field"><span class="uf-label">Last Active</span><span class="uf-value">${isOnline?'🟢 ':''} ${u.lastActive?timeAgo(u.lastActive):'—'}</span></div>
                 </div>
                 <div class="user-card-footer"><button class="action-btn view" onclick="event.stopPropagation();openUserModal('${esc(u.id)}')"><i class="fas fa-eye"></i> Details</button></div>
@@ -1440,6 +1446,8 @@ function openUserModal(id) {
     document.getElementById('umIpText').textContent=u.ip||'—';
     document.getElementById('umLoginTime').textContent=fmtDate(u.loginTime);
     document.getElementById('umLastActive').textContent=u.lastActive?fmtDate(u.lastActive):'—';
+    document.getElementById('umAppVersion').textContent=u.appVersion||'—';
+    document.getElementById('umPlatformDetail').textContent=u.platform||'—';
     if(u.photoURL) { document.getElementById('umPhotoSection').style.display=''; document.getElementById('umPhotoFull').src=u.photoURL; document.getElementById('umPhotoLink').href=u.photoURL; }
     else document.getElementById('umPhotoSection').style.display='none';
     // Populate role section
@@ -1460,6 +1468,7 @@ function renderDangerBtns(u) {
     if(u.blocked) html += `<button class="danger-btn unblock" onclick="askConfirm('unblock','${esc(u.id)}','${esc(u.name)}')"><i class="fas fa-unlock"></i> Unblock</button>`;
     else html += `<button class="danger-btn block" onclick="askConfirm('block','${esc(u.id)}','${esc(u.name)}')"><i class="fas fa-ban"></i> Block</button>`;
     html += `<button class="danger-btn force-logout" onclick="askConfirm('forceLogout','${esc(u.id)}','${esc(u.name)}')"><i class="fas fa-sign-out-alt"></i> Force Logout</button>`;
+    html += `<button class="danger-btn delete-user" onclick="askConfirm('wipeCloud','${esc(u.id)}','${esc(u.name)}')"><i class="fas fa-cloud"></i> Wipe Cloud Data</button>`;
     html += `<button class="danger-btn delete-user" onclick="askConfirm('deleteUser','${esc(u.id)}','${esc(u.name)}')"><i class="fas fa-trash-alt"></i> Delete User</button>`;
     div.innerHTML = html;
 }
@@ -1470,7 +1479,8 @@ const confirmConfigs = {
     block: { icon: '🚫', iconColor: 'rgba(255,152,0,0.12)', title: 'Block User', desc: 'This user will be marked as blocked. Their sessions will be invalidated and they will not be able to use the app.', submitClass: 'warn', submitText: '<i class="fas fa-ban"></i> Block User' },
     unblock: { icon: '✅', iconColor: 'rgba(76,175,80,0.12)', title: 'Unblock User', desc: 'This user will be unblocked and can use the app again.', submitClass: 'accent', submitText: '<i class="fas fa-unlock"></i> Unblock' },
     forceLogout: { icon: '🔄', iconColor: 'rgba(108,99,255,0.12)', title: 'Force Logout', desc: 'The user will be logged out of all active sessions immediately. They can log back in afterward.', submitClass: 'accent', submitText: '<i class="fas fa-sign-out-alt"></i> Force Logout' },
-    deleteUser: { icon: '🗑️', iconColor: 'rgba(244,67,54,0.12)', title: 'Delete User', desc: 'This will permanently delete the user from the database. This action CANNOT be undone.', submitClass: '', submitText: '<i class="fas fa-trash-alt"></i> Delete Permanently' }
+    deleteUser: { icon: '🗑️', iconColor: 'rgba(244,67,54,0.12)', title: 'Delete User', desc: 'This will permanently delete the user profile and sessions from the database. This action CANNOT be undone.', submitClass: '', submitText: '<i class="fas fa-trash-alt"></i> Delete Permanently' },
+    wipeCloud: { icon: '☁️', iconColor: 'rgba(244,67,54,0.12)', title: 'Delete Cloud App Data', desc: 'Deletes all cloud backup / database files for this user (keymapping, bookmarks, Active.sav, history). Local PC files are not removed.', submitClass: '', submitText: '<i class="fas fa-cloud"></i> Wipe Cloud Files' }
 };
 
 function askConfirm(action, userId, userName) {
@@ -1518,17 +1528,76 @@ async function submitConfirm() {
     const {action, userId} = _confirmAction;
     closeConfirm();
     try {
+        if(action === 'wipeCloud') {
+            await wipeUserCloudData(userId);
+            return;
+        }
+
         const userRef = await getCorrectRef(userId);
         if(!userRef) { showToast('⚠️ User ref not found','danger'); return; }
-        if(action === 'block') { await userRef.update({ blocked: true, blockedAt: Date.now() }); updateLocalUser(userId, {blocked: true}); showToast('🚫 User blocked successfully', 'danger'); }
-        else if(action === 'unblock') { await userRef.update({ blocked: false, blockedAt: null }); updateLocalUser(userId, {blocked: false}); showToast('✅ User unblocked', 'success'); }
-        else if(action === 'forceLogout') { await userRef.update({ forceLogout: Date.now(), forceLogoutAt: Date.now() }); updateLocalUser(userId, {forceLogout: Date.now()}); showToast('🔄 Force logout applied', 'success'); }
-        else if(action === 'deleteUser') { await userRef.remove(); allUsers = allUsers.filter(u=>u.id !== userId); updateUserStats(); renderUsers(); closeUserModal(); showToast('🗑️ User deleted permanently', 'danger'); return; }
+
+        if(action === 'block') {
+            await userRef.update({ blocked: true, blockedAt: Date.now() });
+            await db.ref('sessions/' + userId).remove().catch(()=>{});
+            updateLocalUser(userId, {blocked: true});
+            showToast('🚫 User blocked successfully', 'danger');
+        }
+        else if(action === 'unblock') {
+            await userRef.update({ blocked: false, blockedAt: null });
+            updateLocalUser(userId, {blocked: false});
+            showToast('✅ User unblocked', 'success');
+        }
+        else if(action === 'forceLogout') {
+            await userRef.update({ forceLogout: Date.now(), forceLogoutAt: Date.now() });
+            await db.ref('sessions/' + userId).remove().catch(()=>{});
+            updateLocalUser(userId, {forceLogout: Date.now()});
+            showToast('🔄 Force logout applied', 'success');
+        }
+        else if(action === 'deleteUser') {
+            await Promise.all([
+                db.ref('users/' + userId).remove().catch(()=>{}),
+                db.ref('discordUsers/' + userId).remove().catch(()=>{}),
+                db.ref('sessions/' + userId).remove().catch(()=>{})
+            ]);
+            // Best-effort wipe of cloud backup files too
+            try { await wipeUserCloudData(userId, { silent: true }); } catch(_) {}
+            allUsers = allUsers.filter(u=>u.id !== userId);
+            updateUserStats();
+            renderUsers();
+            closeUserModal();
+            showToast('🗑️ User deleted permanently', 'danger');
+            return;
+        }
+
         if(_currentUser?.id === userId) {
             const updated = allUsers.find(u=>u.id===userId);
-            if(updated) { document.getElementById('umBlockedBadge').style.display = updated.blocked ? '' : 'none'; renderDangerBtns(updated); renderUsers(); }
+            if(updated) {
+                document.getElementById('umBlockedBadge').style.display = updated.blocked ? '' : 'none';
+                renderDangerBtns(updated);
+                renderUsers();
+            }
+        } else {
+            renderUsers();
         }
-    } catch(e) { console.error(e); showToast('⚠️ Action failed: '+e.message, 'danger'); }
+    } catch(e) {
+        console.error(e);
+        showToast('⚠️ Action failed: '+(e.message||e.code||e), 'danger');
+    }
+}
+
+async function wipeUserCloudData(userId, opts = {}) {
+    const user = firebase.auth().currentUser;
+    if(!user) { showToast('Not authenticated', 'danger'); return; }
+    const token = await user.getIdToken(true);
+    const url = `https://discord-auth-worker.bariattaye2.workers.dev/backup/admin-wipe?uid=${encodeURIComponent(userId)}`;
+    const res = await fetch(url, {
+        method: 'DELETE',
+        headers: { Authorization: 'Bearer ' + token }
+    });
+    const body = await res.json().catch(()=>({}));
+    if(!res.ok) throw new Error(body.error || ('HTTP '+res.status));
+    if(!opts.silent) showToast(`☁️ Wiped ${body.deleted||0} cloud file(s)`, 'success');
+    return body;
 }
 
 async function getCorrectRef(userId) {

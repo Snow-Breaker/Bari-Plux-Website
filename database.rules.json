@@ -11,25 +11,52 @@
     "users": {
       ".read": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'",
       "$uid": {
-        ".read": "auth.uid === $uid",
-        ".write": "auth.uid === $uid",
+        ".read": "auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'",
+        ".write": "auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'",
+        ".validate": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || ((!newData.hasChild('blocked') || ((!data.exists() || !data.hasChild('blocked')) && newData.child('blocked').val() !== true) || newData.child('blocked').val() === data.child('blocked').val()) && (!newData.hasChild('forceLogout') || (!data.exists() && !newData.hasChild('forceLogout')) || (data.exists() && newData.child('forceLogout').val() === data.child('forceLogout').val())) && (!newData.hasChild('role') || !data.exists() || !data.hasChild('role') || newData.child('role').val() === data.child('role').val()))",
+        "photoURL": {
+          ".read": "auth != null"
+        },
+        "name": {
+          ".read": "auth != null"
+        },
+        "joinedAt": {
+          ".read": "auth != null",
+          ".validate": "newData.exists() && newData.isNumber() && newData.val() > 946684800000 && newData.val() < 4102444800000 && (!data.exists() || data.val() === newData.val())"
+        },
         "role": {
+          ".read": "auth != null",
           ".validate": "newData.isString() && newData.val().matches(/^(free|pro|dev|founder)$/)"
+        },
+        "appVersion": {
+          ".read": "auth != null",
+          ".validate": "!newData.exists() || (newData.isString() && newData.val().length > 0 && newData.val().length <= 32)"
         }
       }
     },
     "discordUsers": {
-      ".read": "auth.uid === 'o2hD76smAygVFJlO3Uu8jDdcatW2' || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'",
+      ".read": "auth != null",
       "$uid": {
-        ".read": "auth != null && auth.uid === $uid",
-        ".write": "auth != null && auth.uid === $uid"
+        ".read": "auth != null",
+        ".write": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com')",
+        ".validate": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || ((!newData.hasChild('blocked') || ((!data.exists() || !data.hasChild('blocked')) && newData.child('blocked').val() !== true) || newData.child('blocked').val() === data.child('blocked').val()) && (!newData.hasChild('forceLogout') || (!data.exists() && !newData.hasChild('forceLogout')) || (data.exists() && newData.child('forceLogout').val() === data.child('forceLogout').val())) && (!newData.hasChild('role') || !data.exists() || !data.hasChild('role') || newData.child('role').val() === data.child('role').val()))",
+        "joinedAt": {
+          ".read": "auth != null",
+          ".validate": "newData.exists() && newData.isNumber() && newData.val() > 946684800000 && newData.val() < 4102444800000 && (!data.exists() || data.val() === newData.val())"
+        },
+        "appVersion": {
+          ".read": "auth != null",
+          ".validate": "!newData.exists() || (newData.isString() && newData.val().length > 0 && newData.val().length <= 32)"
+        }
       }
     },
     "sessions": {
       "$uid": {
+        ".read": "auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'",
+        ".write": "auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'",
         "$sessionId": {
-          ".read": "auth.uid === $uid",
-          ".write": "auth.uid === $uid"
+          ".read": "auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'",
+          ".write": "auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'"
         }
       }
     },
@@ -42,9 +69,14 @@
       }
     },
     "bugReports": {
-      ".read": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || root.child('users/' + auth.uid + '/role').val() === 'dev' || root.child('users/' + auth.uid + '/role').val() === 'founder'",
-      ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || root.child('users/' + auth.uid + '/role').val() === 'dev' || root.child('users/' + auth.uid + '/role').val() === 'founder'",
-      ".indexOn": ["status", "timestamp"]
+      ".read": "auth != null && (auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || root.child('users/' + auth.uid + '/role').val() === 'dev' || root.child('users/' + auth.uid + '/role').val() === 'founder')",
+      ".indexOn": [
+        "status",
+        "timestamp"
+      ],
+      "$reportId": {
+        ".write": "auth != null && ((auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || root.child('users/' + auth.uid + '/role').val() === 'dev' || root.child('users/' + auth.uid + '/role').val() === 'founder') || (!data.exists() && newData.hasChild('description') && newData.child('description').isString() && newData.child('description').val().length > 0 && newData.child('description').val().length <= 8000 && newData.hasChild('status') && newData.child('status').val() === 'new' && newData.hasChild('timestamp')))"
+      }
     },
     "feature_flags": {
       ".read": true,
@@ -62,6 +94,73 @@
     "serverTime": {
       ".read": true,
       ".write": false
+    },
+    "lobby_chat": {
+      "bans": {
+        ".read": "auth != null",
+        ".write": "auth != null && (auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || root.child('users/' + auth.uid + '/role').val() === 'dev' || root.child('users/' + auth.uid + '/role').val() === 'founder')",
+        "$uid": {
+          ".validate": "!newData.exists() || newData.isBoolean()"
+        }
+      },
+      "blocks": {
+        "$myUid": {
+          ".read": "auth != null && auth.uid === $myUid",
+          ".write": "auth != null && auth.uid === $myUid",
+          "$targetUid": {
+            ".validate": "!newData.exists() || (newData.isBoolean() && newData.val() === true && $targetUid.length > 0 && $targetUid.length <= 128 && $targetUid !== $myUid)"
+          }
+        }
+      },
+      "reports": {
+        ".read": "auth != null && (auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || root.child('users/' + auth.uid + '/role').val() === 'dev' || root.child('users/' + auth.uid + '/role').val() === 'founder')",
+        "$reportId": {
+          ".write": "auth != null && ((auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || root.child('users/' + auth.uid + '/role').val() === 'dev' || root.child('users/' + auth.uid + '/role').val() === 'founder') || (root.child('lobby_chat/bans/' + auth.uid).val() !== true && !data.exists() && newData.child('reporterUid').val() === auth.uid && newData.hasChildren(['reporterUid', 'msgId', 'reason', 'ts']) && newData.child('msgId').isString() && newData.child('msgId').val().length > 0 && newData.child('msgId').val().length <= 64 && newData.child('reason').isString() && newData.child('reason').val().length > 0 && newData.child('reason').val().length <= 200 && (newData.child('ts').isNumber() || (newData.child('ts').hasChildren(['.sv']) && newData.child('ts').child('.sv').val() === 'timestamp')) && (!newData.hasChild('targetUid') || (newData.child('targetUid').isString() && newData.child('targetUid').val().length > 0 && newData.child('targetUid').val().length <= 128)) && (!newData.hasChild('targetName') || (newData.child('targetName').isString() && newData.child('targetName').val().length <= 32)) && (!newData.hasChild('room') || (newData.child('room').isString() && newData.child('room').val().matches(/^(general|help|offtopic)$/))) && (!newData.hasChild('textPreview') || (newData.child('textPreview').isString() && newData.child('textPreview').val().length <= 120)) && (!newData.hasChild('status') || (newData.child('status').isString() && newData.child('status').val().matches(/^(new|reviewed|resolved)$/)))))"
+        }
+      },
+      "user_moderation": {
+        ".read": "auth != null && (auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || root.child('users/' + auth.uid + '/role').val() === 'dev' || root.child('users/' + auth.uid + '/role').val() === 'founder')",
+        "$uid": {
+          ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || root.child('users/' + auth.uid + '/role').val() === 'dev' || root.child('users/' + auth.uid + '/role').val() === 'founder')",
+          ".write": "auth != null && ((auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || root.child('users/' + auth.uid + '/role').val() === 'dev' || root.child('users/' + auth.uid + '/role').val() === 'founder') || (auth.uid === $uid && newData.child('rulesAccepted').val() === true && newData.child('rulesVersion').isNumber() && newData.child('rulesVersion').val() === 1 && newData.child('strikesRemaining').isNumber() && newData.child('strikesRemaining').val() >= 0 && newData.child('strikesRemaining').val() <= 5 && newData.child('moralityScore').isNumber() && newData.child('moralityScore').val() >= 0 && newData.child('moralityScore').val() <= 100 && newData.child('displayName').isString() && newData.child('displayName').val().length > 0 && newData.child('displayName').val().length <= 32 && ((!data.exists() && newData.child('strikesRemaining').val() === 5 && newData.child('moralityScore').val() === 100 && !newData.hasChild('violations')) || (data.exists() && newData.child('strikesRemaining').val() === data.child('strikesRemaining').val() && newData.child('moralityScore').val() === data.child('moralityScore').val() && ((!data.hasChild('violations') && !newData.hasChild('violations')) || newData.child('violations').val() === data.child('violations').val())))))"
+        }
+      },
+      "typing": {
+        "$room": {
+          ".read": "auth != null",
+          ".validate": "$room.matches(/^(general|help|offtopic)$/)",
+          "$uid": {
+            ".write": "auth != null && auth.uid === $uid && root.child('lobby_chat/bans/' + auth.uid).val() !== true",
+            ".validate": "!newData.exists() || (newData.hasChildren(['name', 'ts']) && newData.child('name').isString() && newData.child('name').val().length > 0 && newData.child('name').val().length <= 32 && newData.child('ts').isNumber())"
+          }
+        }
+      },
+      "pins": {
+        ".read": "auth != null",
+        "$room": {
+          ".write": "auth != null && (auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || root.child('users/' + auth.uid + '/role').val() === 'dev' || root.child('users/' + auth.uid + '/role').val() === 'founder')",
+          ".validate": "!newData.exists() || ($room.matches(/^(general|help|offtopic)$/) && newData.hasChildren(['text', 'name', 'byUid', 'ts']) && newData.child('text').isString() && newData.child('text').val().length > 0 && newData.child('text').val().length <= 400 && newData.child('name').isString() && newData.child('name').val().length <= 32 && newData.child('byUid').isString() && newData.child('ts').isNumber())"
+        }
+      },
+      "messages": {
+        ".read": "auth != null",
+        ".indexOn": [
+          "ts",
+          "room"
+        ],
+        "$msgId": {
+          ".write": "auth != null && root.child('lobby_chat/bans/' + auth.uid).val() !== true && ((!data.exists() && root.child('lobby_chat/user_moderation/' + auth.uid + '/rulesAccepted').val() === true && root.child('lobby_chat/user_moderation/' + auth.uid + '/strikesRemaining').val() > 0 && newData.child('uid').val() === auth.uid && newData.hasChildren(['uid', 'name', 'text', 'ts', 'role', 'room']) && newData.child('uid').isString() && newData.child('uid').val().length > 0 && newData.child('uid').val().length <= 128 && newData.child('name').isString() && newData.child('name').val().length > 0 && newData.child('name').val().length <= 32 && newData.child('text').isString() && newData.child('text').val().length >= 0 && newData.child('text').val().length <= 400 && (newData.child('text').val().length > 0 || (newData.hasChild('imageKey') && newData.child('imageKey').isString())) && newData.child('role').isString() && newData.child('role').val().matches(/^(free|pro|dev|founder)$/) && newData.child('room').isString() && newData.child('room').val().matches(/^(general|help|offtopic)$/) && (newData.child('ts').isNumber() || (newData.child('ts').hasChildren(['.sv']) && newData.child('ts').child('.sv').val() === 'timestamp')) && (!newData.hasChild('replyTo') || (newData.child('replyTo').isString() && newData.child('replyTo').val().length > 0 && newData.child('replyTo').val().length <= 64)) && (!newData.hasChild('replyName') || (newData.child('replyName').isString() && newData.child('replyName').val().length > 0 && newData.child('replyName').val().length <= 32)) && (!newData.hasChild('replyText') || (newData.child('replyText').isString() && newData.child('replyText').val().length > 0 && newData.child('replyText').val().length <= 100)) && (!newData.hasChild('imageKey') || (newData.child('imageKey').isString() && newData.child('imageKey').val().length > 3 && newData.child('imageKey').val().length <= 120)) && (!newData.hasChild('photoURL') || (newData.child('photoURL').isString() && newData.child('photoURL').val().length > 8 && newData.child('photoURL').val().length <= 500)) && (!newData.hasChild('mentions') || newData.child('mentions').hasChildren()) && !newData.hasChild('reactions')) || (data.exists() && !newData.exists() && (data.child('uid').val() === auth.uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || root.child('users/' + auth.uid + '/role').val() === 'dev' || root.child('users/' + auth.uid + '/role').val() === 'founder')) || (data.exists() && newData.exists() && data.child('uid').val() === auth.uid && newData.child('uid').val() === data.child('uid').val() && newData.child('name').val() === data.child('name').val() && newData.child('role').val() === data.child('role').val() && newData.child('room').val() === data.child('room').val() && newData.child('ts').val() === data.child('ts').val() && newData.child('imageKey').val() === data.child('imageKey').val() && newData.child('replyTo').val() === data.child('replyTo').val() && newData.child('replyName').val() === data.child('replyName').val() && newData.child('replyText').val() === data.child('replyText').val() && newData.child('photoURL').val() === data.child('photoURL').val() && newData.child('reactions').val() === data.child('reactions').val() && newData.child('text').isString() && newData.child('text').val().length >= 0 && newData.child('text').val().length <= 400 && (newData.child('text').val().length > 0 || data.hasChild('imageKey')) && (!newData.hasChild('edited') || newData.child('edited').val() === true) && (!newData.hasChild('editedAt') || newData.child('editedAt').isNumber() || (newData.child('editedAt').hasChildren(['.sv']) && newData.child('editedAt').child('.sv').val() === 'timestamp')) && (!newData.hasChild('mentions') || newData.child('mentions').hasChildren())))",
+          "reactions": {
+            "$emoji": {
+              ".validate": "$emoji.matches(/^(like|joy|fire)$/)",
+              "$uid": {
+                ".write": "auth != null && auth.uid === $uid && root.child('lobby_chat/bans/' + auth.uid).val() !== true && root.child('lobby_chat/messages/' + $msgId).exists()",
+                ".validate": "!newData.exists() || (newData.isBoolean() && newData.val() === true)"
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
