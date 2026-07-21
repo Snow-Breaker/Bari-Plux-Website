@@ -39,8 +39,8 @@
 <body>
     <div class="card" id="card">
         <div class="spin" id="spin"></div>
-        <div id="status">Connecting to Google…</div>
-        <div class="muted" id="hint" style="margin-top:10px;">Full-page sign-in (avoids Brave popup 400).</div>
+        <div id="status">Preparing Google sign-in…</div>
+        <div class="muted" id="hint" style="margin-top:10px;">Clears broken Google session (Brave rart 400), then signs in.</div>
     </div>
     <script>
         const firebaseConfig = {
@@ -176,13 +176,25 @@
             );
         }
 
+        function bridgeStartUrl(extra) {
+            const u = new URL(location.origin + location.pathname);
+            if (isDesktop) u.searchParams.set('desktop', '1');
+            if (returnUrl) u.searchParams.set('return', returnUrl);
+            u.searchParams.set('v', '20260721i');
+            if (extra) {
+                Object.keys(extra).forEach(k => u.searchParams.set(k, extra[k]));
+            }
+            return u.toString();
+        }
+
         function showFail(msg) {
             sessionStorage.removeItem('google_bridge_pending');
+            sessionStorage.removeItem('google_logout_done');
             setStatus(
                 '<span class="err">' + (msg || 'Google sign-in failed') + '</span>' +
-                '<div class="muted" style="margin-top:10px;">If you use Brave, clear cookies for google.com or try Discord.</div>' +
+                '<div class="muted" style="margin-top:10px;">Brave often breaks Google multi-account sessions (ServiceLogin?rart 400). Use Discord, or clear cookies for google.com.</div>' +
                 '<a class="btn" href="https://bariplux.com/login1.html?desktop=1">Use Discord instead</a>' +
-                '<a class="secondary" href="' + location.pathname + location.search + '">Retry Google</a>',
+                '<a class="secondary" href="' + bridgeStartUrl({}) + '">Retry Google (fresh session)</a>',
                 false
             );
         }
@@ -208,15 +220,28 @@
 
             if (sessionStorage.getItem('google_bridge_pending') === '1') {
                 // Came back without a user — failed or cancelled
-                showFail('Google sign-in was cancelled or blocked.');
+                showFail('Google sign-in was cancelled or blocked (often Brave rart 400).');
                 return;
             }
 
-            // Start full-page Google redirect (same origin as authDomain).
-            // prompt=login avoids Brave ServiceLogin?rart=400 on broken Google cookies.
+            // Step A: force Google logout first. Broken authuser/rart cookies cause
+            // GET accounts.google.com/ServiceLogin?rart=… → 400 even with valid OAuth clients.
+            const fresh = params.get('fresh') === '1';
+            if (!fresh) {
+                setStatus('Resetting Google session…', true);
+                const afterLogout = bridgeStartUrl({ fresh: '1' });
+                window.location.href = 'https://accounts.google.com/Logout?continue=' +
+                    encodeURIComponent(afterLogout);
+                return;
+            }
+
+            // Step B: start Firebase Google redirect on same authDomain host.
             sessionStorage.setItem('google_bridge_pending', '1');
+            setStatus('Redirecting to Google…', true);
+            try { await auth.signOut(); } catch (e) { /* ignore */ }
             const provider = new firebase.auth.GoogleAuthProvider();
-            provider.setCustomParameters({ prompt: 'login' });
+            // consent + select_account avoids silent reauth on a half-logged multi-account profile
+            provider.setCustomParameters({ prompt: 'select_account consent' });
             provider.addScope('email');
             provider.addScope('profile');
             try {
