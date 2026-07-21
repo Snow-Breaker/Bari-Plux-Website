@@ -27,7 +27,7 @@
         var q = new URLSearchParams(location.search);
         if (q.get('desktop') === '1' && (h === 'bariplux.com' || h.endsWith('.bariplux.com'))) {
           var dest = 'https://baripluxwebsite.firebaseapp.com/login1.html' + location.search;
-          if (!dest.includes('v=')) dest += (dest.includes('?') ? '&' : '?') + 'v=20260721m';
+          if (!dest.includes('v=')) dest += (dest.includes('?') ? '&' : '?') + 'v=20260721n';
           location.replace(dest);
         }
       } catch (e) {}
@@ -1089,31 +1089,7 @@
             if (message) showNotification(message, 'error');
         }
 
-        /** Prefer redirect for desktop / when popup is unreliable (common cause of auth/internal-error). */
-        
-        // ==================== GOOGLE IDENTITY SERVICES (no /__/auth/handler) ====================
-                                const credential = firebase.auth.GoogleAuthProvider.credential(
-                                    null,
-                                    tokenResponse.access_token
-                                );
-                                const result = await auth.signInWithCredential(credential);
-                                done(resolve, result);
-                            } catch (e) {
-                                done(reject, e);
-                            }
-                        },
-                        error_callback: (err) => {
-                            done(reject, new Error(err?.type || err?.message || 'Google sign-in cancelled'));
-                        }
-                    });
-                    client.requestAccessToken();
-                } catch (e) {
-                    done(reject, e);
-                }
-            });
-        }
-
-                async function signInWithOAuthProvider(provider, preferRedirect) {
+        async function signInWithOAuthProvider(provider, preferRedirect) {
             markDesktopFlowIfNeeded();
             // bariplux.com has NO /__/auth/handler - never redirect there (Google 400).
             // Popup only. Redirect only for WebView embeds.
