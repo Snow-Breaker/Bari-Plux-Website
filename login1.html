@@ -1049,7 +1049,8 @@
         /** Prefer redirect for desktop / when popup is unreliable (common cause of auth/internal-error). */
         async function signInWithOAuthProvider(provider, preferRedirect) {
             markDesktopFlowIfNeeded();
-            if (preferRedirect || isAppEmbed() || isDesktopFlow()) {
+            // Desktop (?desktop=1) must use popup — forced redirect caused Google 400 malformed.
+            if (preferRedirect || isAppEmbed()) {
                 await auth.signInWithRedirect(provider);
                 return null;
             }
