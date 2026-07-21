@@ -20,14 +20,21 @@
     </script>
 
 
+    <!-- Temporary gate: only app=2.3.0 may use login1; older desktop clients bounce to classic login.html -->
     <script>
     (function () {
       try {
         var h = location.hostname;
         var q = new URLSearchParams(location.search);
-        if (q.get('desktop') === '1' && (h === 'bariplux.com' || h.endsWith('.bariplux.com'))) {
+        var app = q.get('app') || '';
+        var allowLogin1 = app === '2.3.0' || app.indexOf('2.3.0.') === 0;
+        if (q.get('desktop') === '1' && !allowLogin1) {
+          location.replace('https://bariplux.com/login.html?desktop=1&v=20260722a');
+          return;
+        }
+        if (q.get('desktop') === '1' && allowLogin1 && (h === 'bariplux.com' || h.endsWith('.bariplux.com'))) {
           var dest = 'https://baripluxwebsite.firebaseapp.com/login1.html' + location.search;
-          if (!dest.includes('v=')) dest += (dest.includes('?') ? '&' : '?') + 'v=20260721n';
+          if (!dest.includes('v=')) dest += (dest.includes('?') ? '&' : '?') + 'v=20260722a';
           location.replace(dest);
         }
       } catch (e) {}
