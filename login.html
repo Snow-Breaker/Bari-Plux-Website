@@ -381,7 +381,7 @@
                     <code>YOUR_FIREBASE_CONFIG_HERE</code>
                 </div>
 
-                <div class="login-tabs" style="display:none;">
+                <div class="login-tabs">
                     <div class="login-tab active" id="mainTab-social" onclick="switchMainTab('social')">
                         <i class="fas fa-users" style="margin-right:6px;font-size:0.85rem;"></i>Social
                     </div>
@@ -897,26 +897,27 @@
         // ==================== GOOGLE LOGIN ====================
         document.getElementById('btnGoogleLogin').addEventListener('click', async function() {
             const btn = this;
-            btn.disabled = true;
-            btn.innerHTML = '<div class="loading-spinner" style="border-color:#333;border-top-color:#666;"></div> Connecting...';
-            try {
+            if (firebaseInitialized && auth) {
+                const provider = new firebase.auth.GoogleAuthProvider();
+                provider.setCustomParameters({ prompt: 'select_account' });
+                btn.disabled = true;
+                btn.innerHTML = '<div class="loading-spinner" style="border-color:#333;border-top-color:#666;"></div> Connecting...';
                 try {
-                    if (new URLSearchParams(window.location.search).get('desktop') === '1') {
-                        sessionStorage.setItem('desktop_login_flow', '1');
+                    if (isAppEmbed()) { await auth.signInWithRedirect(provider); return; }
+                    const result = await auth.signInWithPopup(provider);
+                    const user = result.user;
+                    const userData = { id: user.uid, name: user.displayName, email: user.email, loginMethod: 'firebase.google', loginTime: new Date().toISOString(), photoURL: user.photoURL };
+                    localStorage.setItem('bariplux_user', JSON.stringify(userData));
+                    showLoggedInView(userData);
+                } catch (error) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"> Sign in with Google';
+                    if (error.code !== 'auth/popup-closed-by-user') {
+                        showNotification('Google login failed: ' + (error.message || error) + ' — try Discord if you use Brave.', 'error');
                     }
-                } catch (e) {}
-                const q = new URLSearchParams();
-                try {
-                    if (new URLSearchParams(window.location.search).get('desktop') === '1'
-                        || sessionStorage.getItem('desktop_login_flow') === '1') q.set('desktop', '1');
-                } catch (e) {}
-                q.set('v', '20260721h');
-                q.set('return', window.location.href.split('#')[0]);
-                window.location.href = 'https://baripluxwebsite.firebaseapp.com/google-bridge.html?' + q.toString();
-            } catch (error) {
-                btn.disabled = false;
-                btn.innerHTML = '<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"> Sign in with Google';
-                showNotification('Google login failed: ' + (error.message || error) + ' — try Discord.', 'error');
+                }
+            } else {
+                showNotification('Firebase is not available. Please ensure internet connection and try again.', 'error');
             }
         });
 

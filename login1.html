@@ -394,7 +394,7 @@
                     <code>YOUR_FIREBASE_CONFIG_HERE</code>
                 </div>
 
-                <div class="login-tabs" style="display:none;">
+                <div class="login-tabs">
                     <div class="login-tab active" id="mainTab-social" onclick="switchMainTab('social')">
                         <i class="fas fa-users" style="margin-right:6px;font-size:0.85rem;"></i>Social
                     </div>
@@ -1117,14 +1117,11 @@
             });
         }
 
-        async function signInWithOAuthProvider(provider, preferRedirect) {
+                async function signInWithOAuthProvider(provider, preferRedirect) {
             markDesktopFlowIfNeeded();
-            // On firebaseapp.com/web.app we share authDomain — redirect is safe and avoids Brave
-            // popup cookie partitioning that lands on accounts.google.com/ServiceLogin?rart=… → Google 400.
-            // On bariplux.com (GitHub Pages) there is no /__/auth/handler — keep popup only.
-            const onFirebaseHost = /\.firebaseapp\.com$/i.test(location.hostname)
-                || /\.web\.app$/i.test(location.hostname);
-            if (preferRedirect || isAppEmbed() || (isDesktopFlow() && onFirebaseHost)) {
+            // bariplux.com has NO /__/auth/handler - never redirect there (Google 400).
+            // Popup only. Redirect only for WebView embeds.
+            if (preferRedirect || isAppEmbed()) {
                 await auth.signInWithRedirect(provider);
                 return null;
             }
@@ -1133,13 +1130,8 @@
             } catch (error) {
                 if (error.code === 'auth/popup-blocked' || error.code === 'auth/internal-error') {
                     console.warn('[OAuth] Popup failed:', error.code);
-                    if (onFirebaseHost) {
-                        showNotification('Popup failed — switching to redirect…', 'warning', 2500);
-                        await auth.signInWithRedirect(provider);
-                        return null;
-                    }
                     showNotification(
-                        'Popup blocked — allow popups, or open in Chrome. Brave Shields often break Google login.',
+                        'Popup blocked — allow popups for bariplux.com, or use Discord.',
                         'warning',
                         8000
                     );
@@ -1292,20 +1284,28 @@
         // ==================== GOOGLE LOGIN ====================
         document.getElementById('btnGoogleLogin').addEventListener('click', async function() {
             const btn = this;
-            btn.disabled = true;
-            btn.innerHTML = '<div class="loading-spinner" style="border-color:#333;border-top-color:#666;"></div> Connecting...';
-            try {
-                markDesktopFlowIfNeeded();
-                const q = new URLSearchParams();
-                if (isDesktopFlow()) q.set('desktop', '1');
-                q.set('v', '20260721j');
-                q.set('return', window.location.href.split('#')[0]);
-                // Full-page Google on firebaseapp.com (has /__/auth/handler). Avoids Brave popup ServiceLogin?rart 400.
-                window.location.href = 'https://baripluxwebsite.firebaseapp.com/google-bridge.html?' + q.toString();
-            } catch (error) {
-                btn.disabled = false;
-                btn.innerHTML = '<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"> Sign in with Google';
-                showNotification('Google login failed: ' + (error.message || error) + ' — try Discord.', 'error');
+            if (firebaseInitialized && auth) {
+                const provider = new firebase.auth.GoogleAuthProvider();
+                provider.setCustomParameters({ prompt: 'select_account' });
+                provider.addScope('email');
+                provider.addScope('profile');
+                btn.disabled = true;
+                btn.innerHTML = '<div class="loading-spinner" style="border-color:#333;border-top-color:#666;"></div> Connecting...';
+                try {
+                    const result = await signInWithOAuthProvider(provider, false);
+                    if (result && result.user) {
+                        applyOAuthUser(result.user, 'firebase.google');
+                    } else {
+                        btn.disabled = false;
+                        btn.innerHTML = '<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"> Sign in with Google';
+                    }
+                } catch (error) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"> Sign in with Google';
+                    await handleAuthError(error, 'Google');
+                }
+            } else {
+                showNotification('Firebase is not available. Please ensure internet connection and try again.', 'error');
             }
         });
 
@@ -1706,10 +1706,6 @@
             try {
                 const hintEl = document.getElementById('googleBraveHint');
                 if (hintEl && /Brave/i.test(navigator.userAgent || '')) hintEl.style.display = 'block';
-                if (new URLSearchParams(location.search).get('prefer') === 'discord') {
-                    const dbtn = document.getElementById('btnDiscordLogin');
-                    if (dbtn) setTimeout(() => dbtn.click(), 400);
-                }
             } catch (e) {}
             if (firebaseInitialized && auth) {
                 auth.getRedirectResult().then((result) => {
