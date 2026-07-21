@@ -14,11 +14,48 @@
     
     <link rel="icon" type="image/x-icon" href="https://i.postimg.cc/65cjsvfQ/imglogo.png">
     
+    <!-- Domain-lock -->
+    <script>
+    (function(){var h=location.hostname;var ok=h==='bariplux.com'||h==='localhost'||h==='127.0.0.1'||h.endsWith('.bariplux.com')||h.endsWith('.firebaseapp.com')||h.endsWith('.web.app');if(!ok){document.documentElement.innerHTML='';window.stop();location.replace('about:blank')}})();
+    </script>
+
+
+    <script>
+    (function () {
+      try {
+        var h = location.hostname;
+        var q = new URLSearchParams(location.search);
+        if (q.get('desktop') === '1' && (h === 'bariplux.com' || h.endsWith('.bariplux.com'))) {
+          var dest = 'https://baripluxwebsite.firebaseapp.com/login1.html' + location.search;
+          if (!dest.includes('v=')) dest += (dest.includes('?') ? '&' : '?') + 'v=20260721m';
+          location.replace(dest);
+        }
+      } catch (e) {}
+    })();
+    </script>
+
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+    <!-- Security headers -->
+    <meta http-equiv="Content-Security-Policy"
+      content="default-src 'self' https:;
+               script-src 'self' https://www.gstatic.com https://cdn.jsdelivr.net https://apis.google.com https://www.googleapis.com https://accounts.google.com https://cdnjs.cloudflare.com 'unsafe-inline' 'unsafe-eval';
+               style-src 'self' https://fonts.googleapis.com https://cdnjs.cloudflare.com 'unsafe-inline';
+               img-src 'self' https: data: blob:;
+               font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:;
+               connect-src 'self' https: wss:;
+               frame-src 'self' https: https://accounts.google.com https://*.firebaseapp.com https://*.google.com https://github.com https://*.github.com;
+               object-src 'none';
+               base-uri 'self';">
+    <meta http-equiv="Strict-Transport-Security" content="max-age=31536000; includeSubDomains">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+
     
     <style>
         :root {
@@ -1055,47 +1092,6 @@
         /** Prefer redirect for desktop / when popup is unreliable (common cause of auth/internal-error). */
         
         // ==================== GOOGLE IDENTITY SERVICES (no /__/auth/handler) ====================
-        const GOOGLE_WEB_CLIENT_ID = '280043766563-g23882djkl8cfcmpn5d5j6h1mh98bhdn.apps.googleusercontent.com';
-
-        function loadGoogleIdentityServices() {
-            return new Promise((resolve, reject) => {
-                if (window.google && google.accounts && google.accounts.oauth2) {
-                    resolve();
-                    return;
-                }
-                const existing = document.querySelector('script[data-gis="1"]');
-                if (existing) {
-                    existing.addEventListener('load', () => resolve());
-                    existing.addEventListener('error', () => reject(new Error('GIS load failed')));
-                    return;
-                }
-                const s = document.createElement('script');
-                s.src = 'https://accounts.google.com/gsi/client';
-                s.async = true;
-                s.dataset.gis = '1';
-                s.onload = () => resolve();
-                s.onerror = () => reject(new Error('GIS load failed'));
-                document.head.appendChild(s);
-            });
-        }
-
-        /** Google OAuth via GIS token client — bypasses Firebase /__/auth/handler (missing on GitHub Pages). */
-        async function signInWithGoogleViaGis() {
-            await loadGoogleIdentityServices();
-            return new Promise((resolve, reject) => {
-                let settled = false;
-                const done = (fn, val) => { if (settled) return; settled = true; fn(val); };
-                try {
-                    const client = google.accounts.oauth2.initTokenClient({
-                        client_id: GOOGLE_WEB_CLIENT_ID,
-                        scope: 'openid email profile',
-                        prompt: 'select_account',
-                        callback: async (tokenResponse) => {
-                            try {
-                                if (!tokenResponse || tokenResponse.error) {
-                                    done(reject, new Error(tokenResponse?.error_description || tokenResponse?.error || 'Google token error'));
-                                    return;
-                                }
                                 const credential = firebase.auth.GoogleAuthProvider.credential(
                                     null,
                                     tokenResponse.access_token
@@ -1131,7 +1127,7 @@
                 if (error.code === 'auth/popup-blocked' || error.code === 'auth/internal-error') {
                     console.warn('[OAuth] Popup failed:', error.code);
                     showNotification(
-                        'Popup blocked — allow popups for bariplux.com, or use Discord.',
+                        'Popup blocked — allow popups for this page, then try Google/GitHub again.',
                         'warning',
                         8000
                     );

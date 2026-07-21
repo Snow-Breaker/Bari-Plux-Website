@@ -1,4 +1,4 @@
-﻿{
+{
   "database": {
     "rules": "database.rules.json"
   },
@@ -18,11 +18,15 @@
     ],
     "headers": [
       {
-        "source": "/login1.html",
+        "source": "**",
         "headers": [
           {
             "key": "Cache-Control",
             "value": "no-cache, no-store, must-revalidate"
+          },
+          {
+            "key": "Cross-Origin-Opener-Policy",
+            "value": "same-origin-allow-popups"
           }
         ]
       }

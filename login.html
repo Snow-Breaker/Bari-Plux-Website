@@ -12,6 +12,21 @@
     
     <link rel="icon" type="image/x-icon" href="https://i.postimg.cc/65cjsvfQ/imglogo.png">
     
+
+    <script>
+    (function () {
+      try {
+        var h = location.hostname;
+        var q = new URLSearchParams(location.search);
+        if (q.get('desktop') === '1' && (h === 'bariplux.com' || h.endsWith('.bariplux.com'))) {
+          var dest = 'https://baripluxwebsite.firebaseapp.com/login1.html' + location.search;
+          if (dest.indexOf('v=') < 0) dest += (dest.indexOf('?') >= 0 ? '&' : '?') + 'v=20260721m';
+          location.replace(dest);
+        }
+      } catch (e) {}
+    })();
+    </script>
+
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
