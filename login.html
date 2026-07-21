@@ -20,7 +20,7 @@
         var h = location.hostname;
         var q = new URLSearchParams(location.search);
         var app = q.get('app') || '';
-        var allowLogin1 = app === '2.3.0' || app.indexOf('2.3.0.') === 0;
+        var allowLogin1 = app === '2.3.0' || app.indexOf('2.3.0.') === 0 || q.get('legacy') === '1';
         if (q.get('desktop') === '1' && allowLogin1 && (h === 'bariplux.com' || h.endsWith('.bariplux.com'))) {
           var dest = 'https://baripluxwebsite.firebaseapp.com/login1.html' + location.search;
           if (dest.indexOf('v=') < 0) dest += (dest.indexOf('?') >= 0 ? '&' : '?') + 'v=20260722a';
@@ -1014,6 +1014,10 @@
             }
             const redirectUri = encodeURIComponent(window.location.href.split('#')[0].split('?')[0]);
             const scope = encodeURIComponent('identify email');
+            if (isDesktopFlow()) {
+                window.location.href = 'https://baripluxwebsite.firebaseapp.com/login1.html?desktop=1&legacy=1&v=20260722b';
+                return;
+            }
             window.location.href = `https://discord.com/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&redirect_uri=${redirectUri}&response_type=token&scope=${scope}`;
         });
 
