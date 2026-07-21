@@ -623,6 +623,7 @@
         const firebaseConfig = {
             apiKey: "AIzaSyBH_t3Uue7fbb-DahwjSJGjG2-quCqiLEs",
             authDomain: "baripluxwebsite.firebaseapp.com",
+            databaseURL: "https://baripluxwebsite-default-rtdb.firebaseio.com",
             projectId: "baripluxwebsite",
             storageBucket: "baripluxwebsite.firebasestorage.app",
             messagingSenderId: "280043766563",
@@ -641,7 +642,7 @@
                 }
                 firebase.initializeApp(firebaseConfig);
                 auth = firebase.auth();
-                try { database = firebase.database(); } catch(e) {}
+                try { database = firebase.database(); } catch(e) { console.error('Firebase database init failed — check databaseURL', e); }
                 firebaseInitialized = true;
                 document.getElementById('firebaseConfigNote').style.display = 'none';
                 return true;
@@ -829,17 +830,87 @@
             else { showLoginFormView(); }
         }
 
+
+        // ==================== GOOGLE IDENTITY SERVICES (no /__/auth/handler) ====================
+        const GOOGLE_WEB_CLIENT_ID = '280043766563-g23882djkl8cfcmpn5d5j6h1mh98bhdn.apps.googleusercontent.com';
+
+        function loadGoogleIdentityServices() {
+            return new Promise((resolve, reject) => {
+                if (window.google && google.accounts && google.accounts.oauth2) {
+                    resolve();
+                    return;
+                }
+                const existing = document.querySelector('script[data-gis="1"]');
+                if (existing) {
+                    existing.addEventListener('load', () => resolve());
+                    existing.addEventListener('error', () => reject(new Error('GIS load failed')));
+                    return;
+                }
+                const s = document.createElement('script');
+                s.src = 'https://accounts.google.com/gsi/client';
+                s.async = true;
+                s.dataset.gis = '1';
+                s.onload = () => resolve();
+                s.onerror = () => reject(new Error('GIS load failed'));
+                document.head.appendChild(s);
+            });
+        }
+
+        /** Google OAuth via GIS token client — bypasses Firebase /__/auth/handler (missing on GitHub Pages). */
+        async function signInWithGoogleViaGis() {
+            await loadGoogleIdentityServices();
+            return new Promise((resolve, reject) => {
+                let settled = false;
+                const done = (fn, val) => { if (settled) return; settled = true; fn(val); };
+                try {
+                    const client = google.accounts.oauth2.initTokenClient({
+                        client_id: GOOGLE_WEB_CLIENT_ID,
+                        scope: 'openid email profile',
+                        prompt: 'select_account',
+                        callback: async (tokenResponse) => {
+                            try {
+                                if (!tokenResponse || tokenResponse.error) {
+                                    done(reject, new Error(tokenResponse?.error_description || tokenResponse?.error || 'Google token error'));
+                                    return;
+                                }
+                                const credential = firebase.auth.GoogleAuthProvider.credential(
+                                    null,
+                                    tokenResponse.access_token
+                                );
+                                const result = await auth.signInWithCredential(credential);
+                                done(resolve, result);
+                            } catch (e) {
+                                done(reject, e);
+                            }
+                        },
+                        error_callback: (err) => {
+                            done(reject, new Error(err?.type || err?.message || 'Google sign-in cancelled'));
+                        }
+                    });
+                    client.requestAccessToken();
+                } catch (e) {
+                    done(reject, e);
+                }
+            });
+        }
+
         // ==================== GOOGLE LOGIN ====================
         document.getElementById('btnGoogleLogin').addEventListener('click', async function() {
             const btn = this;
             if (firebaseInitialized && auth) {
-                const provider = new firebase.auth.GoogleAuthProvider();
-                provider.setCustomParameters({ prompt: 'select_account' });
                 btn.disabled = true;
-                btn.innerHTML = '<div class="loading-spinner" style="border-color:#333;border-top-color:#666;"></div> Redirecting...';
+                btn.innerHTML = '<div class="loading-spinner" style="border-color:#333;border-top-color:#666;"></div> Connecting...';
                 try {
-                    if (isAppEmbed()) { await auth.signInWithRedirect(provider); return; }
-                    const result = await auth.signInWithPopup(provider);
+                    let result;
+                    try {
+                        result = await signInWithGoogleViaGis();
+                    } catch (gisErr) {
+                        console.warn('[Google] GIS failed, fallback popup:', gisErr);
+                        const provider = new firebase.auth.GoogleAuthProvider();
+                        provider.setCustomParameters({ prompt: 'select_account' });
+                        if (isAppEmbed()) { await auth.signInWithRedirect(provider); return; }
+                        result = await auth.signInWithPopup(provider);
+                    }
                     const user = result.user;
                     const userData = { id: user.uid, name: user.displayName, email: user.email, loginMethod: 'firebase.google', loginTime: new Date().toISOString(), photoURL: user.photoURL };
                     localStorage.setItem('bariplux_user', JSON.stringify(userData));
@@ -847,11 +918,11 @@
                 } catch (error) {
                     btn.disabled = false;
                     btn.innerHTML = '<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"> Sign in with Google';
-                    if (error.code !== 'auth/popup-closed-by-user') showNotification('Google login failed: ' + error.message, 'error');
+                    if (error.code !== 'auth/popup-closed-by-user') showNotification('Google login failed: ' + (error.message || error), 'error');
                 }
-                } else {
-                    showNotification('Firebase is not available. Please ensure internet connection and try again.', 'error');
-                }
+            } else {
+                showNotification('Firebase is not available. Please ensure internet connection and try again.', 'error');
+            }
         });
 
         // ==================== GITHUB LOGIN ====================
