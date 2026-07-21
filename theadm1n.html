@@ -394,6 +394,10 @@
                 <i class="fas fa-bug"></i> Bug Reports
                 <span class="tab-badge" id="reportsBadge"></span>
             </button>
+            <button class="tab-btn" onclick="switchTab('chatMod', this)">
+                <i class="fas fa-comments"></i> Chat Mod
+                <span class="tab-badge" id="chatModBadge"></span>
+            </button>
             <button class="tab-btn" onclick="switchTab('featureFlags', this)">
                 <i class="fas fa-flag"></i> Feature Flags
             </button>
@@ -503,6 +507,80 @@
             <div class="cards-wrap" id="reportsCards"></div>
             <div class="pagination" id="reportsPaginationMobile" style="display:none;"></div>
             <div class="last-updated" id="reportsLastUpdated"></div>
+        </div>
+
+        <div id="chatModSection" style="display:none;">
+            <div class="stats-grid">
+                <div class="stat-card" style="animation-delay:0s"><div class="stat-icon total"><i class="fas fa-user-shield"></i></div><div><div class="stat-num" id="cmStatUsers">—</div><div class="stat-label">Tracked users</div></div></div>
+                <div class="stat-card" style="animation-delay:0.05s"><div class="stat-icon" style="background:rgba(244,67,54,0.15);color:#F44336;"><i class="fas fa-gavel"></i></div><div><div class="stat-num" id="cmStatViolators">—</div><div class="stat-label">With violations</div></div></div>
+                <div class="stat-card" style="animation-delay:0.1s"><div class="stat-icon" style="background:rgba(255,152,0,0.15);color:#FF9800;"><i class="fas fa-heart-broken"></i></div><div><div class="stat-num" id="cmStatLowMorality">—</div><div class="stat-label">Morality ≤ 50</div></div></div>
+                <div class="stat-card" style="animation-delay:0.15s"><div class="stat-icon" style="background:rgba(244,67,54,0.15);color:#F44336;"><i class="fas fa-flag"></i></div><div><div class="stat-num" id="cmStatReports">—</div><div class="stat-label">Chat reports</div></div></div>
+            </div>
+
+            <div class="toolbar">
+                <span class="toolbar-title">Scores &amp; violations <span id="cmUserCountLabel" style="color:var(--muted);font-size:0.8rem;font-weight:400;"></span></span>
+                <div class="search-wrap">
+                    <i class="fas fa-search"></i>
+                    <input type="text" class="search-input" id="cmUserSearch" placeholder="Search name / uid..." oninput="renderChatModUsers()">
+                </div>
+                <div class="filter-btns">
+                    <button class="filter-btn active" onclick="setCmUserFilter('all',this)"><i class="fas fa-border-all"></i> All</button>
+                    <button class="filter-btn" onclick="setCmUserFilter('violators',this)"><i class="fas fa-exclamation"></i> Violators</button>
+                    <button class="filter-btn" onclick="setCmUserFilter('low',this)"><i class="fas fa-heart"></i> Low score</button>
+                    <button class="filter-btn" onclick="setCmUserFilter('zero',this)"><i class="fas fa-ban"></i> 0 chances</button>
+                </div>
+                <button class="icon-btn teal" onclick="loadChatMod()"><i class="fas fa-sync-alt"></i> Refresh</button>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Chances</th>
+                            <th>Morality</th>
+                            <th>Violations</th>
+                            <th>Last rule</th>
+                            <th>Rules</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cmUsersTableBody"><tr class="state-row"><td colspan="7"><div class="state-icon">🛡️</div><div>Open this tab to load…</div></td></tr></tbody>
+                </table>
+            </div>
+
+            <div class="toolbar" style="margin-top:22px;">
+                <span class="toolbar-title">Chat reports <span id="cmReportCountLabel" style="color:var(--muted);font-size:0.8rem;font-weight:400;"></span></span>
+                <div class="search-wrap">
+                    <i class="fas fa-search"></i>
+                    <input type="text" class="search-input" id="cmReportSearch" placeholder="Search reports..." oninput="renderChatReports()">
+                </div>
+                <div class="filter-btns">
+                    <button class="filter-btn active" onclick="setCmReportFilter('all',this)"><i class="fas fa-border-all"></i> All</button>
+                    <button class="filter-btn" onclick="setCmReportFilter('new',this)"><i class="fas fa-circle" style="color:#F44336;font-size:9px;"></i> New</button>
+                    <button class="filter-btn" onclick="setCmReportFilter('reviewed',this)"><i class="fas fa-circle" style="color:#FF9800;font-size:9px;"></i> Reviewed</button>
+                    <button class="filter-btn" onclick="setCmReportFilter('resolved',this)"><i class="fas fa-circle" style="color:#4CAF50;font-size:9px;"></i> Resolved</button>
+                </div>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>When</th>
+                            <th>Target</th>
+                            <th>Preview</th>
+                            <th>Reason</th>
+                            <th>Reporter</th>
+                            <th>Room</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cmReportsTableBody"><tr class="state-row"><td colspan="8"><div class="state-icon">💬</div><div>Open this tab to load…</div></td></tr></tbody>
+                </table>
+            </div>
+            <div class="last-updated" id="cmLastUpdated"></div>
         </div>
 
         <div id="featureFlagsSection" style="display:none;">
@@ -786,6 +864,8 @@ const firebaseConfig = {
 };
 
 let allUsers = [], allReports = [];
+let allChatModUsers = [], allChatReports = [];
+let cmUserFilter = 'all', cmReportFilter = 'all';
 let activeFilter = 'all', activeReportFilter = 'all';
 let userPage = 1, reportPage = 1;
 const PAGE_SIZE = 15;
@@ -1155,6 +1235,15 @@ function initApp() {
         const badge = document.getElementById('reportsBadge');
         badge.textContent = newCount||'';
         badge.classList.toggle('show', newCount>0);
+    });
+    db.ref('lobby_chat/reports').on('value', snap => {
+        const data = snap.val()||{};
+        const newCount = Object.values(data).filter(r=>(r.status||'new')==='new').length;
+        const badge = document.getElementById('chatModBadge');
+        if (badge) {
+            badge.textContent = newCount||'';
+            badge.classList.toggle('show', newCount>0);
+        }
     });
 }
 
@@ -1894,9 +1983,226 @@ function switchTab(tab, btn) {
     btn.classList.add('active');
     document.getElementById('usersSection').style.display=tab==='users'?'':'none';
     document.getElementById('reportsSection').style.display=tab==='reports'?'':'none';
+    document.getElementById('chatModSection').style.display=tab==='chatMod'?'':'none';
     document.getElementById('featureFlagsSection').style.display=tab==='featureFlags'?'':'none';
     if(tab==='reports') loadReports();
+    if(tab==='chatMod') loadChatMod();
     if(tab==='featureFlags') loadFeatureFlags();
+}
+
+function fmtTs(ts) {
+    if (!ts) return '—';
+    const n = typeof ts === 'number' ? ts : Number(ts);
+    if (!n || Number.isNaN(n)) return '—';
+    const d = new Date(n < 1e12 ? n * 1000 : n);
+    return d.toLocaleString();
+}
+
+async function loadChatMod() {
+    if (!db) return;
+    const usersBody = document.getElementById('cmUsersTableBody');
+    const reportsBody = document.getElementById('cmReportsTableBody');
+    usersBody.innerHTML = '<tr class="state-row"><td colspan="7"><div class="state-icon">⏳</div><div>Loading moderation…</div></td></tr>';
+    reportsBody.innerHTML = '<tr class="state-row"><td colspan="8"><div class="state-icon">⏳</div><div>Loading reports…</div></td></tr>';
+    try {
+        const [modSnap, repSnap, banSnap] = await Promise.all([
+            db.ref('lobby_chat/user_moderation').once('value'),
+            db.ref('lobby_chat/reports').once('value'),
+            db.ref('lobby_chat/bans').once('value')
+        ]);
+        const bans = banSnap.val() || {};
+        const modData = modSnap.val() || {};
+        allChatModUsers = Object.entries(modData).map(([uid, m]) => {
+            const viol = m.violations && typeof m.violations === 'object' ? Object.values(m.violations) : [];
+            return {
+                uid,
+                name: m.displayName || uid.slice(0, 10),
+                strikes: typeof m.strikesRemaining === 'number' ? m.strikesRemaining : 5,
+                morality: typeof m.moralityScore === 'number' ? m.moralityScore : 100,
+                rulesAccepted: m.rulesAccepted === true,
+                lastRule: m.lastViolationRule || '—',
+                violCount: viol.length,
+                banned: bans[uid] === true,
+                violations: viol
+            };
+        }).sort((a,b) => (a.strikes - b.strikes) || (a.morality - b.morality) || b.violCount - a.violCount);
+
+        const repData = repSnap.val() || {};
+        allChatReports = Object.entries(repData).map(([id, r]) => ({
+            id,
+            reporterUid: r.reporterUid || '—',
+            targetUid: r.targetUid || '—',
+            targetName: r.targetName || '—',
+            msgId: r.msgId || '—',
+            reason: r.reason || '—',
+            room: r.room || '—',
+            textPreview: r.textPreview || '',
+            status: r.status || 'new',
+            ts: r.ts || 0
+        })).sort((a,b) => (b.ts||0) - (a.ts||0));
+
+        document.getElementById('cmStatUsers').textContent = allChatModUsers.length;
+        document.getElementById('cmStatViolators').textContent = allChatModUsers.filter(u => u.violCount > 0).length;
+        document.getElementById('cmStatLowMorality').textContent = allChatModUsers.filter(u => u.morality <= 50).length;
+        document.getElementById('cmStatReports').textContent = allChatReports.length;
+        document.getElementById('cmLastUpdated').textContent = 'Updated ' + new Date().toLocaleTimeString();
+        renderChatModUsers();
+        renderChatReports();
+    } catch (e) {
+        usersBody.innerHTML = `<tr class="state-row"><td colspan="7"><div class="state-icon">⚠️</div><div>${e.message}</div></td></tr>`;
+        reportsBody.innerHTML = `<tr class="state-row"><td colspan="8"><div class="state-icon">⚠️</div><div>${e.message}</div></td></tr>`;
+        showToast('⚠️ Chat mod load failed: ' + e.message, 'danger');
+    }
+}
+
+function setCmUserFilter(f, btn) {
+    cmUserFilter = f;
+    btn.parentElement.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderChatModUsers();
+}
+
+function setCmReportFilter(f, btn) {
+    cmReportFilter = f;
+    btn.parentElement.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderChatReports();
+}
+
+function renderChatModUsers() {
+    const q = (document.getElementById('cmUserSearch').value || '').toLowerCase().trim();
+    let list = allChatModUsers.slice();
+    if (cmUserFilter === 'violators') list = list.filter(u => u.violCount > 0);
+    if (cmUserFilter === 'low') list = list.filter(u => u.morality <= 50);
+    if (cmUserFilter === 'zero') list = list.filter(u => u.strikes <= 0 || u.banned);
+    if (q) list = list.filter(u => (u.name||'').toLowerCase().includes(q) || (u.uid||'').toLowerCase().includes(q));
+    document.getElementById('cmUserCountLabel').textContent = `(${list.length})`;
+    const tbody = document.getElementById('cmUsersTableBody');
+    if (!list.length) {
+        tbody.innerHTML = '<tr class="state-row"><td colspan="7"><div class="state-icon">✨</div><div>No users match</div></td></tr>';
+        return;
+    }
+    tbody.innerHTML = list.map(u => `
+        <tr>
+            <td>
+                <div class="user-name">${esc(u.name)}${u.banned ? ' <span class="report-status new">banned</span>' : ''}</div>
+                <div class="user-id">${esc(u.uid)}</div>
+            </td>
+            <td><strong style="color:${u.strikes<=1?'#F44336':u.strikes<=3?'#FF9800':'#4CAF50'}">${u.strikes}/5</strong></td>
+            <td><strong style="color:${u.morality<=30?'#F44336':u.morality<=60?'#FF9800':'#4CAF50'}">${u.morality}</strong></td>
+            <td>${u.violCount}</td>
+            <td>${esc(u.lastRule)}</td>
+            <td>${u.rulesAccepted ? '✅' : '—'}</td>
+            <td>
+                <div class="action-btns">
+                    <button class="action-btn" onclick="showChatViolations('${escAttr(u.uid)}')">History</button>
+                    <button class="action-btn danger" onclick="chatBanUser('${escAttr(u.uid)}', true)">Ban</button>
+                    <button class="action-btn" onclick="chatBanUser('${escAttr(u.uid)}', false)">Unban</button>
+                    <button class="action-btn" onclick="chatResetScore('${escAttr(u.uid)}')">Reset 5</button>
+                </div>
+            </td>
+        </tr>`).join('');
+}
+
+function renderChatReports() {
+    const q = (document.getElementById('cmReportSearch').value || '').toLowerCase().trim();
+    let list = allChatReports.slice();
+    if (cmReportFilter !== 'all') list = list.filter(r => r.status === cmReportFilter);
+    if (q) list = list.filter(r =>
+        (r.targetName||'').toLowerCase().includes(q) ||
+        (r.targetUid||'').toLowerCase().includes(q) ||
+        (r.reason||'').toLowerCase().includes(q) ||
+        (r.textPreview||'').toLowerCase().includes(q) ||
+        (r.reporterUid||'').toLowerCase().includes(q));
+    document.getElementById('cmReportCountLabel').textContent = `(${list.length})`;
+    const tbody = document.getElementById('cmReportsTableBody');
+    if (!list.length) {
+        tbody.innerHTML = '<tr class="state-row"><td colspan="8"><div class="state-icon">✨</div><div>No reports</div></td></tr>';
+        return;
+    }
+    tbody.innerHTML = list.map(r => `
+        <tr>
+            <td class="time-cell">${fmtTs(r.ts)}</td>
+            <td>
+                <div class="user-name">${esc(r.targetName)}</div>
+                <div class="user-id">${esc(r.targetUid)}</div>
+            </td>
+            <td><div class="report-desc" title="${escAttr(r.textPreview)}">${esc(r.textPreview || r.msgId)}</div></td>
+            <td>${esc(r.reason)}</td>
+            <td class="user-id">${esc(r.reporterUid)}</td>
+            <td>${esc(r.room)}</td>
+            <td><span class="report-status ${escAttr(r.status)}">${esc(r.status)}</span></td>
+            <td>
+                <div class="action-btns">
+                    <button class="action-btn" onclick="setChatReportStatus('${escAttr(r.id)}','reviewed')">Review</button>
+                    <button class="action-btn" onclick="setChatReportStatus('${escAttr(r.id)}','resolved')">Resolve</button>
+                    ${r.targetUid && r.targetUid !== '—' ? `<button class="action-btn danger" onclick="chatBanUser('${escAttr(r.targetUid)}', true)">Ban</button>` : ''}
+                    <button class="action-btn danger" onclick="deleteChatReport('${escAttr(r.id)}')">Del</button>
+                </div>
+            </td>
+        </tr>`).join('');
+}
+
+function escAttr(s) { return esc(s).replace(/`/g, ''); }
+
+function showChatViolations(uid) {
+    const u = allChatModUsers.find(x => x.uid === uid);
+    if (!u) return;
+    const lines = (u.violations || []).map(v =>
+        `• ${v.rule || '?'} (−${v.strikeDelta||0} / −${v.moralityDelta||0}) by ${v.byName||v.byUid||'?'} — ${v.reason||''}`
+    );
+    alert(`${u.name}\nChances ${u.strikes}/5 · Morality ${u.morality}\n\n${lines.length ? lines.join('\n') : 'No violations yet.'}`);
+}
+
+async function chatBanUser(uid, ban) {
+    if (!db || !uid) return;
+    try {
+        const ref = db.ref('lobby_chat/bans/' + uid);
+        if (ban) await ref.set(true); else await ref.remove();
+        showToast(ban ? '🚫 Chat ban applied' : '✅ Chat unban applied', ban ? 'danger' : 'success');
+        loadChatMod();
+    } catch (e) {
+        showToast('⚠️ Ban failed: ' + e.message, 'danger');
+    }
+}
+
+async function chatResetScore(uid) {
+    if (!db || !uid) return;
+    if (!confirm('Reset chances to 5 and morality to 100 for this user?')) return;
+    try {
+        await db.ref('lobby_chat/user_moderation/' + uid).update({
+            strikesRemaining: 5,
+            moralityScore: 100
+        });
+        await db.ref('lobby_chat/bans/' + uid).remove();
+        showToast('✅ Score reset', 'success');
+        loadChatMod();
+    } catch (e) {
+        showToast('⚠️ Reset failed: ' + e.message, 'danger');
+    }
+}
+
+async function setChatReportStatus(id, status) {
+    if (!db || !id) return;
+    try {
+        await db.ref('lobby_chat/reports/' + id).update({ status });
+        showToast('✅ Status → ' + status, 'success');
+        loadChatMod();
+    } catch (e) {
+        showToast('⚠️ Update failed: ' + e.message, 'danger');
+    }
+}
+
+async function deleteChatReport(id) {
+    if (!db || !id) return;
+    if (!confirm('Delete this chat report?')) return;
+    try {
+        await db.ref('lobby_chat/reports/' + id).remove();
+        showToast('🗑️ Report deleted', 'danger');
+        loadChatMod();
+    } catch (e) {
+        showToast('⚠️ Delete failed: ' + e.message, 'danger');
+    }
 }
 
 document.addEventListener('keydown', e=>{
