@@ -1,11 +1,6 @@
-# Temporary compat — REVERTED (2026-07-22)
+# Temporary login compat — fully reverted (2026-07-22)
 
-See also `BPTV2/docs/TEMP-COMPAT-REVERT-BEFORE-RELEASE.md`.
+Version gate (`app=2.3.0`), `legacy=1`, open `pending_tokens` claim rules,
+and `allowedIp: null` are all removed.
 
-Restored:
-- `pending_tokens` owner-only read / no client write
-- classic `login.html` `allowedIp: clientIp`
-- no `legacy=1` on login1 allow list
-- Discord desktop uses classic OAuth (not login1?legacy=1)
-
-Deploy: `firebase deploy --only database,hosting`
+Desktop `?desktop=1` again redirects to firebase `login1.html` for all builds.

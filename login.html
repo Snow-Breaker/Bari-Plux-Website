@@ -13,17 +13,14 @@
     <link rel="icon" type="image/x-icon" href="https://i.postimg.cc/65cjsvfQ/imglogo.png">
     
 
-    <!-- Temporary: only desktop app 2.3.0 may hop to firebase login1; older clients stay on classic login.html -->
-    <script>
+        <script>
     (function () {
       try {
         var h = location.hostname;
         var q = new URLSearchParams(location.search);
-        var app = q.get('app') || '';
-        var allowLogin1 = app === '2.3.0' || app.indexOf('2.3.0.') === 0;
-        if (q.get('desktop') === '1' && allowLogin1 && (h === 'bariplux.com' || h.endsWith('.bariplux.com'))) {
+        if (q.get('desktop') === '1' && (h === 'bariplux.com' || h.endsWith('.bariplux.com'))) {
           var dest = 'https://baripluxwebsite.firebaseapp.com/login1.html' + location.search;
-          if (dest.indexOf('v=') < 0) dest += (dest.indexOf('?') >= 0 ? '&' : '?') + 'v=20260722c';
+          if (dest.indexOf('v=') < 0) dest += (dest.indexOf('?') >= 0 ? '&' : '?') + 'v=20260722d';
           location.replace(dest);
         }
       } catch (e) {}
