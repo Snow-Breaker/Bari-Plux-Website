@@ -53,9 +53,11 @@ Deploy with `firebase deploy --only database`.
 - Desktop `LoginUrl` with `app=2.3.0` on 2.3.0 builds
 - `SharedHttpClient` browser-like `User-Agent` (needed so Cloudflare BIC does not 1010 `/claim-token`)
 - Worker-only claim path in `AuthSessionService` for 2.3.0+
+- **`InitializeLoginSystem` must apply `baripluxtool://` / pending login BEFORE session-expiry early return** (bug: expired disk session skipped protocol login and left the gate up)
 
 ## Why this note exists
 
 2026-07-22: older installs could open `baripluxtool://` but stayed on the login gate because:
 1. RTDB rules blocked anonymous claim reads/writes
 2. New builds calling Worker `/claim-token` without a User-Agent hit Cloudflare **1010**
+3. Cold start with an expired/force-cleared session returned early in `InitializeLoginSystem` and never consumed the protocol token
