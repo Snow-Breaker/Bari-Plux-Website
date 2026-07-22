@@ -69,8 +69,13 @@
     "pending_tokens": {
       "$uid": {
         "$sessionId": {
-          ".read": "auth != null && auth.uid === $uid",
-          ".write": false
+          // Compat: older desktop builds claim via anonymous Firebase auth + RTDB read,
+          // then mark claimed. SessionId UUID is the capability; mint stays Worker-only.
+          ".read": "auth != null",
+          ".write": false,
+          "claimed": {
+            ".write": "auth != null && newData.isBoolean() && newData.val() === true && (!data.exists() || data.val() === false)"
+          }
         }
       }
     },

@@ -618,7 +618,7 @@
                         name: user.name || null,
                         email: user.email || fbUser.email || '',
                         photoURL: user.photoURL || fbUser.photoURL || null,
-                        allowedIp: clientIp
+                        allowedIp: null /* classic page: old apps fail IP bind when browser != desktop egress */
                     })
                 });
 
