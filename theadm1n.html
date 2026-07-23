@@ -331,6 +331,101 @@
             .cards-wrap { display: none !important; }
             .table-wrap table { display: table; }
         }
+
+        /* ===== Announcements / Mailbox studio ===== */
+        .ann-status {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 3px 10px; border-radius: 999px; font-size: 0.72rem; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 0.4px;
+        }
+        .ann-status.new { background: rgba(0,180,255,0.14); color: #5AC8FA; border: 1px solid rgba(0,180,255,0.28); }
+        .ann-status.update { background: rgba(48,209,88,0.14); color: #4AE072; border: 1px solid rgba(48,209,88,0.28); }
+        .ann-status.breaking { background: rgba(239,68,68,0.14); color: #F87171; border: 1px solid rgba(239,68,68,0.28); }
+        .ann-status.info { background: rgba(148,163,184,0.14); color: #94A3B8; border: 1px solid rgba(148,163,184,0.25); }
+        .ann-status.draft { background: rgba(255,152,0,0.12); color: #FFB74D; border: 1px solid rgba(255,152,0,0.25); }
+
+        .ann-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px;
+        }
+        .ann-card {
+            background: linear-gradient(165deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+            border: 1px solid var(--border); border-radius: 16px; padding: 16px 16px 14px;
+            position: relative; overflow: hidden; transition: border-color 0.2s, transform 0.2s, background 0.2s;
+        }
+        .ann-card:hover { border-color: var(--border2); transform: translateY(-2px); background: rgba(255,255,255,0.05); }
+        .ann-card::before {
+            content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+            background: var(--accent);
+        }
+        .ann-card.status-new::before { background: #00B4FF; }
+        .ann-card.status-update::before { background: #30D158; }
+        .ann-card.status-breaking::before { background: #EF4444; }
+        .ann-card.status-info::before { background: #94A3B8; }
+        .ann-card.unpublished { opacity: 0.72; }
+        .ann-card-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+        .ann-card-title { font-size: 1rem; font-weight: 650; line-height: 1.35; margin-bottom: 6px; }
+        .ann-card-desc {
+            font-size: 0.82rem; color: var(--muted); line-height: 1.55;
+            display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+            min-height: 3.8em;
+        }
+        .ann-card-meta { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border); }
+        .ann-card-date { font-size: 0.72rem; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+        .ann-card-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+
+        .mb-layout { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 16px; }
+        @media (max-width: 980px) { .mb-layout { grid-template-columns: 1fr; } }
+        .mb-panel {
+            background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 18px;
+        }
+        .mb-panel h3 {
+            font-size: 0.78rem; font-weight: 650; color: var(--accent); text-transform: uppercase;
+            letter-spacing: 0.5px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
+        }
+        .mb-field { margin-bottom: 12px; }
+        .mb-field label { display: block; font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.35px; margin-bottom: 5px; }
+        .mb-field input, .mb-field textarea, .mb-field select {
+            width: 100%; padding: 10px 12px; background: var(--surface2); border: 1px solid var(--border);
+            border-radius: 10px; color: var(--text); font-family: 'Poppins', sans-serif; font-size: 0.88rem;
+        }
+        .mb-field textarea { resize: vertical; min-height: 120px; line-height: 1.5; }
+        .mb-field input:focus, .mb-field textarea:focus, .mb-field select:focus {
+            outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(108,99,255,0.12);
+        }
+        .mb-user-suggest {
+            margin-top: 6px; max-height: 180px; overflow: auto; border: 1px solid var(--border);
+            border-radius: 10px; background: var(--bg2); display: none;
+        }
+        .mb-user-suggest.show { display: block; }
+        .mb-user-item {
+            padding: 9px 12px; cursor: pointer; border-bottom: 1px solid var(--border);
+            display: flex; flex-direction: column; gap: 2px;
+        }
+        .mb-user-item:last-child { border-bottom: none; }
+        .mb-user-item:hover { background: rgba(108,99,255,0.1); }
+        .mb-user-item strong { font-size: 0.85rem; }
+        .mb-user-item span { font-size: 0.72rem; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+        .mb-templates { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+        .mb-chip {
+            padding: 5px 10px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface2);
+            color: var(--muted); font-size: 0.72rem; cursor: pointer; font-family: 'Poppins', sans-serif;
+        }
+        .mb-chip:hover { color: var(--text); border-color: rgba(108,99,255,0.35); background: rgba(108,99,255,0.1); }
+        .mb-send-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 4px; }
+        .mb-outbox-item {
+            padding: 12px; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 8px;
+            background: rgba(255,255,255,0.02);
+        }
+        .mb-outbox-item .ttl { font-weight: 600; font-size: 0.88rem; margin-bottom: 4px; }
+        .mb-outbox-item .meta { font-size: 0.72rem; color: var(--muted); margin-bottom: 6px; }
+        .mb-outbox-item .body { font-size: 0.8rem; color: var(--muted); line-height: 1.45; white-space: pre-wrap; }
+        .ann-preview {
+            margin-top: 14px; padding: 14px; border-radius: 14px; border: 1px dashed var(--border2);
+            background: rgba(0,0,0,0.25);
+        }
+        .ann-preview-label { font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 8px; }
+        .filter-btns.ann-filters { margin-bottom: 14px; }
+
     </style>
 </head>
 <body>
@@ -654,6 +749,84 @@
             <div class="cards-wrap" id="featureFlagsCards"></div>
             <div class="last-updated" id="featureFlagsLastUpdated"></div>
         </div>
+
+        <div id="announcementsSection" style="display:none;">
+            <div class="stats-grid">
+                <div class="stat-card" style="animation-delay:0s"><div class="stat-icon total"><i class="fas fa-bullhorn"></i></div><div><div class="stat-num" id="annStatTotal">—</div><div class="stat-label">Total</div></div></div>
+                <div class="stat-card" style="animation-delay:0.05s"><div class="stat-icon" style="background:rgba(76,175,80,0.15);color:#4CAF50;"><i class="fas fa-eye"></i></div><div><div class="stat-num" id="annStatLive">—</div><div class="stat-label">Published</div></div></div>
+                <div class="stat-card" style="animation-delay:0.1s"><div class="stat-icon" style="background:rgba(255,152,0,0.15);color:#FF9800;"><i class="fas fa-file-alt"></i></div><div><div class="stat-num" id="annStatDraft">—</div><div class="stat-label">Drafts</div></div></div>
+                <div class="stat-card" style="animation-delay:0.15s"><div class="stat-icon" style="background:rgba(244,67,54,0.15);color:#F44336;"><i class="fas fa-bolt"></i></div><div><div class="stat-num" id="annStatBreaking">—</div><div class="stat-label">Breaking</div></div></div>
+            </div>
+            <div class="toolbar">
+                <span class="toolbar-title">Announcements <span id="annCountLabel" style="color:var(--muted);font-size:0.8rem;font-weight:400;"></span></span>
+                <button class="icon-btn teal" onclick="loadAnnouncementsAdmin()"><i class="fas fa-sync-alt"></i> Refresh</button>
+                <button class="icon-btn" style="background:var(--accent);color:#fff;border:none;" onclick="openAnnEditor()"><i class="fas fa-plus"></i> New</button>
+            </div>
+            <div class="filter-btns ann-filters" id="annFilters">
+                <button class="filter-btn active" data-annf="all" onclick="setAnnFilter('all', this)">All</button>
+                <button class="filter-btn" data-annf="live" onclick="setAnnFilter('live', this)">Published</button>
+                <button class="filter-btn" data-annf="draft" onclick="setAnnFilter('draft', this)">Drafts</button>
+                <button class="filter-btn" data-annf="breaking" onclick="setAnnFilter('breaking', this)">Breaking</button>
+                <button class="filter-btn" data-annf="update" onclick="setAnnFilter('update', this)">Updates</button>
+            </div>
+            <div id="annCards" class="ann-grid">
+                <div class="state-row" style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted);"><div class="state-icon">📣</div><div>Loading…</div></div>
+            </div>
+        </div>
+
+        <div id="mailboxSection" style="display:none;">
+            <div class="toolbar">
+                <span class="toolbar-title">Mailbox Studio</span>
+                <button class="icon-btn teal" onclick="renderMailboxOutbox()"><i class="fas fa-history"></i> Refresh outbox</button>
+            </div>
+            <div class="mb-layout">
+                <div class="mb-panel">
+                    <h3><i class="fas fa-paper-plane"></i> Compose personal message</h3>
+                    <div class="mb-templates">
+                        <button type="button" class="mb-chip" onclick="applyMbTemplate('welcome')">Welcome</button>
+                        <button type="button" class="mb-chip" onclick="applyMbTemplate('fix')">Issue fixed</button>
+                        <button type="button" class="mb-chip" onclick="applyMbTemplate('info')">Update notice</button>
+                        <button type="button" class="mb-chip" onclick="applyMbTemplate('thanks')">Thanks for report</button>
+                    </div>
+                    <div class="mb-field">
+                        <label>Find user</label>
+                        <input id="mbUserSearch" type="text" placeholder="Search name, email, or paste UID…" oninput="onMbUserSearch()" autocomplete="off">
+                        <div id="mbUserSuggest" class="mb-user-suggest"></div>
+                    </div>
+                    <div class="mb-field">
+                        <label>User ID</label>
+                        <input id="mbToUid" type="text" placeholder="Firebase uid">
+                    </div>
+                    <div class="mb-field">
+                        <label>Type</label>
+                        <select id="mbType">
+                            <option value="admin">Support</option>
+                            <option value="report_reply">Report reply</option>
+                            <option value="system">System</option>
+                        </select>
+                    </div>
+                    <div class="mb-field">
+                        <label>Title</label>
+                        <input id="mbTitle" type="text" maxlength="120" placeholder="Message title">
+                    </div>
+                    <div class="mb-field">
+                        <label>Body</label>
+                        <textarea id="mbBody" rows="7" placeholder="Personal message the user will see in the app Mailbox…"></textarea>
+                    </div>
+                    <div class="mb-send-row">
+                        <button class="icon-btn" style="background:var(--accent);color:#fff;border:none;" onclick="sendMailboxFromTab()"><i class="fas fa-paper-plane"></i> Send to Mailbox</button>
+                        <span style="font-size:0.75rem;color:var(--muted);">Also available from user profile &amp; bug reports.</span>
+                    </div>
+                </div>
+                <div class="mb-panel">
+                    <h3><i class="fas fa-inbox"></i> Recent outbox <span id="mbOutboxCount" style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;"></span></h3>
+                    <div id="mbOutboxList">
+                        <div style="color:var(--muted);font-size:0.82rem;padding:12px 0;">Sent messages from this browser appear here.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 
@@ -666,26 +839,6 @@
     <div class="preview-counter" id="imgPreviewCounter"></div>
     <button class="preview-btn preview-download" onclick="downloadPreview()"><i class="fas fa-download"></i></button>
 </div>
-
-
-        <div id="announcementsSection" style="display:none;">
-            <div class="toolbar">
-                <span class="toolbar-title">Announcements <span id="annCountLabel" style="color:var(--muted);font-size:0.8rem;font-weight:400;"></span></span>
-                <button class="icon-btn teal" onclick="loadAnnouncementsAdmin()"><i class="fas fa-sync-alt"></i> Refresh</button>
-                <button class="icon-btn" style="background:var(--accent);color:#fff;border:none;" onclick="openAnnEditor()"><i class="fas fa-plus"></i> New</button>
-            </div>
-            <div class="table-wrap">
-                <table>
-                    <thead><tr><th>Title</th><th>Status</th><th>Published</th><th>Date</th><th></th></tr></thead>
-                    <tbody id="annTableBody"><tr class="state-row"><td colspan="5"><div class="state-icon">📣</div><div>Loading…</div></td></tr></tbody>
-                </table>
-            </div>
-        </div>
-
-        <div id="mailboxSection" style="display:none;">
-            <div class="toolbar">
-                <span class="toolbar-title">Send Mailbox Message</span>
-            </div>
             <div class="table-wrap" style="padding:18px;">
                 <div class="modal-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
                     <div class="field" style="grid-column:1/-1;">
@@ -709,17 +862,18 @@
         </div>
 
 
+
 <!-- ANNOUNCEMENT EDITOR -->
 <div class="modal-overlay" id="annModal" onclick="if(event.target===this)closeAnnEditor()">
-    <div class="modal-box" style="max-width:560px;">
+    <div class="modal-box" style="max-width:620px;">
         <button class="modal-close" onclick="closeAnnEditor()"><i class="fas fa-times"></i></button>
-        <h2 style="margin:0 0 16px;font-size:1.1rem;"><i class="fas fa-bullhorn"></i> <span id="annModalTitle">New Announcement</span></h2>
+        <h2 style="margin:0 0 16px;font-size:1.1rem;"><i class="fas fa-bullhorn" style="color:var(--accent);"></i> <span id="annModalTitle">New Announcement</span></h2>
         <input type="hidden" id="annEditKey">
-        <div class="modal-grid" style="display:grid;gap:12px;">
-            <div class="field"><span class="label">Title</span><input id="annTitle" class="search-input" style="width:100%;" maxlength="120"></div>
-            <div class="field"><span class="label">Description</span><textarea id="annDesc" rows="5" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:10px;"></textarea></div>
+        <div class="modal-grid" style="display:grid;gap:12px;grid-template-columns:1fr 1fr;">
+            <div class="field" style="grid-column:1/-1;"><span class="label">Title</span><input id="annTitle" class="search-input" style="width:100%;" maxlength="120" oninput="refreshAnnPreview()"></div>
+            <div class="field" style="grid-column:1/-1;"><span class="label">Description</span><textarea id="annDesc" rows="5" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:10px;font-family:Poppins,sans-serif;" oninput="refreshAnnPreview()"></textarea></div>
             <div class="field"><span class="label">Status</span>
-                <select id="annStatus" style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:8px;border-radius:8px;">
+                <select id="annStatus" style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:8px;border-radius:8px;" onchange="refreshAnnPreview()">
                     <option value="new">New</option>
                     <option value="update">Update</option>
                     <option value="breaking">Breaking</option>
@@ -727,7 +881,15 @@
                 </select>
             </div>
             <div class="field"><span class="label">Published</span>
-                <label style="display:flex;align-items:center;gap:8px;color:var(--text);"><input type="checkbox" id="annPublished" checked> Visible in app</label>
+                <label style="display:flex;align-items:center;gap:8px;color:var(--text);height:38px;"><input type="checkbox" id="annPublished" checked onchange="refreshAnnPreview()"> Visible in app</label>
+            </div>
+        </div>
+        <div class="ann-preview">
+            <div class="ann-preview-label">App card preview</div>
+            <div id="annPreviewCard" class="ann-card status-new" style="margin:0;">
+                <div class="ann-card-top"><span class="ann-status new" id="annPreviewStatus">New</span><span class="ann-card-date" id="annPreviewDate">Today</span></div>
+                <div class="ann-card-title" id="annPreviewTitle">Title</div>
+                <div class="ann-card-desc" id="annPreviewDesc" style="-webkit-line-clamp:4;">Description</div>
             </div>
         </div>
         <div style="margin-top:16px;display:flex;gap:8px;justify-content:flex-end;">
@@ -1926,10 +2088,15 @@ function openReportModal(key) {
     acts+=`<button class="action-btn del" onclick="deleteReport('${r.firebaseKey}')">🗑️ Delete Report</button>`;
     const signedInReply=r.isLoggedIn&&r.userAccount&&r.userAccount.id&&!r.userAccount.note;
     acts+=`<div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);width:100%;">
-      <div style="font-size:0.78rem;color:var(--muted);margin-bottom:6px;"><i class="fas fa-reply"></i> Reply to Mailbox</div>
-      <textarea id="rmReplyBody" rows="3" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:8px;font-family:Poppins,sans-serif;" placeholder="${signedInReply?'Write a personal reply…':'Reporter was not signed in — mailbox reply unavailable'}" ${signedInReply?'':'disabled'}></textarea>
-      <button class="action-btn view" style="margin-top:8px;" ${signedInReply?'':'disabled'} onclick="replyReportMailbox('${r.firebaseKey}')">📨 Send Reply</button>
-      ${r.adminReply&&r.adminReply.body?`<div style="margin-top:10px;font-size:0.8rem;color:var(--muted);">Last reply: ${esc(r.adminReply.body).slice(0,180)}</div>`:''}
+      <div style="font-size:0.78rem;color:var(--muted);margin-bottom:8px;"><i class="fas fa-reply"></i> Reply to Mailbox</div>
+      <div class="mb-templates" style="margin-bottom:8px;">
+        <button type="button" class="mb-chip" ${signedInReply?'':'disabled'} onclick="applyReportReplyTemplate('looking')">Looking into it</button>
+        <button type="button" class="mb-chip" ${signedInReply?'':'disabled'} onclick="applyReportReplyTemplate('fixed')">Fixed</button>
+        <button type="button" class="mb-chip" ${signedInReply?'':'disabled'} onclick="applyReportReplyTemplate('needmore')">Need more info</button>
+      </div>
+      <textarea id="rmReplyBody" rows="4" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:8px;font-family:Poppins,sans-serif;" placeholder="${signedInReply?'Write a personal reply…':'Reporter was not signed in — mailbox reply unavailable'}" ${signedInReply?'':'disabled'}></textarea>
+      <button class="action-btn view" style="margin-top:8px;" ${signedInReply?'':'disabled'} onclick="replyReportMailbox('${r.firebaseKey}')"><i class="fas fa-paper-plane"></i> Send Reply</button>
+      ${r.adminReply&&r.adminReply.body?`<div style="margin-top:10px;padding:10px;border-radius:10px;background:rgba(0,191,166,0.08);border:1px solid rgba(0,191,166,0.2);font-size:0.8rem;color:var(--muted);"><strong style="color:var(--accent2);">Last reply</strong><div style="margin-top:4px;">${esc(r.adminReply.body).slice(0,280)}</div></div>`:''}
     </div>`;
     actDiv.innerHTML=acts;
 
@@ -2146,6 +2313,7 @@ function switchTab(tab, btn) {
     if(tab==='chatMod') loadChatMod();
     if(tab==='featureFlags') loadFeatureFlags();
     if(tab==='announcements') loadAnnouncementsAdmin();
+    if(tab==='mailbox'){ if(typeof allUsers!=='undefined' && (!allUsers||!allUsers.length) && typeof loadUsers==='function'){/* optional */} renderMailboxOutbox(); }
 }
 
 function fmtTs(ts) {
@@ -2394,14 +2562,86 @@ firebase.auth().onAuthStateChanged(user => {
 });
 </script>
 
+
 <script>
 /* ===== Announcements + Mailbox (admin) ===== */
 let allAnnouncementsAdmin = [];
+let annFilter = 'all';
+const MB_OUTBOX_KEY = 'bari_admin_mailbox_outbox_v1';
+
+function annStatusPill(status, published) {
+    if (!published) return '<span class="ann-status draft">Draft</span>';
+    const s = (status || 'info').toLowerCase();
+    const label = s.charAt(0).toUpperCase() + s.slice(1);
+    return `<span class="ann-status ${esc(s)}">${esc(label)}</span>`;
+}
+
+function updateAnnStats() {
+    const total = allAnnouncementsAdmin.length;
+    const live = allAnnouncementsAdmin.filter(a => a.published).length;
+    const draft = total - live;
+    const breaking = allAnnouncementsAdmin.filter(a => a.published && a.status === 'breaking').length;
+    const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = String(v); };
+    set('annStatTotal', total);
+    set('annStatLive', live);
+    set('annStatDraft', draft);
+    set('annStatBreaking', breaking);
+}
+
+function setAnnFilter(f, btn) {
+    annFilter = f;
+    document.querySelectorAll('#annFilters .filter-btn').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    renderAnnouncementsAdmin();
+}
+
+function filteredAnnouncements() {
+    return allAnnouncementsAdmin.filter(a => {
+        if (annFilter === 'live') return a.published;
+        if (annFilter === 'draft') return !a.published;
+        if (annFilter === 'breaking') return a.status === 'breaking';
+        if (annFilter === 'update') return a.status === 'update';
+        return true;
+    });
+}
+
+function renderAnnouncementsAdmin() {
+    const wrap = document.getElementById('annCards');
+    if (!wrap) return;
+    const list = filteredAnnouncements();
+    document.getElementById('annCountLabel').textContent = '(' + list.length + (annFilter !== 'all' ? ' filtered' : '') + ')';
+    updateAnnStats();
+    if (!allAnnouncementsAdmin.length) {
+        wrap.innerHTML = '<div class="state-row" style="grid-column:1/-1;text-align:center;padding:48px;color:var(--muted);"><div class="state-icon">📣</div><div>No announcements yet — create the first one.</div></div>';
+        return;
+    }
+    if (!list.length) {
+        wrap.innerHTML = '<div class="state-row" style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted);"><div>No matches for this filter.</div></div>';
+        return;
+    }
+    wrap.innerHTML = list.map(a => `
+        <div class="ann-card status-${esc(a.status||'info')} ${a.published?'':'unpublished'}">
+            <div class="ann-card-top">
+                ${annStatusPill(a.status, a.published)}
+                <span class="ann-card-date">${esc(a.date || fmtTs(a.timestamp))}</span>
+            </div>
+            <div class="ann-card-title">${esc(a.title)}</div>
+            <div class="ann-card-desc">${esc(a.description)}</div>
+            <div class="ann-card-meta">
+                <span style="font-size:0.72rem;color:var(--muted);">${a.published ? 'Live in app' : 'Hidden draft'}</span>
+                <div class="ann-card-actions">
+                    <button class="action-btn view" onclick="toggleAnnPublish('${a.key}', ${a.published? 'false':'true'})">${a.published?'Unpublish':'Publish'}</button>
+                    <button class="action-btn view" onclick="openAnnEditor('${a.key}')">Edit</button>
+                    <button class="action-btn del" onclick="deleteAnnouncement('${a.key}')">Delete</button>
+                </div>
+            </div>
+        </div>`).join('');
+}
 
 async function loadAnnouncementsAdmin() {
     if (!db) return;
-    const body = document.getElementById('annTableBody');
-    body.innerHTML = '<tr class="state-row"><td colspan="5"><div class="state-icon">⏳</div><div>Loading…</div></td></tr>';
+    const wrap = document.getElementById('annCards');
+    if (wrap) wrap.innerHTML = '<div class="state-row" style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted);"><div class="state-icon">⏳</div><div>Loading…</div></div>';
     try {
         const snap = await db.ref('announcements').once('value');
         const data = snap.val() || {};
@@ -2414,24 +2654,28 @@ async function loadAnnouncementsAdmin() {
             date: a.date || '',
             timestamp: a.timestamp || 0
         })).sort((a,b) => (b.timestamp||0)-(a.timestamp||0));
-        document.getElementById('annCountLabel').textContent = '(' + allAnnouncementsAdmin.length + ')';
-        if (!allAnnouncementsAdmin.length) {
-            body.innerHTML = '<tr class="state-row"><td colspan="5"><div class="state-icon">📣</div><div>No announcements yet</div></td></tr>';
-            return;
-        }
-        body.innerHTML = allAnnouncementsAdmin.map(a => `<tr>
-            <td><strong>${esc(a.title)}</strong><div style="font-size:0.75rem;color:var(--muted);max-width:360px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(a.description)}</div></td>
-            <td>${esc(a.status)}</td>
-            <td>${a.published?'✅':'—'}</td>
-            <td>${esc(a.date||fmtTs(a.timestamp))}</td>
-            <td style="white-space:nowrap;">
-                <button class="action-btn view" onclick="openAnnEditor('${a.key}')">Edit</button>
-                <button class="action-btn del" onclick="deleteAnnouncement('${a.key}')">Delete</button>
-            </td>
-        </tr>`).join('');
+        renderAnnouncementsAdmin();
     } catch (e) {
-        body.innerHTML = `<tr class="state-row"><td colspan="5"><div class="state-icon">⚠️</div><div>${esc(e.message)}</div></td></tr>`;
+        if (wrap) wrap.innerHTML = `<div class="state-row" style="grid-column:1/-1;text-align:center;padding:40px;color:var(--danger);"><div class="state-icon">⚠️</div><div>${esc(e.message)}</div></div>`;
     }
+}
+
+function refreshAnnPreview() {
+    const title = document.getElementById('annTitle')?.value?.trim() || 'Title';
+    const desc = document.getElementById('annDesc')?.value?.trim() || 'Description';
+    const status = document.getElementById('annStatus')?.value || 'new';
+    const published = document.getElementById('annPublished')?.checked;
+    const card = document.getElementById('annPreviewCard');
+    const st = document.getElementById('annPreviewStatus');
+    if (!card) return;
+    card.className = 'ann-card status-' + status + (published ? '' : ' unpublished');
+    if (st) {
+        st.className = 'ann-status ' + (published ? status : 'draft');
+        st.textContent = published ? (status.charAt(0).toUpperCase()+status.slice(1)) : 'Draft';
+    }
+    const t = document.getElementById('annPreviewTitle'); if (t) t.textContent = title;
+    const d = document.getElementById('annPreviewDesc'); if (d) d.textContent = desc;
+    const dt = document.getElementById('annPreviewDate'); if (dt) dt.textContent = new Date().toISOString().slice(0,10);
 }
 
 function openAnnEditor(key) {
@@ -2442,6 +2686,7 @@ function openAnnEditor(key) {
     document.getElementById('annDesc').value = a ? a.description : '';
     document.getElementById('annStatus').value = a ? a.status : 'new';
     document.getElementById('annPublished').checked = a ? !!a.published : true;
+    refreshAnnPreview();
     document.getElementById('annModal').classList.add('show');
     document.body.style.overflow = 'hidden';
 }
@@ -2473,11 +2718,23 @@ async function saveAnnouncement() {
     };
     try {
         await db.ref('announcements/' + key).set(payload);
-        showToast('✅ Announcement saved', 'success');
+        showToast('Announcement saved', 'success');
         closeAnnEditor();
         loadAnnouncementsAdmin();
     } catch (e) {
-        showToast('⚠️ ' + e.message, 'danger');
+        showToast(e.message, 'danger');
+    }
+}
+
+async function toggleAnnPublish(key, next) {
+    if (!db) return;
+    try {
+        await db.ref('announcements/' + key + '/published').set(next === true || next === 'true');
+        await db.ref('announcements/' + key + '/updatedAt').set(Date.now());
+        showToast(next === true || next === 'true' ? 'Published' : 'Unpublished', 'success');
+        loadAnnouncementsAdmin();
+    } catch (e) {
+        showToast(e.message, 'danger');
     }
 }
 
@@ -2488,7 +2745,7 @@ async function deleteAnnouncement(key) {
         showToast('Deleted', 'success');
         loadAnnouncementsAdmin();
     } catch (e) {
-        showToast('⚠️ ' + e.message, 'danger');
+        showToast(e.message, 'danger');
     }
 }
 
@@ -2496,8 +2753,84 @@ function composeMailboxTo(uid, name) {
     const mbBtn=[...document.querySelectorAll('.tab-btn')].find(b=>b.textContent.includes('Mailbox'));
     if(mbBtn) switchTab('mailbox', mbBtn);
     document.getElementById('mbToUid').value = uid || '';
+    document.getElementById('mbUserSearch').value = name || uid || '';
     document.getElementById('mbTitle').value = name ? ('Message for ' + name) : '';
+    document.getElementById('mbType').value = 'admin';
     document.getElementById('mbBody').focus();
+}
+
+function onMbUserSearch() {
+    const q = (document.getElementById('mbUserSearch').value || '').trim().toLowerCase();
+    const box = document.getElementById('mbUserSuggest');
+    if (!box) return;
+    if (!q || q.length < 2) { box.classList.remove('show'); box.innerHTML=''; return; }
+    const hits = (allUsers || []).filter(u => {
+        const name = (u.name || '').toLowerCase();
+        const email = (u.email || '').toLowerCase();
+        const id = (u.id || '').toLowerCase();
+        return name.includes(q) || email.includes(q) || id.includes(q);
+    }).slice(0, 8);
+    if (!hits.length) {
+        box.innerHTML = '<div class="mb-user-item"><strong>No users found</strong><span>Paste a UID manually below</span></div>';
+        box.classList.add('show');
+        return;
+    }
+    box.innerHTML = hits.map(u => `
+        <div class="mb-user-item" onclick="pickMbUser('${esc(u.id)}','${esc(u.name||'')}','${esc(u.email||'')}')">
+            <strong>${esc(u.name || 'User')}</strong>
+            <span>${esc(u.email || '')} · ${esc(u.id)}</span>
+        </div>`).join('');
+    box.classList.add('show');
+}
+
+function pickMbUser(uid, name, email) {
+    document.getElementById('mbToUid').value = uid;
+    document.getElementById('mbUserSearch').value = name || email || uid;
+    document.getElementById('mbUserSuggest').classList.remove('show');
+    if (!document.getElementById('mbTitle').value.trim() && name)
+        document.getElementById('mbTitle').value = 'Message for ' + name;
+}
+
+function applyMbTemplate(kind) {
+    const map = {
+        welcome: { title: 'Welcome to Bari Plux', body: 'Thanks for joining Bari Plux Tool.\nIf you need help, reply from Contact or send a bug report — we read every message.' },
+        fix: { title: 'Your issue was fixed', body: 'We fixed the issue you reported.\nPlease update/restart the app and try again. If anything is still wrong, reply here or open a new report.' },
+        info: { title: 'Important update', body: 'A new update is available for Bari Plux Tool.\nOpen the app to sync announcements and get the latest improvements.' },
+        thanks: { title: 'Thanks for your report', body: 'Thanks for the detailed report — it helps a lot.\nWe are looking into it and will update you here when there is news.' }
+    };
+    const t = map[kind]; if (!t) return;
+    document.getElementById('mbTitle').value = t.title;
+    document.getElementById('mbBody').value = t.body;
+}
+
+function loadMbOutbox() {
+    try { return JSON.parse(localStorage.getItem(MB_OUTBOX_KEY) || '[]'); } catch { return []; }
+}
+function saveMbOutbox(list) {
+    localStorage.setItem(MB_OUTBOX_KEY, JSON.stringify(list.slice(0, 40)));
+}
+function pushMbOutbox(entry) {
+    const list = loadMbOutbox();
+    list.unshift(entry);
+    saveMbOutbox(list);
+    renderMailboxOutbox();
+}
+function renderMailboxOutbox() {
+    const list = loadMbOutbox();
+    const el = document.getElementById('mbOutboxList');
+    const cnt = document.getElementById('mbOutboxCount');
+    if (cnt) cnt.textContent = list.length ? `(${list.length})` : '';
+    if (!el) return;
+    if (!list.length) {
+        el.innerHTML = '<div style="color:var(--muted);font-size:0.82rem;padding:12px 0;">No messages sent from this browser yet.</div>';
+        return;
+    }
+    el.innerHTML = list.map(m => `
+        <div class="mb-outbox-item">
+            <div class="ttl">${esc(m.title)}</div>
+            <div class="meta">${esc(m.type||'admin')} → ${esc(m.name||m.uid)} · ${esc(fmtTs(m.at))}</div>
+            <div class="body">${esc((m.body||'').slice(0,220))}${(m.body||'').length>220?'…':''}</div>
+        </div>`).join('');
 }
 
 async function sendMailboxMessage(uid, title, body, type, relatedReportKey, relatedReportId) {
@@ -2524,11 +2857,14 @@ async function sendMailboxFromTab() {
         const uid = document.getElementById('mbToUid').value.trim();
         const title = document.getElementById('mbTitle').value.trim();
         const body = document.getElementById('mbBody').value.trim();
-        await sendMailboxMessage(uid, title, body, 'admin');
-        showToast('📨 Mailbox message sent', 'success');
+        const type = document.getElementById('mbType').value || 'admin';
+        await sendMailboxMessage(uid, title, body, type);
+        const name = (document.getElementById('mbUserSearch').value || '').trim();
+        pushMbOutbox({ uid, name, title, body, type, at: Date.now() });
+        showToast('Mailbox message sent', 'success');
         document.getElementById('mbBody').value = '';
     } catch (e) {
-        showToast('⚠️ ' + e.message, 'danger');
+        showToast(e.message, 'danger');
     }
 }
 
@@ -2556,14 +2892,34 @@ async function replyReportMailbox(reportKey) {
         });
         await db.ref('bugReports/' + reportKey + '/repliedAt').set(Date.now());
         if (r.status === 'new') await updateStatus(reportKey, 'reviewed');
-        showToast('📨 Reply sent to Mailbox', 'success');
+        pushMbOutbox({
+            uid,
+            name: (r.userAccount && (r.userAccount.name || r.userAccount.email)) || uid,
+            title: 'Reply to your report ' + (r.id || ''),
+            body,
+            type: 'report_reply',
+            at: Date.now()
+        });
+        showToast('Reply sent to Mailbox', 'success');
         closeReportModal();
         loadReports();
     } catch (e) {
-        showToast('⚠️ ' + e.message, 'danger');
+        showToast(e.message, 'danger');
     }
 }
+
+function applyReportReplyTemplate(kind) {
+    const ta = document.getElementById('rmReplyBody');
+    if (!ta || ta.disabled) return;
+    const map = {
+        looking: 'Thanks for the report — we are looking into this and will update you here.',
+        fixed: 'This should now be fixed. Please restart the app and try again. Reply if it still happens.',
+        needmore: 'Thanks! Could you share a bit more detail (steps, screenshots, and when it started) so we can reproduce it?'
+    };
+    if (map[kind]) ta.value = map[kind];
+}
 </script>
+
 
 </body>
 </html>
