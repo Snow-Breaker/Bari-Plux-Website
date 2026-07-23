@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- Desktop fallback only. Canonical source: Bari-Plux-Website / Firebase Hosting. See docs/adr/0004-website-html-ownership.md -->
 <html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
@@ -697,7 +698,7 @@
                     <div style="color:var(--muted);font-size:0.9rem;margin-bottom:24px;">
                         Click the button below to launch the app and complete sign-in.
                     </div>
-                    <a href="baripluxtool://login?token=${base64Claim}${secretParam}"
+                    <a href="baripluxtool23://login?token=${base64Claim}${secretParam}"
                        id="openAppBtn"
                        style="display:inline-block;padding:14px 32px;background:var(--accent);
                               color:white;border-radius:12px;font-weight:600;font-size:1rem;
@@ -705,7 +706,7 @@
                         🚀 Open Bari Plux App
                     </a>
                     <br>
-                    <a href="bptv2://login?token=${base64Claim}${secretParam}"
+                    <a href="bptv223://login?token=${base64Claim}${secretParam}"
                        style="font-size:0.8rem;color:var(--muted);margin-top:8px;display:inline-block;">
                         Try alternate link
                     </a>
@@ -786,7 +787,7 @@
                         Make sure Bari Plux is installed and running.
                     </span>
                     <br><br>
-                    <button onclick="navigator.clipboard.writeText('BPTV2_LOGIN:${base64Claim}').then(()=>this.textContent='✅ Copied!')"
+                    <button onclick="navigator.clipboard.writeText('BPT23_LOGIN:${base64Claim}').then(()=>this.textContent='✅ Copied!')"
                         style="padding:8px 18px;background:var(--glass-bg);color:var(--text);
                                border:1px solid var(--glass-border);border-radius:8px;
                                cursor:pointer;font-family:'Poppins',sans-serif;
@@ -1140,7 +1141,7 @@
                         const { claimToken, claimSecret } = result;
                         const base64Claim = btoa(claimToken);
                         localStorage.setItem('bariplux_login_token',
-                            'BPTV2_LOGIN:' + base64Claim);
+                            'BPT23_LOGIN:' + base64Claim);
                         if (claimSecret) localStorage.setItem('bariplux_login_secret', claimSecret);
 
                         if (tokenSection) {
@@ -1499,12 +1500,29 @@
         });
 
         // ==================== OPEN APP ====================
+        function tryProtocolUrls(base64Claim) {
+            const secretParam = currentClaimSecret ? ('&secret=' + encodeURIComponent(currentClaimSecret)) : '';
+            const appUrls = [
+                'baripluxtool23://login?token=' + base64Claim + secretParam,
+                'bptv223://login?token=' + base64Claim + secretParam
+            ];
+            let tried = 0;
+            const tick = function () {
+                if (tried >= appUrls.length) return;
+                try {
+                    window.location.href = appUrls[tried++];
+                } catch (e) {}
+                if (tried < appUrls.length) setTimeout(tick, 400);
+            };
+            tick();
+        }
+
         function handleOpenApp() {
             const storedUser = localStorage.getItem('bariplux_user');
             if (!storedUser) { showNotification('Please login first!', 'error'); return; }
             const loginToken = localStorage.getItem('bariplux_login_token');
             if (!loginToken) { showNotification('No login token available', 'error'); return; }
-            const parts = loginToken.split(':BPTV2_LOGIN:');
+            const parts = loginToken.split(':BPT23_LOGIN:');
             const base64Claim = parts.length > 1 ? parts[1] : loginToken;
             currentClaimSecret = localStorage.getItem('bariplux_login_secret') || currentClaimSecret || '';
             tryProtocolUrls(base64Claim);
@@ -1549,8 +1567,8 @@
                     if (statusEl) {
                         statusEl.innerHTML =
                             '<div style="font-size:0.85rem;color:var(--warning);">⏱️ Could not verify connection. ' +
-                            'Token copied! Paste it in the app: <code style="display:block;margin-top:4px;padding:6px;background:rgba(0,0,0,0.3);border-radius:4px;word-break:break-all;">BPTV2_LOGIN:' + base64Claim + '</code></div>' +
-                            '<button onclick="navigator.clipboard.writeText(\'BPTV2_LOGIN:' + base64Claim.replace(/'/g, "\\'") + '\')" style="margin-top:8px;padding:6px 14px;background:var(--accent-2);color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.85rem;"><i class="fas fa-copy"></i> Copy Token</button>';
+                            'Token copied! Paste it in the app: <code style="display:block;margin-top:4px;padding:6px;background:rgba(0,0,0,0.3);border-radius:4px;word-break:break-all;">BPT23_LOGIN:' + base64Claim + '</code></div>' +
+                            '<button onclick="navigator.clipboard.writeText(\'BPT23_LOGIN:' + base64Claim.replace(/'/g, "\\'") + '\')" style="margin-top:8px;padding:6px 14px;background:var(--accent-2);color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.85rem;"><i class="fas fa-copy"></i> Copy Token</button>';
                     }
                     btn.disabled = false;
                     return;
@@ -1581,7 +1599,7 @@
                                 '<div style="font-size:0.85rem;color:var(--warning);">⏱️ The app did not respond. Try again or copy the token manually.</div>' +
                                 '<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;">' +
                                     '<button onclick="this.closest(\'#appTokenSection\')?.querySelector(\'#openAppBtn\')?.click()" style="padding:6px 14px;background:var(--accent);color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.85rem;"><i class="fas fa-redo"></i> Retry</button>' +
-                                    '<button onclick="navigator.clipboard.writeText(\'BPTV2_LOGION:' + base64Claim.replace(/'/g, "\\'") + '\').then(()=>showNotification(\'Token copied!\',\'success\'))" style="padding:6px 14px;background:var(--accent-2);color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.85rem;"><i class="fas fa-copy"></i> Copy Token</button>' +
+                                    '<button onclick="navigator.clipboard.writeText(\'BPT23_LOGIN:' + base64Claim.replace(/'/g, "\\'") + '\').then(()=>showNotification(\'Token copied!\',\'success\'))" style="padding:6px 14px;background:var(--accent-2);color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.85rem;"><i class="fas fa-copy"></i> Copy Token</button>' +
                                 '</div>';
                         }
                         btn.disabled = false;
