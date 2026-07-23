@@ -398,6 +398,12 @@
                 <i class="fas fa-comments"></i> Chat Mod
                 <span class="tab-badge" id="chatModBadge"></span>
             </button>
+            <button class="tab-btn" onclick="switchTab('announcements', this)">
+                <i class="fas fa-bullhorn"></i> Announcements
+            </button>
+            <button class="tab-btn" onclick="switchTab('mailbox', this)">
+                <i class="fas fa-envelope"></i> Mailbox
+            </button>
             <button class="tab-btn" onclick="switchTab('featureFlags', this)">
                 <i class="fas fa-flag"></i> Feature Flags
             </button>
@@ -659,6 +665,76 @@
     <button class="preview-btn preview-nav next" id="previewNextBtn" onclick="nextImage()"><i class="fas fa-chevron-right"></i></button>
     <div class="preview-counter" id="imgPreviewCounter"></div>
     <button class="preview-btn preview-download" onclick="downloadPreview()"><i class="fas fa-download"></i></button>
+</div>
+
+
+        <div id="announcementsSection" style="display:none;">
+            <div class="toolbar">
+                <span class="toolbar-title">Announcements <span id="annCountLabel" style="color:var(--muted);font-size:0.8rem;font-weight:400;"></span></span>
+                <button class="icon-btn teal" onclick="loadAnnouncementsAdmin()"><i class="fas fa-sync-alt"></i> Refresh</button>
+                <button class="icon-btn" style="background:var(--accent);color:#fff;border:none;" onclick="openAnnEditor()"><i class="fas fa-plus"></i> New</button>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Title</th><th>Status</th><th>Published</th><th>Date</th><th></th></tr></thead>
+                    <tbody id="annTableBody"><tr class="state-row"><td colspan="5"><div class="state-icon">📣</div><div>Loading…</div></td></tr></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="mailboxSection" style="display:none;">
+            <div class="toolbar">
+                <span class="toolbar-title">Send Mailbox Message</span>
+            </div>
+            <div class="table-wrap" style="padding:18px;">
+                <div class="modal-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                    <div class="field" style="grid-column:1/-1;">
+                        <span class="label">User ID (Firebase uid)</span>
+                        <input id="mbToUid" type="text" class="search-input" style="width:100%;" placeholder="Paste user id…">
+                    </div>
+                    <div class="field" style="grid-column:1/-1;">
+                        <span class="label">Title</span>
+                        <input id="mbTitle" type="text" class="search-input" style="width:100%;" maxlength="120" placeholder="Message title">
+                    </div>
+                    <div class="field" style="grid-column:1/-1;">
+                        <span class="label">Body</span>
+                        <textarea id="mbBody" rows="6" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:10px;font-family:Poppins,sans-serif;" placeholder="Personal message to the user…"></textarea>
+                    </div>
+                </div>
+                <div style="margin-top:14px;display:flex;gap:8px;">
+                    <button class="icon-btn" style="background:var(--accent);color:#fff;border:none;" onclick="sendMailboxFromTab()"><i class="fas fa-paper-plane"></i> Send</button>
+                </div>
+                <p style="margin-top:12px;color:var(--muted);font-size:0.8rem;">Tip: from a Bug Report you can also reply directly — it lands in the same Mailbox.</p>
+            </div>
+        </div>
+
+
+<!-- ANNOUNCEMENT EDITOR -->
+<div class="modal-overlay" id="annModal" onclick="if(event.target===this)closeAnnEditor()">
+    <div class="modal-box" style="max-width:560px;">
+        <button class="modal-close" onclick="closeAnnEditor()"><i class="fas fa-times"></i></button>
+        <h2 style="margin:0 0 16px;font-size:1.1rem;"><i class="fas fa-bullhorn"></i> <span id="annModalTitle">New Announcement</span></h2>
+        <input type="hidden" id="annEditKey">
+        <div class="modal-grid" style="display:grid;gap:12px;">
+            <div class="field"><span class="label">Title</span><input id="annTitle" class="search-input" style="width:100%;" maxlength="120"></div>
+            <div class="field"><span class="label">Description</span><textarea id="annDesc" rows="5" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:10px;"></textarea></div>
+            <div class="field"><span class="label">Status</span>
+                <select id="annStatus" style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:8px;border-radius:8px;">
+                    <option value="new">New</option>
+                    <option value="update">Update</option>
+                    <option value="breaking">Breaking</option>
+                    <option value="info">Info</option>
+                </select>
+            </div>
+            <div class="field"><span class="label">Published</span>
+                <label style="display:flex;align-items:center;gap:8px;color:var(--text);"><input type="checkbox" id="annPublished" checked> Visible in app</label>
+            </div>
+        </div>
+        <div style="margin-top:16px;display:flex;gap:8px;justify-content:flex-end;">
+            <button class="icon-btn" onclick="closeAnnEditor()">Cancel</button>
+            <button class="icon-btn" style="background:var(--accent);color:#fff;border:none;" onclick="saveAnnouncement()"><i class="fas fa-save"></i> Save</button>
+        </div>
+    </div>
 </div>
 
 <!-- USER DETAILS MODAL -->
@@ -1465,6 +1541,7 @@ function openUserModal(id) {
 function renderDangerBtns(u) {
     const div = document.getElementById('dangerBtns');
     let html = '';
+    html += `<button class="danger-btn force-logout" onclick="composeMailboxTo('${esc(u.id)}','${esc(u.name)}')"><i class="fas fa-envelope"></i> Send Mailbox</button>`;
     if(u.blocked) html += `<button class="danger-btn unblock" onclick="askConfirm('unblock','${esc(u.id)}','${esc(u.name)}')"><i class="fas fa-unlock"></i> Unblock</button>`;
     else html += `<button class="danger-btn block" onclick="askConfirm('block','${esc(u.id)}','${esc(u.name)}')"><i class="fas fa-ban"></i> Block</button>`;
     html += `<button class="danger-btn force-logout" onclick="askConfirm('forceLogout','${esc(u.id)}','${esc(u.name)}')"><i class="fas fa-sign-out-alt"></i> Force Logout</button>`;
@@ -1847,6 +1924,13 @@ function openReportModal(key) {
     if(r.status==='new') acts=`<button class="action-btn review" onclick="updateStatus('${r.firebaseKey}','reviewed')">👁️ Mark Reviewed</button><button class="action-btn resolve" onclick="updateStatus('${r.firebaseKey}','resolved')">✅ Mark Resolved</button>`;
     else if(r.status==='reviewed') acts=`<button class="action-btn resolve" onclick="updateStatus('${r.firebaseKey}','resolved')">✅ Mark Resolved</button>`;
     acts+=`<button class="action-btn del" onclick="deleteReport('${r.firebaseKey}')">🗑️ Delete Report</button>`;
+    const signedInReply=r.isLoggedIn&&r.userAccount&&r.userAccount.id&&!r.userAccount.note;
+    acts+=`<div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);width:100%;">
+      <div style="font-size:0.78rem;color:var(--muted);margin-bottom:6px;"><i class="fas fa-reply"></i> Reply to Mailbox</div>
+      <textarea id="rmReplyBody" rows="3" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:8px;font-family:Poppins,sans-serif;" placeholder="${signedInReply?'Write a personal reply…':'Reporter was not signed in — mailbox reply unavailable'}" ${signedInReply?'':'disabled'}></textarea>
+      <button class="action-btn view" style="margin-top:8px;" ${signedInReply?'':'disabled'} onclick="replyReportMailbox('${r.firebaseKey}')">📨 Send Reply</button>
+      ${r.adminReply&&r.adminReply.body?`<div style="margin-top:10px;font-size:0.8rem;color:var(--muted);">Last reply: ${esc(r.adminReply.body).slice(0,180)}</div>`:''}
+    </div>`;
     actDiv.innerHTML=acts;
 
     document.getElementById('reportModal').classList.add('show');
@@ -2054,9 +2138,14 @@ function switchTab(tab, btn) {
     document.getElementById('reportsSection').style.display=tab==='reports'?'':'none';
     document.getElementById('chatModSection').style.display=tab==='chatMod'?'':'none';
     document.getElementById('featureFlagsSection').style.display=tab==='featureFlags'?'':'none';
+    const ann=document.getElementById('announcementsSection');
+    const mb=document.getElementById('mailboxSection');
+    if(ann) ann.style.display=tab==='announcements'?'':'none';
+    if(mb) mb.style.display=tab==='mailbox'?'':'none';
     if(tab==='reports') loadReports();
     if(tab==='chatMod') loadChatMod();
     if(tab==='featureFlags') loadFeatureFlags();
+    if(tab==='announcements') loadAnnouncementsAdmin();
 }
 
 function fmtTs(ts) {
@@ -2304,5 +2393,177 @@ firebase.auth().onAuthStateChanged(user => {
     }, 100);
 });
 </script>
+
+<script>
+/* ===== Announcements + Mailbox (admin) ===== */
+let allAnnouncementsAdmin = [];
+
+async function loadAnnouncementsAdmin() {
+    if (!db) return;
+    const body = document.getElementById('annTableBody');
+    body.innerHTML = '<tr class="state-row"><td colspan="5"><div class="state-icon">⏳</div><div>Loading…</div></td></tr>';
+    try {
+        const snap = await db.ref('announcements').once('value');
+        const data = snap.val() || {};
+        allAnnouncementsAdmin = Object.entries(data).map(([key, a]) => ({
+            key,
+            title: a.title || '',
+            description: a.description || '',
+            status: a.status || 'new',
+            published: a.published !== false,
+            date: a.date || '',
+            timestamp: a.timestamp || 0
+        })).sort((a,b) => (b.timestamp||0)-(a.timestamp||0));
+        document.getElementById('annCountLabel').textContent = '(' + allAnnouncementsAdmin.length + ')';
+        if (!allAnnouncementsAdmin.length) {
+            body.innerHTML = '<tr class="state-row"><td colspan="5"><div class="state-icon">📣</div><div>No announcements yet</div></td></tr>';
+            return;
+        }
+        body.innerHTML = allAnnouncementsAdmin.map(a => `<tr>
+            <td><strong>${esc(a.title)}</strong><div style="font-size:0.75rem;color:var(--muted);max-width:360px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(a.description)}</div></td>
+            <td>${esc(a.status)}</td>
+            <td>${a.published?'✅':'—'}</td>
+            <td>${esc(a.date||fmtTs(a.timestamp))}</td>
+            <td style="white-space:nowrap;">
+                <button class="action-btn view" onclick="openAnnEditor('${a.key}')">Edit</button>
+                <button class="action-btn del" onclick="deleteAnnouncement('${a.key}')">Delete</button>
+            </td>
+        </tr>`).join('');
+    } catch (e) {
+        body.innerHTML = `<tr class="state-row"><td colspan="5"><div class="state-icon">⚠️</div><div>${esc(e.message)}</div></td></tr>`;
+    }
+}
+
+function openAnnEditor(key) {
+    const a = key ? allAnnouncementsAdmin.find(x => x.key === key) : null;
+    document.getElementById('annEditKey').value = key || '';
+    document.getElementById('annModalTitle').textContent = a ? 'Edit Announcement' : 'New Announcement';
+    document.getElementById('annTitle').value = a ? a.title : '';
+    document.getElementById('annDesc').value = a ? a.description : '';
+    document.getElementById('annStatus').value = a ? a.status : 'new';
+    document.getElementById('annPublished').checked = a ? !!a.published : true;
+    document.getElementById('annModal').classList.add('show');
+    document.body.style.overflow = 'hidden';
+}
+function closeAnnEditor() {
+    document.getElementById('annModal').classList.remove('show');
+    document.body.style.overflow = '';
+}
+
+async function saveAnnouncement() {
+    if (!db) return;
+    const title = document.getElementById('annTitle').value.trim();
+    const description = document.getElementById('annDesc').value.trim();
+    const status = document.getElementById('annStatus').value;
+    const published = document.getElementById('annPublished').checked;
+    if (!title || !description) { showToast('Title and description required', 'danger'); return; }
+    const key = document.getElementById('annEditKey').value || db.ref('announcements').push().key;
+    const existing = allAnnouncementsAdmin.find(x => x.key === key);
+    const now = Date.now();
+    const date = new Date().toISOString().slice(0, 10);
+    const payload = {
+        id: key,
+        title,
+        description,
+        status,
+        published,
+        date: existing?.date || date,
+        timestamp: existing?.timestamp || Math.floor(now / 1000),
+        updatedAt: now
+    };
+    try {
+        await db.ref('announcements/' + key).set(payload);
+        showToast('✅ Announcement saved', 'success');
+        closeAnnEditor();
+        loadAnnouncementsAdmin();
+    } catch (e) {
+        showToast('⚠️ ' + e.message, 'danger');
+    }
+}
+
+async function deleteAnnouncement(key) {
+    if (!confirm('Delete this announcement?')) return;
+    try {
+        await db.ref('announcements/' + key).remove();
+        showToast('Deleted', 'success');
+        loadAnnouncementsAdmin();
+    } catch (e) {
+        showToast('⚠️ ' + e.message, 'danger');
+    }
+}
+
+function composeMailboxTo(uid, name) {
+    const mbBtn=[...document.querySelectorAll('.tab-btn')].find(b=>b.textContent.includes('Mailbox'));
+    if(mbBtn) switchTab('mailbox', mbBtn);
+    document.getElementById('mbToUid').value = uid || '';
+    document.getElementById('mbTitle').value = name ? ('Message for ' + name) : '';
+    document.getElementById('mbBody').focus();
+}
+
+async function sendMailboxMessage(uid, title, body, type, relatedReportKey, relatedReportId) {
+    if (!db) throw new Error('No database');
+    if (!uid || !title || !body) throw new Error('uid, title, body required');
+    const msgRef = db.ref('mailbox/' + uid).push();
+    const payload = {
+        id: msgRef.key,
+        type: type || 'admin',
+        title,
+        body,
+        createdAt: Date.now(),
+        read: false,
+        from: 'Bari Plux Support'
+    };
+    if (relatedReportKey) payload.relatedReportKey = relatedReportKey;
+    if (relatedReportId) payload.relatedReportId = relatedReportId;
+    await msgRef.set(payload);
+    return msgRef.key;
+}
+
+async function sendMailboxFromTab() {
+    try {
+        const uid = document.getElementById('mbToUid').value.trim();
+        const title = document.getElementById('mbTitle').value.trim();
+        const body = document.getElementById('mbBody').value.trim();
+        await sendMailboxMessage(uid, title, body, 'admin');
+        showToast('📨 Mailbox message sent', 'success');
+        document.getElementById('mbBody').value = '';
+    } catch (e) {
+        showToast('⚠️ ' + e.message, 'danger');
+    }
+}
+
+async function replyReportMailbox(reportKey) {
+    const r = allReports.find(x => x.firebaseKey === reportKey);
+    if (!r) return;
+    const uid = r.userAccount && r.userAccount.id;
+    const body = (document.getElementById('rmReplyBody')?.value || '').trim();
+    if (!uid) { showToast('Reporter has no account id', 'danger'); return; }
+    if (!body) { showToast('Write a reply first', 'danger'); return; }
+    try {
+        const msgId = await sendMailboxMessage(
+            uid,
+            'Reply to your report ' + (r.id || ''),
+            body,
+            'report_reply',
+            reportKey,
+            r.id || ''
+        );
+        await db.ref('bugReports/' + reportKey + '/adminReply').set({
+            body,
+            at: Date.now(),
+            byEmail: (auth && auth.currentUser && auth.currentUser.email) || 'admin',
+            mailboxMsgId: msgId
+        });
+        await db.ref('bugReports/' + reportKey + '/repliedAt').set(Date.now());
+        if (r.status === 'new') await updateStatus(reportKey, 'reviewed');
+        showToast('📨 Reply sent to Mailbox', 'success');
+        closeReportModal();
+        loadReports();
+    } catch (e) {
+        showToast('⚠️ ' + e.message, 'danger');
+    }
+}
+</script>
+
 </body>
 </html>
