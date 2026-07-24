@@ -442,6 +442,9 @@
             width: 100%; padding: 8px 10px; background: var(--surface2); border: 1px solid var(--border);
             border-radius: 8px; color: var(--text); font-family: 'Poppins', sans-serif; font-size: 0.82rem; cursor: pointer;
         }
+        .ff-page-toggles { display: flex; gap: 6px; flex-wrap: wrap; width: 100%; }
+        .ff-page-toggles .action-btn { flex: 1; min-width: 110px; justify-content: center; }
+        .ff-page-badges { display: flex; gap: 4px; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end; }
         .mb-outbox-item {
             padding: 12px; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 8px;
             background: rgba(255,255,255,0.02);
@@ -781,7 +784,7 @@
                 <button class="icon-btn" style="background:var(--accent);color:#fff;border:none;" onclick="seedMissingPageFlags()"><i class="fas fa-seedling"></i> Seed missing pages</button>
             </div>
 
-            <div class="ff-section-title"><i class="fas fa-th-large"></i> App Pages <span class="hint">same keys as the desktop shell — change role or enable/disable anytime</span></div>
+            <div class="ff-section-title"><i class="fas fa-th-large"></i> App Pages <span class="hint">Show/Hide = menu visibility · Enable/Disable = can open page · role gate applies to both</span></div>
             <div id="ffPagesGrid" class="ff-pages-grid">
                 <div style="grid-column:1/-1;text-align:center;padding:28px;color:var(--muted);">Loading pages…</div>
             </div>
@@ -2462,37 +2465,66 @@ function roleSelectHtml(selected, onChangeAttr) {
     return `<select onchange="${onChangeAttr}">${opts}</select>`;
 }
 
+/** visible defaults true when missing (backward compat); enabled must be explicit true. */
+function readPageFlagState(flag) {
+    if (!flag) return { missing: true, enabled: true, visible: true, role: 'free' };
+    const visible = typeof flag.visible === 'boolean' ? flag.visible : true;
+    return {
+        missing: false,
+        enabled: flag.enabled === true,
+        visible,
+        role: flag.min_role || 'free'
+    };
+}
+
+function defaultPageFlagPayload(extra = {}) {
+    const now = Date.now();
+    return {
+        enabled: true,
+        visible: true,
+        min_role: 'free',
+        created_at: now,
+        updated_at: now,
+        ...extra
+    };
+}
+
 function renderPageFlagsGrid(data) {
     const grid = document.getElementById('ffPagesGrid');
     if (!grid) return;
     grid.innerHTML = PAGE_FLAG_CATALOG.map(p => {
-        const flag = data[p.key];
-        const missing = !flag;
-        const enabled = missing ? true : flag.enabled === true;
-        const role = missing ? 'free' : (flag.min_role || 'free');
-        const badge = missing
+        const s = readPageFlagState(data[p.key]);
+        const badges = s.missing
             ? `<span class="ff-page-badge off">NOT SEEDED</span>`
-            : `<span class="ff-page-badge ${enabled ? 'on' : 'off'}">${enabled ? 'ON' : 'OFF'}</span>`;
-        const toggleLabel = enabled ? '<i class="fas fa-toggle-off"></i> Disable' : '<i class="fas fa-toggle-on"></i> Enable';
-        const toggleStyle = enabled
+            : `<div class="ff-page-badges">
+                <span class="ff-page-badge ${s.visible ? 'on' : 'off'}">${s.visible ? 'SHOWN' : 'HIDDEN'}</span>
+                <span class="ff-page-badge ${s.enabled ? 'on' : 'off'}">${s.enabled ? 'ON' : 'OFF'}</span>
+               </div>`;
+        const visLabel = s.visible ? '<i class="fas fa-eye-slash"></i> Hide' : '<i class="fas fa-eye"></i> Show';
+        const visStyle = s.visible
+            ? 'border-color:rgba(255,152,0,0.35);color:#FF9800;'
+            : 'border-color:rgba(76,175,80,0.3);color:#4CAF50;';
+        const enLabel = s.enabled ? '<i class="fas fa-toggle-off"></i> Disable' : '<i class="fas fa-toggle-on"></i> Enable';
+        const enStyle = s.enabled
             ? 'border-color:rgba(244,67,54,0.3);color:#F44336;'
             : 'border-color:rgba(76,175,80,0.3);color:#4CAF50;';
-        return `<div class="ff-page-card${missing ? ' missing' : ''}${!missing && !enabled ? ' off' : ''}">
+        const cardOff = !s.missing && (!s.visible || !s.enabled);
+        return `<div class="ff-page-card${s.missing ? ' missing' : ''}${cardOff ? ' off' : ''}">
             <div class="ff-page-head">
                 <div>
                     <div class="ff-page-title"><i class="fas ${p.icon}"></i> ${esc(p.title)}</div>
                     <div class="ff-page-key">${esc(p.key)}</div>
                 </div>
-                ${badge}
+                ${badges}
             </div>
             <div class="ff-page-controls">
                 <label>
                     <span class="lbl">Minimum role</span>
-                    ${roleSelectHtml(role, `updatePageFlagRole('${esc(p.key)}', this.value)`)}
+                    ${roleSelectHtml(s.role, `updatePageFlagRole('${esc(p.key)}', this.value)`)}
                 </label>
-                <div>
-                    <span class="lbl">&nbsp;</span>
-                    <button class="action-btn" style="${toggleStyle}" onclick="togglePageFlag('${esc(p.key)}', ${enabled ? 'false' : 'true'})">${toggleLabel}</button>
+                <div class="ff-page-toggles">
+                    <button class="action-btn" style="${visStyle}" onclick="togglePageFlagVisible('${esc(p.key)}', ${s.visible ? 'false' : 'true'})" title="Show or hide this page in the app menu">${visLabel}</button>
+                    <button class="action-btn" style="${enStyle}" onclick="togglePageFlagEnabled('${esc(p.key)}', ${s.enabled ? 'false' : 'true'})" title="Allow or block opening this page">${enLabel}</button>
                 </div>
             </div>
         </div>`;
@@ -2504,23 +2536,17 @@ async function seedMissingPageFlags() {
     try {
         const snap = await db.ref('feature_flags').once('value');
         const data = snap.val() || {};
-        const now = Date.now();
         const ops = [];
         for (const p of PAGE_FLAG_CATALOG) {
             if (data[p.key]) continue;
-            ops.push(db.ref(`feature_flags/${p.key}`).set({
-                enabled: true,
-                min_role: 'free',
-                created_at: now,
-                updated_at: now
-            }));
+            ops.push(db.ref(`feature_flags/${p.key}`).set(defaultPageFlagPayload()));
         }
         if (!ops.length) {
             showToast('✅ All app pages already seeded', 'success');
             return;
         }
         await Promise.all(ops);
-        showToast(`✅ Seeded ${ops.length} page flag(s) (enabled + free)`, 'success');
+        showToast(`✅ Seeded ${ops.length} page flag(s) (shown + enabled + free)`, 'success');
         loadFeatureFlags();
     } catch (e) {
         showToast('⚠️ Seed failed: ' + e.message, 'danger');
@@ -2532,12 +2558,7 @@ async function updatePageFlagRole(key, role) {
     try {
         const snap = await db.ref(`feature_flags/${key}`).once('value');
         if (!snap.exists()) {
-            await db.ref(`feature_flags/${key}`).set({
-                enabled: true,
-                min_role: role,
-                created_at: Date.now(),
-                updated_at: Date.now()
-            });
+            await db.ref(`feature_flags/${key}`).set(defaultPageFlagPayload({ min_role: role }));
         } else {
             await db.ref(`feature_flags/${key}`).update({ min_role: role, updated_at: Date.now() });
         }
@@ -2548,25 +2569,41 @@ async function updatePageFlagRole(key, role) {
     }
 }
 
-async function togglePageFlag(key, newVal) {
+async function ensurePageFlagExists(key) {
+    const snap = await db.ref(`feature_flags/${key}`).once('value');
+    if (snap.exists()) return snap.val() || {};
+    const payload = defaultPageFlagPayload();
+    await db.ref(`feature_flags/${key}`).set(payload);
+    return payload;
+}
+
+async function togglePageFlagVisible(key, newVal) {
     if (!isPageFlagKey(key)) return;
     try {
-        const snap = await db.ref(`feature_flags/${key}`).once('value');
-        if (!snap.exists()) {
-            await db.ref(`feature_flags/${key}`).set({
-                enabled: !!newVal,
-                min_role: 'free',
-                created_at: Date.now(),
-                updated_at: Date.now()
-            });
-        } else {
-            await db.ref(`feature_flags/${key}`).update({ enabled: !!newVal, updated_at: Date.now() });
-        }
+        await ensurePageFlagExists(key);
+        await db.ref(`feature_flags/${key}`).update({ visible: !!newVal, updated_at: Date.now() });
+        showToast(newVal ? `👁 ${key} shown in menu` : `🙈 ${key} hidden from menu`, 'success');
+        loadFeatureFlags();
+    } catch (e) {
+        showToast('⚠️ Failed to update visibility: ' + e.message, 'danger');
+    }
+}
+
+async function togglePageFlagEnabled(key, newVal) {
+    if (!isPageFlagKey(key)) return;
+    try {
+        await ensurePageFlagExists(key);
+        await db.ref(`feature_flags/${key}`).update({ enabled: !!newVal, updated_at: Date.now() });
         showToast(newVal ? `✅ ${key} enabled` : `⛔ ${key} disabled`, 'success');
         loadFeatureFlags();
     } catch (e) {
         showToast('⚠️ Failed to toggle: ' + e.message, 'danger');
     }
+}
+
+/** @deprecated use togglePageFlagEnabled */
+async function togglePageFlag(key, newVal) {
+    return togglePageFlagEnabled(key, newVal);
 }
 
 function loadFeatureFlags() {
@@ -2576,19 +2613,23 @@ function loadFeatureFlags() {
     if (pagesGrid) pagesGrid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:28px;color:var(--muted);">Loading pages…</div>';
     db.ref('feature_flags').once('value').then(async snap => {
         let data = snap.val() || {};
-        // Auto-seed any missing shell pages (enabled + free) so the app fail-closed path stays safe.
-        const now = Date.now();
+        // Auto-seed any missing shell pages (shown + enabled + free).
         const missing = PAGE_FLAG_CATALOG.filter(p => !data[p.key]);
         if (missing.length) {
-            await Promise.all(missing.map(p => db.ref(`feature_flags/${p.key}`).set({
-                enabled: true,
-                min_role: 'free',
-                created_at: now,
-                updated_at: now
-            })));
+            await Promise.all(missing.map(p => db.ref(`feature_flags/${p.key}`).set(defaultPageFlagPayload())));
             const again = await db.ref('feature_flags').once('value');
             data = again.val() || {};
         }
+        // Backfill visible=true on older page flags that only had enabled.
+        const backfill = [];
+        for (const p of PAGE_FLAG_CATALOG) {
+            const f = data[p.key];
+            if (f && typeof f.visible !== 'boolean') {
+                backfill.push(db.ref(`feature_flags/${p.key}/visible`).set(true));
+                f.visible = true;
+            }
+        }
+        if (backfill.length) await Promise.all(backfill);
 
         const entries = Object.entries(data).map(([key, val]) => ({ key, ...(val || {}) }));
         document.getElementById('ffStatTotal').textContent = entries.length;
