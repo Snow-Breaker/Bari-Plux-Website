@@ -892,29 +892,6 @@
     <div class="preview-counter" id="imgPreviewCounter"></div>
     <button class="preview-btn preview-download" onclick="downloadPreview()"><i class="fas fa-download"></i></button>
 </div>
-            <div class="table-wrap" style="padding:18px;">
-                <div class="modal-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-                    <div class="field" style="grid-column:1/-1;">
-                        <span class="label">User ID (Firebase uid)</span>
-                        <input id="mbToUid" type="text" class="search-input" style="width:100%;" placeholder="Paste user id…">
-                    </div>
-                    <div class="field" style="grid-column:1/-1;">
-                        <span class="label">Title</span>
-                        <input id="mbTitle" type="text" class="search-input" style="width:100%;" maxlength="120" placeholder="Message title">
-                    </div>
-                    <div class="field" style="grid-column:1/-1;">
-                        <span class="label">Body</span>
-                        <textarea id="mbBody" rows="6" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:10px;font-family:Poppins,sans-serif;" placeholder="Personal message to the user…"></textarea>
-                    </div>
-                </div>
-                <div style="margin-top:14px;display:flex;gap:8px;">
-                    <button class="icon-btn" style="background:var(--accent);color:#fff;border:none;" onclick="sendMailboxFromTab()"><i class="fas fa-paper-plane"></i> Send</button>
-                </div>
-                <p style="margin-top:12px;color:var(--muted);font-size:0.8rem;">Tip: from a Bug Report you can also reply directly — it lands in the same Mailbox.</p>
-            </div>
-        </div>
-
-
 
 <!-- ANNOUNCEMENT EDITOR -->
 <div class="modal-overlay" id="annModal" onclick="if(event.target===this)closeAnnEditor()">
