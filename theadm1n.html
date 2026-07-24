@@ -412,6 +412,36 @@
         }
         .mb-chip:hover { color: var(--text); border-color: rgba(108,99,255,0.35); background: rgba(108,99,255,0.1); }
         .mb-send-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 4px; }
+        .ff-section-title {
+            font-size: 0.78rem; font-weight: 650; color: var(--accent); text-transform: uppercase;
+            letter-spacing: 0.5px; margin: 8px 0 14px; display: flex; align-items: center; gap: 8px;
+        }
+        .ff-section-title span.hint { color: var(--muted); font-weight: 400; text-transform: none; letter-spacing: 0; font-size: 0.75rem; margin-left: 6px; }
+        .ff-pages-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; margin-bottom: 28px;
+        }
+        .ff-page-card {
+            background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 16px;
+            display: flex; flex-direction: column; gap: 12px;
+        }
+        .ff-page-card.missing { border-style: dashed; opacity: 0.85; }
+        .ff-page-card.off { border-color: rgba(244,67,54,0.35); }
+        .ff-page-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+        .ff-page-title { font-weight: 700; font-size: 0.95rem; display: flex; align-items: center; gap: 8px; }
+        .ff-page-title i { color: var(--accent); width: 18px; text-align: center; }
+        .ff-page-key { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--muted); margin-top: 3px; }
+        .ff-page-badge {
+            font-size: 0.7rem; font-weight: 700; padding: 3px 8px; border-radius: 6px; flex-shrink: 0;
+        }
+        .ff-page-badge.on { background: rgba(76,175,80,0.15); color: #4CAF50; }
+        .ff-page-badge.off { background: rgba(244,67,54,0.15); color: #F44336; }
+        .ff-page-controls { display: flex; gap: 8px; align-items: end; flex-wrap: wrap; }
+        .ff-page-controls label { flex: 1; min-width: 120px; }
+        .ff-page-controls .lbl { display: block; font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 4px; }
+        .ff-page-controls select {
+            width: 100%; padding: 8px 10px; background: var(--surface2); border: 1px solid var(--border);
+            border-radius: 8px; color: var(--text); font-family: 'Poppins', sans-serif; font-size: 0.82rem; cursor: pointer;
+        }
         .mb-outbox-item {
             padding: 12px; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 8px;
             background: rgba(255,255,255,0.02);
@@ -747,6 +777,18 @@
 
             <div class="toolbar">
                 <span class="toolbar-title">Feature Flags</span>
+                <button class="icon-btn teal" onclick="loadFeatureFlags()"><i class="fas fa-sync-alt"></i> Refresh</button>
+                <button class="icon-btn" style="background:var(--accent);color:#fff;border:none;" onclick="seedMissingPageFlags()"><i class="fas fa-seedling"></i> Seed missing pages</button>
+            </div>
+
+            <div class="ff-section-title"><i class="fas fa-th-large"></i> App Pages <span class="hint">same keys as the desktop shell — change role or enable/disable anytime</span></div>
+            <div id="ffPagesGrid" class="ff-pages-grid">
+                <div style="grid-column:1/-1;text-align:center;padding:28px;color:var(--muted);">Loading pages…</div>
+            </div>
+
+            <div class="ff-section-title"><i class="fas fa-puzzle-piece"></i> Features <span class="hint">in-page capabilities (e.g. cloud_backup) — add more later</span></div>
+            <div class="toolbar" style="margin-top:0;">
+                <span class="toolbar-title" style="font-size:0.85rem;">Capability flags</span>
                 <button class="icon-btn teal" id="addFeatureFlagBtn" onclick="showFeatureFlagForm()"><i class="fas fa-plus"></i> Add Flag</button>
             </div>
 
@@ -759,7 +801,7 @@
                     <div>
                         <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Feature Key</div>
                         <input type="text" id="ffKeyInput" placeholder="e.g. cloud_backup" style="width:100%;padding:9px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.82rem;">
-                        <div id="ffKeyError" style="font-size:0.72rem;color:var(--danger);margin-top:3px;display:none;">Only lowercase letters, numbers, and underscores allowed.</div>
+                        <div id="ffKeyError" style="font-size:0.72rem;color:var(--danger);margin-top:3px;display:none;">Only lowercase letters, numbers, and underscores allowed. Page keys are managed above.</div>
                     </div>
                     <div>
                         <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Minimum Role</div>
@@ -2386,23 +2428,184 @@ function downloadPreview() {
 // ==================== FEATURE FLAGS ====================
 let _editingFFKey = null;
 
+/** Shell page keys — must match desktop IShellNavigation / ShowShellPage keys. */
+const PAGE_FLAG_CATALOG = [
+    { key: 'home', title: 'Home', icon: 'fa-home' },
+    { key: 'fps', title: 'FPS', icon: 'fa-tachometer-alt' },
+    { key: 'ipad', title: 'Custom View (iPad)', icon: 'fa-tablet-alt' },
+    { key: 'tools', title: 'Tools', icon: 'fa-toolbox' },
+    { key: 'optimization', title: 'Optimization', icon: 'fa-rocket' },
+    { key: 'dns', title: 'DNS / Network', icon: 'fa-network-wired' },
+    { key: 'filemanager', title: 'File Manager', icon: 'fa-folder-open' },
+    { key: 'contact', title: 'Contact', icon: 'fa-envelope' },
+    { key: 'chat', title: 'Chat', icon: 'fa-comments' },
+    { key: 'report', title: 'Bug Report', icon: 'fa-bug' },
+    { key: 'settings', title: 'Settings', icon: 'fa-cog' },
+    { key: 'adbdiagnostic', title: 'ADB Diagnostic', icon: 'fa-stethoscope' },
+];
+const PAGE_FLAG_KEYS = new Set(PAGE_FLAG_CATALOG.map(p => p.key));
+
+function isPageFlagKey(key) {
+    return PAGE_FLAG_KEYS.has(key);
+}
+
+function roleSelectHtml(selected, onChangeAttr) {
+    const roles = [
+        ['free', '● Free'],
+        ['pro', '⭐ Pro'],
+        ['dev', '🛠️ Dev'],
+        ['founder', '👑 Founder'],
+    ];
+    const opts = roles.map(([v, label]) =>
+        `<option value="${v}"${(selected || 'free') === v ? ' selected' : ''}>${label}</option>`
+    ).join('');
+    return `<select onchange="${onChangeAttr}">${opts}</select>`;
+}
+
+function renderPageFlagsGrid(data) {
+    const grid = document.getElementById('ffPagesGrid');
+    if (!grid) return;
+    grid.innerHTML = PAGE_FLAG_CATALOG.map(p => {
+        const flag = data[p.key];
+        const missing = !flag;
+        const enabled = missing ? true : flag.enabled === true;
+        const role = missing ? 'free' : (flag.min_role || 'free');
+        const badge = missing
+            ? `<span class="ff-page-badge off">NOT SEEDED</span>`
+            : `<span class="ff-page-badge ${enabled ? 'on' : 'off'}">${enabled ? 'ON' : 'OFF'}</span>`;
+        const toggleLabel = enabled ? '<i class="fas fa-toggle-off"></i> Disable' : '<i class="fas fa-toggle-on"></i> Enable';
+        const toggleStyle = enabled
+            ? 'border-color:rgba(244,67,54,0.3);color:#F44336;'
+            : 'border-color:rgba(76,175,80,0.3);color:#4CAF50;';
+        return `<div class="ff-page-card${missing ? ' missing' : ''}${!missing && !enabled ? ' off' : ''}">
+            <div class="ff-page-head">
+                <div>
+                    <div class="ff-page-title"><i class="fas ${p.icon}"></i> ${esc(p.title)}</div>
+                    <div class="ff-page-key">${esc(p.key)}</div>
+                </div>
+                ${badge}
+            </div>
+            <div class="ff-page-controls">
+                <label>
+                    <span class="lbl">Minimum role</span>
+                    ${roleSelectHtml(role, `updatePageFlagRole('${esc(p.key)}', this.value)`)}
+                </label>
+                <div>
+                    <span class="lbl">&nbsp;</span>
+                    <button class="action-btn" style="${toggleStyle}" onclick="togglePageFlag('${esc(p.key)}', ${enabled ? 'false' : 'true'})">${toggleLabel}</button>
+                </div>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+async function seedMissingPageFlags() {
+    if (!db) return;
+    try {
+        const snap = await db.ref('feature_flags').once('value');
+        const data = snap.val() || {};
+        const now = Date.now();
+        const ops = [];
+        for (const p of PAGE_FLAG_CATALOG) {
+            if (data[p.key]) continue;
+            ops.push(db.ref(`feature_flags/${p.key}`).set({
+                enabled: true,
+                min_role: 'free',
+                created_at: now,
+                updated_at: now
+            }));
+        }
+        if (!ops.length) {
+            showToast('✅ All app pages already seeded', 'success');
+            return;
+        }
+        await Promise.all(ops);
+        showToast(`✅ Seeded ${ops.length} page flag(s) (enabled + free)`, 'success');
+        loadFeatureFlags();
+    } catch (e) {
+        showToast('⚠️ Seed failed: ' + e.message, 'danger');
+    }
+}
+
+async function updatePageFlagRole(key, role) {
+    if (!isPageFlagKey(key)) return;
+    try {
+        const snap = await db.ref(`feature_flags/${key}`).once('value');
+        if (!snap.exists()) {
+            await db.ref(`feature_flags/${key}`).set({
+                enabled: true,
+                min_role: role,
+                created_at: Date.now(),
+                updated_at: Date.now()
+            });
+        } else {
+            await db.ref(`feature_flags/${key}`).update({ min_role: role, updated_at: Date.now() });
+        }
+        showToast(`✅ ${key} → min role ${role}`, 'success');
+        loadFeatureFlags();
+    } catch (e) {
+        showToast('⚠️ Failed to update role: ' + e.message, 'danger');
+    }
+}
+
+async function togglePageFlag(key, newVal) {
+    if (!isPageFlagKey(key)) return;
+    try {
+        const snap = await db.ref(`feature_flags/${key}`).once('value');
+        if (!snap.exists()) {
+            await db.ref(`feature_flags/${key}`).set({
+                enabled: !!newVal,
+                min_role: 'free',
+                created_at: Date.now(),
+                updated_at: Date.now()
+            });
+        } else {
+            await db.ref(`feature_flags/${key}`).update({ enabled: !!newVal, updated_at: Date.now() });
+        }
+        showToast(newVal ? `✅ ${key} enabled` : `⛔ ${key} disabled`, 'success');
+        loadFeatureFlags();
+    } catch (e) {
+        showToast('⚠️ Failed to toggle: ' + e.message, 'danger');
+    }
+}
+
 function loadFeatureFlags() {
     const tbody = document.getElementById('featureFlagsTableBody');
+    const pagesGrid = document.getElementById('ffPagesGrid');
     tbody.innerHTML = '<tr class="state-row"><td colspan="5"><div class="state-icon">⏳</div><div>Loading feature flags...</div></td></tr>';
-    db.ref('feature_flags').once('value').then(snap => {
-        const data = snap.val() || {};
-        const entries = Object.entries(data).map(([key, val]) => ({ key, ...val }));
-        document.getElementById('ffStatTotal').textContent = entries.length;
-        document.getElementById('ffStatEnabled').textContent = entries.filter(e => e.enabled !== false).length;
-        document.getElementById('ffStatDisabled').textContent = entries.filter(e => e.enabled === false).length;
+    if (pagesGrid) pagesGrid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:28px;color:var(--muted);">Loading pages…</div>';
+    db.ref('feature_flags').once('value').then(async snap => {
+        let data = snap.val() || {};
+        // Auto-seed any missing shell pages (enabled + free) so the app fail-closed path stays safe.
+        const now = Date.now();
+        const missing = PAGE_FLAG_CATALOG.filter(p => !data[p.key]);
+        if (missing.length) {
+            await Promise.all(missing.map(p => db.ref(`feature_flags/${p.key}`).set({
+                enabled: true,
+                min_role: 'free',
+                created_at: now,
+                updated_at: now
+            })));
+            const again = await db.ref('feature_flags').once('value');
+            data = again.val() || {};
+        }
 
-        if (!entries.length) {
-            tbody.innerHTML = '<tr class="state-row"><td colspan="5"><div class="state-icon">🏁</div><div>No feature flags configured.</div></td></tr>';
-            document.getElementById('featureFlagsCards').innerHTML = '<div style="text-align:center;padding:48px 20px;color:var(--muted);"><div style="font-size:2rem;margin-bottom:8px;opacity:0.35;">🏁</div>No feature flags configured.</div>';
+        const entries = Object.entries(data).map(([key, val]) => ({ key, ...(val || {}) }));
+        document.getElementById('ffStatTotal').textContent = entries.length;
+        document.getElementById('ffStatEnabled').textContent = entries.filter(e => e.enabled === true).length;
+        document.getElementById('ffStatDisabled').textContent = entries.filter(e => e.enabled !== true).length;
+
+        renderPageFlagsGrid(data);
+
+        const featureEntries = entries.filter(e => !isPageFlagKey(e.key));
+        featureEntries.sort((a, b) => a.key.localeCompare(b.key));
+
+        if (!featureEntries.length) {
+            tbody.innerHTML = '<tr class="state-row"><td colspan="5"><div class="state-icon">🧩</div><div>No capability flags yet. Pages are managed above.</div></td></tr>';
+            document.getElementById('featureFlagsCards').innerHTML = '';
         } else {
-            entries.sort((a, b) => a.key.localeCompare(b.key));
-            tbody.innerHTML = entries.map((e, i) => {
-                const enabled = e.enabled !== false;
+            tbody.innerHTML = featureEntries.map((e, i) => {
+                const enabled = e.enabled === true;
                 const toggleBtn = enabled
                     ? `<button class="action-btn" onclick="toggleEnabled('${esc(e.key)}',false)" style="border-color:rgba(76,175,80,0.3);color:#4CAF50;"><i class="fas fa-toggle-on"></i> Enabled</button>`
                     : `<button class="action-btn" onclick="toggleEnabled('${esc(e.key)}',true)" style="border-color:rgba(244,67,54,0.3);color:#F44336;"><i class="fas fa-toggle-off"></i> Disabled</button>`;
@@ -2418,8 +2621,8 @@ function loadFeatureFlags() {
                 </tr>`;
             }).join('');
 
-            document.getElementById('featureFlagsCards').innerHTML = entries.map((e, i) => {
-                const enabled = e.enabled !== false;
+            document.getElementById('featureFlagsCards').innerHTML = featureEntries.map((e, i) => {
+                const enabled = e.enabled === true;
                 return `<div class="user-card" style="animation-delay:${i*0.03}s">
                     <div class="user-card-header">
                         <div style="font-weight:700;font-family:'JetBrains Mono',monospace;font-size:0.85rem;">${esc(e.key)}</div>
@@ -2450,6 +2653,10 @@ function validateFeatureKey(key) {
 }
 
 function showFeatureFlagForm(key) {
+    if (key && isPageFlagKey(key)) {
+        showToast('⚠️ Page flags are edited in the App Pages section above', 'danger');
+        return;
+    }
     const form = document.getElementById('featureFlagForm');
     const title = document.getElementById('ffFormTitle');
     const keyInput = document.getElementById('ffKeyInput');
@@ -2465,7 +2672,7 @@ function showFeatureFlagForm(key) {
             keyInput.value = key;
             keyInput.disabled = true;
             roleSelect.value = data.min_role || 'free';
-            enabledInput.checked = data.enabled !== false;
+            enabledInput.checked = data.enabled === true;
             title.textContent = 'Edit Feature Flag';
             form.style.display = 'block';
             form.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -2504,6 +2711,11 @@ async function saveFeatureFlag() {
             showToast('⚠️ Invalid key: only lowercase letters, numbers, underscores', 'danger');
             return;
         }
+        if (isPageFlagKey(key)) {
+            keyError.style.display = 'block';
+            showToast('⚠️ That key is an app page — use the App Pages section', 'danger');
+            return;
+        }
     }
     keyError.style.display = 'none';
 
@@ -2527,6 +2739,10 @@ async function saveFeatureFlag() {
 }
 
 async function deleteFeatureFlag(key) {
+    if (isPageFlagKey(key)) {
+        showToast('⚠️ Page flags cannot be deleted — disable them instead', 'danger');
+        return;
+    }
     if (!confirm(`Delete feature flag "${key}"? This cannot be undone.`)) return;
     try {
         await db.ref(`feature_flags/${key}`).remove();
@@ -2540,7 +2756,7 @@ async function deleteFeatureFlag(key) {
 
 async function toggleEnabled(key, newVal) {
     try {
-        await db.ref(`feature_flags/${key}/enabled`).set(newVal);
+        await db.ref(`feature_flags/${key}`).update({ enabled: !!newVal, updated_at: Date.now() });
         showToast(newVal ? '✅ Flag enabled' : '⛔ Flag disabled', 'success');
         loadFeatureFlags();
     } catch (e) {
