@@ -489,6 +489,10 @@
                 <i class="fas fa-bug"></i> Bug Reports
                 <span class="tab-badge" id="reportsBadge"></span>
             </button>
+            <button class="tab-btn" onclick="switchTab('errors', this)">
+                <i class="fas fa-bolt"></i> App Errors
+                <span class="tab-badge" id="errorsBadge"></span>
+            </button>
             <button class="tab-btn" onclick="switchTab('chatMod', this)">
                 <i class="fas fa-comments"></i> Chat Mod
                 <span class="tab-badge" id="chatModBadge"></span>
@@ -609,6 +613,55 @@
             <div class="cards-wrap" id="reportsCards"></div>
             <div class="pagination" id="reportsPaginationMobile" style="display:none;"></div>
             <div class="last-updated" id="reportsLastUpdated"></div>
+        </div>
+
+        <div id="errorsSection" style="display:none;">
+            <div class="stats-grid">
+                <div class="stat-card" style="animation-delay:0s"><div class="stat-icon total"><i class="fas fa-bolt"></i></div><div><div class="stat-num" id="eStatTotal">—</div><div class="stat-label">Total</div></div></div>
+                <div class="stat-card" style="animation-delay:0.05s"><div class="stat-icon" style="background:rgba(244,67,54,0.15);color:#F44336;"><i class="fas fa-circle"></i></div><div><div class="stat-num" id="eStatNew">—</div><div class="stat-label">New</div></div></div>
+                <div class="stat-card" style="animation-delay:0.1s"><div class="stat-icon" style="background:rgba(255,152,0,0.15);color:#FF9800;"><i class="fas fa-eye"></i></div><div><div class="stat-num" id="eStatReviewed">—</div><div class="stat-label">Reviewed</div></div></div>
+                <div class="stat-card" style="animation-delay:0.15s"><div class="stat-icon" style="background:rgba(76,175,80,0.15);color:#4CAF50;"><i class="fas fa-check-circle"></i></div><div><div class="stat-num" id="eStatResolved">—</div><div class="stat-label">Resolved</div></div></div>
+            </div>
+
+            <div class="toolbar">
+                <span class="toolbar-title">App Errors <span id="errorCountLabel" style="color:var(--muted);font-size:0.8rem;font-weight:400;"></span></span>
+                <div class="search-wrap">
+                    <i class="fas fa-search"></i>
+                    <input type="text" class="search-input" id="errorSearchInput" placeholder="Search type / message / page / user..." oninput="renderErrors()">
+                </div>
+                <div class="filter-btns">
+                    <button class="filter-btn active" onclick="setErrorFilter('all',this)"><i class="fas fa-border-all"></i> All</button>
+                    <button class="filter-btn" onclick="setErrorFilter('new',this)"><i class="fas fa-circle" style="color:#F44336;font-size:9px;"></i> New</button>
+                    <button class="filter-btn" onclick="setErrorFilter('reviewed',this)"><i class="fas fa-circle" style="color:#FF9800;font-size:9px;"></i> Reviewed</button>
+                    <button class="filter-btn" onclick="setErrorFilter('resolved',this)"><i class="fas fa-circle" style="color:#4CAF50;font-size:9px;"></i> Resolved</button>
+                    <button class="filter-btn" onclick="setErrorFilter('ignored',this)"><i class="fas fa-ban"></i> Ignored</button>
+                </div>
+                <button class="icon-btn teal" id="refreshErrorsBtn" onclick="loadErrors()"><i class="fas fa-sync-alt"></i> Refresh</button>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Kind</th>
+                            <th>Exception</th>
+                            <th>Message</th>
+                            <th>Page</th>
+                            <th>Version</th>
+                            <th>Account</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="errorsTableBody"><tr class="state-row"><td colspan="9"><div class="state-icon">⚡</div><div>Loading...</div></td></tr></tbody>
+                </table>
+                <div class="pagination" id="errorsPagination" style="display:none;"></div>
+            </div>
+
+            <div class="cards-wrap" id="errorsCards"></div>
+            <div class="pagination" id="errorsPaginationMobile" style="display:none;"></div>
+            <div class="last-updated" id="errorsLastUpdated"></div>
         </div>
 
         <div id="chatModSection" style="display:none;">
@@ -1062,6 +1115,19 @@
 </div>
 
 <!-- CONFIRM MODAL -->
+<div class="modal-overlay" id="errorModal" onclick="if(event.target===this)closeErrorModal()">
+    <div class="modal-box" style="max-width:720px;">
+        <button class="modal-close" onclick="closeErrorModal()"><i class="fas fa-times"></i></button>
+        <div class="modal-header">
+            <h2><i class="fas fa-bug" style="color:var(--danger);margin-right:8px;"></i>App Error Details</h2>
+        </div>
+        <div id="errorModalBody" style="max-height:60vh;overflow:auto;padding-right:4px;"></div>
+        <div class="modal-section" style="margin-top:14px;">
+            <div class="report-card-actions" id="errorModalActions" style="justify-content:flex-end;"></div>
+        </div>
+    </div>
+</div>
+
 <div class="modal-overlay" id="confirmModal">
     <div class="confirm-box">
         <div class="confirm-icon" id="confirmIcon">⚠️</div>
@@ -1111,7 +1177,10 @@ let activeFilter = 'all', activeReportFilter = 'all';
 let userPage = 1, reportPage = 1;
 const PAGE_SIZE = 15;
 let db = null, _currentUser = null;
-let usersListener = null, reportsListener = null;
+let usersListener = null, reportsListener = null, errorsListener = null;
+let allErrors = [];
+let activeErrorFilter = 'all';
+let errorPage = 1;
 let _confirmAction = null;
 
 firebase.initializeApp(firebaseConfig);
@@ -1397,6 +1466,7 @@ function logout() {
     document.getElementById('gateInput').value='';
     if(usersListener) { db.ref('users').off(); db.ref('discordUsers').off(); }
     if(reportsListener) { db.ref('bugReports').off(); }
+    if(errorsListener) { db.ref('errorReports').off(); }
 }
 
 async function setupTotp() {
@@ -1476,6 +1546,15 @@ function initApp() {
         const badge = document.getElementById('reportsBadge');
         badge.textContent = newCount||'';
         badge.classList.toggle('show', newCount>0);
+    });
+    errorsListener = db.ref('errorReports').on('value', snap => {
+        const data = snap.val()||{};
+        const newCount = Object.values(data).filter(r=>r.status==='new').length;
+        const badge = document.getElementById('errorsBadge');
+        if (badge) {
+            badge.textContent = newCount||'';
+            badge.classList.toggle('show', newCount>0);
+        }
     });
     db.ref('lobby_chat/reports').on('value', snap => {
         const data = snap.val()||{};
@@ -1900,6 +1979,197 @@ function loadReports() {
     .finally(()=>{ if(btn) btn.classList.remove('spinning'); });
 }
 
+function loadErrors() {
+    const btn=document.getElementById('refreshErrorsBtn');
+    if(btn) btn.classList.add('spinning');
+    if(!db) { if(btn) btn.classList.remove('spinning'); return; }
+    db.ref('errorReports').once('value').then(snap=>{
+        const data=snap.val()||{};
+        allErrors=Object.entries(data).map(([key,r])=>({
+            firebaseKey:key,
+            id:r.id||key,
+            kind:r.kind||'crash',
+            exceptionType:r.exceptionType||'—',
+            message:r.message||'',
+            stackTrace:r.stackTrace||'',
+            fingerprint:r.fingerprint||'',
+            activePage:r.activePage||'—',
+            appVersion:r.appVersion||'—',
+            os:r.os||'—',
+            systemType:r.systemType||'',
+            status:r.status||'new',
+            date:r.date||'—',
+            timestamp:r.timestamp||0,
+            email:r.email||'',
+            isLoggedIn:r.isLoggedIn===true,
+            userAccount:r.userAccount||null,
+            environment:r.environment||''
+        })).sort((a,b)=>(b.timestamp||0)-(a.timestamp||0));
+        updateErrorStats(); errorPage=1; renderErrors();
+        const lu=document.getElementById('errorsLastUpdated');
+        if(lu) lu.textContent='Last updated: '+new Date().toLocaleTimeString();
+    }).catch(e=>{ console.error(e); showToast('⚠️ Failed to load app errors','danger'); })
+    .finally(()=>{ if(btn) btn.classList.remove('spinning'); });
+}
+
+function updateErrorStats() {
+    const set=(id,v)=>{ const el=document.getElementById(id); if(el) el.textContent=v; };
+    set('eStatTotal', allErrors.length);
+    set('eStatNew', allErrors.filter(r=>r.status==='new').length);
+    set('eStatReviewed', allErrors.filter(r=>r.status==='reviewed').length);
+    set('eStatResolved', allErrors.filter(r=>r.status==='resolved').length);
+    const newCount=allErrors.filter(r=>r.status==='new').length;
+    const badge=document.getElementById('errorsBadge');
+    if(badge){ badge.textContent=newCount||''; badge.classList.toggle('show',newCount>0); }
+}
+
+function setErrorFilter(s, btn) {
+    activeErrorFilter=s; errorPage=1;
+    document.querySelectorAll('#errorsSection .filter-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active'); renderErrors();
+}
+
+function getFilteredErrors() {
+    const q=(document.getElementById('errorSearchInput')?.value||'').toLowerCase();
+    return allErrors.filter(r=>{
+        const mf=activeErrorFilter==='all'||r.status===activeErrorFilter;
+        const ua=r.userAccount||{};
+        const ms=!q
+            ||(r.exceptionType||'').toLowerCase().includes(q)
+            ||(r.message||'').toLowerCase().includes(q)
+            ||(r.activePage||'').toLowerCase().includes(q)
+            ||(r.kind||'').toLowerCase().includes(q)
+            ||(r.appVersion||'').toLowerCase().includes(q)
+            ||(ua.name||'').toLowerCase().includes(q)
+            ||(r.email||'').toLowerCase().includes(q)
+            ||(r.fingerprint||'').toLowerCase().includes(q);
+        return mf&&ms;
+    });
+}
+
+function renderErrors() {
+    const filtered=getFilteredErrors();
+    const countLabel=document.getElementById('errorCountLabel');
+    if(countLabel) countLabel.textContent=`(${filtered.length})`;
+    const total=Math.ceil(filtered.length/PAGE_SIZE);
+    if(errorPage>total) errorPage=Math.max(1,total);
+    const start=(errorPage-1)*PAGE_SIZE, slice=filtered.slice(start,start+PAGE_SIZE);
+    const statusIcons={new:'🆕',reviewed:'👁️',resolved:'✅',ignored:'🚫'};
+
+    const tbody=document.getElementById('errorsTableBody');
+    if(!tbody) return;
+    if(!filtered.length) {
+        tbody.innerHTML=`<tr class="state-row"><td colspan="9"><div class="state-icon">⚡</div><div>No app errors found.</div></td></tr>`;
+        document.getElementById('errorsPagination').style.display='none';
+    } else {
+        tbody.innerHTML=slice.map((r,i)=>{
+            const ua=r.userAccount||{};
+            const acc=r.isLoggedIn&&ua.name?`<div style="font-size:0.82rem;font-weight:600;">${esc(ua.name)}</div><div style="font-size:0.68rem;color:var(--muted);font-family:'JetBrains Mono',monospace;">${(ua.id||'').substring(0,12)}…</div>`:`<span style="color:var(--muted);font-size:0.76rem;">Guest</span>`;
+            const msg=(r.message||'').substring(0,60)+((r.message||'').length>60?'…':'');
+            let acts=`<button class="action-btn view" onclick="openErrorModal('${r.firebaseKey}')">📋</button> `;
+            if(r.status==='new') acts+=`<button class="action-btn review" onclick="updateErrorStatus('${r.firebaseKey}','reviewed')">👁️</button> <button class="action-btn resolve" onclick="updateErrorStatus('${r.firebaseKey}','resolved')">✅</button> `;
+            else if(r.status==='reviewed') acts+=`<button class="action-btn resolve" onclick="updateErrorStatus('${r.firebaseKey}','resolved')">✅</button> `;
+            acts+=`<button class="action-btn" onclick="updateErrorStatus('${r.firebaseKey}','ignored')" title="Ignore">🚫</button> `;
+            acts+=`<button class="action-btn del" onclick="deleteError('${r.firebaseKey}')">🗑️</button>`;
+            return `<tr style="animation-delay:${i*0.025}s">
+                <td style="font-size:0.75rem;"><code>${esc(r.kind)}</code></td>
+                <td style="font-family:'JetBrains Mono',monospace;font-size:0.72rem;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${esc(r.exceptionType)}">${esc(r.exceptionType)}</td>
+                <td><div class="report-desc" title="${esc(r.message)}">${esc(msg)}</div></td>
+                <td style="font-size:0.78rem;color:var(--muted);">${esc(r.activePage)}</td>
+                <td style="font-size:0.8rem;">${esc(r.appVersion)}</td>
+                <td>${acc}</td>
+                <td class="time-cell"><span>${esc(r.date)}</span></td>
+                <td><span class="report-status ${r.status}">${statusIcons[r.status]||''} ${r.status}</span></td>
+                <td style="white-space:nowrap;">${acts}</td>
+            </tr>`;
+        }).join('');
+        renderPagination('errorsPagination', errorPage, total, p=>{errorPage=p;renderErrors();});
+    }
+
+    const cards=document.getElementById('errorsCards');
+    if(cards){
+        if(!filtered.length) {
+            cards.innerHTML=`<div style="text-align:center;padding:48px 20px;color:var(--muted);"><div style="font-size:2rem;margin-bottom:8px;opacity:0.35;">⚡</div>No app errors found.</div>`;
+            const pm=document.getElementById('errorsPaginationMobile'); if(pm) pm.style.display='none';
+        } else {
+            cards.innerHTML=slice.map((r,i)=>{
+                const ua=r.userAccount||{};
+                return `<div class="report-card" style="animation-delay:${i*0.03}s">
+                    <div class="report-card-header">
+                        <div><div style="font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--muted);margin-bottom:4px;">${esc(r.kind)} · ${esc(r.appVersion)}</div><span class="report-status ${r.status}">${statusIcons[r.status]||''} ${r.status}</span></div>
+                        <div style="text-align:right;font-size:0.78rem;color:var(--muted);">${esc(r.date)}</div>
+                    </div>
+                    <div style="font-weight:600;margin-bottom:6px;">${esc(r.exceptionType)}</div>
+                    <div class="report-card-desc">${esc(r.message||'No message.')}</div>
+                    <div class="report-card-meta">
+                        <div class="report-card-meta-item"><span class="rm-label">Page</span><span class="rm-value">${esc(r.activePage)}</span></div>
+                        <div class="report-card-meta-item"><span class="rm-label">Account</span><span class="rm-value">${r.isLoggedIn&&ua.name?esc(ua.name):'Guest'}</span></div>
+                        <div class="report-card-meta-item"><span class="rm-label">OS</span><span class="rm-value">${esc(r.os)}</span></div>
+                        <div class="report-card-meta-item"><span class="rm-label">Fingerprint</span><span class="rm-value" style="font-family:monospace;font-size:0.7rem;">${esc(r.fingerprint||'—')}</span></div>
+                    </div>
+                    <div class="report-card-actions">
+                        <button class="action-btn view" onclick="openErrorModal('${r.firebaseKey}')">📋 Details</button>
+                        <button class="action-btn del" onclick="deleteError('${r.firebaseKey}')">🗑️</button>
+                    </div>
+                </div>`;
+            }).join('');
+            renderPagination('errorsPaginationMobile', errorPage, total, p=>{errorPage=p;renderErrors();});
+        }
+    }
+}
+
+function openErrorModal(key) {
+    const r=allErrors.find(x=>x.firebaseKey===key);
+    if(!r) return;
+    const ua=r.userAccount||{};
+    document.getElementById('errorModalBody').innerHTML =
+        `<div style="display:grid;gap:10px;font-size:0.88rem;">
+            <div><b>Kind</b>: <code>${esc(r.kind)}</code> · <b>Status</b>: ${esc(r.status)}</div>
+            <div><b>Exception</b>: <code>${esc(r.exceptionType)}</code></div>
+            <div><b>Message</b><pre style="white-space:pre-wrap;background:rgba(0,0,0,.25);padding:10px;border-radius:8px;margin:6px 0 0;">${esc(r.message)}</pre></div>
+            <div><b>Page</b>: ${esc(r.activePage)} · <b>Version</b>: ${esc(r.appVersion)} · <b>Env</b>: ${esc(r.environment||'—')}</div>
+            <div><b>OS</b>: ${esc(r.os)} ${esc(r.systemType||'')}</div>
+            <div><b>Account</b>: ${r.isLoggedIn?(esc(ua.name||'')+' · '+esc(ua.email||'')+' · '+esc(ua.id||'')):'Guest / not signed in'}</div>
+            <div><b>Fingerprint</b>: <code>${esc(r.fingerprint||'—')}</code></div>
+            <div><b>Time</b>: ${esc(r.date||fmtTs(r.timestamp))}</div>
+            <div><b>Stack</b><pre style="white-space:pre-wrap;max-height:280px;overflow:auto;background:rgba(0,0,0,.35);padding:10px;border-radius:8px;font-size:0.72rem;margin:6px 0 0;">${esc(r.stackTrace||'(none)')}</pre></div>
+        </div>`;
+    document.getElementById('errorModalActions').innerHTML =
+        `<button class="action-btn review" onclick="updateErrorStatus('${r.firebaseKey}','reviewed');closeErrorModal()">Mark reviewed</button>
+         <button class="action-btn resolve" onclick="updateErrorStatus('${r.firebaseKey}','resolved');closeErrorModal()">Resolve</button>
+         <button class="action-btn" onclick="updateErrorStatus('${r.firebaseKey}','ignored');closeErrorModal()">Ignore</button>
+         <button class="action-btn del" onclick="deleteError('${r.firebaseKey}');closeErrorModal()">Delete</button>`;
+    document.getElementById('errorModal').classList.add('show');
+}
+
+function closeErrorModal() {
+    document.getElementById('errorModal')?.classList.remove('show');
+}
+
+async function updateErrorStatus(key, status) {
+    try {
+        await db.ref(`errorReports/${key}/status`).set(status);
+        const r=allErrors.find(x=>x.firebaseKey===key);
+        if(r) r.status=status;
+        updateErrorStats(); renderErrors();
+        showToast('Status → '+status, 'success');
+    } catch(e) {
+        showToast('Failed to update status: '+e.message, 'danger');
+    }
+}
+
+async function deleteError(key) {
+    if(!confirm('Delete this app error report?')) return;
+    try {
+        await db.ref(`errorReports/${key}`).remove();
+        allErrors=allErrors.filter(x=>x.firebaseKey!==key);
+        updateErrorStats(); renderErrors();
+        showToast('Deleted', 'success');
+    } catch(e) {
+        showToast('Delete failed: '+e.message, 'danger');
+    }
+}
+
 function updateReportStats() {
     document.getElementById('rStatTotal').textContent=allReports.length;
     document.getElementById('rStatNew').textContent=allReports.filter(r=>r.status==='new').length;
@@ -1995,8 +2265,11 @@ function renderPagination(elId, currentPage, totalPages, onChange) {
     const el=document.getElementById(elId);
     if(totalPages<=1) { el.style.display='none'; return; }
     el.style.display='flex';
-    const start=(currentPage-1)*PAGE_SIZE+1, end=Math.min(currentPage*PAGE_SIZE, elId.includes('report')?getFilteredReports().length:getFilteredUsers().length);
-    const total=elId.includes('report')?getFilteredReports().length:getFilteredUsers().length;
+    const listLen = elId.includes('error') ? getFilteredErrors().length
+        : elId.includes('report') ? getFilteredReports().length
+        : getFilteredUsers().length;
+    const start=(currentPage-1)*PAGE_SIZE+1, end=Math.min(currentPage*PAGE_SIZE, listLen);
+    const total=listLen;
     let pages='';
     for(let p=1;p<=totalPages;p++) {
         if(p===1||p===totalPages||Math.abs(p-currentPage)<=1) pages+=`<button class="page-btn${p===currentPage?' active':''}" onclick="(${onChange.toString()})(${p})">${p}</button>`;
@@ -2303,6 +2576,8 @@ function switchTab(tab, btn) {
     btn.classList.add('active');
     document.getElementById('usersSection').style.display=tab==='users'?'':'none';
     document.getElementById('reportsSection').style.display=tab==='reports'?'':'none';
+    const errSec=document.getElementById('errorsSection');
+    if(errSec) errSec.style.display=tab==='errors'?'':'none';
     document.getElementById('chatModSection').style.display=tab==='chatMod'?'':'none';
     document.getElementById('featureFlagsSection').style.display=tab==='featureFlags'?'':'none';
     const ann=document.getElementById('announcementsSection');
@@ -2310,6 +2585,7 @@ function switchTab(tab, btn) {
     if(ann) ann.style.display=tab==='announcements'?'':'none';
     if(mb) mb.style.display=tab==='mailbox'?'':'none';
     if(tab==='reports') loadReports();
+    if(tab==='errors') loadErrors();
     if(tab==='chatMod') loadChatMod();
     if(tab==='featureFlags') loadFeatureFlags();
     if(tab==='announcements') loadAnnouncementsAdmin();

@@ -86,6 +86,19 @@
       }
     },
 
+    "errorReports": {
+      ".read": "auth != null && (auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || root.child('users/' + auth.uid + '/role').val() === 'dev' || root.child('users/' + auth.uid + '/role').val() === 'founder')",
+      ".indexOn": [
+        "status",
+        "timestamp",
+        "fingerprint",
+        "kind"
+      ],
+      "$reportId": {
+        ".write": "auth != null && ((auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || root.child('users/' + auth.uid + '/role').val() === 'dev' || root.child('users/' + auth.uid + '/role').val() === 'founder') || (!data.exists() && newData.child('source').val() === 'auto' && newData.child('status').val() === 'new' && newData.hasChild('timestamp') && newData.hasChild('exceptionType') && newData.child('exceptionType').isString() && newData.child('exceptionType').val().length > 0 && newData.child('exceptionType').val().length <= 200 && newData.hasChild('message') && newData.child('message').isString() && newData.child('message').val().length > 0 && newData.child('message').val().length <= 2000 && (!newData.hasChild('stackTrace') || (newData.child('stackTrace').isString() && newData.child('stackTrace').val().length <= 8000))))"
+      }
+    },
+
     "announcements": {
       ".read": true,
       ".indexOn": ["timestamp"],
