@@ -2496,6 +2496,13 @@ const PAGE_FLAG_KEYS = new Set(PAGE_FLAG_CATALOG.map(p => p.key));
  * Start with Tools; other pages fill in as we wire them.
  */
 const PAGE_FEATURE_CATALOG = {
+    home: [
+        { key: 'home_language', title: 'Language Selector', icon: 'fa-globe', desc: 'Language picker in the Home hero' },
+        { key: 'home_time', title: 'Time Card', icon: 'fa-clock', desc: 'Live clock and day-progress atmosphere card' },
+        { key: 'home_system_status', title: 'System Status', icon: 'fa-heartbeat', desc: 'CPU / RAM / network / uptime metrics' },
+        { key: 'home_overview', title: 'Overview', icon: 'fa-info-circle', desc: 'About Bari Plux + core feature tiles' },
+        { key: 'home_activity_log', title: 'Activity Log', icon: 'fa-list', desc: 'Recent activity list with clear / export' },
+    ],
     tools: [
         { key: 'tools_game_files', title: 'Game Files', icon: 'fa-file-archive', desc: 'Backup / restore PUBG .pak files' },
         { key: 'tools_configuration', title: 'Configuration', icon: 'fa-sliders-h', desc: 'Active.sav + keymap helpers' },
