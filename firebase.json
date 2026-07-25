@@ -20,6 +20,14 @@
       {
         "source": "/",
         "destination": "/login1.html"
+      },
+      {
+        "source": "/Pro",
+        "destination": "/Pro.html"
+      },
+      {
+        "source": "/pro",
+        "destination": "/Pro.html"
       }
     ],
     "headers": [
