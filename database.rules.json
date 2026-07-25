@@ -44,12 +44,27 @@
         },
         "proDeviceId": {
           ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com')",
-          ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || (auth.uid === $uid && (!data.exists() || data.val() === newData.val()))",
+          ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || (auth.uid === $uid && (!data.exists() || data.val() === newData.val() || data.parent().child('proDeviceChangeAllowed').val() === true))",
           ".validate": "!newData.exists() || (newData.isString() && newData.val().length >= 16 && newData.val().length <= 128)"
         },
         "proDeviceBoundAt": {
           ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com')",
-          ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || (auth.uid === $uid && (!data.exists() || data.val() === newData.val()))",
+          ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || (auth.uid === $uid && (!data.exists() || data.val() === newData.val() || data.parent().child('proDeviceChangeAllowed').val() === true))",
+          ".validate": "!newData.exists() || newData.isNumber()"
+        },
+        "proDeviceChangeAllowed": {
+          ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com')",
+          ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || (auth.uid === $uid && (!newData.exists() || newData.val() === false))",
+          ".validate": "!newData.exists() || newData.isBoolean()"
+        },
+        "proDeviceChangedAt": {
+          ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com')",
+          ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || auth.uid === $uid",
+          ".validate": "!newData.exists() || newData.isNumber()"
+        },
+        "proDeviceChangeGrantedAt": {
+          ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com')",
+          ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'",
           ".validate": "!newData.exists() || newData.isNumber()"
         }
       }
@@ -75,12 +90,27 @@
         },
         "proDeviceId": {
           ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com')",
-          ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || (auth.uid === $uid && (!data.exists() || data.val() === newData.val()))",
+          ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || (auth.uid === $uid && (!data.exists() || data.val() === newData.val() || data.parent().child('proDeviceChangeAllowed').val() === true))",
           ".validate": "!newData.exists() || (newData.isString() && newData.val().length >= 16 && newData.val().length <= 128)"
         },
         "proDeviceBoundAt": {
           ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com')",
-          ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || (auth.uid === $uid && (!data.exists() || data.val() === newData.val()))",
+          ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || (auth.uid === $uid && (!data.exists() || data.val() === newData.val() || data.parent().child('proDeviceChangeAllowed').val() === true))",
+          ".validate": "!newData.exists() || newData.isNumber()"
+        },
+        "proDeviceChangeAllowed": {
+          ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com')",
+          ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || (auth.uid === $uid && (!newData.exists() || newData.val() === false))",
+          ".validate": "!newData.exists() || newData.isBoolean()"
+        },
+        "proDeviceChangedAt": {
+          ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com')",
+          ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || auth.uid === $uid",
+          ".validate": "!newData.exists() || newData.isNumber()"
+        },
+        "proDeviceChangeGrantedAt": {
+          ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com')",
+          ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'",
           ".validate": "!newData.exists() || newData.isNumber()"
         }
       }
