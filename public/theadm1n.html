@@ -569,6 +569,9 @@
             <button class="tab-btn" onclick="switchTab('updates', this)">
                 <i class="fas fa-cloud-download-alt"></i> Updates
             </button>
+            <button class="tab-btn" onclick="switchTab('pause', this)">
+                <i class="fas fa-pause-circle"></i> Pause
+            </button>
         </div>
 
         <div id="usersSection">
@@ -952,6 +955,63 @@
             </div>
 
             <div class="last-updated" id="updatesLastUpdated"></div>
+        </div>
+
+        <div id="pauseSection" style="display:none;">
+            <div class="stats-grid">
+                <div class="stat-card" style="animation-delay:0s"><div class="stat-icon" style="background:rgba(255,159,10,0.15);color:#FF9F0A;"><i class="fas fa-pause-circle"></i></div><div><div class="stat-num" id="pauseStatStatus" style="font-size:1.2rem;">—</div><div class="stat-label">App Status</div></div></div>
+                <div class="stat-card" style="animation-delay:0.05s"><div class="stat-icon" style="background:rgba(76,175,80,0.15);color:#4CAF50;"><i class="fas fa-broadcast-tower"></i></div><div><div class="stat-num" id="pauseStatLive" style="font-size:1.1rem;">—</div><div class="stat-label">Live Edit</div></div></div>
+                <div class="stat-card" style="animation-delay:0.1s"><div class="stat-icon total"><i class="fas fa-clock"></i></div><div><div class="stat-num" id="pauseStatUpdated" style="font-size:0.95rem;">—</div><div class="stat-label">Last Publish</div></div></div>
+            </div>
+
+            <div class="toolbar">
+                <span class="toolbar-title">Pause App <span style="color:var(--muted);font-size:0.8rem;font-weight:400;">blocks all desktop clients until you resume</span></span>
+                <button class="icon-btn teal" onclick="loadPauseConfig()"><i class="fas fa-sync-alt"></i> Refresh</button>
+            </div>
+
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:22px;margin-bottom:16px;">
+                <div style="font-size:0.9rem;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px;">
+                    <i class="fas fa-pause-circle" style="color:#FF9F0A;"></i>
+                    Maintenance / temporary pause
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+                    <div style="grid-column:1/-1;display:flex;gap:18px;align-items:center;flex-wrap:wrap;">
+                        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+                            <input type="checkbox" id="pauseEnabledInput" style="width:16px;height:16px;accent-color:#FF9F0A;" onchange="refreshPausePreview()">
+                            <span style="font-size:0.9rem;font-weight:600;">Pause Bari Plux Tool for everyone</span>
+                        </label>
+                        <span style="font-size:0.78rem;color:var(--muted);">Clients poll every ~15s — title &amp; message update live while paused.</span>
+                    </div>
+                    <div style="grid-column:1/-1;">
+                        <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Title <span id="pauseTitleCount" style="opacity:0.7;">0/120</span></div>
+                        <input type="text" id="pauseTitleInput" maxlength="120" placeholder="e.g. Temporarily Unavailable" oninput="refreshPausePreview()" style="width:100%;padding:10px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Poppins',sans-serif;font-size:0.9rem;">
+                    </div>
+                    <div style="grid-column:1/-1;">
+                        <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Message <span id="pauseMessageCount" style="opacity:0.7;">0/2000</span></div>
+                        <textarea id="pauseMessageInput" maxlength="2000" rows="5" placeholder="Explain why the app is paused…" oninput="refreshPausePreview()" style="width:100%;padding:10px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Poppins',sans-serif;font-size:0.85rem;resize:vertical;"></textarea>
+                    </div>
+                    <div style="grid-column:1/-1;">
+                        <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:8px;">Client preview</div>
+                        <div id="pausePreviewBox" style="padding:18px 20px;background:rgba(0,0,0,0.28);border:1px solid var(--border);border-radius:14px;text-align:center;">
+                            <div style="font-size:0.72rem;color:#FF9F0A;font-weight:600;margin-bottom:6px;">Bari Plux</div>
+                            <div id="pausePreviewTitle" style="font-size:1.15rem;font-weight:700;margin-bottom:8px;">Temporarily Unavailable</div>
+                            <div id="pausePreviewMessage" style="font-size:0.85rem;color:var(--muted);line-height:1.5;">Bari Plux Tool is temporarily paused. Please try again later.</div>
+                            <div id="pausePreviewBadge" style="display:inline-block;margin-top:12px;padding:6px 12px;border-radius:999px;background:rgba(255,159,10,0.12);color:#FF9F0A;font-size:0.75rem;font-weight:600;">App is running normally</div>
+                        </div>
+                    </div>
+                </div>
+                <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;">
+                    <button class="action-btn view" onclick="savePauseConfig()" style="padding:10px 18px;font-weight:600;"><i class="fas fa-save"></i> Save &amp; Publish</button>
+                    <button class="action-btn" onclick="resumeAppNow()" style="padding:10px 18px;"><i class="fas fa-play"></i> Resume now</button>
+                </div>
+                <div style="margin-top:14px;font-size:0.78rem;color:var(--muted);line-height:1.5;">
+                    Writes to <code style="color:var(--accent2);">app_config/maintenance</code>.
+                    While paused, you can change title/message and Save again — open clients refresh the gate text automatically.
+                    Use <strong>Resume now</strong> to clear the pause immediately.
+                </div>
+            </div>
+
+            <div class="last-updated" id="pauseLastUpdated"></div>
         </div>
 
         <div id="announcementsSection" style="display:none;">
@@ -3452,6 +3512,123 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+const DEFAULT_PAUSE_TITLE = 'Temporarily Unavailable';
+const DEFAULT_PAUSE_MESSAGE = 'Bari Plux Tool is temporarily paused. Please try again later.';
+
+function refreshPausePreview() {
+    const enabled = !!document.getElementById('pauseEnabledInput')?.checked;
+    const title = (document.getElementById('pauseTitleInput')?.value || '').trim() || DEFAULT_PAUSE_TITLE;
+    const message = (document.getElementById('pauseMessageInput')?.value || '').trim() || DEFAULT_PAUSE_MESSAGE;
+    const titleEl = document.getElementById('pausePreviewTitle');
+    const msgEl = document.getElementById('pausePreviewMessage');
+    const badge = document.getElementById('pausePreviewBadge');
+    const titleCount = document.getElementById('pauseTitleCount');
+    const msgCount = document.getElementById('pauseMessageCount');
+    const rawTitle = document.getElementById('pauseTitleInput')?.value || '';
+    const rawMsg = document.getElementById('pauseMessageInput')?.value || '';
+    if (titleEl) titleEl.textContent = title;
+    if (msgEl) msgEl.textContent = message;
+    if (badge) {
+        badge.textContent = enabled ? 'Paused by administrator' : 'App is running normally';
+        badge.style.background = enabled ? 'rgba(255,159,10,0.18)' : 'rgba(76,175,80,0.12)';
+        badge.style.color = enabled ? '#FF9F0A' : '#4CAF50';
+    }
+    if (titleCount) titleCount.textContent = rawTitle.length + '/120';
+    if (msgCount) msgCount.textContent = rawMsg.length + '/2000';
+    const st = document.getElementById('pauseStatStatus');
+    if (st) {
+        st.textContent = enabled ? 'PAUSED' : 'LIVE';
+        st.style.color = enabled ? '#FF9F0A' : '#4CAF50';
+    }
+    const live = document.getElementById('pauseStatLive');
+    if (live) live.textContent = 'ON';
+}
+
+function fillPauseForm(cfg) {
+    const enabled = !!(cfg && cfg.enabled);
+    const title = (cfg && cfg.title) || DEFAULT_PAUSE_TITLE;
+    const message = (cfg && cfg.message) || DEFAULT_PAUSE_MESSAGE;
+    document.getElementById('pauseEnabledInput').checked = enabled;
+    document.getElementById('pauseTitleInput').value = title;
+    document.getElementById('pauseMessageInput').value = message;
+    const updStat = document.getElementById('pauseStatUpdated');
+    if (updStat) {
+        updStat.textContent = cfg && cfg.updated_at
+            ? new Date(cfg.updated_at).toLocaleString()
+            : 'never';
+    }
+    refreshPausePreview();
+}
+
+async function loadPauseConfig() {
+    if (!db) return;
+    try {
+        const snap = await db.ref('app_config/maintenance').once('value');
+        const cfg = snap.val();
+        fillPauseForm(cfg || null);
+        const lu = document.getElementById('pauseLastUpdated');
+        if (lu) {
+            const ts = cfg && cfg.updated_at ? new Date(cfg.updated_at).toLocaleString() : 'never published';
+            lu.textContent = 'Firebase maintenance last updated: ' + ts;
+        }
+    } catch (e) {
+        fillPauseForm(null);
+        showToast('⚠️ Failed to load pause config: ' + e.message, 'danger');
+    }
+}
+
+async function savePauseConfig() {
+    if (!db) return;
+    const enabled = !!document.getElementById('pauseEnabledInput').checked;
+    const title = (document.getElementById('pauseTitleInput').value || '').trim();
+    const message = (document.getElementById('pauseMessageInput').value || '').trim();
+    if (!title || title.length > 120) {
+        showToast('⚠️ Title is required (max 120 chars)', 'danger');
+        return;
+    }
+    if (!message || message.length > 2000) {
+        showToast('⚠️ Message is required (max 2000 chars)', 'danger');
+        return;
+    }
+
+    const payload = {
+        enabled,
+        title,
+        message,
+        updated_at: Date.now()
+    };
+
+    try {
+        await db.ref('app_config/maintenance').set(payload);
+        showToast(enabled
+            ? '⏸ App paused — clients will show the gate shortly'
+            : '▶️ Pause cleared — clients can use the app again', 'success');
+        loadPauseConfig();
+    } catch (e) {
+        showToast('⚠️ Failed to save: ' + e.message, 'danger');
+    }
+}
+
+async function resumeAppNow() {
+    if (!db) return;
+    const title = (document.getElementById('pauseTitleInput').value || '').trim() || DEFAULT_PAUSE_TITLE;
+    const message = (document.getElementById('pauseMessageInput').value || '').trim() || DEFAULT_PAUSE_MESSAGE;
+    document.getElementById('pauseEnabledInput').checked = false;
+    refreshPausePreview();
+    try {
+        await db.ref('app_config/maintenance').set({
+            enabled: false,
+            title,
+            message,
+            updated_at: Date.now()
+        });
+        showToast('▶️ App resumed for all clients', 'success');
+        loadPauseConfig();
+    } catch (e) {
+        showToast('⚠️ Failed to resume: ' + e.message, 'danger');
+    }
+}
+
 function switchTab(tab, btn) {
     document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
@@ -3463,6 +3640,8 @@ function switchTab(tab, btn) {
     document.getElementById('featureFlagsSection').style.display=tab==='featureFlags'?'':'none';
     const upd=document.getElementById('updatesSection');
     if(upd) upd.style.display=tab==='updates'?'':'none';
+    const pause=document.getElementById('pauseSection');
+    if(pause) pause.style.display=tab==='pause'?'':'none';
     const ann=document.getElementById('announcementsSection');
     const mb=document.getElementById('mailboxSection');
     if(ann) ann.style.display=tab==='announcements'?'':'none';
@@ -3473,6 +3652,7 @@ function switchTab(tab, btn) {
     if(tab==='featureFlags') loadFeatureFlags();
     else if (typeof closePageFlagDetail === 'function') closePageFlagDetail();
     if(tab==='updates') loadUpdateConfig();
+    if(tab==='pause') loadPauseConfig();
     if(tab==='announcements') loadAnnouncementsAdmin();
     if(tab==='mailbox'){ if(typeof allUsers!=='undefined' && (!allUsers||!allUsers.length) && typeof loadUsers==='function'){/* optional */} renderMailboxOutbox(); }
 }

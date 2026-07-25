@@ -9,6 +9,9 @@
       ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'",
       "update": {
         ".validate": "!newData.exists() || (newData.hasChild('version') && newData.child('version').isString() && newData.child('version').val().matches(/^[0-9]+(\\.[0-9]+){1,3}$/) && newData.child('version').val().length <= 32 && (!newData.hasChild('mandatory') || newData.child('mandatory').isBoolean()) && (!newData.hasChild('check_enabled') || newData.child('check_enabled').isBoolean()) && (!newData.hasChild('download_url') || (newData.child('download_url').isString() && newData.child('download_url').val().length <= 500)) && (!newData.hasChild('changelog') || (newData.child('changelog').isString() && newData.child('changelog').val().length <= 4000)) && (!newData.hasChild('updated_at') || newData.child('updated_at').isNumber()))"
+      },
+      "maintenance": {
+        ".validate": "!newData.exists() || (newData.hasChild('enabled') && newData.child('enabled').isBoolean() && newData.hasChild('title') && newData.child('title').isString() && newData.child('title').val().length > 0 && newData.child('title').val().length <= 120 && newData.hasChild('message') && newData.child('message').isString() && newData.child('message').val().length > 0 && newData.child('message').val().length <= 2000 && (!newData.hasChild('updated_at') || newData.child('updated_at').isNumber()))"
       }
     },
     "users": {
