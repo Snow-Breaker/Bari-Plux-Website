@@ -17,6 +17,19 @@
         ".validate": "!newData.exists() || (newData.hasChild('mode') && newData.child('mode').isString() && newData.child('mode').val().matches(/^(everyone|allowlist|role)$/) && (!newData.hasChild('min_role') || (newData.child('min_role').isString() && newData.child('min_role').val().matches(/^(free|pro|dev|founder)$/))) && (!newData.hasChild('updated_at') || newData.child('updated_at').isNumber()))"
       }
     },
+    "payhip_orders": {
+      ".read": false,
+      ".write": false
+    },
+    "payhip_licenses": {
+      ".read": false,
+      ".write": false
+    },
+    "payhip_subscriptions": {
+      ".read": false,
+      ".write": false,
+      ".indexOn": ["expiresAtMs"]
+    },
     "users": {
       ".read": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'",
       "$uid": {
@@ -37,6 +50,11 @@
           ".read": "auth != null",
           ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'",
           ".validate": "newData.isString() && newData.val().matches(/^(free|pro|dev|founder)$/)"
+        },
+        "proExpiresAtMs": {
+          ".read": "auth != null",
+          ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'",
+          ".validate": "!newData.exists() || newData.isNumber()"
         },
         "appVersion": {
           ".read": "auth != null",
@@ -83,6 +101,11 @@
           ".read": "auth != null",
           ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'",
           ".validate": "newData.isString() && newData.val().matches(/^(free|pro|dev|founder)$/)"
+        },
+        "proExpiresAtMs": {
+          ".read": "auth != null",
+          ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'",
+          ".validate": "!newData.exists() || newData.isNumber()"
         },
         "appVersion": {
           ".read": "auth != null",
