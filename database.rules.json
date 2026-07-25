@@ -134,6 +134,9 @@
         },
         "visible": {
           ".validate": "newData.isBoolean()"
+        },
+        "page": {
+          ".validate": "newData.isString() && newData.val().matches(/^[a-z0-9_]+$/)"
         }
       }
     },

@@ -445,6 +445,33 @@
         .ff-page-toggles { display: flex; gap: 6px; flex-wrap: wrap; width: 100%; }
         .ff-page-toggles .action-btn { flex: 1; min-width: 110px; justify-content: center; }
         .ff-page-badges { display: flex; gap: 4px; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end; }
+        .ff-page-card { cursor: default; }
+        .ff-page-card .ff-open-page {
+            width: 100%; margin-top: 2px; justify-content: center;
+            border-color: rgba(108,99,255,0.35); color: var(--accent);
+        }
+        .ff-page-detail { display: none; margin-bottom: 28px; }
+        .ff-page-detail.show { display: block; animation: fadeUp 0.25s ease; }
+        .ff-detail-top {
+            display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+            margin-bottom: 14px;
+        }
+        .ff-detail-crumb {
+            display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 0.9rem; font-weight: 600;
+        }
+        .ff-detail-crumb .back {
+            border: 1px solid var(--border); background: var(--surface2); color: var(--text);
+            border-radius: 8px; padding: 7px 12px; cursor: pointer; font-family: Poppins, sans-serif; font-size: 0.8rem;
+        }
+        .ff-detail-crumb .back:hover { border-color: var(--accent); color: var(--accent); }
+        .ff-detail-crumb .sep { color: var(--muted); }
+        .ff-detail-page-panel {
+            background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 16px; margin-bottom: 18px;
+        }
+        .ff-features-empty {
+            text-align: center; padding: 36px 16px; color: var(--muted); border: 1px dashed var(--border);
+            border-radius: 14px; background: rgba(255,255,255,0.02);
+        }
         .mb-outbox-item {
             padding: 12px; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 8px;
             background: rgba(255,255,255,0.02);
@@ -784,12 +811,27 @@
                 <button class="icon-btn" style="background:var(--accent);color:#fff;border:none;" onclick="seedMissingPageFlags()"><i class="fas fa-seedling"></i> Seed missing pages</button>
             </div>
 
-            <div class="ff-section-title"><i class="fas fa-th-large"></i> App Pages <span class="hint">Show/Hide = menu visibility · Enable/Disable = can open page · role gate applies to both</span></div>
+            <div class="ff-section-title" id="ffPagesSectionTitle"><i class="fas fa-th-large"></i> App Pages <span class="hint">Open a page to manage its capabilities · Show/Hide = menu · Enable/Disable = can open</span></div>
             <div id="ffPagesGrid" class="ff-pages-grid">
                 <div style="grid-column:1/-1;text-align:center;padding:28px;color:var(--muted);">Loading pages…</div>
             </div>
 
-            <div class="ff-section-title"><i class="fas fa-puzzle-piece"></i> Features <span class="hint">in-page capabilities (e.g. cloud_backup) — add more later</span></div>
+            <div id="ffPageDetail" class="ff-page-detail">
+                <div class="ff-detail-top">
+                    <div class="ff-detail-crumb">
+                        <button type="button" class="back" onclick="closePageFlagDetail()"><i class="fas fa-arrow-left"></i> All pages</button>
+                        <span class="sep">/</span>
+                        <span id="ffDetailPageTitle">Page</span>
+                    </div>
+                    <button class="icon-btn teal" onclick="seedPageFeaturesForCurrent()"><i class="fas fa-seedling"></i> Seed missing features</button>
+                </div>
+                <div id="ffDetailPagePanel" class="ff-detail-page-panel"></div>
+                <div class="ff-section-title"><i class="fas fa-puzzle-piece"></i> Page features <span class="hint" id="ffDetailFeaturesHint">capabilities inside this page</span></div>
+                <div id="ffDetailFeaturesGrid" class="ff-pages-grid"></div>
+            </div>
+
+            <div id="ffOrphanFeaturesBlock">
+            <div class="ff-section-title"><i class="fas fa-puzzle-piece"></i> Other features <span class="hint">not tied to a page catalog yet (e.g. legacy keys)</span></div>
             <div class="toolbar" style="margin-top:0;">
                 <span class="toolbar-title" style="font-size:0.85rem;">Capability flags</span>
                 <button class="icon-btn teal" id="addFeatureFlagBtn" onclick="showFeatureFlagForm()"><i class="fas fa-plus"></i> Add Flag</button>
@@ -846,6 +888,7 @@
 
             <div class="cards-wrap" id="featureFlagsCards"></div>
             <div class="last-updated" id="featureFlagsLastUpdated"></div>
+            </div>
         </div>
 
         <div id="announcementsSection" style="display:none;">
@@ -2448,8 +2491,49 @@ const PAGE_FLAG_CATALOG = [
 ];
 const PAGE_FLAG_KEYS = new Set(PAGE_FLAG_CATALOG.map(p => p.key));
 
+/**
+ * In-page capability catalogs (card-level first). Keys must match app FeatureGate.IsAllowed later.
+ * Start with Tools; other pages fill in as we wire them.
+ */
+const PAGE_FEATURE_CATALOG = {
+    tools: [
+        { key: 'tools_game_files', title: 'Game Files', icon: 'fa-file-archive', desc: 'Backup / restore PUBG .pak files' },
+        { key: 'tools_configuration', title: 'Configuration', icon: 'fa-sliders-h', desc: 'Active.sav + keymap helpers' },
+        { key: 'tools_custom_obb', title: 'Custom OBB', icon: 'fa-cube', desc: 'Install custom OBB packages' },
+        { key: 'tools_installation', title: 'Installation', icon: 'fa-download', desc: 'Install APK / manage apps' },
+        { key: 'tools_system_tools', title: 'System Tools', icon: 'fa-desktop', desc: 'Kill ADB + desktop shortcuts' },
+        { key: 'tools_defender_exclusion', title: 'Defender Exclusion', icon: 'fa-shield-alt', desc: 'Windows Defender path exclusions' },
+        { key: 'tools_redmagic_registry', title: 'RedMagic Registry', icon: 'fa-magic', desc: '90 FPS unlock registry tweaks' },
+        { key: 'tools_gameloop_control', title: 'GameLoop Control', icon: 'fa-gamepad', desc: 'Open / close GameLoop + Chinese files' },
+        { key: 'tools_uninstall_emulator', title: 'Uninstall Emulator', icon: 'fa-trash-alt', desc: 'Uninstall GameLoop / MuMu leftovers' },
+        { key: 'tools_mouse_customization', title: 'Mouse Customization', icon: 'fa-mouse-pointer', desc: 'Swap GameLoop cursor assets' },
+        { key: 'tools_temp_mover', title: 'Temp Mover', icon: 'fa-hdd', desc: 'Move GameLoop temp folder to another drive' },
+        { key: 'tools_downloads', title: 'Downloads', icon: 'fa-external-link-alt', desc: 'Open PUBG / GameLoop download pages' },
+    ],
+    settings: [
+        { key: 'cloud_backup', title: 'Cloud Backup', icon: 'fa-cloud', desc: 'Backup / restore settings to the cloud' },
+    ],
+};
+
+let _ffFlagsCache = {};
+let _ffOpenPageKey = null;
+
 function isPageFlagKey(key) {
     return PAGE_FLAG_KEYS.has(key);
+}
+
+function getCatalogedFeatureKeys() {
+    const keys = new Set();
+    Object.values(PAGE_FEATURE_CATALOG).forEach(list => list.forEach(f => keys.add(f.key)));
+    return keys;
+}
+
+function getPageFeatures(pageKey) {
+    return PAGE_FEATURE_CATALOG[pageKey] || [];
+}
+
+function getPageMeta(pageKey) {
+    return PAGE_FLAG_CATALOG.find(p => p.key === pageKey) || { key: pageKey, title: pageKey, icon: 'fa-flag' };
 }
 
 function roleSelectHtml(selected, onChangeAttr) {
@@ -2489,46 +2573,223 @@ function defaultPageFlagPayload(extra = {}) {
     };
 }
 
+function renderFlagControlCard({ key, title, icon, desc, s, kind }) {
+    const badges = s.missing
+        ? `<span class="ff-page-badge off">NOT SEEDED</span>`
+        : `<div class="ff-page-badges">
+            <span class="ff-page-badge ${s.visible ? 'on' : 'off'}">${s.visible ? 'SHOWN' : 'HIDDEN'}</span>
+            <span class="ff-page-badge ${s.enabled ? 'on' : 'off'}">${s.enabled ? 'ON' : 'OFF'}</span>
+           </div>`;
+    const visLabel = s.visible ? '<i class="fas fa-eye-slash"></i> Hide' : '<i class="fas fa-eye"></i> Show';
+    const visStyle = s.visible
+        ? 'border-color:rgba(255,152,0,0.35);color:#FF9800;'
+        : 'border-color:rgba(76,175,80,0.3);color:#4CAF50;';
+    const enLabel = s.enabled ? '<i class="fas fa-toggle-off"></i> Disable' : '<i class="fas fa-toggle-on"></i> Enable';
+    const enStyle = s.enabled
+        ? 'border-color:rgba(244,67,54,0.3);color:#F44336;'
+        : 'border-color:rgba(76,175,80,0.3);color:#4CAF50;';
+    const cardOff = !s.missing && (!s.visible || !s.enabled);
+    const roleFn = kind === 'page'
+        ? `updatePageFlagRole('${esc(key)}', this.value)`
+        : `updateFeatureFlagRole('${esc(key)}', this.value)`;
+    const visFn = kind === 'page'
+        ? `togglePageFlagVisible('${esc(key)}', ${s.visible ? 'false' : 'true'})`
+        : `toggleFeatureFlagVisible('${esc(key)}', ${s.visible ? 'false' : 'true'})`;
+    const enFn = kind === 'page'
+        ? `togglePageFlagEnabled('${esc(key)}', ${s.enabled ? 'false' : 'true'})`
+        : `toggleFeatureFlagEnabled('${esc(key)}', ${s.enabled ? 'false' : 'true'})`;
+    const descHtml = desc ? `<div style="font-size:0.75rem;color:var(--muted);line-height:1.4;margin-top:2px;">${esc(desc)}</div>` : '';
+    return `<div class="ff-page-card${s.missing ? ' missing' : ''}${cardOff ? ' off' : ''}">
+        <div class="ff-page-head">
+            <div>
+                <div class="ff-page-title"><i class="fas ${icon}"></i> ${esc(title)}</div>
+                <div class="ff-page-key">${esc(key)}</div>
+                ${descHtml}
+            </div>
+            ${badges}
+        </div>
+        <div class="ff-page-controls">
+            <label>
+                <span class="lbl">Minimum role</span>
+                ${roleSelectHtml(s.role, roleFn)}
+            </label>
+            <div class="ff-page-toggles">
+                <button class="action-btn" style="${visStyle}" onclick="${visFn}" title="Show or hide in the app UI">${visLabel}</button>
+                <button class="action-btn" style="${enStyle}" onclick="${enFn}" title="Allow or block using this capability">${enLabel}</button>
+            </div>
+        </div>
+    </div>`;
+}
+
 function renderPageFlagsGrid(data) {
     const grid = document.getElementById('ffPagesGrid');
     if (!grid) return;
     grid.innerHTML = PAGE_FLAG_CATALOG.map(p => {
         const s = readPageFlagState(data[p.key]);
+        const featCount = getPageFeatures(p.key).length;
+        const featLabel = featCount
+            ? `${featCount} feature${featCount === 1 ? '' : 's'}`
+            : 'No features yet';
         const badges = s.missing
             ? `<span class="ff-page-badge off">NOT SEEDED</span>`
             : `<div class="ff-page-badges">
                 <span class="ff-page-badge ${s.visible ? 'on' : 'off'}">${s.visible ? 'SHOWN' : 'HIDDEN'}</span>
                 <span class="ff-page-badge ${s.enabled ? 'on' : 'off'}">${s.enabled ? 'ON' : 'OFF'}</span>
                </div>`;
-        const visLabel = s.visible ? '<i class="fas fa-eye-slash"></i> Hide' : '<i class="fas fa-eye"></i> Show';
-        const visStyle = s.visible
-            ? 'border-color:rgba(255,152,0,0.35);color:#FF9800;'
-            : 'border-color:rgba(76,175,80,0.3);color:#4CAF50;';
-        const enLabel = s.enabled ? '<i class="fas fa-toggle-off"></i> Disable' : '<i class="fas fa-toggle-on"></i> Enable';
-        const enStyle = s.enabled
-            ? 'border-color:rgba(244,67,54,0.3);color:#F44336;'
-            : 'border-color:rgba(76,175,80,0.3);color:#4CAF50;';
         const cardOff = !s.missing && (!s.visible || !s.enabled);
         return `<div class="ff-page-card${s.missing ? ' missing' : ''}${cardOff ? ' off' : ''}">
             <div class="ff-page-head">
                 <div>
                     <div class="ff-page-title"><i class="fas ${p.icon}"></i> ${esc(p.title)}</div>
                     <div class="ff-page-key">${esc(p.key)}</div>
+                    <div style="font-size:0.75rem;color:var(--muted);margin-top:4px;">${featLabel}</div>
                 </div>
                 ${badges}
             </div>
-            <div class="ff-page-controls">
-                <label>
-                    <span class="lbl">Minimum role</span>
-                    ${roleSelectHtml(s.role, `updatePageFlagRole('${esc(p.key)}', this.value)`)}
-                </label>
-                <div class="ff-page-toggles">
-                    <button class="action-btn" style="${visStyle}" onclick="togglePageFlagVisible('${esc(p.key)}', ${s.visible ? 'false' : 'true'})" title="Show or hide this page in the app menu">${visLabel}</button>
-                    <button class="action-btn" style="${enStyle}" onclick="togglePageFlagEnabled('${esc(p.key)}', ${s.enabled ? 'false' : 'true'})" title="Allow or block opening this page">${enLabel}</button>
-                </div>
-            </div>
+            <button type="button" class="action-btn ff-open-page" onclick="openPageFlagDetail('${esc(p.key)}')">
+                <i class="fas fa-folder-open"></i> Open page
+            </button>
         </div>`;
     }).join('');
+}
+
+function openPageFlagDetail(pageKey) {
+    if (!isPageFlagKey(pageKey)) return;
+    _ffOpenPageKey = pageKey;
+    const meta = getPageMeta(pageKey);
+    document.getElementById('ffPagesGrid').style.display = 'none';
+    document.getElementById('ffPagesSectionTitle').style.display = 'none';
+    document.getElementById('ffOrphanFeaturesBlock').style.display = 'none';
+    const detail = document.getElementById('ffPageDetail');
+    detail.classList.add('show');
+    document.getElementById('ffDetailPageTitle').innerHTML =
+        `<i class="fas ${meta.icon}" style="color:var(--accent);margin-right:6px;"></i>${esc(meta.title)} <span class="ff-page-key" style="display:inline;margin-left:6px;">${esc(pageKey)}</span>`;
+    renderPageDetailContent(_ffFlagsCache);
+    // Auto-seed catalog features for this page so toggles work immediately.
+    seedPageFeatures(pageKey, { silentIfNone: true }).then(seeded => {
+        if (seeded) loadFeatureFlags();
+    });
+}
+
+function closePageFlagDetail() {
+    _ffOpenPageKey = null;
+    document.getElementById('ffPageDetail').classList.remove('show');
+    document.getElementById('ffPagesGrid').style.display = '';
+    document.getElementById('ffPagesSectionTitle').style.display = '';
+    document.getElementById('ffOrphanFeaturesBlock').style.display = '';
+}
+
+function renderPageDetailContent(data) {
+    if (!_ffOpenPageKey) return;
+    const pageKey = _ffOpenPageKey;
+    const meta = getPageMeta(pageKey);
+    const pageState = readPageFlagState(data[pageKey]);
+    document.getElementById('ffDetailPagePanel').innerHTML = renderFlagControlCard({
+        key: pageKey,
+        title: meta.title + ' (page)',
+        icon: meta.icon,
+        desc: 'Shell page gate — menu visibility and whether the page can open',
+        s: pageState,
+        kind: 'page'
+    });
+
+    const features = getPageFeatures(pageKey);
+    const grid = document.getElementById('ffDetailFeaturesGrid');
+    const hint = document.getElementById('ffDetailFeaturesHint');
+    if (hint) hint.textContent = features.length
+        ? `${features.length} catalogued capabilities — add more in code as we wire the app`
+        : 'No catalogued features for this page yet';
+
+    if (!features.length) {
+        grid.innerHTML = `<div class="ff-features-empty" style="grid-column:1/-1;">
+            <div style="font-size:1.6rem;margin-bottom:8px;opacity:0.4;">🧩</div>
+            No features catalogued for <strong>${esc(meta.title)}</strong> yet.<br>
+            <span style="font-size:0.8rem;">We’ll add them page by page as we wire the app.</span>
+        </div>`;
+        return;
+    }
+
+    grid.innerHTML = features.map(f => renderFlagControlCard({
+        key: f.key,
+        title: f.title,
+        icon: f.icon || 'fa-puzzle-piece',
+        desc: f.desc || '',
+        s: readPageFlagState(data[f.key]),
+        kind: 'feature'
+    })).join('');
+}
+
+async function seedPageFeatures(pageKey, { silentIfNone = false } = {}) {
+    const features = getPageFeatures(pageKey);
+    if (!features.length) {
+        if (!silentIfNone) showToast('ℹ️ No feature catalog for this page yet', 'success');
+        return 0;
+    }
+    const snap = await db.ref('feature_flags').once('value');
+    const data = snap.val() || {};
+    const ops = [];
+    for (const f of features) {
+        if (data[f.key]) continue;
+        ops.push(db.ref(`feature_flags/${f.key}`).set(defaultPageFlagPayload({ page: pageKey })));
+    }
+    if (!ops.length) {
+        if (!silentIfNone) showToast('✅ All features already seeded', 'success');
+        return 0;
+    }
+    await Promise.all(ops);
+    if (!silentIfNone) showToast(`✅ Seeded ${ops.length} feature(s) for ${pageKey}`, 'success');
+    return ops.length;
+}
+
+async function seedPageFeaturesForCurrent() {
+    if (!_ffOpenPageKey) return;
+    try {
+        const n = await seedPageFeatures(_ffOpenPageKey);
+        if (n > 0) loadFeatureFlags();
+    } catch (e) {
+        showToast('⚠️ Seed failed: ' + e.message, 'danger');
+    }
+}
+
+async function ensureFeatureFlagExists(key, pageKey) {
+    const snap = await db.ref(`feature_flags/${key}`).once('value');
+    if (snap.exists()) return snap.val() || {};
+    const payload = defaultPageFlagPayload(pageKey ? { page: pageKey } : {});
+    await db.ref(`feature_flags/${key}`).set(payload);
+    return payload;
+}
+
+async function updateFeatureFlagRole(key, role) {
+    try {
+        await ensureFeatureFlagExists(key, _ffOpenPageKey);
+        await db.ref(`feature_flags/${key}`).update({ min_role: role, updated_at: Date.now() });
+        showToast(`✅ ${key} → min role ${role}`, 'success');
+        loadFeatureFlags();
+    } catch (e) {
+        showToast('⚠️ Failed to update role: ' + e.message, 'danger');
+    }
+}
+
+async function toggleFeatureFlagVisible(key, newVal) {
+    try {
+        await ensureFeatureFlagExists(key, _ffOpenPageKey);
+        await db.ref(`feature_flags/${key}`).update({ visible: !!newVal, updated_at: Date.now() });
+        showToast(newVal ? `👁 ${key} shown` : `🙈 ${key} hidden`, 'success');
+        loadFeatureFlags();
+    } catch (e) {
+        showToast('⚠️ Failed to update visibility: ' + e.message, 'danger');
+    }
+}
+
+async function toggleFeatureFlagEnabled(key, newVal) {
+    try {
+        await ensureFeatureFlagExists(key, _ffOpenPageKey);
+        await db.ref(`feature_flags/${key}`).update({ enabled: !!newVal, updated_at: Date.now() });
+        showToast(newVal ? `✅ ${key} enabled` : `⛔ ${key} disabled`, 'success');
+        loadFeatureFlags();
+    } catch (e) {
+        showToast('⚠️ Failed to toggle: ' + e.message, 'danger');
+    }
 }
 
 async function seedMissingPageFlags() {
@@ -2610,7 +2871,7 @@ function loadFeatureFlags() {
     const tbody = document.getElementById('featureFlagsTableBody');
     const pagesGrid = document.getElementById('ffPagesGrid');
     tbody.innerHTML = '<tr class="state-row"><td colspan="5"><div class="state-icon">⏳</div><div>Loading feature flags...</div></td></tr>';
-    if (pagesGrid) pagesGrid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:28px;color:var(--muted);">Loading pages…</div>';
+    if (pagesGrid && !_ffOpenPageKey) pagesGrid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:28px;color:var(--muted);">Loading pages…</div>';
     db.ref('feature_flags').once('value').then(async snap => {
         let data = snap.val() || {};
         // Auto-seed any missing shell pages (shown + enabled + free).
@@ -2631,18 +2892,21 @@ function loadFeatureFlags() {
         }
         if (backfill.length) await Promise.all(backfill);
 
+        _ffFlagsCache = data;
         const entries = Object.entries(data).map(([key, val]) => ({ key, ...(val || {}) }));
         document.getElementById('ffStatTotal').textContent = entries.length;
         document.getElementById('ffStatEnabled').textContent = entries.filter(e => e.enabled === true).length;
         document.getElementById('ffStatDisabled').textContent = entries.filter(e => e.enabled !== true).length;
 
         renderPageFlagsGrid(data);
+        if (_ffOpenPageKey) renderPageDetailContent(data);
 
-        const featureEntries = entries.filter(e => !isPageFlagKey(e.key));
+        const cataloged = getCatalogedFeatureKeys();
+        const featureEntries = entries.filter(e => !isPageFlagKey(e.key) && !cataloged.has(e.key));
         featureEntries.sort((a, b) => a.key.localeCompare(b.key));
 
         if (!featureEntries.length) {
-            tbody.innerHTML = '<tr class="state-row"><td colspan="5"><div class="state-icon">🧩</div><div>No capability flags yet. Pages are managed above.</div></td></tr>';
+            tbody.innerHTML = '<tr class="state-row"><td colspan="5"><div class="state-icon">🧩</div><div>No orphan capability flags. Open a page above to manage its features.</div></td></tr>';
             document.getElementById('featureFlagsCards').innerHTML = '';
         } else {
             tbody.innerHTML = featureEntries.map((e, i) => {
@@ -2695,7 +2959,11 @@ function validateFeatureKey(key) {
 
 function showFeatureFlagForm(key) {
     if (key && isPageFlagKey(key)) {
-        showToast('⚠️ Page flags are edited in the App Pages section above', 'danger');
+        showToast('⚠️ Page flags are edited via Open page', 'danger');
+        return;
+    }
+    if (key && getCatalogedFeatureKeys().has(key)) {
+        showToast('⚠️ That feature is managed inside its page — open the page above', 'danger');
         return;
     }
     const form = document.getElementById('featureFlagForm');
@@ -2754,7 +3022,12 @@ async function saveFeatureFlag() {
         }
         if (isPageFlagKey(key)) {
             keyError.style.display = 'block';
-            showToast('⚠️ That key is an app page — use the App Pages section', 'danger');
+            showToast('⚠️ That key is an app page — use Open page', 'danger');
+            return;
+        }
+        if (getCatalogedFeatureKeys().has(key)) {
+            keyError.style.display = 'block';
+            showToast('⚠️ That key is a catalogued page feature — open its page', 'danger');
             return;
         }
     }
@@ -2782,6 +3055,10 @@ async function saveFeatureFlag() {
 async function deleteFeatureFlag(key) {
     if (isPageFlagKey(key)) {
         showToast('⚠️ Page flags cannot be deleted — disable them instead', 'danger');
+        return;
+    }
+    if (getCatalogedFeatureKeys().has(key)) {
+        showToast('⚠️ Catalogued features cannot be deleted — Hide/Disable them inside the page', 'danger');
         return;
     }
     if (!confirm(`Delete feature flag "${key}"? This cannot be undone.`)) return;
@@ -2822,6 +3099,7 @@ function switchTab(tab, btn) {
     if(tab==='errors') loadErrors();
     if(tab==='chatMod') loadChatMod();
     if(tab==='featureFlags') loadFeatureFlags();
+    else if (typeof closePageFlagDetail === 'function') closePageFlagDetail();
     if(tab==='announcements') loadAnnouncementsAdmin();
     if(tab==='mailbox'){ if(typeof allUsers!=='undefined' && (!allUsers||!allUsers.length) && typeof loadUsers==='function'){/* optional */} renderMailboxOutbox(); }
 }
