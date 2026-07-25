@@ -12,6 +12,9 @@
       },
       "maintenance": {
         ".validate": "!newData.exists() || (newData.hasChild('enabled') && newData.child('enabled').isBoolean() && newData.hasChild('title') && newData.child('title').isString() && newData.child('title').val().length > 0 && newData.child('title').val().length <= 120 && newData.hasChild('message') && newData.child('message').isString() && newData.child('message').val().length > 0 && newData.child('message').val().length <= 2000 && (!newData.hasChild('updated_at') || newData.child('updated_at').isNumber()))"
+      },
+      "access": {
+        ".validate": "!newData.exists() || (newData.hasChild('mode') && newData.child('mode').isString() && newData.child('mode').val().matches(/^(everyone|allowlist|role)$/) && (!newData.hasChild('min_role') || (newData.child('min_role').isString() && newData.child('min_role').val().matches(/^(free|pro|dev|founder)$/))) && (!newData.hasChild('updated_at') || newData.child('updated_at').isNumber()))"
       }
     },
     "users": {
@@ -38,6 +41,16 @@
         "appVersion": {
           ".read": "auth != null",
           ".validate": "!newData.exists() || (newData.isString() && newData.val().length > 0 && newData.val().length <= 32)"
+        },
+        "proDeviceId": {
+          ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com')",
+          ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || (auth.uid === $uid && (!data.exists() || data.val() === newData.val()))",
+          ".validate": "!newData.exists() || (newData.isString() && newData.val().length >= 16 && newData.val().length <= 128)"
+        },
+        "proDeviceBoundAt": {
+          ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com')",
+          ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || (auth.uid === $uid && (!data.exists() || data.val() === newData.val()))",
+          ".validate": "!newData.exists() || newData.isNumber()"
         }
       }
     },
@@ -59,6 +72,16 @@
         "appVersion": {
           ".read": "auth != null",
           ".validate": "!newData.exists() || (newData.isString() && newData.val().length > 0 && newData.val().length <= 32)"
+        },
+        "proDeviceId": {
+          ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com')",
+          ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || (auth.uid === $uid && (!data.exists() || data.val() === newData.val()))",
+          ".validate": "!newData.exists() || (newData.isString() && newData.val().length >= 16 && newData.val().length <= 128)"
+        },
+        "proDeviceBoundAt": {
+          ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com')",
+          ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || (auth.uid === $uid && (!data.exists() || data.val() === newData.val()))",
+          ".validate": "!newData.exists() || newData.isNumber()"
         }
       }
     },
