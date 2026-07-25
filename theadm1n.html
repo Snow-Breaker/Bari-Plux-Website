@@ -566,6 +566,9 @@
             <button class="tab-btn" onclick="switchTab('featureFlags', this)">
                 <i class="fas fa-flag"></i> Feature Flags
             </button>
+            <button class="tab-btn" onclick="switchTab('updates', this)">
+                <i class="fas fa-cloud-download-alt"></i> Updates
+            </button>
         </div>
 
         <div id="usersSection">
@@ -889,6 +892,66 @@
             <div class="cards-wrap" id="featureFlagsCards"></div>
             <div class="last-updated" id="featureFlagsLastUpdated"></div>
             </div>
+        </div>
+
+        <div id="updatesSection" style="display:none;">
+            <div class="stats-grid">
+                <div class="stat-card" style="animation-delay:0s"><div class="stat-icon total"><i class="fas fa-tag"></i></div><div><div class="stat-num" id="updStatVersion" style="font-size:1.35rem;">—</div><div class="stat-label">Published Version</div></div></div>
+                <div class="stat-card" style="animation-delay:0.05s"><div class="stat-icon" style="background:rgba(76,175,80,0.15);color:#4CAF50;"><i class="fas fa-toggle-on"></i></div><div><div class="stat-num" id="updStatChecks" style="font-size:1.1rem;">—</div><div class="stat-label">Update Checks</div></div></div>
+                <div class="stat-card" style="animation-delay:0.1s"><div class="stat-icon" style="background:rgba(255,152,0,0.15);color:#FF9800;"><i class="fas fa-exclamation-triangle"></i></div><div><div class="stat-num" id="updStatMandatory" style="font-size:1.1rem;">—</div><div class="stat-label">Mandatory</div></div></div>
+                <div class="stat-card" style="animation-delay:0.15s"><div class="stat-icon" style="background:rgba(108,99,255,0.15);color:#6C63FF;"><i class="fas fa-file-alt"></i></div><div><div class="stat-num" id="updStatLegacy" style="font-size:1.1rem;">—</div><div class="stat-label">Legacy version.txt</div></div></div>
+            </div>
+
+            <div class="toolbar">
+                <span class="toolbar-title">App Update Check <span style="color:var(--muted);font-size:0.8rem;font-weight:400;">controls what desktop clients see</span></span>
+                <button class="icon-btn teal" onclick="loadUpdateConfig()"><i class="fas fa-sync-alt"></i> Refresh</button>
+            </div>
+
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:22px;margin-bottom:16px;">
+                <div style="font-size:0.9rem;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px;">
+                    <i class="fas fa-cloud-download-alt" style="color:var(--accent);"></i>
+                    Publish update for Bari Plux Tool
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+                    <div>
+                        <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Latest Version</div>
+                        <input type="text" id="updVersionInput" placeholder="e.g. 2.3.0" style="width:100%;padding:10px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.9rem;">
+                    </div>
+                    <div>
+                        <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Installer Download URL</div>
+                        <input type="text" id="updDownloadUrlInput" placeholder="https://download.bariplux.com/..." style="width:100%;padding:10px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.82rem;">
+                    </div>
+                    <div style="display:flex;gap:22px;align-items:center;padding-top:8px;">
+                        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+                            <input type="checkbox" id="updCheckEnabledInput" checked style="width:16px;height:16px;accent-color:var(--accent);">
+                            <span style="font-size:0.85rem;">Update checks enabled</span>
+                        </label>
+                        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+                            <input type="checkbox" id="updMandatoryInput" style="width:16px;height:16px;accent-color:var(--warning);">
+                            <span style="font-size:0.85rem;">Mandatory update</span>
+                        </label>
+                    </div>
+                    <div style="padding-top:4px;">
+                        <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Client preview</div>
+                        <div id="updPreviewBox" style="padding:10px 12px;background:rgba(0,0,0,0.25);border:1px solid var(--border);border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:0.85rem;color:var(--accent2);">2.2.0</div>
+                    </div>
+                    <div style="grid-column:1/-1;">
+                        <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Changelog (optional)</div>
+                        <textarea id="updChangelogInput" rows="4" placeholder="What's new in this release…" style="width:100%;padding:10px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Poppins',sans-serif;font-size:0.85rem;resize:vertical;"></textarea>
+                    </div>
+                </div>
+                <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;">
+                    <button class="action-btn view" onclick="saveUpdateConfig()" style="padding:10px 18px;font-weight:600;"><i class="fas fa-save"></i> Save &amp; Publish</button>
+                    <button class="action-btn" onclick="seedUpdateConfigFromLegacy()" style="padding:10px 18px;"><i class="fas fa-seedling"></i> Seed from version.txt</button>
+                </div>
+                <div style="margin-top:14px;font-size:0.78rem;color:var(--muted);line-height:1.5;">
+                    Clients read <code style="color:var(--accent2);">app_config/update</code> from Firebase first.
+                    If missing, they fall back to <code style="color:var(--accent2);">download.bariplux.com/version.txt</code>.
+                    Disable “Update checks enabled” to stop prompting users without changing the version number.
+                </div>
+            </div>
+
+            <div class="last-updated" id="updatesLastUpdated"></div>
         </div>
 
         <div id="announcementsSection" style="display:none;">
@@ -3193,6 +3256,138 @@ async function toggleEnabled(key, newVal) {
     }
 }
 
+const DEFAULT_UPDATE_DOWNLOAD_URL = 'https://download.bariplux.com/bariplux-files/BariPluxToolProSetup.exe';
+const LEGACY_VERSION_TXT_URL = 'https://download.bariplux.com/version.txt';
+let _legacyVersionTxt = null;
+
+function refreshUpdatePreview() {
+    const version = (document.getElementById('updVersionInput')?.value || '').trim() || '—';
+    const mandatory = document.getElementById('updMandatoryInput')?.checked;
+    const checks = document.getElementById('updCheckEnabledInput')?.checked;
+    const box = document.getElementById('updPreviewBox');
+    if (!box) return;
+    if (!checks) {
+        box.textContent = 'checks disabled (clients will not be prompted)';
+        box.style.color = 'var(--warning)';
+        return;
+    }
+    box.textContent = mandatory ? `${version}|mandatory` : version;
+    box.style.color = 'var(--accent2)';
+}
+
+async function fetchLegacyVersionTxt() {
+    try {
+        const res = await fetch(LEGACY_VERSION_TXT_URL + '?t=' + Date.now(), { cache: 'no-store' });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        _legacyVersionTxt = (await res.text()).trim();
+    } catch (e) {
+        _legacyVersionTxt = null;
+        console.warn('legacy version.txt fetch failed', e);
+    }
+    const el = document.getElementById('updStatLegacy');
+    if (el) el.textContent = _legacyVersionTxt || 'n/a';
+    return _legacyVersionTxt;
+}
+
+function fillUpdateForm(cfg) {
+    const version = (cfg && cfg.version) || (_legacyVersionTxt ? _legacyVersionTxt.split('|')[0].trim() : '2.2.0');
+    const mandatory = !!(cfg && cfg.mandatory) || (!!_legacyVersionTxt && /\|mandatory/i.test(_legacyVersionTxt));
+    const checkEnabled = cfg && typeof cfg.check_enabled === 'boolean' ? cfg.check_enabled : true;
+    const downloadUrl = (cfg && cfg.download_url) || DEFAULT_UPDATE_DOWNLOAD_URL;
+    const changelog = (cfg && cfg.changelog) || '';
+
+    document.getElementById('updVersionInput').value = version;
+    document.getElementById('updMandatoryInput').checked = mandatory;
+    document.getElementById('updCheckEnabledInput').checked = checkEnabled;
+    document.getElementById('updDownloadUrlInput').value = downloadUrl;
+    document.getElementById('updChangelogInput').value = changelog;
+
+    document.getElementById('updStatVersion').textContent = version;
+    document.getElementById('updStatChecks').textContent = checkEnabled ? 'ON' : 'OFF';
+    document.getElementById('updStatMandatory').textContent = mandatory ? 'YES' : 'NO';
+    refreshUpdatePreview();
+}
+
+async function loadUpdateConfig() {
+    if (!db) return;
+    await fetchLegacyVersionTxt();
+    try {
+        const snap = await db.ref('app_config/update').once('value');
+        const cfg = snap.val();
+        fillUpdateForm(cfg || null);
+        const lu = document.getElementById('updatesLastUpdated');
+        if (lu) {
+            const ts = cfg && cfg.updated_at ? new Date(cfg.updated_at).toLocaleString() : 'never published';
+            lu.textContent = 'Firebase config last updated: ' + ts;
+        }
+    } catch (e) {
+        fillUpdateForm(null);
+        showToast('⚠️ Failed to load update config: ' + e.message, 'danger');
+    }
+}
+
+async function saveUpdateConfig() {
+    if (!db) return;
+    const version = (document.getElementById('updVersionInput').value || '').trim();
+    if (!/^[0-9]+(\.[0-9]+){1,3}$/.test(version)) {
+        showToast('⚠️ Version must look like 2.3.0', 'danger');
+        return;
+    }
+    const downloadUrl = (document.getElementById('updDownloadUrlInput').value || '').trim() || DEFAULT_UPDATE_DOWNLOAD_URL;
+    if (downloadUrl.length > 500) {
+        showToast('⚠️ Download URL is too long', 'danger');
+        return;
+    }
+    const changelog = (document.getElementById('updChangelogInput').value || '').trim();
+    if (changelog.length > 4000) {
+        showToast('⚠️ Changelog is too long', 'danger');
+        return;
+    }
+
+    const payload = {
+        version,
+        mandatory: !!document.getElementById('updMandatoryInput').checked,
+        check_enabled: !!document.getElementById('updCheckEnabledInput').checked,
+        download_url: downloadUrl,
+        changelog,
+        updated_at: Date.now()
+    };
+
+    try {
+        await db.ref('app_config/update').set(payload);
+        showToast(`✅ Update config published: ${version}${payload.mandatory ? ' (mandatory)' : ''}`, 'success');
+        loadUpdateConfig();
+    } catch (e) {
+        showToast('⚠️ Failed to save: ' + e.message, 'danger');
+    }
+}
+
+async function seedUpdateConfigFromLegacy() {
+    await fetchLegacyVersionTxt();
+    if (!_legacyVersionTxt) {
+        showToast('⚠️ Could not read version.txt', 'danger');
+        return;
+    }
+    const parts = _legacyVersionTxt.split('|');
+    fillUpdateForm({
+        version: parts[0].trim(),
+        mandatory: parts.length > 1 && parts[1].trim().toLowerCase() === 'mandatory',
+        check_enabled: true,
+        download_url: DEFAULT_UPDATE_DOWNLOAD_URL,
+        changelog: ''
+    });
+    showToast('Seeded form from version.txt — click Save & Publish to write Firebase', 'success');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    ['updVersionInput', 'updMandatoryInput', 'updCheckEnabledInput'].forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.addEventListener('input', refreshUpdatePreview);
+        el.addEventListener('change', refreshUpdatePreview);
+    });
+});
+
 function switchTab(tab, btn) {
     document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
@@ -3202,6 +3397,8 @@ function switchTab(tab, btn) {
     if(errSec) errSec.style.display=tab==='errors'?'':'none';
     document.getElementById('chatModSection').style.display=tab==='chatMod'?'':'none';
     document.getElementById('featureFlagsSection').style.display=tab==='featureFlags'?'':'none';
+    const upd=document.getElementById('updatesSection');
+    if(upd) upd.style.display=tab==='updates'?'':'none';
     const ann=document.getElementById('announcementsSection');
     const mb=document.getElementById('mailboxSection');
     if(ann) ann.style.display=tab==='announcements'?'':'none';
@@ -3211,6 +3408,7 @@ function switchTab(tab, btn) {
     if(tab==='chatMod') loadChatMod();
     if(tab==='featureFlags') loadFeatureFlags();
     else if (typeof closePageFlagDetail === 'function') closePageFlagDetail();
+    if(tab==='updates') loadUpdateConfig();
     if(tab==='announcements') loadAnnouncementsAdmin();
     if(tab==='mailbox'){ if(typeof allUsers!=='undefined' && (!allUsers||!allUsers.length) && typeof loadUsers==='function'){/* optional */} renderMailboxOutbox(); }
 }
