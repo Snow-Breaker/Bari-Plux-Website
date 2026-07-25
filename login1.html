@@ -869,14 +869,11 @@
         }
 
         // ==================== FIREBASE CONFIGURATION ====================
-        // Prefer branded authDomain on login.bariplux.com; keep firebaseapp while DNS/SSL cutover finishes.
-        const firebaseAuthDomain =
-            (location.hostname === 'login.bariplux.com')
-                ? 'login.bariplux.com'
-                : 'baripluxwebsite.firebaseapp.com';
+        // Keep authDomain on firebaseapp.com so Google OAuth redirect_uri matches
+        // the existing OAuth client. See docs/login-custom-domain.md for branding.
         const firebaseConfig = {
             apiKey: "AIzaSyBH_t3Uue7fbb-DahwjSJGjG2-quCqiLEs",
-            authDomain: firebaseAuthDomain,
+            authDomain: "baripluxwebsite.firebaseapp.com",
             databaseURL: "https://baripluxwebsite-default-rtdb.firebaseio.com",
             projectId: "baripluxwebsite",
             storageBucket: "baripluxwebsite.firebasestorage.app",
