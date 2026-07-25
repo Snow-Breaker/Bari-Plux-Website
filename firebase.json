@@ -16,6 +16,12 @@
       "**/.*",
       "**/node_modules/**"
     ],
+    "rewrites": [
+      {
+        "source": "/",
+        "destination": "/login1.html"
+      }
+    ],
     "headers": [
       {
         "source": "**",

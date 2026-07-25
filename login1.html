@@ -26,9 +26,10 @@
       try {
         var h = location.hostname;
         var q = new URLSearchParams(location.search);
-        if (q.get('desktop') === '1' && (h === 'bariplux.com' || h.endsWith('.bariplux.com'))) {
-          var dest = 'https://baripluxwebsite.firebaseapp.com/login1.html' + location.search;
-          if (!dest.includes('v=')) dest += (dest.includes('?') ? '&' : '?') + 'v=20260722d';
+        // Brand hop: GitHub Pages / apex → Firebase Hosting custom domain (login.bariplux.com)
+        if (q.get('desktop') === '1' && (h === 'bariplux.com' || (h.endsWith('.bariplux.com') && h !== 'login.bariplux.com'))) {
+          var dest = 'https://login.bariplux.com/' + location.search;
+          if (!dest.includes('v=')) dest += (dest.includes('?') ? '&' : '?') + 'v=20260725a';
           location.replace(dest);
         }
       } catch (e) {}
@@ -868,9 +869,14 @@
         }
 
         // ==================== FIREBASE CONFIGURATION ====================
+        // Prefer branded authDomain on login.bariplux.com; keep firebaseapp while DNS/SSL cutover finishes.
+        const firebaseAuthDomain =
+            (location.hostname === 'login.bariplux.com')
+                ? 'login.bariplux.com'
+                : 'baripluxwebsite.firebaseapp.com';
         const firebaseConfig = {
             apiKey: "AIzaSyBH_t3Uue7fbb-DahwjSJGjG2-quCqiLEs",
-            authDomain: "baripluxwebsite.firebaseapp.com",
+            authDomain: firebaseAuthDomain,
             databaseURL: "https://baripluxwebsite-default-rtdb.firebaseio.com",
             projectId: "baripluxwebsite",
             storageBucket: "baripluxwebsite.firebasestorage.app",
