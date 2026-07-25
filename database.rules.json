@@ -138,6 +138,9 @@
         "visible": {
           ".validate": "newData.isBoolean()"
         },
+        "emulator": {
+          ".validate": "newData.isString() && newData.val().matches(/^(all|gameloop|mumu)$/)"
+        },
         "page": {
           ".validate": "newData.isString() && newData.val().matches(/^[a-z0-9_]+$/)"
         }

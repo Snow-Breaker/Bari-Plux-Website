@@ -814,7 +814,7 @@
                 <button class="icon-btn" style="background:var(--accent);color:#fff;border:none;" onclick="seedMissingPageFlags()"><i class="fas fa-seedling"></i> Seed missing pages</button>
             </div>
 
-            <div class="ff-section-title" id="ffPagesSectionTitle"><i class="fas fa-th-large"></i> App Pages <span class="hint">Open a page to manage its capabilities · Show/Hide = menu · Enable/Disable = can open</span></div>
+            <div class="ff-section-title" id="ffPagesSectionTitle"><i class="fas fa-th-large"></i> App Pages <span class="hint">Open a page to manage its capabilities · Show/Hide = menu · Enable/Disable = can open · Emulator = which profile sees it</span></div>
             <div id="ffPagesGrid" class="ff-pages-grid">
                 <div style="grid-column:1/-1;text-align:center;padding:28px;color:var(--muted);">Loading pages…</div>
             </div>
@@ -2724,14 +2724,20 @@ function roleSelectHtml(selected, onChangeAttr) {
 }
 
 /** visible defaults true when missing (backward compat); enabled must be explicit true. */
+function normalizeEmulatorScope(value) {
+    const s = String(value || 'all').trim().toLowerCase();
+    return (s === 'gameloop' || s === 'mumu') ? s : 'all';
+}
+
 function readPageFlagState(flag) {
-    if (!flag) return { missing: true, enabled: true, visible: true, role: 'free' };
+    if (!flag) return { missing: true, enabled: true, visible: true, role: 'free', emulator: 'all' };
     const visible = typeof flag.visible === 'boolean' ? flag.visible : true;
     return {
         missing: false,
         enabled: flag.enabled === true,
         visible,
-        role: flag.min_role || 'free'
+        role: flag.min_role || 'free',
+        emulator: normalizeEmulatorScope(flag.emulator)
     };
 }
 
@@ -2741,18 +2747,39 @@ function defaultPageFlagPayload(extra = {}) {
         enabled: true,
         visible: true,
         min_role: 'free',
+        emulator: 'all',
         created_at: now,
         updated_at: now,
         ...extra
     };
 }
 
+function emulatorSelectHtml(selected, onChangeAttr) {
+    const opts = [
+        ['all', '🖥 All emulators'],
+        ['gameloop', '🎮 GameLoop only'],
+        ['mumu', '📱 MuMu only'],
+    ].map(([v, label]) =>
+        `<option value="${v}"${normalizeEmulatorScope(selected) === v ? ' selected' : ''}>${label}</option>`
+    ).join('');
+    return `<select onchange="${onChangeAttr}">${opts}</select>`;
+}
+
+function emulatorBadgeLabel(emulator) {
+    const e = normalizeEmulatorScope(emulator);
+    if (e === 'gameloop') return 'GAMELOOP';
+    if (e === 'mumu') return 'MUMU';
+    return 'ALL';
+}
+
 function renderFlagControlCard({ key, title, icon, desc, s, kind }) {
+    const emu = normalizeEmulatorScope(s.emulator);
     const badges = s.missing
         ? `<span class="ff-page-badge off">NOT SEEDED</span>`
         : `<div class="ff-page-badges">
             <span class="ff-page-badge ${s.visible ? 'on' : 'off'}">${s.visible ? 'SHOWN' : 'HIDDEN'}</span>
             <span class="ff-page-badge ${s.enabled ? 'on' : 'off'}">${s.enabled ? 'ON' : 'OFF'}</span>
+            <span class="ff-page-badge ${emu === 'all' ? 'on' : 'off'}">${emulatorBadgeLabel(emu)}</span>
            </div>`;
     const visLabel = s.visible ? '<i class="fas fa-eye-slash"></i> Hide' : '<i class="fas fa-eye"></i> Show';
     const visStyle = s.visible
@@ -2766,6 +2793,9 @@ function renderFlagControlCard({ key, title, icon, desc, s, kind }) {
     const roleFn = kind === 'page'
         ? `updatePageFlagRole('${esc(key)}', this.value)`
         : `updateFeatureFlagRole('${esc(key)}', this.value)`;
+    const emuFn = kind === 'page'
+        ? `updatePageFlagEmulator('${esc(key)}', this.value)`
+        : `updateFeatureFlagEmulator('${esc(key)}', this.value)`;
     const visFn = kind === 'page'
         ? `togglePageFlagVisible('${esc(key)}', ${s.visible ? 'false' : 'true'})`
         : `toggleFeatureFlagVisible('${esc(key)}', ${s.visible ? 'false' : 'true'})`;
@@ -2786,6 +2816,10 @@ function renderFlagControlCard({ key, title, icon, desc, s, kind }) {
             <label>
                 <span class="lbl">Minimum role</span>
                 ${roleSelectHtml(s.role, roleFn)}
+            </label>
+            <label>
+                <span class="lbl">Emulator</span>
+                ${emulatorSelectHtml(emu, emuFn)}
             </label>
             <div class="ff-page-toggles">
                 <button class="action-btn" style="${visStyle}" onclick="${visFn}" title="Show or hide in the app UI">${visLabel}</button>
@@ -3001,6 +3035,36 @@ async function updatePageFlagRole(key, role) {
         loadFeatureFlags();
     } catch (e) {
         showToast('⚠️ Failed to update role: ' + e.message, 'danger');
+    }
+}
+
+async function updatePageFlagEmulator(key, emulator) {
+    if (!isPageFlagKey(key)) return;
+    const scope = normalizeEmulatorScope(emulator);
+    try {
+        await ensurePageFlagExists(key);
+        await db.ref(`feature_flags/${key}`).update({ emulator: scope, updated_at: Date.now() });
+        showToast(`✅ ${key} → emulator ${scope}`, 'success');
+        loadFeatureFlags();
+    } catch (e) {
+        showToast('⚠️ Failed to update emulator: ' + e.message, 'danger');
+    }
+}
+
+async function updateFeatureFlagEmulator(key, emulator) {
+    if (isPageFlagKey(key)) return;
+    const scope = normalizeEmulatorScope(emulator);
+    try {
+        const snap = await db.ref(`feature_flags/${key}`).once('value');
+        if (!snap.exists()) {
+            await db.ref(`feature_flags/${key}`).set(defaultPageFlagPayload({ emulator: scope }));
+        } else {
+            await db.ref(`feature_flags/${key}`).update({ emulator: scope, updated_at: Date.now() });
+        }
+        showToast(`✅ ${key} → emulator ${scope}`, 'success');
+        loadFeatureFlags();
+    } catch (e) {
+        showToast('⚠️ Failed to update emulator: ' + e.message, 'danger');
     }
 }
 
