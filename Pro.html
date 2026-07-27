@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Bari Plux Pro</title>
-  <meta name="description" content="Unlock Bari Plux Pro — premium tools for PUBG Mobile / GameLoop optimization." />
+  <meta name="description" content="Unlock Bari Plux Pro — $2 for 60 days. PayPal or card." />
   <link rel="icon" href="https://i.postimg.cc/65cjsvfQ/imglogo.png" />
   <style>
     :root {
@@ -28,122 +28,70 @@
         radial-gradient(700px 400px at 90% 0%, rgba(165,180,252,.16), transparent 50%),
         linear-gradient(180deg, var(--bg0), var(--bg1));
     }
-    .wrap {
-      max-width: 720px;
-      margin: 0 auto;
-      padding: 48px 20px 64px;
-    }
+    .wrap { max-width: 720px; margin: 0 auto; padding: 48px 20px 64px; }
     .brand {
-      font-size: 13px;
-      letter-spacing: .14em;
-      text-transform: uppercase;
-      color: var(--accent2);
-      margin-bottom: 14px;
+      font-size: 13px; letter-spacing: .14em; text-transform: uppercase;
+      color: var(--accent2); margin-bottom: 14px;
     }
     h1 {
-      font-size: clamp(2rem, 5vw, 3rem);
-      line-height: 1.1;
-      margin: 0 0 14px;
-      font-weight: 700;
+      font-size: clamp(2rem, 5vw, 3rem); line-height: 1.1;
+      margin: 0 0 14px; font-weight: 700;
     }
     .lead {
-      color: var(--muted);
-      font-size: 1.05rem;
-      line-height: 1.55;
-      margin: 0 0 28px;
-      max-width: 38rem;
+      color: var(--muted); font-size: 1.05rem; line-height: 1.55;
+      margin: 0 0 28px; max-width: 40rem;
     }
     .card {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 22px;
-      margin-bottom: 16px;
+      background: var(--card); border: 1px solid var(--line);
+      border-radius: 18px; padding: 22px; margin-bottom: 16px;
     }
-    .card h2 {
-      margin: 0 0 10px;
-      font-size: 1.05rem;
-    }
-    .card ul {
-      margin: 0;
-      padding-left: 1.15rem;
-      color: var(--muted);
-      line-height: 1.55;
-    }
+    .card h2 { margin: 0 0 10px; font-size: 1.05rem; }
+    .card ul { margin: 0; padding-left: 1.15rem; color: var(--muted); line-height: 1.55; }
     .card li { margin: 6px 0; }
-    .warn {
-      border-color: rgba(251,191,36,.35);
-      background: rgba(251,191,36,.08);
-    }
+    .warn { border-color: rgba(251,191,36,.35); background: rgba(251,191,36,.08); }
     .warn strong { color: #fbbf24; }
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin: 28px 0 18px;
-    }
+    .okbanner { border-color: rgba(52,211,153,.35); background: rgba(52,211,153,.08); }
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 28px 0 18px; }
     .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 48px;
-      padding: 0 22px;
-      border-radius: 12px;
-      font-weight: 650;
-      font-size: 15px;
-      text-decoration: none;
-      border: 1px solid transparent;
-      cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center;
+      min-height: 48px; padding: 0 22px; border-radius: 12px;
+      font-weight: 650; font-size: 15px; text-decoration: none;
+      border: 1px solid transparent; cursor: pointer; color: #fff;
     }
+    .btn:disabled { opacity: .55; cursor: wait; }
     .btn-primary {
       background: linear-gradient(135deg, #818cf8, #6366f1);
-      color: #fff;
       box-shadow: 0 10px 30px rgba(99,102,241,.28);
     }
+    .btn-paypal {
+      background: linear-gradient(135deg, #0070ba, #003087);
+    }
     .btn-ghost {
-      background: transparent;
-      color: var(--text);
-      border-color: var(--line);
+      background: transparent; color: var(--text); border-color: var(--line);
     }
-    .claim {
-      margin-top: 8px;
+    .pay-grid {
+      display: grid; gap: 14px;
+      grid-template-columns: 1fr;
     }
-    .claim label {
-      display: block;
-      font-size: 13px;
-      color: var(--muted);
-      margin-bottom: 8px;
+    @media (min-width: 640px) {
+      .pay-grid { grid-template-columns: 1fr 1fr; }
     }
-    .row {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
+    .pay-box h3 { margin: 0 0 6px; font-size: 1rem; }
+    .pay-box p { margin: 0 0 14px; color: var(--muted); font-size: 13px; line-height: 1.45; }
+    label.field {
+      display: block; font-size: 13px; color: var(--muted); margin-bottom: 8px;
     }
-    input[type="text"] {
-      flex: 1;
-      min-width: 220px;
-      height: 48px;
-      border-radius: 12px;
-      border: 1px solid var(--line);
-      background: rgba(0,0,0,.35);
-      color: var(--text);
-      padding: 0 14px;
-      font-size: 15px;
-      letter-spacing: .04em;
+    input[type="email"], input[type="text"] {
+      width: 100%; height: 48px; border-radius: 12px;
+      border: 1px solid var(--line); background: rgba(0,0,0,.35);
+      color: var(--text); padding: 0 14px; font-size: 15px;
     }
-    .status {
-      margin-top: 12px;
-      font-size: 14px;
-      color: var(--muted);
-      min-height: 1.2em;
-    }
+    .row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .row input { flex: 1; min-width: 220px; }
+    .status { margin-top: 12px; font-size: 14px; color: var(--muted); min-height: 1.2em; }
     .status.ok { color: #34d399; }
     .status.err { color: #f87171; }
-    footer {
-      margin-top: 36px;
-      color: var(--muted);
-      font-size: 13px;
-    }
+    footer { margin-top: 36px; color: var(--muted); font-size: 13px; }
     a { color: var(--accent2); }
   </style>
 </head>
@@ -153,17 +101,16 @@
     <h1>Go Pro</h1>
     <p class="lead">
       Unlock premium Bari Plux Tool features for <strong>$2 / 60 days</strong>.
-      After payment, Pro is applied automatically to the Bari Plux account that matches
-      your checkout email. When the 60 days end, your role returns to Free until you renew.
+      Choose <strong>PayPal</strong> or <strong>Card (Stripe)</strong>.
+      Pro is applied to the Bari Plux account that matches your checkout email.
     </p>
 
-    <div class="actions">
-      <a class="btn btn-primary" href="https://payhip.com/b/0rSWG" target="_blank" rel="noopener">
-        Buy Bari Plux Pro
-      </a>
-      <a class="btn btn-ghost" href="https://login.bariplux.com/?desktop=1" target="_blank" rel="noopener">
-        Open login
-      </a>
+    <div id="stripeBanner" class="card okbanner" style="display:none">
+      <h2>Payment received</h2>
+      <p style="margin:0;color:var(--muted);line-height:1.55">
+        If checkout succeeded, open Bari Plux Tool and sign in with the <strong>same email</strong>.
+        Pro usually appears within a few seconds.
+      </p>
     </div>
 
     <section class="card warn">
@@ -171,9 +118,36 @@
       <p style="margin:0;color:var(--muted);line-height:1.55">
         Checkout email must be the <strong>same email</strong> you use inside Bari Plux Tool.
         A different email will not upgrade your app account.
-        For gifts, the recipient should redeem the license key below while logged in.
       </p>
     </section>
+
+    <section class="card">
+      <h2>Choose payment</h2>
+      <div class="pay-grid" style="margin-top:14px">
+        <div class="pay-box">
+          <h3>PayPal</h3>
+          <p>Checkout on Payhip with your PayPal balance or linked PayPal.</p>
+          <a class="btn btn-paypal" href="https://payhip.com/b/0rSWG" target="_blank" rel="noopener">
+            Pay with PayPal
+          </a>
+        </div>
+        <div class="pay-box">
+          <h3>Card (Stripe)</h3>
+          <p>Visa / Mastercard and other cards via Stripe Checkout.</p>
+          <label class="field" for="cardEmail">Bari Plux login email</label>
+          <input id="cardEmail" type="email" placeholder="you@email.com" autocomplete="email" />
+          <div style="height:12px"></div>
+          <button class="btn btn-primary" id="stripeBtn" type="button">Pay $2 with Card</button>
+          <div class="status" id="stripeStatus"></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="actions">
+      <a class="btn btn-ghost" href="https://login.bariplux.com/?desktop=1" target="_blank" rel="noopener">
+        Open login
+      </a>
+    </div>
 
     <section class="card">
       <h2>What you get</h2>
@@ -190,28 +164,68 @@
       <ul>
         <li>Open Bari Plux Tool and sign in with the purchase email</li>
         <li>Wait a few seconds, or sign out and sign in once</li>
-        <li>If you received a gift / license key, redeem it here while logged in</li>
+        <li>PayPal gift / license key redeem (optional):</li>
       </ul>
-
-      <div class="claim">
-        <label for="license">Redeem license key (gifts / recovery)</label>
+      <div style="margin-top:12px">
+        <label class="field" for="license">License key</label>
         <div class="row">
           <input id="license" type="text" placeholder="XXXX-XXXX-XXXX-XXXX" autocomplete="off" spellcheck="false" />
           <button class="btn btn-primary" id="claimBtn" type="button">Activate</button>
         </div>
-        <div class="status" id="claimStatus">Requires being signed in to Bari Plux in this browser (login page), then paste your key.</div>
+        <div class="status" id="claimStatus">Sign in at login.bariplux.com in this browser first, then redeem.</div>
       </div>
     </section>
 
     <footer>
-      Product: <a href="https://payhip.com/b/0rSWG">payhip.com/b/0rSWG</a>
+      PayPal: <a href="https://payhip.com/b/0rSWG">Payhip</a>
+      · Cards: Stripe Checkout
       · Support: contact Bari Plux with your purchase email
     </footer>
   </main>
 
   <script type="module">
-    // Optional redeem helper: uses Firebase idToken from login.bariplux.com localStorage if present.
     const WORKER = 'https://discord-auth-worker.bariattaye2.workers.dev';
+    const params = new URLSearchParams(location.search);
+    if (params.get('stripe') === 'success') {
+      document.getElementById('stripeBanner').style.display = 'block';
+    }
+
+    const stripeBtn = document.getElementById('stripeBtn');
+    const stripeStatus = document.getElementById('stripeStatus');
+    const cardEmail = document.getElementById('cardEmail');
+
+    function setStripeStatus(text, kind) {
+      stripeStatus.textContent = text;
+      stripeStatus.className = 'status' + (kind ? ' ' + kind : '');
+    }
+
+    stripeBtn.addEventListener('click', async () => {
+      const email = (cardEmail.value || '').trim();
+      if (!email || !email.includes('@')) {
+        setStripeStatus('Enter the email you use in Bari Plux Tool.', 'err');
+        return;
+      }
+      stripeBtn.disabled = true;
+      setStripeStatus('Opening secure Stripe Checkout…');
+      try {
+        const res = await fetch(WORKER + '/stripe/create-checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || !data.url) {
+          setStripeStatus('Could not start checkout: ' + (data.error || res.status), 'err');
+          stripeBtn.disabled = false;
+          return;
+        }
+        location.href = data.url;
+      } catch {
+        setStripeStatus('Network error. Try again.', 'err');
+        stripeBtn.disabled = false;
+      }
+    });
+
     const statusEl = document.getElementById('claimStatus');
     const input = document.getElementById('license');
     const btn = document.getElementById('claimBtn');
@@ -225,13 +239,10 @@
       try {
         for (let i = 0; i < localStorage.length; i++) {
           const k = localStorage.key(i);
-          if (!k) continue;
-          if (k.includes('firebase:authUser')) {
-            const raw = localStorage.getItem(k);
-            const parsed = JSON.parse(raw);
-            const token = parsed?.stsTokenManager?.accessToken || parsed?.accessToken;
-            if (token) return token;
-          }
+          if (!k || !k.includes('firebase:authUser')) continue;
+          const parsed = JSON.parse(localStorage.getItem(k));
+          const token = parsed?.stsTokenManager?.accessToken || parsed?.accessToken;
+          if (token) return token;
         }
       } catch {}
       return null;
@@ -245,7 +256,7 @@
       }
       const token = findIdToken();
       if (!token) {
-        setStatus('Sign in at login.bariplux.com in this browser first, then come back and redeem.', 'err');
+        setStatus('Sign in at login.bariplux.com in this browser first, then come back.', 'err');
         return;
       }
       btn.disabled = true;
@@ -265,7 +276,7 @@
         } else {
           setStatus('Pro activated. Open the app and refresh / re-login.', 'ok');
         }
-      } catch (e) {
+      } catch {
         setStatus('Network error. Try again.', 'err');
       } finally {
         btn.disabled = false;

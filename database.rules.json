@@ -30,6 +30,14 @@
       ".write": false,
       ".indexOn": ["expiresAtMs"]
     },
+    "stripe_orders": {
+      ".read": false,
+      ".write": false
+    },
+    "stripe_payment_intents": {
+      ".read": false,
+      ".write": false
+    },
     "users": {
       ".read": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'",
       "$uid": {
