@@ -3706,15 +3706,29 @@ function onAccessModeChange() {
     if (role) role.style.display = mode === 'role' ? '' : 'none';
 }
 
-function linesToMap(textVal) {
+/** Firebase RTDB keys cannot contain '.' — encode/decode email map keys. */
+function encodeAccessEmailKey(email) {
+    return String(email || '').trim().toLowerCase().replace(/\./g, ',');
+}
+function decodeAccessEmailKey(key) {
+    return String(key || '').replace(/,/g, '.');
+}
+
+function linesToMap(textVal, { encodeEmails = false } = {}) {
     const map = {};
-    String(textVal || '').split(/\r?\n/).map(s => s.trim()).filter(Boolean).forEach(v => { map[v] = true; });
+    String(textVal || '').split(/\r?\n/).map(s => s.trim()).filter(Boolean).forEach(v => {
+        const key = encodeEmails ? encodeAccessEmailKey(v) : v;
+        if (key) map[key] = true;
+    });
     return map;
 }
 
-function mapToLines(obj) {
+function mapToLines(obj, { decodeEmails = false } = {}) {
     if (!obj || typeof obj !== 'object') return '';
-    return Object.keys(obj).filter(k => obj[k]).join('\n');
+    return Object.keys(obj)
+        .filter(k => obj[k])
+        .map(k => decodeEmails ? decodeAccessEmailKey(k) : k)
+        .join('\n');
 }
 
 async function loadAccessConfig() {
@@ -3730,7 +3744,7 @@ async function loadAccessConfig() {
         if (minRole) minRole.value = data.min_role || 'free';
         const emails = document.getElementById('accessEmails');
         const uids = document.getElementById('accessUids');
-        if (emails) emails.value = mapToLines(data.emails);
+        if (emails) emails.value = mapToLines(data.emails, { decodeEmails: true });
         if (uids) uids.value = mapToLines(data.uids);
         onAccessModeChange();
         if (status) status.textContent = data.updated_at ? ('Saved ' + new Date(data.updated_at).toLocaleString()) : 'Ready';
@@ -3747,7 +3761,7 @@ async function saveAccessConfig() {
     const payload = {
         mode,
         min_role: document.getElementById('accessMinRole')?.value || 'free',
-        emails: mode === 'allowlist' ? linesToMap(document.getElementById('accessEmails')?.value) : {},
+        emails: mode === 'allowlist' ? linesToMap(document.getElementById('accessEmails')?.value, { encodeEmails: true }) : {},
         uids: mode === 'allowlist' ? linesToMap(document.getElementById('accessUids')?.value) : {},
         updated_at: Date.now()
     };
@@ -3758,7 +3772,7 @@ async function saveAccessConfig() {
         showToast('Access policy saved', 'success');
     } catch (e) {
         console.error(e);
-        showToast('Failed to save access policy', 'danger');
+        showToast('Failed to save access policy: ' + (e && e.message ? e.message : e), 'danger');
     }
 }
 

@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Bari Plux Pro</title>
-  <meta name="description" content="Unlock Bari Plux Pro — $2 for 60 days. PayPal or card." />
+  <meta name="description" content="Unlock Bari Plux Pro — $2 for 60 days via Stripe (PayPal or card)." />
   <link rel="icon" href="https://i.postimg.cc/65cjsvfQ/imglogo.png" />
   <style>
     :root {
@@ -28,7 +28,7 @@
         radial-gradient(700px 400px at 90% 0%, rgba(165,180,252,.16), transparent 50%),
         linear-gradient(180deg, var(--bg0), var(--bg1));
     }
-    .wrap { max-width: 720px; margin: 0 auto; padding: 48px 20px 64px; }
+    .wrap { max-width: 640px; margin: 0 auto; padding: 48px 20px 64px; }
     .brand {
       font-size: 13px; letter-spacing: .14em; text-transform: uppercase;
       color: var(--accent2); margin-bottom: 14px;
@@ -62,32 +62,20 @@
     .btn-primary {
       background: linear-gradient(135deg, #818cf8, #6366f1);
       box-shadow: 0 10px 30px rgba(99,102,241,.28);
-    }
-    .btn-paypal {
-      background: linear-gradient(135deg, #0070ba, #003087);
+      width: 100%;
     }
     .btn-ghost {
       background: transparent; color: var(--text); border-color: var(--line);
     }
-    .pay-grid {
-      display: grid; gap: 14px;
-      grid-template-columns: 1fr;
-    }
-    @media (min-width: 640px) {
-      .pay-grid { grid-template-columns: 1fr 1fr; }
-    }
-    .pay-box h3 { margin: 0 0 6px; font-size: 1rem; }
-    .pay-box p { margin: 0 0 14px; color: var(--muted); font-size: 13px; line-height: 1.45; }
     label.field {
       display: block; font-size: 13px; color: var(--muted); margin-bottom: 8px;
     }
-    input[type="email"], input[type="text"] {
+    input[type="email"] {
       width: 100%; height: 48px; border-radius: 12px;
       border: 1px solid var(--line); background: rgba(0,0,0,.35);
       color: var(--text); padding: 0 14px; font-size: 15px;
+      margin-bottom: 12px;
     }
-    .row { display: flex; gap: 10px; flex-wrap: wrap; }
-    .row input { flex: 1; min-width: 220px; }
     .status { margin-top: 12px; font-size: 14px; color: var(--muted); min-height: 1.2em; }
     .status.ok { color: #34d399; }
     .status.err { color: #f87171; }
@@ -101,7 +89,7 @@
     <h1>Go Pro</h1>
     <p class="lead">
       Unlock premium Bari Plux Tool features for <strong>$2 / 60 days</strong>.
-      Choose <strong>PayPal</strong> or <strong>Card (Stripe)</strong>.
+      Pay with <strong>PayPal</strong> or <strong>card</strong> in one Stripe Checkout.
       Pro is applied to the Bari Plux account that matches your checkout email.
     </p>
 
@@ -122,25 +110,11 @@
     </section>
 
     <section class="card">
-      <h2>Choose payment</h2>
-      <div class="pay-grid" style="margin-top:14px">
-        <div class="pay-box">
-          <h3>PayPal</h3>
-          <p>Checkout on Payhip with your PayPal balance or linked PayPal.</p>
-          <a class="btn btn-paypal" href="https://payhip.com/b/0rSWG" target="_blank" rel="noopener">
-            Pay with PayPal
-          </a>
-        </div>
-        <div class="pay-box">
-          <h3>Card (Stripe)</h3>
-          <p>Visa / Mastercard and other cards via Stripe Checkout.</p>
-          <label class="field" for="cardEmail">Bari Plux login email</label>
-          <input id="cardEmail" type="email" placeholder="you@email.com" autocomplete="email" />
-          <div style="height:12px"></div>
-          <button class="btn btn-primary" id="stripeBtn" type="button">Pay $2 with Card</button>
-          <div class="status" id="stripeStatus"></div>
-        </div>
-      </div>
+      <h2>Checkout</h2>
+      <label class="field" for="email">Bari Plux login email</label>
+      <input id="email" type="email" placeholder="you@email.com" autocomplete="email" />
+      <button class="btn btn-primary" id="payBtn" type="button">Pay $2 — PayPal or Card</button>
+      <div class="status" id="status"></div>
     </section>
 
     <div class="actions">
@@ -164,21 +138,11 @@
       <ul>
         <li>Open Bari Plux Tool and sign in with the purchase email</li>
         <li>Wait a few seconds, or sign out and sign in once</li>
-        <li>PayPal gift / license key redeem (optional):</li>
       </ul>
-      <div style="margin-top:12px">
-        <label class="field" for="license">License key</label>
-        <div class="row">
-          <input id="license" type="text" placeholder="XXXX-XXXX-XXXX-XXXX" autocomplete="off" spellcheck="false" />
-          <button class="btn btn-primary" id="claimBtn" type="button">Activate</button>
-        </div>
-        <div class="status" id="claimStatus">Sign in at login.bariplux.com in this browser first, then redeem.</div>
-      </div>
     </section>
 
     <footer>
-      PayPal: <a href="https://payhip.com/b/0rSWG">Payhip</a>
-      · Cards: Stripe Checkout
+      Payments via Stripe (PayPal &amp; cards)
       · Support: contact Bari Plux with your purchase email
     </footer>
   </main>
@@ -190,23 +154,23 @@
       document.getElementById('stripeBanner').style.display = 'block';
     }
 
-    const stripeBtn = document.getElementById('stripeBtn');
-    const stripeStatus = document.getElementById('stripeStatus');
-    const cardEmail = document.getElementById('cardEmail');
+    const payBtn = document.getElementById('payBtn');
+    const statusEl = document.getElementById('status');
+    const emailInput = document.getElementById('email');
 
-    function setStripeStatus(text, kind) {
-      stripeStatus.textContent = text;
-      stripeStatus.className = 'status' + (kind ? ' ' + kind : '');
+    function setStatus(text, kind) {
+      statusEl.textContent = text;
+      statusEl.className = 'status' + (kind ? ' ' + kind : '');
     }
 
-    stripeBtn.addEventListener('click', async () => {
-      const email = (cardEmail.value || '').trim();
+    payBtn.addEventListener('click', async () => {
+      const email = (emailInput.value || '').trim();
       if (!email || !email.includes('@')) {
-        setStripeStatus('Enter the email you use in Bari Plux Tool.', 'err');
+        setStatus('Enter the email you use in Bari Plux Tool.', 'err');
         return;
       }
-      stripeBtn.disabled = true;
-      setStripeStatus('Opening secure Stripe Checkout…');
+      payBtn.disabled = true;
+      setStatus('Opening Stripe Checkout…');
       try {
         const res = await fetch(WORKER + '/stripe/create-checkout', {
           method: 'POST',
@@ -215,71 +179,14 @@
         });
         const data = await res.json().catch(() => ({}));
         if (!res.ok || !data.url) {
-          setStripeStatus('Could not start checkout: ' + (data.error || res.status), 'err');
-          stripeBtn.disabled = false;
+          setStatus('Could not start checkout: ' + (data.error || res.status), 'err');
+          payBtn.disabled = false;
           return;
         }
         location.href = data.url;
       } catch {
-        setStripeStatus('Network error. Try again.', 'err');
-        stripeBtn.disabled = false;
-      }
-    });
-
-    const statusEl = document.getElementById('claimStatus');
-    const input = document.getElementById('license');
-    const btn = document.getElementById('claimBtn');
-
-    function setStatus(text, kind) {
-      statusEl.textContent = text;
-      statusEl.className = 'status' + (kind ? ' ' + kind : '');
-    }
-
-    function findIdToken() {
-      try {
-        for (let i = 0; i < localStorage.length; i++) {
-          const k = localStorage.key(i);
-          if (!k || !k.includes('firebase:authUser')) continue;
-          const parsed = JSON.parse(localStorage.getItem(k));
-          const token = parsed?.stsTokenManager?.accessToken || parsed?.accessToken;
-          if (token) return token;
-        }
-      } catch {}
-      return null;
-    }
-
-    btn.addEventListener('click', async () => {
-      const licenseKey = (input.value || '').trim();
-      if (!licenseKey) {
-        setStatus('Enter your license key.', 'err');
-        return;
-      }
-      const token = findIdToken();
-      if (!token) {
-        setStatus('Sign in at login.bariplux.com in this browser first, then come back.', 'err');
-        return;
-      }
-      btn.disabled = true;
-      setStatus('Activating…');
-      try {
-        const res = await fetch(WORKER + '/payhip/claim', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: 'Bearer ' + token
-          },
-          body: JSON.stringify({ licenseKey })
-        });
-        const data = await res.json().catch(() => ({}));
-        if (!res.ok || data.ok === false) {
-          setStatus('Could not activate: ' + (data.error || res.status), 'err');
-        } else {
-          setStatus('Pro activated. Open the app and refresh / re-login.', 'ok');
-        }
-      } catch {
         setStatus('Network error. Try again.', 'err');
-      } finally {
-        btn.disabled = false;
+        payBtn.disabled = false;
       }
     });
   </script>
