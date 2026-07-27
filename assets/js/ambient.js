@@ -21,7 +21,7 @@
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     let w = 0, h = 0, raf = 0, t0 = performance.now();
     const nodes = [];
-    const NODE_COUNT = 28;
+    const NODE_COUNT = (window.innerWidth < 720) ? 16 : 26;
 
     function resize() {
       const rect = host.getBoundingClientRect();
