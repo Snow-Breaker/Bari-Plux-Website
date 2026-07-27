@@ -1,5 +1,7 @@
 # Bari Plux Website — structure
 
+**Canonical working copy:** `C:\Github\Bari-Plux-Website`
+
 ## Locked files (do not edit / do not move)
 
 These stay at the **repo root** exactly as they are — desktop v2.2 depends on them:
@@ -34,8 +36,12 @@ Non-product / leftover pages live under `_archive/`:
 - `_archive/legacy-pages/` — school calendars, wisdom, test HTML, C# leftovers
 - `_archive/legacy-index/` — pre-redesign homepage backup
 
-## Next pages to migrate onto `bariplux.css`
+## Migrated onto `bariplux.css`
 
-`updates.html`, `news.html`, `optimizationtools.html`, `404.html`, `gameloopdown.html`, `mobile.html` (optional).
+`index.html`, `Pro.html`, `updates.html`, `404.html`
+
+## Still to migrate
+
+`news.html`, `optimizationtools.html`, `gameloopdown.html`, `mobile.html`, and other product pages.
 
 Do **not** migrate `login.html`. `login1.html` / `theadm1n.html` only when explicitly approved.
