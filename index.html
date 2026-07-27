@@ -79,7 +79,7 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
     document.ondragstart = function() { return false; };
 </script>
 
-<!-- در انتهای <body> -->
+<!-- در انتهای <body class="bp-body"> -->
 <!-- Scripts moved inline -->
     <!-- External scripts (files not found - functionality included inline) -->
     <!-- <script src="js/main.min.js"></script> -->
@@ -91,7 +91,7 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
 <link rel="dns-prefetch" href="https://www.gstatic.com">
 
 <!-- اضافه به <head> -->
-<meta name="theme-color" content="#6C63FF">
+<meta name="theme-color" content="#030305">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
@@ -99,10 +99,10 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
 <link rel="manifest" href="/manifest.json">
 
 <!-- Preload critical resources -->
-<link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Montserrat:wght@700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<link rel="preload" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
 
 <!-- PWA Meta Tags -->
-    <meta name="theme-color" content="#6C63FF">
+    <meta name="theme-color" content="#030305">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="manifest" href="/manifest.json">
@@ -116,35 +116,31 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
 
     <!-- Fonts and Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Montserrat:wght@700;800&family=Oxanium:wght@400;600;700&family=Rajdhani:wght@500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/all-styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+    
 
     <!-- Preload critical resources -->
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
     
     <!-- Lazy load non-critical resources -->
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet"></noscript>
+    <noscript><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet"></noscript>
     
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js" defer></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js" defer></script>
-    
-    <!-- Particles.js -->
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js" defer></script>
-
-    <!-- Performance: Critical CSS inline -->
+<!-- Performance: Critical CSS inline -->
     <style>
         /* Critical above-the-fold styles */
         :root {
-            --bg-1: #0f1115;
-            --bg-2: #15171b;
+            --bg-1: #030305;
+            --bg-2: #08080c;
             --glass-bg: rgba(255,255,255,0.06);
             --glass-strong: rgba(255,255,255,0.08);
             --glass-accent: rgba(108,99,255,0.12);
-            --accent: #6C63FF;
-            --accent-2: #00BFA6;
+            --accent: #818cf8;
+            --accent-2: #a5b4fc;
             --text: #e8eef8;
             --muted: rgba(232,238,248,0.65);
             --radius-lg: 20px;
@@ -6632,19 +6628,16 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
             }
         }
     </style>
+
+    <link rel="stylesheet" href="assets/css/bariplux.css">
+    <link rel="stylesheet" href="assets/css/home.css">
+    <script src="assets/js/protect.js" defer></script>
+    <script src="assets/js/ambient.js" defer></script>
 </head>
 <body>
-    <!-- Scroll Progress Bar -->
-    <div class="scroll-progress" id="scrollProgress"></div>
-
-    <!-- Particles.js Container -->
-    <div id="particles-js"></div>
-
-    <!-- Animated Background -->
-    <div class="bg-animation">
-        <div class="floating-circle circle-1"></div>
-        <div class="floating-circle circle-2"></div>
-        <div class="floating-circle circle-3"></div>
+    <div class="bp-ambient" data-bp-ambient aria-hidden="true">
+        <div class="bp-ambient__sheen"></div>
+        <div class="bp-ambient__noise"></div>
     </div>
 
     <!-- Header -->
@@ -9605,7 +9598,7 @@ function sanitizeInput(input) {
         setupThemeToggle();
         setupScrollTop();
         setupRippleEffect();
-        initParticles();
+        /* initParticles disabled */
         setupSearch();
         initializeChatBot();
         initializeFAQ();
