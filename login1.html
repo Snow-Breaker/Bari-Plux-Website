@@ -77,6 +77,8 @@
             return;
           }
         }
+        // Clear one-shot leftover that used to bounce every login visit back to home
+        try { sessionStorage.removeItem('github_web_goto_home'); } catch (eClear) {}
       } catch (e) {}
     })();
     </script>
@@ -921,9 +923,10 @@
                 try { window.close(); } catch (e) {}
                 return;
             }
+            // In-memory only — do NOT persist (persisting bounced every later login visit to home)
             window.__BPT_GH_LOGIN_IN_PROGRESS = true;
             window.__BPT_GH_GOTO_HOME = true;
-            try { sessionStorage.setItem('github_web_goto_home', '1'); } catch (e) {}
+            try { sessionStorage.removeItem('github_web_goto_home'); } catch (e) {}
             window.location.replace('https://bariplux.com/');
         }
 
@@ -940,14 +943,9 @@
             window.__BPT_GH_POPUP_REF = null;
         }
 
-        function shouldSkipAccountPanelForGithubWeb() {
-            if (window.__BPT_GH_GOTO_HOME) return true;
-            try { return sessionStorage.getItem('github_web_goto_home') === '1'; } catch (e) { return false; }
-        }
-
         function showLoggedInView(user) {
-            // GitHub web login must never paint Account / Open App — go straight home
-            if (shouldSkipAccountPanelForGithubWeb() && !isDesktopFlow() && !isAppEmbed()) {
+            // Only during the active post-OAuth handoff — not on later login page visits
+            if (window.__BPT_GH_GOTO_HOME && !isDesktopFlow() && !isAppEmbed()) {
                 redirectToSiteHome();
                 return;
             }
@@ -973,7 +971,7 @@
                 if (tokenSection) tokenSection.style.display = 'none';
             } else {
                 createPendingToken(user).then(result => {
-                    if (shouldSkipAccountPanelForGithubWeb()) {
+                    if (window.__BPT_GH_GOTO_HOME) {
                         redirectToSiteHome();
                         return;
                     }
@@ -1022,8 +1020,8 @@
         }
 
         function showLoginFormView() {
-            try { sessionStorage.removeItem('github_web_goto_home'); } catch (e) {}
             window.__BPT_GH_GOTO_HOME = false;
+            try { sessionStorage.removeItem('github_web_goto_home'); } catch (e) {}
             document.getElementById('loggedInView').classList.remove('active');
             document.getElementById('loginFormView').style.display = 'block';
         }
@@ -1037,10 +1035,10 @@
                     try { storedUser = localStorage.getItem('bariplux_user'); } catch (e) {}
 
                     if (user) {
-                        if (window.__BPT_GH_LOGIN_IN_PROGRESS || shouldSkipAccountPanelForGithubWeb()) {
-                            if (shouldSkipAccountPanelForGithubWeb() && !isDesktopFlow()) {
-                                redirectToSiteHome();
-                            }
+                        // Only block paint during active OAuth finish — never bounce revisits to home
+                        if (window.__BPT_GH_LOGIN_IN_PROGRESS) return;
+                        if (window.__BPT_GH_GOTO_HOME && !isDesktopFlow()) {
+                            redirectToSiteHome();
                             return;
                         }
                         // OAuth callbacks (?code=) own first paint for custom-token providers
@@ -1166,11 +1164,8 @@
         let githubPopupWatch = null;
 
         function githubRedirectUri() {
-            var host = location.hostname;
-            if (host === 'login.bariplux.com' || host === 'baripluxwebsite.web.app' || host.endsWith('.firebaseapp.com')) {
-                return location.origin + '/login1';
-            }
-            return location.origin + (location.pathname.indexOf('login1') >= 0 ? location.pathname.split('?')[0] : '/login1.html');
+            // Must exactly match GitHub OAuth App Authorization callback URL
+            return 'https://login.bariplux.com/login1';
         }
 
         function resetGithubButton() {
@@ -1274,12 +1269,20 @@
             } catch (error) {
                 window.__BPT_GH_LOGIN_IN_PROGRESS = false;
                 window.__BPT_GH_GOTO_HOME = false;
-                try { sessionStorage.removeItem('github_web_goto_home'); } catch (e) {}
                 throw error;
             }
         }
 
         function handleGithubLogin() {
+            // Always run OAuth from the canonical host so redirect_uri matches the GitHub App
+            if (location.hostname !== 'login.bariplux.com' || !/\/login1\/?$/.test(location.pathname.replace(/\.html$/, ''))) {
+                var hop = 'https://login.bariplux.com/login1';
+                if (location.search) hop += location.search;
+                else hop += '?github=1';
+                window.location.replace(hop);
+                return;
+            }
+
             markDesktopFlowIfNeeded();
             const raw = crypto.randomUUID();
             // p.* = popup child must only hand off + close; t.* = same-tab fallback
