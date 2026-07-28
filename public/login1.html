@@ -927,9 +927,12 @@
             if (firebaseInitialized && auth) {
                 auth.onAuthStateChanged((user) => {
                     if (user) {
-                        // Discord OAuth callback (?code=) owns first paint — avoid racing it.
-                        if (user.uid.startsWith('discord_')) {
-                            if (new URLSearchParams(location.search).get('code')) return;
+                        // OAuth callbacks (?code=) own first paint for custom-token providers
+                        if (new URLSearchParams(location.search).get('code') &&
+                            (user.uid.startsWith('discord_') || user.uid.startsWith('github_'))) {
+                            return;
+                        }
+                        if (user.uid.startsWith('discord_') || user.uid.startsWith('github_')) {
                             let userData = null;
                             try {
                                 if (storedUser) {
@@ -938,29 +941,35 @@
                                 }
                             } catch (e) {}
                             if (!userData) {
+                                const isGh = user.uid.startsWith('github_');
                                 let photoURL = user.photoURL || null;
-                                try {
-                                    const d = JSON.parse(localStorage.getItem('discord_user') || 'null');
-                                    if (d && d.id && d.avatar) {
-                                        photoURL = String(d.avatar).startsWith('http')
-                                            ? d.avatar
-                                            : ('https://cdn.discordapp.com/avatars/' + d.id + '/' + d.avatar + '.png?size=128');
+                                if (!isGh) {
+                                    try {
+                                        const d = JSON.parse(localStorage.getItem('discord_user') || 'null');
+                                        if (d && d.id && d.avatar) {
+                                            photoURL = String(d.avatar).startsWith('http')
+                                                ? d.avatar
+                                                : ('https://cdn.discordapp.com/avatars/' + d.id + '/' + d.avatar + '.png?size=128');
+                                        }
+                                        userData = {
+                                            id: user.uid,
+                                            discordId: d && d.id ? d.id : undefined,
+                                            name: (d && (d.global_name || d.username)) || user.displayName || 'Discord User',
+                                            email: user.email || (d && d.email) || '',
+                                            loginMethod: 'discord',
+                                            loginTime: new Date().toISOString(),
+                                            photoURL
+                                        };
+                                    } catch (e) {
+                                        userData = null;
                                     }
+                                }
+                                if (!userData) {
                                     userData = {
                                         id: user.uid,
-                                        discordId: d && d.id ? d.id : undefined,
-                                        name: (d && (d.global_name || d.username)) || user.displayName || 'Discord User',
-                                        email: user.email || (d && d.email) || '',
-                                        loginMethod: 'discord',
-                                        loginTime: new Date().toISOString(),
-                                        photoURL
-                                    };
-                                } catch (e) {
-                                    userData = {
-                                        id: user.uid,
-                                        name: user.displayName || 'Discord User',
+                                        name: user.displayName || (isGh ? 'GitHub User' : 'Discord User'),
                                         email: user.email || '',
-                                        loginMethod: 'discord',
+                                        loginMethod: isGh ? 'github' : 'discord',
                                         loginTime: new Date().toISOString(),
                                         photoURL
                                     };
@@ -976,7 +985,7 @@
                         showLoggedInView(firebaseUser);
                     } else if (storedUser) {
                         const parsed = JSON.parse(storedUser);
-                        if (parsed.loginMethod === 'discord') { showLoggedInView(parsed); }
+                        if (parsed.loginMethod === 'discord' || parsed.loginMethod === 'github') { showLoggedInView(parsed); }
                         else { localStorage.removeItem('bariplux_user'); showLoginFormView(); }
                     } else { showLoginFormView(); }
                 });
@@ -1044,6 +1053,14 @@
 
         async function handleGithubCallback() {
             const params = new URLSearchParams(window.location.search);
+            const oauthErr = params.get('error');
+            if (oauthErr) {
+                const desc = params.get('error_description') || oauthErr;
+                showNotification('GitHub OAuth error: ' + decodeURIComponent(desc.replace(/\+/g, ' ')), 'error', 10000);
+                window.history.replaceState({}, document.title, window.location.pathname);
+                return;
+            }
+
             const code = params.get('code');
             const state = params.get('state');
             if (!code) return;
@@ -1075,29 +1092,41 @@
                 });
                 const payload = await response.json().catch(() => ({}));
                 if (!response.ok) {
-                    throw new Error(payload.error || payload.detail || 'GitHub worker request failed');
+                    throw new Error(
+                        (typeof payload.detail === 'string' ? payload.detail : null)
+                        || payload.error
+                        || 'GitHub worker request failed'
+                    );
                 }
-                if (!payload.accessToken) throw new Error('GitHub access token missing');
-
+                if (!payload.customToken) throw new Error('GitHub custom token missing');
                 if (!firebaseInitialized || !auth) throw new Error('Firebase is not available');
 
-                const credential = firebase.auth.GithubAuthProvider.credential(payload.accessToken);
-                const result = await auth.signInWithCredential(credential);
+                await auth.signInWithCustomToken(payload.customToken);
+                const firebaseUser = auth.currentUser;
                 const gh = payload.githubUser || {};
+
+                const userData = {
+                    id: firebaseUser ? firebaseUser.uid : ('github_' + gh.id),
+                    githubId: gh.id,
+                    name: gh.name || gh.login || 'GitHub User',
+                    email: gh.email || ((gh.login || 'user') + '@users.noreply.github.com'),
+                    loginMethod: 'github',
+                    loginTime: new Date().toISOString(),
+                    photoURL: gh.avatar_url || null
+                };
+                localStorage.setItem('bariplux_user', JSON.stringify(userData));
+
                 if (wasDesktopFlow) {
                     try { sessionStorage.setItem('desktop_login_flow', '1'); } catch (e) {}
+                    startDesktopLoginFlow(userData);
+                } else {
+                    showLoggedInView(userData);
                 }
                 window.history.replaceState({}, document.title, window.location.pathname + (wasDesktopFlow ? '?desktop=1' : ''));
-                if (result && result.user) {
-                    if (!result.user.displayName && gh.name) {
-                        try { await result.user.updateProfile({ displayName: gh.name, photoURL: gh.avatar_url || result.user.photoURL }); } catch (e) {}
-                    }
-                    applyOAuthUser(result.user, 'github');
-                }
             } catch (error) {
                 console.error('GitHub login error:', error);
                 window.history.replaceState({}, document.title, window.location.pathname);
-                showNotification('GitHub login failed: ' + (error.message || 'Unknown error'), 'error', 8000);
+                showNotification('GitHub login failed: ' + (error.message || 'Unknown error'), 'error', 10000);
             }
         }
 
