@@ -35,6 +35,7 @@
   function wireReveals() {
     var selectors = [
       '.hero-card',
+      '.about-merged',
       '.section-title',
       '.section-subtitle',
       '.about-image',
@@ -42,11 +43,16 @@
       '.highlight-item',
       '.download-card',
       '.video-card',
+      '.youtube-container',
       '.quiz-container',
       '.compact-info-item',
       '.social-links',
       '.plux-article',
       '.pubg-card',
+      '.feedback-card',
+      '.faq-item',
+      '.hours-card',
+      '.events-card',
       '.footer-col'
     ];
 
