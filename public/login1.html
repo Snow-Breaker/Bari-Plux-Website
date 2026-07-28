@@ -709,17 +709,43 @@
 
         async function signInWithOAuthProvider(provider, preferRedirect) {
             markDesktopFlowIfNeeded();
-            // bariplux.com has NO /__/auth/handler - never redirect there (Google 400).
-            // Popup only. Redirect only for WebView embeds.
-            if (preferRedirect || isAppEmbed()) {
+            // bariplux.com (GitHub Pages) has NO /__/auth/handler — never start redirect from apex.
+            // login.bariplux.com / web.app / firebaseapp are fine for redirect.
+            const host = location.hostname;
+            const redirectSafe = host === 'login.bariplux.com'
+                || host === 'baripluxwebsite.web.app'
+                || host.endsWith('.firebaseapp.com')
+                || host === 'localhost'
+                || host === '127.0.0.1';
+            // GitHub popup is unreliable (often auth/popup-blocked or auth/internal-error).
+            const forceRedirect = preferRedirect || isAppEmbed()
+                || (provider && provider.providerId === 'github.com');
+
+            if (forceRedirect) {
+                if (!redirectSafe) {
+                    showNotification(
+                        'Open login on login.bariplux.com to use GitHub sign-in.',
+                        'error',
+                        7000
+                    );
+                    return null;
+                }
+                try { sessionStorage.setItem('oauth_pending_redirect', provider.providerId || 'github.com'); } catch (e) {}
                 await auth.signInWithRedirect(provider);
                 return null;
             }
+
             try {
                 return await auth.signInWithPopup(provider);
             } catch (error) {
                 if (error.code === 'auth/popup-blocked' || error.code === 'auth/internal-error') {
                     console.warn('[OAuth] Popup failed:', error.code);
+                    if (redirectSafe) {
+                        try { sessionStorage.setItem('oauth_pending_redirect', provider.providerId || '1'); } catch (e) {}
+                        showNotification('Popup blocked — continuing with full-page sign-in…', 'warning', 5000);
+                        await auth.signInWithRedirect(provider);
+                        return null;
+                    }
                     showNotification(
                         'Popup blocked — allow popups for this page, then try Google/GitHub again.',
                         'warning',
@@ -991,15 +1017,20 @@
                 provider.addScope('read:user');
                 provider.addScope('user:email');
                 btn.disabled = true;
-                btn.innerHTML = '<div class="loading-spinner"></div> Connecting...';
+                btn.innerHTML = '<div class="loading-spinner"></div> Redirecting to GitHub...';
                 try {
-                    const result = await signInWithOAuthProvider(provider, false);
+                    // Always redirect for GitHub (popup is blocked / flaky on this host).
+                    const result = await signInWithOAuthProvider(provider, true);
                     if (result && result.user) {
                         applyOAuthUser(result.user, 'github');
-                    } else {
-                        btn.disabled = false;
-                        btn.innerHTML = githubBtnHtml;
                     }
+                    // Redirect navigates away; if it returns null without navigation, restore UI.
+                    setTimeout(function () {
+                        if (!auth.currentUser) {
+                            btn.disabled = false;
+                            btn.innerHTML = githubBtnHtml;
+                        }
+                    }, 2500);
                 } catch (error) {
                     btn.disabled = false;
                     btn.innerHTML = githubBtnHtml;
@@ -1418,6 +1449,7 @@
             handleDiscordCallback();
             if (firebaseInitialized && auth) {
                 auth.getRedirectResult().then((result) => {
+                    try { sessionStorage.removeItem('oauth_pending_redirect'); } catch (e) {}
                     if (result && result.user) {
                         const providerId = result.credential?.providerId || result.user.providerData[0]?.providerId || 'firebase';
                         const method = providerId === 'google.com' ? 'firebase.google'
