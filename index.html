@@ -95,13 +95,13 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="assets/css/bariplux.css?v=20260728o">
-    <link rel="stylesheet" href="assets/css/site.css?v=20260728o">
-    <link rel="stylesheet" href="assets/css/shell.css?v=20260728o">
-    <link rel="stylesheet" href="assets/css/widgets.css?v=20260728o">
-    <link rel="stylesheet" href="assets/css/pages/home.css?v=20260728o">
+    <link rel="stylesheet" href="assets/css/bariplux.css?v=20260728r">
+    <link rel="stylesheet" href="assets/css/site.css?v=20260728r">
+    <link rel="stylesheet" href="assets/css/shell.css?v=20260728r">
+    <link rel="stylesheet" href="assets/css/widgets.css?v=20260728r">
+    <link rel="stylesheet" href="assets/css/pages/home.css?v=20260728r">
     <script src="assets/js/protect.js" defer></script>
-    <script src="assets/js/signal-ambient.js?v=20260728o" defer></script>
+    <script src="assets/js/signal-ambient.js?v=20260728r" defer></script>
     <script src="assets/js/home.js" defer></script>
 
 </head>
@@ -770,52 +770,54 @@
         </div>
     </section>
 
-    <!-- PUBG Mobile 4.5 Events Section -->
-<section class="pubg-events">
+    <!-- PUBG Mobile Events -->
+<section class="pubg-events" id="pubg-events">
     <div class="container">
-        <div class="events-card glass">
-            <div class="events-header">
-                <div class="events-icon glass">
+        <div class="events-card glass liquid">
+            <header class="events-header">
+                <div class="events-icon" aria-hidden="true">
                     <i class="fas fa-gift"></i>
                 </div>
-                <h2>PUBG Mobile 4.5 Events</h2>
-                <p>Latest events 4.5 Release Date</p>
-            </div>
-            
+                <p class="events-kicker">Season spotlight</p>
+                <h2>PUBG Mobile Events</h2>
+                <p class="events-lead">Track live and upcoming 4.5 events — rewards, timelines, and what’s next.</p>
+            </header>
+
             <div class="events-content">
                 <div class="events-grid">
-                    <div class="event-item glass">
-                        <div class="event-icon">
+                    <a href="pubgevents430" class="event-item glass liquid-nested">
+                        <div class="event-icon" aria-hidden="true">
                             <i class="fas fa-calendar-check"></i>
                         </div>
                         <div class="event-details">
-                            <h3>All Events</h3>
-                            <p>Current & upcoming events</p>
+                            <h3>All events</h3>
+                            <p>Current &amp; upcoming event boards</p>
                         </div>
-                        <a href="pubgevents430" class="event-btn glass">
+                        <span class="event-btn" aria-hidden="true">
                             <i class="fas fa-arrow-right"></i>
-                        </a>
-                    </div>
-                    
-                    <div class="event-item glass">
-                        <div class="event-icon">
-                            <i class="fas fa-calendar-check"></i>
+                        </span>
+                    </a>
+
+                    <a href="pubgevents430" class="event-item glass liquid-nested">
+                        <div class="event-icon" aria-hidden="true">
+                            <i class="fas fa-rocket"></i>
                         </div>
                         <div class="event-details">
-                            <h3>Future Events</h3>
-                            <p>Next season's events</p>
+                            <h3>Future events</h3>
+                            <p>Next season previews &amp; drops</p>
                         </div>
-                        <a href="pubgevents430" class="event-btn glass" title="View events">
+                        <span class="event-btn" aria-hidden="true">
                             <i class="fas fa-arrow-right"></i>
-                        </a>
-                    </div>
+                        </span>
+                    </a>
                 </div>
-                
+
                 <div class="event-banner glass">
-                    <img src="https://i.postimg.cc/DzKhjL35/PUBGMobile-Naruto.png" loading="lazy" alt="PUBG 4.5 Events">
+                    <img src="https://i.postimg.cc/DzKhjL35/PUBGMobile-Naruto.png" loading="lazy" alt="PUBG Mobile 4.5 events artwork">
                     <div class="banner-overlay">
-                        <span class="banner-badge glass">NEW</span>
-                        <h4>Season 4.5 Live!</h4>
+                        <span class="banner-badge">NEW</span>
+                        <h4>Season 4.5 live</h4>
+                        <p>Open the full events page for every board</p>
                     </div>
                 </div>
             </div>
@@ -1044,58 +1046,60 @@
         </div>
     </section>
 
-    <!-- Working Hours Section - Glass Morphism -->
-<section class="working-hours">
+    <!-- Support Availability -->
+<section class="working-hours" id="support">
     <div class="container">
-        <div class="hours-card glass">
-            <div class="hours-header">
-                <div class="hours-icon glass">
+        <div class="hours-card glass liquid">
+            <header class="hours-header">
+                <div class="hours-icon" aria-hidden="true">
                     <i class="fas fa-headset"></i>
                 </div>
+                <p class="hours-kicker">Live help window</p>
                 <h2>Support Availability</h2>
-            </div>
+                <p class="hours-lead">Catch me during the daily UTC window — or ping Telegram anytime for non-urgent help.</p>
+            </header>
 
             <div class="hours-content">
                 <div class="hours-schedule">
-                    <div class="schedule-item glass">
+                    <div class="schedule-item glass liquid-nested">
                         <div class="time-range">
-                            <i class="fas fa-clock"></i>
+                            <div class="time-icon" aria-hidden="true"><i class="fas fa-clock"></i></div>
                             <div class="time-details">
-                                <div class="days">Daily</div>
-                                <div class="time">4:00 PM - 8:00 PM UTC</div>
+                                <div class="days">Daily coverage</div>
+                                <div class="time">4:00 PM – 8:00 PM UTC</div>
                             </div>
                         </div>
-                        <div class="utc-info glass">
-                            <i class="fas fa-globe"></i>
-                            <span>UTC Time Zone</span>
+                        <div class="utc-info">
+                            <i class="fas fa-globe" aria-hidden="true"></i>
+                            <span>Times shown in Coordinated Universal Time</span>
                         </div>
                     </div>
                 </div>
-                
-                <div class="current-time-display glass">
+
+                <div class="current-time-display glass liquid-nested">
                     <div class="current-utc">
-                        <span>Current UTC: </span>
-                        <span id="current-utc-time">Loading...</span>
+                        <span class="meta-label">Current UTC</span>
+                        <span class="meta-value" id="current-utc-time">Loading…</span>
                     </div>
                     <div class="status-indicator">
-                        <span class="status-label">Support Status: </span>
-                        <span class="status-value" id="support-status">Checking...</span>
+                        <span class="meta-label">Support status</span>
+                        <span class="status-value" id="support-status">Checking…</span>
                     </div>
                 </div>
-                
-                <div class="hours-note glass">
-                    <i class="fas fa-info-circle"></i>
-                    <p>Response time may vary during peak hours. For urgent matters outside these hours, please use Telegram.</p>
+
+                <div class="hours-note glass liquid-nested">
+                    <i class="fas fa-info-circle" aria-hidden="true"></i>
+                    <p>Peak hours can slow replies. For urgent issues outside this window, use Telegram.</p>
                 </div>
-                
+
                 <div class="hours-actions">
-                    <a href="https://t.me/BariPlux" class="contact-btn glass" target="_blank">
-                        <i class="fab fa-telegram"></i>
-                        Contact via Telegram
+                    <a href="https://t.me/BariPlux" class="contact-btn" target="_blank" rel="noopener">
+                        <i class="fab fa-telegram" aria-hidden="true"></i>
+                        Contact on Telegram
                     </a>
-                    <button class="timezone-help-btn glass" id="timezone-help">
-                        <i class="fas fa-question-circle"></i>
-                        Timezone Help
+                    <button type="button" class="timezone-help-btn" id="timezone-help">
+                        <i class="fas fa-question-circle" aria-hidden="true"></i>
+                        Timezone help
                     </button>
                 </div>
             </div>
