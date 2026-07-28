@@ -1012,37 +1012,105 @@
             }
         });
 
-        // ==================== GITHUB LOGIN ====================
-        document.getElementById('btnGitHubLogin').addEventListener('click', async function() {
-            const btn = this;
-            const githubBtnHtml = '<i class="fab fa-github" style="font-size:1.2rem;"></i> Sign in with GitHub';
-            if (firebaseInitialized && auth) {
-                const provider = new firebase.auth.GithubAuthProvider();
-                provider.addScope('read:user');
-                provider.addScope('user:email');
-                btn.disabled = true;
-                btn.innerHTML = '<div class="loading-spinner"></div> Redirecting to GitHub...';
-                try {
-                    // Always redirect for GitHub (popup is blocked / flaky on this host).
-                    const result = await signInWithOAuthProvider(provider, true);
-                    if (result && result.user) {
-                        applyOAuthUser(result.user, 'github');
-                    }
-                    // Redirect navigates away; if it returns null without navigation, restore UI.
-                    setTimeout(function () {
-                        if (!auth.currentUser) {
-                            btn.disabled = false;
-                            btn.innerHTML = githubBtnHtml;
-                        }
-                    }, 2500);
-                } catch (error) {
-                    btn.disabled = false;
-                    btn.innerHTML = githubBtnHtml;
-                    await handleAuthError(error, 'GitHub');
-                }
-            } else {
-                showNotification('Firebase is not available. Please ensure internet connection and try again.', 'error');
+        // ==================== GITHUB LOGIN (custom OAuth via Worker — like Discord) ====================
+        const GITHUB_OAUTH_CLIENT_ID = 'Ov23liYBk9X5ykqEvjCA';
+
+        function githubRedirectUri() {
+            var host = location.hostname;
+            if (host === 'login.bariplux.com' || host === 'baripluxwebsite.web.app' || host.endsWith('.firebaseapp.com')) {
+                return location.origin + '/login1';
             }
+            return location.origin + (location.pathname.indexOf('login1') >= 0 ? location.pathname.split('?')[0] : '/login1.html');
+        }
+
+        async function handleGithubLogin() {
+            markDesktopFlowIfNeeded();
+            const state = crypto.randomUUID();
+            try {
+                sessionStorage.setItem('github_oauth_state', state);
+                if (isDesktopFlow()) sessionStorage.setItem('github_desktop_flow', '1');
+            } catch (e) {}
+
+            const redirectUri = githubRedirectUri();
+            const params = new URLSearchParams({
+                client_id: GITHUB_OAUTH_CLIENT_ID,
+                redirect_uri: redirectUri,
+                scope: 'read:user user:email',
+                state,
+                allow_signup: 'true'
+            });
+            window.location.href = 'https://github.com/login/oauth/authorize?' + params.toString();
+        }
+
+        async function handleGithubCallback() {
+            const params = new URLSearchParams(window.location.search);
+            const code = params.get('code');
+            const state = params.get('state');
+            if (!code) return;
+
+            const savedState = sessionStorage.getItem('github_oauth_state');
+            if (!savedState) return; // not our GitHub flow (maybe Discord)
+            if (!state || state !== savedState) {
+                showNotification('Security error: GitHub OAuth state mismatch. Please try again.', 'error');
+                window.history.replaceState({}, document.title, window.location.pathname);
+                sessionStorage.removeItem('github_oauth_state');
+                return;
+            }
+            sessionStorage.removeItem('github_oauth_state');
+
+            const wasDesktopFlow = params.get('desktop') === '1' ||
+                sessionStorage.getItem('github_desktop_flow') === '1' ||
+                sessionStorage.getItem('desktop_login_flow') === '1';
+            sessionStorage.removeItem('github_desktop_flow');
+
+            const redirectUri = githubRedirectUri();
+            showNotification('Connecting GitHub account...', 'success');
+
+            try {
+                const response = await fetch('https://discord-auth-worker.bariattaye2.workers.dev/github', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ code, redirectUri }),
+                    signal: AbortSignal.timeout(15000)
+                });
+                const payload = await response.json().catch(() => ({}));
+                if (!response.ok) {
+                    throw new Error(payload.error || payload.detail || 'GitHub worker request failed');
+                }
+                if (!payload.accessToken) throw new Error('GitHub access token missing');
+
+                if (!firebaseInitialized || !auth) throw new Error('Firebase is not available');
+
+                const credential = firebase.auth.GithubAuthProvider.credential(payload.accessToken);
+                const result = await auth.signInWithCredential(credential);
+                const gh = payload.githubUser || {};
+                if (wasDesktopFlow) {
+                    try { sessionStorage.setItem('desktop_login_flow', '1'); } catch (e) {}
+                }
+                window.history.replaceState({}, document.title, window.location.pathname + (wasDesktopFlow ? '?desktop=1' : ''));
+                if (result && result.user) {
+                    if (!result.user.displayName && gh.name) {
+                        try { await result.user.updateProfile({ displayName: gh.name, photoURL: gh.avatar_url || result.user.photoURL }); } catch (e) {}
+                    }
+                    applyOAuthUser(result.user, 'github');
+                }
+            } catch (error) {
+                console.error('GitHub login error:', error);
+                window.history.replaceState({}, document.title, window.location.pathname);
+                showNotification('GitHub login failed: ' + (error.message || 'Unknown error'), 'error', 8000);
+            }
+        }
+
+        document.getElementById('btnGitHubLogin').addEventListener('click', function(e) {
+            e.preventDefault();
+            const btn = this;
+            btn.disabled = true;
+            btn.innerHTML = '<div class="loading-spinner"></div> Redirecting to GitHub...';
+            handleGithubLogin().catch(async (error) => {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fab fa-github" style="font-size:1.2rem;"></i> Sign in with GitHub';
+                await handleAuthError(error, 'GitHub');
+            });
         });
 
         // ── PKCE helpers ──────────────────────────────────────────
@@ -1101,10 +1169,10 @@
             const code = params.get('code');
             const state = params.get('state');
 
-            if (!code) return; // not a Discord callback
-
-            // Verify state
+            if (!code) return; // not an OAuth callback
+            // Don't steal GitHub (or other) ?code= callbacks
             const savedState = sessionStorage.getItem('discord_oauth_state');
+            if (!savedState) return;
             if (!state || state !== savedState) {
                 showNotification('Security error: OAuth state mismatch. Please try again.', 'error');
                 window.history.replaceState({}, document.title, window.location.pathname);
@@ -1451,6 +1519,7 @@
             markDesktopFlowIfNeeded();
             initFirebase();
             handleDiscordCallback();
+            handleGithubCallback();
             if (firebaseInitialized && auth) {
                 auth.getRedirectResult().then((result) => {
                     let pending = null;
