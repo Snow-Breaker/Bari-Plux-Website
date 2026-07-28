@@ -420,3 +420,180 @@ html[data-theme="light"] .live-hub__rule {
   );
 }
 
+/* ═══════════════ BARI PLUX TOOL SPOTLIGHT ═══════════════ */
+.bp-tool-spot {
+  padding: clamp(2rem, 4.5vw, 3.25rem) 0;
+}
+
+.bp-tool-spot__shell {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: clamp(1rem, 2.5vw, 1.75rem);
+  align-items: center;
+  max-width: 920px;
+  margin: 0 auto;
+  padding: clamp(1.35rem, 3vw, 1.85rem) clamp(1.35rem, 3vw, 2rem);
+  border-radius: 22px;
+  background:
+    linear-gradient(165deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.05) 42%, transparent 100%),
+    rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(28px) saturate(160%);
+  -webkit-backdrop-filter: blur(28px) saturate(160%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 18px 44px rgba(0, 0, 0, 0.24);
+}
+
+.bp-tool-spot__shell::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.12), transparent 40%);
+  opacity: 0.45;
+  mix-blend-mode: soft-light;
+  z-index: 0;
+}
+
+.bp-tool-spot__shell > * {
+  position: relative;
+  z-index: 1;
+}
+
+.bp-tool-spot__kicker {
+  margin: 0 0 0.4rem;
+  color: var(--bp-accent-2, #a5b4fc);
+  font-size: 0.75rem;
+  font-weight: 650;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.bp-tool-spot__title {
+  margin: 0 0 0.55rem;
+  font-family: var(--bp-font-display, "Space Grotesk", sans-serif);
+  font-size: clamp(1.55rem, 3vw, 1.95rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  background: linear-gradient(135deg, #fff 12%, var(--bp-accent-2, #a5b4fc) 58%, var(--bp-accent, #818cf8) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.bp-tool-spot__lead {
+  margin: 0 0 1.1rem;
+  max-width: 42ch;
+  color: var(--bp-text-2, #c0c0c8);
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.bp-tool-spot__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.bp-tool-spot__actions .bp-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.65rem 1.05rem;
+  border-radius: 11px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.bp-tool-spot__actions .bp-btn--glass {
+  background: rgba(129, 140, 248, 0.34);
+  border: 1px solid rgba(129, 140, 248, 0.48);
+  color: #fff;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+
+.bp-tool-spot__actions .bp-btn--ghost {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: var(--bp-text, #f5f5f7);
+}
+
+.bp-tool-spot__aside {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 1rem;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.bp-tool-spot__aside img {
+  width: 120px;
+  height: auto;
+  filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.3));
+}
+
+.bp-tool-spot__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  width: 100%;
+}
+
+.bp-tool-spot__list li {
+  position: relative;
+  padding: 0.35rem 0.35rem 0.35rem 1.15rem;
+  font-size: 0.84rem;
+  color: var(--bp-text-2, #c0c0c8);
+}
+
+.bp-tool-spot__list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.7rem;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--bp-accent-2, #a5b4fc);
+}
+
+@media (max-width: 720px) {
+  .bp-tool-spot__shell {
+    grid-template-columns: 1fr;
+  }
+  .bp-tool-spot__lead {
+    max-width: none;
+  }
+}
+
+html[data-theme="light"] .bp-tool-spot__shell,
+html[data-theme="light"] .bp-tool-spot__aside {
+  background:
+    linear-gradient(165deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.72)),
+    rgba(255, 255, 255, 0.7);
+  border-color: rgba(15, 20, 40, 0.1);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    0 14px 36px rgba(15, 20, 40, 0.08);
+}
+
+html[data-theme="light"] .bp-tool-spot__title {
+  background: linear-gradient(135deg, #12131a 15%, #4f46e5 80%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+html[data-theme="light"] .bp-tool-spot__lead,
+html[data-theme="light"] .bp-tool-spot__list li {
+  color: #3f4558;
+}
+

@@ -13,7 +13,7 @@
 :root {
   --void: #030305;
   --ink: #0c0c10;
-  --chrome-fill: rgba(16, 16, 20, 0.58);
+  --chrome-fill: rgba(8, 8, 12, 0.92);
   --chrome-border: rgba(255, 255, 255, 0.16);
   --card-fill: linear-gradient(180deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.07) 45%, rgba(255,255,255,0.04) 100%);
   --card-border: rgba(255, 255, 255, 0.15);
@@ -178,6 +178,26 @@ button, input, textarea { font: inherit; color: inherit; }
   margin: 12px auto 0;
   height: 64px;
   overflow: visible;
+  isolation: isolate;
+}
+
+/* Blocks page content peeking through / above the floating bar */
+.bp-chrome::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -12px;
+  width: 100vw;
+  height: calc(64px + 28px);
+  transform: translateX(-50%);
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(3, 3, 5, 0.97) 0%,
+    rgba(3, 3, 5, 0.88) 58%,
+    rgba(3, 3, 5, 0) 100%
+  );
 }
 
 .bp-chrome__inner {
@@ -188,16 +208,31 @@ button, input, textarea { font: inherit; color: inherit; }
   gap: 1rem;
   padding: 0 0.8rem 0 0.95rem;
   border-radius: var(--r-chrome);
-  background: var(--chrome-fill);
-  backdrop-filter: blur(var(--blur-chrome)) saturate(160%);
-  -webkit-backdrop-filter: blur(var(--blur-chrome)) saturate(160%);
+  background:
+    linear-gradient(180deg, rgba(22, 22, 30, 0.98), rgba(10, 10, 14, 0.94)),
+    var(--chrome-fill);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
   border: 1px solid var(--chrome-border);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.12);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255,255,255,0.12);
   overflow: visible;
 }
 
 .bp-chrome.scrolled .bp-chrome__inner {
-  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.12);
+  background:
+    linear-gradient(180deg, rgba(14, 14, 20, 0.99), rgba(6, 6, 10, 0.97)),
+    rgba(6, 6, 10, 0.97);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255,255,255,0.12);
+}
+
+.bp-chrome.scrolled::before {
+  height: calc(64px + 36px);
+  background: linear-gradient(
+    180deg,
+    rgba(3, 3, 5, 0.99) 0%,
+    rgba(3, 3, 5, 0.92) 62%,
+    rgba(3, 3, 5, 0) 100%
+  );
 }
 
 .bp-logo { display: flex; align-items: center; gap: 0.6rem; min-width: 0; }

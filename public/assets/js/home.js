@@ -49,6 +49,7 @@
       '.feedback-card',
       '.faq-item',
       '.live-hub__shell',
+      '.bp-tool-spot__shell',
       '.footer-col'
     ];
 

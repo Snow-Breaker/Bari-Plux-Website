@@ -802,7 +802,7 @@ html[data-theme="light"],
   --text: #12131a;
   --text-2: #3f4558;
   --text-3: #5c6478;
-  --chrome-fill: rgba(255, 255, 255, 0.78);
+  --chrome-fill: rgba(255, 255, 255, 0.94);
   --chrome-border: rgba(15, 20, 40, 0.12);
   --card-fill: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.78));
   --card-border: rgba(15, 20, 40, 0.1);
@@ -834,6 +834,28 @@ html[data-theme="light"],
   --secondary: var(--accent-2);
 
   scrollbar-color: rgba(79, 70, 229, 0.4) transparent;
+}
+
+html[data-theme="light"] .bp-chrome::before,
+[data-theme="light"] .bp-chrome::before {
+  background: linear-gradient(
+    180deg,
+    rgba(238, 240, 246, 0.98) 0%,
+    rgba(238, 240, 246, 0.9) 58%,
+    rgba(238, 240, 246, 0) 100%
+  );
+}
+
+html[data-theme="light"] .bp-chrome__inner,
+[data-theme="light"] .bp-chrome__inner {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 249, 252, 0.96)),
+    rgba(255, 255, 255, 0.94);
+}
+
+html[data-theme="light"] .bp-chrome.scrolled .bp-chrome__inner,
+[data-theme="light"] .bp-chrome.scrolled .bp-chrome__inner {
+  background: rgba(255, 255, 255, 0.97);
 }
 
 /* Ambient field — light (same structure as AmbientSignalField, cool wash) */

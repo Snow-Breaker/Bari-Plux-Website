@@ -22,6 +22,7 @@
     { href: 'weaponorg.html', label: 'Weapons', match: ['weaponorg.html', 'org.html'] },
     { href: 'news.html', label: 'News', match: ['news.html'] },
     { href: 'updates.html', label: 'Updates', match: ['updates.html'] },
+    { href: 'tool.html', label: 'Tool', match: ['tool.html', 'tool'] },
     { href: 'optimizationtools.html', label: 'Tools', match: ['optimizationtools.html'] },
     { href: 'Pro.html', label: 'Pro', match: ['pro.html'] }
   ];

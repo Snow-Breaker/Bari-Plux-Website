@@ -28,6 +28,14 @@
       {
         "source": "/pro",
         "destination": "/Pro.html"
+      },
+      {
+        "source": "/tool",
+        "destination": "/tool.html"
+      },
+      {
+        "source": "/Tool",
+        "destination": "/tool.html"
       }
     ],
     "headers": [

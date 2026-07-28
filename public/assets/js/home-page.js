@@ -836,11 +836,13 @@ document.addEventListener('DOMContentLoaded', function() {
             { title: 'Videos', type: 'Section', id: 'videos', keys: 'video youtube tutorial fix guide' },
             { title: 'Optimization Quiz', type: 'Section', id: 'optimization-quiz', keys: 'quiz optimize test' },
             { title: 'PUBG Content', type: 'Section', id: 'pubg', keys: 'pubg content mobile' },
+            { title: 'Bari Plux Tool', type: 'Section', id: 'bari-plux-tool', keys: 'tool desktop app download gameloop fps' },
+            { title: 'Live now', type: 'Section', id: 'live', keys: 'events support season hours availability timezone' },
             { title: 'PUBG Events', type: 'Section', id: 'pubg-events', keys: 'events season reward' },
             { title: 'Plux Times', type: 'Section', id: 'plux-times', keys: 'plux times news' },
             { title: 'Blog', type: 'Section', id: 'blog', keys: 'blog posts article weapon map' },
             { title: 'Community & FAQ', type: 'Section', id: 'feedback', keys: 'faq feedback community support' },
-            { title: 'Support Hours', type: 'Section', id: 'working-hours', keys: 'support hours availability timezone' },
+            { title: 'Support Hours', type: 'Section', id: 'support', keys: 'support hours availability timezone' },
             { title: 'Contact', type: 'Section', id: 'contact', keys: 'contact email telegram' }
         ];
 
@@ -850,9 +852,9 @@ document.addEventListener('DOMContentLoaded', function() {
             '.hero-lead', '.profile-story p', '.pubg-card h3', '.plux-article h3'
         ];
 
-        var wh = document.querySelector('.working-hours');
-        if (wh && !wh.id) wh.id = 'working-hours';
-        var pe = document.querySelector('.pubg-events');
+        var wh = document.querySelector('#support');
+        if (wh && !wh.id) wh.id = 'support';
+        var pe = document.querySelector('#pubg-events');
         if (pe && !pe.id) pe.id = 'pubg-events';
 
         function hideDropdown() {
