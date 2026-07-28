@@ -23,10 +23,10 @@
       try {
         var h = location.hostname;
         var q = new URLSearchParams(location.search);
-        // Brand hop: GitHub Pages / apex → Firebase Hosting login page (not site root/index)
+        // Brand hop: GitHub Pages / apex → canonical login host root
         if (q.get('desktop') === '1' && (h === 'bariplux.com' || (h.endsWith('.bariplux.com') && h !== 'login.bariplux.com'))) {
-          var dest = 'https://login.bariplux.com/login1' + location.search;
-          if (!dest.includes('v=')) dest += (dest.includes('?') ? '&' : '?') + 'v=20260728e';
+          var dest = 'https://login.bariplux.com/' + (location.search || '?desktop=1');
+          if (!dest.includes('v=')) dest += (dest.includes('?') ? '&' : '?') + 'v=20260729';
           location.replace(dest);
           return;
         }
@@ -1078,7 +1078,7 @@
 
         function githubRedirectUri() {
             // Must exactly match GitHub OAuth App Authorization callback URL
-            return 'https://login.bariplux.com/login1';
+            return 'https://login.bariplux.com/';
         }
 
         function resetGithubButton() {
@@ -1181,8 +1181,7 @@
         function handleGithubLogin() {
             // Canonical host only — otherwise GitHub rejects redirect_uri
             if (location.hostname !== 'login.bariplux.com') {
-                var hop = 'https://login.bariplux.com/login1' + (location.search || '');
-                window.location.replace(hop);
+                window.location.replace('https://login.bariplux.com/' + (location.search || ''));
                 return;
             }
 
@@ -1205,7 +1204,7 @@
             if (oauthErr) {
                 const desc = params.get('error_description') || oauthErr;
                 showNotification('GitHub OAuth error: ' + decodeURIComponent(String(desc).replace(/\+/g, ' ')), 'error', 10000);
-                window.history.replaceState({}, document.title, window.location.pathname + (isDesktopFlow() ? '?desktop=1' : ''));
+                window.history.replaceState({}, document.title, '/' + (isDesktopFlow() ? '?desktop=1' : ''));
                 resetGithubButton();
                 return;
             }
@@ -1217,10 +1216,10 @@
 
             try {
                 await finishGithubLoginWithCode(code, state);
-                window.history.replaceState({}, document.title, window.location.pathname + (isDesktopFlow() ? '?desktop=1' : ''));
+                window.history.replaceState({}, document.title, '/' + (isDesktopFlow() ? '?desktop=1' : ''));
             } catch (error) {
                 console.error('GitHub login error:', error);
-                window.history.replaceState({}, document.title, window.location.pathname + (isDesktopFlow() ? '?desktop=1' : ''));
+                window.history.replaceState({}, document.title, '/' + (isDesktopFlow() ? '?desktop=1' : ''));
                 showNotification('GitHub login failed: ' + (error.message || 'Unknown error'), 'error', 10000);
                 resetGithubButton();
             }
@@ -1268,14 +1267,7 @@
             sessionStorage.setItem('discord_code_verifier', codeVerifier);
             sessionStorage.setItem('discord_oauth_state', state);
 
-            const redirectUri = (function () {
-                // Always return to the login page (never site root /index).
-                var host = location.hostname;
-                if (host === 'login.bariplux.com' || host === 'baripluxwebsite.web.app' || host.endsWith('.firebaseapp.com')) {
-                    return location.origin + '/login1';
-                }
-                return location.origin + (location.pathname.indexOf('login1') >= 0 ? location.pathname.split('?')[0] : '/login1.html');
-            })();
+            const redirectUri = 'https://login.bariplux.com/';
             const params = new URLSearchParams({
                 client_id: '1504446428959871127',
                 redirect_uri: redirectUri,
@@ -1319,13 +1311,7 @@
                                    sessionStorage.getItem('discord_desktop_flow') === '1';
             sessionStorage.removeItem('discord_desktop_flow');
 
-            const redirectUri = (function () {
-                var host = location.hostname;
-                if (host === 'login.bariplux.com' || host === 'baripluxwebsite.web.app' || host.endsWith('.firebaseapp.com')) {
-                    return location.origin + '/login1';
-                }
-                return location.origin + (location.pathname.indexOf('login1') >= 0 ? location.pathname.split('?')[0] : '/login1.html');
-            })();
+            const redirectUri = 'https://login.bariplux.com/';
 
             // Show loading state
             showNotification('Connecting Discord account...', 'success');

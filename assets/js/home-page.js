@@ -135,7 +135,7 @@
                 document.getElementById('goToLoginBtn').onclick = function(e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    window.location.href = '/login1';
+                    window.location.href = 'https://login.bariplux.com/';
                 };
                 
                 document.getElementById('logoutBtn').onclick = function() {
@@ -159,7 +159,7 @@
             document.getElementById('goToLoginBtn').onclick = function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                window.location.href = '/login1';
+                window.location.href = 'https://login.bariplux.com/';
             };
             document.getElementById('logoutBtn').style.display = 'none';
             if (dropdown) dropdown.setAttribute('hidden', '');

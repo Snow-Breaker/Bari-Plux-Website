@@ -297,7 +297,7 @@
         e.stopPropagation();
         var user = readUser();
         if (!user) {
-          location.href = '/login1';
+          location.href = 'https://login.bariplux.com/';
           return;
         }
         if (!dropdown) return;
@@ -309,7 +309,7 @@
     if (go && !go.dataset.bpWired) {
       go.dataset.bpWired = '1';
       go.addEventListener('click', function () {
-        location.href = '/login1';
+        location.href = 'https://login.bariplux.com/';
       });
     }
 
@@ -326,7 +326,7 @@
     if (profile && !profile.dataset.bpWired) {
       profile.dataset.bpWired = '1';
       profile.addEventListener('click', function () {
-        location.href = '/login1';
+        location.href = 'https://login.bariplux.com/';
       });
     }
 

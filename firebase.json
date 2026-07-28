@@ -17,10 +17,22 @@
       "**/.*",
       "**/node_modules/**"
     ],
+    "redirects": [
+      {
+        "source": "/login1",
+        "destination": "/",
+        "type": 301
+      },
+      {
+        "source": "/login1.html",
+        "destination": "/",
+        "type": 301
+      }
+    ],
     "rewrites": [
       {
         "source": "/",
-        "destination": "/index.html"
+        "destination": "/login1.html"
       },
       {
         "source": "/Pro",

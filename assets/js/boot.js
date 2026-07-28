@@ -17,16 +17,8 @@
   } catch (_) { /* ignore */ }
 
   try {
-    // Desktop app opens /?desktop=1 — Firebase "/" rewrite serves index.html.
-    // Send those sessions to the real login page (cleanUrls → /login1).
-    var qs = new URLSearchParams(window.location.search);
-    if (qs.get('desktop') === '1') {
-      var path = window.location.pathname || '/';
-      if (path === '/' || path === '/index.html' || path === '/index') {
-        window.location.replace('/login1' + window.location.search);
-        return;
-      }
-    }
+    // Desktop app opens login.bariplux.com/?desktop=1 — root already serves the login page.
+    // (Older builds redirected / → /login1; that must not run anymore or it loops.)
   } catch (_) { /* ignore */ }
 
   try {

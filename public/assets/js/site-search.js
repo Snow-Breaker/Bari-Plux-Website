@@ -24,7 +24,7 @@
     { title: 'Blog', type: 'Section', href: '/#blog', keys: 'blog posts article' },
     { title: 'Support / Live', type: 'Section', href: '/#live', keys: 'support hours telegram events' },
     { title: 'Contact', type: 'Section', href: '/#contact', keys: 'contact email telegram' },
-    { title: 'Login', type: 'Page', href: '/login1', keys: 'login sign in account' }
+    { title: 'Login', type: 'Page', href: 'https://login.bariplux.com/', keys: 'login sign in account' }
   ];
 
   function ensureModal() {
