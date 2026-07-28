@@ -137,17 +137,16 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
 
 
 
-
-
-
-    <link rel="stylesheet" href="assets/css/obsidian.css">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/widgets.css">
+    <link rel="stylesheet" href="assets/css/bari.css">
     <script src="assets/js/protect.js" defer></script>
-    <script src="assets/js/signal-ambient.js" defer></script>
+    <script src="assets/js/aurora.js" defer></script>
     <script src="assets/js/home.js" defer></script>
 
 </head>
 <body class="bp-body">
-    <div id="bp-aurora" class="bp-aurora bp-ambient" aria-hidden="true"></div>
+    <div id="bp-aurora" class="bp-aurora" aria-hidden="true"></div>
 
 
 <header class="bp-chrome" id="bp-header">
@@ -1674,7 +1673,11 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
                 
                 loginBtn.innerHTML = `<span style="display:flex;align-items:center;gap:8px;"><span style="width:28px;height:28px;background:linear-gradient(135deg,var(--accent),var(--accent-2));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:white;">${initial}</span><span style="font-size:0.9rem;">${userName.substring(0, 12)}${userName.length > 12 ? '...' : ''}</span></span>`;
                 loginBtn.style.cursor = 'pointer';
-                /* onclick removed — wired once via wireLoginButton */
+                loginBtn.onclick = function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggleUserDropdown();
+                };
                 
                 document.getElementById('userAvatar').innerHTML = initial;
                 document.getElementById('userName').textContent = userName;
@@ -1704,7 +1707,11 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
             }
         } else {
             loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i><span>Login</span>';
-            /* onclick removed — wired once via wireLoginButton */
+            loginBtn.onclick = function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleUserDropdown();
+            };
             document.getElementById('userAvatar').innerHTML = '<i class="fas fa-user"></i>';
             document.getElementById('userName').textContent = 'Guest User';
             document.getElementById('userEmail').textContent = 'Click below to login';
@@ -1729,15 +1736,24 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
 
     document.addEventListener('click', function(e) {
         const dropdown = document.getElementById('userDropdown');
-        const container = document.querySelector('.bp-account');
+        const container = document.querySelector('.bp-account') || document.querySelector('.user-menu-container');
         if (dropdown && container && !container.contains(e.target)) {
             dropdown.setAttribute('hidden', '');
         }
     });
+
+    const loginBtnWire = document.getElementById('loginBtnHeader');
+    if (loginBtnWire && !loginBtnWire.getAttribute('data-wired')) {
+        loginBtnWire.setAttribute('data-wired', '1');
+        loginBtnWire.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleUserDropdown();
+        });
+    }
     
     // Run on page load
     updateLoginButton();
-    wireLoginButton();
     setTimeout(updateLoginButton, 500);
     setTimeout(updateLoginButton, 1000);
 
@@ -3068,25 +3084,25 @@ function sanitizeInput(input) {
         initializeFAQ();
         new WorkingHoursManager();
         checkLoginStatus();
-        wireLoginButton();
         
         console.log('🎯 All features initialized successfully!');
     });
 
     // Check login status and update header button
-        function checkLoginStatus() {
+    function checkLoginStatus() {
         const storedUser = localStorage.getItem('bariplux_user');
         const loginBtn = document.getElementById('loginBtnHeader');
+        
         if (!loginBtn) return;
-
+        
         if (storedUser) {
             try {
                 const user = JSON.parse(storedUser);
-                const label = user.name || (user.email ? String(user.email).split('@')[0] : 'Account');
+                const label = user.name || (user.email ? user.email.split('@')[0] : 'Account');
                 loginBtn.classList.add('logged-in');
                 loginBtn.innerHTML = '<i class="fas fa-user-circle"></i><span>' + label + '</span>';
                 loginBtn.title = 'Account menu';
-            } catch (e) {
+            } catch(e) {
                 localStorage.removeItem('bariplux_user');
             }
         } else {
@@ -3094,17 +3110,12 @@ function sanitizeInput(input) {
             loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i><span>Login</span>';
             loginBtn.title = 'Login';
         }
-    }
-
-    function wireLoginButton() {
-        const loginBtn = document.getElementById('loginBtnHeader');
-        if (!loginBtn || loginBtn.dataset.bpWired === '1') return;
-        loginBtn.dataset.bpWired = '1';
-        loginBtn.addEventListener('click', function (e) {
+        // Always open account menu — never expand/break the chrome bar
+        loginBtn.onclick = function(e) {
             e.preventDefault();
             e.stopPropagation();
             toggleUserDropdown();
-        });
+        };
     }
 
     function logout() {
