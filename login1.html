@@ -254,7 +254,8 @@
                 if (new URLSearchParams(window.location.search).get('desktop') === '1') return true;
                 // Survives OAuth redirects that drop ?desktop=1
                 return sessionStorage.getItem('desktop_login_flow') === '1'
-                    || sessionStorage.getItem('discord_desktop_flow') === '1';
+                    || sessionStorage.getItem('discord_desktop_flow') === '1'
+                    || sessionStorage.getItem('github_desktop_flow') === '1';
             } catch (e) { return false; }
         }
 
@@ -350,14 +351,22 @@
             const secretParam = claimSecret ? `&secret=${claimSecret}` : '';
             document.getElementById('loginFormView').style.display = 'none';
             document.getElementById('loggedInView').classList.add('active');
-            document.getElementById('loggedInView').innerHTML = `
-                <div style="text-align:center;padding:30px 20px;">
-                    <div style="font-size:2.5rem;margin-bottom:12px;">🔗</div>
-                    <div style="font-size:1.1rem;font-weight:600;margin-bottom:8px;">
+
+            // Keep profile card visible; only swap/insert the desktop open-app panel
+            let panel = document.getElementById('desktopOpenAppPanel');
+            if (!panel) {
+                panel = document.createElement('div');
+                panel.id = 'desktopOpenAppPanel';
+                panel.style.cssText = 'text-align:center;padding:20px 12px 8px;border-top:1px solid var(--border,rgba(255,255,255,0.08));margin-top:16px;';
+                document.getElementById('loggedInView').appendChild(panel);
+            }
+            panel.innerHTML = `
+                    <div style="font-size:1.5rem;margin-bottom:8px;">🔗</div>
+                    <div style="font-size:1rem;font-weight:600;margin-bottom:6px;">
                         Ready to open Bari Plux App
                     </div>
-                    <div style="color:var(--muted);font-size:0.9rem;margin-bottom:24px;">
-                        Click the button below to launch the app and complete sign-in.
+                    <div style="color:var(--muted);font-size:0.85rem;margin-bottom:18px;">
+                        Click below to launch the app and complete sign-in.
                     </div>
                     <a href="baripluxtool23://login?token=${base64Claim}${secretParam}"
                        id="openAppBtn"
@@ -371,12 +380,10 @@
                        style="font-size:0.8rem;color:var(--muted);margin-top:8px;display:inline-block;">
                         Try alternate link
                     </a>
-                    <div id="openAppStatus" style="margin-top:20px;color:var(--muted);font-size:0.85rem;">
+                    <div id="openAppStatus" style="margin-top:16px;color:var(--muted);font-size:0.85rem;">
                         <div class="loading-spinner" style="margin:0 auto 8px;"></div>
                         Waiting for app to respond...
                     </div>
-                    <button type="button" class="btn-logout" onclick="doWebsiteLogout()" style="margin-top:20px;"><i class="fas fa-sign-out-alt"></i> Logout</button>
-                </div>
             `;
         }
 
@@ -798,20 +805,7 @@
         }
 
         // ==================== LOGGED IN / OUT VIEWS ====================
-        function showLoggedInView(user) {
-            currentUser = user;
-            localStorage.setItem('bariplux_user', JSON.stringify(user));
-            syncLoginToFirebase(user).catch(e => console.error(e));
-
-            if (isAppEmbed()) {
-                if (notifyDesktopApp(user)) { showAppSigningInView(); return; }
-            }
-
-            if (isDesktopFlow()) {
-                startDesktopLoginFlow(user);
-                return;
-            }
-
+        function paintLoggedInProfile(user) {
             document.getElementById('loginFormView').style.display = 'none';
             document.getElementById('loggedInView').classList.add('active');
             const displayName = user.name || user.displayName || user.username ||
@@ -828,9 +822,12 @@
                     photo = 'https://cdn.discordapp.com/avatars/' + discordId + '/' + photo + '.png?size=128';
                 }
             }
-            document.getElementById('loginUserName').textContent = displayName;
-            document.getElementById('loginUserEmail').textContent = user.email || '';
-            document.getElementById('loginUserId').textContent = user.id || user.uid || '—';
+            const nameEl = document.getElementById('loginUserName');
+            const emailEl = document.getElementById('loginUserEmail');
+            const idEl = document.getElementById('loginUserId');
+            if (nameEl) nameEl.textContent = displayName;
+            if (emailEl) emailEl.textContent = user.email || '';
+            if (idEl) idEl.textContent = user.id || user.uid || '—';
             const methodEl = document.getElementById('loginUserMethod');
             if (methodEl) {
                 const m = String(user.loginMethod || '').toLowerCase();
@@ -865,6 +862,25 @@
                     if (avatarImg) avatarImg.style.display = 'none';
                     avatarEl.textContent = displayName.charAt(0).toUpperCase();
                 }
+            }
+            return displayName;
+        }
+
+        function showLoggedInView(user) {
+            currentUser = user;
+            localStorage.setItem('bariplux_user', JSON.stringify(user));
+            syncLoginToFirebase(user).catch(e => console.error(e));
+
+            if (isAppEmbed()) {
+                if (notifyDesktopApp(user)) { showAppSigningInView(); return; }
+            }
+
+            // Always show account card (name / method / logout) first
+            paintLoggedInProfile(user);
+
+            if (isDesktopFlow()) {
+                startDesktopLoginFlow(user);
+                return;
             }
 
             const tokenSection = document.getElementById('appTokenSection');
@@ -1118,11 +1134,10 @@
 
                 if (wasDesktopFlow) {
                     try { sessionStorage.setItem('desktop_login_flow', '1'); } catch (e) {}
-                    startDesktopLoginFlow(userData);
-                } else {
-                    showLoggedInView(userData);
                 }
                 window.history.replaceState({}, document.title, window.location.pathname + (wasDesktopFlow ? '?desktop=1' : ''));
+                // Always paint account card; desktop open-app panel attaches underneath
+                showLoggedInView(userData);
             } catch (error) {
                 console.error('GitHub login error:', error);
                 window.history.replaceState({}, document.title, window.location.pathname);
@@ -1522,6 +1537,9 @@
             try {
                 sessionStorage.removeItem('desktop_login_flow');
                 sessionStorage.removeItem('discord_desktop_flow');
+                sessionStorage.removeItem('github_desktop_flow');
+                sessionStorage.removeItem('github_oauth_state');
+                sessionStorage.removeItem('oauth_pending_redirect');
             } catch (e) {}
             localStorage.removeItem('discord_user');
             localStorage.removeItem('bariplux_user');
@@ -1534,8 +1552,8 @@
             }
             // Restore default logged-in shell so next login has Logout again
             location.href = location.pathname + (location.search.includes('desktop=1')
-                ? '?desktop=1&v=20260721q'
-                : '?v=20260721q');
+                ? '?desktop=1&v=20260729gh'
+                : '?v=20260729gh');
         }
 
         // ==================== LOGOUT ====================
