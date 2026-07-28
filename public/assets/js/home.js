@@ -14,7 +14,7 @@
     if (window.matchMedia('(pointer: coarse)').matches) return;
 
     var cards = document.querySelectorAll(
-      '.hero-card, .download-card, .highlight-item, .video-card, .compact-info-item, .plux-article, .pubg-card, .quiz-container'
+      '.profile-shell, .download-card, .video-card, .blog-card, .compact-info-item, .plux-article, .pubg-card, .quiz-container'
     );
 
     cards.forEach(function (card) {
@@ -35,16 +35,12 @@
   function wireReveals() {
     var selectors = [
       '.profile-shell',
-      '.hero-card',
-      '.about-merged',
+      '.videos-featured',
       '.section-title',
       '.section-subtitle',
-      '.about-image',
-      '.about-intro',
-      '.highlight-item',
       '.download-card',
       '.video-card',
-      '.youtube-container',
+      '.blog-card',
       '.quiz-container',
       '.compact-info-item',
       '.social-links',

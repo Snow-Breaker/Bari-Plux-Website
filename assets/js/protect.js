@@ -1,12 +1,19 @@
 /**
  * Bari Plux — client-side deterrents (not real DRM).
- * Ctrl/Cmd+S downloads an empty HTML file (oathnet-style).
+ * Ctrl/Cmd+S downloads an empty placeholder HTML (content unavailable).
  */
 (function () {
   'use strict';
 
   const EMPTY_HTML =
-    '<!DOCTYPE html><html><head><meta charset="utf-8"><title></title></head><body></body></html>\n';
+    '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">' +
+    '<meta name="robots" content="noindex">' +
+    '<title>Unavailable</title>' +
+    '<style>html,body{margin:0;min-height:100%;background:#030305;color:#888;font:15px/1.5 system-ui,sans-serif;display:grid;place-items:center;text-align:center;padding:2rem}' +
+    'p{max-width:28ch;opacity:.7}</style></head><body>' +
+    '<div><strong style="color:#c0c0c8;font-size:1.1rem">در دسترس نیست</strong>' +
+    '<p>This content is not available.<br>Not available.</p></div>' +
+    '</body></html>\n';
 
   function downloadEmpty() {
     try {
@@ -35,13 +42,14 @@
 
   document.addEventListener('contextmenu', function (e) {
     if (isEditable(e.target)) return;
+    // Block on page chrome; YouTube iframes are cross-origin (limited)
     e.preventDefault();
-  });
+  }, true);
 
   document.addEventListener('dragstart', function (e) {
     if (isEditable(e.target)) return;
     e.preventDefault();
-  });
+  }, true);
 
   document.addEventListener('keydown', function (e) {
     const key = (e.key || '').toLowerCase();
@@ -66,6 +74,7 @@
 
     if (mod && e.shiftKey && (key === 'i' || key === 'j' || key === 'c')) {
       e.preventDefault();
+      e.stopPropagation();
     }
   }, true);
 

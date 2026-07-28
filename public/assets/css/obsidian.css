@@ -34,7 +34,7 @@
   --blur-chrome: 28px;
   --max: 1400px;
   --gutter: clamp(1.1rem, 3vw, 2rem);
-  --font-d: "Syne", "Segoe UI", system-ui, sans-serif;
+  --font-d: "Space Grotesk", "Sora", "Segoe UI", system-ui, sans-serif;
   --font-b: "Sora", "Segoe UI", system-ui, sans-serif;
   --font-m: "IBM Plex Mono", ui-monospace, monospace;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
