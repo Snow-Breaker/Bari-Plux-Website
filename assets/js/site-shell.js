@@ -99,7 +99,7 @@
     if (document.querySelector('link[data-bp-search-css]')) return;
     var link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = 'assets/css/site-search.css?v=20260728ad';
+    link.href = 'assets/css/site-search.css?v=20260728ae';
     link.setAttribute('data-bp-search-css', '1');
     document.head.appendChild(link);
   }
@@ -111,7 +111,7 @@
     }
     if (document.querySelector('script[data-bp-search-js]')) return;
     var s = document.createElement('script');
-    s.src = 'assets/js/site-search.js?v=20260728ad';
+    s.src = 'assets/js/site-search.js?v=20260728ae';
     s.defer = true;
     s.setAttribute('data-bp-search-js', '1');
     document.head.appendChild(s);
