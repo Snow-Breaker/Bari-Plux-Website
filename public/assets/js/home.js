@@ -49,7 +49,7 @@
       '.feedback-card',
       '.faq-item',
       '.hours-card',
-      '.events-card',
+      '.event-item',
       '.footer-col'
     ];
 

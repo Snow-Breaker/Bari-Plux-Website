@@ -900,49 +900,39 @@ button, input, textarea { font: inherit; color: inherit; }
   padding: clamp(2.25rem, 5vw, 4rem) 0;
 }
 .hours-card {
-  max-width: 720px;
+  max-width: 520px;
   margin: 0 auto;
-  padding: 1.75rem 1.5rem;
+  padding: 1.15rem 1.25rem;
   background: var(--card-fill);
   border: 1px solid var(--card-border);
   border-radius: var(--r-card);
   box-shadow: inset 0 1px 0 var(--sheen);
 }
-.hours-header { text-align: center; margin-bottom: 1.25rem; }
-.hours-icon {
-  width: 56px; height: 56px; margin: 0 auto 0.85rem;
-  display: grid; place-items: center; border-radius: 14px;
-  background: var(--accent-btn); color: #fff; font-size: 1.25rem;
+.hours-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
 }
-.hours-header h2 {
-  margin: 0;
-  font-size: 1.55rem;
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  -webkit-background-clip: text; background-clip: text; color: transparent;
+.meta-label {
+  display: block;
+  margin-bottom: 0.2rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-3);
 }
-.schedule-item, .current-time-display, .hours-note, .utc-info {
-  padding: 1rem 1.1rem;
-  margin-bottom: 0.75rem;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid var(--border-soft);
-  border-radius: var(--r-tile);
+.meta-value, .status-value {
+  font-size: 0.95rem;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
 }
-.time-range { display: flex; align-items: center; gap: 0.85rem; margin-bottom: 0.65rem; }
-.time-range i { color: var(--accent-2); font-size: 1.2rem; }
-.time-details .days { font-weight: 650; margin-bottom: 0.15rem; }
-.time-details .time { color: var(--text-2); }
-.utc-info { display: flex; align-items: center; gap: 0.5rem; color: var(--text-2); font-size: 0.88rem; margin: 0; }
-.current-utc, .status-indicator { margin-bottom: 0.35rem; color: var(--text-2); font-size: 0.92rem; }
-.status-value { color: var(--accent-2); font-weight: 650; }
-.hours-note { display: flex; gap: 0.65rem; align-items: flex-start; color: var(--text-2); font-size: 0.88rem; }
-.hours-note p { margin: 0; }
-.hours-note i { color: var(--accent-2); margin-top: 0.15rem; }
-.hours-actions { display: flex; flex-wrap: wrap; gap: 0.65rem; justify-content: center; margin-top: 0.5rem; }
+.status-value { color: var(--accent-2); }
+.hours-actions { display: flex; flex-wrap: wrap; gap: 0.55rem; }
 .contact-btn, .timezone-help-btn {
-  display: inline-flex; align-items: center; gap: 0.45rem;
-  padding: 0.65rem 1rem; border-radius: var(--r-btn);
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  padding: 0.55rem 0.9rem; border-radius: var(--r-btn);
   border: 1px solid var(--accent-ring); background: var(--accent-btn);
-  color: #fff; cursor: pointer; font-weight: 600;
+  color: #fff; cursor: pointer; font-weight: 600; font-size: 0.86rem;
 }
 .timezone-help-btn { background: rgba(255,255,255,0.07); border-color: var(--chrome-border); color: var(--text); }
 .timezone-examples { padding: 1rem; margin: 0.85rem 0; }
@@ -955,66 +945,33 @@ button, input, textarea { font: inherit; color: inherit; }
   z-index: var(--z-content);
   padding: clamp(2.25rem, 5vw, 4rem) 0;
 }
-.events-card {
-  max-width: 1100px;
+.events-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  max-width: 720px;
   margin: 0 auto;
-  padding: 1.75rem 1.5rem;
+}
+.event-item {
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 1.05rem 1.1rem;
   background: var(--card-fill);
   border: 1px solid var(--card-border);
   border-radius: var(--r-card);
   box-shadow: inset 0 1px 0 var(--sheen);
-}
-.events-header { text-align: center; margin-bottom: 1.5rem; }
-.events-icon {
-  width: 56px; height: 56px; margin: 0 auto 0.85rem;
-  display: grid; place-items: center; border-radius: 14px;
-  background: var(--accent-btn); color: #fff; font-size: 1.25rem;
-}
-.events-header h2 {
-  margin: 0 0 0.35rem; font-size: 1.55rem;
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  -webkit-background-clip: text; background-clip: text; color: transparent;
-}
-.events-header p { margin: 0; color: var(--text-2); }
-.events-content {
-  display: grid;
-  grid-template-columns: 1fr minmax(240px, 380px);
-  gap: 1.25rem;
-  align-items: stretch;
-}
-.events-grid { display: flex; flex-direction: column; gap: 0.75rem; }
-.event-item {
-  display: flex; align-items: center; gap: 0.9rem;
-  padding: 1.05rem 1.15rem;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid var(--border-soft);
-  border-radius: var(--r-tile);
+  text-decoration: none; color: inherit;
 }
 .event-icon {
-  width: 42px; height: 42px; display: grid; place-items: center;
+  width: 40px; height: 40px; display: grid; place-items: center;
   border-radius: 11px; background: var(--accent-soft); color: var(--accent-2); flex: 0 0 auto;
 }
 .event-details { flex: 1; min-width: 0; }
-.event-details h3 { margin: 0 0 0.2rem; font-size: 1rem; }
-.event-details p { margin: 0; color: var(--text-3); font-size: 0.85rem; }
+.event-details h3 { margin: 0 0 0.15rem; font-size: 0.98rem; }
+.event-details p { margin: 0; color: var(--text-3); font-size: 0.8rem; }
 .event-btn {
-  width: 38px; height: 38px; display: grid; place-items: center;
-  border-radius: 10px; background: var(--accent-btn); color: #fff; flex: 0 0 auto;
+  width: 32px; height: 32px; display: grid; place-items: center;
+  border-radius: 9px; background: var(--accent-btn); color: #fff; flex: 0 0 auto; font-size: 0.75rem;
 }
-.event-banner {
-  position: relative; border-radius: var(--r-card); overflow: hidden;
-  border: 1px solid var(--border-soft); min-height: 200px;
-}
-.event-banner img { width: 100%; height: 100%; object-fit: cover; min-height: 220px; }
-.banner-overlay {
-  position: absolute; inset: auto 0 0 0; padding: 1rem;
-  background: linear-gradient(transparent, rgba(3,3,5,0.85));
-}
-.banner-badge {
-  display: inline-flex; padding: 0.2rem 0.5rem; border-radius: 8px;
-  font-size: 0.7rem; font-weight: 700; background: var(--accent-btn); color: #fff;
-}
-.banner-overlay h4 { margin: 0.4rem 0 0; }
 
 /* ═══════════════ MERGED ABOUT STRIP ═══════════════ */
 .about-merged {
@@ -1111,7 +1068,7 @@ button, input, textarea { font: inherit; color: inherit; }
 .blog-card,
 .feedback-card,
 .hours-card,
-.events-card,
+.event-item,
 .youtube-container,
 .spec-item {
   background:
