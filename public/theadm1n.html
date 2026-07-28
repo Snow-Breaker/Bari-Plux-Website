@@ -1428,6 +1428,12 @@
             <input type="password" id="confirmPass" class="confirm-pass" placeholder="••••••••" autocomplete="off">
             <button class="confirm-pass-eye" onclick="toggleConfirmEye()"><i class="fas fa-eye" id="confirmEyeIcon"></i></button>
         </div>
+        <div id="confirmTotpWrap" style="display:none;margin-bottom:14px;">
+            <div style="font-size:0.78rem;color:var(--muted);margin-bottom:8px;text-align:center;">
+                <i class="fas fa-shield-alt" style="font-size:0.7rem;margin-right:4px;"></i> Authenticator code
+            </div>
+            <input type="text" id="confirmTotp" class="confirm-pass" maxlength="6" placeholder="000000" autocomplete="one-time-code" inputmode="numeric" style="letter-spacing:4px;text-align:center;">
+        </div>
         <div class="confirm-err" id="confirmErr"><i class="fas fa-times-circle"></i> Incorrect password</div>
         <div class="confirm-action-btns">
             <button class="confirm-cancel" onclick="closeConfirm()">Cancel</button>
@@ -1439,11 +1445,10 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const ADMIN_HASH = '677a05115bca1efb77c9a6677de4af6f7cab101b221c0d0d0c5b021ae79d098c';
 const ADMIN_EMAIL = 'mister.attaye@gmail.com';
+const ADMIN_UID = 'ZHMxN5tZkNgLcxFnp98QUqfvw963';
+const WORKER_URL = 'https://discord-auth-worker.bariattaye2.workers.dev';
 const MAX_ATTEMPTS = 10;
-const LOCKOUT_KEY = 'bp_admin_lockout';
-const ATTEMPTS_KEY = 'bp_admin_attempts';
 
 const firebaseConfig = {
     apiKey: "AIzaSyBH_t3Uue7fbb-DahwjSJGjG2-quCqiLEs",
@@ -1467,49 +1472,11 @@ let allErrors = [];
 let activeErrorFilter = 'all';
 let errorPage = 1;
 let _confirmAction = null;
+let _totpEnabled = false;
+let _pendingGatePassword = '';
 
 firebase.initializeApp(firebaseConfig);
 
-async function sha256(msg) {
-    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(msg));
-    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
-}
-function base32Decode(s) {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
-    s = s.replace(/=+$/, '').toUpperCase();
-    const bits = [];
-    for (const c of s) { const idx = chars.indexOf(c); if (idx === -1) continue; for (let i = 4; i >= 0; i--) bits.push((idx >> i) & 1); }
-    const bytes = [];
-    for (let i = 0; i + 7 < bits.length; i += 8) { let b = 0; for (let j = 0; j < 8; j++) b = (b << 1) | bits[i + j]; bytes.push(b); }
-    return new Uint8Array(bytes);
-}
-async function verifyTotp(secret, userCode) {
-    const timeStep = 30;
-    const now = Math.floor(Date.now() / 1000 / timeStep);
-    const keyBytes = base32Decode(secret);
-    const generated = [];
-    for (let delta = -2; delta <= 2; delta++) {
-        const timeBig = BigInt(now + delta);
-        const timeBuf = new ArrayBuffer(8);
-        new DataView(timeBuf).setBigUint64(0, timeBig, false);
-        const key = await crypto.subtle.importKey('raw', keyBytes, { name: 'HMAC', hash: 'SHA-1' }, false, ['sign']);
-        const sig = await crypto.subtle.sign('HMAC', key, timeBuf);
-        const sigBytes = new Uint8Array(sig);
-        const offset = sigBytes[sigBytes.length - 1] & 0x0f;
-        const code = (((sigBytes[offset] & 0x7f) << 24) | ((sigBytes[offset + 1] & 0xff) << 16) | ((sigBytes[offset + 2] & 0xff) << 8) | (sigBytes[offset + 3] & 0xff)) % 1000000;
-        const codeStr = code.toString().padStart(6, '0');
-        generated.push(codeStr);
-        if (codeStr === userCode.trim()) return true;
-    }
-    console.error('TOTP mismatch');
-    return false;
-}
-function generateTotpSecret() {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
-    const bytes = new Uint8Array(20); crypto.getRandomValues(bytes);
-    let secret = ''; for (const b of bytes) secret += chars[b & 0x1f];
-    return secret;
-}
 function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function fmtDate(v) { try { const d=new Date(v); return d.toLocaleDateString()+' '+d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}); } catch{return'—';} }
 function timeAgo(ts) {
@@ -1573,85 +1540,57 @@ function toggleEye() {
     i.type=i.type==='password'?'text':'password';
     ic.className='fas fa-eye'+(i.type==='text'?'-slash':'');
 }
-function getAttemptState() {
-    const attempts = parseInt(sessionStorage.getItem(ATTEMPTS_KEY) || '0');
-    const lockoutUntil = parseInt(sessionStorage.getItem(LOCKOUT_KEY) || '0');
-    return { attempts, lockoutUntil };
+function formatRetryAfter(retryAfter) {
+    const seconds = Math.max(0, Number(retryAfter) || 0);
+    const minutes = Math.floor(seconds / 60);
+    return minutes > 0 ? `${minutes}m ${seconds % 60}s` : `${seconds}s`;
 }
-function recordFailedAttempt() {
-    const { attempts } = getAttemptState();
-    const newAttempts = attempts + 1;
-    sessionStorage.setItem(ATTEMPTS_KEY, newAttempts.toString());
-    const delays = [0, 1000, 1000, 5000, 5000, 30000, 30000, 120000, 120000, 600000];
-    const delay = delays[Math.min(newAttempts, delays.length - 1)];
-    if (delay > 0) {
-        const lockoutUntil = Date.now() + delay;
-        sessionStorage.setItem(LOCKOUT_KEY, lockoutUntil.toString());
-    }
-    return { newAttempts, delay };
+async function adminWorkerPost(path, body, idToken) {
+    const headers = { 'Content-Type': 'application/json' };
+    if (idToken) headers.Authorization = 'Bearer ' + idToken;
+    const res = await fetch(WORKER_URL + path, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(body || {})
+    });
+    let data = {};
+    try { data = await res.json(); } catch { /* empty */ }
+    return { ok: res.ok, status: res.status, data };
 }
-function resetAttempts() {
-    sessionStorage.removeItem(ATTEMPTS_KEY);
-    sessionStorage.removeItem(LOCKOUT_KEY);
-}
-function getRemainingLockout() {
-    const { lockoutUntil } = getAttemptState();
-    return Math.max(0, lockoutUntil - Date.now());
+function showGateError(html) {
+    const errorEl = document.getElementById('gateError');
+    errorEl.innerHTML = html;
+    errorEl.classList.add('show');
+    setTimeout(() => errorEl.classList.remove('show'), 3500);
 }
 async function checkPassword() {
     const val = document.getElementById('gateInput').value;
     if (!val) return;
-
-    const remaining = getRemainingLockout();
-    if (remaining > 0) {
-        const seconds = Math.ceil(remaining / 1000);
-        const minutes = Math.floor(seconds / 60);
-        const timeStr = minutes > 0
-            ? `${minutes}m ${seconds % 60}s`
-            : `${seconds}s`;
-        showToast(`⏳ Too many attempts. Try again in ${timeStr}.`, 'danger');
-        return;
-    }
 
     const btn = document.getElementById('gateBtn');
     btn.disabled = true;
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking...';
 
     try {
-        if (await sha256(val) === ADMIN_HASH) {
-            resetAttempts();
-            const totpSnap = await db.ref('admin/totp_enabled').once('value');
-            if (totpSnap.val() === true) {
-                showTotpVerificationStep(val);
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fas fa-unlock-alt"></i> Enter';
-                return;
-            }
-            await completePasswordLogin(val);
+        const { ok, status, data } = await adminWorkerPost('/admin/verify', { password: val });
+        if (status === 429) {
+            showGateError(`<i class="fas fa-lock"></i> Too many attempts — locked for ${formatRetryAfter(data.retryAfter)}`);
+            showToast(`⏳ Too many attempts. Try again in ${formatRetryAfter(data.retryAfter)}.`, 'danger');
+        } else if (ok && data.needTotp) {
+            _pendingGatePassword = val;
+            showTotpVerificationStep('password');
+        } else if (ok && data.customToken) {
+            await completeCustomTokenLogin(data.customToken);
         } else {
-            const { newAttempts, delay } = recordFailedAttempt();
-            const errorEl = document.getElementById('gateError');
-            const remaining2 = getRemainingLockout();
-
-            if (remaining2 > 0) {
-                const seconds = Math.ceil(remaining2 / 1000);
-                const minutes = Math.floor(seconds / 60);
-                const timeStr = minutes > 0
-                    ? `${minutes}m ${seconds % 60}s`
-                    : `${seconds}s`;
-                errorEl.innerHTML = `
-                    <i class="fas fa-lock"></i>
-                    Too many attempts — locked for ${timeStr}`;
+            const attempts = Number(data.attempts) || 0;
+            const attemptsLeft = Math.max(0, MAX_ATTEMPTS - attempts);
+            if (data.retryAfter > 0) {
+                showGateError(`<i class="fas fa-lock"></i> Too many attempts — locked for ${formatRetryAfter(data.retryAfter)}`);
             } else {
-                const attemptsLeft = MAX_ATTEMPTS - newAttempts;
-                errorEl.innerHTML = attemptsLeft > 0
-                    ? `<i class="fas fa-times-circle"></i>
-                       Wrong password (${attemptsLeft} attempts left)`
-                    : `<i class="fas fa-lock"></i> Account locked`;
+                showGateError(attemptsLeft > 0
+                    ? `<i class="fas fa-times-circle"></i> Wrong password (${attemptsLeft} attempts left)`
+                    : `<i class="fas fa-lock"></i> Account locked`);
             }
-
-            errorEl.classList.add('show');
-            setTimeout(() => errorEl.classList.remove('show'), 3000);
             document.getElementById('gateInput').value = '';
         }
     } catch(e) {
@@ -1660,21 +1599,22 @@ async function checkPassword() {
     }
 
     btn.disabled = false;
-    btn.disabled = false;
     btn.innerHTML = '<i class="fas fa-unlock-alt"></i> Enter';
 }
 document.getElementById('gateInput').addEventListener('keydown',e=>{ if(e.key==='Enter') checkPassword(); });
 
-async function completePasswordLogin(password) {
+async function completeCustomTokenLogin(customToken) {
     sessionStorage.setItem('bp_admin', '1');
-    await firebase.auth().signOut();
-    await firebase.auth().signInWithEmailAndPassword('mister.attaye@gmail.com', password);
+    await firebase.auth().signOut().catch(()=>{});
+    await firebase.auth().signInWithCustomToken(customToken);
     document.getElementById('gate').classList.add('hidden');
     document.getElementById('app').classList.add('show');
     initApp();
 }
-function showTotpVerificationStep(password) {
+function showTotpVerificationStep(mode) {
     const gateContent = document.querySelector('.gate-card') || document.getElementById('gate');
+    const existing = document.getElementById('totpStep');
+    if (existing) existing.remove();
     const step = document.createElement('div');
     step.id = 'totpStep';
     step.style.cssText = 'position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:var(--bg);border-radius:inherit;z-index:10;';
@@ -1697,20 +1637,49 @@ function showTotpVerificationStep(password) {
     document.getElementById('totpVerifyBtn').onclick = async () => {
         const code = document.getElementById('totpInput').value;
         if (code.length !== 6) return;
-        const snap = await db.ref('admin/totp_secret').once('value');
-        const secret = snap.val();
-        if (!secret) { showToast('2FA secret not found', 'danger'); return; }
-        if (await verifyTotp(secret, code)) {
-            gateContent.removeChild(step);
-            await completePasswordLogin(password);
-        } else {
+        const btn = document.getElementById('totpVerifyBtn');
+        btn.disabled = true;
+        try {
+            if (mode === 'password') {
+                const { ok, data } = await adminWorkerPost('/admin/verify', {
+                    password: _pendingGatePassword,
+                    totpCode: code
+                });
+                if (ok && data.customToken) {
+                    gateContent.removeChild(step);
+                    _pendingGatePassword = '';
+                    await completeCustomTokenLogin(data.customToken);
+                    return;
+                }
+            } else if (mode === 'google') {
+                const user = firebase.auth().currentUser;
+                if (!user) throw new Error('Not signed in');
+                const idToken = await user.getIdToken();
+                const { ok } = await adminWorkerPost('/admin/session-unlock', { totpCode: code }, idToken);
+                if (ok) {
+                    gateContent.removeChild(step);
+                    sessionStorage.setItem('bp_admin', '1');
+                    document.getElementById('gate').classList.add('hidden');
+                    document.getElementById('app').classList.add('show');
+                    initApp();
+                    return;
+                }
+            }
             document.getElementById('totpError').style.display = 'block';
             document.getElementById('totpInput').value = '';
             document.getElementById('totpInput').focus();
+        } catch (e) {
+            console.error(e);
+            showToast('⚠️ Verification failed', 'danger');
         }
+        btn.disabled = false;
     };
     document.getElementById('totpInput').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('totpVerifyBtn').click(); });
-    document.getElementById('totpBackBtn').onclick = () => { gateContent.removeChild(step); };
+    document.getElementById('totpBackBtn').onclick = async () => {
+        gateContent.removeChild(step);
+        _pendingGatePassword = '';
+        if (mode === 'google') await firebase.auth().signOut().catch(()=>{});
+    };
 }
 
 // ==================== GOOGLE SIGN-IN ====================
@@ -1731,20 +1700,30 @@ document.getElementById('btnGoogleLogin').addEventListener('click', async functi
             btn.innerHTML = '<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"> Sign in with Google';
             return;
         }
-        sessionStorage.setItem('bp_admin', '1');
-        document.getElementById('gate').classList.add('hidden');
-        document.getElementById('app').classList.add('show');
-        initApp();
+        const idToken = await user.getIdToken();
+        const unlock = await adminWorkerPost('/admin/session-unlock', {}, idToken);
+        if (unlock.ok) {
+            sessionStorage.setItem('bp_admin', '1');
+            document.getElementById('gate').classList.add('hidden');
+            document.getElementById('app').classList.add('show');
+            initApp();
+        } else if (unlock.data?.needTotp || unlock.data?.error === 'invalid_totp') {
+            showTotpVerificationStep('google');
+        } else {
+            showToast('Admin unlock failed', 'danger');
+            await firebase.auth().signOut();
+        }
     } catch (error) {
-        btn.disabled = false;
-        btn.innerHTML = '<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"> Sign in with Google';
         if (error.code !== 'auth/popup-closed-by-user')
             showToast('Google login failed: ' + error.message, 'danger');
     }
+    btn.disabled = false;
+    btn.innerHTML = '<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"> Sign in with Google';
 });
 
 function logout() {
     sessionStorage.removeItem('bp_admin');
+    _pendingGatePassword = '';
     firebase.auth().signOut();
     document.getElementById('gate').classList.remove('hidden');
     document.getElementById('app').classList.remove('show');
@@ -1755,14 +1734,20 @@ function logout() {
 }
 
 async function setupTotp() {
-    const secret = generateTotpSecret();
-    const issuer = 'BariPlux Admin';
-    const account = 'mister.attaye@gmail.com';
-    const otpauthUrl = 'otpauth://totp/' + encodeURIComponent(issuer) + ':' + encodeURIComponent(account) + '?secret=' + secret + '&issuer=' + encodeURIComponent(issuer) + '&algorithm=SHA1&digits=6&period=30';
+    const user = firebase.auth().currentUser;
+    if (!user) return showToast('Not signed in', 'danger');
+    const idToken = await user.getIdToken();
+    const start = await adminWorkerPost('/admin/totp/enroll/start', {}, idToken);
+    if (!start.ok || !start.data.secret) {
+        showToast('Could not start 2FA setup', 'danger');
+        return;
+    }
+    const secret = start.data.secret;
+    const otpauthUrl = start.data.otpauthUrl;
     const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(otpauthUrl);
-    showTotpSetupModal(qrUrl, secret, otpauthUrl);
+    showTotpSetupModal(qrUrl, secret, idToken);
 }
-function showTotpSetupModal(qrUrl, secret) {
+function showTotpSetupModal(qrUrl, secret, idToken) {
     const modal = document.createElement('div');
     modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.8);display:flex;align-items:center;justify-content:center;z-index:99999;font-family:\'Poppins\',sans-serif;';
     modal.innerHTML = '<div style="background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:20px;padding:32px;max-width:400px;text-align:center;">' +
@@ -1779,18 +1764,15 @@ function showTotpSetupModal(qrUrl, secret) {
     document.body.appendChild(modal);
     document.getElementById('totpSetupConfirm').onclick = async () => {
         const code = document.getElementById('totpSetupCode').value;
-        if (!(await verifyTotp(secret, code))) {
+        const confirm = await adminWorkerPost('/admin/totp/enroll/confirm', { secret, totpCode: code }, idToken);
+        if (!confirm.ok) {
             showToast('Invalid code. Try again.', 'danger');
             return;
         }
-        const user = firebase.auth().currentUser;
-        if (user) {
-            await db.ref('admin/totp_secret').set(secret);
-            await db.ref('admin/totp_enabled').set(true);
-            document.body.removeChild(modal);
-            showToast('✅ 2FA enabled successfully!', 'success');
-            document.getElementById('totpStatus').textContent = '2FA ✓';
-        }
+        document.body.removeChild(modal);
+        _totpEnabled = true;
+        showToast('✅ 2FA enabled successfully!', 'success');
+        document.getElementById('totpStatus').textContent = '2FA ✓';
     };
 }
 
@@ -1798,7 +1780,7 @@ function initApp() {
     db = firebase.database();
 
     const currentUser = firebase.auth().currentUser;
-    if (!currentUser || (currentUser.uid !== 'ZHMxN5tZkNgLcxFnp98QUqfvw963' && currentUser.email !== ADMIN_EMAIL)) {
+    if (!currentUser || (currentUser.uid !== ADMIN_UID && currentUser.email !== ADMIN_EMAIL)) {
         console.error('initApp: wrong user or not authenticated', currentUser?.uid, currentUser?.email);
         const tbody = document.getElementById('usersTableBody');
         if (tbody) tbody.innerHTML = `
@@ -1822,7 +1804,8 @@ function initApp() {
         if(dbBanner)dbBanner.classList.toggle('show',!connected);
     });
     db.ref('admin/totp_enabled').once('value').then(snap => {
-        document.getElementById('totpStatus').textContent = snap.val() === true ? '2FA ✓' : '2FA';
+        _totpEnabled = snap.val() === true;
+        document.getElementById('totpStatus').textContent = _totpEnabled ? '2FA ✓' : '2FA';
     }).catch(() => {});
     loadUsers();
     db.ref('bugReports').on('value', snap => {
@@ -2111,6 +2094,8 @@ function askConfirm(action, userId, userName) {
     btn.innerHTML = cfg.submitText;
     btn.disabled = false;
     document.getElementById('confirmPass').value = '';
+    document.getElementById('confirmTotp').value = '';
+    document.getElementById('confirmTotpWrap').style.display = _totpEnabled ? 'block' : 'none';
     document.getElementById('confirmErr').classList.remove('show');
     document.getElementById('confirmModal').classList.add('show');
     setTimeout(()=>document.getElementById('confirmPass').focus(), 100);
@@ -2127,13 +2112,21 @@ function toggleConfirmEye() {
 async function submitConfirm() {
     const pass = document.getElementById('confirmPass').value;
     if(!pass) return;
+    const totpCode = document.getElementById('confirmTotp').value || '';
+    if (_totpEnabled && totpCode.length !== 6) {
+        document.getElementById('confirmErr').innerHTML = '<i class="fas fa-times-circle"></i> Authenticator code required';
+        document.getElementById('confirmErr').classList.add('show');
+        return;
+    }
     const btn = document.getElementById('confirmSubmit');
     btn.disabled = true;
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
-    const hash = await sha256(pass);
-    if(hash !== ADMIN_HASH) {
+    const { ok } = await adminWorkerPost('/admin/reauth', { password: pass, totpCode });
+    if(!ok) {
+        document.getElementById('confirmErr').innerHTML = '<i class="fas fa-times-circle"></i> Incorrect password' + (_totpEnabled ? ' or code' : '');
         document.getElementById('confirmErr').classList.add('show');
         document.getElementById('confirmPass').value = '';
+        document.getElementById('confirmTotp').value = '';
         btn.disabled = false;
         btn.innerHTML = confirmConfigs[_confirmAction?.action]?.submitText || 'Confirm';
         return;
