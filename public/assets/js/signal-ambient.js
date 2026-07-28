@@ -228,13 +228,11 @@
       ctx.fillRect(0, scanY - 32, w, 64);
       ctx.restore();
 
-      // Corner brackets (instrument chrome)
+      // Corner brackets — bottom only (top brackets read as a header gap/line)
       ctx.strokeStyle = light ? 'rgba(79,70,229,0.12)' : 'rgba(129,140,248,0.28)';
       ctx.lineWidth = 1.3;
       var m = 28, len = 22;
       ctx.beginPath();
-      ctx.moveTo(m, m + len); ctx.lineTo(m, m); ctx.lineTo(m + len, m);
-      ctx.moveTo(w - m, m + len); ctx.lineTo(w - m, m); ctx.lineTo(w - m - len, m);
       ctx.moveTo(m, h - m - len); ctx.lineTo(m, h - m); ctx.lineTo(m + len, h - m);
       ctx.moveTo(w - m, h - m - len); ctx.lineTo(w - m, h - m); ctx.lineTo(w - m - len, h - m);
       ctx.stroke();
