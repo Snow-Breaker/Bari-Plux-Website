@@ -1,0 +1,10 @@
+{
+  "bodyBg": "rgb(244, 246, 251)",
+  "bodyColor": "rgb(18, 19, 26)",
+  "leadColor": "rgb(63, 69, 88)",
+  "void": "#f4f6fb",
+  "text": "#12131a",
+  "text2": "#3f4558",
+  "text3": "#5c6478",
+  "accent": "#4f46e5"
+}

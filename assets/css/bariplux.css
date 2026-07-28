@@ -450,3 +450,197 @@ a:hover {
     padding-right: var(--bp-gutter);
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   LIGHT MODE — single source of truth (Phase 3.5)
+   All theme color/opacity overrides live here. site.css / widgets.css
+   stay theme-agnostic (structure + layout only).
+   Palette: cool off-white scale + ice-indigo accent (not inverted black).
+   Body text: #12131A on #F4F6FB ≈ 16:1 (WCAG AAA).
+   Secondary: #3F4558 on #F4F6FB ≈ 8.2:1 (AA+).
+   Muted: #5C6478 on #F4F6FB ≈ 5.6:1 (AA).
+   ═══════════════════════════════════════════════════════════════ */
+html[data-theme="light"],
+[data-theme="light"] {
+  color-scheme: light;
+
+  /* Background scale (cool gray — glass blur still reads) */
+  --bp-bg-0: #f4f6fb;
+  --bp-bg-1: #eef1f8;
+  --bp-bg-2: #e4e9f3;
+  --bp-elevated: rgba(15, 20, 40, 0.06);
+  --bp-elevated-2: rgba(15, 20, 40, 0.04);
+
+  /* Glass — higher fill opacity than dark (avoids muddy wash) */
+  --bp-glass-fill: rgba(255, 255, 255, 0.72);
+  --bp-glass-fill-strong: rgba(255, 255, 255, 0.88);
+  --bp-glass-border: rgba(15, 20, 40, 0.12);
+  --bp-glass-border-soft: rgba(15, 20, 40, 0.08);
+  --bp-glass-highlight: rgba(255, 255, 255, 0.95);
+
+  /* Accent — deeper indigo for contrast on light surfaces */
+  --bp-accent: #4f46e5;
+  --bp-accent-2: #6366f1;
+  --bp-accent-muted: rgba(79, 70, 229, 0.14);
+  --bp-accent-border: rgba(79, 70, 229, 0.35);
+  --bp-accent-glow: rgba(79, 70, 229, 0.22);
+
+  /* Text */
+  --bp-text: #12131a;
+  --bp-text-2: #3f4558;
+  --bp-text-3: #5c6478;
+  --bp-text-inv: #f4f6fb;
+
+  /* Homepage aliases (site.css / widgets.css consume these) */
+  --void: #f4f6fb;
+  --ink: #eef1f8;
+  --text: #12131a;
+  --text-2: #3f4558;
+  --text-3: #5c6478;
+  --chrome-fill: rgba(255, 255, 255, 0.78);
+  --chrome-border: rgba(15, 20, 40, 0.12);
+  --card-fill: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.78));
+  --card-border: rgba(15, 20, 40, 0.1);
+  --border-soft: rgba(15, 20, 40, 0.08);
+  --sheen: rgba(255, 255, 255, 0.85);
+  --accent: #4f46e5;
+  --accent-2: #6366f1;
+  --accent-deep: #4338ca;
+  --accent-soft: rgba(79, 70, 229, 0.12);
+  --accent-muted: rgba(79, 70, 229, 0.14);
+  --accent-ring: rgba(79, 70, 229, 0.28);
+  --accent-btn: rgba(79, 70, 229, 0.92);
+  --accent-btn-hover: rgba(67, 56, 202, 0.96);
+  --lg-fill: rgba(255, 255, 255, 0.72);
+  --lg-fill-strong: rgba(255, 255, 255, 0.88);
+  --lg-fill-nested: rgba(255, 255, 255, 0.65);
+  --lg-stroke: rgba(15, 20, 40, 0.14);
+  --lg-stroke-soft: rgba(15, 20, 40, 0.1);
+  --lg-sheen: linear-gradient(155deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.35) 32%, transparent 60%);
+  --lg-shadow: 0 12px 36px rgba(15, 20, 40, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  --shadow: 0 12px 32px rgba(15, 20, 40, 0.1);
+  --shadow-hover: 0 16px 40px rgba(15, 20, 40, 0.14);
+  --glass-bg: var(--chrome-fill);
+  --glass-strong: rgba(255, 255, 255, 0.9);
+  --glass-border: var(--chrome-border);
+  --glass-inner-shadow: rgba(15, 20, 40, 0.06);
+  --muted: var(--text-2);
+  --primary: var(--accent);
+  --secondary: var(--accent-2);
+
+  scrollbar-color: rgba(79, 70, 229, 0.4) var(--void);
+}
+
+/* Ambient field */
+html[data-theme="light"] .bp-ambient,
+html[data-theme="light"] #bp-aurora,
+[data-theme="light"] .bp-ambient,
+[data-theme="light"] #bp-aurora {
+  background: var(--void) !important;
+}
+html[data-theme="light"] .bp-ambient__wash,
+[data-theme="light"] .bp-ambient__wash {
+  background:
+    radial-gradient(ellipse 70% 50% at 15% 0%, rgba(99, 102, 241, 0.2), transparent 55%),
+    radial-gradient(ellipse 55% 45% at 90% 20%, rgba(165, 180, 252, 0.16), transparent 55%),
+    linear-gradient(180deg, #f8f9fd, #e8ecf4) !important;
+}
+html[data-theme="light"] .bp-ambient__orb,
+[data-theme="light"] .bp-ambient__orb {
+  opacity: 0.32;
+}
+html[data-theme="light"] .bp-ambient__vignette,
+[data-theme="light"] .bp-ambient__vignette {
+  background: radial-gradient(ellipse 75% 70% at 50% 40%, transparent 35%, rgba(244, 246, 251, 0.7) 100%);
+}
+html[data-theme="light"] .bp-ambient__grain,
+[data-theme="light"] .bp-ambient__grain {
+  opacity: 0.03;
+  mix-blend-mode: multiply;
+}
+
+/* Theme toggle icons */
+html[data-theme="light"] .bp-icon-btn .moon-icon,
+html[data-theme="light"] .theme-toggle .moon-icon,
+[data-theme="light"] .bp-icon-btn .moon-icon,
+[data-theme="light"] .theme-toggle .moon-icon {
+  display: none;
+}
+html[data-theme="light"] .bp-icon-btn .sun-icon,
+html[data-theme="light"] .theme-toggle .sun-icon,
+[data-theme="light"] .bp-icon-btn .sun-icon,
+[data-theme="light"] .theme-toggle .sun-icon {
+  display: inline;
+}
+
+/* Hero / brand */
+html[data-theme="light"] .name-gradient {
+  background: linear-gradient(135deg, #12131a 5%, #4f46e5 55%, #6366f1 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Surfaces that still hardcode dark fills (can't be token-only) */
+html[data-theme="light"] .bp-menu {
+  background: rgba(255, 255, 255, 0.9) !important;
+  color: var(--text);
+}
+html[data-theme="light"] .bp-search {
+  background: rgba(15, 20, 40, 0.05);
+  color: var(--text-3);
+}
+html[data-theme="light"] .bp-search__input {
+  color: var(--text);
+}
+html[data-theme="light"] .glass::before,
+html[data-theme="light"] .download-card::before,
+html[data-theme="light"] .video-card::before {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.65) 0%, transparent 40%);
+}
+
+/* Chat widget (hardcoded dark fills in widgets/site) */
+html[data-theme="light"] .chat-messages,
+html[data-theme="light"] .chat-input-container {
+  background: rgba(255, 255, 255, 0.45);
+}
+html[data-theme="light"] .message-content {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: rgba(15, 20, 40, 0.08);
+  color: var(--text);
+}
+html[data-theme="light"] .user-message .message-content {
+  background: rgba(79, 70, 229, 0.12);
+  border-color: rgba(79, 70, 229, 0.22);
+}
+html[data-theme="light"] #chat-input {
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--text);
+}
+
+/* Rules modal */
+html[data-theme="light"] .rules-container.liquid {
+  background: rgba(255, 255, 255, 0.92) !important;
+}
+html[data-theme="light"] .rule-card {
+  background: rgba(15, 20, 40, 0.04);
+  border-color: rgba(15, 20, 40, 0.08);
+}
+
+/* Scrollbar */
+html[data-theme="light"]::-webkit-scrollbar-track,
+html[data-theme="light"] body::-webkit-scrollbar-track {
+  background: var(--void);
+}
+html[data-theme="light"]::-webkit-scrollbar-thumb {
+  border-color: var(--void);
+  background: rgba(79, 70, 229, 0.4);
+}
+
+/* Search highlight */
+html[data-theme="light"] mark.search-highlight {
+  background: rgba(79, 70, 229, 0.2);
+  color: #12131a;
+  box-shadow: 0 0 0 1px rgba(79, 70, 229, 0.25);
+}
+

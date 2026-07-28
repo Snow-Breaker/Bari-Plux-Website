@@ -710,13 +710,7 @@ body.bp-body { min-height: 100dvh; display: block; }
 }
 .rules-accept-btn:hover { filter: brightness(1.06); }
 
-html[data-theme="light"] .rules-container.liquid {
-  background: rgba(255,255,255,0.88) !important;
-}
-html[data-theme="light"] .rule-card {
-  background: rgba(15,15,25,0.04);
-  border-color: rgba(15,15,25,0.08);
-}
+/* Light rules styles: bariplux.css Phase 3.5 */
 
 /* Misc polish */
 .modal.active { display: grid !important; }
