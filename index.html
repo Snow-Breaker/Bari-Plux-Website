@@ -140,7 +140,8 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
 
 
 
-    <link rel="stylesheet" href="assets/css/obsidian.css?v=20260728">
+    <link rel="stylesheet" href="assets/css/obsidian.css?v=20260728b">
+    <link rel="stylesheet" href="assets/css/liquid-polish.css?v=20260728b">
     <script src="assets/js/protect.js" defer></script>
     <script src="assets/js/signal-ambient.js" defer></script>
     <script src="assets/js/home.js" defer></script>
@@ -170,7 +171,8 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
     <div class="bp-chrome__actions">
       <div class="bp-search" id="collapsible-search">
         <i class="fas fa-search" aria-hidden="true"></i>
-        <input type="search" id="header-search-input" class="bp-search__input" placeholder="Search…" autocomplete="off">
+        <input type="search" id="header-search-input" class="bp-search__input" placeholder="Search…" autocomplete="off" aria-autocomplete="list" aria-controls="search-results-dropdown">
+        <div class="search-results-dropdown" id="search-results-dropdown" role="listbox" hidden></div>
       </div>
       <button type="button" id="theme-toggle" class="bp-icon-btn" title="Toggle theme" aria-label="Toggle theme">
         <span class="moon-icon">☾</span><span class="sun-icon">☀</span>
@@ -197,171 +199,78 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
     </div>
   </div>
 </header>
-<div class="search-results-dropdown" id="search-results-dropdown"></div>
 
-<!-- Hero + About (merged) -->
+<!-- Profile — brand + about + journey + platforms (one composition) -->
 <section id="home" class="hero">
     <div class="container">
-        <div class="hero-content">
-            <div class="hero-card glass">
-                <div class="hero-profile">
-                    <p class="hero-kicker">Gaming &amp; Tech Specialist · PUBG Optimization</p>
+        <article id="about" class="profile-shell glass liquid">
+            <div class="profile-shell__hero">
+                <div class="profile-shell__copy">
+                    <p class="hero-kicker">Gaming &amp; Tech · PUBG Optimization</p>
                     <h1 class="hero-title">
                         <span class="name-gradient">Bari Plux</span>
                         <span class="pro-badge">BETA</span>
                     </h1>
-                    <p class="hero-subtitle">Gaming & Tech Specialist | PUBG Optimization Expert</p>
+                    <p class="hero-lead">I help gamers push FPS higher and keep systems stable — PUBG Mobile, GameLoop, and Windows tuning, distilled into clear guides.</p>
                     <div class="hero-actions">
-                        <a href="#downloads" class="btn btn-primary">
-                            <i class="fas fa-arrow-down"></i>
-                            See the work
-                        </a>
-                        <a href="#contact" class="btn btn-secondary" id="contact-me-btn">
-                            <i class="fas fa-envelope"></i>
-                            Contact Me
-                        </a>
+                        <a href="#downloads" class="btn btn-primary"><i class="fas fa-arrow-down"></i> See the work</a>
+                        <a href="#contact" class="btn btn-secondary" id="contact-me-btn"><i class="fas fa-envelope"></i> Contact Me</a>
+                    </div>
+                    <div class="profile-pills" aria-label="Focus areas">
+                        <span class="profile-pill"><i class="fas fa-tachometer-alt"></i> Performance</span>
+                        <span class="profile-pill"><i class="fas fa-desktop"></i> Emulators</span>
+                        <span class="profile-pill"><i class="fas fa-cogs"></i> Windows</span>
                     </div>
                 </div>
-
-                <div class="hero-side">
-                    <img src="https://i.postimg.cc/vTx3kpR8/photo-2025-10-30-00-14-32.jpg" loading="lazy"
-                         alt="Bari Plux" class="profile-img">
-                    <div class="specializations">
-                        <div class="spec-item">
-                            <div class="spec-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            <div class="spec-content"><h5>Performance Optimization</h5></div>
-                        </div>
-                        <div class="spec-item">
-                            <div class="spec-icon"><i class="fas fa-desktop"></i></div>
-                            <div class="spec-content"><h5>Emulator Setup</h5></div>
-                        </div>
-                        <div class="spec-item">
-                            <div class="spec-icon"><i class="fas fa-cogs"></i></div>
-                            <div class="spec-content"><h5>Windows Optimization</h5></div>
-                        </div>
+                <div class="profile-shell__media">
+                    <img src="https://i.postimg.cc/vTx3kpR8/photo-2025-10-30-00-14-32.jpg" loading="lazy" alt="Bari Plux" class="profile-img">
+                    <div class="profile-cert glass liquid-nested">
+                        <i class="fas fa-certificate"></i>
+                        <span>IT Site Coding 6/6 Certified</span>
                     </div>
                 </div>
             </div>
 
-            <div id="about" class="about-merged glass">
-                <div class="about-merged__grid">
-                    <div>
-                        <h2 class="section-title" style="margin-bottom:0.75rem;">About Me</h2>
-                        <h3>Hey, I'm <span style="background: linear-gradient(135deg, var(--accent), var(--accent-2)); -webkit-background-clip: text; background-clip: text; color: transparent;">Bari Plux</span></h3>
-                        <p style="color:var(--text-2);margin:0.5rem 0 0;">Welcome to my digital playground! I'm a passionate gaming content creator and tech specialist who lives and breathes PUBG Mobile optimizations, emulator setups, and Windows performance tuning.</p>
-                        <div class="about-merged__stats">
-                            <div class="stat-item"><div class="stat-number">673</div><div class="stat-label">Followers</div></div>
-                            <div class="stat-item"><div class="stat-number">100</div><div class="stat-label">Videos</div></div>
-                            <div class="stat-item"><div class="stat-number">4+</div><div class="stat-label">Years</div></div>
-                        </div>
-                        <div class="about-badge glass" style="display:inline-flex;margin-top:0.25rem;">
-                            <i class="fas fa-certificate"></i>
-                            <span>IT Site Coding 6/6 Certified</span>
-                        </div>
-                    </div>
-                    <div class="about-highlights">
-                        <div class="highlight-item glass">
-                            <div class="highlight-icon"><i class="fas fa-rocket"></i></div>
-                            <div class="highlight-content">
-                                <h4>Performance Optimization</h4>
-                                <p>Transforming gaming experiences through expert optimization techniques</p>
-                            </div>
-                        </div>
-                        <div class="highlight-item glass">
-                            <div class="highlight-icon"><i class="fas fa-video"></i></div>
-                            <div class="highlight-content">
-                                <h4>Content Creation</h4>
-                                <p>Creating engaging content across multiple platforms</p>
-                            </div>
-                        </div>
-                        <div class="highlight-item glass">
-                            <div class="highlight-icon"><i class="fas fa-users"></i></div>
-                            <div class="highlight-content">
-                                <h4>Community Building</h4>
-                                <p>Helping thousands of gamers improve their experience</p>
-                            </div>
-                        </div>
+            <div class="profile-shell__stats" aria-label="At a glance">
+                <div class="stat-item"><div class="stat-number">13K+</div><div class="stat-label">Gamers helped</div></div>
+                <div class="stat-item"><div class="stat-number">100K</div><div class="stat-label">YouTube views</div></div>
+                <div class="stat-item"><div class="stat-number">100</div><div class="stat-label">Videos</div></div>
+                <div class="stat-item"><div class="stat-number">4+</div><div class="stat-label">Years</div></div>
+                <div class="stat-item"><div class="stat-number">98%</div><div class="stat-label">Satisfaction</div></div>
+            </div>
+
+            <div class="profile-shell__body">
+                <div class="profile-story">
+                    <h2 class="profile-heading">The craft</h2>
+                    <p>Four years of testing GameLoop builds, Windows plans, and PUBG settings — so you spend less time troubleshooting and more time playing.</p>
+                </div>
+                <div class="profile-platforms">
+                    <h2 class="profile-heading">Find me</h2>
+                    <div class="platforms-row">
+                        <a href="https://www.youtube.com/@BariPlux" class="platform-chip glass liquid-nested" target="_blank" rel="noopener">
+                            <i class="fab fa-youtube"></i>
+                            <span>YouTube</span>
+                            <small>630+ subs</small>
+                        </a>
+                        <a href="https://t.me/BariPlux" class="platform-chip glass liquid-nested" target="_blank" rel="noopener">
+                            <i class="fab fa-telegram"></i>
+                            <span>Telegram</span>
+                            <small>240+ members</small>
+                        </a>
+                        <a href="https://www.kick.com/BariPlux" class="platform-chip glass liquid-nested" target="_blank" rel="noopener">
+                            <i class="fab fa-kickstarter-k"></i>
+                            <span>Kick</span>
+                            <small>Live</small>
+                        </a>
+                        <a href="https://www.instagram.com/BariPlux" class="platform-chip glass liquid-nested" target="_blank" rel="noopener">
+                            <i class="fab fa-instagram"></i>
+                            <span>Instagram</span>
+                            <small>60+</small>
+                        </a>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-</section>
-    
-<!-- About continued — journey & platforms (intro merged into hero) -->
-<section class="section about-continued" aria-label="My journey and platforms">
-    <div class="container">
-        <div class="about-details">
-            <div class="about-story glass">
-                <h3>My Journey</h3>
-                <p>My journey began 4 years ago when I discovered my passion for both gaming and technology. What started as a hobby quickly evolved into a mission to help other gamers overcome technical challenges and maximize their gaming performance.</p>
-                <p>I've spent countless hours testing, optimizing, and perfecting setups to deliver the best possible gaming experience. From tweaking GameLoop settings to optimizing Windows for maximum FPS, I've mastered the art of performance tuning.</p>
-                <div class="achievements-card glass">
-                    <h3>Community Impact</h3>
-                    <div class="achievements-list">
-                        <div class="achievement">
-                            <div class="achievement-icon"><i class="fas fa-users"></i></div>
-                            <div class="achievement-info">
-                                <span class="achievement-title">13K+ Gamers Helped</span>
-                                <span class="achievement-desc">Optimization Success</span>
-                            </div>
-                        </div>
-                        <div class="achievement">
-                            <div class="achievement-icon"><i class="fas fa-eye"></i></div>
-                            <div class="achievement-info">
-                                <span class="achievement-title">100K Views</span>
-                                <span class="achievement-desc">YouTube Content</span>
-                            </div>
-                        </div>
-                        <div class="achievement">
-                            <div class="achievement-icon"><i class="fas fa-heart"></i></div>
-                            <div class="achievement-info">
-                                <span class="achievement-title">98% Satisfaction</span>
-                                <span class="achievement-desc">Community Rating</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="about-platforms glass">
-                <h3>Where to Find Me</h3>
-                <p>I create content across all major platforms to reach and help as many gamers as possible:</p>
-                <div class="platforms-grid">
-                    <a href="https://www.youtube.com/@BariPlux" class="platform-card glass" target="_blank" rel="noopener">
-                        <div class="platform-icon"><i class="fab fa-youtube"></i></div>
-                        <div class="platform-info">
-                            <h4>YouTube</h4>
-                            <p>Detailed tutorials & gameplay</p>
-                            <span class="platform-stats">630+ subscribers</span>
-                        </div>
-                    </a>
-                    <a href="https://t.me/BariPlux" class="platform-card glass" target="_blank" rel="noopener">
-                        <div class="platform-icon"><i class="fab fa-telegram"></i></div>
-                        <div class="platform-info">
-                            <h4>Telegram</h4>
-                            <p>Latest news & updates</p>
-                            <span class="platform-stats">240+ members</span>
-                        </div>
-                    </a>
-                    <a href="https://www.kick.com/BariPlux" class="platform-card glass" target="_blank" rel="noopener">
-                        <div class="platform-icon"><i class="fab fa-kickstarter-k"></i></div>
-                        <div class="platform-info">
-                            <h4>Kick</h4>
-                            <p>Live streams & interaction</p>
-                            <span class="platform-stats">Regular streams</span>
-                        </div>
-                    </a>
-                    <a href="https://www.instagram.com/BariPlux" class="platform-card glass" target="_blank" rel="noopener">
-                        <div class="platform-icon"><i class="fab fa-instagram"></i></div>
-                        <div class="platform-info">
-                            <h4>Instagram</h4>
-                            <p>Short tips & highlights</p>
-                            <span class="platform-stats">60+ followers</span>
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </div>
+        </article>
     </div>
 </section>
 
@@ -1431,31 +1340,13 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
         
         <div class="chat-messages" id="chat-messages">
             <div class="message ai-message welcome">
-                <div class="message-avatar">
-                    <img src="https://i.pinimg.com/236x/78/49/d2/7849d2c3a70f94b81eaf325065a38ded.jpg" loading="lazy" alt="AI Assistant">
-                </div>
                 <div class="message-content">
                     <div class="message-header">
                         <span class="sender-name">Bari Plux AI</span>
                         <span class="message-time" id="welcome-time"></span>
                     </div>
                     <div class="message-text">
-                        <p>👋 <strong>Welcome to Bari Plux AI Assistant!</strong></p>
-                        <p>I'm your professional gaming optimization expert. I can help you with:</p>
-                        <ul>
-                            <li>🎮 PUBG Mobile performance optimization</li>
-                            <li>⚡ GameLoop setup & configuration</li>
-                            <li>🖥️ Windows system tuning</li>
-                            <li>📊 FPS improvement strategies</li>
-                            <li>🔧 Download recommendations</li>
-                            <li>🎯 Personalized setup advice</li>
-                        </ul>
-                        <p>What would you like to optimize today?</p>
-                    </div>
-                    <div class="message-reactions">
-                        <span class="reaction">🤖 AI Powered</span>
-                        <span class="reaction">⚡ Instant Help</span>
-                        <span class="reaction">🎯 Professional</span>
+                        <p>👋 Welcome — ask about PUBG FPS, GameLoop setup, or Windows tuning.</p>
                     </div>
                 </div>
             </div>
@@ -1722,29 +1613,25 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
     // Theme Toggle - Fixed Version
     function setupThemeToggle() {
         const themeToggle = document.getElementById('theme-toggle');
-        if (!themeToggle) {
-            console.log('Theme toggle not found');
-            return;
-        }
-        
-        // بررسی theme ذخیره شده یا استفاده از حالت پیش فرض
+        if (!themeToggle) return;
+
         const storedTheme = localStorage.getItem('theme');
         const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-        const currentTheme = storedTheme || systemTheme;
-        
-        document.documentElement.setAttribute('data-theme', currentTheme);
-        
+        const currentTheme = storedTheme || systemTheme || 'dark';
+
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            document.body.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            // Soften constellation canvas stroke in light mode via CSS vars already
+        }
+
+        applyTheme(currentTheme);
+
         themeToggle.addEventListener('click', () => {
-            const current = document.documentElement.getAttribute('data-theme');
-            const next = current === 'light' ? 'dark' : 'light';
-            
-            document.documentElement.setAttribute('data-theme', next);
-            localStorage.setItem('theme', next);
-            
-            console.log('Theme changed to:', next);
+            const current = document.documentElement.getAttribute('data-theme') || 'dark';
+            applyTheme(current === 'light' ? 'dark' : 'light');
         });
-        
-        console.log('Theme toggle initialized');
     }
 
     // Scroll to top
@@ -2443,96 +2330,99 @@ document.addEventListener('DOMContentLoaded', function() {
     initQuiz();
 });
 
-    // Simple Search Function - Opens on click
+    // Header search — curated index, dropdown anchored under search field
     var dropdown, searchBox;
     function setupSearch() {
         searchBox = document.getElementById('header-search-input');
         dropdown = document.getElementById('search-results-dropdown');
         var container = document.getElementById('collapsible-search');
-        
-        if (!searchBox || !dropdown) return;
-        
-        // Click to expand
-        container.addEventListener('click', function() {
+        if (!searchBox || !dropdown || !container) return;
+
+        var catalog = [
+            { title: 'Home / Profile', type: 'Page', id: 'home', keys: 'home bari plux about profile' },
+            { title: 'Downloads', type: 'Section', id: 'downloads', keys: 'download gameloop tools fps' },
+            { title: 'Videos', type: 'Section', id: 'videos', keys: 'video youtube tutorial' },
+            { title: 'Optimization Quiz', type: 'Section', id: 'optimization-quiz', keys: 'quiz optimize test' },
+            { title: 'PUBG Content', type: 'Section', id: 'pubg', keys: 'pubg content mobile' },
+            { title: 'PUBG Events', type: 'Section', id: 'pubg-events', keys: 'events season reward' },
+            { title: 'Plux Times', type: 'Section', id: 'plux-times', keys: 'plux times news' },
+            { title: 'Blog', type: 'Section', id: 'blog', keys: 'blog posts article' },
+            { title: 'Community & FAQ', type: 'Section', id: 'feedback', keys: 'faq feedback community support' },
+            { title: 'Support Hours', type: 'Section', id: 'working-hours', keys: 'support hours availability timezone' },
+            { title: 'Contact', type: 'Section', id: 'contact', keys: 'contact email telegram' }
+        ];
+
+        // Attach ids to sections that lack them
+        var wh = document.querySelector('.working-hours');
+        if (wh && !wh.id) wh.id = 'working-hours';
+        var pe = document.querySelector('.pubg-events');
+        if (pe && !pe.id) pe.id = 'pubg-events';
+
+        function hideDropdown() {
+            dropdown.hidden = true;
+            dropdown.innerHTML = '';
+            dropdown.style.display = 'none';
+        }
+        function showDropdown() {
+            dropdown.hidden = false;
+            dropdown.style.display = 'block';
+        }
+
+        container.addEventListener('click', function (e) {
+            if (e.target.closest('.search-results-dropdown')) return;
             container.classList.add('active');
-            setTimeout(function() { searchBox.focus(); }, 100);
+            setTimeout(function () { searchBox.focus(); }, 60);
         });
-        
-        searchBox.addEventListener('input', function() {
+
+        searchBox.addEventListener('input', function () {
             var term = this.value.toLowerCase().trim();
-            if (term.length < 1) {
-                dropdown.style.display = 'none';
+            if (term.length < 2) {
+                hideDropdown();
                 return;
             }
-            
-            // Search page content
-            var results = [];
-            
-            // Find matching sections
-            document.querySelectorAll('section, .section').forEach(function(sec) {
-                var id = sec.id;
-                var title = sec.querySelector('h1, h2, h3, .section-title');
-                var text = sec.innerText.toLowerCase();
-                
-                if (text.includes(term)) {
-                    results.push({
-                        title: title ? title.innerText : (id || 'Section'),
-                        type: 'Section',
-                        id: id || 'home'
-                    });
-                }
-            });
-            
-            // Search cards
-            document.querySelectorAll('.download-card, .video-card, .pubg-card').forEach(function(card) {
-                var text = card.innerText.toLowerCase();
-                if (text.includes(term)) {
-                    var title = card.querySelector('h3, h4, .download-title, .video-title');
-                    var section = card.closest('section, .section');
-                    results.push({
-                        title: title ? title.innerText.substring(0, 40) : 'Item',
-                        type: 'Content',
-                        id: section ? section.id : 'home'
-                    });
-                }
-            });
-            
-            // Remove duplicates
-            var unique = results.filter(function(v,i,a){return a.findIndex(function(t){return t.title===v.title})===i;}).slice(0, 8);
-            
-            if (unique.length === 0) {
-                dropdown.innerHTML = '<div style="padding:15px;text-align:center;color:#888">No results found</div>';
-            } else {
-                dropdown.innerHTML = '';
-                unique.forEach(function(item) {
-                    var div = document.createElement('div');
-                    div.className = 'search-result-item';
-                    div.innerHTML = '<div class="search-result-icon"><i class="fas fa-search"></i></div><div class="search-result-content"><div class="search-result-title">'+item.title+'</div><div class="search-result-type">'+item.type+'</div></div>';
-                    div.onclick = function() {
-                        var target = document.getElementById(item.id);
-                        if (target) target.scrollIntoView({behavior:'smooth'});
-                        dropdown.style.display = 'none';
-                        searchBox.value = '';
-                    };
-                    dropdown.appendChild(div);
+
+            var matches = catalog.filter(function (item) {
+                return item.title.toLowerCase().includes(term) || item.keys.includes(term);
+            }).slice(0, 7);
+
+            dropdown.innerHTML = '';
+            if (!matches.length) {
+                dropdown.innerHTML = '<div class="search-empty">No matching sections</div>';
+                showDropdown();
+                return;
+            }
+
+            matches.forEach(function (item) {
+                var btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'search-result-item';
+                btn.setAttribute('role', 'option');
+                btn.innerHTML = '<span class="search-result-icon"><i class="fas fa-arrow-right"></i></span><span class="search-result-content"><span class="search-result-title"></span><span class="search-result-type"></span></span>';
+                btn.querySelector('.search-result-title').textContent = item.title;
+                btn.querySelector('.search-result-type').textContent = item.type;
+                btn.addEventListener('click', function () {
+                    var target = document.getElementById(item.id);
+                    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    searchBox.value = '';
+                    hideDropdown();
+                    container.classList.remove('active');
                 });
-            }
-            
-            dropdown.style.display = 'block';
+                dropdown.appendChild(btn);
+            });
+            showDropdown();
         });
-        
-        // Close on escape
-        searchBox.addEventListener('keydown', function(e) {
+
+        searchBox.addEventListener('keydown', function (e) {
             if (e.key === 'Escape') {
-                dropdown.style.display = 'none';
+                hideDropdown();
                 container.classList.remove('active');
+                searchBox.blur();
             }
         });
-        
-        // Close on click outside
-        document.addEventListener('click', function(e) {
-            if (!container.contains(e.target) && !dropdown.contains(e.target)) {
-                dropdown.style.display = 'none';
+
+        document.addEventListener('click', function (e) {
+            if (!container.contains(e.target)) {
+                hideDropdown();
                 container.classList.remove('active');
             }
         });
@@ -2836,23 +2726,15 @@ function initializeChatBot() {
 function addUserMessage(text) {
     const messagesDiv = document.getElementById('chat-messages');
     if (!messagesDiv) return;
-    
+    const safe = String(text)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     const messageDiv = document.createElement('div');
     messageDiv.className = 'message user-message';
-    messageDiv.innerHTML = `
-        <div class="message-avatar">
-            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%236C63FF'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E" alt="User">
-        </div>
-        <div class="message-content">
-            <div class="message-header">
-                <span class="sender-name">You</span>
-                <span class="message-time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
-            </div>
-            <div class="message-text">
-                <p>${text}</p>
-            </div>
-        </div>
-    `;
+    messageDiv.innerHTML =
+        '<div class="message-content">' +
+        '<div class="message-header"><span class="sender-name">You</span>' +
+        '<span class="message-time">' + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) + '</span></div>' +
+        '<div class="message-text"><p>' + safe + '</p></div></div>';
     messagesDiv.appendChild(messageDiv);
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
 }
@@ -2860,23 +2742,14 @@ function addUserMessage(text) {
 function addAIMessage(text) {
     const messagesDiv = document.getElementById('chat-messages');
     if (!messagesDiv) return;
-    
     const messageDiv = document.createElement('div');
     messageDiv.className = 'message ai-message';
-    messageDiv.innerHTML = `
-        <div class="message-avatar">
-            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2300BFA6'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z'/%3E%3C/svg%3E" alt="AI">
-        </div>
-        <div class="message-content">
-            <div class="message-header">
-                <span class="sender-name">Bari Plux AI</span>
-                <span class="message-time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
-            </div>
-            <div class="message-text">
-                <p>${text}</p>
-            </div>
-        </div>
-    `;
+    const body = (typeof formatMessage === 'function') ? formatMessage(text) : String(text);
+    messageDiv.innerHTML =
+        '<div class="message-content">' +
+        '<div class="message-header"><span class="sender-name">Bari Plux AI</span>' +
+        '<span class="message-time">' + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) + '</span></div>' +
+        '<div class="message-text">' + body + '</div></div>';
     messagesDiv.appendChild(messageDiv);
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
 }

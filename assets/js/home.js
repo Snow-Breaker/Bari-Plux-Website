@@ -34,6 +34,7 @@
 
   function wireReveals() {
     var selectors = [
+      '.profile-shell',
       '.hero-card',
       '.about-merged',
       '.section-title',

@@ -374,7 +374,7 @@ button, input, textarea { font: inherit; color: inherit; }
   backdrop-filter: blur(20px); box-shadow: 0 18px 44px rgba(0,0,0,0.5);
   display: none;
 }
-.search-results-dropdown:not(:empty) { display: block; }
+/* positioning handled in liquid-polish.css — never force show when empty */
 
 /* ═══════════════ BUTTONS (desktop radius 10, indigo glass) ═══════════════ */
 .bp-btn, .btn, .btn-primary, .btn-secondary, .btn-accent,

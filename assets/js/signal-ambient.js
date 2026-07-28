@@ -71,6 +71,11 @@
       var dx = Math.sin(t * 0.07) * 10;
       var dy = Math.cos(t * 0.055) * 8;
 
+      var light = document.documentElement.getAttribute('data-theme') === 'light';
+      var linkA = light ? 'rgba(79,70,229,0.14)' : 'rgba(129,140,248,0.11)';
+      var nodeA = light ? 'rgba(15,20,40,' : 'rgba(255,255,255,';
+      var nodeB = light ? 'rgba(79,70,229,' : 'rgba(129,140,248,';
+
       // Links
       ctx.lineWidth = 1;
       for (var i = 0; i < links.length; i++) {
@@ -83,7 +88,7 @@
         ctx.beginPath();
         ctx.moveTo(ax, ay);
         ctx.lineTo(bx, by);
-        ctx.strokeStyle = 'rgba(129,140,248,0.11)';
+        ctx.strokeStyle = linkA;
         ctx.stroke();
       }
 
@@ -97,9 +102,9 @@
         ctx.beginPath();
         ctx.arc(x, y, r, 0, Math.PI * 2);
         if (n % 3 === 0) {
-          ctx.fillStyle = 'rgba(255,255,255,' + (0.18 * pulse) + ')';
+          ctx.fillStyle = nodeA + (0.18 * pulse) + ')';
         } else {
-          ctx.fillStyle = 'rgba(129,140,248,' + (0.35 * pulse) + ')';
+          ctx.fillStyle = nodeB + (0.35 * pulse) + ')';
         }
         ctx.fill();
       }
@@ -107,9 +112,10 @@
       // Soft scan sweep (max ~12% opacity like desktop)
       var scanY = ((t * 28) % (h + 120)) - 60;
       var sg = ctx.createLinearGradient(0, scanY - 40, 0, scanY + 40);
-      sg.addColorStop(0, 'rgba(129,140,248,0)');
-      sg.addColorStop(0.5, 'rgba(129,140,248,0.10)');
-      sg.addColorStop(1, 'rgba(129,140,248,0)');
+      var scanC = light ? 'rgba(79,70,229,' : 'rgba(129,140,248,';
+      sg.addColorStop(0, scanC + '0)');
+      sg.addColorStop(0.5, scanC + '0.10)');
+      sg.addColorStop(1, scanC + '0)');
       ctx.fillStyle = sg;
       ctx.fillRect(0, scanY - 40, w, 80);
 
