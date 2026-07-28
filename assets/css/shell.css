@@ -1,0 +1,205 @@
+/**
+ * Bari Plux shell bridge — makes legacy page content sit inside the new template.
+ * Load AFTER bariplux.css + site.css. Safe alongside trimmed all-styles leftovers.
+ */
+
+html.bp-shell,
+body.bp-body {
+  background: transparent !important;
+  color: var(--bp-text, #f5f5f7) !important;
+  font-family: var(--bp-font-body, "Sora", "Segoe UI", system-ui, sans-serif) !important;
+}
+
+/* Kill legacy chrome that site-shell also removes */
+body.bp-body > .header.glass,
+body.bp-body > header.header,
+body.bp-body .header.glass:not(.bp-chrome),
+#particles-js,
+.bg-animation,
+.floating-circle,
+.scroll-progress,
+.mobile-menu,
+.mobile-menu-overlay,
+.mobile-nav {
+  display: none !important;
+}
+
+/* Content breathes under sticky chrome */
+body.bp-body .container,
+body.bp-body .bp-page,
+body.bp-body main,
+body.bp-body .content-wrapper,
+body.bp-body .main-content {
+  position: relative;
+  z-index: 1;
+}
+
+body.bp-body .section,
+body.bp-body section {
+  position: relative;
+  z-index: 1;
+}
+
+/* Typography tokens on legacy headings */
+body.bp-body h1,
+body.bp-body h2,
+body.bp-body h3,
+body.bp-body .section-title,
+body.bp-body .page-title {
+  font-family: var(--bp-font-display, "Space Grotesk", "Sora", sans-serif) !important;
+  letter-spacing: -0.03em;
+  color: var(--bp-text, #f5f5f7);
+}
+
+body.bp-body p,
+body.bp-body li,
+body.bp-body .section-subtitle {
+  color: var(--bp-text-2, #c0c0c8);
+}
+
+/* Legacy buttons → new glass CTA language (site.css also aliases .btn) */
+body.bp-body .btn,
+body.bp-body .btn-primary,
+body.bp-body .btn-secondary,
+body.bp-body .btn-accent,
+body.bp-body .download-btn,
+body.bp-body .filter-btn,
+body.bp-body .event-btn,
+body.bp-body .unlock-btn,
+body.bp-body .contact-btn {
+  border-radius: 12px !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+  transition: transform 160ms ease, background 200ms ease, border-color 200ms ease !important;
+}
+
+body.bp-body .btn-primary,
+body.bp-body .download-btn,
+body.bp-body .unlock-btn {
+  background: rgba(129, 140, 248, 0.34) !important;
+  color: #fff !important;
+  border-color: rgba(129, 140, 248, 0.45) !important;
+}
+
+body.bp-body .btn-primary:hover,
+body.bp-body .download-btn:hover,
+body.bp-body .unlock-btn:hover {
+  background: rgba(129, 140, 248, 0.48) !important;
+  transform: translateY(-1px);
+}
+
+body.bp-body .btn-secondary,
+body.bp-body .filter-btn,
+body.bp-body .event-btn,
+body.bp-body .contact-btn {
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: var(--bp-text, #f5f5f7) !important;
+}
+
+body.bp-body .btn-secondary:hover,
+body.bp-body .filter-btn:hover,
+body.bp-body .filter-btn.active,
+body.bp-body .event-btn:hover {
+  background: rgba(129, 140, 248, 0.18) !important;
+  border-color: rgba(129, 140, 248, 0.4) !important;
+  color: #fff !important;
+}
+
+/* Cards / panels → liquid glass surfaces */
+body.bp-body .glass,
+body.bp-body .download-card,
+body.bp-body .video-card,
+body.bp-body .pubg-card,
+body.bp-body .blog-card,
+body.bp-body .card,
+body.bp-body .info-card,
+body.bp-body .tool-card,
+body.bp-body .event-card,
+body.bp-body .weapon-card,
+body.bp-body .content-card,
+body.bp-body .news-card,
+body.bp-body .update-card,
+body.bp-body .footer-col {
+  background: rgba(16, 16, 20, 0.55) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 18px !important;
+  backdrop-filter: blur(22px) saturate(150%);
+  -webkit-backdrop-filter: blur(22px) saturate(150%);
+  box-shadow:
+    0 18px 48px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+
+html[data-theme="light"] body.bp-body .glass,
+html[data-theme="light"] body.bp-body .download-card,
+html[data-theme="light"] body.bp-body .video-card,
+html[data-theme="light"] body.bp-body .card,
+html[data-theme="light"] body.bp-body .tool-card,
+html[data-theme="light"] body.bp-body .event-card,
+html[data-theme="light"] body.bp-body .footer-col {
+  background: rgba(255, 255, 255, 0.72) !important;
+  border-color: rgba(15, 20, 40, 0.1) !important;
+  box-shadow:
+    0 14px 36px rgba(15, 20, 40, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+}
+
+/* Footer sits on ambient */
+body.bp-body .footer,
+body.bp-body footer {
+  position: relative;
+  z-index: 1;
+  background: transparent !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  margin-top: 3rem;
+  padding-top: 2rem;
+}
+
+body.bp-body .footer-title {
+  color: var(--bp-text, #f5f5f7) !important;
+}
+
+body.bp-body .footer-link,
+body.bp-body .footer-about,
+body.bp-body .copyright {
+  color: var(--bp-text-2, #c0c0c8) !important;
+}
+
+body.bp-body .footer-link:hover {
+  color: var(--bp-accent-2, #a5b4fc) !important;
+}
+
+/* Forms / inputs on legacy pages */
+body.bp-body input,
+body.bp-body select,
+body.bp-body textarea {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 12px !important;
+  color: var(--bp-text, #f5f5f7) !important;
+}
+
+body.bp-body input:focus,
+body.bp-body select:focus,
+body.bp-body textarea:focus {
+  outline: none !important;
+  border-color: rgba(129, 140, 248, 0.5) !important;
+  box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.18) !important;
+}
+
+/* Login page: keep card readable over ambient */
+body.bp-body .login-container,
+body.bp-body .auth-card,
+body.bp-body .login-box {
+  background: rgba(16, 16, 20, 0.72) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-radius: 22px !important;
+  backdrop-filter: blur(28px) saturate(150%);
+  -webkit-backdrop-filter: blur(28px) saturate(150%);
+}
+
+body.bp-body {
+  padding-top: 0;
+}
