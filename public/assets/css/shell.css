@@ -168,15 +168,14 @@ body.bp-body textarea:focus {
   box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.18) !important;
 }
 
-/* Login page: keep card readable over ambient */
+/* Login — frosted glass (auth.css owns the full recipe) */
 body.bp-body .login-container,
 body.bp-body .auth-card,
 body.bp-body .login-box {
-  background: rgba(16, 16, 20, 0.72) !important;
-  border: 1px solid rgba(255, 255, 255, 0.14) !important;
-  border-radius: 22px !important;
-  backdrop-filter: blur(28px) saturate(150%);
-  -webkit-backdrop-filter: blur(28px) saturate(150%);
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
 }
 
 body.bp-body {

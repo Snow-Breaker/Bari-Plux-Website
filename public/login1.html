@@ -10,10 +10,7 @@
     <meta name="description" content="Login to your Bari Plux account">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Montserrat:wght@700;800&family=Oxanium:wght@400;600;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/all-styles.css">
-    
-    <link rel="icon" type="image/x-icon" href="https://i.postimg.cc/65cjsvfQ/imglogo.png">
+<link rel="icon" type="image/x-icon" href="https://i.postimg.cc/65cjsvfQ/imglogo.png">
     
     <!-- Domain-lock -->
     <script>
@@ -40,9 +37,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-
-    <!-- Security headers -->
+<!-- Security headers -->
     <meta http-equiv="Content-Security-Policy"
       content="default-src 'self' https:;
                script-src 'self' https://www.gstatic.com https://cdn.jsdelivr.net https://apis.google.com https://www.googleapis.com https://accounts.google.com https://cdnjs.cloudflare.com 'unsafe-inline' 'unsafe-eval';
@@ -57,331 +52,20 @@
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
-
-    
-    <style>
-        :root {
-            --bg-1: #0f1115;
-            --bg-2: #15171b;
-            --glass-bg: rgba(255,255,255,0.06);
-            --glass-strong: rgba(255,255,255,0.08);
-            --glass-accent: rgba(108,99,255,0.12);
-            --accent: #6C63FF;
-            --accent-rgb: 108, 99, 255;
-            --accent-2: #00BFA6;
-            --text: #e8eef8;
-            --muted: rgba(232,238,248,0.65);
-            --radius-lg: 20px;
-            --radius: 12px;
-            --transition: 300ms cubic-bezier(.2,.9,.2,1);
-            --glass-border: rgba(255,255,255,0.08);
-            --glass-inner-shadow: rgba(0,0,0,0.35);
-            --success: #4CAF50;
-            --warning: #FF9800;
-            --danger: #F44336;
-            --shadow: 0 8px 30px rgba(0,0,0,0.35);
-            --shadow-hover: 0 24px 50px rgba(0,0,0,0.45);
-        }
-
-        .scroll-progress {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 0%;
-            height: 3px;
-            background: linear-gradient(90deg, var(--accent), var(--accent-2));
-            z-index: 10001;
-            transition: width 0.1s ease-out;
-            box-shadow: 0 0 10px var(--accent);
-        }
-
-        .header {
-            background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
-            border: 1px solid var(--glass-border);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            padding: 12px 24px;
-            margin: 15px auto;
-            width: calc(100% - 40px);
-            max-width: 1400px;
-            border-radius: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: fixed;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1000;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-        }
-
-        .header .left { display: flex; align-items: center; }
-
-        .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text); }
-        .logo-img { width: 35px; height: 35px; border-radius: 50%; object-fit: cover; }
-        .logo-text { font-weight: 700; font-size: 1.1rem; background: linear-gradient(135deg, var(--accent), var(--accent-2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
-
-        .nav { display: flex; align-items: center; }
-        .nav-links { display: flex; list-style: none; gap: 5px; margin: 0; padding: 0; }
-        .nav-links a { padding: 8px 14px; color: var(--muted); text-decoration: none; font-size: 0.9rem; font-weight: 500; border-radius: 20px; transition: all 0.3s ease; }
-        .nav-links a:hover, .nav-links a.active { color: var(--text); background: var(--glass-bg); }
-
-        @media (max-width: 1000px) { .nav-links { display: none; } }
-
-        .theme-toggle { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--glass-bg); border: 1px solid var(--glass-border); cursor: pointer; transition: all 0.3s ease; font-size: 16px; }
-        .theme-toggle:hover { border-color: var(--accent); transform: scale(1.1); box-shadow: 0 0 20px rgba(108, 99, 255, 0.3); }
-        .theme-toggle .moon-icon { display: block; color: #FFD700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.8); }
-        .theme-toggle .sun-icon { display: none; color: #FFA500; text-shadow: 0 0 10px rgba(255, 165, 0, 0.8); }
-        [data-theme="light"] .theme-toggle .moon-icon { display: none; }
-        [data-theme="light"] .theme-toggle .sun-icon { display: block; }
-
-        .back-btn { display: none; }
-
-        [data-theme="light"] {
-            --bg-1: #f6f8fb;
-            --bg-2: #eef2f7;
-            --glass-bg: rgba(255,255,255,0.85);
-            --glass-strong: rgba(255,255,255,0.95);
-            --glass-accent: rgba(108,99,255,08);
-            --accent: #5748E8;
-            --accent-rgb: 87, 72, 232;
-            --accent-2: #07bfa0;
-            --text: #111827;
-            --muted: rgba(17,24,39,0.6);
-            --glass-border: rgba(0,0,0,0.04);
-            --glass-inner-shadow: rgba(255,255,255,0.6);
-        }
-
-        *{box-sizing:border-box; margin:0; padding:0;}
-        html,body{height:100%}
-        body{
-            margin:0;
-            font-family:'Poppins',sans-serif;
-            background:
-                radial-gradient(800px 400px at 10% 20%, rgba(108,99,255,0.08), transparent 10%),
-                radial-gradient(600px 300px at 90% 80%, rgba(0,191,166,0.06), transparent 12%),
-                linear-gradient(180deg,var(--bg-1),var(--bg-2));
-            color:var(--text);
-            -webkit-font-smoothing:antialiased;
-            -moz-osx-font-smoothing:grayscale;
-            background-attachment: fixed;
-            position: relative;
-            overflow-x: hidden;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        #particles-js { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: -1; pointer-events: none; }
-
-        .bg-animation { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -2; overflow: hidden; }
-        .floating-circle { position: absolute; border-radius: 50%; background: radial-gradient(circle, var(--accent), transparent 70%); opacity: 0.05; animation: float 20s infinite ease-in-out; }
-        .circle-1 { width: 300px; height: 300px; top: 10%; left: 5%; animation-delay: 0s; }
-        .circle-2 { width: 200px; height: 200px; top: 60%; right: 10%; animation-delay: 5s; background: radial-gradient(circle, var(--accent-2), transparent 70%); }
-        @keyframes float { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-20px) rotate(180deg); } }
-
-        .container { max-width: 500px; margin: 0 auto; padding: 35px 20px 30px; position: relative; z-index: 1; }
-
-        .login-container {
-            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.03));
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-lg);
-            padding: 40px;
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            box-shadow: var(--shadow);
-        }
-
-        .login-header { text-align: center; margin-bottom: 30px; }
-        .login-logo { width: 150px; height: 150px; margin-bottom: 20px; object-fit: contain; border: none; border-radius: 0 !important; box-shadow: none; }
-        .login-title { font-size: 1.8rem; font-weight: 700; margin-bottom: 10px; background: linear-gradient(135deg, var(--accent), var(--accent-2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .login-subtitle { color: var(--muted); font-size: 0.95rem; }
-
-        .login-tabs { display: flex; margin-bottom: 30px; border-radius: var(--radius); background: var(--glass-bg); padding: 4px; }
-        .login-tab { flex: 1; padding: 12px; text-align: center; cursor: pointer; border-radius: 8px; transition: var(--transition); font-weight: 500; color: var(--muted); }
-        .login-tab.active { background: var(--accent); color: white; }
-        .login-tab:hover:not(.active) { background: rgba(255,255,255,0.05); }
-
-        .login-form { display: none; }
-        .login-form.active { display: block; animation: fadeIn 0.3s ease; }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        .form-group { margin-bottom: 20px; }
-        .form-label { display: block; margin-bottom: 8px; font-weight: 500; color: var(--text); font-size: 0.9rem; }
-        .form-input { width: 100%; padding: 14px 16px; border-radius: var(--radius); border: 1px solid var(--glass-border); background: var(--glass-bg); color: var(--text); font-family: 'Poppins', sans-serif; font-size: 0.95rem; transition: var(--transition); }
-        .form-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1); }
-        .form-input::placeholder { color: var(--muted); }
-
-        .btn-primary { width: 100%; padding: 14px; background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: white; border: none; border-radius: var(--radius); font-family: 'Poppins', sans-serif; font-size: 1rem; font-weight: 600; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; gap: 10px; }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(108, 99, 255, 0.3); }
-        .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-
-        .btn-google { width: 100%; padding: 14px; background: white; color: #333; border: none; border-radius: var(--radius); font-family: 'Poppins', sans-serif; font-size: 1rem; font-weight: 600; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 20px; }
-        .btn-google:hover { background: #f5f5f5; transform: translateY(-2px); box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
-        .btn-google img { width: 20px; height: 20px; }
-
-        .btn-github { width: 100%; padding: 14px; background: #24292e; color: white; border: none; border-radius: var(--radius); font-family: 'Poppins', sans-serif; font-size: 1rem; font-weight: 600; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 12px; position: relative; overflow: hidden; }
-        .btn-github:hover { background: #1a1e22; transform: translateY(-2px); box-shadow: 0 5px 20px rgba(0,0,0,0.4); }
-        .btn-github::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent); transition: left 0.5s ease; }
-        .btn-github:hover::before { left: 100%; }
-        .btn-github:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-
-        .btn-discord { width: 100%; padding: 14px; background: #5865F2; color: white; border: none; border-radius: var(--radius); font-family: 'Poppins', sans-serif; font-size: 1rem; font-weight: 600; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 12px; position: relative; overflow: hidden; }
-        .btn-discord:hover { background: #4752C4; transform: translateY(-2px); box-shadow: 0 5px 20px rgba(88,101,242,0.45); }
-        .btn-discord::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent); transition: left 0.5s ease; }
-        .btn-discord:hover::before { left: 100%; }
-        .btn-discord:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-
-        .sub-tabs { display: flex; gap: 6px; margin-bottom: 22px; }
-        .sub-tab { flex: 1; padding: 9px; text-align: center; cursor: pointer; border-radius: 8px; font-size: 0.85rem; font-weight: 500; color: var(--muted); background: transparent; transition: var(--transition); }
-        .sub-tab.active { background: rgba(108,99,255,0.15); color: var(--accent); border: 1px solid rgba(108,99,255,0.3); }
-        .sub-tab:hover:not(.active) { background: var(--glass-bg); }
-        .sub-form { display: none; }
-        .sub-form.active { display: block; animation: fadeIn 0.3s ease; }
-
-        .discord-notice { background: rgba(88,101,242,0.08); border: 1px solid rgba(88,101,242,0.25); border-radius: var(--radius); padding: 10px 14px; font-size: 0.8rem; color: var(--muted); margin-bottom: 12px; display: none; }
-        .discord-notice.show { display: block; }
-
-        .divider { display: flex; align-items: center; margin: 25px 0; color: var(--muted); font-size: 0.85rem; }
-        .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--glass-border); }
-        .divider span { padding: 0 15px; }
-
-        .error-message { background: rgba(244, 67, 54, 0.1); border: 1px solid var(--danger); color: var(--danger); padding: 12px; border-radius: var(--radius); margin-bottom: 20px; font-size: 0.9rem; display: none; }
-        .error-message.active { display: block; animation: shake 0.5s ease; }
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
-
-        .success-message { background: rgba(76, 175, 80, 0.1); border: 1px solid var(--success); color: var(--success); padding: 12px; border-radius: var(--radius); margin-bottom: 20px; font-size: 0.9rem; display: none; }
-        .success-message.active { display: block; }
-
-        .logged-in-view { display: none; text-align: center; padding: 20px; }
-        .logged-in-view.active { display: block; animation: fadeIn 0.5s ease; }
-
-        .user-avatar { width: 80px; height: 80px; border-radius: 50%; background: var(--glass-bg); border: 2px solid var(--glass-border); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 2rem; font-weight: 700; color: var(--text); overflow: hidden; }
-        .user-avatar img { width: 100%; height: 100%; object-fit: cover; }
-
-        .user-info { margin-bottom: 30px; }
-        .user-name { font-size: 1.5rem; font-weight: 700; margin-bottom: 5px; }
-        .user-email { color: var(--muted); font-size: 0.95rem; }
-        .user-id { background: var(--glass-bg); padding: 12px; border-radius: var(--radius); margin: 20px 0; font-size: 0.85rem; color: var(--muted); }
-        .user-id strong { color: var(--text); }
-
-        .btn-logout { padding: 12px 30px; background: transparent; color: var(--danger); border: 1px solid var(--danger); border-radius: var(--radius); font-family: 'Poppins', sans-serif; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: var(--transition); }
-        .btn-logout:hover { background: var(--danger); color: white; }
-
-        .back-home { display: inline-flex; align-items: center; gap: 8px; color: var(--muted); text-decoration: none; margin-top: 20px; font-size: 0.9rem; transition: var(--transition); }
-        .back-home:hover { color: var(--accent); }
-
-        .app-token-section { background: var(--glass-bg); border: 1px solid var(--accent); border-radius: var(--radius); padding: 15px; margin: 20px 0; text-align: left; }
-        .app-token-section h4 { font-size: 0.9rem; margin-bottom: 10px; color: var(--accent); display: flex; align-items: center; gap: 8px; }
-        .token-display { display: flex; gap: 8px; align-items: center; }
-        .token-input { flex: 1; padding: 8px 12px; border-radius: 6px; border: 1px solid var(--glass-border); background: rgba(0,0,0,0.3); color: var(--text); font-family: monospace; font-size: 0.8rem; }
-        .copy-token-btn { padding: 8px 16px; background: var(--accent); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: 600; transition: var(--transition); }
-        .copy-token-btn:hover { background: var(--accent-2); }
-        .copied-msg { color: var(--success); font-size: 0.8rem; margin-top: 8px; display: none; }
-        .copied-msg.active { display: block; }
-
-        .loading-spinner { width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        .firebase-config-note { background: var(--glass-accent); border: 1px solid var(--accent); border-radius: var(--radius); padding: 15px; margin-bottom: 20px; font-size: 0.85rem; color: var(--muted); display: none; }
-        .firebase-config-note code { background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px; font-size: 0.8rem; }
-
-        .input-wrapper { position: relative; }
-        .input-wrapper i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 1rem; transition: color var(--transition); }
-        .form-input.with-icon { padding-left: 45px; }
-
-        .password-toggle { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--muted); cursor: pointer; padding: 0; font-size: 1rem; transition: color var(--transition); }
-        .password-toggle:hover { color: var(--accent); }
-
-        .form-options { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; font-size: 0.9rem; }
-        .remember-me { display: flex; align-items: center; gap: 8px; color: var(--muted); cursor: pointer; }
-        .remember-me input { width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer; }
-        .forgot-password { color: var(--accent); text-decoration: none; font-weight: 500; transition: color var(--transition); }
-        .forgot-password:hover { color: var(--accent-2); }
-
-        .btn-primary { position: relative; overflow: hidden; }
-        .btn-primary::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent); transition: left 0.5s ease; }
-        .btn-primary:hover::before { left: 100%; }
-        .btn-google { position: relative; overflow: hidden; }
-        .btn-google::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(0,0,0,0.05), transparent); transition: left 0.5s ease; }
-        .btn-google:hover::before { left: 100%; }
-
-        .login-tab { position: relative; overflow: hidden; }
-        .login-tab::after { content: ''; position: absolute; bottom: 0; left: 50%; width: 0; height: 2px; background: var(--accent-2); transition: all 0.3s ease; transform: translateX(-50%); }
-        .login-tab.active::after { width: 80%; }
-
-        .login-container { position: relative; overflow: hidden; }
-        .login-container::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--accent), var(--accent-2), var(--accent)); background-size: 200% 100%; animation: gradientSlide 3s linear infinite; }
-        @keyframes gradientSlide { 0% { background-position: 0% 0%; } 100% { background-position: 200% 0%; } }
-
-        .feature-pills { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--glass-border); }
-        .feature-pill { display: flex; align-items: center; gap: 6px; padding: 6px 12px; background: var(--glass-bg); border-radius: 20px; font-size: 0.8rem; color: var(--muted); }
-        .feature-pill i { color: var(--accent); font-size: 0.75rem; }
-
-        .notification { position: fixed; top: 80px; right: 20px; padding: 15px 25px; border-radius: var(--radius); display: flex; align-items: center; gap: 12px; z-index: 10000; animation: slideIn 0.3s ease forwards; font-size: 0.9rem; }
-        .notification.success { background: rgba(76, 175, 80, 0.2); border: 1px solid rgba(76, 175, 80, 0.4); color: #4CAF50; }
-        .notification.error { background: rgba(244, 67, 54, 0.2); border: 1px solid rgba(244, 67, 54, 0.4); color: #F44336; }
-        .notification i { font-size: 1.1rem; }
-        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-
-        .error-message { position: relative; padding-left: 40px; }
-        .error-message::before { content: '\f071'; font-family: 'Font Awesome 6 Free'; font-weight: 900; position: absolute; left: 15px; top: 50%; transform: translateY(-50%); }
-        .success-message { position: relative; padding-left: 40px; }
-        .success-message::before { content: '\f00c'; font-family: 'Font Awesome 6 Free'; font-weight: 900; position: absolute; left: 15px; top: 50%; transform: translateY(-50%); }
-
-        .btn-logout { position: relative; overflow: hidden; }
-        .btn-logout::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(244, 67, 54, 0.2), transparent); transition: left 0.5s ease; }
-        .btn-logout:hover::before { left: 100%; }
-
-        @keyframes highlight-pulse {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(var(--accent-rgb), 0.4); }
-            50% { box-shadow: 0 0 0 8px rgba(var(--accent-rgb), 0); }
-        }
-        .highlight-pulse {
-            animation: highlight-pulse 1s ease-in-out 3;
-            border: 2px solid var(--accent) !important;
-        }
-
-        @media (max-width: 768px) {
-            .login-container { max-width: 90%; padding: 25px; }
-            .login-logo { width: 60px; height: 60px; }
-            .login-title { font-size: 1.5rem; }
-            .form-input { padding: 12px 16px; font-size: 0.9rem; }
-            .btn-primary, .btn-google { padding: 12px 20px; font-size: 0.95rem; }
-        }
-
-        @media (max-width: 480px) {
-            .login-container { max-width: 95%; padding: 20px 15px; margin-top: 60px; }
-            .login-logo { width: 50px; height: 50px; }
-            .login-title { font-size: 1.3rem; }
-            .login-subtitle { font-size: 0.85rem; }
-            .form-input { padding: 10px 14px; font-size: 0.85rem; }
-            .btn-primary, .btn-google { padding: 10px 16px; font-size: 0.9rem; }
-            .user-avatar { width: 60px; height: 60px; font-size: 1.5rem; }
-            .user-name { font-size: 1.2rem; }
-            .feature-pills { flex-direction: column; align-items: center; }
-        }
-
-        body.app-embed { display: flex; align-items: center; justify-content: center; min-height: 100%; overflow: hidden; }
-        body.app-embed .header, body.app-embed .footer, body.app-embed .scroll-progress, body.app-embed #particles-js, body.app-embed .bg-animation { display: none !important; }
-        body.app-embed .container { max-width: 100%; width: 100%; padding: 8px 12px 12px; margin: 0; }
-        body.app-embed .login-container { padding: 22px 18px; box-shadow: none; }
-        body.app-embed .login-logo { width: 72px; height: 72px; margin-bottom: 12px; }
-        body.app-embed .login-title { font-size: 1.35rem; }
-        body.app-embed .app-token-section, body.app-embed .user-id, body.app-embed .back-home, body.app-embed #openAppBtn { display: none !important; }
-        body.app-embed .app-signing-in { text-align: center; padding: 28px 12px; color: var(--muted); font-size: 0.95rem; }
-        body.app-embed .app-signing-in .loading-spinner { margin: 0 auto 14px; width: 28px; height: 28px; border-width: 3px; }
-    </style>
-    <link rel="stylesheet" href="assets/css/bariplux.css?v=20260728m">
-    <link rel="stylesheet" href="assets/css/site.css?v=20260728m">
-    <link rel="stylesheet" href="assets/css/shell.css?v=20260728m">
-    <link rel="stylesheet" href="assets/css/widgets.css?v=20260728m">
-    <script src="assets/js/boot.js"></script>
-    <script src="assets/js/signal-ambient.js?v=20260728m" defer></script>
-    <script src="assets/js/site-shell.js?v=20260728m" defer></script>
+<link rel="stylesheet" href="assets/css/site.css?v=20260728m">
+<link rel="stylesheet" href="assets/css/widgets.css?v=20260728m">
+<script src="assets/js/signal-ambient.js?v=20260728m" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/bariplux.css?v=20260728o">
+    <link rel="stylesheet" href="assets/css/site.css?v=20260728o">
+    <link rel="stylesheet" href="assets/css/shell.css?v=20260728o">
+    <link rel="stylesheet" href="assets/css/widgets.css?v=20260728o">
+    <link rel="stylesheet" href="assets/css/pages/auth.css?v=20260728o">
+    <script src="assets/js/boot.js"></script>
+    <script src="assets/js/signal-ambient.js?v=20260728o" defer></script>
+    <script src="assets/js/site-shell.js?v=20260728o" defer></script>
+
 </head>
 <body class="bp-body">
     <div id="bp-aurora" class="bp-aurora bp-ambient" aria-hidden="true"></div>
@@ -393,40 +77,8 @@
         document.ondragstart = function() { return false; };
         document.oncontextmenu = function() { return false; };
     </script>
-    
-    <div class="scroll-progress" id="scrollProgress"></div>
 
-    <header class="header glass">
-        <div class="left">
-            <a href="index.html" class="logo">
-                <img class="logo-img" src="https://yt3.googleusercontent.com/RPW5Z_kcoEu0ES_VpL4-7ZqI4eI1OQfuVL-DbuCYWmRhXono9hA5NOCSGGMDLzJqNcHUlhOg=s160-c-k-c0x00ffffff-no-rj" alt="Bari Plux">
-                <span class="logo-text">Bari Plux</span>
-            </a>
-        </div>
-        <nav class="nav">
-            <ul class="nav-links">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="index.html#downloads">Downloads</a></li>
-                <li><a href="index.html#videos">Videos</a></li>
-                <li><a href="index.html#pubg">Content</a></li>
-                <li><a href="index.html#contact">Contact</a></li>
-            </ul>
-        </nav>
-        <div style="display:flex;align-items:center;gap:12px">
-            <div id="theme-toggle" class="theme-toggle" title="Toggle Theme">
-                <span class="moon-icon">🌙</span>
-                <span class="sun-icon">☀️</span>
-            </div>
-        </div>
-    </header>
-
-    <div id="particles-js"></div>
-    <div class="bg-animation">
-        <div class="floating-circle circle-1"></div>
-        <div class="floating-circle circle-2"></div>
-    </div>
-
-    <div class="container">
+    <main class="bp-auth">
         <div class="login-container">
             <div id="loginFormView">
                 <div class="login-header">
@@ -587,7 +239,7 @@
                 <a href="index.html" class="back-home"><i class="fas fa-arrow-left"></i> Back to Home</a>
             </div>
         </div>
-    </div>
+    </main>
 
     <script>
         // ==================== DESKTOP APP EMBED ====================
@@ -878,11 +530,8 @@
         }
 
         // ==================== FIREBASE CONFIGURATION ====================
-        // Keep authDomain on firebaseapp.com so Google OAuth redirect_uri
-        // (…/__/auth/handler) matches the existing OAuth client. Hosting URL
-        // stays login.bariplux.com; only the Google popup uses firebaseapp.
-        // To brand the popup too, add https://login.bariplux.com/__/auth/handler
-        // in Google Cloud Console → Credentials → Web client, then switch authDomain.
+        // Keep authDomain on firebaseapp.com so Google OAuth redirect_uri matches
+        // the existing OAuth client. See docs/login-custom-domain.md for branding.
         const firebaseConfig = {
             apiKey: "AIzaSyBH_t3Uue7fbb-DahwjSJGjG2-quCqiLEs",
             authDomain: "baripluxwebsite.firebaseapp.com",
@@ -1654,17 +1303,6 @@
         const btnLogoutEl = document.getElementById('btnLogout');
         if (btnLogoutEl) btnLogoutEl.addEventListener('click', function() { doWebsiteLogout(); });
 
-        // ==================== PARTICLES ====================
-        function initParticles() {
-            if (typeof particlesJS !== 'undefined') {
-                particlesJS('particles-js', {
-                    "particles": { "number": { "value": 40, "density": { "enable": true, "value_area": 800 } }, "color": { "value": "#6C63FF" }, "shape": { "type": "circle" }, "opacity": { "value": 0.3, "random": false }, "size": { "value": 2, "random": true }, "line_linked": { "enable": true, "distance": 150, "color": "#6C63FF", "opacity": 0.2, "width": 1 }, "move": { "enable": true, "speed": 3, "direction": "none", "random": false, "straight": false, "out_mode": "out" } },
-                    "interactivity": { "detect_on": "canvas", "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": true, "mode": "push" } } },
-                    "retina_detect": true
-                });
-            }
-        }
-
         // ==================== INIT ====================
         document.addEventListener('DOMContentLoaded', () => {
             if (isAppEmbed()) document.body.classList.add('app-embed');
@@ -1686,7 +1324,6 @@
                 });
             }
             checkLoginStatus();
-            initParticles();
 
             const themeToggle = document.getElementById('theme-toggle');
             if (themeToggle) {

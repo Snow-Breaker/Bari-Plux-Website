@@ -1,0 +1,168 @@
+/**
+ * Homepage Liquid Glass polish — aligns with downloads recipe.
+ * Load after bariplux + site + shell.
+ */
+
+/* Profile shell = primary liquid surface */
+.profile-shell.glass,
+.profile-shell.liquid {
+  background:
+    linear-gradient(165deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.05) 40%, transparent 100%),
+    rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  backdrop-filter: blur(28px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(160%) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 22px 56px rgba(0, 0, 0, 0.28) !important;
+  isolation: isolate;
+}
+
+.profile-shell.glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.16), transparent 38%);
+  opacity: 0.5;
+  mix-blend-mode: soft-light;
+  z-index: 0;
+}
+
+.profile-shell > * {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-kicker {
+  color: var(--bp-accent-2, #a5b4fc) !important;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin: 0 0 1rem;
+}
+
+.hero-actions .bp-btn,
+.hero-actions .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.72rem 1.15rem !important;
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+  transition: transform 160ms ease, background 200ms ease, border-color 200ms ease !important;
+}
+
+.hero-actions .bp-btn--glass,
+.hero-actions .btn-primary {
+  background: rgba(129, 140, 248, 0.32) !important;
+  border: 1px solid rgba(129, 140, 248, 0.45) !important;
+  color: #fff !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16) !important;
+}
+
+.hero-actions .bp-btn--glass:hover,
+.hero-actions .btn-primary:hover {
+  background: rgba(129, 140, 248, 0.46) !important;
+  transform: translateY(-1px);
+}
+
+.hero-actions .bp-btn--ghost,
+.hero-actions .btn-secondary {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  color: var(--bp-text, #f5f5f7) !important;
+}
+
+.hero-actions .bp-btn--ghost:hover,
+.hero-actions .btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(129, 140, 248, 0.35) !important;
+}
+
+.profile-pill,
+.profile-shell__stats .stat-item {
+  background:
+    linear-gradient(165deg, rgba(255, 255, 255, 0.1), transparent 55%),
+    rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+
+.profile-shell__stats .stat-number {
+  color: var(--bp-accent-2, #a5b4fc) !important;
+}
+
+.profile-shell__stats .stat-label {
+  color: var(--bp-text-3, #888896) !important;
+}
+
+.profile-cert.liquid-nested,
+.platform-chip.liquid-nested {
+  background:
+    linear-gradient(165deg, rgba(255, 255, 255, 0.1), transparent 50%),
+    rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+}
+
+/* Homepage download cards — same frosted feel as /pages/downloads */
+#downloads .download-card {
+  background:
+    linear-gradient(165deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.04) 40%, transparent 100%),
+    rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  backdrop-filter: blur(24px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(160%) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 12px 32px rgba(0, 0, 0, 0.22) !important;
+}
+
+#downloads .download-card:hover {
+  border-color: rgba(129, 140, 248, 0.42) !important;
+  transform: translateY(-3px);
+}
+
+#downloads .download-btn {
+  background: rgba(129, 140, 248, 0.28) !important;
+  border: 1px solid rgba(129, 140, 248, 0.42) !important;
+  color: #fff !important;
+  border-radius: 12px !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14) !important;
+}
+
+#downloads .download-btn:hover {
+  background: rgba(129, 140, 248, 0.42) !important;
+}
+
+#downloads .ripple {
+  display: none !important;
+}
+
+/* Section titles — frosted chips */
+.section-title.glass {
+  background:
+    linear-gradient(165deg, rgba(255, 255, 255, 0.1), transparent 50%),
+    rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+}
+
+html[data-theme="light"] .profile-shell.glass,
+html[data-theme="light"] #downloads .download-card,
+html[data-theme="light"] .section-title.glass {
+  background:
+    linear-gradient(165deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.72)),
+    rgba(255, 255, 255, 0.7) !important;
+  border-color: rgba(15, 20, 40, 0.1) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    0 14px 36px rgba(15, 20, 40, 0.08) !important;
+}
