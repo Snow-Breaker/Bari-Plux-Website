@@ -230,6 +230,8 @@
                 if (e.target === modal) closeVideo();
             });
         }
+        var closeBtn = document.getElementById('video-modal-close');
+        if (closeBtn) closeBtn.addEventListener('click', closeVideo);
     }
 
     // Ripple effect

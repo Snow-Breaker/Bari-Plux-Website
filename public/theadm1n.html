@@ -1455,7 +1455,7 @@ async function verifyTotp(secret, userCode) {
         generated.push(codeStr);
         if (codeStr === userCode.trim()) return true;
     }
-    console.error('TOTP mismatch — user entered:', userCode, '— generated codes:', generated.join(', '), '— secret first 4 chars:', secret.substring(0, 4));
+    console.error('TOTP mismatch');
     return false;
 }
 function generateTotpSecret() {
