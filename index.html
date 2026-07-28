@@ -263,104 +263,7 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
     </div>
 </section>
 
-    <!-- Videos: featured + library (merged) -->
-    <section id="videos" class="section videos-section">
-        <div class="container">
-            <header class="section-head">
-                <h2 class="section-title glass">Videos</h2>
-                <p class="section-subtitle">Latest upload and hand-picked optimization guides</p>
-            </header>
 
-            <div class="videos-featured glass liquid">
-                <div class="videos-featured__label"><i class="fas fa-bolt"></i> Latest upload</div>
-                <div class="youtube-container">
-                    <iframe
-                        src="https://www.youtube-nocookie.com/embed/asiy1fJ69O0?rel=0&modestbranding=1"
-                        title="Latest Bari Plux video"
-                        loading="lazy"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen
-                        referrerpolicy="strict-origin-when-cross-origin"></iframe>
-                </div>
-            </div>
-
-            <div class="video-toolbar">
-                <h3 class="video-toolbar__title">More from the channel</h3>
-                <div class="video-filters" role="tablist" aria-label="Filter videos">
-                    <button type="button" class="video-filter is-active" data-filter="all">All</button>
-                    <button type="button" class="video-filter" data-filter="fix">Fixes</button>
-                    <button type="button" class="video-filter" data-filter="guide">Guides</button>
-                </div>
-            </div>
-
-            <div class="video-grid">
-                <article class="video-card glass" data-tags="fix" data-video="cb3S6lu-QF0" tabindex="0" role="button" aria-label="Play GameLoop crash fix video">
-                    <div class="video-thumbnail">
-                        <img src="https://img.youtube.com/vi/cb3S6lu-QF0/hqdefault.jpg" loading="lazy" alt="" draggable="false">
-                        <div class="video-play" aria-hidden="true"><i class="fas fa-play"></i></div>
-                        <span class="video-chip">Fix</span>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">GameLoop crash &amp; black screen fix</h3>
-                        <div class="video-meta">
-                            <span><i class="fas fa-eye"></i> 12.7K</span>
-                            <span><i class="fas fa-clock"></i> Guide</span>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="video-card glass" data-tags="guide" data-video="wvAhTWyY4ng" tabindex="0" role="button" aria-label="Play PUBG optimization guide">
-                    <div class="video-thumbnail">
-                        <img src="https://img.youtube.com/vi/wvAhTWyY4ng/hqdefault.jpg" loading="lazy" alt="" draggable="false">
-                        <div class="video-play" aria-hidden="true"><i class="fas fa-play"></i></div>
-                        <span class="video-chip">Guide</span>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">PUBG Mobile full optimization guide</h3>
-                        <div class="video-meta">
-                            <span><i class="fas fa-eye"></i> 5.6K</span>
-                            <span><i class="fas fa-clock"></i> Guide</span>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="video-card glass" data-tags="fix" data-video="bDFwDz5eclw" tabindex="0" role="button" aria-label="Play FPS drop fix video">
-                    <div class="video-thumbnail">
-                        <img src="https://img.youtube.com/vi/bDFwDz5eclw/hqdefault.jpg" loading="lazy" alt="" draggable="false">
-                        <div class="video-play" aria-hidden="true"><i class="fas fa-play"></i></div>
-                        <span class="video-chip">Fix</span>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">Stop FPS drops &amp; lag on GameLoop</h3>
-                        <div class="video-meta">
-                            <span><i class="fas fa-eye"></i> 4.9K</span>
-                            <span><i class="fas fa-clock"></i> Fix</span>
-                        </div>
-                    </div>
-                </article>
-            </div>
-
-            <div class="videos-cta">
-                <a href="https://www.youtube.com/@BariPlux/videos" class="btn btn-secondary" target="_blank" rel="noopener">
-                    <i class="fab fa-youtube"></i> View all on YouTube
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Video Modal (outside section flow) -->
-    <div class="modal" id="video-modal" role="dialog" aria-modal="true" aria-labelledby="video-modal-title" hidden>
-        <div class="modal-content glass liquid video-modal-panel">
-            <div class="modal-header">
-                <h3 id="video-modal-title">Watch Video</h3>
-                <button type="button" class="modal-close" onclick="closeVideo()" aria-label="Close video">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div id="video-player" class="video-player-frame"></div>
-            </div>
-        </div>
-    </div>
-    
     <!-- Downloads Section -->
     <section id="downloads" class="section">
         <div class="container">
@@ -462,6 +365,104 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
         </div>
     </div>
 </section>
+
+    <!-- Videos: featured + library (merged) -->
+    <section id="videos" class="section videos-section">
+        <div class="container">
+            <header class="section-head">
+                <h2 class="section-title glass">Videos</h2>
+                <p class="section-subtitle">Latest upload and hand-picked optimization guides</p>
+            </header>
+
+            <div class="videos-featured glass liquid">
+                <div class="videos-featured__label"><i class="fas fa-bolt"></i> Latest upload</div>
+                <div class="youtube-container">
+                    <iframe
+                        src="https://www.youtube-nocookie.com/embed/asiy1fJ69O0?rel=0&modestbranding=1"
+                        title="Latest Bari Plux video"
+                        loading="lazy"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen
+                        referrerpolicy="strict-origin-when-cross-origin"></iframe>
+                </div>
+            </div>
+
+            <div class="video-toolbar">
+                <h3 class="video-toolbar__title">More from the channel</h3>
+                <div class="video-filters" role="tablist" aria-label="Filter videos">
+                    <button type="button" class="video-filter is-active" data-filter="all">All</button>
+                    <button type="button" class="video-filter" data-filter="fix">Fixes</button>
+                    <button type="button" class="video-filter" data-filter="guide">Guides</button>
+                </div>
+            </div>
+
+            <div class="video-grid">
+                <article class="video-card glass" data-tags="fix" data-video="cb3S6lu-QF0" tabindex="0" role="button" aria-label="Play GameLoop crash fix video">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/cb3S6lu-QF0/hqdefault.jpg" loading="lazy" alt="" draggable="false">
+                        <div class="video-play" aria-hidden="true"><i class="fas fa-play"></i></div>
+                        <span class="video-chip">Fix</span>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">GameLoop crash &amp; black screen fix</h3>
+                        <div class="video-meta">
+                            <span><i class="fas fa-eye"></i> 12.7K</span>
+                            <span><i class="fas fa-clock"></i> Guide</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="video-card glass" data-tags="guide" data-video="wvAhTWyY4ng" tabindex="0" role="button" aria-label="Play PUBG optimization guide">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/wvAhTWyY4ng/hqdefault.jpg" loading="lazy" alt="" draggable="false">
+                        <div class="video-play" aria-hidden="true"><i class="fas fa-play"></i></div>
+                        <span class="video-chip">Guide</span>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">PUBG Mobile full optimization guide</h3>
+                        <div class="video-meta">
+                            <span><i class="fas fa-eye"></i> 5.6K</span>
+                            <span><i class="fas fa-clock"></i> Guide</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="video-card glass" data-tags="fix" data-video="bDFwDz5eclw" tabindex="0" role="button" aria-label="Play FPS drop fix video">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/bDFwDz5eclw/hqdefault.jpg" loading="lazy" alt="" draggable="false">
+                        <div class="video-play" aria-hidden="true"><i class="fas fa-play"></i></div>
+                        <span class="video-chip">Fix</span>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">Stop FPS drops &amp; lag on GameLoop</h3>
+                        <div class="video-meta">
+                            <span><i class="fas fa-eye"></i> 4.9K</span>
+                            <span><i class="fas fa-clock"></i> Fix</span>
+                        </div>
+                    </div>
+                </article>
+            </div>
+
+            <div class="videos-cta">
+                <a href="https://www.youtube.com/@BariPlux/videos" class="btn btn-secondary" target="_blank" rel="noopener">
+                    <i class="fab fa-youtube"></i> View all on YouTube
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Video Modal (outside section flow) -->
+    <div class="modal" id="video-modal" role="dialog" aria-modal="true" aria-labelledby="video-modal-title" hidden>
+        <div class="modal-content glass liquid video-modal-panel">
+            <div class="modal-header">
+                <h3 id="video-modal-title">Watch Video</h3>
+                <button type="button" class="modal-close" onclick="closeVideo()" aria-label="Close video">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="video-player" class="video-player-frame"></div>
+            </div>
+        </div>
+    </div>
 
     <!-- PUBG Content Section -->
     <section id="pubg" class="section">

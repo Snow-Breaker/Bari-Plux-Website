@@ -252,65 +252,7 @@
         });
     }
 
-    // Particles.js
-    function initParticles() {
-        if (typeof particlesJS !== 'undefined') {
-            particlesJS('particles-js', {
-                "particles": {
-                    "number": {
-                        "value": 80,
-                        "density": {
-                            "enable": true,
-                            "value_area": 800
-                        }
-                    },
-                    "color": {
-                        "value": "#6C63FF"
-                    },
-                    "shape": {
-                        "type": "circle"
-                    },
-                    "opacity": {
-                        "value": 0.5,
-                        "random": false
-                    },
-                    "size": {
-                        "value": 3,
-                        "random": true
-                    },
-                    "line_linked": {
-                        "enable": true,
-                        "distance": 150,
-                        "color": "#6C63FF",
-                        "opacity": 0.4,
-                        "width": 1
-                    },
-                    "move": {
-                        "enable": true,
-                        "speed": 6,
-                        "direction": "none",
-                        "random": false,
-                        "straight": false,
-                        "out_mode": "out"
-                    }
-                },
-                "interactivity": {
-                    "detect_on": "canvas",
-                    "events": {
-                        "onhover": {
-                            "enable": true,
-                            "mode": "grab"
-                        },
-                        "onclick": {
-                            "enable": true,
-                            "mode": "push"
-                        }
-                    }
-                },
-                "retina_detect": true
-            });
-        }
-    }
+    // Particles.js removed (dead code)
 
     // اضافه کردن این تابع در بخش اسکریپت
 function sanitizeInput(input) {
@@ -1564,7 +1506,6 @@ function sanitizeInput(input) {
         setupThemeToggle();
         setupScrollTop();
         setupRippleEffect();
-        /* initParticles disabled */
         setupSearch();
         setupVideoLibrary();
         initializeChatBot();
