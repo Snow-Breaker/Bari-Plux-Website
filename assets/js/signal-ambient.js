@@ -175,14 +175,15 @@
         var r = s[2] * (w < 720 ? 0.85 : 1);
         var baseOp = 0.42 + (n % 5) * 0.08;
         var twinkle = baseOp + (0.5 + 0.5 * Math.sin(t * (1 / (3.2 + n * 0.37)) * Math.PI * 2 + n)) * 0.45;
+        var fade = chromeFade(s[0], s[1]);
         ctx.beginPath();
         ctx.arc(x, y, r, 0, Math.PI * 2);
         if (n % 3 === 0) {
           ctx.fillStyle = light
-            ? 'rgba(15,20,40,' + (twinkle * 0.55) + ')'
-            : 'rgba(255,255,255,' + (twinkle * 0.55) + ')';
+            ? 'rgba(15,20,40,' + (twinkle * 0.55 * fade) + ')'
+            : 'rgba(255,255,255,' + (twinkle * 0.55 * fade) + ')';
         } else {
-          ctx.fillStyle = 'rgba(' + linkBase + ',' + linkG + ',' + linkB + ',' + twinkle + ')';
+          ctx.fillStyle = 'rgba(' + linkBase + ',' + linkG + ',' + linkB + ',' + (twinkle * fade) + ')';
         }
         ctx.fill();
       }
