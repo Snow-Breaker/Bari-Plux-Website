@@ -11,3 +11,6 @@ appsettings*.json
 node_modules/
 package-lock.json
 
+
+WEBSITE.zip
+
