@@ -38,17 +38,17 @@
     return false;
   }
 
-  document.documentElement.classList.add('bp-protect');
+  // Allow selecting/copying page text; keep save/devtools deterrents.
+  // (Do not add bp-protect — that locks user-select site-wide.)
 
   document.addEventListener('contextmenu', function (e) {
     if (isEditable(e.target)) return;
-    // Block on page chrome; YouTube iframes are cross-origin (limited)
     e.preventDefault();
   }, true);
 
   document.addEventListener('dragstart', function (e) {
     if (isEditable(e.target)) return;
-    e.preventDefault();
+    if ((e.target.tagName || '').toLowerCase() === 'img') e.preventDefault();
   }, true);
 
   document.addEventListener('keydown', function (e) {
@@ -77,12 +77,4 @@
       e.stopPropagation();
     }
   }, true);
-
-  document.addEventListener('copy', function (e) {
-    if (isEditable(e.target)) return;
-    try {
-      e.clipboardData.setData('text/plain', '');
-      e.preventDefault();
-    } catch (_) { /* ignore */ }
-  });
 })();

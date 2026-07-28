@@ -1,12 +1,6 @@
 /**
- * Bari Plux shared site shell — injects the new template chrome on every page.
- * Requires: bariplux.css + site.css (+ optional shell.css / widgets.css)
- *           signal-ambient.js for #bp-aurora
- *
- * - Replaces legacy .header.glass with .bp-chrome
- * - Removes particles / floating bg chrome
- * - Theme toggle + sticky scrolled state
- * - Keeps #loginBtnHeader / #userDropdown IDs for existing auth scripts
+ * Bari Plux shared site shell — Liquid Glass chrome on every page.
+ * Requires: bariplux.css + site.css (+ optional shell / widgets / site-search)
  */
 (function () {
   'use strict';
@@ -14,22 +8,23 @@
   var LOGO =
     'https://yt3.googleusercontent.com/RPW5Z_kcoEu0ES_VpL4-7ZqI4eI1OQfuVL-DbuCYWmRhXono9hA5NOCSGGMDLzJqNcHUlhOg=s160-c-k-c0x00ffffff-no-rj';
 
+  /* Extensionless paths for clean URLs */
   var NAV = [
-    { href: 'index.html', label: 'Home', match: ['', 'index.html', 'index'] },
-    { href: 'index.html#downloads', label: 'Downloads' },
-    { href: 'index.html#videos', label: 'Videos' },
-    { href: 'mapspubg.html', label: 'Maps', match: ['mapspubg.html'] },
-    { href: 'weaponorg.html', label: 'Weapons', match: ['weaponorg.html', 'org.html'] },
-    { href: 'news.html', label: 'News', match: ['news.html'] },
-    { href: 'updates.html', label: 'Updates', match: ['updates.html'] },
-    { href: 'tool.html', label: 'Tool', match: ['tool.html', 'tool'] },
-    { href: 'optimizationtools.html', label: 'Tools', match: ['optimizationtools.html'] },
-    { href: 'Pro.html', label: 'Pro', match: ['pro.html'] }
+    { href: '/', label: 'Home', match: ['', 'index.html', 'index'] },
+    { href: '/#downloads', label: 'Downloads' },
+    { href: '/#videos', label: 'Videos' },
+    { href: '/mapspubg', label: 'Maps', match: ['mapspubg.html', 'mapspubg'] },
+    { href: '/weaponorg', label: 'Weapons', match: ['weaponorg.html', 'weaponorg', 'org.html'] },
+    { href: '/news', label: 'News', match: ['news.html', 'news'] },
+    { href: '/updates', label: 'Updates', match: ['updates.html', 'updates'] },
+    { href: '/tool', label: 'Tool', match: ['tool.html', 'tool'] },
+    { href: '/optimizationtools', label: 'Tools', match: ['optimizationtools.html', 'optimizationtools'] },
+    { href: '/Pro', label: 'Pro', match: ['pro.html', 'pro'] }
   ];
 
   function pageFile() {
     var path = (location.pathname || '').replace(/\\/g, '/');
-    var seg = path.split('/').pop() || 'index.html';
+    var seg = path.split('/').filter(Boolean).pop() || '';
     return decodeURIComponent(seg).toLowerCase();
   }
 
@@ -43,6 +38,15 @@
     return false;
   }
 
+  function readUser() {
+    try {
+      var raw = localStorage.getItem('bariplux_user');
+      return raw ? JSON.parse(raw) : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
   function chromeHtml() {
     var links = NAV.map(function (item) {
       var cls = 'bp-nav__link' + (isActive(item) ? ' is-active' : '');
@@ -52,12 +56,15 @@
     return (
       '<header class="bp-chrome" id="bp-header" data-bp-shell="1">' +
         '<div class="bp-chrome__inner">' +
-          '<a href="index.html" class="bp-logo">' +
+          '<a href="/" class="bp-logo">' +
             '<img src="' + LOGO + '" alt="" class="bp-logo__img" width="36" height="36">' +
             '<span class="bp-logo__text">Bari Plux</span>' +
           '</a>' +
           '<nav class="bp-nav" aria-label="Primary">' + links + '</nav>' +
           '<div class="bp-chrome__actions">' +
+            '<button type="button" id="bp-search-open" class="bp-icon-btn" title="Search (Ctrl+K)" aria-label="Search">' +
+              '<i class="fas fa-search" aria-hidden="true"></i>' +
+            '</button>' +
             '<button type="button" id="theme-toggle" class="bp-icon-btn" title="Toggle theme" aria-label="Toggle theme">' +
               '<span class="moon-icon">☾</span><span class="sun-icon">☀</span>' +
             '</button>' +
@@ -86,19 +93,34 @@
     );
   }
 
-  function purgeLegacyChrome() {
-    var kill = document.querySelectorAll(
-      '#particles-js, .bg-animation, .floating-circle, .scroll-progress, .mobile-menu-overlay'
-    );
-    for (var i = 0; i < kill.length; i++) kill[i].remove();
+  function ensureStyles() {
+    if (document.querySelector('link[data-bp-search-css]')) return;
+    var link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'assets/css/site-search.css?v=20260728w';
+    link.setAttribute('data-bp-search-css', '1');
+    document.head.appendChild(link);
+  }
 
-    var oldHeaders = document.querySelectorAll('header.header, .header.glass');
-    for (var h = 0; h < oldHeaders.length; h++) {
-      if (!oldHeaders[h].classList.contains('bp-chrome')) oldHeaders[h].remove();
+  function ensureSearchScript() {
+    if (window.BPSearch) {
+      window.BPSearch.wire();
+      return;
     }
+    if (document.querySelector('script[data-bp-search-js]')) return;
+    var s = document.createElement('script');
+    s.src = 'assets/js/site-search.js?v=20260728w';
+    s.defer = true;
+    s.setAttribute('data-bp-search-js', '1');
+    document.head.appendChild(s);
+  }
 
-    // Duplicate mobile menus that mirrored old header
-    var mobileMenus = document.querySelectorAll('.mobile-menu, .mobile-nav');
+  function purgeLegacyChrome() {
+    var legacy = document.querySelectorAll('body > .header.glass, body > header.header:not(.bp-chrome)');
+    for (var i = 0; i < legacy.length; i++) legacy[i].remove();
+    var kill = document.querySelectorAll('#particles-js, .bg-animation, .floating-circle, .scroll-progress');
+    for (var k = 0; k < kill.length; k++) kill[k].remove();
+    var mobileMenus = document.querySelectorAll('.mobile-menu, .mobile-nav, .mobile-menu-overlay');
     for (var m = 0; m < mobileMenus.length; m++) mobileMenus[m].remove();
   }
 
@@ -159,31 +181,86 @@
     window.addEventListener('scroll', onScroll, { passive: true });
   }
 
-  function wireLoginFallback() {
-    var go = document.getElementById('goToLoginBtn');
-    if (go && !go.dataset.bpWired) {
-      go.dataset.bpWired = '1';
-      go.addEventListener('click', function () {
-        location.href = 'login1.html';
-      });
-    }
-    var login = document.getElementById('loginBtnHeader');
-    if (login && !login.dataset.bpShellLogin) {
-      login.dataset.bpShellLogin = '1';
-      // If page has no auth handler, open login after short delay check
-      login.addEventListener('click', function () {
-        window.setTimeout(function () {
-          if (document.getElementById('userDropdown') &&
-              document.getElementById('userDropdown').hidden !== false) {
-            /* leave to page scripts */
-          }
-        }, 0);
-      });
+  function updateLoginUi() {
+    var user = readUser();
+    var btn = document.getElementById('loginBtnHeader');
+    var name = document.getElementById('userName');
+    var email = document.getElementById('userEmail');
+    var avatar = document.getElementById('userAvatar');
+    if (!btn) return;
+    if (user) {
+      btn.innerHTML = '<i class="fas fa-user-circle" aria-hidden="true"></i><span>' +
+        (user.displayName || user.name || 'Account') + '</span>';
+      if (name) name.textContent = user.displayName || user.name || 'User';
+      if (email) email.textContent = user.email || '';
+      if (avatar && user.photoURL) {
+        avatar.style.backgroundImage = 'url(' + user.photoURL + ')';
+      }
+    } else {
+      btn.innerHTML = '<i class="fas fa-sign-in-alt" aria-hidden="true"></i><span>Login</span>';
+      if (name) name.textContent = 'Guest';
+      if (email) email.textContent = 'Sign in to continue';
     }
   }
 
+  function wireLogin() {
+    var dropdown = document.getElementById('userDropdown');
+    var login = document.getElementById('loginBtnHeader');
+    var go = document.getElementById('goToLoginBtn');
+    var logout = document.getElementById('logoutBtn');
+    var profile = document.getElementById('viewProfileBtn');
+
+    updateLoginUi();
+
+    if (login && !login.dataset.bpShellLogin) {
+      login.dataset.bpShellLogin = '1';
+      login.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var user = readUser();
+        if (!user) {
+          location.href = '/login1';
+          return;
+        }
+        if (!dropdown) return;
+        if (dropdown.hasAttribute('hidden')) dropdown.removeAttribute('hidden');
+        else dropdown.setAttribute('hidden', '');
+      });
+    }
+
+    if (go && !go.dataset.bpWired) {
+      go.dataset.bpWired = '1';
+      go.addEventListener('click', function () {
+        location.href = '/login1';
+      });
+    }
+
+    if (logout && !logout.dataset.bpWired) {
+      logout.dataset.bpWired = '1';
+      logout.addEventListener('click', function () {
+        try { localStorage.removeItem('bariplux_user'); } catch (e) { /* ignore */ }
+        if (dropdown) dropdown.setAttribute('hidden', '');
+        updateLoginUi();
+        location.href = '/';
+      });
+    }
+
+    if (profile && !profile.dataset.bpWired) {
+      profile.dataset.bpWired = '1';
+      profile.addEventListener('click', function () {
+        location.href = '/login1';
+      });
+    }
+
+    document.addEventListener('click', function (e) {
+      var container = document.querySelector('.bp-account');
+      if (dropdown && container && !container.contains(e.target)) {
+        dropdown.setAttribute('hidden', '');
+      }
+    });
+  }
+
   function polishSurfaces() {
-    // Soft-tag common legacy cards so glass tokens apply via shell.css
     var sels = [
       '.download-card', '.video-card', '.pubg-card', '.blog-card',
       '.card', '.info-card', '.tool-card', '.event-card', '.weapon-card',
@@ -197,16 +274,29 @@
     }
   }
 
+  function stripHtmlLinks() {
+    var anchors = document.querySelectorAll('a[href$=".html"], a[href*=".html#"]');
+    for (var i = 0; i < anchors.length; i++) {
+      var a = anchors[i];
+      var href = a.getAttribute('href');
+      if (!href || href.indexOf('http') === 0) continue;
+      a.setAttribute('href', href.replace(/\.html(?=#|$)/i, ''));
+    }
+  }
+
   function boot() {
     document.documentElement.classList.add('bp-shell');
     document.body.classList.add('bp-body');
+    ensureStyles();
     ensureAmbientHost();
     purgeLegacyChrome();
     injectChrome();
     wireTheme();
     wireScroll();
-    wireLoginFallback();
+    wireLogin();
     polishSurfaces();
+    stripHtmlLinks();
+    ensureSearchScript();
   }
 
   if (document.readyState === 'loading') {

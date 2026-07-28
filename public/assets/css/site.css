@@ -13,7 +13,7 @@
 :root {
   --void: #030305;
   --ink: #0c0c10;
-  --chrome-fill: rgba(16, 16, 20, 0.52);
+  --chrome-fill: rgba(16, 16, 20, 0.42);
   --chrome-border: rgba(255, 255, 255, 0.16);
   --card-fill: linear-gradient(180deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.07) 45%, rgba(255,255,255,0.04) 100%);
   --card-border: rgba(255, 255, 255, 0.15);
@@ -86,7 +86,7 @@ body, body.bp-body, body.bp-app {
   margin: 0;
   min-height: 100dvh;
   font-family: var(--font-b);
-  font-size: 15px;
+  font-size: 1rem;
   line-height: 1.55;
   color: var(--text);
   background: var(--void);
@@ -171,7 +171,7 @@ body > header.header { display: none !important; }
 
 .ripple, .btn::before, .download-btn::before { display: none !important; }
 
-/* ═══════════════ CHROME HEADER — Liquid Glass (frosted, not opaque black) ═══════════════ */
+/* ═══════════════ CHROME HEADER — Liquid Glass, heavy blur under bar ═══════════════ */
 .bp-chrome {
   position: sticky;
   top: 12px;
@@ -183,23 +183,27 @@ body > header.header { display: none !important; }
   isolation: isolate;
 }
 
-/* Soft top fade only — keeps content from reading through the gap, without a black slab */
+/* Frosted veil only — no black slab */
 .bp-chrome::before {
   content: "";
   position: absolute;
   left: 50%;
   top: -12px;
   width: 100vw;
-  height: calc(64px + 20px);
+  height: calc(64px + 36px);
   transform: translateX(-50%);
   z-index: -1;
   pointer-events: none;
+  backdrop-filter: blur(28px) saturate(140%);
+  -webkit-backdrop-filter: blur(28px) saturate(140%);
   background: linear-gradient(
     180deg,
-    rgba(7, 7, 12, 0.55) 0%,
-    rgba(7, 7, 12, 0.22) 55%,
+    rgba(255, 255, 255, 0.04) 0%,
+    rgba(255, 255, 255, 0.02) 40%,
     transparent 100%
   );
+  mask-image: linear-gradient(180deg, #000 0%, #000 55%, transparent 100%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 55%, transparent 100%);
 }
 
 .bp-chrome__inner {
@@ -211,34 +215,29 @@ body > header.header { display: none !important; }
   padding: 0 0.8rem 0 0.95rem;
   border-radius: var(--r-chrome);
   background:
-    linear-gradient(165deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.05) 42%, transparent 100%),
-    var(--chrome-fill);
-  backdrop-filter: blur(var(--blur-chrome)) saturate(160%);
-  -webkit-backdrop-filter: blur(var(--blur-chrome)) saturate(160%);
+    linear-gradient(165deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.06) 42%, transparent 100%),
+    rgba(16, 16, 20, 0.42);
+  backdrop-filter: blur(36px) saturate(170%);
+  -webkit-backdrop-filter: blur(36px) saturate(170%);
   border: 1px solid var(--chrome-border);
   box-shadow:
-    0 16px 40px rgba(0, 0, 0, 0.28),
-    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+    0 16px 40px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16);
   overflow: visible;
 }
 
 .bp-chrome.scrolled .bp-chrome__inner {
   background:
-    linear-gradient(165deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.06) 40%, transparent 100%),
-    rgba(16, 16, 20, 0.68);
-  box-shadow:
-    0 18px 44px rgba(0, 0, 0, 0.34),
-    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+    linear-gradient(165deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.07) 40%, transparent 100%),
+    rgba(16, 16, 20, 0.5);
+  backdrop-filter: blur(42px) saturate(175%);
+  -webkit-backdrop-filter: blur(42px) saturate(175%);
 }
 
 .bp-chrome.scrolled::before {
-  height: calc(64px + 26px);
-  background: linear-gradient(
-    180deg,
-    rgba(7, 7, 12, 0.62) 0%,
-    rgba(7, 7, 12, 0.28) 50%,
-    transparent 100%
-  );
+  height: calc(64px + 44px);
+  backdrop-filter: blur(34px) saturate(150%);
+  -webkit-backdrop-filter: blur(34px) saturate(150%);
 }
 
 .bp-logo { display: flex; align-items: center; gap: 0.6rem; min-width: 0; }

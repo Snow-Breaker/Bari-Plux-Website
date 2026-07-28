@@ -1061,55 +1061,112 @@ function initializeChatBot() {
     const chatInput = document.getElementById('chat-input');
     const charCount = document.querySelector('.char-count');
     
-    // Simple AI Responses Database
+    // Scoped Bari Plux knowledge — only answer on-topic questions
     const aiResponses = {
-        'greeting': { message: "👋 Hello! I'm Bari Plux AI Assistant! I specialize in PUBG optimization, GameLoop setup, and Windows tuning. How can I help you today?", quickReplies: ['FPS optimization', 'GameLoop setup', 'Windows tuning'] },
-        'optimization': { message: "🎯 **Performance Tips:**\n\n1. Set graphics to 'Smooth' + 90 FPS\n2. Disable anti-aliasing and shadows\n3. Close background apps\n4. Use high performance power plan\n\n**Advanced:** GameLoop Chinese version gives +20% FPS!", quickReplies: ['GameLoop download', 'More tips', 'Back to main'] },
-        'gameloop': { message: "⚡ **GameLoop Setup:**\n\n• Chinese Version: Best performance\n• Global Version: More stable\n\n**Settings:** Graphics: Smooth, FPS: 90, RAM: 4GB, CPU: 4 cores", quickReplies: ['Download GameLoop', 'VT guide', 'Troubleshooting'] },
-        'fps': { message: "🚀 **FPS Boost:**\n\n• Set graphics to Smooth\n• Close Discord/Chrome\n• Enable VT in BIOS\n• Use GameLoop Chinese version\n\nThis can give you 15-30 more FPS!", quickReplies: ['Download tools', 'More optimizations', 'Back to main'] },
-        'windows': { message: "🖥️ **Windows Tuning:**\n\n1. Power Plan: High performance\n2. Game Mode: Disable\n3. Game Bar: Disable\n4. Update graphics drivers", quickReplies: ['Optimization tools', 'Driver updates', 'Back to main'] },
-        'downloads': { message: "📦 **Downloads:**\n\n• GameLoop Chinese (Best)\n• GameLoop Global (Stable)\n• FPS monitoring tools\n• Driver updater", quickReplies: ['GameLoop download', 'Tools', 'Back to main'] },
-        'vt': { message: "🔧 **Enable VT:**\n\n1. Restart PC, enter BIOS (Del/F2)\n2. Find 'Intel VT-x' or 'AMD-V'\n3. Enable and save\n4. Restart\n\n**Important:** Gives 30-50% better performance!", quickReplies: ['GameLoop download', 'More help', 'Back to main'] },
-        'lag': { message: "🐌 **Fix Lag:**\n\n1. Enable VT in BIOS\n2. Allocate more RAM (4GB+)\n3. Close background apps\n4. Use high performance power plan\n5. Switch to Chinese version", quickReplies: ['VT guide', 'More tips', 'Back to main'] },
-        'crash': { message: "💥 **Fix Crashes:**\n\n1. Run as Administrator\n2. Update graphics drivers\n3. Enable VT\n4. Clear shader cache\n\n**Clean Reinstall:** Uninstall, delete TxGameAssistant folders, reinstall", quickReplies: ['Download GameLoop', 'VT guide', 'Driver updates'] },
-        'network': { message: "🌐 **Network Tips:**\n\n• Use wired connection\n• Change DNS: 1.1.1.1 or 8.8.8.8\n• Close bandwidth apps\n• Select nearest server in GameLoop", quickReplies: ['DNS setup', 'VPN tips', 'Back to main'] },
-        'graphics': { message: "🎨 **Best Graphics:**\n\n• Graphics: Smooth\n• FPS: 90/120\n• Style: Movie\n• Shadows: Off\n• Anti-aliasing: Off", quickReplies: ['FPS guide', 'More settings', 'Back to main'] }
+        greeting: {
+            message: "Hello — I’m the Bari Plux assistant. I can help with PUBG Mobile on GameLoop/MuMu, Bari Plux Tool, FPS/graphics, Windows tuning, DNS, downloads, and Pro. Ask a specific question about those topics.",
+            quickReplies: ['Bari Plux Tool', 'FPS boost', 'GameLoop setup', 'Pro unlock']
+        },
+        tool: {
+            message: "**Bari Plux Tool** is the Windows suite for PUBG Mobile on GameLoop & MuMu (graphics/FPS, custom view, match prep, ADB, DNS).\n\n• Product page: /tool\n• Installer: download section on that page only\n• Terms: /tool-terms\n• Pro ($2 / 60 days): /Pro — same email as app login",
+            quickReplies: ['Pro unlock', 'FPS boost', 'Downloads']
+        },
+        optimization: {
+            message: "**Performance checklist**\n1. Smooth graphics + 90/120 FPS in-game / via Tool\n2. Close Chrome/Discord overlays when testing\n3. High performance power plan\n4. Prefer a clean GameLoop install + VT enabled\n5. Use Bari Plux Tool match-prep / cleaners instead of random .bat packs",
+            quickReplies: ['Bari Plux Tool', 'VT guide', 'GameLoop setup']
+        },
+        gameloop: {
+            message: "**GameLoop**\n• Download page: /gameloopdown\n• Allocate enough RAM/CPU cores for your PC\n• Enable virtualization (VT-x / AMD-V)\n• After crashes: run as admin, clear shader cache, check graphics drivers\n• Pair with Bari Plux Tool for FPS/keymapping — don’t mix unverified injectors",
+            quickReplies: ['VT guide', 'Crash fix', 'Bari Plux Tool']
+        },
+        fps: {
+            message: "**FPS**\n• In Tool: Active.sav domain patch for 90/120 where supported\n• Smooth style, shadows/AA off if you need frames\n• Graphic packs 4.5: /optimizationtools (Balanced/HD/HDR/Ultra HDR ± enhanced lobby)\n• Cap expectations: CPU/GPU and emulator limits still apply",
+            quickReplies: ['Graphic packs', 'Bari Plux Tool', 'Lag fix']
+        },
+        windows: {
+            message: "**Windows tuning**\n• High performance power plan\n• Keep GPU drivers current\n• Avoid aggressive “optimizer” junkware\n• X-Lite ISO page: /windowsxlitedown (advanced users only — backup first)\n• Tool’s reversible tunes are safer than random registry spam",
+            quickReplies: ['Bari Plux Tool', 'Downloads']
+        },
+        downloads: {
+            message: "**Official downloads**\n• Bari Plux Tool → /tool\n• Optimization apps & graphic packs → /optimizationtools\n• PUBG Mobile → /pubgdown\n• GameLoop → /gameloopdown\nAvoid third-party mirrors of the Tool installer.",
+            quickReplies: ['Bari Plux Tool', 'Graphic packs', 'GameLoop setup']
+        },
+        graphics: {
+            message: "**Graphics packs (season 4.5)** on /optimizationtools:\n• Balanced / HD / HDR / Ultra HDR\n• Each has Standard lobby vs Enhanced lobby builds\nApply one pack at a time; back up Active.sav / configs first.",
+            quickReplies: ['FPS boost', 'Bari Plux Tool']
+        },
+        vt: {
+            message: "**Enable VT**\n1. Restart → BIOS/UEFI (Del/F2/F10 — vendor specific)\n2. Enable Intel VT-x / AMD-V / SVM\n3. Save & exit\nNeeded for stable emulator performance. If the option is missing, update BIOS or check OEM docs.",
+            quickReplies: ['GameLoop setup', 'Lag fix']
+        },
+        lag: {
+            message: "**Lag / stutter**\n• Enable VT, raise emulator RAM\n• Wired network or stable Wi-Fi; try DNS 1.1.1.1 / 8.8.8.8 via Tool DNS tools\n• Close capture overlays\n• Don’t stack multiple FPS “magics”",
+            quickReplies: ['DNS', 'FPS boost', 'Network']
+        },
+        crash: {
+            message: "**Crashes**\n• Update GPU drivers; run emulator as Administrator\n• Clear GameLoop shader/temp caches (Tool cleaners help)\n• Reinstall GameLoop only after backing up configs\n• Report persistent Tool bugs from inside the app (signed-in)",
+            quickReplies: ['GameLoop setup', 'Bari Plux Tool']
+        },
+        network: {
+            message: "**Network**\n• Prefer ethernet\n• Tool DNS benchmark → apply best IPv4/IPv6, or reset DHCP if broken\n• Closest server / lower background uploads\nVPN only if you understand routing cost to ping",
+            quickReplies: ['Lag fix', 'Bari Plux Tool']
+        },
+        pro: {
+            message: "**Bari Plux Pro**\n• $2 / 60 days via Stripe (PayPal or card) on /Pro\n• Checkout email must match Tool login email\n• Renewing extends another 60 days\n• Details & liability: /tool-terms",
+            quickReplies: ['Bari Plux Tool', 'Downloads']
+        },
+        support: {
+            message: "**Support**\n• Live window on homepage → Support pane (daily 4:00–8:00 PM UTC)\n• Telegram: https://t.me/BariPlux\n• I only answer Bari Plux / PUBG emulator optimization topics here",
+            quickReplies: ['Bari Plux Tool', 'Pro unlock']
+        },
+        off_topic: {
+            message: "I only answer Bari Plux topics: Tool, Pro, PUBG Mobile emulator optimization, GameLoop/MuMu, graphics/FPS packs, Windows tuning related to gaming, and official downloads. Try rephrasing within those areas.",
+            quickReplies: ['Bari Plux Tool', 'FPS boost', 'Downloads', 'Support hours']
+        }
     };
 
-    // Disable real AI for stability - use keyword matching only
-    let useRealAI = false; // Set to true only when API is confirmed working
+    let useRealAI = false;
 
-    // Simplified response generator
     function getAIResponse(userMessage) {
-        const msg = userMessage.toLowerCase();
-        
-        // Greeting check
-        if (msg.includes('hello') || msg.includes('hi') || msg.includes('hey') || msg.includes('salam') || msg.includes('درود') || msg === 'start') {
+        const msg = (userMessage || '').toLowerCase().trim();
+        if (!msg) return aiResponses.greeting;
+
+        if (/^(hi|hello|hey|salam|درود|start)\b/.test(msg) || msg === 'help') {
             return aiResponses.greeting;
         }
-        
-        // Keyword matching
-        const keywords = {
-            'optimiz': 'optimization', 'performance': 'optimization', 'بهینه': 'optimization',
-            'gameloop': 'gameloop', 'emulator': 'gameloop', 'امولاتور': 'gameloop',
-            'fps': 'fps', 'فریم': 'fps', 'frame': 'fps',
-            'windows': 'windows', 'ویندوز': 'windows', 'system': 'windows',
-            'دانلود': 'downloads', 'download': 'downloads', 'tool': 'downloads',
-            'vt': 'vt', 'virtual': 'vt',
-            'lag': 'lag', 'کند': 'lag', 'لگ': 'lag',
-            'crash': 'crash', 'کرش': 'crash', 'بسته': 'crash',
-            'network': 'network', 'ping': 'network', 'اینترنت': 'network',
-            'graphics': 'graphics', 'گرافیک': 'graphics', 'تنظیمات': 'graphics'
-        };
-        
-        for (const [keyword, responseKey] of Object.entries(keywords)) {
-            if (msg.includes(keyword) && aiResponses[responseKey]) {
-                return aiResponses[responseKey];
+
+        const rules = [
+            { re: /pro\b|stripe|payment|\$2|unlock/, key: 'pro' },
+            { re: /tool-terms|disclaimer|terms of|license/, key: 'pro' },
+            { re: /bari plux tool|\btool\b|adb|file manager|active\.sav/, key: 'tool' },
+            { re: /graphic pack|balanced|ultra\s*hdr|\bhdr\b|\bhd\b lobby|4\.5/, key: 'graphics' },
+            { re: /gameloop|emulator|امولاتور|mumu/, key: 'gameloop' },
+            { re: /\bfps\b|frame|فریم|90|120/, key: 'fps' },
+            { re: /\bvt\b|virtuali|bios|amd-v|vt-x/, key: 'vt' },
+            { re: /crash|کرش|bsod|close itself/, key: 'crash' },
+            { re: /lag|stutter|کند|لگ/, key: 'lag' },
+            { re: /dns|ping|network|اینترنت|wifi|ethernet/, key: 'network' },
+            { re: /windows|ویندوز|power plan|driver|xlite/, key: 'windows' },
+            { re: /download|دانلود|pubgdown|installer/, key: 'downloads' },
+            { re: /optim|performance|بهینه/, key: 'optimization' },
+            { re: /support|telegram|utc|hours|کمک/, key: 'support' }
+        ];
+
+        for (var i = 0; i < rules.length; i++) {
+            if (rules[i].re.test(msg) && aiResponses[rules[i].key]) {
+                return aiResponses[rules[i].key];
             }
         }
-        
-        // Default
-        return { message: "🤖 Thanks for your question! I can help with:\n\n🎮 PUBG FPS & Graphics\n⚡ GameLoop Setup\n🖥️ Windows Tuning\n📥 Downloads & Tools\n\nWhat would you like to know?", quickReplies: ['FPS optimization', 'GameLoop setup', 'Windows tuning'] };
+
+        // If message has no gaming/tool signal, refuse politely
+        if (!/(pubg|gameloop|mumu|fps|tool|bari|plux|emulator|windows|dns|graphic|download|pro)/i.test(msg)) {
+            return aiResponses.off_topic;
+        }
+
+        return {
+            message: "I can help, but I need a clearer Bari Plux topic. Try: Tool install, Pro email match, GameLoop VT, FPS 90/120, graphic packs 4.5, or DNS.",
+            quickReplies: ['Bari Plux Tool', 'Pro unlock', 'FPS boost', 'Graphic packs']
+        };
     }
 
     const chatMinimized = document.getElementById('ai-chat-minimized');

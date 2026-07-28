@@ -1,0 +1,254 @@
+/**
+ * Editorial pages — Legal, Plux Times, Tool Terms, 404 companion.
+ */
+
+.bp-editorial {
+  position: relative;
+  z-index: 1;
+  width: min(860px, calc(100% - 2 * var(--bp-gutter, 24px)));
+  margin: 0 auto;
+  padding: clamp(1.5rem, 3vw, 2.25rem) 0 clamp(3.5rem, 7vw, 5rem);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.bp-editorial__hero {
+  padding: clamp(1.35rem, 3vw, 1.85rem);
+  border-radius: 22px;
+  background:
+    linear-gradient(165deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.05) 42%, transparent 100%),
+    rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(28px) saturate(160%);
+  -webkit-backdrop-filter: blur(28px) saturate(160%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+
+.bp-editorial__kicker {
+  margin: 0 0 0.4rem;
+  color: var(--bp-accent-2, #a5b4fc);
+  font-size: 0.75rem;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.bp-editorial__hero h1 {
+  margin: 0 0 0.55rem;
+  font-family: var(--bp-font-display, "Space Grotesk", sans-serif);
+  font-size: clamp(1.7rem, 3.5vw, 2.35rem);
+  letter-spacing: -0.03em;
+  background: linear-gradient(135deg, #fff 12%, var(--bp-accent-2, #a5b4fc) 60%, var(--bp-accent, #818cf8) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.bp-editorial__lead {
+  margin: 0;
+  color: var(--bp-text-2, #c0c0c8);
+  line-height: 1.6;
+  max-width: 58ch;
+}
+
+.bp-editorial__meta {
+  margin: 0.75rem 0 0;
+  font-size: 0.8rem;
+  color: var(--bp-text-3, #888896);
+}
+
+.bp-editorial__panel {
+  padding: 1.15rem 1.25rem;
+  border-radius: 16px;
+  background:
+    linear-gradient(165deg, rgba(255, 255, 255, 0.1), transparent 55%),
+    rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(18px) saturate(145%);
+  -webkit-backdrop-filter: blur(18px) saturate(145%);
+}
+
+.bp-editorial__panel h2 {
+  margin: 0 0 0.55rem;
+  font-size: 1.05rem;
+  color: var(--bp-text, #f5f5f7);
+}
+
+.bp-editorial__panel p,
+.bp-editorial__panel li {
+  margin: 0;
+  color: var(--bp-text-2, #c0c0c8);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+.bp-editorial__panel p + p,
+.bp-editorial__panel ul {
+  margin-top: 0.65rem;
+}
+
+.bp-editorial__panel ul {
+  padding-left: 1.15rem;
+  list-style: disc;
+}
+
+.bp-editorial__panel li + li { margin-top: 0.35rem; }
+
+.bp-editorial__panel a {
+  color: var(--bp-accent-2, #a5b4fc);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.bp-editorial__panel code {
+  font-family: var(--bp-font-mono, "IBM Plex Mono", monospace);
+  font-size: 0.84em;
+  padding: 0.1rem 0.35rem;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.bp-editorial__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-top: 0.5rem;
+}
+
+.bp-editorial__actions .bp-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.65rem 1.05rem;
+  border-radius: 11px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.bp-editorial__actions .bp-btn--glass {
+  background: rgba(129, 140, 248, 0.34);
+  border: 1px solid rgba(129, 140, 248, 0.48);
+  color: #fff;
+}
+
+.bp-editorial__actions .bp-btn--ghost {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: var(--bp-text, #f5f5f7);
+}
+
+.bp-editorial__toc {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.bp-editorial__toc a {
+  display: inline-flex;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--bp-text-2, #c0c0c8);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.bp-editorial__toc a:hover {
+  border-color: rgba(129, 140, 248, 0.4);
+  color: #fff;
+}
+
+/* Plux times article cards */
+.bp-plux-grid {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.bp-plux-card {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 16px;
+  text-decoration: none;
+  color: inherit;
+  background:
+    linear-gradient(165deg, rgba(255, 255, 255, 0.1), transparent 55%),
+    rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  transition: transform 160ms ease, border-color 160ms ease;
+}
+
+.bp-plux-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(129, 140, 248, 0.4);
+}
+
+.bp-plux-card img {
+  width: 100%;
+  height: 96px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.bp-plux-card h3 {
+  margin: 0 0 0.35rem;
+  font-size: 1.02rem;
+  color: var(--bp-text, #f5f5f7);
+}
+
+.bp-plux-card p {
+  margin: 0;
+  font-size: 0.86rem;
+  color: var(--bp-text-2, #c0c0c8);
+  line-height: 1.5;
+}
+
+@media (max-width: 640px) {
+  .bp-plux-card { grid-template-columns: 1fr; }
+  .bp-plux-card img { height: 140px; }
+}
+
+/* 404 */
+.bp-404 {
+  text-align: center;
+  padding: 18vh 0 4rem;
+  width: min(520px, calc(100% - 48px));
+  margin: 0 auto;
+}
+
+.bp-404__code {
+  margin: 0;
+  font-family: var(--bp-font-display, "Space Grotesk", sans-serif);
+  font-size: clamp(3.5rem, 12vw, 5.5rem);
+  letter-spacing: -0.05em;
+  background: linear-gradient(135deg, #fff, var(--bp-accent-2, #a5b4fc));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+html[data-theme="light"] .bp-editorial__hero,
+html[data-theme="light"] .bp-editorial__panel,
+html[data-theme="light"] .bp-plux-card {
+  background:
+    linear-gradient(165deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.75)),
+    rgba(255, 255, 255, 0.7);
+  border-color: rgba(15, 20, 40, 0.1);
+}
+
+html[data-theme="light"] .bp-editorial__hero h1,
+html[data-theme="light"] .bp-404__code {
+  background: linear-gradient(135deg, #12131a, #4f46e5);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+html[data-theme="light"] .bp-editorial__panel h2,
+html[data-theme="light"] .bp-plux-card h3 {
+  color: #12131a;
+}

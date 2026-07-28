@@ -95,14 +95,13 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="assets/css/bariplux.css?v=20260728w">
-    <link rel="stylesheet" href="assets/css/site.css?v=20260728w">
-    <link rel="stylesheet" href="assets/css/shell.css?v=20260728w">
-    <link rel="stylesheet" href="assets/css/widgets.css?v=20260728w">
-    <link rel="stylesheet" href="assets/css/pages/home.css?v=20260728w">
-    <link rel="stylesheet" href="assets/css/site-search.css?v=20260728w">
+    <link rel="stylesheet" href="assets/css/bariplux.css?v=20260728v">
+    <link rel="stylesheet" href="assets/css/site.css?v=20260728v">
+    <link rel="stylesheet" href="assets/css/shell.css?v=20260728v">
+    <link rel="stylesheet" href="assets/css/widgets.css?v=20260728v">
+    <link rel="stylesheet" href="assets/css/pages/home.css?v=20260728v">
     <script src="assets/js/protect.js" defer></script>
-    <script src="assets/js/signal-ambient.js?v=20260728w" defer></script>
+    <script src="assets/js/signal-ambient.js?v=20260728v" defer></script>
     <script src="assets/js/home.js" defer></script>
 
 </head>
@@ -128,9 +127,11 @@
     </nav>
 
     <div class="bp-chrome__actions">
-      <button type="button" id="bp-search-open" class="bp-icon-btn" title="Search (Ctrl+K)" aria-label="Search">
+      <div class="bp-search" id="collapsible-search">
         <i class="fas fa-search" aria-hidden="true"></i>
-      </button>
+        <input type="search" id="header-search-input" class="bp-search__input" placeholder="Search…" autocomplete="off" aria-autocomplete="list" aria-controls="search-results-dropdown">
+        <div class="search-results-dropdown" id="search-results-dropdown" role="listbox" hidden></div>
+      </div>
       <button type="button" id="theme-toggle" class="bp-icon-btn" title="Toggle theme" aria-label="Toggle theme">
         <span class="moon-icon">☾</span><span class="sun-icon">☀</span>
       </button>
@@ -1447,7 +1448,6 @@
     <!-- Scroll to top -->
     <div id="scroll-top" class="scroll-top" title="Back to top"><i class="fas fa-arrow-up"></i></div>
 
-    <script src="assets/js/site-search.js?v=20260728w" defer></script>
     <script src="assets/js/home-page.js" defer></script>
 </body>
 </html>

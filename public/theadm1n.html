@@ -583,6 +583,9 @@
             <button class="tab-btn" onclick="switchTab('access', this)">
                 <i class="fas fa-lock"></i> Access
             </button>
+            <button class="tab-btn" onclick="switchTab('website', this)">
+                <i class="fas fa-globe"></i> Website
+            </button>
         </div>
 
         <div id="usersSection">
@@ -1023,6 +1026,41 @@
             </div>
 
             <div class="last-updated" id="pauseLastUpdated"></div>
+        </div>
+
+        <div id="websiteSection" style="display:none;">
+            <div class="toolbar">
+                <span class="toolbar-title">Website controls</span>
+                <button class="icon-btn teal" onclick="loadWebsiteConfig()"><i class="fas fa-sync-alt"></i> Refresh</button>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px;max-width:720px;margin-bottom:16px;">
+                <div style="font-size:0.82rem;color:var(--muted);margin-bottom:14px;line-height:1.5;">
+                    Homepage banner shown under the header (optional). Stored at <code style="color:var(--accent2);">website/banner</code>.
+                    Leave empty to hide.
+                </div>
+                <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:6px;">Banner text</div>
+                <textarea id="websiteBannerInput" maxlength="280" rows="3" placeholder="e.g. Bari Plux Tool v2.3 is live — see /tool" style="width:100%;padding:10px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Poppins',sans-serif;font-size:0.85rem;resize:vertical;"></textarea>
+                <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin:14px 0 6px;">Banner link (optional)</div>
+                <input id="websiteBannerLink" type="text" placeholder="/tool" style="width:100%;padding:10px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.85rem;">
+                <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;">
+                    <button class="action-btn view" onclick="saveWebsiteConfig()" style="padding:10px 18px;font-weight:600;"><i class="fas fa-save"></i> Save banner</button>
+                    <button class="action-btn" onclick="clearWebsiteBanner()" style="padding:10px 18px;"><i class="fas fa-eraser"></i> Clear</button>
+                </div>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px;max-width:720px;">
+                <div class="toolbar-title" style="margin-bottom:10px;">Quick site links</div>
+                <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                    <a class="topbar-btn" href="/tool" target="_blank"><i class="fas fa-wrench"></i> Tool page</a>
+                    <a class="topbar-btn" href="/tool-terms" target="_blank"><i class="fas fa-file-contract"></i> Tool terms</a>
+                    <a class="topbar-btn" href="/optimizationtools" target="_blank"><i class="fas fa-download"></i> Opt tools</a>
+                    <a class="topbar-btn" href="/Legal Information" target="_blank"><i class="fas fa-balance-scale"></i> Legal</a>
+                    <a class="topbar-btn" href="/404" target="_blank"><i class="fas fa-exclamation-triangle"></i> 404</a>
+                </div>
+                <div style="margin-top:14px;font-size:0.78rem;color:var(--muted);line-height:1.5;">
+                    App installer URL is managed under the <strong>Updates</strong> tab. Announcements stay under <strong>Announcements</strong>.
+                </div>
+            </div>
+            <div class="last-updated" id="websiteLastUpdated"></div>
         </div>
 
         
@@ -3799,6 +3837,8 @@ function switchTab(tab, btn) {
     if(pause) pause.style.display=tab==='pause'?'':'none';
     const access=document.getElementById('accessSection');
     if(access) access.style.display=tab==='access'?'':'none';
+    const website=document.getElementById('websiteSection');
+    if(website) website.style.display=tab==='website'?'':'none';
     const ann=document.getElementById('announcementsSection');
     const mb=document.getElementById('mailboxSection');
     if(ann) ann.style.display=tab==='announcements'?'':'none';
@@ -3811,8 +3851,59 @@ function switchTab(tab, btn) {
     if(tab==='updates') loadUpdateConfig();
     if(tab==='pause') loadPauseConfig();
     if(tab==='access') loadAccessConfig();
+    if(tab==='website') loadWebsiteConfig();
     if(tab==='announcements') loadAnnouncementsAdmin();
     if(tab==='mailbox'){ if(typeof allUsers!=='undefined' && (!allUsers||!allUsers.length) && typeof loadUsers==='function'){/* optional */} renderMailboxOutbox(); }
+}
+
+async function loadWebsiteConfig() {
+    if (!db) return;
+    try {
+        const snap = await db.ref('website/banner').once('value');
+        const data = snap.val() || {};
+        const text = document.getElementById('websiteBannerInput');
+        const link = document.getElementById('websiteBannerLink');
+        if (text) text.value = data.text || '';
+        if (link) link.value = data.href || '';
+        const lu = document.getElementById('websiteLastUpdated');
+        if (lu) lu.textContent = data.updated_at ? ('Updated ' + new Date(data.updated_at).toLocaleString()) : '';
+    } catch (e) {
+        console.error(e);
+        showToast('Failed to load website banner', 'danger');
+    }
+}
+
+async function saveWebsiteConfig() {
+    if (!db) return;
+    const text = (document.getElementById('websiteBannerInput')?.value || '').trim();
+    const href = (document.getElementById('websiteBannerLink')?.value || '').trim();
+    try {
+        await db.ref('website/banner').set({
+            text,
+            href,
+            enabled: !!text,
+            updated_at: Date.now()
+        });
+        showToast('Website banner saved', 'success');
+        loadWebsiteConfig();
+    } catch (e) {
+        console.error(e);
+        showToast('Failed to save banner', 'danger');
+    }
+}
+
+async function clearWebsiteBanner() {
+    if (!db) return;
+    try {
+        await db.ref('website/banner').set({ text: '', href: '', enabled: false, updated_at: Date.now() });
+        const text = document.getElementById('websiteBannerInput');
+        const link = document.getElementById('websiteBannerLink');
+        if (text) text.value = '';
+        if (link) link.value = '';
+        showToast('Banner cleared', 'success');
+    } catch (e) {
+        showToast('Failed to clear banner', 'danger');
+    }
 }
 
 function fmtTs(ts) {

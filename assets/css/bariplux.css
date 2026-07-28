@@ -83,6 +83,8 @@
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+  /* Viewport-relative type scale (laptop-friendly, not over-zoomed) */
+  font-size: clamp(12.75px, 0.22vw + 11.6px, 15px);
 }
 
 html.bp-protect {
@@ -840,8 +842,8 @@ html[data-theme="light"] .bp-chrome::before,
 [data-theme="light"] .bp-chrome::before {
   background: linear-gradient(
     180deg,
-    rgba(238, 240, 246, 0.55) 0%,
-    rgba(238, 240, 246, 0.2) 55%,
+    rgba(255, 255, 255, 0.35) 0%,
+    rgba(255, 255, 255, 0.12) 45%,
     transparent 100%
   );
 }
@@ -850,14 +852,14 @@ html[data-theme="light"] .bp-chrome__inner,
 [data-theme="light"] .bp-chrome__inner {
   background:
     linear-gradient(165deg, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0.22) 45%, transparent 100%),
-    rgba(255, 255, 255, 0.62);
+    rgba(255, 255, 255, 0.48);
 }
 
 html[data-theme="light"] .bp-chrome.scrolled .bp-chrome__inner,
 [data-theme="light"] .bp-chrome.scrolled .bp-chrome__inner {
   background:
     linear-gradient(165deg, rgba(255, 255, 255, 0.65) 0%, rgba(255, 255, 255, 0.28) 45%, transparent 100%),
-    rgba(255, 255, 255, 0.78);
+    rgba(255, 255, 255, 0.58);
 }
 
 /* Ambient field — light (same structure as AmbientSignalField, cool wash) */

@@ -11,6 +11,7 @@
   },
   "hosting": {
     "public": "public",
+    "cleanUrls": true,
     "ignore": [
       "firebase.json",
       "**/.*",
@@ -19,7 +20,7 @@
     "rewrites": [
       {
         "source": "/",
-        "destination": "/login1.html"
+        "destination": "/index.html"
       },
       {
         "source": "/Pro",
@@ -36,6 +37,16 @@
       {
         "source": "/Tool",
         "destination": "/tool.html"
+      },
+      {
+        "source": "/tool-terms",
+        "destination": "/tool-terms.html"
+      }
+    ],
+    "errorPages": [
+      {
+        "code": 404,
+        "page": "/404.html"
       }
     ],
     "headers": [
