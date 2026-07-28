@@ -1718,7 +1718,7 @@ function sanitizeInput(input) {
             localStorage.removeItem('bariplux_user');
             localStorage.removeItem('bariplux_user_new');
             checkLoginStatus();
-            window.location.href = 'login.html';
+            window.location.href = 'https://login.bariplux.com/';
         }
     }
 

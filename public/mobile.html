@@ -10001,7 +10001,7 @@ document.addEventListener('touchend', function(event) {
                 document.getElementById('goToLoginBtn').onclick = function(e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    window.location.href = 'login.html';
+                    window.location.href = 'https://login.bariplux.com/';
                 };
                 
                 document.getElementById('logoutBtn').onclick = function() {
@@ -10016,7 +10016,7 @@ document.addEventListener('touchend', function(event) {
             }
         } else {
             loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i><span>Login</span>';
-            loginBtn.onclick = function() { window.location.href = 'login.html'; };
+            loginBtn.onclick = function() { window.location.href = 'https://login.bariplux.com/'; };
             dropdown.classList.remove('active');
         }
     }

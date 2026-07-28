@@ -1636,7 +1636,7 @@ document.getElementById('viewProfileBtn').onclick = function(e) {
                 document.getElementById('goToLoginBtn').onclick = function(e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    window.location.href = 'login.html';
+                    window.location.href = 'https://login.bariplux.com/';
                 };
                 
                 document.getElementById('logoutBtn').onclick = function() {
@@ -1651,7 +1651,7 @@ document.getElementById('viewProfileBtn').onclick = function(e) {
         }
     } else {
         loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i><span>Login</span>';
-        loginBtn.onclick = function() { window.location.href = 'login.html'; };
+        loginBtn.onclick = function() { window.location.href = 'https://login.bariplux.com/'; };
         dropdown.classList.remove('active');
     }
   }
@@ -1662,7 +1662,7 @@ document.getElementById('viewProfileBtn').onclick = function(e) {
         const storedUser = localStorage.getItem('bariplux_user');
         
         if (!storedUser) {
-            window.location.href = 'login.html';
+            window.location.href = 'https://login.bariplux.com/';
             return;
         }
         
