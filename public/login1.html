@@ -57,14 +57,14 @@
 <script src="assets/js/signal-ambient.js?v=20260728m" defer></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/bariplux.css?v=20260728o">
-    <link rel="stylesheet" href="assets/css/site.css?v=20260728o">
-    <link rel="stylesheet" href="assets/css/shell.css?v=20260728o">
-    <link rel="stylesheet" href="assets/css/widgets.css?v=20260728o">
-    <link rel="stylesheet" href="assets/css/pages/auth.css?v=20260728o">
+    <link rel="stylesheet" href="assets/css/bariplux.css?v=20260728ac">
+    <link rel="stylesheet" href="assets/css/site.css?v=20260728ac">
+    <link rel="stylesheet" href="assets/css/shell.css?v=20260728ac">
+    <link rel="stylesheet" href="assets/css/widgets.css?v=20260728ac">
+    <link rel="stylesheet" href="assets/css/pages/auth.css?v=20260728ac">
     <script src="assets/js/boot.js"></script>
-    <script src="assets/js/signal-ambient.js?v=20260728o" defer></script>
-    <script src="assets/js/site-shell.js?v=20260728o" defer></script>
+    <script src="assets/js/signal-ambient.js?v=20260728ac" defer></script>
+    <script src="assets/js/site-shell.js?v=20260728ac" defer></script>
 
 </head>
 <body class="bp-body">
@@ -219,24 +219,24 @@
             </div>
 
             <div id="loggedInView" class="logged-in-view">
-                <div class="login-header">
-                    <div class="user-avatar" id="userAvatar">
-                        <img id="userAvatarImg" src="" alt="Profile" style="display: none;">
+                <div class="login-account-card">
+                    <div class="user-avatar" id="loginUserAvatar">
+                        <img id="loginUserAvatarImg" src="" alt="" style="display: none;">
                     </div>
-                    <h1 class="login-title">You're Logged In!</h1>
-                </div>
-                <div class="user-info">
-                    <div class="user-name" id="userName">User Name</div>
-                    <div class="user-email" id="userEmail">user@email.com</div>
-                </div>
-                <div class="user-id">
-                    <strong>User ID:</strong> <span id="userId">---</span>
+                    <p class="login-account-kicker">Account</p>
+                    <div class="user-name" id="loginUserName">—</div>
+                    <div class="user-email" id="loginUserEmail">—</div>
+                    <div class="login-account-badge" id="loginUserMethod" hidden></div>
+                    <div class="user-id">
+                        <span>ID</span>
+                        <code id="loginUserId">—</code>
+                    </div>
                 </div>
                 <div class="app-token-section" id="appTokenSection" style="display:none;">
                     <div id="openAppStatus" style="margin-top:10px;display:none;"></div>
                 </div>
                 <button id="btnLogout" class="btn-logout"><i class="fas fa-sign-out-alt"></i> Logout</button>
-                <a href="index.html" class="back-home"><i class="fas fa-arrow-left"></i> Back to Home</a>
+                <a href="/" class="back-home"><i class="fas fa-arrow-left"></i> Back to Home</a>
             </div>
         </div>
     </main>
@@ -785,15 +785,57 @@
 
             document.getElementById('loginFormView').style.display = 'none';
             document.getElementById('loggedInView').classList.add('active');
-            document.getElementById('userName').textContent = user.name || 'User';
-            document.getElementById('userEmail').textContent = user.email || '';
-            document.getElementById('userId').textContent = user.id || '';
+            const displayName = user.name || user.displayName || user.username ||
+                (user.email ? String(user.email).split('@')[0] : 'User');
+            let photo = user.photoURL || user.photoUrl || user.avatar || '';
+            if (photo && !/^https?:\/\//i.test(String(photo))) {
+                let discordId = user.discordId || '';
+                try {
+                    const d = JSON.parse(localStorage.getItem('discord_user') || 'null');
+                    if (d && d.id) discordId = d.id;
+                    if (d && d.avatar && String(photo).indexOf('/') === -1) photo = d.avatar;
+                } catch (e) {}
+                if (discordId && String(photo).indexOf('/') === -1 && String(photo).length >= 16) {
+                    photo = 'https://cdn.discordapp.com/avatars/' + discordId + '/' + photo + '.png?size=128';
+                }
+            }
+            document.getElementById('loginUserName').textContent = displayName;
+            document.getElementById('loginUserEmail').textContent = user.email || '';
+            document.getElementById('loginUserId').textContent = user.id || user.uid || '—';
+            const methodEl = document.getElementById('loginUserMethod');
+            if (methodEl) {
+                const m = String(user.loginMethod || '').toLowerCase();
+                let label = '';
+                if (m.indexOf('google') >= 0) label = 'Google';
+                else if (m.indexOf('github') >= 0) label = 'GitHub';
+                else if (m.indexOf('discord') >= 0) label = 'Discord';
+                else if (m.indexOf('email') >= 0) label = 'Email';
+                if (label) {
+                    methodEl.textContent = label;
+                    methodEl.hidden = false;
+                    methodEl.removeAttribute('hidden');
+                } else {
+                    methodEl.hidden = true;
+                    methodEl.setAttribute('hidden', '');
+                }
+            }
 
-            const avatarEl = document.getElementById('userAvatar');
-            const avatarImg = document.getElementById('userAvatarImg');
+            const avatarEl = document.getElementById('loginUserAvatar');
+            const avatarImg = document.getElementById('loginUserAvatarImg');
             if (avatarEl) {
-                if (user.photoURL && avatarImg) { avatarImg.src = user.photoURL; avatarImg.style.display = 'block'; avatarEl.textContent = ''; }
-                else { if (avatarImg) avatarImg.style.display = 'none'; avatarEl.textContent = user.name ? user.name.charAt(0).toUpperCase() : 'U'; }
+                if (photo && avatarImg) {
+                    avatarImg.src = photo;
+                    avatarImg.alt = '';
+                    avatarImg.style.display = 'block';
+                    avatarImg.referrerPolicy = 'no-referrer';
+                    Array.prototype.slice.call(avatarEl.childNodes).forEach(function (n) {
+                        if (n !== avatarImg) avatarEl.removeChild(n);
+                    });
+                    if (!avatarEl.contains(avatarImg)) avatarEl.appendChild(avatarImg);
+                } else {
+                    if (avatarImg) avatarImg.style.display = 'none';
+                    avatarEl.textContent = displayName.charAt(0).toUpperCase();
+                }
             }
 
             const tokenSection = document.getElementById('appTokenSection');

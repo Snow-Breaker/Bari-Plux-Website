@@ -78,6 +78,23 @@
                 }
                 document.getElementById('userName').textContent = userName;
                 document.getElementById('userEmail').textContent = userEmail;
+                const methodBadge = document.getElementById('userMethodBadge');
+                if (methodBadge) {
+                    const m = String(user.loginMethod || '').toLowerCase();
+                    let label = '';
+                    if (m.indexOf('google') >= 0) label = 'Google';
+                    else if (m.indexOf('github') >= 0) label = 'GitHub';
+                    else if (m.indexOf('discord') >= 0) label = 'Discord';
+                    else if (m.indexOf('email') >= 0) label = 'Email';
+                    if (label) {
+                        methodBadge.textContent = label;
+                        methodBadge.hidden = false;
+                        methodBadge.removeAttribute('hidden');
+                    } else {
+                        methodBadge.hidden = true;
+                        methodBadge.setAttribute('hidden', '');
+                    }
+                }
                 
                 document.getElementById('viewProfileBtn').onclick = function(e) {
                     e.preventDefault();

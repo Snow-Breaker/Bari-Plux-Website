@@ -77,9 +77,10 @@
               '<div id="userDropdown" class="bp-menu user-dropdown" hidden>' +
                 '<div class="bp-menu__head">' +
                   '<div id="userAvatar" class="bp-menu__avatar"></div>' +
-                  '<div>' +
+                  '<div class="bp-menu__meta">' +
                     '<div id="userName" class="bp-menu__name">Guest</div>' +
                     '<div id="userEmail" class="bp-menu__email">Sign in to continue</div>' +
+                    '<div id="userMethodBadge" class="bp-menu__badge" hidden></div>' +
                   '</div>' +
                 '</div>' +
                 '<div class="bp-menu__divider"></div>' +
@@ -98,7 +99,7 @@
     if (document.querySelector('link[data-bp-search-css]')) return;
     var link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = 'assets/css/site-search.css?v=20260728aa';
+    link.href = 'assets/css/site-search.css?v=20260728ac';
     link.setAttribute('data-bp-search-css', '1');
     document.head.appendChild(link);
   }
@@ -110,7 +111,7 @@
     }
     if (document.querySelector('script[data-bp-search-js]')) return;
     var s = document.createElement('script');
-    s.src = 'assets/js/site-search.js?v=20260728aa';
+    s.src = 'assets/js/site-search.js?v=20260728ac';
     s.defer = true;
     s.setAttribute('data-bp-search-js', '1');
     document.head.appendChild(s);
@@ -208,12 +209,22 @@
     return photo;
   }
 
+  function methodLabel(user) {
+    var m = String((user && (user.loginMethod || user.provider)) || '').toLowerCase();
+    if (m.indexOf('google') >= 0) return 'Google';
+    if (m.indexOf('github') >= 0) return 'GitHub';
+    if (m.indexOf('discord') >= 0) return 'Discord';
+    if (m.indexOf('email') >= 0 || m.indexOf('password') >= 0) return 'Email';
+    return m ? 'Account' : '';
+  }
+
   function updateLoginUi() {
     var user = readUser();
     var btn = document.getElementById('loginBtnHeader');
     var name = document.getElementById('userName');
     var email = document.getElementById('userEmail');
     var avatar = document.getElementById('userAvatar');
+    var badge = document.getElementById('userMethodBadge');
     if (!btn) return;
     if (user) {
       var userName = resolveUserName(user);
@@ -223,7 +234,7 @@
       if (photo) {
         btn.innerHTML =
           '<span class="bp-user-chip">' +
-            '<img class="bp-user-chip__avatar" src="' + photo + '" alt="" referrerpolicy="no-referrer" crossorigin="anonymous">' +
+            '<img class="bp-user-chip__avatar" src="' + photo + '" alt="" referrerpolicy="no-referrer">' +
             '<span>' + shortName + '</span>' +
           '</span>';
       } else {
@@ -235,10 +246,21 @@
       }
       if (name) name.textContent = userName;
       if (email) email.textContent = user.email || '';
+      if (badge) {
+        var label = methodLabel(user);
+        if (label) {
+          badge.textContent = label;
+          badge.hidden = false;
+          badge.removeAttribute('hidden');
+        } else {
+          badge.hidden = true;
+          badge.setAttribute('hidden', '');
+        }
+      }
       if (avatar) {
         avatar.style.backgroundImage = '';
         if (photo) {
-          avatar.innerHTML = '<img src="' + photo + '" alt="" referrerpolicy="no-referrer" crossorigin="anonymous">';
+          avatar.innerHTML = '<img src="' + photo + '" alt="" referrerpolicy="no-referrer">';
         } else {
           avatar.innerHTML = initial;
         }
@@ -247,6 +269,11 @@
       btn.innerHTML = '<i class="fas fa-sign-in-alt" aria-hidden="true"></i><span>Login</span>';
       if (name) name.textContent = 'Guest';
       if (email) email.textContent = 'Sign in to continue';
+      if (badge) {
+        badge.hidden = true;
+        badge.setAttribute('hidden', '');
+        badge.textContent = '';
+      }
       if (avatar) {
         avatar.style.backgroundImage = '';
         avatar.innerHTML = '<i class="fas fa-user" aria-hidden="true"></i>';
