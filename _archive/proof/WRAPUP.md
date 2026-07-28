@@ -38,10 +38,17 @@ None of the overhaul commits (`34e449d`…`2b684fb`) appear in that history.
 
 ## Screenshots
 
-Headless Chrome/Edge were not available in this execution environment (`msedge.exe` / `chrome.exe` not installed on standard paths). Visual verification: open https://bariplux.com at 1440px and 390px after Pages deploy.
+Captured via Puppeteer headless Chromium → `_archive/proof/screenshots/`:
+
+- `index-dark-1440x900.png` / `index-dark-390x844.png`
+- `index-light-1440x900.png` / `index-light-390x844.png`
+- `glass-reference-1440x900.png` / `glass-reference-390x844.png`
+
+Script: `screenshot.js` (local static server + viewport shots + console capture).
 
 ## Proof artifacts
 
 - `_archive/proof/PHASE5-SECURITY.md`
 - `_archive/proof/PHASE6-REMAINING.md`
 - `_archive/proof/WRAPUP.md` (this file)
+- `_archive/proof/screenshots/`
