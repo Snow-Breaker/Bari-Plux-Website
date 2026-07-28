@@ -1,0 +1,12 @@
+---
+description: Always commit and push after finishing website changes
+alwaysApply: true
+---
+
+# Always commit and push
+
+When you finish a batch of changes to this repo (Bari Plux Website), **always** create a git commit and push to `origin` without waiting to be asked.
+
+Follow the existing commit protocol (status/diff/log, HEREDOC message, no secrets, no force-push, no amend unless conditions met). Prefer the repo where the edits were made (`C:\Github\Bari-Plux-Website` for the site).
+
+Do not leave deployable site fixes uncommitted/unpushed at the end of a turn.
