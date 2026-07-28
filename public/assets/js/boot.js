@@ -1,5 +1,5 @@
 /**
- * Early boot (non-module): theme FOUC fix, mobile redirect, drag deterrent,
+ * Early boot (non-module): theme FOUC fix, drag deterrent,
  * stylesheet preload activation (no inline onload — CSP script-src without unsafe-inline).
  */
 (function () {
@@ -19,14 +19,6 @@
   try {
     // Desktop app opens login.bariplux.com/?desktop=1 — root already serves the login page.
     // (Older builds redirected / → /login1; that must not run anymore or it loops.)
-  } catch (_) { /* ignore */ }
-
-  try {
-    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) &&
-        window.innerWidth <= 768 &&
-        window.location.href.indexOf('mobile') === -1) {
-      window.location.href = 'mobile';
-    }
   } catch (_) { /* ignore */ }
 
   document.ondragstart = function () { return false; };

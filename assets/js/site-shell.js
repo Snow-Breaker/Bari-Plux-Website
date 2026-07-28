@@ -62,6 +62,9 @@
           '</a>' +
           '<nav class="bp-nav" aria-label="Primary">' + links + '</nav>' +
           '<div class="bp-chrome__actions">' +
+            '<button type="button" class="bp-nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="bp-drawer">' +
+              '<span class="bp-nav-toggle__bars" aria-hidden="true"><span></span><span></span><span></span></span>' +
+            '</button>' +
             '<button type="button" id="bp-search-open" class="bp-icon-btn" title="Search (Ctrl+K)" aria-label="Search">' +
               '<i class="fas fa-search" aria-hidden="true"></i>' +
             '</button>' +
@@ -93,6 +96,173 @@
         '</div>' +
       '</header>'
     );
+  }
+
+  function collectNavLinks() {
+    var chrome = document.getElementById('bp-header');
+    var nav = chrome && chrome.querySelector('.bp-nav');
+    var items = [];
+    if (nav) {
+      var anchors = nav.querySelectorAll('a.bp-nav__link, a.nav-link, a');
+      for (var i = 0; i < anchors.length; i++) {
+        var a = anchors[i];
+        var href = a.getAttribute('href') || '#';
+        var label = (a.textContent || '').trim();
+        if (!label) continue;
+        items.push({
+          href: href,
+          label: label,
+          active: a.classList.contains('is-active') || a.classList.contains('active')
+        });
+      }
+    }
+    if (!items.length) {
+      for (var n = 0; n < NAV.length; n++) {
+        items.push({
+          href: NAV[n].href,
+          label: NAV[n].label,
+          active: isActive(NAV[n])
+        });
+      }
+    }
+    return items;
+  }
+
+  function drawerHtml(items) {
+    var links = items.map(function (item, idx) {
+      var cls = 'bp-drawer__link' + (item.active ? ' is-active' : '');
+      return (
+        '<a href="' + item.href + '" class="' + cls + '" style="--bp-i:' + idx + '">' +
+          '<span class="bp-drawer__link-label">' + item.label + '</span>' +
+          '<span class="bp-drawer__link-glow" aria-hidden="true"></span>' +
+        '</a>'
+      );
+    }).join('');
+
+    return (
+      '<div class="bp-drawer-root" id="bp-drawer-root" hidden>' +
+        '<div class="bp-drawer-backdrop" data-bp-drawer-close tabindex="-1" aria-hidden="true"></div>' +
+        '<aside class="bp-drawer" id="bp-drawer" role="dialog" aria-modal="true" aria-label="Site menu">' +
+          '<div class="bp-drawer__sheen" aria-hidden="true"></div>' +
+          '<div class="bp-drawer__head">' +
+            '<a href="/" class="bp-drawer__brand">' +
+              '<img src="' + LOGO + '" alt="" width="40" height="40">' +
+              '<div>' +
+                '<strong>Bari Plux</strong>' +
+                '<span>Navigate</span>' +
+              '</div>' +
+            '</a>' +
+            '<button type="button" class="bp-drawer__close" data-bp-drawer-close aria-label="Close menu">' +
+              '<span aria-hidden="true"></span><span aria-hidden="true"></span>' +
+            '</button>' +
+          '</div>' +
+          '<nav class="bp-drawer__nav" aria-label="Mobile">' + links + '</nav>' +
+          '<div class="bp-drawer__foot">' +
+            '<a href="/Pro" class="bp-drawer__cta">' +
+              '<span class="bp-drawer__cta-badge">PRO</span>' +
+              '<span class="bp-drawer__cta-copy">' +
+                '<strong>Unlock Bari Plux Pro</strong>' +
+                '<em>Full toolkit &amp; priority features</em>' +
+              '</span>' +
+              '<i class="fas fa-arrow-right" aria-hidden="true"></i>' +
+            '</a>' +
+          '</div>' +
+        '</aside>' +
+      '</div>'
+    );
+  }
+
+  function ensureMobileNav() {
+    var chrome = document.getElementById('bp-header');
+    if (!chrome) return;
+
+    var actions = chrome.querySelector('.bp-chrome__actions');
+    if (actions && !chrome.querySelector('.bp-nav-toggle')) {
+      var toggle = document.createElement('button');
+      toggle.type = 'button';
+      toggle.className = 'bp-nav-toggle';
+      toggle.setAttribute('aria-label', 'Open menu');
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.setAttribute('aria-controls', 'bp-drawer');
+      toggle.innerHTML =
+        '<span class="bp-nav-toggle__bars" aria-hidden="true"><span></span><span></span><span></span></span>';
+      actions.insertBefore(toggle, actions.firstChild);
+    }
+
+    var existing = document.getElementById('bp-drawer-root');
+    if (existing) existing.remove();
+
+    var wrap = document.createElement('div');
+    wrap.innerHTML = drawerHtml(collectNavLinks());
+    document.body.appendChild(wrap.firstChild);
+    wireMobileNav();
+  }
+
+  function wireMobileNav() {
+    var root = document.getElementById('bp-drawer-root');
+    var chrome = document.getElementById('bp-header');
+    var toggle = chrome && chrome.querySelector('.bp-nav-toggle');
+    if (!root || !toggle || toggle.dataset.bpWired) return;
+    toggle.dataset.bpWired = '1';
+
+    var closeBtns = root.querySelectorAll('[data-bp-drawer-close]');
+    var links = root.querySelectorAll('.bp-drawer__link, .bp-drawer__cta, .bp-drawer__brand');
+    var closing = false;
+
+    function setOpen(open) {
+      if (open) {
+        closing = false;
+        root.hidden = false;
+        // Force reflow so enter transition runs
+        void root.offsetWidth;
+        document.body.classList.add('bp-drawer-open');
+        root.classList.add('is-open');
+        toggle.classList.add('is-open');
+        toggle.setAttribute('aria-expanded', 'true');
+        toggle.setAttribute('aria-label', 'Close menu');
+        var closeBtn = root.querySelector('.bp-drawer__close');
+        if (closeBtn) {
+          try { closeBtn.focus({ preventScroll: true }); } catch (e) { /* ignore */ }
+        }
+      } else {
+        if (!root.classList.contains('is-open') && root.hidden) return;
+        closing = true;
+        document.body.classList.remove('bp-drawer-open');
+        root.classList.remove('is-open');
+        toggle.classList.remove('is-open');
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.setAttribute('aria-label', 'Open menu');
+        window.setTimeout(function () {
+          if (closing) {
+            root.hidden = true;
+            closing = false;
+          }
+        }, 420);
+        try { toggle.focus({ preventScroll: true }); } catch (e2) { /* ignore */ }
+      }
+    }
+
+    toggle.addEventListener('click', function () {
+      setOpen(!root.classList.contains('is-open'));
+    });
+
+    for (var i = 0; i < closeBtns.length; i++) {
+      closeBtns[i].addEventListener('click', function () { setOpen(false); });
+    }
+
+    for (var l = 0; l < links.length; l++) {
+      links[l].addEventListener('click', function () {
+        // Keep drawer open briefly for hash jumps on homepage, then close
+        window.setTimeout(function () { setOpen(false); }, 40);
+      });
+    }
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && root.classList.contains('is-open')) {
+        e.preventDefault();
+        setOpen(false);
+      }
+    });
   }
 
   function ensureStyles() {
@@ -382,6 +552,7 @@
     ensureAmbientHost();
     purgeLegacyChrome();
     injectChrome();
+    ensureMobileNav();
     wireTheme();
     wireScroll();
     wireLogin();
