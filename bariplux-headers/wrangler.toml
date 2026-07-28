@@ -1,0 +1,13 @@
+name = "bariplux-headers"
+main = "src/index.js"
+compatibility_date = "2026-07-28"
+workers_dev = true
+
+# Applied once apex/www are Proxied (orange cloud) in Cloudflare DNS.
+[[routes]]
+pattern = "bariplux.com/*"
+zone_name = "bariplux.com"
+
+[[routes]]
+pattern = "www.bariplux.com/*"
+zone_name = "bariplux.com"
