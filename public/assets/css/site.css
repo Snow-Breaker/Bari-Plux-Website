@@ -172,15 +172,15 @@ body > header.header { display: none !important; }
 .ripple, .btn::before, .download-btn::before { display: none !important; }
 
 /* ═══════════════ CHROME HEADER — floating liquid-glass pill ═══════════════
-   Same inset on every page (homepage + shell). Never dock/clip the top radius. */
+   Tiny top inset (same on every page) so the pill radius isn't viewport-clipped. */
 .bp-chrome {
   position: sticky;
   top: 0;
   z-index: var(--z-chrome);
   width: 100%;
   margin: 0;
-  /* Identical top + side inset site-wide — floating pill, not flush-docked */
-  padding: 10px 12px 0;
+  /* Keep this equal site-wide — was 10px and looked larger than before */
+  padding: 4px 12px 0;
   height: auto;
   overflow: visible;
   isolation: isolate;
@@ -198,8 +198,7 @@ body > header.header { display: none !important; }
   position: absolute;
   left: 0;
   right: 0;
-  /* Start below the top padding so no hairline at the viewport edge */
-  top: 10px;
+  top: 4px;
   width: 100%;
   height: calc(100% + 28px);
   z-index: -1;
@@ -252,7 +251,7 @@ body > header.header { display: none !important; }
 }
 
 .bp-chrome.scrolled::before {
-  top: 10px;
+  top: 4px;
   height: calc(100% + 36px);
   backdrop-filter: blur(52px) saturate(170%);
   -webkit-backdrop-filter: blur(52px) saturate(170%);
