@@ -73,6 +73,27 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 html { scroll-behavior: smooth; scroll-padding-top: 96px; }
+
+/* Skip link — MUST be out of flow or it pushes .bp-chrome down (~23px) on homepage */
+.bp-skip {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 1000;
+  padding: 0.65rem 1rem;
+  border-radius: 10px;
+  background: var(--accent, #818cf8);
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+}
+.bp-skip:focus,
+.bp-skip:focus-visible {
+  left: 12px;
+  top: 12px;
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
@@ -171,15 +192,14 @@ body > header.header { display: none !important; }
 
 .ripple, .btn::before, .download-btn::before { display: none !important; }
 
-/* ═══════════════ CHROME HEADER — flush docked glass bar ═══════════════
-   No top inset. Side gutters only. Flat top so nothing sits above the bar. */
+/* ═══════════════ CHROME HEADER — floating liquid-glass pill ═══════════════ */
 .bp-chrome {
   position: sticky;
   top: 0;
   z-index: var(--z-chrome);
   width: 100%;
-  margin: 0 !important;
-  padding: 0 12px !important;
+  margin: 0;
+  padding: 8px 12px 0;
   height: auto;
   overflow: visible;
   isolation: isolate;
@@ -191,7 +211,7 @@ body > header.header { display: none !important; }
   -webkit-backdrop-filter: none;
 }
 
-/* Frost starts at the bar — never above it */
+/* Frost veil under the pill */
 .bp-chrome::before {
   content: "";
   position: absolute;
@@ -211,8 +231,8 @@ body > header.header { display: none !important; }
     rgba(7, 7, 12, 0.06) 72%,
     transparent 100%
   );
-  mask-image: linear-gradient(180deg, #000 0%, #000 45%, transparent 100%);
-  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 45%, transparent 100%);
+  mask-image: linear-gradient(180deg, transparent 0, #000 10px, #000 45%, transparent 100%);
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 10px, #000 45%, transparent 100%);
 }
 
 .bp-chrome__inner {
@@ -224,17 +244,16 @@ body > header.header { display: none !important; }
   align-items: center;
   gap: 1rem;
   padding: 0 0.75rem 0 0.9rem;
-  border-radius: 0 0 18px 18px;
+  border-radius: 18px;
   background:
     linear-gradient(160deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.04) 38%, transparent 70%),
     rgba(18, 18, 24, 0.62);
   backdrop-filter: blur(40px) saturate(180%);
   -webkit-backdrop-filter: blur(40px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.16);
-  border-top: 0;
   box-shadow:
     0 14px 36px rgba(0, 0, 0, 0.28),
-    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
     inset 0 -1px 0 rgba(0, 0, 0, 0.2);
   overflow: visible;
   position: relative;
@@ -250,7 +269,6 @@ body > header.header { display: none !important; }
 }
 
 .bp-chrome.scrolled::before {
-  top: 0;
   height: calc(100% + 40px);
   backdrop-filter: blur(52px) saturate(170%);
   -webkit-backdrop-filter: blur(52px) saturate(170%);
@@ -942,7 +960,7 @@ body > header.header { display: none !important; }
     height: auto; min-height: 60px;
     grid-template-columns: 1fr auto; grid-template-rows: auto auto;
     padding: 0.45rem 0.6rem; gap: 0.45rem;
-    border-radius: 0 0 16px 16px;
+    border-radius: 16px;
   }
   .bp-nav { grid-column: 1 / -1; order: 3; justify-content: flex-start; }
 }

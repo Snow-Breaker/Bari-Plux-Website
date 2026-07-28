@@ -859,8 +859,7 @@ html[data-theme="light"] .bp-chrome__inner,
     linear-gradient(160deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.62) 45%, rgba(255, 255, 255, 0.4) 100%),
     rgba(255, 255, 255, 0.55) !important;
   border: 1px solid rgba(15, 20, 40, 0.12) !important;
-  border-top: 0 !important;
-  border-radius: 0 0 18px 18px !important;
+  border-radius: 18px !important;
   box-shadow:
     0 12px 32px rgba(15, 20, 40, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.95) !important;
