@@ -543,15 +543,14 @@
         }
 
         // ==================== FIREBASE CONFIGURATION ====================
-        // On login.bariplux.com use the same host as authDomain so
-        // signInWithRedirect (GitHub) can return a result. firebaseapp.com
-        // authDomain + custom-domain page breaks getRedirectResult (Google
-        // popup still works, which is why only GitHub looked broken).
+        // Use default firebaseapp.com authDomain so Google OAuth uses the
+        // auto-registered redirect URI (...firebaseapp.com/__/auth/handler).
+        // Custom authDomain (login.bariplux.com) requires manually adding
+        // https://login.bariplux.com/__/auth/handler in Google Cloud Console;
+        // GitHub/Discord no longer use Firebase redirect providers.
         const firebaseConfig = {
             apiKey: "AIzaSyBH_t3Uue7fbb-DahwjSJGjG2-quCqiLEs",
-            authDomain: (location.hostname === 'login.bariplux.com')
-                ? 'login.bariplux.com'
-                : 'baripluxwebsite.firebaseapp.com',
+            authDomain: 'baripluxwebsite.firebaseapp.com',
             databaseURL: "https://baripluxwebsite-default-rtdb.firebaseio.com",
             projectId: "baripluxwebsite",
             storageBucket: "baripluxwebsite.firebasestorage.app",
