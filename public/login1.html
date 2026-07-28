@@ -529,11 +529,15 @@
         }
 
         // ==================== FIREBASE CONFIGURATION ====================
-        // Keep authDomain on firebaseapp.com so Google OAuth redirect_uri matches
-        // the existing OAuth client. See docs/login-custom-domain.md for branding.
+        // On login.bariplux.com use the same host as authDomain so
+        // signInWithRedirect (GitHub) can return a result. firebaseapp.com
+        // authDomain + custom-domain page breaks getRedirectResult (Google
+        // popup still works, which is why only GitHub looked broken).
         const firebaseConfig = {
             apiKey: "AIzaSyBH_t3Uue7fbb-DahwjSJGjG2-quCqiLEs",
-            authDomain: "baripluxwebsite.firebaseapp.com",
+            authDomain: (location.hostname === 'login.bariplux.com')
+                ? 'login.bariplux.com'
+                : 'baripluxwebsite.firebaseapp.com',
             databaseURL: "https://baripluxwebsite-default-rtdb.firebaseio.com",
             projectId: "baripluxwebsite",
             storageBucket: "baripluxwebsite.firebasestorage.app",
@@ -1449,13 +1453,21 @@
             handleDiscordCallback();
             if (firebaseInitialized && auth) {
                 auth.getRedirectResult().then((result) => {
-                    try { sessionStorage.removeItem('oauth_pending_redirect'); } catch (e) {}
+                    let pending = null;
+                    try { pending = sessionStorage.getItem('oauth_pending_redirect'); sessionStorage.removeItem('oauth_pending_redirect'); } catch (e) {}
                     if (result && result.user) {
                         const providerId = result.credential?.providerId || result.user.providerData[0]?.providerId || 'firebase';
                         const method = providerId === 'google.com' ? 'firebase.google'
                             : providerId === 'github.com' ? 'github'
                             : providerId;
                         applyOAuthUser(result.user, method);
+                    } else if (pending) {
+                        console.warn('[getRedirectResult] empty after pending redirect for', pending);
+                        showNotification(
+                            'GitHub sign-in did not complete. Confirm the GitHub OAuth App callback is https://login.bariplux.com/__/auth/handler then try again.',
+                            'error',
+                            10000
+                        );
                     }
                 }).catch((err) => {
                     console.error('[getRedirectResult]', err);
