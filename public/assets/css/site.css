@@ -177,8 +177,9 @@ body > header.header { display: none !important; }
   top: 0;
   z-index: var(--z-chrome);
   width: 100%;
-  margin: 0;
-  padding: 8px 12px 0;
+  margin: 0 !important;
+  /* Side inset only — NO top gap (keeps homepage aligned with other pages) */
+  padding: 0 12px !important;
   height: auto;
   overflow: visible;
   isolation: isolate;
@@ -198,7 +199,7 @@ body > header.header { display: none !important; }
   right: 0;
   top: 0;
   width: 100%;
-  height: calc(100% + 36px);
+  height: calc(100% + 40px);
   z-index: -1;
   pointer-events: none;
   backdrop-filter: blur(44px) saturate(165%);
@@ -217,19 +218,21 @@ body > header.header { display: none !important; }
 .bp-chrome__inner {
   height: 60px;
   width: min(100%, var(--max));
-  margin: 0 auto;
+  margin: 0 auto !important;
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: 1rem;
   padding: 0 0.75rem 0 0.9rem;
-  border-radius: 18px;
+  /* Flat top so the pill sits on the viewport edge (aligned across all pages) */
+  border-radius: 0 0 18px 18px;
   background:
     linear-gradient(160deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.04) 38%, transparent 70%),
     rgba(18, 18, 24, 0.62);
   backdrop-filter: blur(40px) saturate(180%);
   -webkit-backdrop-filter: blur(40px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.16);
+  border-top: 0;
   box-shadow:
     0 14px 36px rgba(0, 0, 0, 0.28),
     inset 0 1px 0 rgba(255, 255, 255, 0.18),
@@ -939,7 +942,7 @@ body > header.header { display: none !important; }
     height: auto; min-height: 60px;
     grid-template-columns: 1fr auto; grid-template-rows: auto auto;
     padding: 0.45rem 0.6rem; gap: 0.45rem;
-    border-radius: 16px;
+    border-radius: 0 0 16px 16px;
   }
   .bp-nav { grid-column: 1 / -1; order: 3; justify-content: flex-start; }
 }
