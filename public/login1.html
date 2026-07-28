@@ -374,8 +374,11 @@
         body.app-embed .app-signing-in { text-align: center; padding: 28px 12px; color: var(--muted); font-size: 0.95rem; }
         body.app-embed .app-signing-in .loading-spinner { margin: 0 auto 14px; width: 28px; height: 28px; border-width: 3px; }
     </style>
+    <link rel="stylesheet" href="assets/css/bariplux.css?v=20260728k">
+    <script src="assets/js/signal-ambient.js?v=20260728k" defer></script>
 </head>
 <body>
+    <div id="bp-aurora" class="bp-aurora bp-ambient" aria-hidden="true"></div>
     <script>
         document.addEventListener('contextmenu', function(e) { e.preventDefault(); }, false);
         document.addEventListener('keydown', function(e) {

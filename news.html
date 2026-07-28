@@ -930,10 +930,7 @@
             width: 6px;
         }
 
-        .comments-container::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-        }
+        .comments-container::-webkit-scrollbar-track { background: transparent !important; border: none !important; box-shadow: none !important; }
 
         .comments-container::-webkit-scrollbar-thumb {
             background: var(--primary);
@@ -1417,8 +1414,11 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="assets/css/bariplux.css?v=20260728k">
+    <script src="assets/js/signal-ambient.js?v=20260728k" defer></script>
 </head>
 <body>
+    <div id="bp-aurora" class="bp-aurora bp-ambient" aria-hidden="true"></div>
     <!-- Security: Disable right-click and keyboard shortcuts -->
     <script>
         document.addEventListener('contextmenu', function(e) { e.preventDefault(); }, false);

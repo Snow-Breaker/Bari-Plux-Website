@@ -112,10 +112,18 @@ h1, h2, h3, h4, h5, h6 { font-family: 'Montserrat', 'Oxanium', sans-serif; font-
 a { text-decoration: none; color: inherit; }
 ul { list-style: none; padding: 0; margin: 0; }
 
-::-webkit-scrollbar { width: 8px; height: 8px; }
-::-webkit-scrollbar-track { background: var(--bg-2); border-radius: 10px; }
-::-webkit-scrollbar-thumb { background: linear-gradient(to bottom, var(--accent), var(--accent-2)); border-radius: 50px; border: 2px solid var(--bg-2); }
-::-webkit-scrollbar-thumb:hover { background: linear-gradient(to bottom, var(--accent-2), var(--accent)); }
+::-webkit-scrollbar { width: 8px; height: 8px; background: transparent !important; }
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-track-piece { background: transparent !important; border: none !important; box-shadow: none !important; }
+::-webkit-scrollbar-thumb {
+  background: rgba(129, 140, 248, 0.5) !important;
+  border-radius: 999px;
+  border: 2px solid transparent !important;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover { background: rgba(165, 180, 252, 0.65) !important; }
+::-webkit-scrollbar-corner { background: transparent !important; }
+html { scrollbar-width: thin; scrollbar-color: rgba(129, 140, 248, 0.55) transparent; }
 ::selection { background: var(--accent); color: white; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 

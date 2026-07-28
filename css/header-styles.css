@@ -159,14 +159,15 @@ ul {
 }
 
 /* Scrollbar - Modern Thin Style */
-::-webkit-scrollbar { width: 8px; height: 8px; }
-::-webkit-scrollbar-track { background: var(--bg-2); border-radius: 10px; }
+::-webkit-scrollbar { width: 8px; height: 8px; background: transparent !important; }
+::-webkit-scrollbar-track { background: transparent !important; border: none !important; box-shadow: none !important; }
 ::-webkit-scrollbar-thumb {
-    background: linear-gradient(to bottom, var(--accent), var(--accent-2));
-    border-radius: 50px;
-    border: 2px solid var(--bg-2);
+  background: rgba(129, 140, 248, 0.5) !important;
+  border-radius: 999px;
+  border: 2px solid transparent !important;
+  background-clip: padding-box;
 }
-::-webkit-scrollbar-thumb:hover { background: linear-gradient(to bottom, var(--accent-2), var(--accent)); }
+::-webkit-scrollbar-thumb:hover { background: rgba(165, 180, 252, 0.65) !important; }
 
 /* Selection */
 ::selection { background: var(--accent); color: white; }
