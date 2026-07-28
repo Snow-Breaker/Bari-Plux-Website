@@ -12,24 +12,25 @@ These stay at the **repo root** exactly as they are — desktop v2.2 depends on 
 - `Version21BPT`
 - `Timer2BPT`
 
-## Design system (live homepage — July 2026)
+## Design system (live homepage — Phase 2.5)
 
 | Path | Role |
 |------|------|
-| `assets/css/obsidian.css` | Primary tokens, layout, Obsidian palette (`--max: 1400px`) |
-| `assets/css/liquid-polish.css` | Liquid glass materials + light mode |
-| `assets/css/experience.css` | Type, videos/blog/rules polish, scrollbar, motion |
+| `assets/css/bariplux.css` | Design tokens (+ Pro/404 page chrome) |
+| `assets/css/site.css` | Homepage layout / surfaces |
+| `assets/css/widgets.css` | AI chat, search, videos, community rules |
 | `assets/js/protect.js` | Copy/devtools deterrents + Ctrl+S unavailable page |
 | `assets/js/boot.js` | Early theme FOUC fix, mobile redirect, preload activation |
-| `assets/js/signal-ambient.js` | Constellation ambient (loaded by index) |
+| `assets/js/signal-ambient.js` | Constellation ambient (homepage + glass-reference) |
+| `assets/js/ambient.js` | Ambient for Pro/404 only (`[data-bp-ambient]`) — **not orphaned** |
 | `assets/js/home.js` | Reveals / spotlight |
-| `assets/js/home-page.js` | Homepage interaction logic (extracted Phase 1) |
+| `assets/js/home-page.js` | Homepage interaction logic |
 | `manifest.json` | PWA manifest (`theme_color` `#030305`) |
 | `public/assets/*` | Mirrors for Firebase hosting |
 
 **Staging:** `glass-reference.html` — Liquid Glass hierarchy for visual sign-off before migrating legacy pages.
 
-Legacy token file `assets/css/bariplux.css` kept in sync (`--bp-max: 1400px`) for pages that still reference it.
+Archived dead CSS: `_archive/legacy-css/` (and `pre-site-merge/` sources).
 
 Palette: `#030305` base, accent `#818CF8`.
 
