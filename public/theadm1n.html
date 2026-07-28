@@ -486,9 +486,17 @@
         .ann-preview-label { font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 8px; }
         .filter-btns.ann-filters { margin-bottom: 14px; }
 
+        /* Keep admin UI above any accidental ambient / global layers */
+        #gate, #app { position: relative; z-index: 2; }
+        #app.show { position: relative; z-index: 2; }
+        body.admin-panel { background: var(--bg); }
+        body.admin-panel img { max-width: none; display: inline-block; }
+        body.admin-panel .topbar-logo,
+        body.admin-panel .gate-logo img { display: block; max-width: 100%; }
+
     </style>
 </head>
-<body>
+<body class="admin-panel">
 
 <div id="gate">
     <div class="gate-box">
