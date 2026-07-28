@@ -20,8 +20,28 @@
     return document.documentElement.getAttribute('data-theme') === 'light';
   }
 
+  function bootReveals() {
+    var els = document.querySelectorAll('.bp-reveal');
+    if (!els.length) return;
+    if (reduced() || !('IntersectionObserver' in window)) {
+      for (var i = 0; i < els.length; i++) els[i].classList.add('is-in');
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      for (var e = 0; e < entries.length; e++) {
+        if (entries[e].isIntersecting) {
+          entries[e].target.classList.add('is-in');
+          io.unobserve(entries[e].target);
+        }
+      }
+    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+    for (var j = 0; j < els.length; j++) io.observe(els[j]);
+  }
+
   function boot() {
-    var host = document.getElementById('bp-aurora') || document.getElementById('bp-ambient');
+    var host = document.getElementById('bp-aurora')
+      || document.getElementById('bp-ambient')
+      || document.querySelector('[data-bp-ambient]');
     if (!host) {
       host = document.createElement('div');
       host.id = 'bp-aurora';
@@ -29,6 +49,7 @@
       host.setAttribute('aria-hidden', 'true');
       document.body.insertBefore(host, document.body.firstChild);
     }
+    host.id = host.id || 'bp-aurora';
     host.classList.add('bp-aurora', 'bp-ambient', 'bp-ambient--app');
     host.setAttribute('aria-hidden', 'true');
 
@@ -54,6 +75,8 @@
       '<div class="bp-ambient__vignette"></div>' +
       '<div class="bp-ambient__rim"></div>' +
       '<div class="bp-ambient__grain"></div>';
+
+    bootReveals();
 
     if (reduced()) return;
 
@@ -111,6 +134,13 @@
       var cx0 = w * 0.5;
       var cy0 = h * 0.5;
 
+      // Soft fade nodes/links near top-left logo chrome
+      function chromeFade(nx, ny) {
+        if (nx > 0.28 || ny > 0.16) return 1;
+        var fx = nx / 0.28;
+        var fy = ny / 0.16;
+        return Math.max(0.15, Math.min(fx, fy));
+      }
       var light = isLight();
       // Desktop: accent #818CF8 @ ~0.12 links; soft white nodes every 3rd
       var linkBase = light ? 79 : 129;
@@ -132,7 +162,8 @@
         ctx.beginPath();
         ctx.moveTo(a[0] * w, a[1] * h);
         ctx.lineTo(b[0] * w, b[1] * h);
-        ctx.strokeStyle = 'rgba(' + linkBase + ',' + linkG + ',' + linkB + ',' + (linkOp * (breathL / 0.12)) + ')';
+        var fade = Math.min(chromeFade(a[0], a[1]), chromeFade(b[0], b[1]));
+        ctx.strokeStyle = 'rgba(' + linkBase + ',' + linkG + ',' + linkB + ',' + (linkOp * (breathL / 0.12) * fade) + ')';
         ctx.stroke();
       }
 
