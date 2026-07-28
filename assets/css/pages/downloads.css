@@ -1,0 +1,448 @@
+/**
+ * Download pages — Liquid Glass only (tokens from bariplux + site).
+ * No purple legacy, no flat charcoal slabs.
+ */
+
+.bp-dl {
+  position: relative;
+  z-index: 1;
+  width: min(var(--bp-max, 1400px), calc(100% - 2 * var(--bp-gutter, 24px)));
+  margin-inline: auto;
+  padding: clamp(1.25rem, 3vw, 2rem) 0 clamp(3rem, 6vw, 4.5rem);
+}
+
+/* Hero panel */
+.bp-dl__hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--bp-radius-xl, 28px);
+  padding: clamp(1.5rem, 3.5vw, 2.4rem);
+  margin-bottom: clamp(1.75rem, 4vw, 2.75rem);
+  background:
+    linear-gradient(165deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.04) 42%, transparent 100%),
+    var(--bp-glass-fill, rgba(16, 16, 20, 0.45));
+  backdrop-filter: blur(var(--bp-glass-blur, 28px)) saturate(var(--bp-glass-saturate, 1.45));
+  -webkit-backdrop-filter: blur(var(--bp-glass-blur, 28px)) saturate(var(--bp-glass-saturate, 1.45));
+  border: 1px solid var(--bp-glass-border, rgba(255, 255, 255, 0.16));
+  box-shadow:
+    inset 0 1px 0 var(--bp-glass-highlight, rgba(255, 255, 255, 0.14)),
+    0 18px 48px rgba(0, 0, 0, 0.28);
+  isolation: isolate;
+}
+
+.bp-dl__hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.14), transparent 36%);
+  opacity: 0.5;
+  mix-blend-mode: soft-light;
+}
+
+.bp-dl__kicker {
+  margin: 0 0 0.55rem;
+  color: var(--bp-accent-2, #a5b4fc);
+  font-size: 0.8rem;
+  font-weight: 650;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.bp-dl__title {
+  margin: 0 0 0.65rem;
+  font-family: var(--bp-font-display, "Space Grotesk", sans-serif);
+  font-size: clamp(2rem, 4.5vw, 3rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+  background: linear-gradient(135deg, #fff 12%, var(--bp-accent-2, #a5b4fc) 55%, var(--bp-accent, #818cf8) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.bp-dl__lead {
+  margin: 0;
+  max-width: 52ch;
+  color: var(--bp-text-2, #c0c0c8);
+  font-size: clamp(0.98rem, 1.5vw, 1.1rem);
+  line-height: 1.6;
+}
+
+.bp-dl__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.35rem;
+}
+
+.bp-dl__stat {
+  min-width: 7.5rem;
+  padding: 0.85rem 1.05rem;
+  border-radius: 14px;
+  background:
+    linear-gradient(165deg, rgba(255, 255, 255, 0.1), transparent 55%),
+    rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+}
+
+.bp-dl__stat-num {
+  font-family: var(--bp-font-display, "Space Grotesk", sans-serif);
+  font-size: 1.55rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--bp-accent-2, #a5b4fc);
+  line-height: 1.1;
+}
+
+.bp-dl__stat-label {
+  margin-top: 0.2rem;
+  font-size: 0.78rem;
+  color: var(--bp-text-3, #888896);
+}
+
+/* Sections */
+.bp-dl .download-section,
+.bp-dl .section {
+  background: transparent !important;
+  border: 0 !important;
+  padding: 0 0 clamp(1.75rem, 4vw, 2.75rem) !important;
+  margin: 0 !important;
+}
+
+.bp-dl .section-title {
+  display: inline-flex !important;
+  margin: 0 0 1.15rem !important;
+  padding: 0.55rem 1.05rem !important;
+  border-radius: 14px !important;
+  background:
+    linear-gradient(165deg, rgba(255, 255, 255, 0.1), transparent 50%),
+    rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+  backdrop-filter: blur(18px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(150%) !important;
+  color: var(--bp-text, #f5f5f7) !important;
+}
+
+.bp-dl .section-subtitle {
+  color: var(--bp-text-2, #c0c0c8) !important;
+}
+
+/* Download cards — true liquid glass */
+.bp-dl .download-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.bp-dl .download-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  min-height: 100%;
+  padding: 1.15rem 1.15rem 1.2rem !important;
+  border-radius: var(--bp-radius-lg, 22px) !important;
+  background:
+    linear-gradient(165deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.04) 40%, rgba(255, 255, 255, 0.02) 100%),
+    rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  backdrop-filter: blur(24px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(160%) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 12px 32px rgba(0, 0, 0, 0.22) !important;
+  overflow: hidden;
+  isolation: isolate;
+  transition: transform 220ms var(--bp-ease, ease), border-color 220ms ease, box-shadow 220ms ease !important;
+}
+
+.bp-dl .download-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.14), transparent 38%);
+  opacity: 0.45;
+  mix-blend-mode: soft-light;
+}
+
+.bp-dl .download-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(129, 140, 248, 0.42) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 18px 40px rgba(0, 0, 0, 0.28),
+    0 0 0 1px rgba(129, 140, 248, 0.12) !important;
+}
+
+.bp-dl .download-card .ripple {
+  display: none !important;
+}
+
+.bp-dl .download-icon {
+  width: 56px;
+  height: 56px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+.bp-dl .download-icon img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.bp-dl .download-title {
+  margin: 0;
+  font-family: var(--bp-font-display, "Space Grotesk", sans-serif);
+  font-size: 1.05rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  color: var(--bp-text, #f5f5f7) !important;
+}
+
+.bp-dl .download-description {
+  margin: 0;
+  flex: 1;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--bp-text-2, #c0c0c8) !important;
+}
+
+.bp-dl .download-meta {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  font-size: 0.75rem;
+  color: var(--bp-text-3, #888896);
+}
+
+.bp-dl .download-buttons {
+  margin-top: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.bp-dl .download-btn,
+.bp-dl .unlock-btn {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  width: 100%;
+  padding: 0.7rem 1rem !important;
+  border-radius: 12px !important;
+  border: 1px solid rgba(129, 140, 248, 0.42) !important;
+  background: rgba(129, 140, 248, 0.28) !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+  font-size: 0.9rem !important;
+  text-decoration: none !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16) !important;
+  transition: background 200ms ease, transform 160ms ease !important;
+}
+
+.bp-dl .download-btn:hover,
+.bp-dl .unlock-btn:hover {
+  background: rgba(129, 140, 248, 0.42) !important;
+  transform: translateY(-1px);
+  color: #fff !important;
+}
+
+.bp-dl .download-btn.is-expired,
+.bp-dl .download-btn[aria-disabled="true"] {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: var(--bp-text-3, #888896) !important;
+  pointer-events: none;
+}
+
+/* Version / requirements tables */
+.bp-dl .version-table,
+.bp-dl table.glass {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+  border-radius: 18px;
+  background:
+    linear-gradient(165deg, rgba(255, 255, 255, 0.1), transparent 50%),
+    rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  backdrop-filter: blur(22px) saturate(150%);
+  -webkit-backdrop-filter: blur(22px) saturate(150%);
+}
+
+.bp-dl .version-table th,
+.bp-dl .version-table td,
+.bp-dl table.glass th,
+.bp-dl table.glass td {
+  padding: 0.85rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--bp-text-2, #c0c0c8);
+  background: transparent !important;
+}
+
+.bp-dl .version-table th,
+.bp-dl table.glass th {
+  color: var(--bp-text, #f5f5f7);
+  font-weight: 650;
+  font-size: 0.84rem;
+}
+
+.bp-dl .version-table tr:last-child td,
+.bp-dl table.glass tr:last-child td {
+  border-bottom: 0;
+}
+
+/* Light theme */
+html[data-theme="light"] .bp-dl__hero,
+html[data-theme="light"] .bp-dl .download-card,
+html[data-theme="light"] .bp-dl .section-title,
+html[data-theme="light"] .bp-dl .version-table,
+html[data-theme="light"] .bp-dl table.glass {
+  background:
+    linear-gradient(165deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.7) 55%),
+    rgba(255, 255, 255, 0.65) !important;
+  border-color: rgba(15, 20, 40, 0.1) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 12px 28px rgba(15, 20, 40, 0.08) !important;
+}
+
+html[data-theme="light"] .bp-dl__title {
+  background: linear-gradient(135deg, #12131a 10%, #4f46e5 70%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+html[data-theme="light"] .bp-dl__lead,
+html[data-theme="light"] .bp-dl .download-description {
+  color: #3f4558 !important;
+}
+
+html[data-theme="light"] .bp-dl .download-title,
+html[data-theme="light"] .bp-dl .section-title {
+  color: #12131a !important;
+}
+
+@media (max-width: 1100px) {
+  .bp-dl .download-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 800px) {
+  .bp-dl .download-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 520px) {
+  .bp-dl .download-grid { grid-template-columns: 1fr; }
+}
+
+/* Nested .container inside .bp-dl — full width of shell */
+.bp-dl .container {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Password unlock modal (optimization tools) */
+.password-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 10050;
+  display: none;
+  place-items: center;
+  padding: 1.25rem;
+  background: rgba(3, 3, 5, 0.55);
+  backdrop-filter: blur(10px);
+}
+.password-modal.active { display: grid; }
+.password-modal .modal-content,
+.password-modal > div:not(.password-hint) {
+  /* content styled below */
+}
+.password-content,
+.password-modal .modal-content,
+#password-modal .password-box,
+.password-modal-inner {
+  width: min(100%, 420px);
+  margin: 0 auto;
+  padding: 1.35rem 1.4rem 1.45rem;
+  border-radius: 22px;
+  background:
+    linear-gradient(165deg, rgba(255, 255, 255, 0.12), transparent 50%),
+    rgba(16, 16, 20, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(28px) saturate(150%);
+  -webkit-backdrop-filter: blur(28px) saturate(150%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 24px 60px rgba(0, 0, 0, 0.45);
+  color: var(--bp-text, #f5f5f7);
+}
+#password-modal.active > *:not(script) {
+  /* ensure first content panel is glass when markup is flat */
+}
+#password-modal .password-input-group,
+#password-modal .password-input-wrapper {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin: 0.85rem 0;
+}
+#password-modal input[type="password"],
+#password-modal input[type="text"] {
+  flex: 1;
+  min-width: 0;
+}
+#password-modal .submit-btn,
+#password-modal .visibility-btn {
+  border-radius: 12px;
+  border: 1px solid rgba(129, 140, 248, 0.4);
+  background: rgba(129, 140, 248, 0.28);
+  color: #fff;
+  padding: 0.65rem 0.9rem;
+  cursor: pointer;
+}
+#password-modal .visibility-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+#password-modal .error-message {
+  color: #f87171;
+  font-size: 0.88rem;
+}
+#password-modal .password-hint {
+  color: var(--bp-text-3, #888896);
+  font-size: 0.82rem;
+}
+.bp-dl p[style*="opacity"] {
+  color: var(--bp-text-3, #888896) !important;
+}
+.hidden-download.is-unlocked { display: inline-flex !important; }
+
+.scroll-top {
+  position: fixed;
+  right: 1.1rem;
+  bottom: 1.1rem;
+  z-index: 40;
+  width: 42px;
+  height: 42px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 200ms ease, transform 200ms ease;
+}
+.scroll-top.visible {
+  opacity: 1;
+  pointer-events: auto;
+}

@@ -1055,8 +1055,8 @@ button, input, textarea { font: inherit; color: inherit; }
 
 /* ═══════════════ LIQUID GLASS MATERIAL ═══════════════ */
 :root {
-  --lg-fill: rgba(18, 18, 24, 0.42);
-  --lg-fill-strong: rgba(12, 12, 18, 0.55);
+  --lg-fill: rgba(255, 255, 255, 0.07);
+  --lg-fill-strong: rgba(255, 255, 255, 0.08);
   --lg-fill-nested: rgba(255, 255, 255, 0.06);
   --lg-stroke: rgba(255, 255, 255, 0.22);
   --lg-stroke-soft: rgba(255, 255, 255, 0.12);
@@ -1114,7 +1114,9 @@ button, input, textarea { font: inherit; color: inherit; }
 .events-card,
 .youtube-container,
 .spec-item {
-  background: var(--lg-fill-strong) !important;
+  background:
+    linear-gradient(165deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.04) 42%, transparent 100%),
+    var(--lg-fill-strong) !important;
   backdrop-filter: blur(22px) saturate(160%) !important;
   -webkit-backdrop-filter: blur(22px) saturate(160%) !important;
   border: 1px solid var(--lg-stroke-soft) !important;

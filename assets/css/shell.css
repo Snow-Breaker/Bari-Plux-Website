@@ -107,7 +107,7 @@ body.bp-body .event-btn:hover {
   color: #fff !important;
 }
 
-/* Cards / panels → liquid glass surfaces */
+/* Cards — radius only; liquid fills live in site.css */
 body.bp-body .glass,
 body.bp-body .download-card,
 body.bp-body .video-card,
@@ -122,28 +122,7 @@ body.bp-body .content-card,
 body.bp-body .news-card,
 body.bp-body .update-card,
 body.bp-body .footer-col {
-  background: rgba(16, 16, 20, 0.55) !important;
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
   border-radius: 18px !important;
-  backdrop-filter: blur(22px) saturate(150%);
-  -webkit-backdrop-filter: blur(22px) saturate(150%);
-  box-shadow:
-    0 18px 48px rgba(0, 0, 0, 0.35),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
-}
-
-html[data-theme="light"] body.bp-body .glass,
-html[data-theme="light"] body.bp-body .download-card,
-html[data-theme="light"] body.bp-body .video-card,
-html[data-theme="light"] body.bp-body .card,
-html[data-theme="light"] body.bp-body .tool-card,
-html[data-theme="light"] body.bp-body .event-card,
-html[data-theme="light"] body.bp-body .footer-col {
-  background: rgba(255, 255, 255, 0.72) !important;
-  border-color: rgba(15, 20, 40, 0.1) !important;
-  box-shadow:
-    0 14px 36px rgba(15, 20, 40, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
 }
 
 /* Footer sits on ambient */
