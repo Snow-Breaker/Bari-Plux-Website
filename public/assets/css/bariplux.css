@@ -816,8 +816,8 @@ html[data-theme="light"],
   --accent-soft: rgba(79, 70, 229, 0.12);
   --accent-muted: rgba(79, 70, 229, 0.14);
   --accent-ring: rgba(79, 70, 229, 0.28);
-  --accent-btn: rgba(79, 70, 229, 0.92);
-  --accent-btn-hover: rgba(67, 56, 202, 0.96);
+  --accent-btn: rgba(79, 70, 229, 0.14);
+  --accent-btn-hover: rgba(79, 70, 229, 0.22);
   --lg-fill: rgba(255, 255, 255, 0.72);
   --lg-fill-strong: rgba(255, 255, 255, 0.88);
   --lg-fill-nested: rgba(255, 255, 255, 0.65);
@@ -842,24 +842,93 @@ html[data-theme="light"] .bp-chrome::before,
 [data-theme="light"] .bp-chrome::before {
   background: linear-gradient(
     180deg,
-    rgba(255, 255, 255, 0.35) 0%,
-    rgba(255, 255, 255, 0.12) 45%,
+    rgba(244, 246, 251, 0.55) 0%,
+    rgba(244, 246, 251, 0.22) 50%,
     transparent 100%
   );
+  backdrop-filter: blur(52px) saturate(160%);
+  -webkit-backdrop-filter: blur(52px) saturate(160%);
 }
 
 html[data-theme="light"] .bp-chrome__inner,
 [data-theme="light"] .bp-chrome__inner {
   background:
-    linear-gradient(165deg, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0.22) 45%, transparent 100%),
-    rgba(255, 255, 255, 0.48);
+    linear-gradient(165deg, rgba(255, 255, 255, 0.72) 0%, rgba(255, 255, 255, 0.4) 45%, transparent 100%),
+    rgba(255, 255, 255, 0.58) !important;
+  border-color: rgba(15, 20, 40, 0.12) !important;
+  box-shadow: 0 10px 28px rgba(15, 20, 40, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
 }
 
 html[data-theme="light"] .bp-chrome.scrolled .bp-chrome__inner,
 [data-theme="light"] .bp-chrome.scrolled .bp-chrome__inner {
   background:
-    linear-gradient(165deg, rgba(255, 255, 255, 0.65) 0%, rgba(255, 255, 255, 0.28) 45%, transparent 100%),
-    rgba(255, 255, 255, 0.58);
+    linear-gradient(165deg, rgba(255, 255, 255, 0.82) 0%, rgba(255, 255, 255, 0.5) 45%, transparent 100%),
+    rgba(255, 255, 255, 0.7) !important;
+}
+
+html[data-theme="light"] .bp-logo__text,
+[data-theme="light"] .bp-logo__text {
+  color: #12131a !important;
+  -webkit-text-fill-color: #12131a !important;
+  background: none !important;
+}
+
+/* Light-mode CTAs — soft indigo glass, not solid purple slabs */
+html[data-theme="light"] .bp-btn,
+html[data-theme="light"] .btn,
+html[data-theme="light"] .btn-secondary,
+html[data-theme="light"] .download-btn,
+html[data-theme="light"] .login-btn-header,
+html[data-theme="light"] .filter-btn,
+html[data-theme="light"] .event-btn,
+html[data-theme="light"] .contact-btn,
+[data-theme="light"] .bp-btn,
+[data-theme="light"] .btn {
+  background: rgba(255, 255, 255, 0.72) !important;
+  border: 1px solid rgba(15, 20, 40, 0.12) !important;
+  color: #12131a !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), 0 4px 14px rgba(15, 20, 40, 0.06) !important;
+}
+
+html[data-theme="light"] .bp-btn:hover,
+html[data-theme="light"] .btn:hover,
+html[data-theme="light"] .btn-secondary:hover,
+html[data-theme="light"] .download-btn:hover,
+[data-theme="light"] .bp-btn:hover,
+[data-theme="light"] .btn:hover {
+  background: rgba(79, 70, 229, 0.1) !important;
+  border-color: rgba(79, 70, 229, 0.32) !important;
+  color: #312e81 !important;
+}
+
+html[data-theme="light"] .bp-btn--glass,
+html[data-theme="light"] .btn-primary,
+html[data-theme="light"] .btn-accent,
+html[data-theme="light"] .download-btn,
+html[data-theme="light"] .login-btn-header,
+html[data-theme="light"] .unlock-btn,
+[data-theme="light"] .bp-btn--glass,
+[data-theme="light"] .btn-primary {
+  background: rgba(79, 70, 229, 0.12) !important;
+  border-color: rgba(79, 70, 229, 0.34) !important;
+  color: #312e81 !important;
+}
+
+html[data-theme="light"] .bp-btn--glass:hover,
+html[data-theme="light"] .btn-primary:hover,
+html[data-theme="light"] .download-btn:hover,
+html[data-theme="light"] .login-btn-header:hover,
+[data-theme="light"] .bp-btn--glass:hover,
+[data-theme="light"] .btn-primary:hover {
+  background: rgba(79, 70, 229, 0.2) !important;
+  color: #1e1b4b !important;
+}
+
+html[data-theme="light"] .bp-icon-btn,
+[data-theme="light"] .bp-icon-btn {
+  background: rgba(255, 255, 255, 0.7) !important;
+  border-color: rgba(15, 20, 40, 0.12) !important;
+  color: #12131a !important;
 }
 
 /* Ambient field — light (same structure as AmbientSignalField, cool wash) */

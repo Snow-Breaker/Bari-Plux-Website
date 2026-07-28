@@ -378,13 +378,13 @@ html[data-theme="light"] .bp-dl .section-title {
   padding: 0;
 }
 
-/* Footer spacing on download pages */
+/* Footer spacing on download pages — tight under copyright */
 .bp-dl .footer,
 .bp-dl + .footer,
 body.bp-body:has(.bp-dl) .footer {
-  margin-top: clamp(1.5rem, 4vw, 2.5rem) !important;
-  padding-top: clamp(2.25rem, 5vw, 3.5rem) !important;
-  padding-bottom: clamp(1.75rem, 3.5vw, 2.5rem);
+  margin-top: clamp(1rem, 2.5vw, 1.75rem) !important;
+  padding-top: clamp(1.25rem, 3vw, 1.85rem) !important;
+  padding-bottom: 0.65rem !important;
 }
 
 .bp-dl .footer-content {

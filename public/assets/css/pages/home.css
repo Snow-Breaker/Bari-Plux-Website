@@ -625,18 +625,30 @@ html[data-theme="light"] .bp-tool-spot__list li {
   border-color: rgba(129, 140, 248, 0.4);
 }
 
-#blog .blog-img-container,
-#plux-times .plux-article-img,
-#plux-times .plux-article img {
+#blog .blog-img-container {
   position: relative;
   aspect-ratio: 16 / 10;
+  max-height: 168px;
   overflow: hidden;
 }
 
-#blog .blog-img,
-#plux-times .plux-article img {
+#plux-times .plux-article-img,
+#plux-times .plux-article > img,
+#plux-times .plux-article img.plux-article-img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: 148px;
+  max-height: 148px;
+  aspect-ratio: auto;
+  object-fit: cover;
+  object-position: center;
+}
+
+#blog .blog-img {
   width: 100%;
   height: 100%;
+  max-height: 168px;
   object-fit: cover;
 }
 

@@ -97,7 +97,7 @@
     if (document.querySelector('link[data-bp-search-css]')) return;
     var link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = 'assets/css/site-search.css?v=20260728w';
+    link.href = 'assets/css/site-search.css?v=20260728x';
     link.setAttribute('data-bp-search-css', '1');
     document.head.appendChild(link);
   }
@@ -109,7 +109,7 @@
     }
     if (document.querySelector('script[data-bp-search-js]')) return;
     var s = document.createElement('script');
-    s.src = 'assets/js/site-search.js?v=20260728w';
+    s.src = 'assets/js/site-search.js?v=20260728x';
     s.defer = true;
     s.setAttribute('data-bp-search-js', '1');
     document.head.appendChild(s);
@@ -181,6 +181,12 @@
     window.addEventListener('scroll', onScroll, { passive: true });
   }
 
+  function resolveUserName(user) {
+    if (!user) return 'User';
+    return user.name || user.displayName || user.username ||
+      (user.email ? String(user.email).split('@')[0] : 'User');
+  }
+
   function updateLoginUi() {
     var user = readUser();
     var btn = document.getElementById('loginBtnHeader');
@@ -189,17 +195,41 @@
     var avatar = document.getElementById('userAvatar');
     if (!btn) return;
     if (user) {
-      btn.innerHTML = '<i class="fas fa-user-circle" aria-hidden="true"></i><span>' +
-        (user.displayName || user.name || 'Account') + '</span>';
-      if (name) name.textContent = user.displayName || user.name || 'User';
+      var userName = resolveUserName(user);
+      var photo = user.photoURL || user.photoUrl || user.avatar || '';
+      var shortName = userName.length > 14 ? userName.slice(0, 14) + '…' : userName;
+      var initial = userName.charAt(0).toUpperCase();
+      if (photo) {
+        btn.innerHTML =
+          '<span class="bp-user-chip">' +
+            '<img class="bp-user-chip__avatar" src="' + photo + '" alt="" referrerpolicy="no-referrer">' +
+            '<span>' + shortName + '</span>' +
+          '</span>';
+      } else {
+        btn.innerHTML =
+          '<span class="bp-user-chip">' +
+            '<span class="bp-user-chip__initial">' + initial + '</span>' +
+            '<span>' + shortName + '</span>' +
+          '</span>';
+      }
+      if (name) name.textContent = userName;
       if (email) email.textContent = user.email || '';
-      if (avatar && user.photoURL) {
-        avatar.style.backgroundImage = 'url(' + user.photoURL + ')';
+      if (avatar) {
+        avatar.style.backgroundImage = '';
+        if (photo) {
+          avatar.innerHTML = '<img src="' + photo + '" alt="" referrerpolicy="no-referrer">';
+        } else {
+          avatar.innerHTML = initial;
+        }
       }
     } else {
       btn.innerHTML = '<i class="fas fa-sign-in-alt" aria-hidden="true"></i><span>Login</span>';
       if (name) name.textContent = 'Guest';
       if (email) email.textContent = 'Sign in to continue';
+      if (avatar) {
+        avatar.style.backgroundImage = '';
+        avatar.innerHTML = '<i class="fas fa-user" aria-hidden="true"></i>';
+      }
     }
   }
 

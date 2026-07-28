@@ -13,6 +13,22 @@
     }
 
     // Login Status - Update Header Button
+    function resolveUserName(user) {
+        if (!user) return 'User';
+        return user.name || user.displayName || user.username ||
+            (user.email ? String(user.email).split('@')[0] : 'User');
+    }
+
+    function avatarMarkup(user, sizeClass) {
+        const name = resolveUserName(user);
+        const initial = name.charAt(0).toUpperCase();
+        const photo = user && (user.photoURL || user.photoUrl || user.avatar);
+        if (photo) {
+            return `<img class="${sizeClass}" src="${photo}" alt="" referrerpolicy="no-referrer" onerror="this.style.display='none';var s=document.createElement('span');s.className='bp-user-chip__initial';s.textContent='${initial}';this.parentNode.insertBefore(s,this);">`;
+        }
+        return `<span class="bp-user-chip__initial">${initial}</span>`;
+    }
+
     function updateLoginButton() {
         const loginBtn = document.getElementById('loginBtnHeader');
         const dropdown = document.getElementById('userDropdown');
@@ -23,15 +39,24 @@
         if (storedUser) {
             try {
                 const user = JSON.parse(storedUser);
-                const userName = user.name || user.email.split('@')[0];
+                const userName = resolveUserName(user);
                 const userEmail = user.email || '';
-                const initial = userName.charAt(0).toUpperCase();
+                const photo = user.photoURL || user.photoUrl || user.avatar || '';
+                const shortName = userName.length > 14 ? userName.substring(0, 14) + '…' : userName;
                 
-                loginBtn.innerHTML = `<span style="display:flex;align-items:center;gap:8px;"><span style="width:28px;height:28px;background:linear-gradient(135deg,var(--accent),var(--accent-2));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:white;">${initial}</span><span style="font-size:0.9rem;">${userName.substring(0, 12)}${userName.length > 12 ? '...' : ''}</span></span>`;
+                loginBtn.innerHTML = `<span class="bp-user-chip">${avatarMarkup(user, 'bp-user-chip__avatar')}<span>${shortName}</span></span>`;
                 loginBtn.style.cursor = 'pointer';
                 /* onclick removed — wired once via wireLoginButton */
                 
-                document.getElementById('userAvatar').innerHTML = initial;
+                const avatarEl = document.getElementById('userAvatar');
+                if (avatarEl) {
+                    avatarEl.style.backgroundImage = '';
+                    if (photo) {
+                        avatarEl.innerHTML = `<img src="${photo}" alt="" referrerpolicy="no-referrer">`;
+                    } else {
+                        avatarEl.innerHTML = userName.charAt(0).toUpperCase();
+                    }
+                }
                 document.getElementById('userName').textContent = userName;
                 document.getElementById('userEmail').textContent = userEmail;
                 
@@ -44,7 +69,7 @@
                 document.getElementById('goToLoginBtn').onclick = function(e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    window.location.href = 'login.html';
+                    window.location.href = '/login1';
                 };
                 
                 document.getElementById('logoutBtn').onclick = function() {
@@ -68,7 +93,7 @@
             document.getElementById('goToLoginBtn').onclick = function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                window.location.href = 'login.html';
+                window.location.href = '/login1';
             };
             document.getElementById('logoutBtn').style.display = 'none';
             if (dropdown) dropdown.setAttribute('hidden', '');

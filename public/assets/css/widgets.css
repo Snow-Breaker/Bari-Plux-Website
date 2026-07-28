@@ -100,11 +100,12 @@
 html { height: auto; }
 body.bp-body { min-height: 100dvh; display: block; }
 .footer {
-  padding: 2.25rem 0 1.5rem !important;
+  padding: 1.5rem 0 0.65rem !important;
   margin: 0 !important;
 }
-.footer-content { margin-bottom: 1rem !important; }
-.footer-bottom { padding: 0.85rem 0 0 !important; margin: 0 !important; }
+.footer-content { margin-bottom: 0.75rem !important; }
+.footer-bottom { padding: 0.55rem 0 0 !important; margin: 0 !important; }
+.copyright { margin: 0 !important; padding: 0 !important; line-height: 1.35; }
 .rules-modal:not(.active):not(.show) {
   display: none !important;
   height: 0 !important;
