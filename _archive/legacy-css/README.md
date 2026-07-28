@@ -19,3 +19,9 @@ Live homepage stack left in place until merged into `site.css`:
 
 Still live for Pro/404:
 - bariplux.css
+
+## site.css merge (2026-07-28)
+
+`index.html` / `glass-reference.html` now load a single `assets/css/site.css` (concat of obsidian + liquid-polish + experience in prior load order).
+
+Computed-style regression: `styleChanges: 0` (see `_archive/proof/computed-diff.json`). Pre-merge sources archived under `pre-site-merge/`.
