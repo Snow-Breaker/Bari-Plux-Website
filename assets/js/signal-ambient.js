@@ -116,7 +116,7 @@
       var linkBase = light ? 79 : 129;
       var linkG = light ? 70 : 140;
       var linkB = light ? 229 : 248;
-      var linkOp = light ? 0.14 : 0.12;
+      var linkOp = light ? 0.16 : 0.22;
 
       ctx.save();
       ctx.translate(cx0 + dx, cy0 + dy);
@@ -142,8 +142,8 @@
         var x = s[0] * w;
         var y = s[1] * h;
         var r = s[2] * (w < 720 ? 0.85 : 1);
-        var baseOp = 0.28 + (n % 5) * 0.06;
-        var twinkle = baseOp + (0.5 + 0.5 * Math.sin(t * (1 / (3.2 + n * 0.37)) * Math.PI * 2 + n)) * 0.35;
+        var baseOp = 0.42 + (n % 5) * 0.08;
+        var twinkle = baseOp + (0.5 + 0.5 * Math.sin(t * (1 / (3.2 + n * 0.37)) * Math.PI * 2 + n)) * 0.45;
         ctx.beginPath();
         ctx.arc(x, y, r, 0, Math.PI * 2);
         if (n % 3 === 0) {
@@ -160,7 +160,7 @@
       var pingPhase = (t % 7.5) / 7.5;
       if (pingPhase < 0.42 && seeds.length > 9) {
         var pr = 18 + pingPhase * 130;
-        var pa = (1 - pingPhase / 0.42) * 0.16;
+        var pa = (1 - pingPhase / 0.42) * 0.28;
         ctx.beginPath();
         ctx.arc(seeds[9][0] * w, seeds[9][1] * h, pr, 0, Math.PI * 2);
         ctx.strokeStyle = 'rgba(' + linkBase + ',' + linkG + ',' + linkB + ',' + pa + ')';
@@ -180,7 +180,7 @@
         sg.addColorStop(1, 'rgba(79,70,229,0)');
       } else {
         sg.addColorStop(0, 'rgba(255,255,255,0)');
-        sg.addColorStop(0.5, 'rgba(255,255,255,0.10)');
+        sg.addColorStop(0.5, 'rgba(165,180,252,0.16)');
         sg.addColorStop(1, 'rgba(255,255,255,0)');
       }
       ctx.fillStyle = sg;
@@ -198,7 +198,7 @@
       ctx.restore();
 
       // Corner brackets (instrument chrome)
-      ctx.strokeStyle = light ? 'rgba(79,70,229,0.12)' : 'rgba(129,140,248,0.14)';
+      ctx.strokeStyle = light ? 'rgba(79,70,229,0.12)' : 'rgba(129,140,248,0.28)';
       ctx.lineWidth = 1.3;
       var m = 28, len = 22;
       ctx.beginPath();

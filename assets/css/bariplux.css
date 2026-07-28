@@ -6,9 +6,9 @@
 
 :root {
   /* Surfaces — Obsidian Glass */
-  --bp-bg-0: #030305;
-  --bp-bg-1: #08080c;
-  --bp-bg-2: #0c0c10;
+  --bp-bg-0: #07070c;
+  --bp-bg-1: #0a0a12;
+  --bp-bg-2: #101018;
   --bp-elevated: rgba(255, 255, 255, 0.10);
   --bp-elevated-2: rgba(255, 255, 255, 0.06);
 
@@ -59,8 +59,8 @@
   --bp-font-mono: "IBM Plex Mono", ui-monospace, monospace;
 
   /* Live homepage token aliases (obsidian/site.css) — single source of truth */
-  --void: #030305;
-  --ink: #0c0c10;
+  --void: #07070c;
+  --ink: #101018;
   --text: #f5f5f7;
   --text-2: #c0c0c8;
   --text-3: #888896;
