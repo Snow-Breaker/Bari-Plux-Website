@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <title>Glass Reference — Bari Plux (staging)</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/obsidian.css?v=ref">
+  <link rel="stylesheet" href="assets/css/liquid-polish.css?v=ref">
+  <link rel="stylesheet" href="assets/css/experience.css?v=ref">
+  <style>
+    .ref-wrap { width: min(100% - 2rem, 1100px); margin: 2rem auto 4rem; position: relative; z-index: 1; }
+    .ref-note { color: var(--text-2); max-width: 52ch; margin-bottom: 1.5rem; }
+    .ref-row { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 1rem; margin: 1.25rem 0 2rem; }
+    .ref-tier { padding: 1.1rem 1.15rem; border-radius: 18px; }
+    .ref-tier h3 { margin: 0 0 0.35rem; font-size: 1rem; }
+    .ref-tier p { margin: 0; color: var(--text-2); font-size: 0.86rem; }
+    .ref-elevated { box-shadow: 0 16px 40px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.2) !important; }
+    .ref-nested { background: rgba(255,255,255,0.06) !important; }
+    @media (max-width: 800px) { .ref-row { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body class="bp-body">
+  <div id="bp-aurora" class="bp-aurora bp-ambient" aria-hidden="true"></div>
+  <div class="ref-wrap">
+    <p class="hero-kicker">Staging · not linked from nav</p>
+    <h1 class="hero-title"><span class="name-gradient">Liquid Glass reference</span></h1>
+    <p class="ref-note">Elevation hierarchy for Bari Plux (Obsidian): background → base card → elevated/hover → modal chrome. Approve this treatment before rolling to other pages.</p>
+
+    <article class="profile-shell glass liquid" style="margin-bottom:1.5rem;">
+      <h2 class="profile-heading">Hero / chrome shell</h2>
+      <p class="hero-lead" style="margin:0;">Full liquid glass: blur + sheen + soft stroke. Used for header chrome and primary profile shell.</p>
+    </article>
+
+    <h2 class="section-title glass">Card tiers</h2>
+    <div class="ref-row">
+      <div class="ref-tier glass">
+        <h3>Base card</h3>
+        <p>Download / blog / video surface — nested white-alpha, light blur.</p>
+      </div>
+      <div class="ref-tier glass ref-elevated">
+        <h3>Elevated</h3>
+        <p>Hover / featured elevation — deeper shadow, same tokens.</p>
+      </div>
+      <div class="ref-tier glass liquid-nested ref-nested">
+        <h3>Nested tile</h3>
+        <p>Chips, badges, inner panels inside a card.</p>
+      </div>
+    </div>
+
+    <div class="download-grid" style="margin-bottom:2rem;">
+      <div class="download-card glass"><div class="download-info"><h3>Sample download</h3><p>Base product card</p></div></div>
+      <div class="download-card glass"><div class="download-info"><h3>Sample download</h3><p>Base product card</p></div></div>
+      <div class="download-card glass"><div class="download-info"><h3>Sample download</h3><p>Base product card</p></div></div>
+      <div class="download-card glass"><div class="download-info"><h3>Sample download</h3><p>Base product card</p></div></div>
+    </div>
+
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-col glass"><h3 class="footer-title">Footer col</h3><p class="footer-about">Footer uses same glass tokens.</p></div>
+        <div class="footer-col glass"><h3 class="footer-title">Links</h3><a class="footer-link" href="index.html">Back to home</a></div>
+      </div>
+    </footer>
+  </div>
+  <script src="assets/js/signal-ambient.js" defer></script>
+</body>
+</html>
