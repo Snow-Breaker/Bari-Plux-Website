@@ -98,6 +98,35 @@ body.bp-body {
   animation: bp-rise 0.5s 0.05s var(--ease, cubic-bezier(0.22,1,0.36,1)) both;
 }
 
+.profile-shell {
+  position: relative;
+  overflow: hidden;
+}
+.profile-shell::after {
+  content: "";
+  position: absolute;
+  inset: -20% -40%;
+  background: linear-gradient(
+    115deg,
+    transparent 35%,
+    rgba(255, 255, 255, 0.055) 48%,
+    transparent 62%
+  );
+  transform: translate3d(-30%, 0, 0);
+  animation: bp-specular-sweep 16s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+@keyframes bp-specular-sweep {
+  0%, 12% { transform: translate3d(-35%, 0, 0); opacity: 0; }
+  20% { opacity: 1; }
+  45% { transform: translate3d(35%, 0, 0); opacity: 1; }
+  55%, 100% { transform: translate3d(40%, 0, 0); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .profile-shell::after { animation: none !important; display: none !important; }
+}
+
 .profile-shell,
 .videos-featured,
 .video-card,
