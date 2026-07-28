@@ -178,6 +178,7 @@ body > header.header { display: none !important; }
   z-index: var(--z-chrome);
   width: 100%;
   margin: 0;
+  padding: 0;
   height: auto;
   overflow: visible;
   isolation: isolate;
@@ -191,37 +192,38 @@ body > header.header { display: none !important; }
   right: 0;
   top: 0;
   width: 100%;
-  height: calc(100% + 32px);
+  height: calc(100% + 36px);
   z-index: -1;
   pointer-events: none;
   backdrop-filter: blur(52px) saturate(165%);
   -webkit-backdrop-filter: blur(52px) saturate(165%);
   background: linear-gradient(
     180deg,
-    rgba(7, 7, 12, 0.35) 0%,
-    rgba(7, 7, 12, 0.16) 50%,
+    rgba(7, 7, 12, 0.42) 0%,
+    rgba(7, 7, 12, 0.18) 55%,
     transparent 100%
   );
-  mask-image: linear-gradient(180deg, #000 0%, #000 48%, transparent 100%);
-  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 48%, transparent 100%);
+  mask-image: linear-gradient(180deg, #000 0%, #000 52%, transparent 100%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 52%, transparent 100%);
 }
 
 .bp-chrome__inner {
   height: 64px;
   width: min(100% - 24px, var(--max));
-  margin: 10px auto;
+  margin: 0 auto;
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: 1rem;
   padding: 0 0.8rem 0 0.95rem;
-  border-radius: var(--r-chrome);
+  border-radius: 0 0 var(--r-chrome) var(--r-chrome);
   background:
     linear-gradient(165deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.03) 42%, transparent 100%),
     rgba(16, 16, 20, 0.58);
   backdrop-filter: blur(42px) saturate(170%);
   -webkit-backdrop-filter: blur(42px) saturate(170%);
   border: 1px solid var(--chrome-border);
+  border-top: 0;
   box-shadow:
     0 12px 32px rgba(0, 0, 0, 0.22),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
