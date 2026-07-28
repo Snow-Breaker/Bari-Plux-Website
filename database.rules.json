@@ -2,7 +2,15 @@
   "rules": {
     "admin": {
       ".read": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'",
-      ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'"
+      ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'",
+      "totp_secret": {
+        ".read": false,
+        ".write": false
+      },
+      "gate_rate": {
+        ".read": false,
+        ".write": false
+      }
     },
     "app_config": {
       ".read": true,
