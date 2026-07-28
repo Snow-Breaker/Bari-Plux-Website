@@ -99,7 +99,7 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
 <link rel="manifest" href="/manifest.json">
 
 <!-- Preload critical resources -->
-<link rel="preload" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;600;700;800&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<link rel="preload" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
 
 <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#030305">
@@ -133,21 +133,19 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;600;700;800&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/signal.css">
-    <link rel="stylesheet" href="assets/css/widgets.css">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+
+
+
+    <link rel="stylesheet" href="assets/css/layout.css">
+    <link rel="stylesheet" href="assets/css/liquid.css">
     <script src="assets/js/protect.js" defer></script>
-    <script src="assets/js/signal-field.js" defer></script>
+    <script src="assets/js/fluid-field.js" defer></script>
     <script src="assets/js/home.js" defer></script>
 
 </head>
 <body class="bp-body">
-    <div class="sf-ambient bp-ambient" data-bp-ambient aria-hidden="true">
-        <div class="sf-ambient__ribbons bp-ambient__sheen"></div>
-        <div class="sf-ambient__grid"></div>
-        <div class="sf-ambient__scan"></div>
-        <div class="sf-ambient__noise bp-ambient__noise"></div>
-    </div>
+    <div class="lg-ambient bp-ambient" data-bp-ambient aria-hidden="true"></div>
 
     <!-- Header -->
 <header class="header glass">
