@@ -24,7 +24,10 @@ function serve(req, res) {
   if (!filePath.startsWith(ROOT) || !fs.existsSync(filePath) || fs.statSync(filePath).isDirectory()) {
     res.writeHead(404); res.end('nf'); return;
   }
-  res.writeHead(200, { 'Content-Type': mime[path.extname(filePath).toLowerCase()] || 'application/octet-stream' });
+  res.writeHead(200, {
+    'Content-Type': mime[path.extname(filePath).toLowerCase()] || 'application/octet-stream',
+    'Cache-Control': 'no-store',
+  });
   fs.createReadStream(filePath).pipe(res);
 }
 

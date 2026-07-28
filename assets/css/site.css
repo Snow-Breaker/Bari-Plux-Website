@@ -1621,13 +1621,20 @@ html[data-theme="light"] mark.search-highlight {
   from { opacity: 0; transform: translate3d(0, 18px, 0); }
   to { opacity: 1; transform: none; }
 }
+/* Opacity-only body fade — NEVER put transform on body/html.
+   A transform on body makes position:fixed modals use the document
+   as containing block (off-screen when scrolled). */
+@keyframes bp-page-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
 @keyframes bp-soft-glow {
   0%, 100% { box-shadow: 0 0 0 0 rgba(129,140,248,0); }
   50% { box-shadow: 0 0 28px rgba(129,140,248,0.18); }
 }
 
 body.bp-body {
-  animation: bp-rise 0.55s var(--ease, cubic-bezier(0.22,1,0.36,1)) both;
+  animation: bp-page-fade 0.55s var(--ease, cubic-bezier(0.22,1,0.36,1)) both;
 }
 
 .bp-chrome {

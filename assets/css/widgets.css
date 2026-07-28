@@ -600,6 +600,9 @@ body.bp-body { min-height: 100dvh; display: block; }
 .rules-modal.active,
 .rules-modal.show {
   display: grid !important;
+}
+.rules-modal.active .rules-container,
+.rules-modal.show .rules-container {
   animation: bp-rise 0.3s ease both;
 }
 .rules-container {
