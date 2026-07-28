@@ -96,10 +96,10 @@
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="assets/css/bariplux.css?v=20260728r">
-    <link rel="stylesheet" href="assets/css/site.css?v=20260728s">
+    <link rel="stylesheet" href="assets/css/site.css?v=20260728t">
     <link rel="stylesheet" href="assets/css/shell.css?v=20260728r">
     <link rel="stylesheet" href="assets/css/widgets.css?v=20260728r">
-    <link rel="stylesheet" href="assets/css/pages/home.css?v=20260728s">
+    <link rel="stylesheet" href="assets/css/pages/home.css?v=20260728t">
     <script src="assets/js/protect.js" defer></script>
     <script src="assets/js/signal-ambient.js?v=20260728r" defer></script>
     <script src="assets/js/home.js" defer></script>
@@ -770,34 +770,7 @@
         </div>
     </section>
 
-    <!-- PUBG Mobile Events -->
-<section class="pubg-events section" id="pubg-events">
-    <div class="container">
-        <h2 class="section-title glass">PUBG Mobile Events</h2>
-        <p class="section-subtitle">Season 4.5 boards and upcoming drops</p>
-
-        <div class="events-grid">
-            <a href="pubgevents430" class="event-item glass">
-                <div class="event-icon" aria-hidden="true"><i class="fas fa-calendar-check"></i></div>
-                <div class="event-details">
-                    <h3>All events</h3>
-                    <p>Current &amp; upcoming boards</p>
-                </div>
-                <span class="event-btn" aria-hidden="true"><i class="fas fa-arrow-right"></i></span>
-            </a>
-            <a href="pubgevents430" class="event-item glass">
-                <div class="event-icon" aria-hidden="true"><i class="fas fa-rocket"></i></div>
-                <div class="event-details">
-                    <h3>Future events</h3>
-                    <p>Next season previews</p>
-                </div>
-                <span class="event-btn" aria-hidden="true"><i class="fas fa-arrow-right"></i></span>
-            </a>
-        </div>
-    </div>
-</section>
-
-<!-- Blog Section -->
+    <!-- Blog Section -->
 <section id="blog" class="section">
     <div class="container">
         <header class="section-head">
@@ -1018,33 +991,54 @@
         </div>
     </section>
 
-    <!-- Support Availability -->
-<section class="working-hours section" id="support">
+    <!-- Live hub — events + support -->
+<section class="live-hub section" id="live">
     <div class="container">
-        <h2 class="section-title glass">Support Availability</h2>
-        <p class="section-subtitle">Daily 4:00–8:00 PM UTC · Telegram anytime</p>
+        <h2 class="section-title glass">Live now</h2>
+        <p class="section-subtitle">Season boards and support in one place</p>
 
-        <div class="hours-card glass">
-            <div class="hours-meta">
-                <div class="current-utc">
-                    <span class="meta-label">UTC now</span>
-                    <span class="meta-value" id="current-utc-time">Loading…</span>
+        <div class="live-hub__shell glass liquid">
+            <article class="live-pane live-pane--events" id="pubg-events">
+                <div class="live-pane__top">
+                    <span class="live-chip">Season 4.5</span>
+                    <span class="live-chip live-chip--soft">PUBG Mobile</span>
                 </div>
-                <div class="status-indicator">
-                    <span class="meta-label">Status</span>
-                    <span class="status-value" id="support-status">Checking…</span>
-                </div>
-            </div>
-            <div class="hours-actions">
-                <a href="https://t.me/BariPlux" class="contact-btn bp-btn bp-btn--glass" target="_blank" rel="noopener">
-                    <i class="fab fa-telegram" aria-hidden="true"></i>
-                    Telegram
+                <h3 class="live-pane__title">Events</h3>
+                <p class="live-pane__text">Current boards, rewards, and what’s coming next.</p>
+                <a href="pubgevents430" class="live-pane__cta bp-btn bp-btn--glass">
+                    Open events
+                    <i class="fas fa-arrow-right" aria-hidden="true"></i>
                 </a>
-                <button type="button" class="timezone-help-btn bp-btn bp-btn--ghost" id="timezone-help">
-                    <i class="fas fa-question-circle" aria-hidden="true"></i>
-                    Timezone
-                </button>
-            </div>
+            </article>
+
+            <div class="live-hub__rule" aria-hidden="true"></div>
+
+            <article class="live-pane live-pane--support" id="support">
+                <div class="live-pane__top">
+                    <span class="live-chip">Daily window</span>
+                    <span class="live-chip live-chip--soft">4:00–8:00 PM UTC</span>
+                </div>
+                <h3 class="live-pane__title">Support</h3>
+                <div class="live-status">
+                    <div class="live-status__cell">
+                        <span class="meta-label">UTC now</span>
+                        <span class="meta-value" id="current-utc-time">Loading…</span>
+                    </div>
+                    <div class="live-status__cell">
+                        <span class="meta-label">Status</span>
+                        <span class="status-value" id="support-status">Checking…</span>
+                    </div>
+                </div>
+                <div class="live-pane__actions">
+                    <a href="https://t.me/BariPlux" class="bp-btn bp-btn--glass contact-btn" target="_blank" rel="noopener">
+                        <i class="fab fa-telegram" aria-hidden="true"></i>
+                        Telegram
+                    </a>
+                    <button type="button" class="bp-btn bp-btn--ghost timezone-help-btn" id="timezone-help">
+                        Timezone
+                    </button>
+                </div>
+            </article>
         </div>
     </div>
 </section>

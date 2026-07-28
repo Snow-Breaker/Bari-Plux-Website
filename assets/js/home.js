@@ -48,8 +48,7 @@
       '.pubg-card',
       '.feedback-card',
       '.faq-item',
-      '.hours-card',
-      '.event-item',
+      '.live-hub__shell',
       '.footer-col'
     ];
 

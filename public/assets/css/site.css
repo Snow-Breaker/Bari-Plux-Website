@@ -894,84 +894,22 @@ button, input, textarea { font: inherit; color: inherit; }
 .faq-cta p { margin: 0 0 0.85rem; color: var(--text-2); font-size: 0.9rem; }
 
 /* ═══════════════ SUPPORT AVAILABILITY ═══════════════ */
-.working-hours {
+.live-hub {
   position: relative;
   z-index: var(--z-content);
   padding: clamp(2.25rem, 5vw, 4rem) 0;
 }
-.hours-card {
-  max-width: 520px;
+.live-hub__shell {
+  max-width: 860px;
   margin: 0 auto;
-  padding: 1.15rem 1.25rem;
+  border-radius: var(--r-card);
   background: var(--card-fill);
   border: 1px solid var(--card-border);
-  border-radius: var(--r-card);
   box-shadow: inset 0 1px 0 var(--sheen);
 }
-.hours-meta {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.75rem;
-}
-.meta-label {
-  display: block;
-  margin-bottom: 0.2rem;
-  font-size: 0.7rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--text-3);
-}
-.meta-value, .status-value {
-  font-size: 0.95rem;
-  font-weight: 650;
-  font-variant-numeric: tabular-nums;
-}
-.status-value { color: var(--accent-2); }
-.hours-actions { display: flex; flex-wrap: wrap; gap: 0.55rem; }
-.contact-btn, .timezone-help-btn {
-  display: inline-flex; align-items: center; gap: 0.4rem;
-  padding: 0.55rem 0.9rem; border-radius: var(--r-btn);
-  border: 1px solid var(--accent-ring); background: var(--accent-btn);
-  color: #fff; cursor: pointer; font-weight: 600; font-size: 0.86rem;
-}
-.timezone-help-btn { background: rgba(255,255,255,0.07); border-color: var(--chrome-border); color: var(--text); }
 .timezone-examples { padding: 1rem; margin: 0.85rem 0; }
 .timezone-examples ul { padding-left: 1.1rem; list-style: disc; color: var(--text-2); }
 .timezone-examples li { margin: 0.25rem 0; }
-
-/* ═══════════════ PUBG EVENTS ═══════════════ */
-.pubg-events {
-  position: relative;
-  z-index: var(--z-content);
-  padding: clamp(2.25rem, 5vw, 4rem) 0;
-}
-.events-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
-  max-width: 720px;
-  margin: 0 auto;
-}
-.event-item {
-  display: flex; align-items: center; gap: 0.75rem;
-  padding: 1.05rem 1.1rem;
-  background: var(--card-fill);
-  border: 1px solid var(--card-border);
-  border-radius: var(--r-card);
-  box-shadow: inset 0 1px 0 var(--sheen);
-  text-decoration: none; color: inherit;
-}
-.event-icon {
-  width: 40px; height: 40px; display: grid; place-items: center;
-  border-radius: 11px; background: var(--accent-soft); color: var(--accent-2); flex: 0 0 auto;
-}
-.event-details { flex: 1; min-width: 0; }
-.event-details h3 { margin: 0 0 0.15rem; font-size: 0.98rem; }
-.event-details p { margin: 0; color: var(--text-3); font-size: 0.8rem; }
-.event-btn {
-  width: 32px; height: 32px; display: grid; place-items: center;
-  border-radius: 9px; background: var(--accent-btn); color: #fff; flex: 0 0 auto; font-size: 0.75rem;
-}
 
 /* ═══════════════ MERGED ABOUT STRIP ═══════════════ */
 .about-merged {
@@ -1068,7 +1006,7 @@ button, input, textarea { font: inherit; color: inherit; }
 .blog-card,
 .feedback-card,
 .hours-card,
-.event-item,
+.live-hub__shell,
 .youtube-container,
 .spec-item {
   background:
@@ -1398,7 +1336,7 @@ body.bp-body {
 .feedback-card,
 .faq-item,
 .hours-card,
-.events-card {
+.live-hub__shell {
   transition:
     transform 0.28s var(--ease, cubic-bezier(0.22,1,0.36,1)),
     border-color 0.28s ease,
