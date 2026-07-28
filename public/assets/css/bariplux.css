@@ -838,34 +838,46 @@ html[data-theme="light"],
   scrollbar-color: rgba(79, 70, 229, 0.4) transparent;
 }
 
-html[data-theme="light"] .bp-chrome::before,
-[data-theme="light"] .bp-chrome::before {
-  background: linear-gradient(
-    180deg,
-    rgba(244, 246, 251, 0.45) 0%,
-    transparent 100%
-  );
-}
-
 html[data-theme="light"] .bp-chrome,
 [data-theme="light"] .bp-chrome {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.86) 0%, rgba(255, 255, 255, 0.72) 100%) !important;
-  border-bottom-color: rgba(15, 20, 40, 0.1) !important;
-  box-shadow: 0 8px 24px rgba(15, 20, 40, 0.06) !important;
-}
-
-html[data-theme="light"] .bp-chrome__inner,
-[data-theme="light"] .bp-chrome__inner,
-html[data-theme="light"] .bp-chrome.scrolled .bp-chrome__inner,
-[data-theme="light"] .bp-chrome.scrolled .bp-chrome__inner {
   background: transparent !important;
   border: 0 !important;
   box-shadow: none !important;
 }
 
+html[data-theme="light"] .bp-chrome::before,
+[data-theme="light"] .bp-chrome::before {
+  background: linear-gradient(
+    180deg,
+    rgba(244, 246, 251, 0.72) 0%,
+    rgba(244, 246, 251, 0.35) 48%,
+    transparent 100%
+  );
+  backdrop-filter: blur(44px) saturate(160%);
+  -webkit-backdrop-filter: blur(44px) saturate(160%);
+}
+
+html[data-theme="light"] .bp-chrome__inner,
+[data-theme="light"] .bp-chrome__inner {
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.62) 45%, rgba(255, 255, 255, 0.4) 100%),
+    rgba(255, 255, 255, 0.55) !important;
+  border: 1px solid rgba(15, 20, 40, 0.12) !important;
+  box-shadow:
+    0 12px 32px rgba(15, 20, 40, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95) !important;
+}
+
+html[data-theme="light"] .bp-chrome.scrolled .bp-chrome__inner,
+[data-theme="light"] .bp-chrome.scrolled .bp-chrome__inner {
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.96) 0%, rgba(255, 255, 255, 0.72) 50%, rgba(255, 255, 255, 0.5) 100%),
+    rgba(255, 255, 255, 0.7) !important;
+}
+
 html[data-theme="light"] .bp-chrome.scrolled,
 [data-theme="light"] .bp-chrome.scrolled {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.94) 0%, rgba(255, 255, 255, 0.82) 100%) !important;
+  background: transparent !important;
 }
 
 html[data-theme="light"] .bp-logo__text,
