@@ -391,6 +391,7 @@
             try {
                 sessionStorage.removeItem('desktop_login_flow');
                 sessionStorage.removeItem('discord_desktop_flow');
+                sessionStorage.removeItem('github_desktop_flow');
             } catch (e) {}
             const status = document.getElementById('openAppStatus');
             const btn = document.getElementById('openAppBtn');
@@ -1037,8 +1038,10 @@
             }
         });
 
-        // ==================== GITHUB LOGIN (custom OAuth via Worker — like Discord) ====================
+        // ==================== GITHUB LOGIN (popup OAuth via Worker; full-page fallback) ====================
         const GITHUB_OAUTH_CLIENT_ID = 'Ov23liYBk9X5ykqEvjCA';
+        const GITHUB_BTN_HTML = '<i class="fab fa-github" style="font-size:1.2rem;"></i> Sign in with GitHub';
+        let githubPopupWatch = null;
 
         function githubRedirectUri() {
             var host = location.hostname;
@@ -1048,14 +1051,14 @@
             return location.origin + (location.pathname.indexOf('login1') >= 0 ? location.pathname.split('?')[0] : '/login1.html');
         }
 
-        async function handleGithubLogin() {
-            markDesktopFlowIfNeeded();
-            const state = crypto.randomUUID();
-            try {
-                sessionStorage.setItem('github_oauth_state', state);
-                if (isDesktopFlow()) sessionStorage.setItem('github_desktop_flow', '1');
-            } catch (e) {}
+        function resetGithubButton() {
+            const btn = document.getElementById('btnGitHubLogin');
+            if (!btn) return;
+            btn.disabled = false;
+            btn.innerHTML = GITHUB_BTN_HTML;
+        }
 
+        function buildGithubAuthUrl(state) {
             const redirectUri = githubRedirectUri();
             const params = new URLSearchParams({
                 client_id: GITHUB_OAUTH_CLIENT_ID,
@@ -1064,97 +1067,190 @@
                 state,
                 allow_signup: 'true'
             });
-            window.location.href = 'https://github.com/login/oauth/authorize?' + params.toString();
+            return 'https://github.com/login/oauth/authorize?' + params.toString();
         }
 
-        async function handleGithubCallback() {
-            const params = new URLSearchParams(window.location.search);
-            const oauthErr = params.get('error');
-            if (oauthErr) {
-                const desc = params.get('error_description') || oauthErr;
-                showNotification('GitHub OAuth error: ' + decodeURIComponent(desc.replace(/\+/g, ' ')), 'error', 10000);
-                window.history.replaceState({}, document.title, window.location.pathname);
-                return;
-            }
-
-            const code = params.get('code');
-            const state = params.get('state');
-            if (!code) return;
-
+        async function finishGithubLoginWithCode(code, state) {
             const savedState = sessionStorage.getItem('github_oauth_state');
-            if (!savedState) return; // not our GitHub flow (maybe Discord)
-            if (!state || state !== savedState) {
-                showNotification('Security error: GitHub OAuth state mismatch. Please try again.', 'error');
-                window.history.replaceState({}, document.title, window.location.pathname);
-                sessionStorage.removeItem('github_oauth_state');
-                return;
+            if (!savedState || !state || state !== savedState) {
+                throw new Error('GitHub OAuth state mismatch. Please try again.');
             }
             sessionStorage.removeItem('github_oauth_state');
 
-            const wasDesktopFlow = params.get('desktop') === '1' ||
-                sessionStorage.getItem('github_desktop_flow') === '1' ||
-                sessionStorage.getItem('desktop_login_flow') === '1';
+            const wasDesktopFlow = sessionStorage.getItem('github_desktop_flow') === '1'
+                || sessionStorage.getItem('desktop_login_flow') === '1'
+                || new URLSearchParams(location.search).get('desktop') === '1';
             sessionStorage.removeItem('github_desktop_flow');
 
             const redirectUri = githubRedirectUri();
             showNotification('Connecting GitHub account...', 'success');
 
+            const response = await fetch('https://discord-auth-worker.bariattaye2.workers.dev/github', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code, redirectUri }),
+                signal: AbortSignal.timeout(15000)
+            });
+            const payload = await response.json().catch(() => ({}));
+            if (!response.ok) {
+                throw new Error(
+                    (typeof payload.detail === 'string' ? payload.detail : null)
+                    || payload.error
+                    || 'GitHub worker request failed'
+                );
+            }
+            if (!payload.customToken) throw new Error('GitHub custom token missing');
+            if (!firebaseInitialized || !auth) throw new Error('Firebase is not available');
+
+            await auth.signInWithCustomToken(payload.customToken);
+            const firebaseUser = auth.currentUser;
+            const gh = payload.githubUser || {};
+
+            const userData = {
+                id: firebaseUser ? firebaseUser.uid : ('github_' + gh.id),
+                githubId: gh.id,
+                name: gh.name || gh.login || 'GitHub User',
+                email: gh.email || ((gh.login || 'user') + '@users.noreply.github.com'),
+                loginMethod: 'github',
+                loginTime: new Date().toISOString(),
+                photoURL: gh.avatar_url || null
+            };
+            localStorage.setItem('bariplux_user', JSON.stringify(userData));
+
+            if (wasDesktopFlow) {
+                try { sessionStorage.setItem('desktop_login_flow', '1'); } catch (e) {}
+            }
+            showLoggedInView(userData);
+            resetGithubButton();
+            return userData;
+        }
+
+        function handleGithubLogin() {
+            markDesktopFlowIfNeeded();
+            const state = crypto.randomUUID();
             try {
-                const response = await fetch('https://discord-auth-worker.bariattaye2.workers.dev/github', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ code, redirectUri }),
-                    signal: AbortSignal.timeout(15000)
-                });
-                const payload = await response.json().catch(() => ({}));
-                if (!response.ok) {
-                    throw new Error(
-                        (typeof payload.detail === 'string' ? payload.detail : null)
-                        || payload.error
-                        || 'GitHub worker request failed'
-                    );
+                sessionStorage.setItem('github_oauth_state', state);
+                if (isDesktopFlow()) sessionStorage.setItem('github_desktop_flow', '1');
+            } catch (e) {}
+
+            const authUrl = buildGithubAuthUrl(state);
+            const w = 600, h = 720;
+            const left = Math.max(0, Math.round(window.screenX + (window.outerWidth - w) / 2));
+            const top = Math.max(0, Math.round(window.screenY + (window.outerHeight - h) / 2));
+            const features = 'width=' + w + ',height=' + h + ',left=' + left + ',top=' + top + ',menubar=no,toolbar=no,status=no,resizable=yes,scrollbars=yes';
+            let popup = null;
+            try {
+                popup = window.open(authUrl, 'bariplux_github_oauth', features);
+            } catch (e) {
+                popup = null;
+            }
+
+            if (!popup || popup.closed) {
+                // Popup blocked — same-tab fallback
+                window.location.href = authUrl;
+                return;
+            }
+
+            try { popup.focus(); } catch (e) {}
+
+            if (githubPopupWatch) clearInterval(githubPopupWatch);
+            githubPopupWatch = setInterval(function () {
+                if (!popup || popup.closed) {
+                    clearInterval(githubPopupWatch);
+                    githubPopupWatch = null;
+                    resetGithubButton();
                 }
-                if (!payload.customToken) throw new Error('GitHub custom token missing');
-                if (!firebaseInitialized || !auth) throw new Error('Firebase is not available');
+            }, 600);
+        }
 
-                await auth.signInWithCustomToken(payload.customToken);
-                const firebaseUser = auth.currentUser;
-                const gh = payload.githubUser || {};
+        async function handleGithubCallback() {
+            const params = new URLSearchParams(window.location.search);
+            const oauthErr = params.get('error');
+            const code = params.get('code');
+            const state = params.get('state');
 
-                const userData = {
-                    id: firebaseUser ? firebaseUser.uid : ('github_' + gh.id),
-                    githubId: gh.id,
-                    name: gh.name || gh.login || 'GitHub User',
-                    email: gh.email || ((gh.login || 'user') + '@users.noreply.github.com'),
-                    loginMethod: 'github',
-                    loginTime: new Date().toISOString(),
-                    photoURL: gh.avatar_url || null
-                };
-                localStorage.setItem('bariplux_user', JSON.stringify(userData));
-
-                if (wasDesktopFlow) {
-                    try { sessionStorage.setItem('desktop_login_flow', '1'); } catch (e) {}
+            // Popup child: hand code back to opener (sessionStorage is NOT shared across windows)
+            if (code && window.opener && !window.opener.closed) {
+                try {
+                    window.opener.postMessage({
+                        type: 'bariplux-github-oauth',
+                        ok: !oauthErr,
+                        error: oauthErr ? (params.get('error_description') || oauthErr) : null,
+                        code: oauthErr ? null : code,
+                        state: state
+                    }, location.origin);
+                } catch (e) {
+                    console.error('[github popup postMessage]', e);
                 }
-                window.history.replaceState({}, document.title, window.location.pathname + (wasDesktopFlow ? '?desktop=1' : ''));
-                // Always paint account card; desktop open-app panel attaches underneath
-                showLoggedInView(userData);
+                document.body.innerHTML = '<div style="font-family:system-ui,sans-serif;text-align:center;padding:48px 20px;color:#e8e8e8;background:#0b0b0f;min-height:100vh;box-sizing:border-box;">'
+                    + '<div style="font-size:1.1rem;font-weight:600;margin-bottom:8px;">GitHub sign-in complete</div>'
+                    + '<div style="opacity:0.7;font-size:0.9rem;">This window will close automatically.</div></div>';
+                setTimeout(function () { try { window.close(); } catch (e) {} }, 400);
+                return;
+            }
+
+            if (oauthErr) {
+                const desc = params.get('error_description') || oauthErr;
+                showNotification('GitHub OAuth error: ' + decodeURIComponent(String(desc).replace(/\+/g, ' ')), 'error', 10000);
+                window.history.replaceState({}, document.title, window.location.pathname);
+                resetGithubButton();
+                return;
+            }
+
+            if (!code) return;
+
+            // Full-page fallback (no opener): verify state in this tab's sessionStorage
+            const savedState = sessionStorage.getItem('github_oauth_state');
+            if (!savedState) return;
+            try {
+                await finishGithubLoginWithCode(code, state);
+                window.history.replaceState({}, document.title, window.location.pathname + (isDesktopFlow() ? '?desktop=1' : ''));
             } catch (error) {
                 console.error('GitHub login error:', error);
                 window.history.replaceState({}, document.title, window.location.pathname);
                 showNotification('GitHub login failed: ' + (error.message || 'Unknown error'), 'error', 10000);
+                resetGithubButton();
             }
+        }
+
+        function onGithubPopupMessage(event) {
+            if (event.origin !== location.origin) return;
+            const data = event.data;
+            if (!data || data.type !== 'bariplux-github-oauth') return;
+
+            if (githubPopupWatch) {
+                clearInterval(githubPopupWatch);
+                githubPopupWatch = null;
+            }
+
+            if (!data.ok) {
+                showNotification('GitHub OAuth error: ' + (data.error || 'cancelled'), 'error', 8000);
+                resetGithubButton();
+                return;
+            }
+            if (!data.code) {
+                resetGithubButton();
+                return;
+            }
+
+            finishGithubLoginWithCode(data.code, data.state).catch(function (error) {
+                console.error('GitHub popup login error:', error);
+                showNotification('GitHub login failed: ' + (error.message || 'Unknown error'), 'error', 10000);
+                resetGithubButton();
+            });
         }
 
         document.getElementById('btnGitHubLogin').addEventListener('click', function(e) {
             e.preventDefault();
             const btn = this;
             btn.disabled = true;
-            btn.innerHTML = '<div class="loading-spinner"></div> Redirecting to GitHub...';
-            handleGithubLogin().catch(async (error) => {
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fab fa-github" style="font-size:1.2rem;"></i> Sign in with GitHub';
-                await handleAuthError(error, 'GitHub');
-            });
+            btn.innerHTML = '<div class="loading-spinner"></div> Opening GitHub...';
+            try {
+                handleGithubLogin();
+            } catch (error) {
+                resetGithubButton();
+                handleAuthError(error, 'GitHub');
+            }
         });
 
         // ── PKCE helpers ──────────────────────────────────────────
@@ -1564,6 +1660,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             if (isAppEmbed()) document.body.classList.add('app-embed');
             markDesktopFlowIfNeeded();
+            window.addEventListener('message', onGithubPopupMessage);
             initFirebase();
             handleDiscordCallback();
             handleGithubCallback();
