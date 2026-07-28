@@ -4,6 +4,9 @@
  *
  * Zone routes (bariplux.com / www): fetch(request) goes to the origin.
  * workers.dev: proxy https://bariplux.com for header smoke tests.
+ *
+ * Requires Cloudflare SSL/TLS mode Full or Full (strict). Flexible causes
+ * an infinite HTTPS redirect loop with GitHub Pages Enforce HTTPS.
  */
 export default {
   async fetch(request) {
