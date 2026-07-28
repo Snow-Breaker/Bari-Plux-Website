@@ -66,7 +66,8 @@
               '<i class="fas fa-search" aria-hidden="true"></i>' +
             '</button>' +
             '<button type="button" id="theme-toggle" class="bp-icon-btn" title="Toggle theme" aria-label="Toggle theme">' +
-              '<span class="moon-icon">☾</span><span class="sun-icon">☀</span>' +
+              '<i class="fas fa-moon moon-icon" aria-hidden="true"></i>' +
+              '<i class="fas fa-sun sun-icon" aria-hidden="true"></i>' +
             '</button>' +
             '<div class="bp-account user-menu-container">' +
               '<button type="button" id="loginBtnHeader" class="bp-btn bp-btn--glass login-btn-header" title="Login">' +
@@ -97,7 +98,7 @@
     if (document.querySelector('link[data-bp-search-css]')) return;
     var link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = 'assets/css/site-search.css?v=20260728x';
+    link.href = 'assets/css/site-search.css?v=20260728z';
     link.setAttribute('data-bp-search-css', '1');
     document.head.appendChild(link);
   }
@@ -109,7 +110,7 @@
     }
     if (document.querySelector('script[data-bp-search-js]')) return;
     var s = document.createElement('script');
-    s.src = 'assets/js/site-search.js?v=20260728x';
+    s.src = 'assets/js/site-search.js?v=20260728z';
     s.defer = true;
     s.setAttribute('data-bp-search-js', '1');
     document.head.appendChild(s);
@@ -187,6 +188,26 @@
       (user.email ? String(user.email).split('@')[0] : 'User');
   }
 
+  function resolvePhotoUrl(user) {
+    if (!user) return '';
+    var photo = user.photoURL || user.photoUrl || user.avatar || '';
+    if (!photo) return '';
+    photo = String(photo);
+    if (/^https?:\/\//i.test(photo)) return photo;
+    var discordId = user.discordId || '';
+    if (!discordId) {
+      try {
+        var d = JSON.parse(localStorage.getItem('discord_user') || 'null');
+        if (d && d.id) discordId = d.id;
+        if ((!photo || photo.indexOf('/') === -1) && d && d.avatar) photo = d.avatar;
+      } catch (e) { /* ignore */ }
+    }
+    if (discordId && photo.indexOf('/') === -1 && photo.length >= 16) {
+      return 'https://cdn.discordapp.com/avatars/' + discordId + '/' + photo + '.png?size=128';
+    }
+    return photo;
+  }
+
   function updateLoginUi() {
     var user = readUser();
     var btn = document.getElementById('loginBtnHeader');
@@ -196,13 +217,13 @@
     if (!btn) return;
     if (user) {
       var userName = resolveUserName(user);
-      var photo = user.photoURL || user.photoUrl || user.avatar || '';
+      var photo = resolvePhotoUrl(user);
       var shortName = userName.length > 14 ? userName.slice(0, 14) + '…' : userName;
       var initial = userName.charAt(0).toUpperCase();
       if (photo) {
         btn.innerHTML =
           '<span class="bp-user-chip">' +
-            '<img class="bp-user-chip__avatar" src="' + photo + '" alt="" referrerpolicy="no-referrer">' +
+            '<img class="bp-user-chip__avatar" src="' + photo + '" alt="" referrerpolicy="no-referrer" crossorigin="anonymous">' +
             '<span>' + shortName + '</span>' +
           '</span>';
       } else {
@@ -217,7 +238,7 @@
       if (avatar) {
         avatar.style.backgroundImage = '';
         if (photo) {
-          avatar.innerHTML = '<img src="' + photo + '" alt="" referrerpolicy="no-referrer">';
+          avatar.innerHTML = '<img src="' + photo + '" alt="" referrerpolicy="no-referrer" crossorigin="anonymous">';
         } else {
           avatar.innerHTML = initial;
         }

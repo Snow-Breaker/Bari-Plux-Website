@@ -842,28 +842,30 @@ html[data-theme="light"] .bp-chrome::before,
 [data-theme="light"] .bp-chrome::before {
   background: linear-gradient(
     180deg,
-    rgba(244, 246, 251, 0.55) 0%,
-    rgba(244, 246, 251, 0.22) 50%,
+    rgba(244, 246, 251, 0.45) 0%,
     transparent 100%
   );
-  backdrop-filter: blur(52px) saturate(160%);
-  -webkit-backdrop-filter: blur(52px) saturate(160%);
+}
+
+html[data-theme="light"] .bp-chrome,
+[data-theme="light"] .bp-chrome {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.86) 0%, rgba(255, 255, 255, 0.72) 100%) !important;
+  border-bottom-color: rgba(15, 20, 40, 0.1) !important;
+  box-shadow: 0 8px 24px rgba(15, 20, 40, 0.06) !important;
 }
 
 html[data-theme="light"] .bp-chrome__inner,
-[data-theme="light"] .bp-chrome__inner {
-  background:
-    linear-gradient(165deg, rgba(255, 255, 255, 0.72) 0%, rgba(255, 255, 255, 0.4) 45%, transparent 100%),
-    rgba(255, 255, 255, 0.58) !important;
-  border-color: rgba(15, 20, 40, 0.12) !important;
-  box-shadow: 0 10px 28px rgba(15, 20, 40, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
-}
-
+[data-theme="light"] .bp-chrome__inner,
 html[data-theme="light"] .bp-chrome.scrolled .bp-chrome__inner,
 [data-theme="light"] .bp-chrome.scrolled .bp-chrome__inner {
-  background:
-    linear-gradient(165deg, rgba(255, 255, 255, 0.82) 0%, rgba(255, 255, 255, 0.5) 45%, transparent 100%),
-    rgba(255, 255, 255, 0.7) !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+html[data-theme="light"] .bp-chrome.scrolled,
+[data-theme="light"] .bp-chrome.scrolled {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.94) 0%, rgba(255, 255, 255, 0.82) 100%) !important;
 }
 
 html[data-theme="light"] .bp-logo__text,

@@ -19,10 +19,30 @@
             (user.email ? String(user.email).split('@')[0] : 'User');
     }
 
+    function resolvePhotoUrl(user) {
+        if (!user) return '';
+        let photo = user.photoURL || user.photoUrl || user.avatar || '';
+        if (!photo) return '';
+        photo = String(photo);
+        if (/^https?:\/\//i.test(photo)) return photo;
+        let discordId = user.discordId || '';
+        if (!discordId) {
+            try {
+                const d = JSON.parse(localStorage.getItem('discord_user') || 'null');
+                if (d && d.id) discordId = d.id;
+                if (photo.indexOf('/') === -1 && d && d.avatar) photo = d.avatar;
+            } catch (e) { /* ignore */ }
+        }
+        if (discordId && photo.indexOf('/') === -1 && photo.length >= 16) {
+            return 'https://cdn.discordapp.com/avatars/' + discordId + '/' + photo + '.png?size=128';
+        }
+        return photo;
+    }
+
     function avatarMarkup(user, sizeClass) {
         const name = resolveUserName(user);
         const initial = name.charAt(0).toUpperCase();
-        const photo = user && (user.photoURL || user.photoUrl || user.avatar);
+        const photo = resolvePhotoUrl(user);
         if (photo) {
             return `<img class="${sizeClass}" src="${photo}" alt="" referrerpolicy="no-referrer" onerror="this.style.display='none';var s=document.createElement('span');s.className='bp-user-chip__initial';s.textContent='${initial}';this.parentNode.insertBefore(s,this);">`;
         }
@@ -41,12 +61,11 @@
                 const user = JSON.parse(storedUser);
                 const userName = resolveUserName(user);
                 const userEmail = user.email || '';
-                const photo = user.photoURL || user.photoUrl || user.avatar || '';
+                const photo = resolvePhotoUrl(user);
                 const shortName = userName.length > 14 ? userName.substring(0, 14) + '…' : userName;
                 
                 loginBtn.innerHTML = `<span class="bp-user-chip">${avatarMarkup(user, 'bp-user-chip__avatar')}<span>${shortName}</span></span>`;
                 loginBtn.style.cursor = 'pointer';
-                /* onclick removed — wired once via wireLoginButton */
                 
                 const avatarEl = document.getElementById('userAvatar');
                 if (avatarEl) {

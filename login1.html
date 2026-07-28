@@ -1040,13 +1040,19 @@
                 // Store locally and show UI immediately
                 localStorage.setItem('discord_user', JSON.stringify(discordUser));
                 window.history.replaceState({}, document.title, window.location.pathname);
+                const avatarUrl = discordUser.avatar
+                    ? (String(discordUser.avatar).startsWith('http')
+                        ? discordUser.avatar
+                        : `https://cdn.discordapp.com/avatars/${discordUser.id}/${discordUser.avatar}.png?size=128`)
+                    : null;
                 const userData = {
                     id: firebaseUser.uid,
-                    name: discordUser.username,
+                    discordId: discordUser.id,
+                    name: discordUser.global_name || discordUser.username,
                     email: discordUser.email || discordUser.username + '@discord',
                     loginMethod: 'discord',
                     loginTime: new Date().toISOString(),
-                    photoURL: discordUser.avatar
+                    photoURL: avatarUrl
                 };
                 localStorage.setItem('bariplux_user', JSON.stringify(userData));
 
