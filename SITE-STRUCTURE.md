@@ -20,9 +20,11 @@ These stay at the **repo root** exactly as they are — desktop v2.2 depends on 
 | `assets/css/liquid-polish.css` | Liquid glass materials + light mode |
 | `assets/css/experience.css` | Type, videos/blog/rules polish, scrollbar, motion |
 | `assets/js/protect.js` | Copy/devtools deterrents + Ctrl+S unavailable page |
+| `assets/js/boot.js` | Early theme FOUC fix, mobile redirect, preload activation |
 | `assets/js/signal-ambient.js` | Constellation ambient (loaded by index) |
 | `assets/js/home.js` | Reveals / spotlight |
 | `assets/js/home-page.js` | Homepage interaction logic (extracted Phase 1) |
+| `manifest.json` | PWA manifest (`theme_color` `#030305`) |
 | `public/assets/*` | Mirrors for Firebase hosting |
 
 **Staging:** `glass-reference.html` — Liquid Glass hierarchy for visual sign-off before migrating legacy pages.

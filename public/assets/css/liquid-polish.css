@@ -642,3 +642,34 @@ html[data-theme="light"] .download-card::before,
 html[data-theme="light"] .video-card::before {
   background: linear-gradient(180deg, rgba(255,255,255,0.55) 0%, transparent 40%);
 }
+html[data-theme="light"] .section-title,
+html[data-theme="light"] .hero-title,
+html[data-theme="light"] .bp-logo__text {
+  color: var(--text);
+}
+html[data-theme="light"] .modal-content,
+html[data-theme="light"] .search-results-dropdown,
+html[data-theme="light"] .quiz-container {
+  color: var(--text);
+}
+html[data-theme="light"] .video-chip,
+html[data-theme="light"] .blog-badge {
+  color: var(--text);
+}
+html[data-theme="light"] .faq-item,
+html[data-theme="light"] .feedback-card,
+html[data-theme="light"] .hours-card,
+html[data-theme="light"] .events-card,
+html[data-theme="light"] .plux-article,
+html[data-theme="light"] .blog-card {
+  color: var(--text);
+}
+html[data-theme="light"] .faq-answer,
+html[data-theme="light"] .compact-info-item p,
+html[data-theme="light"] .hero-lead {
+  color: var(--text-2);
+}
+html[data-theme="light"] .bp-ambient__grain {
+  opacity: 0.03;
+  mix-blend-mode: multiply;
+}

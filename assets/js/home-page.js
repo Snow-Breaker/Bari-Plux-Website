@@ -132,7 +132,10 @@
             document.documentElement.setAttribute('data-theme', theme);
             document.body.setAttribute('data-theme', theme);
             localStorage.setItem('theme', theme);
-            // Soften constellation canvas stroke in light mode via CSS vars already
+            var metaTheme = document.querySelector('meta[name="theme-color"]');
+            if (metaTheme) {
+                metaTheme.setAttribute('content', theme === 'light' ? '#eef0f6' : '#030305');
+            }
         }
 
         applyTheme(currentTheme);

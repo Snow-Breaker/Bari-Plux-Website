@@ -116,7 +116,7 @@ button, input, textarea { font: inherit; color: inherit; }
   z-index: var(--z-ambient);
   pointer-events: none;
   overflow: hidden;
-  background: #030305;
+  background: var(--void);
 }
 
 .bp-ambient__wash {
