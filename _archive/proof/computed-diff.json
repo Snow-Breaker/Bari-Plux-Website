@@ -1,9 +1,30 @@
 {
-  "comparedAt": "2026-07-28T02:40:07.752Z",
-  "changedCount": 1,
+  "comparedAt": "2026-07-28T02:42:56.116Z",
+  "changedCount": 5,
   "missingCount": 0,
   "addedCount": 0,
-  "styleChanges": [],
+  "styleChanges": [
+    {
+      "key": "snapshots.dark@1440x900.__tokens.--bp-max",
+      "before": "",
+      "after": "1400px"
+    },
+    {
+      "key": "snapshots.dark@390x844.__tokens.--bp-max",
+      "before": "",
+      "after": "1400px"
+    },
+    {
+      "key": "snapshots.light@1440x900.__tokens.--bp-max",
+      "before": "",
+      "after": "1400px"
+    },
+    {
+      "key": "snapshots.light@390x844.__tokens.--bp-max",
+      "before": "",
+      "after": "1400px"
+    }
+  ],
   "stylesheetChanges": [
     {
       "key": "stylesheets",
@@ -13,7 +34,9 @@
         "http://127.0.0.1:8766/assets/css/experience.css?v=20260728d"
       ],
       "after": [
-        "http://127.0.0.1:8766/assets/css/site.css?v=20260728e"
+        "http://127.0.0.1:8766/assets/css/bariplux.css?v=20260728f",
+        "http://127.0.0.1:8766/assets/css/site.css?v=20260728f",
+        "http://127.0.0.1:8766/assets/css/widgets.css?v=20260728f"
       ]
     }
   ],

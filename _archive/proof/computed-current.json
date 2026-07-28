@@ -1,8 +1,10 @@
 {
-  "capturedAt": "2026-07-28T02:40:04.889Z",
+  "capturedAt": "2026-07-28T02:42:53.179Z",
   "url": "http://127.0.0.1:8766/index.html",
   "stylesheets": [
-    "http://127.0.0.1:8766/assets/css/site.css?v=20260728e"
+    "http://127.0.0.1:8766/assets/css/bariplux.css?v=20260728f",
+    "http://127.0.0.1:8766/assets/css/site.css?v=20260728f",
+    "http://127.0.0.1:8766/assets/css/widgets.css?v=20260728f"
   ],
   "snapshots": {
     "dark@1440x900": {
@@ -310,7 +312,7 @@
         "--text": "#f5f5f7",
         "--accent": "#818cf8",
         "--max": "1400px",
-        "--bp-max": "",
+        "--bp-max": "1400px",
         "--lg-fill": "rgba(18, 18, 24, 0.42)",
         "--font-d": "\"Space Grotesk\", \"Sora\", \"Segoe UI\", system-ui, sans-serif",
         "--font-b": "\"Sora\", \"Segoe UI\", system-ui, sans-serif"
@@ -621,7 +623,7 @@
         "--text": "#f5f5f7",
         "--accent": "#818cf8",
         "--max": "1400px",
-        "--bp-max": "",
+        "--bp-max": "1400px",
         "--lg-fill": "rgba(18, 18, 24, 0.42)",
         "--font-d": "\"Space Grotesk\", \"Sora\", \"Segoe UI\", system-ui, sans-serif",
         "--font-b": "\"Sora\", \"Segoe UI\", system-ui, sans-serif"
@@ -932,7 +934,7 @@
         "--text": "#12131a",
         "--accent": "#4f46e5",
         "--max": "1400px",
-        "--bp-max": "",
+        "--bp-max": "1400px",
         "--lg-fill": "rgba(255, 255, 255, 0.55)",
         "--font-d": "\"Space Grotesk\", \"Sora\", \"Segoe UI\", system-ui, sans-serif",
         "--font-b": "\"Sora\", \"Segoe UI\", system-ui, sans-serif"
@@ -1243,7 +1245,7 @@
         "--text": "#12131a",
         "--accent": "#4f46e5",
         "--max": "1400px",
-        "--bp-max": "",
+        "--bp-max": "1400px",
         "--lg-fill": "rgba(255, 255, 255, 0.55)",
         "--font-d": "\"Space Grotesk\", \"Sora\", \"Segoe UI\", system-ui, sans-serif",
         "--font-b": "\"Sora\", \"Segoe UI\", system-ui, sans-serif"

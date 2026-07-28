@@ -53,10 +53,23 @@
   --bp-dur: 280ms;
   --bp-dur-slow: 520ms;
 
-  /* Type */
-  --bp-font-display: "Syne", "Segoe UI", system-ui, sans-serif;
+  /* Type — match live homepage (Space Grotesk + Sora) */
+  --bp-font-display: "Space Grotesk", "Sora", "Segoe UI", system-ui, sans-serif;
   --bp-font-body: "Sora", "Segoe UI", system-ui, sans-serif;
   --bp-font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+  /* Live homepage token aliases (obsidian/site.css) — single source of truth */
+  --void: #030305;
+  --ink: #0c0c10;
+  --text: #f5f5f7;
+  --text-2: #c0c0c8;
+  --text-3: #888896;
+  --accent: #818cf8;
+  --accent-2: #a5b4fc;
+  --max: 1400px;
+  --font-d: var(--bp-font-display);
+  --font-b: var(--bp-font-body);
+  --font-m: var(--bp-font-mono);
 
   color-scheme: dark;
 }
@@ -403,58 +416,8 @@ a:hover {
   font-size: 0.82rem;
 }
 
-/* Nav chrome */
-.bp-nav {
-  position: sticky;
-  top: 14px;
-  z-index: 40;
-  margin: 14px auto 0;
-  width: min(var(--bp-max), 100% - (var(--bp-gutter) * 2));
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 10px 14px;
-  border-radius: 999px;
-}
-
-.bp-nav__links {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-wrap: wrap;
-}
-
-.bp-nav__link {
-  color: var(--bp-text-2);
-  font-size: 0.84rem;
-  font-weight: 500;
-  padding: 8px 12px;
-  border-radius: 999px;
-  transition: background var(--bp-dur) var(--bp-ease), color var(--bp-dur) var(--bp-ease);
-}
-
-.bp-nav__link:hover,
-.bp-nav__link.is-active {
-  color: var(--bp-text);
-  background: rgba(255, 255, 255, 0.06);
-}
-
-.bp-nav__mark {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  color: var(--bp-text);
-  font-family: var(--bp-font-display);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-}
-
-.bp-nav__mark img {
-  width: 28px;
-  height: 28px;
-  border-radius: 8px;
-}
+/* Nav chrome: homepage uses .bp-chrome/.bp-nav from site.css.
+   Do not define .bp-nav here — it fought mobile link widths (Phase 2.5). */
 
 /* Reveal */
 .bp-reveal {
@@ -481,10 +444,9 @@ a:hover {
 }
 
 @media (max-width: 720px) {
-  .bp-nav {
-    border-radius: var(--bp-radius);
-    flex-direction: column;
-    align-items: stretch;
+  /* Pro page utilities only — homepage breakpoints live in site.css */
+  .bp-page .bp-wrap {
+    padding-left: var(--bp-gutter);
+    padding-right: var(--bp-gutter);
   }
-  .bp-nav__links { justify-content: flex-start; }
 }
