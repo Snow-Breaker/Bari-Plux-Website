@@ -1,0 +1,63 @@
+<header class="header glass">
+    <div class="left">
+        <a href="#home" class="logo" style="display:flex;align-items:center;gap:12px;text-decoration:none">
+            <img class="logo-img" src="https://yt3.googleusercontent.com/RPW5Z_kcoEu0ES_VpL4-7ZqI4eI1OQfuVL-DbuCYWmRhXono9hA5NOCSGGMDLzJqNcHUlhOg=s160-c-k-c0x00ffffff-no-rj" alt="Bari Plux">
+            <span class="logo-text">Bari Plux</span>
+        </a>
+    </div>
+    
+    <nav class="nav">
+        <ul class="nav-links">
+            <li><a href="#home" class="nav-link active">Home</a></li>
+            <li><a href="#downloads" class="nav-link">Downloads</a></li>
+            <li><a href="#videos" class="nav-link">Videos</a></li>
+            <li><a href="#optimization-quiz" class="nav-link">Optimization Quiz</a></li>
+            <li><a href="#pubg" class="nav-link">Content</a></li>
+            <li><a href="#plux-times" class="nav-link">Plux Times</a></li>
+            <li><a href="#contact" class="nav-link">Contact</a></li>
+        </ul>
+    </nav>
+    
+    <div style="display:flex;align-items:center;gap:12px">
+        <!-- Collapsible Search Box -->
+        <div class="search-container">
+            <div class="collapsible-search glass" id="collapsible-search">
+                <i class="fas fa-search search-icon"></i>
+                <input type="search" class="search-input" placeholder="Search games, tools, guides..." id="header-search-input" autocomplete="off" role="searchbox">
+            </div>
+        </div>
+        
+        <div id="theme-toggle" class="theme-toggle glass" title="Toggle Theme">
+            <span class="moon-icon">🌙</span>
+            <span class="sun-icon">☀️</span>
+        </div>
+
+        <div class="user-menu-container">
+            <button id="loginBtnHeader" class="login-btn-header" title="Login" onclick="toggleUserDropdown(); event.stopPropagation();">
+                <i class="fas fa-sign-in-alt"></i>
+                <span>Login</span>
+            </button>
+            <div id="userDropdown" class="user-dropdown glass">
+                <div class="dropdown-header">
+                    <div id="userAvatar" class="user-avatar-small"></div>
+                    <div class="user-quick-info">
+                        <div id="userName" class="user-name-dropdown"></div>
+                        <div id="userEmail" class="user-email-dropdown"></div>
+                    </div>
+                </div>
+                <div class="dropdown-divider"></div>
+                <div class="dropdown-actions">
+                    <button type="button" id="viewProfileBtn" class="dropdown-btn">
+                        <i class="fas fa-user-circle"></i> Account Info
+                    </button>
+                    <button type="button" id="goToLoginBtn" class="dropdown-btn">
+                        <i class="fas fa-sign-in-alt"></i> Login Page
+                    </button>
+                    <button type="button" id="logoutBtn" class="dropdown-btn logout-btn">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>

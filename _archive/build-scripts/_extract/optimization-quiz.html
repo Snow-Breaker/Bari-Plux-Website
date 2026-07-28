@@ -1,0 +1,254 @@
+<section id="optimization-quiz" class="section">
+    <div class="container">
+        <h2 class="section-title glass">How Optimized is Your System for PUBG?</h2>
+        <p class="section-subtitle" style="text-align: center; margin-bottom: 40px; opacity: 0.8;">Take this 2-minute quiz to get personalized optimization recommendations</p>
+        
+        <div class="quiz-container glass">
+            <div class="quiz-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="quiz-progress" style="width: 0%"></div>
+                </div>
+                <span class="progress-text">Question <span id="current-question">1</span> of 8</span>
+            </div>
+            
+            <div class="quiz-content" id="quiz-content">
+                <!-- Question 1 -->
+                <div class="quiz-question active" id="question-1">
+                    <h3>What's your CPU?</h3>
+                    <div class="quiz-options">
+                        <button class="quiz-option" data-value="3">
+                            <span class="option-text">Intel Core i7/i9 or AMD Ryzen 7/9</span>
+                            <span class="option-badge">Premium</span>
+                        </button>
+                        <button class="quiz-option" data-value="2">
+                            <span class="option-text">Intel Core i5 or AMD Ryzen 5</span>
+                            <span class="option-badge">Good</span>
+                        </button>
+                        <button class="quiz-option" data-value="1">
+                            <span class="option-text">Intel Core i3 or AMD Ryzen 3</span>
+                            <span class="option-badge">Basic</span>
+                        </button>
+                        <button class="quiz-option" data-value="0">
+                            <span class="option-text">Older than 8th Gen Intel</span>
+                            <span class="option-badge">Entry</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Question 2 -->
+                <div class="quiz-question" id="question-2">
+                    <h3>What's your GPU?</h3>
+                    <div class="quiz-options">
+                        <button class="quiz-option" data-value="3">
+                            <span class="option-text">RTX 3060 or higher / RX 6600 or higher</span>
+                            <span class="option-badge">Premium</span>
+                        </button>
+                        <button class="quiz-option" data-value="2">
+                            <span class="option-text">GTX 1660 / RTX 3050 / RX 6500</span>
+                            <span class="option-badge">Good</span>
+                        </button>
+                        <button class="quiz-option" data-value="1">
+                            <span class="option-text">GTX 1050 / RX 560</span>
+                            <span class="option-badge">Basic</span>
+                        </button>
+                        <button class="quiz-option" data-value="0">
+                            <span class="option-text">Integrated Graphics</span>
+                            <span class="option-badge">Entry</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Question 3 -->
+                <div class="quiz-question" id="question-3">
+                    <h3>How much RAM do you have?</h3>
+                    <div class="quiz-options">
+                        <button class="quiz-option" data-value="3">
+                            <span class="option-text">32GB or more</span>
+                            <span class="option-badge">Premium</span>
+                        </button>
+                        <button class="quiz-option" data-value="2">
+                            <span class="option-text">16GB</span>
+                            <span class="option-badge">Good</span>
+                        </button>
+                        <button class="quiz-option" data-value="1">
+                            <span class="option-text">8GB</span>
+                            <span class="option-badge">Basic</span>
+                        </button>
+                        <button class="quiz-option" data-value="0">
+                            <span class="option-text">4GB or less</span>
+                            <span class="option-badge">Entry</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Question 4 -->
+                <div class="quiz-question" id="question-4">
+                    <h3>What storage type are you using?</h3>
+                    <div class="quiz-options">
+                        <button class="quiz-option" data-value="3">
+                            <span class="option-text">NVMe SSD</span>
+                            <span class="option-badge">Premium</span>
+                        </button>
+                        <button class="quiz-option" data-value="2">
+                            <span class="option-text">SATA SSD</span>
+                            <span class="option-badge">Good</span>
+                        </button>
+                        <button class="quiz-option" data-value="1">
+                            <span class="option-text">HDD 7200 RPM</span>
+                            <span class="option-badge">Basic</span>
+                        </button>
+                        <button class="quiz-option" data-value="0">
+                            <span class="option-text">HDD 5400 RPM</span>
+                            <span class="option-badge">Entry</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Question 5 -->
+                <div class="quiz-question" id="question-5">
+                    <h3>What's your current average FPS in PUBG?</h3>
+                    <div class="quiz-options">
+                        <button class="quiz-option" data-value="3">
+                            <span class="option-text">90+ FPS (Smooth/Ultra)</span>
+                            <span class="option-badge">Premium</span>
+                        </button>
+                        <button class="quiz-option" data-value="2">
+                            <span class="option-text">60-89 FPS (Balanced)</span>
+                            <span class="option-badge">Good</span>
+                        </button>
+                        <button class="quiz-option" data-value="1">
+                            <span class="option-text">30-59 FPS (Playable)</span>
+                            <span class="option-badge">Basic</span>
+                        </button>
+                        <button class="quiz-option" data-value="0">
+                            <span class="option-text">Below 30 FPS</span>
+                            <span class="option-badge">Entry</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Question 6 -->
+                <div class="quiz-question" id="question-6">
+                    <h3>Do you experience stuttering or lag spikes?</h3>
+                    <div class="quiz-options">
+                        <button class="quiz-option" data-value="3">
+                            <span class="option-text">Never, smooth gameplay</span>
+                            <span class="option-badge">Premium</span>
+                        </button>
+                        <button class="quiz-option" data-value="2">
+                            <span class="option-text">Rarely in intense fights</span>
+                            <span class="option-badge">Good</span>
+                        </button>
+                        <button class="quiz-option" data-value="1">
+                            <span class="option-text">Sometimes during gameplay</span>
+                            <span class="option-badge">Basic</span>
+                        </button>
+                        <button class="quiz-option" data-value="0">
+                            <span class="option-text">Constant stuttering</span>
+                            <span class="option-badge">Entry</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Question 7 -->
+                <div class="quiz-question" id="question-7">
+                    <h3>What's your internet connection speed?</h3>
+                    <div class="quiz-options">
+                        <button class="quiz-option" data-value="3">
+                            <span class="option-text">100+ Mbps Fiber</span>
+                            <span class="option-badge">Premium</span>
+                        </button>
+                        <button class="quiz-option" data-value="2">
+                            <span class="option-text">50-99 Mbps</span>
+                            <span class="option-badge">Good</span>
+                        </button>
+                        <button class="quiz-option" data-value="1">
+                            <span class="option-text">25-49 Mbps</span>
+                            <span class="option-badge">Basic</span>
+                        </button>
+                        <button class="quiz-option" data-value="0">
+                            <span class="option-text">Below 25 Mbps</span>
+                            <span class="option-badge">Entry</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Question 8 -->
+                <div class="quiz-question" id="question-8">
+                    <h3>Which GameLoop version are you using?</h3>
+                    <div class="quiz-options">
+                        <button class="quiz-option" data-value="3">
+                            <span class="option-text">Latest Chinese Version</span>
+                            <span class="option-badge">Optimized</span>
+                        </button>
+                        <button class="quiz-option" data-value="2">
+                            <span class="option-text">Latest Global Version</span>
+                            <span class="option-badge">Good</span>
+                        </button>
+                        <button class="quiz-option" data-value="1">
+                            <span class="option-text">Older Optimized Version</span>
+                            <span class="option-badge">Basic</span>
+                        </button>
+                        <button class="quiz-option" data-value="0">
+                            <span class="option-text">Don't know / First time</span>
+                            <span class="option-badge">Entry</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Results Section -->
+                <div class="quiz-results" id="quiz-results">
+                    <div class="result-content">
+                        <div class="result-header">
+                            <div class="result-icon" id="result-icon">
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                            <h3>Your Optimization Score</h3>
+                            <div class="result-score">
+                                <span id="result-percentage">0%</span>
+                                <span id="result-level">Beginner</span>
+                            </div>
+                        </div>
+                        
+                        <div class="result-description">
+                            <p id="result-description">Based on your system specifications and current performance.</p>
+                        </div>
+                        
+                        <div class="result-recommendations">
+                            <h4>Recommended Downloads for You:</h4>
+                            <div class="recommendation-list" id="recommendation-list">
+                                <!-- Dynamic recommendations will be inserted here -->
+                            </div>
+                        </div>
+                        
+                        <div class="result-actions">
+                            <button class="btn btn-primary" id="retake-quiz">
+                                <i class="fas fa-redo"></i>
+                                Retake Quiz
+                            </button>
+                            <a href="#downloads" class="btn btn-secondary">
+                                <i class="fas fa-download"></i>
+                                View All Downloads
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="quiz-navigation">
+                <button class="btn btn-secondary" id="prev-question" disabled>
+                    <i class="fas fa-arrow-left"></i>
+                    Previous
+                </button>
+                <button class="btn btn-primary" id="next-question">
+                    Next Question
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+                <button class="btn btn-accent" id="show-results" style="display: none;">
+                    See Results
+                    <i class="fas fa-chart-bar"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
