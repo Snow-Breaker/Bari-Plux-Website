@@ -1118,16 +1118,17 @@
 
         function buildGithubAuthUrl(state) {
             const redirectUri = githubRedirectUri();
+            // prompt=select_account is required: without it, GitHub silently reuses a prior
+            // authorization and the popup never shows a GitHub UI (instant code → home).
             const params = new URLSearchParams({
                 client_id: GITHUB_OAUTH_CLIENT_ID,
                 redirect_uri: redirectUri,
                 scope: 'read:user user:email',
                 state,
-                allow_signup: 'true'
+                allow_signup: 'true',
+                prompt: 'select_account'
             });
-            const authorizePath = '/login/oauth/authorize?' + params.toString();
-            // Open GitHub's own login page first so the popup is clearly GitHub-branded
-            return 'https://github.com/login?return_to=' + encodeURIComponent(authorizePath);
+            return 'https://github.com/login/oauth/authorize?' + params.toString();
         }
 
         async function finishGithubLoginWithCode(code, state) {
