@@ -53,6 +53,12 @@
       [6, 7], [6, 8], [7, 9], [9, 10], [10, 11], [5, 12], [1, 13]
     ];
 
+    // Mobile: fewer nodes/links to keep compositor cheap (<720px)
+    if (window.matchMedia && window.matchMedia('(max-width: 719px)').matches) {
+      seeds = seeds.slice(0, 8);
+      links = [[0, 1], [1, 2], [0, 4], [3, 4], [4, 5], [4, 6], [6, 7]];
+    }
+
     function resize() {
       w = Math.max(1, window.innerWidth);
       h = Math.max(1, window.innerHeight);
