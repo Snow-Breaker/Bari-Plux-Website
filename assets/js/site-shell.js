@@ -287,8 +287,21 @@
     var go = document.getElementById('goToLoginBtn');
     var logout = document.getElementById('logoutBtn');
     var profile = document.getElementById('viewProfileBtn');
+    var LOGIN_URL = 'https://login.bariplux.com/';
 
     updateLoginUi();
+
+    // Capture-phase: guests always go to canonical login, even if a page used
+    // onclick="toggleUserDropdown()" or other handlers that only open the menu.
+    if (login && !login.dataset.bpShellCapture) {
+      login.dataset.bpShellCapture = '1';
+      login.addEventListener('click', function (e) {
+        if (readUser()) return;
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        location.href = LOGIN_URL;
+      }, true);
+    }
 
     if (login && !login.dataset.bpShellLogin) {
       login.dataset.bpShellLogin = '1';
@@ -297,7 +310,7 @@
         e.stopPropagation();
         var user = readUser();
         if (!user) {
-          location.href = 'https://login.bariplux.com/';
+          location.href = LOGIN_URL;
           return;
         }
         if (!dropdown) return;
@@ -309,7 +322,7 @@
     if (go && !go.dataset.bpWired) {
       go.dataset.bpWired = '1';
       go.addEventListener('click', function () {
-        location.href = 'https://login.bariplux.com/';
+        location.href = LOGIN_URL;
       });
     }
 
@@ -326,7 +339,7 @@
     if (profile && !profile.dataset.bpWired) {
       profile.dataset.bpWired = '1';
       profile.addEventListener('click', function () {
-        location.href = 'https://login.bariplux.com/';
+        location.href = LOGIN_URL;
       });
     }
 

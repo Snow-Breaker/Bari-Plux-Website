@@ -180,6 +180,12 @@
         loginBtn.addEventListener('click', function (e) {
             e.preventDefault();
             e.stopPropagation();
+            var stored = null;
+            try { stored = localStorage.getItem('bariplux_user'); } catch (err) {}
+            if (!stored) {
+                window.location.href = 'https://login.bariplux.com/';
+                return;
+            }
             toggleUserDropdown();
         });
     }

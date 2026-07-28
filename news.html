@@ -1420,7 +1420,7 @@
     <link rel="stylesheet" href="assets/css/widgets.css?v=20260728ai">
     <script src="assets/js/boot.js"></script>
     <script src="assets/js/signal-ambient.js?v=20260728ai" defer></script>
-    <script src="assets/js/site-shell.js?v=20260728ai" defer></script>
+    <script src="assets/js/site-shell.js?v=20260729login" defer></script>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 </head>
 <body class="bp-body">
@@ -1466,7 +1466,7 @@
             </div>
 
             <div class="user-menu-container">
-                <button id="loginBtnHeader" class="login-btn-header" title="Login" onclick="toggleUserDropdown(); event.stopPropagation();">
+                <button id="loginBtnHeader" class="login-btn-header" title="Login" onclick="if(!localStorage.getItem('bariplux_user')){location.href='https://login.bariplux.com/';return;} toggleUserDropdown(); event.stopPropagation();">
                     <i class="fas fa-sign-in-alt"></i>
                     <span>Login</span>
                 </button>
