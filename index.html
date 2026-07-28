@@ -79,7 +79,7 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
     document.ondragstart = function() { return false; };
 </script>
 
-<!-- در انتهای <body class="bp-body"> -->
+<!-- در انتهای <body class="bp-body bp-app"> -->
 <!-- Scripts moved inline -->
     <!-- External scripts (files not found - functionality included inline) -->
     <!-- <script src="js/main.min.js"></script> -->
@@ -137,86 +137,68 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
 
 
 
-    <link rel="stylesheet" href="assets/css/layout.css">
-    <link rel="stylesheet" href="assets/css/liquid.css">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/widgets.css">
+    <link rel="stylesheet" href="assets/css/bari.css">
     <script src="assets/js/protect.js" defer></script>
-    <script src="assets/js/fluid-field.js" defer></script>
+    <script src="assets/js/aurora.js" defer></script>
     <script src="assets/js/home.js" defer></script>
 
 </head>
 <body class="bp-body">
-    <div class="lg-ambient bp-ambient" data-bp-ambient aria-hidden="true"></div>
+    <div id="bp-aurora" class="bp-aurora" aria-hidden="true"></div>
 
-    <!-- Header -->
-<header class="header glass">
-    <div class="left">
-        <a href="#home" class="logo" style="display:flex;align-items:center;gap:12px;text-decoration:none">
-            <img class="logo-img" src="https://yt3.googleusercontent.com/RPW5Z_kcoEu0ES_VpL4-7ZqI4eI1OQfuVL-DbuCYWmRhXono9hA5NOCSGGMDLzJqNcHUlhOg=s160-c-k-c0x00ffffff-no-rj" alt="Bari Plux">
-            <span class="logo-text">Bari Plux</span>
-        </a>
-    </div>
-    
-    <nav class="nav">
-        <ul class="nav-links">
-            <li><a href="#home" class="nav-link active">Home</a></li>
-            <li><a href="#downloads" class="nav-link">Downloads</a></li>
-            <li><a href="#videos" class="nav-link">Videos</a></li>
-            <li><a href="#optimization-quiz" class="nav-link">Optimization Quiz</a></li>
-            <li><a href="#pubg" class="nav-link">Content</a></li>
-            <li><a href="#plux-times" class="nav-link">Plux Times</a></li>
-            <li><a href="#contact" class="nav-link">Contact</a></li>
-        </ul>
+
+<header class="bp-chrome" id="bp-header">
+  <div class="bp-chrome__inner">
+    <a href="#home" class="bp-logo">
+      <img src="https://yt3.googleusercontent.com/RPW5Z_kcoEu0ES_VpL4-7ZqI4eI1OQfuVL-DbuCYWmRhXono9hA5NOCSGGMDLzJqNcHUlhOg=s160-c-k-c0x00ffffff-no-rj" alt="" class="bp-logo__img" width="36" height="36">
+      <span class="bp-logo__text">Bari Plux</span>
+    </a>
+
+    <nav class="bp-nav" aria-label="Primary">
+      <a href="#home" class="bp-nav__link is-active">Home</a>
+      <a href="#downloads" class="bp-nav__link">Downloads</a>
+      <a href="#videos" class="bp-nav__link">Videos</a>
+      <a href="#optimization-quiz" class="bp-nav__link">Quiz</a>
+      <a href="#pubg" class="bp-nav__link">Content</a>
+      <a href="#plux-times" class="bp-nav__link">Plux Times</a>
+      <a href="#contact" class="bp-nav__link">Contact</a>
     </nav>
-    
-    <div class="header-actions">
-        <!-- Collapsible Search Box -->
-        <div class="search-container">
-            <div class="collapsible-search glass" id="collapsible-search">
-                <i class="fas fa-search search-icon"></i>
-                <input type="search" class="search-input" placeholder="Search games, tools, guides..." id="header-search-input" autocomplete="off" role="searchbox">
-            </div>
-        </div>
-        
-        <div id="theme-toggle" class="theme-toggle glass" title="Toggle Theme">
-            <span class="moon-icon">🌙</span>
-            <span class="sun-icon">☀️</span>
-        </div>
 
-        <div class="user-menu-container">
-            <button id="loginBtnHeader" class="login-btn-header" title="Login" onclick="toggleUserDropdown(); event.stopPropagation();">
-                <i class="fas fa-sign-in-alt"></i>
-                <span>Login</span>
-            </button>
-            <div id="userDropdown" class="user-dropdown glass">
-                <div class="dropdown-header">
-                    <div id="userAvatar" class="user-avatar-small"></div>
-                    <div class="user-quick-info">
-                        <div id="userName" class="user-name-dropdown"></div>
-                        <div id="userEmail" class="user-email-dropdown"></div>
-                    </div>
-                </div>
-                <div class="dropdown-divider"></div>
-                <div class="dropdown-actions">
-                    <button type="button" id="viewProfileBtn" class="dropdown-btn">
-                        <i class="fas fa-user-circle"></i> Account Info
-                    </button>
-                    <button type="button" id="goToLoginBtn" class="dropdown-btn">
-                        <i class="fas fa-sign-in-alt"></i> Login Page
-                    </button>
-                    <button type="button" id="logoutBtn" class="dropdown-btn logout-btn">
-                        <i class="fas fa-sign-out-alt"></i> Logout
-                    </button>
-                </div>
+    <div class="bp-chrome__actions">
+      <div class="bp-search" id="collapsible-search">
+        <i class="fas fa-search" aria-hidden="true"></i>
+        <input type="search" id="header-search-input" class="bp-search__input" placeholder="Search…" autocomplete="off">
+      </div>
+      <button type="button" id="theme-toggle" class="bp-icon-btn" title="Toggle theme" aria-label="Toggle theme">
+        <span class="moon-icon">☾</span><span class="sun-icon">☀</span>
+      </button>
+      <div class="bp-account">
+        <button type="button" id="loginBtnHeader" class="bp-btn bp-btn--glass" title="Login">
+          <i class="fas fa-sign-in-alt" aria-hidden="true"></i>
+          <span>Login</span>
+        </button>
+        <div id="userDropdown" class="bp-menu" hidden>
+          <div class="bp-menu__head">
+            <div id="userAvatar" class="bp-menu__avatar"></div>
+            <div>
+              <div id="userName" class="bp-menu__name">Guest</div>
+              <div id="userEmail" class="bp-menu__email">Sign in to continue</div>
             </div>
+          </div>
+          <div class="bp-menu__divider"></div>
+          <button type="button" id="viewProfileBtn" class="bp-menu__item"><i class="fas fa-user-circle"></i> Account Info</button>
+          <button type="button" id="goToLoginBtn" class="bp-menu__item"><i class="fas fa-sign-in-alt"></i> Login Page</button>
+          <button type="button" id="logoutBtn" class="bp-menu__item bp-menu__item--danger"><i class="fas fa-sign-out-alt"></i> Logout</button>
         </div>
+      </div>
     </div>
+  </div>
 </header>
-
-<!-- Search Results Dropdown - Outside Header -->
 <div class="search-results-dropdown" id="search-results-dropdown"></div>
 
-    
-    <!-- Hero — brand-first Signal Field composition (content unchanged) -->
+<!-- Hero — brand-first Signal Field composition (content unchanged) -->
 <section id="home" class="hero">
     <div class="container">
         <div class="hero-content">
@@ -1741,25 +1723,34 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
                 window.location.href = 'login.html';
             };
             document.getElementById('logoutBtn').style.display = 'none';
-            if (dropdown) dropdown.classList.remove('active');
+            if (dropdown) dropdown.setAttribute('hidden', '');
         }
     }
     
     function toggleUserDropdown() {
         const dropdown = document.getElementById('userDropdown');
-        if (dropdown) {
-            dropdown.classList.toggle('active');
-        }
+        if (!dropdown) return;
+        if (dropdown.hasAttribute('hidden')) dropdown.removeAttribute('hidden');
+        else dropdown.setAttribute('hidden', '');
     }
-    
+
     document.addEventListener('click', function(e) {
         const dropdown = document.getElementById('userDropdown');
-        const container = document.querySelector('.user-menu-container');
-        
+        const container = document.querySelector('.bp-account') || document.querySelector('.user-menu-container');
         if (dropdown && container && !container.contains(e.target)) {
-            dropdown.classList.remove('active');
+            dropdown.setAttribute('hidden', '');
         }
     });
+
+    const loginBtnWire = document.getElementById('loginBtnHeader');
+    if (loginBtnWire && !loginBtnWire.getAttribute('data-wired')) {
+        loginBtnWire.setAttribute('data-wired', '1');
+        loginBtnWire.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleUserDropdown();
+        });
+    }
     
     // Run on page load
     updateLoginButton();
@@ -1767,7 +1758,7 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
     setTimeout(updateLoginButton, 1000);
 
     // Header Scroll Effect
-    const header = document.querySelector('.header');
+    const header = document.getElementById('bp-header') || document.querySelector('.bp-chrome');
     if (header) {
         window.addEventListener('scroll', () => {
             if (window.scrollY > 50) {
@@ -1775,7 +1766,7 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
             } else {
                 header.classList.remove('scrolled');
             }
-        });
+        }, { passive: true });
     }
 
     // Theme Toggle - Fixed Version
@@ -3064,7 +3055,7 @@ function sanitizeInput(input) {
     // Active navigation link
     window.addEventListener('scroll', () => {
         const sections = document.querySelectorAll('section');
-        const navLinks = document.querySelectorAll('.nav-link');
+        const navLinks = document.querySelectorAll('.bp-nav__link, .nav-link');
         
         let current = '';
         sections.forEach(section => {
@@ -3075,9 +3066,9 @@ function sanitizeInput(input) {
         });
 
         navLinks.forEach(link => {
-            link.classList.remove('active');
+            link.classList.remove('active', 'is-active');
             if (link.getAttribute('href') === `#${current}`) {
-                link.classList.add('active');
+                link.classList.add('active', 'is-active');
             }
         });
     });
@@ -3107,13 +3098,10 @@ function sanitizeInput(input) {
         if (storedUser) {
             try {
                 const user = JSON.parse(storedUser);
+                const label = user.name || (user.email ? user.email.split('@')[0] : 'Account');
                 loginBtn.classList.add('logged-in');
-                loginBtn.innerHTML = '<i class="fas fa-user-circle"></i><span>' + user.name + '</span>';
-                loginBtn.title = 'Logged in - Click to logout';
-                loginBtn.onclick = function(e) {
-                    e.preventDefault();
-                    logout();
-                };
+                loginBtn.innerHTML = '<i class="fas fa-user-circle"></i><span>' + label + '</span>';
+                loginBtn.title = 'Account menu';
             } catch(e) {
                 localStorage.removeItem('bariplux_user');
             }
@@ -3121,8 +3109,13 @@ function sanitizeInput(input) {
             loginBtn.classList.remove('logged-in');
             loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i><span>Login</span>';
             loginBtn.title = 'Login';
-            loginBtn.onclick = null;
         }
+        // Always open account menu — never expand/break the chrome bar
+        loginBtn.onclick = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleUserDropdown();
+        };
     }
 
     function logout() {
