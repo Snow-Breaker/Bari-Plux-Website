@@ -30,55 +30,11 @@
           location.replace(dest);
           return;
         }
-        // GitHub OAuth callback in popup: abort page load, hand code to opener, close.
-        // state "p.*" = popup flow (never run login UI / never navigate this window to home).
-        if (q.get('code') || q.get('error')) {
-          var st = q.get('state') || '';
-          var isPopupOAuth = st.indexOf('p.') === 0 || window.name === 'bariplux_github_oauth';
-          var hasOpener = false;
-          try { hasOpener = !!(window.opener && !window.opener.closed); } catch (e0) { hasOpener = false; }
-          var sameTabFallback = false;
-          try {
-            sameTabFallback = !isPopupOAuth && !hasOpener && !!sessionStorage.getItem('github_oauth_state');
-          } catch (e1) {}
-          if (!sameTabFallback) {
-            window.__BPT_GH_POPUP_HANDOFF = true;
-            var ghMsg = {
-              type: 'bariplux-github-oauth',
-              ok: !q.get('error'),
-              error: q.get('error_description') || q.get('error') || null,
-              code: q.get('error') ? null : q.get('code'),
-              state: st,
-              ts: Date.now()
-            };
-            try { localStorage.setItem('bariplux_github_oauth_result', JSON.stringify(ghMsg)); } catch (e2) {}
-            if (hasOpener) {
-              try { window.opener.postMessage(ghMsg, location.origin); } catch (e3) {}
-            }
-            // Stop the rest of login1.html from loading (Firebase/UI) so this window can't redirect home
-            try {
-              document.open();
-              document.write(
-                '<!doctype html><html><head><meta charset="utf-8"><title>GitHub</title></head>'
-                + '<body style="margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;'
-                + 'background:#0d1117;color:#e6edf3;font:600 15px/1.4 system-ui,sans-serif;text-align:center">'
-                + '<div id="m">Signed in with GitHub — closing…</div>'
-                + '<script>(function(){function c(){try{window.close()}catch(e){}}c();'
-                + 'setTimeout(c,100);setTimeout(c,400);setTimeout(c,900);'
-                + 'setTimeout(function(){var m=document.getElementById("m");'
-                + 'if(m)m.innerHTML="Signed in.<br><button type=button onclick=\\"window.close()\\" style=\\"margin-top:16px;padding:10px 18px;'
-                + 'border-radius:8px;border:0;background:#238636;color:#fff;font-weight:600;cursor:pointer\\">Close window</button>"},1100);'
-                + '})();<\/script></body></html>'
-              );
-              document.close();
-            } catch (e4) {
-              setTimeout(function () { try { window.close(); } catch (e5) {} }, 200);
-            }
-            return;
-          }
-        }
-        // Clear one-shot leftover that used to bounce every login visit back to home
-        try { sessionStorage.removeItem('github_web_goto_home'); } catch (eClear) {}
+        // Clear leftover flags from older popup / bounce-to-home experiments
+        try {
+          sessionStorage.removeItem('github_web_goto_home');
+          localStorage.removeItem('bariplux_github_oauth_result');
+        } catch (eClear) {}
       } catch (e) {}
     })();
     </script>
@@ -917,39 +873,7 @@
             return displayName;
         }
 
-        function redirectToSiteHome() {
-            // Never navigate the OAuth popup window to the homepage
-            if (window.__BPT_GH_POPUP_HANDOFF || window.name === 'bariplux_github_oauth') {
-                try { window.close(); } catch (e) {}
-                return;
-            }
-            // In-memory only — do NOT persist (persisting bounced every later login visit to home)
-            window.__BPT_GH_LOGIN_IN_PROGRESS = true;
-            window.__BPT_GH_GOTO_HOME = true;
-            try { sessionStorage.removeItem('github_web_goto_home'); } catch (e) {}
-            window.location.replace('https://bariplux.com/');
-        }
-
-        function closeGithubOauthPopup() {
-            try {
-                if (window.__BPT_GH_POPUP_REF && !window.__BPT_GH_POPUP_REF.closed) {
-                    window.__BPT_GH_POPUP_REF.close();
-                }
-            } catch (e) {}
-            try {
-                const w = window.open('', 'bariplux_github_oauth');
-                if (w && w !== window && !w.closed) w.close();
-            } catch (e) {}
-            window.__BPT_GH_POPUP_REF = null;
-        }
-
         function showLoggedInView(user) {
-            // Only during the active post-OAuth handoff — not on later login page visits
-            if (window.__BPT_GH_GOTO_HOME && !isDesktopFlow() && !isAppEmbed()) {
-                redirectToSiteHome();
-                return;
-            }
-
             currentUser = user;
             localStorage.setItem('bariplux_user', JSON.stringify(user));
             syncLoginToFirebase(user).catch(e => console.error(e));
@@ -971,10 +895,6 @@
                 if (tokenSection) tokenSection.style.display = 'none';
             } else {
                 createPendingToken(user).then(result => {
-                    if (window.__BPT_GH_GOTO_HOME) {
-                        redirectToSiteHome();
-                        return;
-                    }
                     if (result && result.claimToken) {
                         const { claimToken, claimSecret } = result;
                         const base64Claim = btoa(claimToken);
@@ -1020,8 +940,6 @@
         }
 
         function showLoginFormView() {
-            window.__BPT_GH_GOTO_HOME = false;
-            try { sessionStorage.removeItem('github_web_goto_home'); } catch (e) {}
             document.getElementById('loggedInView').classList.remove('active');
             document.getElementById('loginFormView').style.display = 'block';
         }
@@ -1035,12 +953,8 @@
                     try { storedUser = localStorage.getItem('bariplux_user'); } catch (e) {}
 
                     if (user) {
-                        // Only block paint during active OAuth finish — never bounce revisits to home
+                        // Block duplicate paint while GitHub code exchange is in progress
                         if (window.__BPT_GH_LOGIN_IN_PROGRESS) return;
-                        if (window.__BPT_GH_GOTO_HOME && !isDesktopFlow()) {
-                            redirectToSiteHome();
-                            return;
-                        }
                         // OAuth callbacks (?code=) own first paint for custom-token providers
                         if (new URLSearchParams(location.search).get('code') &&
                             (user.uid.startsWith('discord_') || user.uid.startsWith('github_'))) {
@@ -1158,10 +1072,9 @@
             }
         });
 
-        // ==================== GITHUB LOGIN (popup OAuth via Worker; full-page fallback) ====================
+        // ==================== GITHUB LOGIN (full-page OAuth via Worker) ====================
         const GITHUB_OAUTH_CLIENT_ID = 'Ov23liYBk9X5ykqEvjCA';
         const GITHUB_BTN_HTML = '<i class="fab fa-github" style="font-size:1.2rem;"></i> Sign in with GitHub';
-        let githubPopupWatch = null;
 
         function githubRedirectUri() {
             // Must exactly match GitHub OAuth App Authorization callback URL
@@ -1176,15 +1089,13 @@
         }
 
         function buildGithubAuthUrl(state) {
-            const redirectUri = githubRedirectUri();
-            // prompt=select_account is required: without it, GitHub silently reuses a prior
-            // authorization and the popup never shows a GitHub UI (instant code → home).
             const params = new URLSearchParams({
                 client_id: GITHUB_OAUTH_CLIENT_ID,
-                redirect_uri: redirectUri,
+                redirect_uri: githubRedirectUri(),
                 scope: 'read:user user:email',
                 state,
                 allow_signup: 'true',
+                // Always show GitHub account picker so users can switch accounts
                 prompt: 'select_account'
             });
             return 'https://github.com/login/oauth/authorize?' + params.toString();
@@ -1202,7 +1113,6 @@
                 || new URLSearchParams(location.search).get('desktop') === '1';
             sessionStorage.removeItem('github_desktop_flow');
 
-            const redirectUri = githubRedirectUri();
             window.__BPT_GH_LOGIN_IN_PROGRESS = true;
             showNotification('Connecting GitHub account...', 'success');
 
@@ -1210,7 +1120,7 @@
                 const response = await fetch('https://discord-auth-worker.bariattaye2.workers.dev/github', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ code, redirectUri }),
+                    body: JSON.stringify({ code, redirectUri: githubRedirectUri() }),
                     signal: AbortSignal.timeout(15000)
                 });
                 const payload = await response.json().catch(() => ({}));
@@ -1256,203 +1166,71 @@
 
                 if (wasDesktopFlow) {
                     try { sessionStorage.setItem('desktop_login_flow', '1'); } catch (e) {}
-                    window.__BPT_GH_LOGIN_IN_PROGRESS = false;
-                    showLoggedInView(userData);
-                    resetGithubButton();
-                    return userData;
                 }
 
-                // Web: never paint Account panel — keep lock until navigation completes
+                window.__BPT_GH_LOGIN_IN_PROGRESS = false;
+                showLoggedInView(userData);
                 resetGithubButton();
-                redirectToSiteHome();
                 return userData;
             } catch (error) {
                 window.__BPT_GH_LOGIN_IN_PROGRESS = false;
-                window.__BPT_GH_GOTO_HOME = false;
                 throw error;
             }
         }
 
         function handleGithubLogin() {
-            // Always run OAuth from the canonical host so redirect_uri matches the GitHub App
-            if (location.hostname !== 'login.bariplux.com' || !/\/login1\/?$/.test(location.pathname.replace(/\.html$/, ''))) {
-                var hop = 'https://login.bariplux.com/login1';
-                if (location.search) hop += location.search;
-                else hop += '?github=1';
+            // Canonical host only — otherwise GitHub rejects redirect_uri
+            if (location.hostname !== 'login.bariplux.com') {
+                var hop = 'https://login.bariplux.com/login1' + (location.search || '');
                 window.location.replace(hop);
                 return;
             }
 
             markDesktopFlowIfNeeded();
-            const raw = crypto.randomUUID();
-            // p.* = popup child must only hand off + close; t.* = same-tab fallback
-            let state = 'p.' + raw;
+            const state = crypto.randomUUID();
             try {
                 sessionStorage.setItem('github_oauth_state', state);
                 if (isDesktopFlow()) sessionStorage.setItem('github_desktop_flow', '1');
             } catch (e) {}
 
-            let authUrl = buildGithubAuthUrl(state);
-            const w = 600, h = 720;
-            const left = Math.max(0, Math.round(window.screenX + (window.outerWidth - w) / 2));
-            const top = Math.max(0, Math.round(window.screenY + (window.outerHeight - h) / 2));
-            const features = 'width=' + w + ',height=' + h + ',left=' + left + ',top=' + top + ',menubar=no,toolbar=no,status=no,resizable=yes,scrollbars=yes';
-            let popup = null;
-            try {
-                popup = window.open(authUrl, 'bariplux_github_oauth', features);
-            } catch (e) {
-                popup = null;
-            }
-
-            if (!popup || popup.closed) {
-                // Popup blocked — same-tab fallback (state t.*)
-                state = 't.' + raw;
-                try { sessionStorage.setItem('github_oauth_state', state); } catch (e) {}
-                window.location.href = buildGithubAuthUrl(state);
-                return;
-            }
-
-            window.__BPT_GH_POPUP_REF = popup;
-            try { popup.focus(); } catch (e) {}
-
-            if (githubPopupWatch) clearInterval(githubPopupWatch);
-            githubPopupWatch = setInterval(function () {
-                try {
-                    const rawResult = localStorage.getItem('bariplux_github_oauth_result');
-                    if (rawResult) {
-                        const parsed = JSON.parse(rawResult);
-                        if (parsed && parsed.code && parsed.state) {
-                            consumeGithubOAuthResult(parsed);
-                            return;
-                        }
-                    }
-                } catch (e) {}
-                if (!popup || popup.closed) {
-                    clearInterval(githubPopupWatch);
-                    githubPopupWatch = null;
-                    resetGithubButton();
-                }
-            }, 400);
+            window.location.href = buildGithubAuthUrl(state);
         }
 
         async function handleGithubCallback() {
-            // Early head script already handed off popup callbacks
-            if (window.__BPT_GH_POPUP_HANDOFF) return;
-
             const params = new URLSearchParams(window.location.search);
             const oauthErr = params.get('error');
             const code = params.get('code');
-            const state = params.get('state') || '';
-
-            // Popup child (p.* state or named window): never finish login / never go home here
-            const isPopupChild = state.indexOf('p.') === 0 || window.name === 'bariplux_github_oauth';
-            if ((code || oauthErr) && isPopupChild) {
-                window.__BPT_GH_POPUP_HANDOFF = true;
-                const ghMsg = {
-                    type: 'bariplux-github-oauth',
-                    ok: !oauthErr,
-                    error: oauthErr ? (params.get('error_description') || oauthErr) : null,
-                    code: oauthErr ? null : code,
-                    state: state,
-                    ts: Date.now()
-                };
-                try { localStorage.setItem('bariplux_github_oauth_result', JSON.stringify(ghMsg)); } catch (e) {}
-                try {
-                    if (window.opener && !window.opener.closed) {
-                        window.opener.postMessage(ghMsg, location.origin);
-                    }
-                } catch (e) {}
-                document.body.innerHTML = '<div style="font-family:system-ui,sans-serif;text-align:center;padding:48px 20px;color:#e6edf3;background:#0d1117;min-height:100vh;box-sizing:border-box;">'
-                    + '<div style="font-size:1.1rem;font-weight:600;margin-bottom:8px;">Signed in with GitHub</div>'
-                    + '<div style="opacity:0.7;font-size:0.9rem;margin-bottom:16px;">This window should close automatically.</div>'
-                    + '<button type="button" onclick="window.close()" style="padding:10px 18px;border-radius:8px;border:0;background:#238636;color:#fff;font-weight:600;cursor:pointer;">Close window</button></div>';
-                try { window.close(); } catch (e) {}
-                setTimeout(function () { try { window.close(); } catch (e) {} }, 300);
-                return;
-            }
+            const state = params.get('state');
 
             if (oauthErr) {
                 const desc = params.get('error_description') || oauthErr;
                 showNotification('GitHub OAuth error: ' + decodeURIComponent(String(desc).replace(/\+/g, ' ')), 'error', 10000);
-                window.history.replaceState({}, document.title, window.location.pathname);
+                window.history.replaceState({}, document.title, window.location.pathname + (isDesktopFlow() ? '?desktop=1' : ''));
                 resetGithubButton();
                 return;
             }
 
             if (!code) return;
 
-            // Full-page fallback (t.* / same tab): verify state in this tab's sessionStorage
             const savedState = sessionStorage.getItem('github_oauth_state');
             if (!savedState) return;
+
             try {
                 await finishGithubLoginWithCode(code, state);
                 window.history.replaceState({}, document.title, window.location.pathname + (isDesktopFlow() ? '?desktop=1' : ''));
             } catch (error) {
                 console.error('GitHub login error:', error);
-                window.history.replaceState({}, document.title, window.location.pathname);
+                window.history.replaceState({}, document.title, window.location.pathname + (isDesktopFlow() ? '?desktop=1' : ''));
                 showNotification('GitHub login failed: ' + (error.message || 'Unknown error'), 'error', 10000);
                 resetGithubButton();
             }
         }
-
-        function consumeGithubOAuthResult(data) {
-            if (!data || data.type !== 'bariplux-github-oauth') return;
-            if (window.__BPT_GH_CONSUMING_OAUTH) return;
-            window.__BPT_GH_CONSUMING_OAUTH = true;
-
-            try { localStorage.removeItem('bariplux_github_oauth_result'); } catch (e) {}
-
-            if (githubPopupWatch) {
-                clearInterval(githubPopupWatch);
-                githubPopupWatch = null;
-            }
-
-            // Close popup from the opener — more reliable than popup closing itself
-            closeGithubOauthPopup();
-            setTimeout(closeGithubOauthPopup, 200);
-            setTimeout(closeGithubOauthPopup, 800);
-
-            if (!data.ok) {
-                window.__BPT_GH_CONSUMING_OAUTH = false;
-                showNotification('GitHub OAuth error: ' + (data.error || 'cancelled'), 'error', 8000);
-                resetGithubButton();
-                return;
-            }
-            if (!data.code) {
-                window.__BPT_GH_CONSUMING_OAUTH = false;
-                resetGithubButton();
-                return;
-            }
-
-            finishGithubLoginWithCode(data.code, data.state).then(function () {
-                closeGithubOauthPopup();
-            }).catch(function (error) {
-                window.__BPT_GH_CONSUMING_OAUTH = false;
-                console.error('GitHub popup login error:', error);
-                showNotification('GitHub login failed: ' + (error.message || 'Unknown error'), 'error', 10000);
-                resetGithubButton();
-            });
-        }
-
-        function onGithubPopupMessage(event) {
-            if (event.origin !== location.origin) return;
-            consumeGithubOAuthResult(event.data);
-        }
-
-        window.addEventListener('storage', function (event) {
-            if (event.key !== 'bariplux_github_oauth_result' || !event.newValue) return;
-            try {
-                consumeGithubOAuthResult(JSON.parse(event.newValue));
-            } catch (e) {
-                console.error('[github storage handoff]', e);
-            }
-        });
 
         document.getElementById('btnGitHubLogin').addEventListener('click', function(e) {
             e.preventDefault();
             const btn = this;
             btn.disabled = true;
-            btn.innerHTML = '<div class="loading-spinner"></div> Opening GitHub...';
+            btn.innerHTML = '<div class="loading-spinner"></div> Redirecting to GitHub...';
             try {
                 handleGithubLogin();
             } catch (error) {
@@ -1868,10 +1646,8 @@
 
         // ==================== INIT ====================
         document.addEventListener('DOMContentLoaded', () => {
-            if (window.__BPT_GH_POPUP_HANDOFF) return;
             if (isAppEmbed()) document.body.classList.add('app-embed');
             markDesktopFlowIfNeeded();
-            window.addEventListener('message', onGithubPopupMessage);
             initFirebase();
             handleDiscordCallback();
             handleGithubCallback();
