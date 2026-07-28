@@ -73,7 +73,6 @@
         '<span class="bp-ambient__ring bp-ambient__ring--inner"></span>' +
       '</div>' +
       '<div class="bp-ambient__vignette"></div>' +
-      '<div class="bp-ambient__rim"></div>' +
       '<div class="bp-ambient__grain"></div>';
 
     bootReveals();

@@ -356,13 +356,9 @@ a:hover {
 }
 
 .bp-ambient__rim {
-  position: absolute;
-  inset: 0;
-  border: 1.2px solid rgba(129, 140, 248, 0.38);
-  opacity: 0.4;
-  pointer-events: none;
-  animation: bp-rim-fade 11s ease-in-out infinite alternate;
-  box-sizing: border-box;
+  /* Full-viewport border caused a visible hairline at the top of the page.
+     Corner brackets on the canvas already provide the instrument chrome. */
+  display: none !important;
 }
 
 .bp-ambient__grain {
@@ -1005,7 +1001,7 @@ html[data-theme="light"] .bp-ambient__ring {
   border-color: rgba(79, 70, 229, 0.45);
 }
 html[data-theme="light"] .bp-ambient__rim {
-  border-color: rgba(79, 70, 229, 0.22);
+  display: none !important;
 }
 html[data-theme="light"] .bp-ambient__vignette,
 [data-theme="light"] .bp-ambient__vignette {
