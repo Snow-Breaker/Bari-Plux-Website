@@ -23,10 +23,10 @@
       try {
         var h = location.hostname;
         var q = new URLSearchParams(location.search);
-        // Brand hop: GitHub Pages / apex → Firebase Hosting custom domain (login.bariplux.com)
+        // Brand hop: GitHub Pages / apex → Firebase Hosting login page (not site root/index)
         if (q.get('desktop') === '1' && (h === 'bariplux.com' || (h.endsWith('.bariplux.com') && h !== 'login.bariplux.com'))) {
-          var dest = 'https://login.bariplux.com/' + location.search;
-          if (!dest.includes('v=')) dest += (dest.includes('?') ? '&' : '?') + 'v=20260725a';
+          var dest = 'https://login.bariplux.com/login1' + location.search;
+          if (!dest.includes('v=')) dest += (dest.includes('?') ? '&' : '?') + 'v=20260728e';
           location.replace(dest);
         }
       } catch (e) {}
@@ -897,8 +897,49 @@
             if (firebaseInitialized && auth) {
                 auth.onAuthStateChanged((user) => {
                     if (user) {
-                        // Discord users are handled by handleDiscordCallback() — skip here
-                        if (user.uid.startsWith('discord_')) return;
+                        // Discord OAuth callback (?code=) owns first paint — avoid racing it.
+                        if (user.uid.startsWith('discord_')) {
+                            if (new URLSearchParams(location.search).get('code')) return;
+                            let userData = null;
+                            try {
+                                if (storedUser) {
+                                    const parsed = JSON.parse(storedUser);
+                                    if (parsed && parsed.id === user.uid) userData = parsed;
+                                }
+                            } catch (e) {}
+                            if (!userData) {
+                                let photoURL = user.photoURL || null;
+                                try {
+                                    const d = JSON.parse(localStorage.getItem('discord_user') || 'null');
+                                    if (d && d.id && d.avatar) {
+                                        photoURL = String(d.avatar).startsWith('http')
+                                            ? d.avatar
+                                            : ('https://cdn.discordapp.com/avatars/' + d.id + '/' + d.avatar + '.png?size=128');
+                                    }
+                                    userData = {
+                                        id: user.uid,
+                                        discordId: d && d.id ? d.id : undefined,
+                                        name: (d && (d.global_name || d.username)) || user.displayName || 'Discord User',
+                                        email: user.email || (d && d.email) || '',
+                                        loginMethod: 'discord',
+                                        loginTime: new Date().toISOString(),
+                                        photoURL
+                                    };
+                                } catch (e) {
+                                    userData = {
+                                        id: user.uid,
+                                        name: user.displayName || 'Discord User',
+                                        email: user.email || '',
+                                        loginMethod: 'discord',
+                                        loginTime: new Date().toISOString(),
+                                        photoURL
+                                    };
+                                }
+                            }
+                            localStorage.setItem('bariplux_user', JSON.stringify(userData));
+                            showLoggedInView(userData);
+                            return;
+                        }
                         const name = user.displayName || (user.email ? user.email.split('@')[0] : user.uid);
                         const firebaseUser = { id: user.uid, name, email: user.email, loginMethod: user.providerData[0]?.providerId || 'firebase', loginTime: new Date().toISOString(), photoURL: user.photoURL };
                         localStorage.setItem('bariplux_user', JSON.stringify(firebaseUser));
@@ -944,18 +985,24 @@
         // ==================== GITHUB LOGIN ====================
         document.getElementById('btnGitHubLogin').addEventListener('click', async function() {
             const btn = this;
+            const githubBtnHtml = '<i class="fab fa-github" style="font-size:1.2rem;"></i> Sign in with GitHub';
             if (firebaseInitialized && auth) {
                 const provider = new firebase.auth.GithubAuthProvider();
+                provider.addScope('read:user');
+                provider.addScope('user:email');
                 btn.disabled = true;
                 btn.innerHTML = '<div class="loading-spinner"></div> Connecting...';
                 try {
                     const result = await signInWithOAuthProvider(provider, false);
                     if (result && result.user) {
                         applyOAuthUser(result.user, 'github');
+                    } else {
+                        btn.disabled = false;
+                        btn.innerHTML = githubBtnHtml;
                     }
                 } catch (error) {
                     btn.disabled = false;
-                    btn.innerHTML = '<i class="fab fa-github" style="font-size:1.2rem;"></i> Sign in with GitHub';
+                    btn.innerHTML = githubBtnHtml;
                     await handleAuthError(error, 'GitHub');
                 }
             } else {
@@ -992,7 +1039,14 @@
             sessionStorage.setItem('discord_code_verifier', codeVerifier);
             sessionStorage.setItem('discord_oauth_state', state);
 
-            const redirectUri = window.location.href.split('#')[0].split('?')[0];
+            const redirectUri = (function () {
+                // Always return to the login page (never site root /index).
+                var host = location.hostname;
+                if (host === 'login.bariplux.com' || host === 'baripluxwebsite.web.app' || host.endsWith('.firebaseapp.com')) {
+                    return location.origin + '/login1';
+                }
+                return location.origin + (location.pathname.indexOf('login1') >= 0 ? location.pathname.split('?')[0] : '/login1.html');
+            })();
             const params = new URLSearchParams({
                 client_id: '1504446428959871127',
                 redirect_uri: redirectUri,
@@ -1036,7 +1090,13 @@
                                    sessionStorage.getItem('discord_desktop_flow') === '1';
             sessionStorage.removeItem('discord_desktop_flow');
 
-            const redirectUri = window.location.href.split('#')[0].split('?')[0];
+            const redirectUri = (function () {
+                var host = location.hostname;
+                if (host === 'login.bariplux.com' || host === 'baripluxwebsite.web.app' || host.endsWith('.firebaseapp.com')) {
+                    return location.origin + '/login1';
+                }
+                return location.origin + (location.pathname.indexOf('login1') >= 0 ? location.pathname.split('?')[0] : '/login1.html');
+            })();
 
             // Show loading state
             showNotification('Connecting Discord account...', 'success');

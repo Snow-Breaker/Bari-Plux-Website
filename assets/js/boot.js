@@ -17,6 +17,19 @@
   } catch (_) { /* ignore */ }
 
   try {
+    // Desktop app opens /?desktop=1 — Firebase "/" rewrite serves index.html.
+    // Send those sessions to the real login page (cleanUrls → /login1).
+    var qs = new URLSearchParams(window.location.search);
+    if (qs.get('desktop') === '1') {
+      var path = window.location.pathname || '/';
+      if (path === '/' || path === '/index.html' || path === '/index') {
+        window.location.replace('/login1' + window.location.search);
+        return;
+      }
+    }
+  } catch (_) { /* ignore */ }
+
+  try {
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) &&
         window.innerWidth <= 768 &&
         window.location.href.indexOf('mobile') === -1) {
