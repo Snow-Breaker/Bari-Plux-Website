@@ -13,6 +13,35 @@
     }
 
     // Login Status - Update Header Button
+    function escapeAttr(value) {
+        return String(value == null ? '' : value)
+            .replace(/&/g, '&amp;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+    }
+
+    function escapeHtmlText(value) {
+        return String(value == null ? '' : value)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
+
+    /** Only allow http(s) image URLs for avatar src (blocks javascript: and data: XSS). */
+    function safeHttpUrl(url) {
+        if (!url) return '';
+        try {
+            const u = new URL(String(url), location.origin);
+            if (u.protocol !== 'http:' && u.protocol !== 'https:') return '';
+            return u.href;
+        } catch (e) {
+            return '';
+        }
+    }
+
     function resolveUserName(user) {
         if (!user) return 'User';
         return user.name || user.displayName || user.username ||
@@ -24,7 +53,7 @@
         let photo = user.photoURL || user.photoUrl || user.avatar || '';
         if (!photo) return '';
         photo = String(photo);
-        if (/^https?:\/\//i.test(photo)) return photo;
+        if (/^https?:\/\//i.test(photo)) return safeHttpUrl(photo);
         let discordId = user.discordId || '';
         if (!discordId) {
             try {
@@ -33,18 +62,19 @@
                 if (photo.indexOf('/') === -1 && d && d.avatar) photo = d.avatar;
             } catch (e) { /* ignore */ }
         }
-        if (discordId && photo.indexOf('/') === -1 && photo.length >= 16) {
+        if (discordId && photo.indexOf('/') === -1 && photo.length >= 16 && /^[A-Za-z0-9_-]+$/.test(String(discordId)) && /^[A-Za-z0-9_-]+$/.test(photo)) {
             return 'https://cdn.discordapp.com/avatars/' + discordId + '/' + photo + '.png?size=128';
         }
-        return photo;
+        return '';
     }
 
     function avatarMarkup(user, sizeClass) {
         const name = resolveUserName(user);
-        const initial = name.charAt(0).toUpperCase();
+        const initial = escapeHtmlText(name.charAt(0).toUpperCase());
         const photo = resolvePhotoUrl(user);
+        const safeClass = escapeAttr(sizeClass || '');
         if (photo) {
-            return `<img class="${sizeClass}" src="${photo}" alt="" referrerpolicy="no-referrer" onerror="this.style.display='none';var s=document.createElement('span');s.className='bp-user-chip__initial';s.textContent='${initial}';this.parentNode.insertBefore(s,this);">`;
+            return `<img class="${safeClass}" src="${escapeAttr(photo)}" alt="" referrerpolicy="no-referrer" onerror="this.style.display='none';var s=document.createElement('span');s.className='bp-user-chip__initial';s.textContent=this.getAttribute('data-initial')||'?';this.parentNode.insertBefore(s,this);" data-initial="${initial}">`;
         }
         return `<span class="bp-user-chip__initial">${initial}</span>`;
     }
@@ -64,16 +94,16 @@
                 const photo = resolvePhotoUrl(user);
                 const shortName = userName.length > 14 ? userName.substring(0, 14) + '…' : userName;
                 
-                loginBtn.innerHTML = `<span class="bp-user-chip">${avatarMarkup(user, 'bp-user-chip__avatar')}<span>${shortName}</span></span>`;
+                loginBtn.innerHTML = `<span class="bp-user-chip">${avatarMarkup(user, 'bp-user-chip__avatar')}<span>${escapeHtmlText(shortName)}</span></span>`;
                 loginBtn.style.cursor = 'pointer';
                 
                 const avatarEl = document.getElementById('userAvatar');
                 if (avatarEl) {
                     avatarEl.style.backgroundImage = '';
                     if (photo) {
-                        avatarEl.innerHTML = `<img src="${photo}" alt="" referrerpolicy="no-referrer">`;
+                        avatarEl.innerHTML = `<img src="${escapeAttr(photo)}" alt="" referrerpolicy="no-referrer">`;
                     } else {
-                        avatarEl.innerHTML = userName.charAt(0).toUpperCase();
+                        avatarEl.textContent = userName.charAt(0).toUpperCase();
                     }
                 }
                 document.getElementById('userName').textContent = userName;
@@ -1451,8 +1481,26 @@ function formatMessage(text) {
     // Underline: ~~text~~
     formatted = formatted.replace(/~~(.+?)~~/g, '<u style="text-decoration: underline;">$1</u>');
     
-    // Links: [text](url)
-    formatted = formatted.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" style="color: #6C63FF; text-decoration: underline; font-weight: 500;">$1 <i class="fas fa-external-link-alt" style="font-size: 0.7em;"></i></a>');
+    // Links: [text](url) — only http(s)/mailto; block javascript: and other schemes
+    formatted = formatted.replace(/\[([^\]]+)\]\(([^)]+)\)/g, function (_m, label, rawUrl) {
+        var href = String(rawUrl || '').trim();
+        var safe = false;
+        try {
+            if (/^mailto:[^\s]+$/i.test(href)) {
+                safe = true;
+            } else {
+                var u = new URL(href, location.origin);
+                safe = u.protocol === 'http:' || u.protocol === 'https:';
+                if (safe) href = u.href;
+            }
+        } catch (e) {
+            safe = false;
+        }
+        if (!safe) {
+            return label;
+        }
+        return '<a href="' + href.replace(/"/g, '&quot;') + '" target="_blank" rel="noopener noreferrer" style="color: #6C63FF; text-decoration: underline; font-weight: 500;">' + label + ' <i class="fas fa-external-link-alt" style="font-size: 0.7em;"></i></a>';
+    });
     
     // Inline code: `code`
     formatted = formatted.replace(/`(.+?)`/g, '<code style="background: rgba(108, 99, 255, 0.2); padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 0.9em; color: #00BFA6;">$1</code>');
