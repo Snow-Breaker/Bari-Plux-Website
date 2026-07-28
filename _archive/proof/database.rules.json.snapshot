@@ -1,0 +1,308 @@
+{
+  "rules": {
+    "admin": {
+      ".read": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'",
+      ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'"
+    },
+    "app_config": {
+      ".read": true,
+      ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'",
+      "update": {
+        ".validate": "!newData.exists() || (newData.hasChild('version') && newData.child('version').isString() && newData.child('version').val().matches(/^[0-9]+(\\.[0-9]+){1,3}$/) && newData.child('version').val().length <= 32 && (!newData.hasChild('mandatory') || newData.child('mandatory').isBoolean()) && (!newData.hasChild('check_enabled') || newData.child('check_enabled').isBoolean()) && (!newData.hasChild('download_url') || (newData.child('download_url').isString() && newData.child('download_url').val().length <= 500)) && (!newData.hasChild('changelog') || (newData.child('changelog').isString() && newData.child('changelog').val().length <= 4000)) && (!newData.hasChild('updated_at') || newData.child('updated_at').isNumber()))"
+      },
+      "maintenance": {
+        ".validate": "!newData.exists() || (newData.hasChild('enabled') && newData.child('enabled').isBoolean() && newData.hasChild('title') && newData.child('title').isString() && newData.child('title').val().length > 0 && newData.child('title').val().length <= 120 && newData.hasChild('message') && newData.child('message').isString() && newData.child('message').val().length > 0 && newData.child('message').val().length <= 2000 && (!newData.hasChild('updated_at') || newData.child('updated_at').isNumber()))"
+      },
+      "access": {
+        ".validate": "!newData.exists() || (newData.hasChild('mode') && newData.child('mode').isString() && newData.child('mode').val().matches(/^(everyone|allowlist|role)$/) && (!newData.hasChild('min_role') || (newData.child('min_role').isString() && newData.child('min_role').val().matches(/^(free|pro|dev|founder)$/))) && (!newData.hasChild('updated_at') || newData.child('updated_at').isNumber()))"
+      }
+    },
+    "payhip_orders": {
+      ".read": false,
+      ".write": false
+    },
+    "payhip_licenses": {
+      ".read": false,
+      ".write": false
+    },
+    "payhip_subscriptions": {
+      ".read": false,
+      ".write": false,
+      ".indexOn": ["expiresAtMs"]
+    },
+    "stripe_orders": {
+      ".read": false,
+      ".write": false
+    },
+    "stripe_payment_intents": {
+      ".read": false,
+      ".write": false
+    },
+    "users": {
+      ".read": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'",
+      "$uid": {
+        ".read": "auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'",
+        ".write": "auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'",
+        ".validate": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || ((!newData.hasChild('blocked') || ((!data.exists() || !data.hasChild('blocked')) && newData.child('blocked').val() !== true) || newData.child('blocked').val() === data.child('blocked').val()) && (!newData.hasChild('forceLogout') || (!data.hasChild('forceLogout') && !newData.hasChild('forceLogout')) || (data.hasChild('forceLogout') && newData.child('forceLogout').val() === data.child('forceLogout').val())) && (!newData.hasChild('role') || (!data.exists() && !newData.hasChild('role')) || (data.hasChild('role') && newData.child('role').val() === data.child('role').val()) || (!data.hasChild('role') && !newData.hasChild('role'))))",
+        "photoURL": {
+          ".read": "auth != null"
+        },
+        "name": {
+          ".read": "auth != null"
+        },
+        "joinedAt": {
+          ".read": "auth != null",
+          ".validate": "newData.exists() && newData.isNumber() && newData.val() > 946684800000 && newData.val() < 4102444800000 && (!data.exists() || data.val() === newData.val())"
+        },
+        "role": {
+          ".read": "auth != null",
+          ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'",
+          ".validate": "newData.isString() && newData.val().matches(/^(free|pro|dev|founder)$/)"
+        },
+        "proExpiresAtMs": {
+          ".read": "auth != null",
+          ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'",
+          ".validate": "!newData.exists() || newData.isNumber()"
+        },
+        "appVersion": {
+          ".read": "auth != null",
+          ".validate": "!newData.exists() || (newData.isString() && newData.val().length > 0 && newData.val().length <= 32)"
+        },
+        "proDeviceId": {
+          ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com')",
+          ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || (auth.uid === $uid && (!data.exists() || data.val() === newData.val() || data.parent().child('proDeviceChangeAllowed').val() === true))",
+          ".validate": "!newData.exists() || (newData.isString() && newData.val().length >= 16 && newData.val().length <= 128)"
+        },
+        "proDeviceBoundAt": {
+          ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com')",
+          ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || (auth.uid === $uid && (!data.exists() || data.val() === newData.val() || data.parent().child('proDeviceChangeAllowed').val() === true))",
+          ".validate": "!newData.exists() || newData.isNumber()"
+        },
+        "proDeviceChangeAllowed": {
+          ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com')",
+          ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || (auth.uid === $uid && (!newData.exists() || newData.val() === false))",
+          ".validate": "!newData.exists() || newData.isBoolean()"
+        },
+        "proDeviceChangedAt": {
+          ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com')",
+          ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || auth.uid === $uid",
+          ".validate": "!newData.exists() || newData.isNumber()"
+        },
+        "proDeviceChangeGrantedAt": {
+          ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com')",
+          ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'",
+          ".validate": "!newData.exists() || newData.isNumber()"
+        }
+      }
+    },
+    "discordUsers": {
+      ".read": "auth != null",
+      "$uid": {
+        ".read": "auth != null",
+        ".write": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com')",
+        ".validate": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || ((!newData.hasChild('blocked') || ((!data.exists() || !data.hasChild('blocked')) && newData.child('blocked').val() !== true) || newData.child('blocked').val() === data.child('blocked').val()) && (!newData.hasChild('forceLogout') || (!data.hasChild('forceLogout') && !newData.hasChild('forceLogout')) || (data.hasChild('forceLogout') && newData.child('forceLogout').val() === data.child('forceLogout').val())) && (!newData.hasChild('role') || (!data.exists() && !newData.hasChild('role')) || (data.hasChild('role') && newData.child('role').val() === data.child('role').val()) || (!data.hasChild('role') && !newData.hasChild('role'))))",
+        "joinedAt": {
+          ".read": "auth != null",
+          ".validate": "newData.exists() && newData.isNumber() && newData.val() > 946684800000 && newData.val() < 4102444800000 && (!data.exists() || data.val() === newData.val())"
+        },
+        "role": {
+          ".read": "auth != null",
+          ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'",
+          ".validate": "newData.isString() && newData.val().matches(/^(free|pro|dev|founder)$/)"
+        },
+        "proExpiresAtMs": {
+          ".read": "auth != null",
+          ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'",
+          ".validate": "!newData.exists() || newData.isNumber()"
+        },
+        "appVersion": {
+          ".read": "auth != null",
+          ".validate": "!newData.exists() || (newData.isString() && newData.val().length > 0 && newData.val().length <= 32)"
+        },
+        "proDeviceId": {
+          ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com')",
+          ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || (auth.uid === $uid && (!data.exists() || data.val() === newData.val() || data.parent().child('proDeviceChangeAllowed').val() === true))",
+          ".validate": "!newData.exists() || (newData.isString() && newData.val().length >= 16 && newData.val().length <= 128)"
+        },
+        "proDeviceBoundAt": {
+          ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com')",
+          ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || (auth.uid === $uid && (!data.exists() || data.val() === newData.val() || data.parent().child('proDeviceChangeAllowed').val() === true))",
+          ".validate": "!newData.exists() || newData.isNumber()"
+        },
+        "proDeviceChangeAllowed": {
+          ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com')",
+          ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || (auth.uid === $uid && (!newData.exists() || newData.val() === false))",
+          ".validate": "!newData.exists() || newData.isBoolean()"
+        },
+        "proDeviceChangedAt": {
+          ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com')",
+          ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || auth.uid === $uid",
+          ".validate": "!newData.exists() || newData.isNumber()"
+        },
+        "proDeviceChangeGrantedAt": {
+          ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com')",
+          ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'",
+          ".validate": "!newData.exists() || newData.isNumber()"
+        }
+      }
+    },
+    "sessions": {
+      "$uid": {
+        ".read": "auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'",
+        ".write": "auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'",
+        "$sessionId": {
+          ".read": "auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'",
+          ".write": "auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'"
+        }
+      }
+    },
+    "pending_tokens": {
+      "$uid": {
+        "$sessionId": {
+          // Owner read only. Writes are Worker admin SDK only (client .write: false).
+          ".read": "auth != null && auth.uid === $uid",
+          ".write": false
+        }
+      }
+    },
+    "bugReports": {
+      ".read": "auth != null && (auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || root.child('users/' + auth.uid + '/role').val() === 'dev' || root.child('users/' + auth.uid + '/role').val() === 'founder')",
+      ".indexOn": [
+        "status",
+        "timestamp"
+      ],
+      "$reportId": {
+        ".write": "auth != null && ((auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || root.child('users/' + auth.uid + '/role').val() === 'dev' || root.child('users/' + auth.uid + '/role').val() === 'founder') || (!data.exists() && newData.hasChild('description') && newData.child('description').isString() && newData.child('description').val().length > 0 && newData.child('description').val().length <= 8000 && newData.hasChild('status') && newData.child('status').val() === 'new' && newData.hasChild('timestamp')))"
+      }
+    },
+
+    "errorReports": {
+      ".read": "auth != null && (auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || root.child('users/' + auth.uid + '/role').val() === 'dev' || root.child('users/' + auth.uid + '/role').val() === 'founder')",
+      ".indexOn": [
+        "status",
+        "timestamp",
+        "fingerprint",
+        "kind"
+      ],
+      "$reportId": {
+        ".write": "auth != null && ((auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || root.child('users/' + auth.uid + '/role').val() === 'dev' || root.child('users/' + auth.uid + '/role').val() === 'founder') || (!data.exists() && newData.child('source').val() === 'auto' && newData.child('status').val() === 'new' && newData.hasChild('timestamp') && newData.hasChild('exceptionType') && newData.child('exceptionType').isString() && newData.child('exceptionType').val().length > 0 && newData.child('exceptionType').val().length <= 200 && newData.hasChild('message') && newData.child('message').isString() && newData.child('message').val().length > 0 && newData.child('message').val().length <= 2000 && (!newData.hasChild('stackTrace') || (newData.child('stackTrace').isString() && newData.child('stackTrace').val().length <= 8000))))"
+      }
+    },
+
+    "announcements": {
+      ".read": true,
+      ".indexOn": ["timestamp"],
+      "$annId": {
+        ".write": "auth != null && (auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || root.child('users/' + auth.uid + '/role').val() === 'dev' || root.child('users/' + auth.uid + '/role').val() === 'founder')",
+        ".validate": "!newData.exists() || (newData.hasChildren(['title', 'description', 'status', 'timestamp', 'published']) && newData.child('title').isString() && newData.child('title').val().length > 0 && newData.child('title').val().length <= 120 && newData.child('description').isString() && newData.child('description').val().length > 0 && newData.child('description').val().length <= 4000 && newData.child('status').isString() && newData.child('status').val().matches(/^(new|breaking|update|info)$/) && newData.child('timestamp').isNumber() && newData.child('published').isBoolean())"
+      }
+    },
+    "mailbox": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || root.child('users/' + auth.uid + '/role').val() === 'dev' || root.child('users/' + auth.uid + '/role').val() === 'founder')",
+        ".indexOn": ["createdAt", "read"],
+        "$msgId": {
+          ".write": "auth != null && (auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || root.child('users/' + auth.uid + '/role').val() === 'dev' || root.child('users/' + auth.uid + '/role').val() === 'founder')",
+          ".validate": "!newData.exists() || (newData.hasChildren(['title', 'body', 'createdAt', 'read', 'type']) && newData.child('title').isString() && newData.child('title').val().length > 0 && newData.child('title').val().length <= 120 && newData.child('body').isString() && newData.child('body').val().length > 0 && newData.child('body').val().length <= 8000 && newData.child('createdAt').isNumber() && newData.child('read').isBoolean() && newData.child('type').isString() && newData.child('type').val().matches(/^(admin|report_reply|system)$/))",
+          "read": {
+            ".write": "auth != null && auth.uid === $uid",
+            ".validate": "newData.isBoolean()"
+          }
+        }
+      }
+    },
+    "feature_flags": {
+      ".read": true,
+      ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'",
+      "$featureKey": {
+        ".validate": "newData.hasChildren(['min_role', 'enabled'])",
+        "min_role": {
+          ".validate": "newData.isString() && newData.val().matches(/^(free|pro|dev|founder)$/)"
+        },
+        "enabled": {
+          ".validate": "newData.isBoolean()"
+        },
+        "visible": {
+          ".validate": "newData.isBoolean()"
+        },
+        "emulator": {
+          ".validate": "newData.isString() && newData.val().matches(/^(all|gameloop|mumu)$/)"
+        },
+        "page": {
+          ".validate": "newData.isString() && newData.val().matches(/^[a-z0-9_]+$/)"
+        }
+      }
+    },
+    "serverTime": {
+      ".read": true,
+      ".write": false
+    },
+    "lobby_chat": {
+      "bans": {
+        ".read": "auth != null",
+        ".write": "auth != null && (auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || root.child('users/' + auth.uid + '/role').val() === 'dev' || root.child('users/' + auth.uid + '/role').val() === 'founder')",
+        "$uid": {
+          ".validate": "!newData.exists() || newData.isBoolean()"
+        }
+      },
+      "blocks": {
+        "$myUid": {
+          ".read": "auth != null && auth.uid === $myUid",
+          ".write": "auth != null && auth.uid === $myUid",
+          "$targetUid": {
+            ".validate": "!newData.exists() || (newData.isBoolean() && newData.val() === true && $targetUid.length > 0 && $targetUid.length <= 128 && $targetUid !== $myUid)"
+          }
+        }
+      },
+      "reports": {
+        ".read": "auth != null && (auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || root.child('users/' + auth.uid + '/role').val() === 'dev' || root.child('users/' + auth.uid + '/role').val() === 'founder')",
+        "$reportId": {
+          ".write": "auth != null && ((auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || root.child('users/' + auth.uid + '/role').val() === 'dev' || root.child('users/' + auth.uid + '/role').val() === 'founder') || (root.child('lobby_chat/bans/' + auth.uid).val() !== true && !data.exists() && newData.child('reporterUid').val() === auth.uid && newData.hasChildren(['reporterUid', 'msgId', 'reason', 'ts']) && newData.child('msgId').isString() && newData.child('msgId').val().length > 0 && newData.child('msgId').val().length <= 64 && newData.child('reason').isString() && newData.child('reason').val().length > 0 && newData.child('reason').val().length <= 200 && (newData.child('ts').isNumber() || (newData.child('ts').hasChildren(['.sv']) && newData.child('ts').child('.sv').val() === 'timestamp')) && (!newData.hasChild('targetUid') || (newData.child('targetUid').isString() && newData.child('targetUid').val().length > 0 && newData.child('targetUid').val().length <= 128)) && (!newData.hasChild('targetName') || (newData.child('targetName').isString() && newData.child('targetName').val().length <= 32)) && (!newData.hasChild('room') || (newData.child('room').isString() && newData.child('room').val().matches(/^(general|help|offtopic)$/))) && (!newData.hasChild('textPreview') || (newData.child('textPreview').isString() && newData.child('textPreview').val().length <= 120)) && (!newData.hasChild('status') || (newData.child('status').isString() && newData.child('status').val().matches(/^(new|reviewed|resolved)$/)))))"
+        }
+      },
+      "user_moderation": {
+        ".read": "auth != null && (auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || root.child('users/' + auth.uid + '/role').val() === 'dev' || root.child('users/' + auth.uid + '/role').val() === 'founder')",
+        "$uid": {
+          ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || root.child('users/' + auth.uid + '/role').val() === 'dev' || root.child('users/' + auth.uid + '/role').val() === 'founder')",
+          ".write": "auth != null && ((auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || root.child('users/' + auth.uid + '/role').val() === 'dev' || root.child('users/' + auth.uid + '/role').val() === 'founder') || (auth.uid === $uid && newData.child('rulesAccepted').val() === true && newData.child('rulesVersion').isNumber() && newData.child('rulesVersion').val() === 1 && newData.child('strikesRemaining').isNumber() && newData.child('strikesRemaining').val() >= 0 && newData.child('strikesRemaining').val() <= 5 && newData.child('moralityScore').isNumber() && newData.child('moralityScore').val() >= 0 && newData.child('moralityScore').val() <= 100 && newData.child('displayName').isString() && newData.child('displayName').val().length > 0 && newData.child('displayName').val().length <= 32 && ((!data.exists() && newData.child('strikesRemaining').val() === 5 && newData.child('moralityScore').val() === 100 && !newData.hasChild('violations')) || (data.exists() && newData.child('strikesRemaining').val() === data.child('strikesRemaining').val() && newData.child('moralityScore').val() === data.child('moralityScore').val() && ((!data.hasChild('violations') && !newData.hasChild('violations')) || newData.child('violations').val() === data.child('violations').val())))))"
+        }
+      },
+      "typing": {
+        "$room": {
+          ".read": "auth != null",
+          ".validate": "$room.matches(/^(general|help|offtopic)$/)",
+          "$uid": {
+            ".write": "auth != null && auth.uid === $uid && root.child('lobby_chat/bans/' + auth.uid).val() !== true",
+            ".validate": "!newData.exists() || (newData.hasChildren(['name', 'ts']) && newData.child('name').isString() && newData.child('name').val().length > 0 && newData.child('name').val().length <= 32 && newData.child('ts').isNumber())"
+          }
+        }
+      },
+      "pins": {
+        ".read": "auth != null",
+        "$room": {
+          ".write": "auth != null && (auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || root.child('users/' + auth.uid + '/role').val() === 'dev' || root.child('users/' + auth.uid + '/role').val() === 'founder')",
+          ".validate": "!newData.exists() || ($room.matches(/^(general|help|offtopic)$/) && newData.hasChildren(['text', 'name', 'byUid', 'ts']) && newData.child('text').isString() && newData.child('text').val().length > 0 && newData.child('text').val().length <= 400 && newData.child('name').isString() && newData.child('name').val().length <= 32 && newData.child('byUid').isString() && newData.child('ts').isNumber())"
+        }
+      },
+      "messages": {
+        ".read": "auth != null",
+        ".indexOn": [
+          "ts",
+          "room"
+        ],
+        "$msgId": {
+          ".write": "auth != null && root.child('lobby_chat/bans/' + auth.uid).val() !== true && ((!data.exists() && root.child('lobby_chat/user_moderation/' + auth.uid + '/rulesAccepted').val() === true && root.child('lobby_chat/user_moderation/' + auth.uid + '/strikesRemaining').val() > 0 && newData.child('uid').val() === auth.uid && newData.hasChildren(['uid', 'name', 'text', 'ts', 'role', 'room']) && newData.child('uid').isString() && newData.child('uid').val().length > 0 && newData.child('uid').val().length <= 128 && newData.child('name').isString() && newData.child('name').val().length > 0 && newData.child('name').val().length <= 32 && newData.child('text').isString() && newData.child('text').val().length >= 0 && newData.child('text').val().length <= 400 && (newData.child('text').val().length > 0 || (newData.hasChild('imageKey') && newData.child('imageKey').isString())) && newData.child('role').isString() && ((root.child('users/' + auth.uid + '/role').val() != null && newData.child('role').val() === root.child('users/' + auth.uid + '/role').val()) || (root.child('users/' + auth.uid + '/role').val() == null && root.child('discordUsers/' + auth.uid + '/role').val() != null && newData.child('role').val() === root.child('discordUsers/' + auth.uid + '/role').val()) || (root.child('users/' + auth.uid + '/role').val() == null && root.child('discordUsers/' + auth.uid + '/role').val() == null && newData.child('role').val() === 'free')) && newData.child('room').isString() && newData.child('room').val().matches(/^(general|help|offtopic)$/) && (newData.child('ts').isNumber() || (newData.child('ts').hasChildren(['.sv']) && newData.child('ts').child('.sv').val() === 'timestamp')) && (!newData.hasChild('replyTo') || (newData.child('replyTo').isString() && newData.child('replyTo').val().length > 0 && newData.child('replyTo').val().length <= 64)) && (!newData.hasChild('replyName') || (newData.child('replyName').isString() && newData.child('replyName').val().length > 0 && newData.child('replyName').val().length <= 32)) && (!newData.hasChild('replyText') || (newData.child('replyText').isString() && newData.child('replyText').val().length > 0 && newData.child('replyText').val().length <= 100)) && (!newData.hasChild('imageKey') || (newData.child('imageKey').isString() && newData.child('imageKey').val().length > 3 && newData.child('imageKey').val().length <= 120)) && (!newData.hasChild('photoURL') || (newData.child('photoURL').isString() && newData.child('photoURL').val().length > 8 && newData.child('photoURL').val().length <= 500)) && (!newData.hasChild('mentions') || newData.child('mentions').hasChildren()) && !newData.hasChild('reactions')) || (data.exists() && !newData.exists() && (data.child('uid').val() === auth.uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || root.child('users/' + auth.uid + '/role').val() === 'dev' || root.child('users/' + auth.uid + '/role').val() === 'founder')) || (data.exists() && newData.exists() && data.child('uid').val() === auth.uid && newData.child('uid').val() === data.child('uid').val() && newData.child('name').val() === data.child('name').val() && newData.child('role').val() === data.child('role').val() && newData.child('room').val() === data.child('room').val() && newData.child('ts').val() === data.child('ts').val() && newData.child('imageKey').val() === data.child('imageKey').val() && newData.child('replyTo').val() === data.child('replyTo').val() && newData.child('replyName').val() === data.child('replyName').val() && newData.child('replyText').val() === data.child('replyText').val() && newData.child('photoURL').val() === data.child('photoURL').val() && newData.child('reactions').val() === data.child('reactions').val() && newData.child('text').isString() && newData.child('text').val().length >= 0 && newData.child('text').val().length <= 400 && (newData.child('text').val().length > 0 || data.hasChild('imageKey')) && (!newData.hasChild('edited') || newData.child('edited').val() === true) && (!newData.hasChild('editedAt') || newData.child('editedAt').isNumber() || (newData.child('editedAt').hasChildren(['.sv']) && newData.child('editedAt').child('.sv').val() === 'timestamp')) && (!newData.hasChild('mentions') || newData.child('mentions').hasChildren())))",
+          "reactions": {
+            "$emoji": {
+              ".validate": "$emoji.matches(/^(like|joy|fire)$/)",
+              "$uid": {
+                ".write": "auth != null && auth.uid === $uid && root.child('lobby_chat/bans/' + auth.uid).val() !== true && root.child('lobby_chat/messages/' + $msgId).exists()",
+                ".validate": "!newData.exists() || (newData.isBoolean() && newData.val() === true)"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
