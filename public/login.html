@@ -11,17 +11,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
     <title>Login | Bari Plux</title>
     <meta name="description" content="Login to your Bari Plux account">
-    <!-- Domain-lock + hop modern web visitors to canonical login.
-         Keep this page for Tool 2.2 desktop hops (?desktop=1 / ?legacy=1). -->
+    <!-- Domain-lock only. This page is the Tool 2.2 JSON login hop —
+         never bounce to login.bariplux.com (that breaks desktop=1 after OAuth). -->
     <script>
     (function(){
       var h=location.hostname;
       var ok=h==='bariplux.com'||h==='localhost'||h==='127.0.0.1'||h.endsWith('.bariplux.com')||h.endsWith('.firebaseapp.com')||h.endsWith('.web.app');
       if(!ok){document.documentElement.innerHTML='';window.stop();location.replace('about:blank');return;}
-      var q=new URLSearchParams(location.search);
-      // Legacy Tool 2.2 opens bariplux.com/login?desktop=1 — must stay on JSON token hop.
-      if(q.get('desktop')==='1'||q.get('legacy')==='1')return;
-      location.replace('https://login.bariplux.com/'+(location.search||''));
+      try {
+        var q=new URLSearchParams(location.search);
+        if(q.get('desktop')==='1'||q.get('legacy')==='1'){
+          sessionStorage.setItem('bp_tool22_desktop','1');
+        }
+        // Discord OAuth returns to /login#access_token=... without ?desktop=1 — restore it.
+        if(sessionStorage.getItem('bp_tool22_desktop')==='1' && q.get('desktop')!=='1'){
+          var keepHash=location.hash||'';
+          history.replaceState(null,'',location.pathname+'?desktop=1'+keepHash);
+        }
+      } catch(e) {}
     })();
     </script>
     <meta http-equiv="Content-Security-Policy"
@@ -891,6 +898,9 @@
                 showNotification('Discord Client ID not configured yet.', 'error');
                 return;
             }
+            // Discord redirect_uri must match the Developer Portal entry (no query).
+            // desktop=1 is restored via sessionStorage after the OAuth bounce.
+            try { sessionStorage.setItem('bp_tool22_desktop', '1'); } catch (e) {}
             const redirectUri = encodeURIComponent(window.location.href.split('#')[0].split('?')[0]);
             const scope = encodeURIComponent('identify email');
             window.location.href = `https://discord.com/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&redirect_uri=${redirectUri}&response_type=token&scope=${scope}`;
