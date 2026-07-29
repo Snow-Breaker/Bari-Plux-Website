@@ -28,8 +28,29 @@ let errorPage = 1;
 let _confirmAction = null;
 let _totpEnabled = false;
 let _pendingGatePassword = '';
+let _appInited = false;
+let _connectedBound = false;
 
 firebase.initializeApp(firebaseConfig);
+
+/** Prefer HTTPS long-polling — WebSockets to *.firebaseio.com are often blocked (VPN/ISP/Iran). */
+function ensureDb() {
+    if (db) return db;
+    db = firebase.database();
+    try {
+        // Must run before any ref()/listeners start the transport.
+        if (db.INTERNAL && typeof db.INTERNAL.forceLongPolling === 'function') {
+            db.INTERNAL.forceLongPolling();
+        }
+    } catch (e) {
+        console.warn('[RTDB] forceLongPolling failed', e);
+    }
+    try { db.goOnline(); } catch (_) { /* ignore */ }
+    return db;
+}
+
+// Start transport early with long-polling (before auth callbacks attach listeners).
+ensureDb();
 
 function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function fmtDate(v) { try { const d=new Date(v); return d.toLocaleDateString()+' '+d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}); } catch{return'—';} }
@@ -335,7 +356,7 @@ function showTotpSetupModal(qrUrl, secret, idToken) {
 }
 
 function initApp() {
-    db = firebase.database();
+    db = ensureDb();
 
     const currentUser = firebase.auth().currentUser;
     if (!currentUser || (currentUser.uid !== ADMIN_UID && currentUser.email !== ADMIN_EMAIL)) {
@@ -354,16 +375,33 @@ function initApp() {
         return;
     }
 
-    db.ref('.info/connected').on('value',s=>{
-        const connected=s.val()===true;
-        const rtDot=document.getElementById('realtime-dot');
-        const dbBanner=document.getElementById('dbBanner');
-        if(rtDot){rtDot.style.background=connected?'var(--success)':'#F44336';rtDot.title=connected?'DB Connected':'DB Offline';}
-        if(dbBanner)dbBanner.classList.toggle('show',!connected);
-    });
+    if (!_connectedBound) {
+        _connectedBound = true;
+        db.ref('.info/connected').on('value', s => {
+            const connected = s.val() === true;
+            const rtDot = document.getElementById('realtime-dot');
+            const dbBanner = document.getElementById('dbBanner');
+            if (rtDot) {
+                rtDot.style.background = connected ? 'var(--success)' : '#F44336';
+                rtDot.title = connected ? 'DB Connected' : 'DB Offline';
+            }
+            if (dbBanner) dbBanner.classList.toggle('show', !connected);
+            if (!connected) {
+                try { db.goOnline(); } catch (_) { /* ignore */ }
+            }
+        });
+    }
+
+    if (_appInited) {
+        loadUsers();
+        return;
+    }
+    _appInited = true;
+
     db.ref('admin/totp_enabled').once('value').then(snap => {
         _totpEnabled = snap.val() === true;
-        document.getElementById('totpStatus').textContent = _totpEnabled ? '2FA ✓' : '2FA';
+        const el = document.getElementById('totpStatus');
+        if (el) el.textContent = _totpEnabled ? '2FA ✓' : '2FA';
     }).catch(() => {});
     loadUsers();
     db.ref('bugReports').on('value', snap => {
