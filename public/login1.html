@@ -46,12 +46,13 @@
 <!-- Security headers -->
     <meta http-equiv="Content-Security-Policy"
       content="default-src 'self' https:;
-               script-src 'self' https://www.gstatic.com https://cdn.jsdelivr.net https://apis.google.com https://www.googleapis.com https://accounts.google.com https://cdnjs.cloudflare.com 'unsafe-inline' 'unsafe-eval';
+               script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://www.gstatic.com https://*.gstatic.com https://cdn.jsdelivr.net https://apis.google.com https://www.googleapis.com https://*.googleapis.com https://accounts.google.com https://www.google.com https://google.com https://*.google.com https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://static.cloudflareinsights.com;
                style-src 'self' https://fonts.googleapis.com https://cdnjs.cloudflare.com 'unsafe-inline';
                img-src 'self' https: data: blob:;
                font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:;
                connect-src 'self' https: wss:;
-               frame-src 'self' https: https://accounts.google.com https://*.firebaseapp.com https://*.google.com https://github.com https://*.github.com;
+               frame-src 'self' https: https://accounts.google.com https://*.firebaseapp.com https://*.google.com https://github.com https://*.github.com https://challenges.cloudflare.com;
+               worker-src 'self' blob:;
                object-src 'none';
                base-uri 'self';">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
