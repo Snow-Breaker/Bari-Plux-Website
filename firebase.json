@@ -27,6 +27,16 @@
         "source": "/login1.html",
         "destination": "/",
         "type": 301
+      },
+      {
+        "source": "/mobile",
+        "destination": "/",
+        "type": 301
+      },
+      {
+        "source": "/mobile.html",
+        "destination": "/",
+        "type": 301
       }
     ],
     "rewrites": [

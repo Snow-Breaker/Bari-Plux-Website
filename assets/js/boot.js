@@ -1,6 +1,7 @@
 /**
  * Early boot (non-module): theme FOUC fix, drag deterrent,
  * stylesheet preload activation (no inline onload — CSP script-src without unsafe-inline).
+ * NOTE: Do NOT redirect phones to mobile.html — the main site is responsive with bp-drawer.
  */
 (function () {
   'use strict';
