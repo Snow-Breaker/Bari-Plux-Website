@@ -505,10 +505,13 @@
 
                 const tokenRef = database.ref('pending_tokens/' + uid + '/' + sessionId);
                 let claimed = false;
+                let sawToken = false;
 
                 const listener = tokenRef.on('value', function(snapshot) {
                     const data = snapshot.val();
-                    if (data && data.claimed === true && !claimed) {
+                    if (data) sawToken = true;
+                    // claimed===true (preferred) OR node removed after we saw it (legacy worker delete)
+                    if (!claimed && ((data && data.claimed === true) || (sawToken && data === null))) {
                         claimed = true;
                         cleanupDesktopLogin();
                         showDesktopClaimedView();
@@ -516,6 +519,14 @@
                 });
 
                 activeTokenListener = function() { tokenRef.off('value', listener); };
+
+                // Browsers often block custom-protocol without a gesture; still try once.
+                setTimeout(function() {
+                    const btn = document.getElementById('openAppBtn');
+                    if (btn) {
+                        try { btn.click(); } catch (e) {}
+                    }
+                }, 500);
 
                 activeTimeoutId = setTimeout(function() {
                     if (!claimed) {
@@ -1561,10 +1572,12 @@
 
                 const tokenRef = database.ref('pending_tokens/' + uid + '/' + sessionId);
                 let claimed = false;
+                let sawToken = false;
 
                 const listener = tokenRef.on('value', function(snapshot) {
                     const data = snapshot.val();
-                    if (data && data.claimed === true && !claimed) {
+                    if (data) sawToken = true;
+                    if (!claimed && ((data && data.claimed === true) || (sawToken && data === null))) {
                         claimed = true;
                         if (activeTokenListener) { activeTokenListener(); }
                         if (statusEl) {
