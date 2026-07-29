@@ -36,10 +36,10 @@ firebase.initializeApp(firebaseConfig);
 
 /** Prefer HTTPS long-polling — WebSockets to *.firebaseio.com are often blocked (VPN/ISP/Iran). */
 function ensureDb() {
-    if (db) return db;
+    if (db && !_usingProxyMode) return db;
+    if (_usingProxyMode && db && db.__proxy) return db;
     db = firebase.database();
     try {
-        // Must run before any ref()/listeners start the transport.
         if (db.INTERNAL && typeof db.INTERNAL.forceLongPolling === 'function') {
             db.INTERNAL.forceLongPolling();
         }
@@ -50,9 +50,101 @@ function ensureDb() {
     return db;
 }
 
-// Start transport early with long-polling (before auth callbacks attach listeners).
-ensureDb();
+async function workerRtdbGet(paths) {
+    const authUser = firebase.auth().currentUser;
+    if (!authUser) throw new Error('Not signed in');
+    const idToken = await authUser.getIdToken(true);
+    const { ok, status, data } = await adminWorkerPost('/admin/rtdb-get', { paths }, idToken);
+    if (!ok || !data?.ok) {
+        throw new Error((data && (data.error || data.message)) || ('Worker rtdb-get failed (' + status + ')'));
+    }
+    return data.data || {};
+}
 
+async function workerRtdbWrite(op, path, writeData) {
+    const authUser = firebase.auth().currentUser;
+    if (!authUser) throw new Error('Not signed in');
+    const idToken = await authUser.getIdToken(true);
+    const body = { op, path };
+    if (op !== 'remove') body.data = writeData;
+    const { ok, status, data } = await adminWorkerPost('/admin/rtdb-write', body, idToken);
+    if (!ok || !data?.ok) {
+        throw new Error((data && (data.error || data.message)) || ('Worker rtdb-write failed (' + status + ')'));
+    }
+    return true;
+}
+
+/** Firebase-compatible DB shim so the whole admin panel works when firebaseio.com is blocked. */
+function createProxyDb() {
+    const pollers = new Map();
+
+    function makeSnap(val) {
+        return {
+            val: () => (val === undefined ? null : val),
+            exists: () => val !== null && val !== undefined
+        };
+    }
+
+    function ref(path) {
+        const p = String(path || '').replace(/^\/+|\/+$/g, '');
+        const api = {
+            once(event) {
+                if (event !== 'value') return Promise.reject(new Error('proxy only supports value'));
+                if (p === '.info/connected') return Promise.resolve(makeSnap(true));
+                return workerRtdbGet([p]).then(data => makeSnap(data[p]));
+            },
+            on(event, cb) {
+                if (event !== 'value') return cb;
+                const key = p;
+                const tick = async () => {
+                    try {
+                        if (key === '.info/connected') {
+                            cb(makeSnap(true));
+                            return;
+                        }
+                        const data = await workerRtdbGet([key]);
+                        cb(makeSnap(data[key]));
+                    } catch (e) {
+                        console.warn('[proxy on]', key, e);
+                    }
+                };
+                tick();
+                const id = setInterval(tick, 25000);
+                if (!pollers.has(key)) pollers.set(key, new Set());
+                pollers.get(key).add(id);
+                api._pollIds = api._pollIds || new Set();
+                api._pollIds.add(id);
+                return cb;
+            },
+            off() {
+                if (api._pollIds) {
+                    for (const id of api._pollIds) clearInterval(id);
+                    api._pollIds.clear();
+                }
+            },
+            set(data) { return workerRtdbWrite('set', p, data); },
+            update(data) { return workerRtdbWrite('update', p, data); },
+            remove() { return workerRtdbWrite('remove', p); }
+        };
+        return api;
+    }
+
+    return {
+        __proxy: true,
+        ref,
+        goOnline() {},
+        INTERNAL: { forceLongPolling() {} }
+    };
+}
+
+function activateProxyDb(reason) {
+    console.warn('[RTDB] switching to Worker proxy:', reason || '');
+    _usingProxyMode = true;
+    db = createProxyDb();
+    setDbBannerMode('proxy');
+}
+
+// Probe later in initApp — don't start real sockets until we know auth succeeded.
 function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function fmtDate(v) { try { const d=new Date(v); return d.toLocaleDateString()+' '+d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}); } catch{return'—';} }
 function timeAgo(ts) {
@@ -357,8 +449,6 @@ function showTotpSetupModal(qrUrl, secret, idToken) {
 }
 
 function initApp() {
-    db = ensureDb();
-
     const currentUser = firebase.auth().currentUser;
     if (!currentUser || (currentUser.uid !== ADMIN_UID && currentUser.email !== ADMIN_EMAIL)) {
         console.error('initApp: wrong user or not authenticated', currentUser?.uid, currentUser?.email);
@@ -376,66 +466,84 @@ function initApp() {
         return;
     }
 
-    if (!_connectedBound) {
-        _connectedBound = true;
-        db.ref('.info/connected').on('value', s => {
-            const connected = s.val() === true;
-            const rtDot = document.getElementById('realtime-dot');
-            const dbBanner = document.getElementById('dbBanner');
-            if (connected) {
-                _usingProxyMode = false;
-                setDbBannerMode('hidden');
-                return;
-            }
-            if (_usingProxyMode) {
-                setDbBannerMode('proxy');
-                return;
-            }
-            if (rtDot) {
-                rtDot.style.background = '#F44336';
-                rtDot.title = 'DB Offline';
-            }
-            if (dbBanner) dbBanner.classList.toggle('show', true);
-            try { db.goOnline(); } catch (_) { /* ignore */ }
-        });
-    }
-
     if (_appInited) {
         loadUsers();
         return;
     }
     _appInited = true;
 
-    db.ref('admin/totp_enabled').once('value').then(snap => {
-        _totpEnabled = snap.val() === true;
-        const el = document.getElementById('totpStatus');
-        if (el) el.textContent = _totpEnabled ? '2FA ✓' : '2FA';
-    }).catch(() => {});
-    loadUsers();
-    db.ref('bugReports').on('value', snap => {
-        const data = snap.val()||{};
-        const newCount = Object.values(data).filter(r=>r.status==='new').length;
-        const badge = document.getElementById('reportsBadge');
-        badge.textContent = newCount||'';
-        badge.classList.toggle('show', newCount>0);
-    });
-    errorsListener = db.ref('errorReports').on('value', snap => {
-        const data = snap.val()||{};
-        const newCount = Object.values(data).filter(r=>r.status==='new').length;
-        const badge = document.getElementById('errorsBadge');
-        if (badge) {
-            badge.textContent = newCount||'';
-            badge.classList.toggle('show', newCount>0);
+    const tbody = document.getElementById('usersTableBody');
+    if (tbody) {
+        tbody.innerHTML = '<tr class="state-row"><td colspan="8"><div class="state-icon" style="font-size:1.5rem;">⏳</div><div>Checking Firebase connection…</div></td></tr>';
+    }
+
+    (async () => {
+        ensureDb();
+        let connected = false;
+        try {
+            await waitForDbConnected(5000);
+            connected = true;
+        } catch (e) {
+            connected = false;
         }
-    });
-    db.ref('lobby_chat/reports').on('value', snap => {
-        const data = snap.val()||{};
-        const newCount = Object.values(data).filter(r=>(r.status||'new')==='new').length;
-        const badge = document.getElementById('chatModBadge');
-        if (badge) {
-            badge.textContent = newCount||'';
-            badge.classList.toggle('show', newCount>0);
+
+        if (!connected) {
+            activateProxyDb('direct firebaseio blocked');
+        } else if (!_connectedBound) {
+            _connectedBound = true;
+            db.ref('.info/connected').on('value', s => {
+                const isUp = s.val() === true;
+                if (isUp) {
+                    _usingProxyMode = false;
+                    setDbBannerMode('hidden');
+                } else if (_usingProxyMode) {
+                    setDbBannerMode('proxy');
+                } else {
+                    setDbBannerMode('offline');
+                    try { db.goOnline(); } catch (_) { /* ignore */ }
+                }
+            });
+            setDbBannerMode('hidden');
         }
+
+        db.ref('admin/totp_enabled').once('value').then(snap => {
+            _totpEnabled = snap.val() === true;
+            const el = document.getElementById('totpStatus');
+            if (el) el.textContent = _totpEnabled ? '2FA ✓' : '2FA';
+        }).catch(() => {});
+
+        loadUsers();
+
+        db.ref('bugReports').on('value', snap => {
+            const data = snap.val() || {};
+            const newCount = Object.values(data).filter(r => r.status === 'new').length;
+            const badge = document.getElementById('reportsBadge');
+            if (badge) {
+                badge.textContent = newCount || '';
+                badge.classList.toggle('show', newCount > 0);
+            }
+        });
+        errorsListener = db.ref('errorReports').on('value', snap => {
+            const data = snap.val() || {};
+            const newCount = Object.values(data).filter(r => r.status === 'new').length;
+            const badge = document.getElementById('errorsBadge');
+            if (badge) {
+                badge.textContent = newCount || '';
+                badge.classList.toggle('show', newCount > 0);
+            }
+        });
+        db.ref('lobby_chat/reports').on('value', snap => {
+            const data = snap.val() || {};
+            const newCount = Object.values(data).filter(r => (r.status || 'new') === 'new').length;
+            const badge = document.getElementById('chatModBadge');
+            if (badge) {
+                badge.textContent = newCount || '';
+                badge.classList.toggle('show', newCount > 0);
+            }
+        });
+    })().catch(e => {
+        console.error('initApp failed', e);
+        showToast('⚠️ Admin init failed: ' + (e.message || e), 'danger');
     });
 }
 
@@ -519,57 +627,57 @@ function applyUsersData(usersObj, discordObj, sourceLabel) {
     if (el) el.textContent = 'Last updated: ' + new Date().toLocaleTimeString() + (sourceLabel ? ' (' + sourceLabel + ')' : '');
 }
 
-async function loadUsersViaWorker() {
-    const authUser = firebase.auth().currentUser;
-    if (!authUser) throw new Error('Not signed in');
-    const idToken = await authUser.getIdToken(true);
-    const { ok, status, data } = await adminWorkerPost('/admin/rtdb-get', {
-        paths: ['users', 'discordUsers']
-    }, idToken);
-    if (!ok || !data?.ok) {
-        throw new Error((data && (data.error || data.message)) || ('Worker proxy failed (' + status + ')'));
-    }
-    return data.data || {};
-}
-
 function loadUsers() {
     const btn = document.getElementById('refreshBtn');
     if (btn) btn.classList.add('spinning');
-    ensureDb();
+    if (!db) ensureDb();
 
     const tbody = document.getElementById('usersTableBody');
-    tbody.innerHTML = '<tr class="state-row"><td colspan="8"><div class="state-icon" style="font-size:1.5rem;">⏳</div><div>Connecting to Firebase…</div></td></tr>';
+    tbody.innerHTML = '<tr class="state-row"><td colspan="8"><div class="state-icon" style="font-size:1.5rem;">⏳</div><div>Loading users' + (_usingProxyMode ? ' (proxy)…' : '…') + '</div></td></tr>';
     const mc = document.getElementById('mobileCards');
-    if (mc) mc.innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted);"><div style="font-size:2rem;margin-bottom:8px;">⏳</div><div>Connecting…</div></div>';
+    if (mc) mc.innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted);"><div style="font-size:2rem;margin-bottom:8px;">⏳</div><div>Loading…</div></div>';
 
     const authUser = firebase.auth().currentUser;
     const prep = authUser
         ? authUser.getIdToken(true).catch(() => null)
         : Promise.resolve(null);
 
-    prep.then(() => waitForDbConnected(8000)).then(() => {
-        tbody.innerHTML = '<tr class="state-row"><td colspan="8"><div class="state-icon" style="font-size:1.5rem;">⏳</div><div>Loading users from database...</div></td></tr>';
+    const loadDirectOrProxy = async () => {
+        if (!_usingProxyMode) {
+            try {
+                await waitForDbConnected(5000);
+            } catch (e) {
+                activateProxyDb('connect timeout during loadUsers');
+            }
+        }
+
+        if (_usingProxyMode) {
+            const data = await workerRtdbGet(['users', 'discordUsers']);
+            setDbBannerMode('proxy');
+            applyUsersData(data.users, data.discordUsers, 'proxy');
+            return;
+        }
+
         const timeout = new Promise((_, rej) => setTimeout(() => rej(new Error('TIMEOUT: Firebase did not respond in 20 seconds')), 20000));
-        return Promise.race([Promise.all([
+        const [us, ds] = await Promise.race([Promise.all([
             db.ref('users').once('value'),
             db.ref('discordUsers').once('value')
-        ]), timeout]).then(([us, ds]) => {
-            setDbBannerMode('hidden');
-            applyUsersData(us.val(), ds.val(), 'live');
-        });
-    }).catch(async (directErr) => {
-        console.warn('[loadUsers] direct RTDB failed, trying Worker proxy', directErr);
-        setDbBannerMode('offline');
-        tbody.innerHTML = '<tr class="state-row"><td colspan="8"><div class="state-icon" style="font-size:1.5rem;">⏳</div><div>Direct Firebase blocked — loading via secure proxy…</div></td></tr>';
+        ]), timeout]);
+        setDbBannerMode('hidden');
+        applyUsersData(us.val(), ds.val(), 'live');
+    };
+
+    prep.then(() => loadDirectOrProxy()).catch(async (err) => {
+        console.warn('[loadUsers] failed', err);
         try {
-            const data = await loadUsersViaWorker();
-            _usingProxyMode = true;
+            if (!_usingProxyMode) activateProxyDb(String(err && err.message || err));
+            const data = await workerRtdbGet(['users', 'discordUsers']);
             setDbBannerMode('proxy');
             applyUsersData(data.users, data.discordUsers, 'proxy');
             showToast('✅ Users loaded via secure proxy', 'success');
         } catch (proxyErr) {
             console.error(proxyErr);
-            const msg = String((proxyErr && proxyErr.message) || proxyErr || directErr);
+            const msg = String((proxyErr && proxyErr.message) || proxyErr || err);
             const isPermDenied = msg.includes('permission_denied') || msg.includes('Admin only') || msg.includes('PERMISSION_DENIED');
             const errMsg = isPermDenied
                 ? '🔒 Access denied. Re-login as the admin account.'

@@ -8,13 +8,12 @@
     <script src="assets/js/domain-lock.js"></script>
     <meta http-equiv="Content-Security-Policy"
       content="default-src 'self' https:;
-               script-src 'self' https://www.gstatic.com https://apis.google.com https://www.googleapis.com https://accounts.google.com https://cdnjs.cloudflare.com;
+               script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.gstatic.com https://apis.google.com https://www.googleapis.com https://accounts.google.com https://cdnjs.cloudflare.com https://www.google.com https://*.google.com https://*.gstatic.com https://cdn-cgi.cloudflare.com https://static.cloudflareinsights.com;
                style-src 'self' https://fonts.googleapis.com https://cdnjs.cloudflare.com 'unsafe-inline';
                img-src 'self' https: data: blob:;
                font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:;
-               connect-src 'self' https: wss:;
+               connect-src 'self' https: wss: https://*.firebaseio.com https://*.googleapis.com https://*.workers.dev;
                frame-src 'self' https: https://accounts.google.com https://*.firebaseapp.com https://*.google.com;
-               frame-ancestors 'none';
                object-src 'none';
                base-uri 'self';">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
@@ -1512,7 +1511,7 @@
 
 <div class="toast" id="toast"></div>
 
-<script src="assets/js/theadm1n.js?v=20260729fb3"></script>
+<script src="assets/js/theadm1n.js?v=20260729fb4"></script>
 
 
 </body>
