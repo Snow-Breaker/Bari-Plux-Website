@@ -97,6 +97,22 @@
   gap: 0.75rem;
 }
 
+/* Social providers — keep grid (inline display:block used to kill gap) */
+#socialForm.login-form {
+  display: grid !important;
+  gap: 1.35rem;
+}
+
+#socialForm .btn-google,
+#socialForm .btn-github,
+#socialForm .btn-discord {
+  margin: 0;
+}
+
+#socialForm .feature-pills {
+  margin-top: 0.25rem;
+}
+
 .btn-google,
 .btn-github,
 .btn-discord,
