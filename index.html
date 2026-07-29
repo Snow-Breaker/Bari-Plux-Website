@@ -20,13 +20,12 @@
 
     <meta http-equiv="Content-Security-Policy" 
       content="default-src 'self' https:; 
-               script-src 'self' https://cdnjs.cloudflare.com https://www.gstatic.com https://cdn.jsdelivr.net; 
+               script-src 'self' https://cdnjs.cloudflare.com https://www.gstatic.com https://cdn.jsdelivr.net https://apis.google.com https://www.googleapis.com https://accounts.google.com 'unsafe-inline' 'unsafe-eval'; 
                style-src 'self' https://fonts.googleapis.com https://cdnjs.cloudflare.com 'unsafe-inline'; 
                img-src 'self' https: data: blob:; 
                font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; 
-               connect-src 'self' https: https://api.groq.com; 
-               frame-src 'self' https://www.youtube.com https://youtube.com https://*.youtube.com https://www.youtube-nocookie.com;
-               frame-ancestors 'none';
+               connect-src 'self' https: wss: https://api.groq.com; 
+               frame-src 'self' https: https://www.youtube.com https://youtube.com https://*.youtube.com https://www.youtube-nocookie.com https://accounts.google.com https://*.firebaseapp.com;
                object-src 'none';
                base-uri 'self';">
 
@@ -73,6 +72,7 @@
 <link rel="dns-prefetch" href="https://www.gstatic.com">
 
 <meta name="theme-color" content="#030305">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="manifest" href="/manifest.json">

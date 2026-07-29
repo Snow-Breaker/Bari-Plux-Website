@@ -46,13 +46,12 @@
 <!-- Security headers -->
     <meta http-equiv="Content-Security-Policy"
       content="default-src 'self' https:;
-               script-src 'self' https://www.gstatic.com https://cdn.jsdelivr.net https://apis.google.com https://www.googleapis.com https://accounts.google.com https://cdnjs.cloudflare.com 'unsafe-inline';
+               script-src 'self' https://www.gstatic.com https://cdn.jsdelivr.net https://apis.google.com https://www.googleapis.com https://accounts.google.com https://cdnjs.cloudflare.com 'unsafe-inline' 'unsafe-eval';
                style-src 'self' https://fonts.googleapis.com https://cdnjs.cloudflare.com 'unsafe-inline';
                img-src 'self' https: data: blob:;
                font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:;
                connect-src 'self' https: wss:;
                frame-src 'self' https: https://accounts.google.com https://*.firebaseapp.com https://*.google.com https://github.com https://*.github.com;
-               frame-ancestors 'none';
                object-src 'none';
                base-uri 'self';">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
@@ -140,14 +139,14 @@
                     <div id="subForm-signin" class="sub-form active">
                         <div class="error-message" id="signInError"></div>
                         <div class="form-group">
-                            <label class="form-label">Email</label>
+                            <label class="form-label" for="emailInput">Email</label>
                             <div class="input-wrapper">
                                 <input type="email" id="emailInput" class="form-input with-icon" placeholder="your@email.com" autocomplete="email">
                                 <i class="fas fa-envelope"></i>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Password</label>
+                            <label class="form-label" for="passwordInput">Password</label>
                             <div class="input-wrapper">
                                 <input type="password" id="passwordInput" class="form-input with-icon" placeholder="Your password" autocomplete="current-password" style="padding-right:45px;">
                                 <i class="fas fa-lock"></i>
@@ -168,21 +167,21 @@
                     <div id="subForm-register" class="sub-form">
                         <div class="error-message" id="regError"></div>
                         <div class="form-group">
-                            <label class="form-label">Full Name</label>
+                            <label class="form-label" for="regName">Full Name</label>
                             <div class="input-wrapper">
                                 <input type="text" id="regName" class="form-input with-icon" placeholder="Your name" autocomplete="name">
                                 <i class="fas fa-user"></i>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Email</label>
+                            <label class="form-label" for="regEmail">Email</label>
                             <div class="input-wrapper">
                                 <input type="email" id="regEmail" class="form-input with-icon" placeholder="your@email.com" autocomplete="email">
                                 <i class="fas fa-envelope"></i>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Password</label>
+                            <label class="form-label" for="regPassword">Password</label>
                             <div class="input-wrapper">
                                 <input type="password" id="regPassword" class="form-input with-icon" placeholder="At least 6 characters" autocomplete="new-password" style="padding-right:45px;">
                                 <i class="fas fa-lock"></i>
@@ -190,7 +189,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Confirm Password</label>
+                            <label class="form-label" for="regConfirm">Confirm Password</label>
                             <div class="input-wrapper">
                                 <input type="password" id="regConfirm" class="form-input with-icon" placeholder="Repeat password" autocomplete="new-password" style="padding-right:45px;">
                                 <i class="fas fa-lock"></i>
@@ -207,7 +206,7 @@
                         <div class="error-message" id="forgotError"></div>
                         <div class="success-message" id="forgotSuccess"></div>
                         <div class="form-group">
-                            <label class="form-label">Email</label>
+                            <label class="form-label" for="forgotEmail">Email</label>
                             <div class="input-wrapper">
                                 <input type="email" id="forgotEmail" class="form-input with-icon" placeholder="your@email.com">
                                 <i class="fas fa-envelope"></i>
