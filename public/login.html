@@ -11,15 +11,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
     <title>Login | Bari Plux</title>
     <meta name="description" content="Login to your Bari Plux account">
-    <!-- Domain-lock + hop modern web visitors to canonical login -->
+    <!-- Domain-lock + hop modern web visitors to canonical login.
+         Keep this page for Tool 2.2 desktop hops (?desktop=1 / ?legacy=1). -->
     <script>
     (function(){
       var h=location.hostname;
       var ok=h==='bariplux.com'||h==='localhost'||h==='127.0.0.1'||h.endsWith('.bariplux.com')||h.endsWith('.firebaseapp.com')||h.endsWith('.web.app');
       if(!ok){document.documentElement.innerHTML='';window.stop();location.replace('about:blank');return;}
-      // Tool 2.2 can keep this page with ?legacy=1; everyone else uses the canonical host
       var q=new URLSearchParams(location.search);
-      if(q.get('legacy')==='1')return;
+      // Legacy Tool 2.2 opens bariplux.com/login?desktop=1 — must stay on JSON token hop.
+      if(q.get('desktop')==='1'||q.get('legacy')==='1')return;
       location.replace('https://login.bariplux.com/'+(location.search||''));
     })();
     </script>
