@@ -393,21 +393,52 @@ function initApp() {
     });
 }
 
+function waitForDbConnected(ms = 20000) {
+    return new Promise((resolve, reject) => {
+        if (!db) return reject(new Error('Database not initialized'));
+        let done = false;
+        const ref = db.ref('.info/connected');
+        const timer = setTimeout(() => {
+            if (done) return;
+            done = true;
+            ref.off('value', onVal);
+            reject(new Error('TIMEOUT: Firebase did not connect in ' + Math.round(ms / 1000) + ' seconds'));
+        }, ms);
+        function onVal(snap) {
+            if (snap.val() === true && !done) {
+                done = true;
+                clearTimeout(timer);
+                ref.off('value', onVal);
+                resolve(true);
+            }
+        }
+        ref.on('value', onVal);
+    });
+}
+
 function loadUsers() {
     const btn=document.getElementById('refreshBtn');
-    btn.classList.add('spinning');
-    if(!db) { btn.classList.remove('spinning'); return; }
+    if (btn) btn.classList.add('spinning');
+    if(!db) { if (btn) btn.classList.remove('spinning'); return; }
 
     const tbody=document.getElementById('usersTableBody');
-    tbody.innerHTML='<tr class="state-row"><td colspan="8"><div class="state-icon" style="font-size:1.5rem;">⏳</div><div>Loading users from database...</div></td></tr>';
+    tbody.innerHTML='<tr class="state-row"><td colspan="8"><div class="state-icon" style="font-size:1.5rem;">⏳</div><div>Connecting to Firebase…</div></td></tr>';
     const mc=document.getElementById('mobileCards');
-    if(mc) mc.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted);"><div style="font-size:2rem;margin-bottom:8px;">⏳</div><div>Loading users...</div></div>';
+    if(mc) mc.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted);"><div style="font-size:2rem;margin-bottom:8px;">⏳</div><div>Connecting…</div></div>';
 
-    const timeout=new Promise((_,rej)=>setTimeout(()=>rej(new Error('TIMEOUT: Firebase did not respond in 10 seconds')),10000));
-    Promise.race([Promise.all([
-        db.ref('users').once('value'),
-        db.ref('discordUsers').once('value')
-    ]), timeout]).then(([us, ds]) => {
+    const authUser = firebase.auth().currentUser;
+    const prep = authUser
+        ? authUser.getIdToken(true).catch(() => null)
+        : Promise.resolve(null);
+
+    prep.then(() => waitForDbConnected(25000)).then(() => {
+        tbody.innerHTML='<tr class="state-row"><td colspan="8"><div class="state-icon" style="font-size:1.5rem;">⏳</div><div>Loading users from database...</div></td></tr>';
+        const timeout=new Promise((_,rej)=>setTimeout(()=>rej(new Error('TIMEOUT: Firebase did not respond in 45 seconds')),45000));
+        return Promise.race([Promise.all([
+            db.ref('users').once('value'),
+            db.ref('discordUsers').once('value')
+        ]), timeout]);
+    }).then(([us, ds]) => {
         const parse = snap => {
             const d=snap.val();
             if(!d) return [];
@@ -420,6 +451,7 @@ function loadUsers() {
                 city:u.city||null, ip:u.ip||null,
                 blocked:u.blocked===true, forceLogout:u.forceLogout||null,
                 role:u.role||'free', roleAssignedAt:u.role_assigned_at||null, roleAssignedBy:u.role_assigned_by||null,
+                proExpiresAtMs: Number(u.proExpiresAtMs)||0,
                 appVersion:u.appVersion||u.app_version||null,
                 proDeviceId:u.proDeviceId||null,
                 proDeviceBoundAt:u.proDeviceBoundAt||null,
@@ -431,26 +463,31 @@ function loadUsers() {
         allUsers=merged.filter(u=>{ if(seen.has(u.id)) return false; seen.add(u.id); return true; });
         allUsers.sort((a,b)=>(b.lastActive||0)-(a.lastActive||0));
         updateUserStats(); userPage=1; renderUsers();
+        if (typeof renderProUsers === 'function') renderProUsers();
         document.getElementById('lastUpdated').textContent='Last updated: '+new Date().toLocaleTimeString();
     }).catch(e=>{
         console.error(e);
-        const isPermDenied=String(e.message||e).includes('permission_denied')||e.code==='PERMISSION_DENIED';
+        const msg = String(e.message||e);
+        const isPermDenied=msg.includes('permission_denied')||e.code==='PERMISSION_DENIED';
+        const isTimeout=msg.includes('TIMEOUT');
         const errMsg=isPermDenied
-            ? '🔒 Access denied. The Firebase Database Rules are blocking this read. Check that the admin UID in rules matches this account\'s Firebase Auth UID.'
+            ? '🔒 Access denied. Re-login as the admin account.'
+            : isTimeout
+            ? '⏳ Firebase timed out. Check internet / VPN / firewall, then Retry. Prefer https://bariplux.com/theadm1n.html (not a local file).'
             : '⚠️ Failed to load users';
         showToast(errMsg,'danger');
         tbody.innerHTML='<tr class="state-row"><td colspan="8">'
             +'<div class="state-icon">⚠️</div>'
-            +'<div style="color:#F44336;font-weight:600;">'+(isPermDenied?'Access Denied':'Failed to load users')+'</div>'
-            +'<div style="font-size:0.8rem;margin-top:6px;color:var(--muted);">'+(e.code||e.message||'Unknown error')+'</div>'
+            +'<div style="color:#F44336;font-weight:600;">'+(isPermDenied?'Access Denied':(isTimeout?'Connection timeout':'Failed to load users'))+'</div>'
+            +'<div style="font-size:0.8rem;margin-top:6px;color:var(--muted);">'+esc(msg)+'</div>'
             +'<button data-act="loadUsers" style="margin-top:12px;padding:8px 20px;background:var(--accent);color:white;border:none;border-radius:8px;cursor:pointer;font-family:\'Poppins\',sans-serif;font-size:0.82rem;">↺ Retry</button>'
             +'</td></tr>';
         if(mc) mc.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted);">'
             +'<div style="font-size:2rem;margin-bottom:8px;">⚠️</div>'
-            +'<div style="color:#F44336;font-weight:600;">'+(isPermDenied?'Access Denied':'Failed to load users')+'</div>'
+            +'<div style="color:#F44336;font-weight:600;">'+(isPermDenied?'Access Denied':(isTimeout?'Connection timeout':'Failed to load users'))+'</div>'
             +'<button data-act="loadUsers" style="margin-top:12px;padding:8px 20px;background:var(--accent);color:white;border:none;border-radius:8px;cursor:pointer;font-family:\'Poppins\',sans-serif;font-size:0.82rem;">↺ Retry</button>'
             +'</div>';
-    }).finally(()=>btn.classList.remove('spinning'));
+    }).finally(()=>{ if (btn) btn.classList.remove('spinning'); });
 }
 
 function updateUserStats() {
@@ -472,15 +509,138 @@ function setFilter(f, btn) {
 function getFilteredUsers() {
     const q=document.getElementById('searchInput').value.toLowerCase();
     return allUsers.filter(u=>{
+        const role = (u.role||'free').toLowerCase();
         const mf=activeFilter==='all'
             ||(activeFilter==='google'&&u.loginMethod.includes('google'))
             ||(activeFilter==='discord'&&u.loginMethod==='discord')
             ||(activeFilter==='github'&&u.loginMethod.includes('github'))
-            ||(activeFilter==='email'&&u.loginMethod==='email');
+            ||(activeFilter==='email'&&u.loginMethod==='email')
+            ||(activeFilter==='role:free'&&role==='free')
+            ||(activeFilter==='role:pro'&&role==='pro')
+            ||(activeFilter==='role:dev'&&role==='dev')
+            ||(activeFilter==='role:founder'&&role==='founder');
         const ms=!q||u.name.toLowerCase().includes(q)||u.email.toLowerCase().includes(q)||u.id.toLowerCase().includes(q)||(u.country||'').toLowerCase().includes(q)||(u.city||'').toLowerCase().includes(q)||(u.ip||'').toLowerCase().includes(q);
         return mf&&ms;
     });
 }
+
+function proDaysLeft(u) {
+    const exp = Number(u.proExpiresAtMs)||0;
+    if (!exp) return null;
+    return Math.ceil((exp - Date.now()) / 86400000);
+}
+
+function renderProUsers() {
+    const tbody = document.getElementById('proTableBody');
+    if (!tbody) return;
+    const q = (document.getElementById('proSearchInput')?.value || '').toLowerCase();
+    const now = Date.now();
+    let list = allUsers.filter(u => (u.role||'').toLowerCase() === 'pro');
+    if (q) {
+        list = list.filter(u =>
+            (u.name||'').toLowerCase().includes(q) ||
+            (u.email||'').toLowerCase().includes(q) ||
+            (u.id||'').toLowerCase().includes(q)
+        );
+    }
+    list.sort((a,b) => (Number(a.proExpiresAtMs)||0) - (Number(b.proExpiresAtMs)||0));
+
+    const active = list.filter(u => {
+        const exp = Number(u.proExpiresAtMs)||0;
+        return !exp || exp > now;
+    }).length;
+    const expiring = list.filter(u => {
+        const d = proDaysLeft(u);
+        return d != null && d >= 0 && d <= 7;
+    }).length;
+    const noExp = list.filter(u => !Number(u.proExpiresAtMs)).length;
+    const elA = document.getElementById('proStatActive');
+    const elE = document.getElementById('proStatExpiring');
+    const elN = document.getElementById('proStatNoExpiry');
+    if (elA) elA.textContent = active;
+    if (elE) elE.textContent = expiring;
+    if (elN) elN.textContent = noExp;
+    const badge = document.getElementById('proBadge');
+    if (badge) badge.textContent = list.length || '';
+    const countLabel = document.getElementById('proCountLabel');
+    if (countLabel) countLabel.textContent = `(${list.length})`;
+
+    if (!list.length) {
+        tbody.innerHTML = `<tr class="state-row"><td colspan="7"><div class="state-icon">⭐</div><div>No Pro members found.</div></td></tr>`;
+    } else {
+        tbody.innerHTML = list.map(u => {
+            const days = proDaysLeft(u);
+            let daysHtml = '—';
+            if (days != null) {
+                const color = days < 0 ? '#F44336' : days <= 7 ? '#FF9800' : '#4CAF50';
+                daysHtml = `<span style="color:${color};font-weight:700;">${days < 0 ? 'Expired' : days + 'd'}</span>`;
+            }
+            const activated = u.roleAssignedAt ? fmtDate(u.roleAssignedAt) : '—';
+            const expires = u.proExpiresAtMs ? fmtDate(u.proExpiresAtMs) : '—';
+            const source = u.roleAssignedBy || '—';
+            return `<tr style="cursor:pointer;" data-act="openUserModal" data-a1="${esc(u.id)}">
+                <td><div class="user-name">${esc(u.name)}</div><div class="user-id">${u.id.substring(0,18)}…</div></td>
+                <td style="color:var(--muted);font-size:0.82rem;">${esc(u.email)}</td>
+                <td class="time-cell">${activated}</td>
+                <td class="time-cell">${expires}</td>
+                <td>${daysHtml}</td>
+                <td style="font-size:0.78rem;color:var(--muted);">${esc(source)}</td>
+                <td><button class="icon-btn" data-act="openUserModal" data-a1="${esc(u.id)}" data-stop="1"><i class="fas fa-eye"></i></button></td>
+            </tr>`;
+        }).join('');
+    }
+    const lu = document.getElementById('proLastUpdated');
+    if (lu) lu.textContent = 'Last updated: ' + new Date().toLocaleTimeString();
+}
+
+async function loadBannedWords() {
+    if (!db) return;
+    try {
+        const snap = await db.ref('lobby_chat/banned_words').once('value');
+        const data = snap.val() || {};
+        let words = [];
+        if (Array.isArray(data.words)) words = data.words;
+        else if (data.words && typeof data.words === 'object') {
+            words = Object.values(data.words).filter(w => typeof w === 'string');
+        } else if (data.list && typeof data.list === 'object') {
+            words = Object.keys(data.list);
+        }
+        const ta = document.getElementById('cmBannedWordsInput');
+        if (ta) ta.value = words.join('\n');
+        const st = document.getElementById('cmBannedWordsStatus');
+        if (st) st.textContent = data.updatedAt
+            ? (`${words.length} words · updated ${new Date(data.updatedAt).toLocaleString()}`)
+            : (`${words.length} words`);
+    } catch (e) {
+        console.error(e);
+        showToast('Failed to load banned words', 'danger');
+    }
+}
+
+async function saveBannedWords() {
+    if (!db) return;
+    const ta = document.getElementById('cmBannedWordsInput');
+    const words = String(ta?.value || '')
+        .split(/\r?\n/)
+        .map(s => s.trim())
+        .filter(Boolean)
+        .filter((v, i, a) => a.findIndex(x => x.toLowerCase() === v.toLowerCase()) === i)
+        .slice(0, 500);
+    try {
+        await db.ref('lobby_chat/banned_words').set({
+            words,
+            updatedAt: Date.now(),
+            updatedBy: firebase.auth().currentUser?.uid || 'admin'
+        });
+        const st = document.getElementById('cmBannedWordsStatus');
+        if (st) st.textContent = `${words.length} words · saved ${new Date().toLocaleString()}`;
+        showToast('Banned words saved ✓', 'success');
+    } catch (e) {
+        console.error(e);
+        showToast('Failed to save banned words: ' + (e.message || e), 'danger');
+    }
+}
+
 
 function renderUsers() {
     const filtered=getFilteredUsers();
@@ -599,9 +759,19 @@ function openUserModal(id) {
     // Populate role section
     document.getElementById('modalCurrentRole').innerHTML = getRoleBadgeHtml(u.role || 'free');
     document.getElementById('modalRoleSelect').value = u.role || 'free';
-    const assignedInfo = u.roleAssignedAt
+    let assignedInfo = u.roleAssignedAt
         ? `Assigned ${new Date(u.roleAssignedAt).toLocaleDateString()}`
         : 'Default role';
+    if ((u.role || '').toLowerCase() === 'pro') {
+        const days = proDaysLeft(u);
+        if (u.proExpiresAtMs) {
+            assignedInfo += ` · expires ${new Date(u.proExpiresAtMs).toLocaleDateString()}`;
+            if (days != null) assignedInfo += ` (${days < 0 ? 'expired' : days + 'd left'})`;
+        } else {
+            assignedInfo += ' · no expiry set';
+        }
+        if (u.roleAssignedBy) assignedInfo += ` · via ${u.roleAssignedBy}`;
+    }
     document.getElementById('roleAssignedInfo').textContent = assignedInfo;
     renderDangerBtns(u);
     document.getElementById('userModal').classList.add('show');
@@ -791,22 +961,67 @@ async function assignRole() {
     const currentUser = firebase.auth().currentUser;
     if (!currentUser) return showToast('Not authenticated', 'danger');
 
+    if (newRole === 'pro') {
+        const daysRaw = prompt('Pro duration in days (default 60):', '60');
+        if (daysRaw === null) return;
+        const days = Math.min(Math.max(parseInt(daysRaw, 10) || 60, 1), 3650);
+        if (!confirm(`Grant PRO for ${days} days to this user?\nA Discord announce will be posted.`)) return;
+        try {
+            const token = await currentUser.getIdToken(true);
+            const { ok, data, status } = await adminWorkerPost('/admin/grant-pro', {
+                uid: userId,
+                days,
+                email: _currentUser.email || null
+            }, token);
+            if (!ok) throw new Error(data?.error || ('HTTP ' + status));
+            const exp = data?.expiresAtByUid?.[userId] || (Date.now() + days * 86400000);
+            document.getElementById('modalCurrentRole').innerHTML = getRoleBadgeHtml('pro');
+            document.getElementById('roleAssignedInfo').textContent =
+                `Pro until ${new Date(exp).toLocaleString()} · ${days} days`;
+            updateLocalUser(userId, {
+                role: 'pro',
+                roleAssignedAt: new Date().toISOString(),
+                roleAssignedBy: 'admin',
+                proExpiresAtMs: exp
+            });
+            renderUsers();
+            renderProUsers();
+            showToast(`PRO granted for ${days} days ✓`, 'success');
+        } catch (err) {
+            showToast('Failed to grant Pro: ' + (err.message || err), 'danger');
+        }
+        return;
+    }
+
     if (!confirm(`Assign role "${newRole.toUpperCase()}" to this user?`)) return;
 
     try {
         const userRef = await getCorrectRef(userId);
         if (!userRef) { showToast('User not found in database', 'danger'); return; }
-        await userRef.update({
+        const patch = {
             role: newRole,
             role_assigned_at: new Date().toISOString(),
             role_assigned_by: currentUser.uid
-        });
+        };
+        if (newRole === 'free') {
+            patch.proExpiresAtMs = null;
+        }
+        await userRef.update(patch);
+        if (newRole === 'free') {
+            await db.ref(`payhip_subscriptions/${userId}`).remove().catch(()=>{});
+        }
 
         document.getElementById('modalCurrentRole').innerHTML = getRoleBadgeHtml(newRole);
         document.getElementById('roleAssignedInfo').textContent = `Assigned ${new Date().toLocaleDateString()}`;
 
-        updateLocalUser(userId, { role: newRole, roleAssignedAt: new Date().toISOString(), roleAssignedBy: currentUser.uid });
+        updateLocalUser(userId, {
+            role: newRole,
+            roleAssignedAt: new Date().toISOString(),
+            roleAssignedBy: currentUser.uid,
+            proExpiresAtMs: newRole === 'free' ? 0 : (_currentUser.proExpiresAtMs || 0)
+        });
         renderUsers();
+        renderProUsers();
         showToast(`Role updated to ${newRole.toUpperCase()} ✓`, 'success');
     } catch (err) {
         showToast('Failed to assign role: ' + err.message, 'danger');
@@ -2389,6 +2604,8 @@ function switchTab(tab, btn) {
     document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
     document.getElementById('usersSection').style.display=tab==='users'?'':'none';
+    const proSec=document.getElementById('proSection');
+    if(proSec) proSec.style.display=tab==='pro'?'':'none';
     document.getElementById('reportsSection').style.display=tab==='reports'?'':'none';
     const errSec=document.getElementById('errorsSection');
     if(errSec) errSec.style.display=tab==='errors'?'':'none';
@@ -2406,6 +2623,10 @@ function switchTab(tab, btn) {
     const mb=document.getElementById('mailboxSection');
     if(ann) ann.style.display=tab==='announcements'?'':'none';
     if(mb) mb.style.display=tab==='mailbox'?'':'none';
+    if(tab==='pro') {
+        if(!allUsers.length) loadUsers();
+        else renderProUsers();
+    }
     if(tab==='reports') loadReports();
     if(tab==='errors') loadErrors();
     if(tab==='chatMod') loadChatMod();
@@ -2483,6 +2704,7 @@ async function loadChatMod() {
     const reportsBody = document.getElementById('cmReportsTableBody');
     usersBody.innerHTML = '<tr class="state-row"><td colspan="7"><div class="state-icon">⏳</div><div>Loading moderation…</div></td></tr>';
     reportsBody.innerHTML = '<tr class="state-row"><td colspan="8"><div class="state-icon">⏳</div><div>Loading reports…</div></td></tr>';
+    loadBannedWords();
     try {
         const [modSnap, repSnap, banSnap] = await Promise.all([
             db.ref('lobby_chat/user_moderation').once('value'),

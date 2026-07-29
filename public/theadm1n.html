@@ -568,6 +568,10 @@
                 <i class="fas fa-users"></i> Users
                 <span class="tab-badge" id="usersBadge"></span>
             </button>
+            <button class="tab-btn" data-act="switchTab" data-a1="pro" data-pass-el="1">
+                <i class="fas fa-star"></i> Pro
+                <span class="tab-badge" id="proBadge"></span>
+            </button>
             <button class="tab-btn" data-act="switchTab" data-a1="reports" data-pass-el="1">
                 <i class="fas fa-bug"></i> Bug Reports
                 <span class="tab-badge" id="reportsBadge"></span>
@@ -625,6 +629,10 @@
                     <button class="filter-btn google" data-act="setFilter" data-a1="google" data-pass-el="1"><i class="fab fa-google"></i> Google</button>
                     <button class="filter-btn github" data-act="setFilter" data-a1="github" data-pass-el="1"><i class="fab fa-github"></i> GitHub</button>
                     <button class="filter-btn email" data-act="setFilter" data-a1="email" data-pass-el="1"><i class="fas fa-envelope"></i> Email</button>
+                    <button class="filter-btn" data-act="setFilter" data-a1="role:free" data-pass-el="1">● Free</button>
+                    <button class="filter-btn" data-act="setFilter" data-a1="role:pro" data-pass-el="1">⭐ Pro</button>
+                    <button class="filter-btn" data-act="setFilter" data-a1="role:dev" data-pass-el="1">🛠️ Dev</button>
+                    <button class="filter-btn" data-act="setFilter" data-a1="role:founder" data-pass-el="1">👑 Founder</button>
                 </div>
                 <button class="icon-btn teal" id="refreshBtn" data-act="loadUsers"><i class="fas fa-sync-alt"></i> Refresh</button>
             </div>
@@ -661,6 +669,39 @@
                 </div>
                 <a href="https://console.firebase.google.com/project/baripluxwebsite/authentication/users" target="_blank" class="firebase-link"><i class="fas fa-external-link-alt"></i> Firebase Auth</a>
             </div>
+        </div>
+
+        <div id="proSection" style="display:none;">
+            <div class="stats-grid">
+                <div class="stat-card" style="animation-delay:0s"><div class="stat-icon" style="background:rgba(99,179,237,0.15);color:#63B3ED;"><i class="fas fa-star"></i></div><div><div class="stat-num" id="proStatActive">—</div><div class="stat-label">Active Pro</div></div></div>
+                <div class="stat-card" style="animation-delay:0.05s"><div class="stat-icon" style="background:rgba(255,152,0,0.15);color:#FF9800;"><i class="fas fa-hourglass-half"></i></div><div><div class="stat-num" id="proStatExpiring">—</div><div class="stat-label">Expire ≤ 7 days</div></div></div>
+                <div class="stat-card" style="animation-delay:0.1s"><div class="stat-icon" style="background:rgba(244,67,54,0.15);color:#F44336;"><i class="fas fa-exclamation-triangle"></i></div><div><div class="stat-num" id="proStatNoExpiry">—</div><div class="stat-label">No expiry set</div></div></div>
+            </div>
+            <div class="toolbar">
+                <span class="toolbar-title">Pro members <span id="proCountLabel" style="color:var(--muted);font-size:0.8rem;font-weight:400;"></span></span>
+                <div class="search-wrap">
+                    <i class="fas fa-search"></i>
+                    <input type="text" class="search-input" id="proSearchInput" placeholder="Search Pro users..." data-act="renderProUsers">
+                </div>
+                <button class="icon-btn teal" data-act="renderProUsers"><i class="fas fa-sync-alt"></i> Refresh</button>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Email</th>
+                            <th>Activated</th>
+                            <th>Expires</th>
+                            <th>Days left</th>
+                            <th>Source</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="proTableBody"><tr class="state-row"><td colspan="7"><div class="state-icon">⭐</div><div>Open Users first (or this tab) to load…</div></td></tr></tbody>
+                </table>
+            </div>
+            <div class="last-updated" id="proLastUpdated"></div>
         </div>
 
         <div id="reportsSection" style="display:none;">
@@ -765,6 +806,18 @@
                 <div class="stat-card" style="animation-delay:0.05s"><div class="stat-icon" style="background:rgba(244,67,54,0.15);color:#F44336;"><i class="fas fa-gavel"></i></div><div><div class="stat-num" id="cmStatViolators">—</div><div class="stat-label">With violations</div></div></div>
                 <div class="stat-card" style="animation-delay:0.1s"><div class="stat-icon" style="background:rgba(255,152,0,0.15);color:#FF9800;"><i class="fas fa-heart-broken"></i></div><div><div class="stat-num" id="cmStatLowMorality">—</div><div class="stat-label">Morality ≤ 50</div></div></div>
                 <div class="stat-card" style="animation-delay:0.15s"><div class="stat-icon" style="background:rgba(244,67,54,0.15);color:#F44336;"><i class="fas fa-flag"></i></div><div><div class="stat-num" id="cmStatReports">—</div><div class="stat-label">Chat reports</div></div></div>
+            </div>
+
+            <div class="toolbar" style="align-items:flex-start;flex-wrap:wrap;">
+                <div style="flex:1;min-width:260px;">
+                    <span class="toolbar-title"><i class="fas fa-comment-slash"></i> Banned words</span>
+                    <div style="font-size:0.72rem;color:var(--muted);margin-top:4px;">One word/phrase per line. Lobby chat blocks these (English word-boundary match).</div>
+                    <textarea id="cmBannedWordsInput" rows="4" style="width:100%;margin-top:8px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:10px;font-family:'JetBrains Mono',monospace;font-size:0.78rem;resize:vertical;" placeholder="badword&#10;another"></textarea>
+                    <div style="display:flex;gap:8px;margin-top:8px;align-items:center;">
+                        <button class="icon-btn teal" data-act="saveBannedWords"><i class="fas fa-save"></i> Save banned words</button>
+                        <span id="cmBannedWordsStatus" style="font-size:0.72rem;color:var(--muted);"></span>
+                    </div>
+                </div>
             </div>
 
             <div class="toolbar">
@@ -1459,7 +1512,7 @@
 
 <div class="toast" id="toast"></div>
 
-<script src="assets/js/theadm1n.js?v=20260728al"></script>
+<script src="assets/js/theadm1n.js?v=20260729fb1"></script>
 
 
 </body>
