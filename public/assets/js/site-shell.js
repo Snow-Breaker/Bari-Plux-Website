@@ -6,7 +6,7 @@
   'use strict';
 
   var LOGO =
-    'https://yt3.googleusercontent.com/RPW5Z_kcoEu0ES_VpL4-7ZqI4eI1OQfuVL-DbuCYWmRhXono9hA5NOCSGGMDLzJqNcHUlhOg=s160-c-k-c0x00ffffff-no-rj';
+    'https://i.postimg.cc/CKj6nBJP/PLUX-Logo.png';
 
   /* Extensionless paths for clean URLs */
   var NAV = [
