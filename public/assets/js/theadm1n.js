@@ -34,19 +34,12 @@ let _usingProxyMode = false;
 
 firebase.initializeApp(firebaseConfig);
 
-/** Prefer HTTPS long-polling — WebSockets to *.firebaseio.com are often blocked (VPN/ISP/Iran). */
+/** Admin panel never talks to firebaseio.com from the browser — ISP blocks are common. */
 function ensureDb() {
-    if (db && !_usingProxyMode) return db;
-    if (_usingProxyMode && db && db.__proxy) return db;
-    db = firebase.database();
-    try {
-        if (db.INTERNAL && typeof db.INTERNAL.forceLongPolling === 'function') {
-            db.INTERNAL.forceLongPolling();
-        }
-    } catch (e) {
-        console.warn('[RTDB] forceLongPolling failed', e);
-    }
-    try { db.goOnline(); } catch (_) { /* ignore */ }
+    if (db && db.__proxy) return db;
+    _usingProxyMode = true;
+    db = createProxyDb();
+    setDbBannerMode('proxy');
     return db;
 }
 
@@ -74,10 +67,8 @@ async function workerRtdbWrite(op, path, writeData) {
     return true;
 }
 
-/** Firebase-compatible DB shim so the whole admin panel works when firebaseio.com is blocked. */
+/** Firebase-compatible DB shim backed by Cloudflare Worker + service account. */
 function createProxyDb() {
-    const pollers = new Map();
-
     function makeSnap(val) {
         return {
             val: () => (val === undefined ? null : val),
@@ -110,8 +101,6 @@ function createProxyDb() {
                 };
                 tick();
                 const id = setInterval(tick, 25000);
-                if (!pollers.has(key)) pollers.set(key, new Set());
-                pollers.get(key).add(id);
                 api._pollIds = api._pollIds || new Set();
                 api._pollIds.add(id);
                 return cb;
@@ -129,22 +118,13 @@ function createProxyDb() {
         return api;
     }
 
-    return {
-        __proxy: true,
-        ref,
-        goOnline() {},
-        INTERNAL: { forceLongPolling() {} }
-    };
+    return { __proxy: true, ref, goOnline() {}, INTERNAL: { forceLongPolling() {} } };
 }
 
-function activateProxyDb(reason) {
-    console.warn('[RTDB] switching to Worker proxy:', reason || '');
-    _usingProxyMode = true;
-    db = createProxyDb();
-    setDbBannerMode('proxy');
+function activateProxyDb() {
+    return ensureDb();
 }
 
-// Probe later in initApp — don't start real sockets until we know auth succeeded.
 function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function fmtDate(v) { try { const d=new Date(v); return d.toLocaleDateString()+' '+d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}); } catch{return'—';} }
 function timeAgo(ts) {
@@ -466,84 +446,49 @@ function initApp() {
         return;
     }
 
+    ensureDb();
+
     if (_appInited) {
         loadUsers();
         return;
     }
     _appInited = true;
+    setDbBannerMode('proxy');
 
-    const tbody = document.getElementById('usersTableBody');
-    if (tbody) {
-        tbody.innerHTML = '<tr class="state-row"><td colspan="8"><div class="state-icon" style="font-size:1.5rem;">⏳</div><div>Checking Firebase connection…</div></td></tr>';
-    }
+    db.ref('admin/totp_enabled').once('value').then(snap => {
+        _totpEnabled = snap.val() === true;
+        const el = document.getElementById('totpStatus');
+        if (el) el.textContent = _totpEnabled ? '2FA ✓' : '2FA';
+    }).catch(() => {});
 
-    (async () => {
-        ensureDb();
-        let connected = false;
-        try {
-            await waitForDbConnected(5000);
-            connected = true;
-        } catch (e) {
-            connected = false;
+    loadUsers();
+
+    db.ref('bugReports').on('value', snap => {
+        const data = snap.val() || {};
+        const newCount = Object.values(data).filter(r => r.status === 'new').length;
+        const badge = document.getElementById('reportsBadge');
+        if (badge) {
+            badge.textContent = newCount || '';
+            badge.classList.toggle('show', newCount > 0);
         }
-
-        if (!connected) {
-            activateProxyDb('direct firebaseio blocked');
-        } else if (!_connectedBound) {
-            _connectedBound = true;
-            db.ref('.info/connected').on('value', s => {
-                const isUp = s.val() === true;
-                if (isUp) {
-                    _usingProxyMode = false;
-                    setDbBannerMode('hidden');
-                } else if (_usingProxyMode) {
-                    setDbBannerMode('proxy');
-                } else {
-                    setDbBannerMode('offline');
-                    try { db.goOnline(); } catch (_) { /* ignore */ }
-                }
-            });
-            setDbBannerMode('hidden');
+    });
+    errorsListener = db.ref('errorReports').on('value', snap => {
+        const data = snap.val() || {};
+        const newCount = Object.values(data).filter(r => r.status === 'new').length;
+        const badge = document.getElementById('errorsBadge');
+        if (badge) {
+            badge.textContent = newCount || '';
+            badge.classList.toggle('show', newCount > 0);
         }
-
-        db.ref('admin/totp_enabled').once('value').then(snap => {
-            _totpEnabled = snap.val() === true;
-            const el = document.getElementById('totpStatus');
-            if (el) el.textContent = _totpEnabled ? '2FA ✓' : '2FA';
-        }).catch(() => {});
-
-        loadUsers();
-
-        db.ref('bugReports').on('value', snap => {
-            const data = snap.val() || {};
-            const newCount = Object.values(data).filter(r => r.status === 'new').length;
-            const badge = document.getElementById('reportsBadge');
-            if (badge) {
-                badge.textContent = newCount || '';
-                badge.classList.toggle('show', newCount > 0);
-            }
-        });
-        errorsListener = db.ref('errorReports').on('value', snap => {
-            const data = snap.val() || {};
-            const newCount = Object.values(data).filter(r => r.status === 'new').length;
-            const badge = document.getElementById('errorsBadge');
-            if (badge) {
-                badge.textContent = newCount || '';
-                badge.classList.toggle('show', newCount > 0);
-            }
-        });
-        db.ref('lobby_chat/reports').on('value', snap => {
-            const data = snap.val() || {};
-            const newCount = Object.values(data).filter(r => (r.status || 'new') === 'new').length;
-            const badge = document.getElementById('chatModBadge');
-            if (badge) {
-                badge.textContent = newCount || '';
-                badge.classList.toggle('show', newCount > 0);
-            }
-        });
-    })().catch(e => {
-        console.error('initApp failed', e);
-        showToast('⚠️ Admin init failed: ' + (e.message || e), 'danger');
+    });
+    db.ref('lobby_chat/reports').on('value', snap => {
+        const data = snap.val() || {};
+        const newCount = Object.values(data).filter(r => (r.status || 'new') === 'new').length;
+        const badge = document.getElementById('chatModBadge');
+        if (badge) {
+            badge.textContent = newCount || '';
+            badge.classList.toggle('show', newCount > 0);
+        }
     });
 }
 
@@ -580,21 +525,13 @@ function setDbBannerMode(mode) {
         if (rtDot) { rtDot.style.background = 'var(--success)'; rtDot.title = 'DB Connected'; }
         return;
     }
-    if (mode === 'proxy') {
-        dbBanner.classList.add('show');
-        dbBanner.innerHTML = '<i class="fas fa-shield-alt"></i> Direct Firebase blocked on this network — loading via secure Worker proxy.';
-        dbBanner.style.background = '#E8F4FD';
-        dbBanner.style.color = '#0C5460';
-        dbBanner.style.borderBottomColor = '#BEE5EB';
-        if (rtDot) { rtDot.style.background = '#63B3ED'; rtDot.title = 'Proxy mode'; }
-        return;
-    }
+    // Proxy is the normal/intended path for admin — informational, not an error.
     dbBanner.classList.add('show');
-    dbBanner.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Cannot reach Firebase database. Trying secure proxy… Prefer https://bariplux.com/theadm1n.html';
-    dbBanner.style.background = '';
-    dbBanner.style.color = '';
-    dbBanner.style.borderBottomColor = '';
-    if (rtDot) { rtDot.style.background = '#F44336'; rtDot.title = 'DB Offline'; }
+    dbBanner.innerHTML = '<i class="fas fa-shield-alt"></i> Secure Worker proxy active — admin never connects to firebaseio.com from your browser.';
+    dbBanner.style.background = '#E8F4FD';
+    dbBanner.style.color = '#0C5460';
+    dbBanner.style.borderBottomColor = '#BEE5EB';
+    if (rtDot) { rtDot.style.background = '#63B3ED'; rtDot.title = 'Proxy mode'; }
 }
 
 function parseUserMap(d) {
@@ -630,10 +567,10 @@ function applyUsersData(usersObj, discordObj, sourceLabel) {
 function loadUsers() {
     const btn = document.getElementById('refreshBtn');
     if (btn) btn.classList.add('spinning');
-    if (!db) ensureDb();
+    ensureDb();
 
     const tbody = document.getElementById('usersTableBody');
-    tbody.innerHTML = '<tr class="state-row"><td colspan="8"><div class="state-icon" style="font-size:1.5rem;">⏳</div><div>Loading users' + (_usingProxyMode ? ' (proxy)…' : '…') + '</div></td></tr>';
+    tbody.innerHTML = '<tr class="state-row"><td colspan="8"><div class="state-icon" style="font-size:1.5rem;">⏳</div><div>Loading users…</div></td></tr>';
     const mc = document.getElementById('mobileCards');
     if (mc) mc.innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted);"><div style="font-size:2rem;margin-bottom:8px;">⏳</div><div>Loading…</div></div>';
 
@@ -642,59 +579,26 @@ function loadUsers() {
         ? authUser.getIdToken(true).catch(() => null)
         : Promise.resolve(null);
 
-    const loadDirectOrProxy = async () => {
-        if (!_usingProxyMode) {
-            try {
-                await waitForDbConnected(5000);
-            } catch (e) {
-                activateProxyDb('connect timeout during loadUsers');
-            }
-        }
-
-        if (_usingProxyMode) {
-            const data = await workerRtdbGet(['users', 'discordUsers']);
-            setDbBannerMode('proxy');
-            applyUsersData(data.users, data.discordUsers, 'proxy');
-            return;
-        }
-
-        const timeout = new Promise((_, rej) => setTimeout(() => rej(new Error('TIMEOUT: Firebase did not respond in 20 seconds')), 20000));
-        const [us, ds] = await Promise.race([Promise.all([
-            db.ref('users').once('value'),
-            db.ref('discordUsers').once('value')
-        ]), timeout]);
-        setDbBannerMode('hidden');
-        applyUsersData(us.val(), ds.val(), 'live');
-    };
-
-    prep.then(() => loadDirectOrProxy()).catch(async (err) => {
-        console.warn('[loadUsers] failed', err);
-        try {
-            if (!_usingProxyMode) activateProxyDb(String(err && err.message || err));
-            const data = await workerRtdbGet(['users', 'discordUsers']);
-            setDbBannerMode('proxy');
-            applyUsersData(data.users, data.discordUsers, 'proxy');
-            showToast('✅ Users loaded via secure proxy', 'success');
-        } catch (proxyErr) {
-            console.error(proxyErr);
-            const msg = String((proxyErr && proxyErr.message) || proxyErr || err);
-            const isPermDenied = msg.includes('permission_denied') || msg.includes('Admin only') || msg.includes('PERMISSION_DENIED');
-            const errMsg = isPermDenied
-                ? '🔒 Access denied. Re-login as the admin account.'
-                : '⏳ Could not reach Firebase (direct or proxy). Check internet, then Retry.';
-            showToast(errMsg, 'danger');
-            tbody.innerHTML = '<tr class="state-row"><td colspan="8">'
-                + '<div class="state-icon">⚠️</div>'
-                + '<div style="color:#F44336;font-weight:600;">' + (isPermDenied ? 'Access Denied' : 'Connection failed') + '</div>'
-                + '<div style="font-size:0.8rem;margin-top:6px;color:var(--muted);">' + esc(msg) + '</div>'
-                + '<button data-act="loadUsers" style="margin-top:12px;padding:8px 20px;background:var(--accent);color:white;border:none;border-radius:8px;cursor:pointer;font-family:\'Poppins\',sans-serif;font-size:0.82rem;">↺ Retry</button>'
-                + '</td></tr>';
-            if (mc) mc.innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted);">'
-                + '<div style="font-size:2rem;margin-bottom:8px;">⚠️</div>'
-                + '<div style="color:#F44336;font-weight:600;">' + (isPermDenied ? 'Access Denied' : 'Connection failed') + '</div>'
-                + '<button data-act="loadUsers" style="margin-top:12px;padding:8px 20px;background:var(--accent);color:white;border:none;border-radius:8px;cursor:pointer;font-family:\'Poppins\',sans-serif;font-size:0.82rem;">↺ Retry</button>'
-                + '</div>';
-        }
+    prep.then(() => workerRtdbGet(['users', 'discordUsers'])).then((data) => {
+        setDbBannerMode('proxy');
+        applyUsersData(data.users, data.discordUsers, 'proxy');
+    }).catch((err) => {
+        console.error(err);
+        const msg = String((err && err.message) || err);
+        const isPermDenied = msg.includes('permission_denied') || msg.includes('Admin only') || msg.includes('PERMISSION_DENIED');
+        showToast(isPermDenied
+            ? '🔒 Access denied. Re-login as the admin account.'
+            : '⏳ Could not load users via Worker. Check internet, then Retry.', 'danger');
+        tbody.innerHTML = '<tr class="state-row"><td colspan="8">'
+            + '<div class="state-icon">⚠️</div>'
+            + '<div style="color:#F44336;font-weight:600;">' + (isPermDenied ? 'Access Denied' : 'Connection failed') + '</div>'
+            + '<div style="font-size:0.8rem;margin-top:6px;color:var(--muted);">' + esc(msg) + '</div>'
+            + '<button data-act="loadUsers" style="margin-top:12px;padding:8px 20px;background:var(--accent);color:white;border:none;border-radius:8px;cursor:pointer;font-family:\'Poppins\',sans-serif;font-size:0.82rem;">↺ Retry</button>'
+            + '</td></tr>';
+        if (mc) mc.innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted);">'
+            + '<div style="font-size:2rem;margin-bottom:8px;">⚠️</div>'
+            + '<button data-act="loadUsers" style="margin-top:12px;padding:8px 20px;background:var(--accent);color:white;border:none;border-radius:8px;cursor:pointer;">↺ Retry</button>'
+            + '</div>';
     }).finally(() => { if (btn) btn.classList.remove('spinning'); });
 }
 
@@ -2501,12 +2405,15 @@ function refreshUpdatePreview() {
 
 async function fetchLegacyVersionTxt() {
     try {
-        const res = await fetch(LEGACY_VERSION_TXT_URL + '?t=' + Date.now(), { cache: 'no-store' });
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        _legacyVersionTxt = (await res.text()).trim();
+        const authUser = firebase.auth().currentUser;
+        if (!authUser) throw new Error('Not signed in');
+        const idToken = await authUser.getIdToken(true);
+        const { ok, data } = await adminWorkerPost('/admin/legacy-version', {}, idToken);
+        if (!ok || !data?.ok) throw new Error((data && data.error) || 'legacy-version failed');
+        _legacyVersionTxt = String(data.text || '').trim() || null;
     } catch (e) {
         _legacyVersionTxt = null;
-        console.warn('legacy version.txt fetch failed', e);
+        console.warn('legacy version.txt via worker failed', e);
     }
     const el = document.getElementById('updStatLegacy');
     if (el) el.textContent = _legacyVersionTxt || 'n/a';
@@ -3520,12 +3427,10 @@ function applyReportReplyTemplate(kind) {
   }
   function run(el) {
     var act = el.getAttribute("data-act");
-    if (!act) return;
+    // Ignore junk/injected attributes (e.g. CF/extensions producing data-act="if")
+    if (!act || !/^[A-Za-z_$][\w$]*$/.test(act)) return;
     var fn = window[act];
-    if (typeof fn !== "function") {
-      console.error("[admin] unknown action:", act);
-      return;
-    }
+    if (typeof fn !== "function") return;
     fn.apply(null, collectArgs(el));
   }
   document.addEventListener("click", function (e) {

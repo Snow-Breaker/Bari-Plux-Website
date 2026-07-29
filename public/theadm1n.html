@@ -6,24 +6,14 @@
     <title>Admin Panel | Bari Plux</title>
     <!-- Domain-lock -->
     <script src="assets/js/domain-lock.js"></script>
-    <meta http-equiv="Content-Security-Policy"
-      content="default-src 'self' https:;
-               script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.gstatic.com https://apis.google.com https://www.googleapis.com https://accounts.google.com https://cdnjs.cloudflare.com https://www.google.com https://*.google.com https://*.gstatic.com https://cdn-cgi.cloudflare.com https://static.cloudflareinsights.com;
-               style-src 'self' https://fonts.googleapis.com https://cdnjs.cloudflare.com 'unsafe-inline';
-               img-src 'self' https: data: blob:;
-               font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:;
-               connect-src 'self' https: wss: https://*.firebaseio.com https://*.googleapis.com https://*.workers.dev;
-               frame-src 'self' https: https://accounts.google.com https://*.firebaseapp.com https://*.google.com;
-               object-src 'none';
-               base-uri 'self';">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="https://i.postimg.cc/CKj6nBJP/PLUX-Logo.png">
+    <!-- Auth only — RTDB always goes through Worker (firebaseio.com is blocked on many networks). -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
     <style>
         :root {
@@ -559,7 +549,7 @@
         </div>
     </div>
 
-    <div id="dbBanner" class="db-banner"><i class="fas fa-exclamation-triangle"></i> Cannot reach Firebase database. Try disabling VPN, or use another network/DNS — then refresh. Prefer https://bariplux.com/theadm1n.html</div>
+    <div id="dbBanner" class="db-banner show"><i class="fas fa-shield-alt"></i> Admin database uses secure Worker proxy (browser never talks to firebaseio.com).</div>
 
     <div class="main">
         <div class="tabs">
@@ -1511,7 +1501,7 @@
 
 <div class="toast" id="toast"></div>
 
-<script src="assets/js/theadm1n.js?v=20260729fb4"></script>
+<script src="assets/js/theadm1n.js?v=20260729fb5"></script>
 
 
 </body>
