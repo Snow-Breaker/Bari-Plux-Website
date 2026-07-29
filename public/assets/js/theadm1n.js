@@ -30,6 +30,7 @@ let _totpEnabled = false;
 let _pendingGatePassword = '';
 let _appInited = false;
 let _connectedBound = false;
+let _usingProxyMode = false;
 
 firebase.initializeApp(firebaseConfig);
 
@@ -381,14 +382,21 @@ function initApp() {
             const connected = s.val() === true;
             const rtDot = document.getElementById('realtime-dot');
             const dbBanner = document.getElementById('dbBanner');
+            if (connected) {
+                _usingProxyMode = false;
+                setDbBannerMode('hidden');
+                return;
+            }
+            if (_usingProxyMode) {
+                setDbBannerMode('proxy');
+                return;
+            }
             if (rtDot) {
-                rtDot.style.background = connected ? 'var(--success)' : '#F44336';
-                rtDot.title = connected ? 'DB Connected' : 'DB Offline';
+                rtDot.style.background = '#F44336';
+                rtDot.title = 'DB Offline';
             }
-            if (dbBanner) dbBanner.classList.toggle('show', !connected);
-            if (!connected) {
-                try { db.goOnline(); } catch (_) { /* ignore */ }
-            }
+            if (dbBanner) dbBanner.classList.toggle('show', true);
+            try { db.goOnline(); } catch (_) { /* ignore */ }
         });
     }
 
@@ -454,78 +462,132 @@ function waitForDbConnected(ms = 20000) {
     });
 }
 
-function loadUsers() {
-    const btn=document.getElementById('refreshBtn');
-    if (btn) btn.classList.add('spinning');
-    if(!db) { if (btn) btn.classList.remove('spinning'); return; }
+function setDbBannerMode(mode) {
+    // mode: 'hidden' | 'offline' | 'proxy'
+    const dbBanner = document.getElementById('dbBanner');
+    const rtDot = document.getElementById('realtime-dot');
+    if (!dbBanner) return;
+    if (mode === 'hidden') {
+        dbBanner.classList.remove('show');
+        if (rtDot) { rtDot.style.background = 'var(--success)'; rtDot.title = 'DB Connected'; }
+        return;
+    }
+    if (mode === 'proxy') {
+        dbBanner.classList.add('show');
+        dbBanner.innerHTML = '<i class="fas fa-shield-alt"></i> Direct Firebase blocked on this network — loading via secure Worker proxy.';
+        dbBanner.style.background = '#E8F4FD';
+        dbBanner.style.color = '#0C5460';
+        dbBanner.style.borderBottomColor = '#BEE5EB';
+        if (rtDot) { rtDot.style.background = '#63B3ED'; rtDot.title = 'Proxy mode'; }
+        return;
+    }
+    dbBanner.classList.add('show');
+    dbBanner.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Cannot reach Firebase database. Trying secure proxy… Prefer https://bariplux.com/theadm1n.html';
+    dbBanner.style.background = '';
+    dbBanner.style.color = '';
+    dbBanner.style.borderBottomColor = '';
+    if (rtDot) { rtDot.style.background = '#F44336'; rtDot.title = 'DB Offline'; }
+}
 
-    const tbody=document.getElementById('usersTableBody');
-    tbody.innerHTML='<tr class="state-row"><td colspan="8"><div class="state-icon" style="font-size:1.5rem;">⏳</div><div>Connecting to Firebase…</div></td></tr>';
-    const mc=document.getElementById('mobileCards');
-    if(mc) mc.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted);"><div style="font-size:2rem;margin-bottom:8px;">⏳</div><div>Connecting…</div></div>';
+function parseUserMap(d) {
+    if (!d || typeof d !== 'object') return [];
+    return Object.entries(d).map(([id, u]) => ({
+        id, name: u.name || 'Unknown', email: u.email || '—',
+        loginMethod: u.loginMethod || 'unknown',
+        loginTime: u.loginTime || null, lastActive: u.lastActive || null,
+        photoURL: u.photoURL || null, platform: u.platform || 'website',
+        country: u.country || null, countryCode: u.countryCode || null,
+        city: u.city || null, ip: u.ip || null,
+        blocked: u.blocked === true, forceLogout: u.forceLogout || null,
+        role: u.role || 'free', roleAssignedAt: u.role_assigned_at || null, roleAssignedBy: u.role_assigned_by || null,
+        proExpiresAtMs: Number(u.proExpiresAtMs) || 0,
+        appVersion: u.appVersion || u.app_version || null,
+        proDeviceId: u.proDeviceId || null,
+        proDeviceBoundAt: u.proDeviceBoundAt || null,
+        proDeviceChangeAllowed: u.proDeviceChangeAllowed === true
+    }));
+}
+
+function applyUsersData(usersObj, discordObj, sourceLabel) {
+    const merged = [...parseUserMap(usersObj), ...parseUserMap(discordObj)];
+    const seen = new Set();
+    allUsers = merged.filter(u => { if (seen.has(u.id)) return false; seen.add(u.id); return true; });
+    allUsers.sort((a, b) => (b.lastActive || 0) - (a.lastActive || 0));
+    updateUserStats(); userPage = 1; renderUsers();
+    if (typeof renderProUsers === 'function') renderProUsers();
+    const el = document.getElementById('lastUpdated');
+    if (el) el.textContent = 'Last updated: ' + new Date().toLocaleTimeString() + (sourceLabel ? ' (' + sourceLabel + ')' : '');
+}
+
+async function loadUsersViaWorker() {
+    const authUser = firebase.auth().currentUser;
+    if (!authUser) throw new Error('Not signed in');
+    const idToken = await authUser.getIdToken(true);
+    const { ok, status, data } = await adminWorkerPost('/admin/rtdb-get', {
+        paths: ['users', 'discordUsers']
+    }, idToken);
+    if (!ok || !data?.ok) {
+        throw new Error((data && (data.error || data.message)) || ('Worker proxy failed (' + status + ')'));
+    }
+    return data.data || {};
+}
+
+function loadUsers() {
+    const btn = document.getElementById('refreshBtn');
+    if (btn) btn.classList.add('spinning');
+    ensureDb();
+
+    const tbody = document.getElementById('usersTableBody');
+    tbody.innerHTML = '<tr class="state-row"><td colspan="8"><div class="state-icon" style="font-size:1.5rem;">⏳</div><div>Connecting to Firebase…</div></td></tr>';
+    const mc = document.getElementById('mobileCards');
+    if (mc) mc.innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted);"><div style="font-size:2rem;margin-bottom:8px;">⏳</div><div>Connecting…</div></div>';
 
     const authUser = firebase.auth().currentUser;
     const prep = authUser
         ? authUser.getIdToken(true).catch(() => null)
         : Promise.resolve(null);
 
-    prep.then(() => waitForDbConnected(25000)).then(() => {
-        tbody.innerHTML='<tr class="state-row"><td colspan="8"><div class="state-icon" style="font-size:1.5rem;">⏳</div><div>Loading users from database...</div></td></tr>';
-        const timeout=new Promise((_,rej)=>setTimeout(()=>rej(new Error('TIMEOUT: Firebase did not respond in 45 seconds')),45000));
+    prep.then(() => waitForDbConnected(8000)).then(() => {
+        tbody.innerHTML = '<tr class="state-row"><td colspan="8"><div class="state-icon" style="font-size:1.5rem;">⏳</div><div>Loading users from database...</div></td></tr>';
+        const timeout = new Promise((_, rej) => setTimeout(() => rej(new Error('TIMEOUT: Firebase did not respond in 20 seconds')), 20000));
         return Promise.race([Promise.all([
             db.ref('users').once('value'),
             db.ref('discordUsers').once('value')
-        ]), timeout]);
-    }).then(([us, ds]) => {
-        const parse = snap => {
-            const d=snap.val();
-            if(!d) return [];
-            return Object.entries(d).map(([id,u])=>({
-                id, name:u.name||'Unknown', email:u.email||'—',
-                loginMethod:u.loginMethod||'unknown',
-                loginTime:u.loginTime||null, lastActive:u.lastActive||null,
-                photoURL:u.photoURL||null, platform:u.platform||'website',
-                country:u.country||null, countryCode:u.countryCode||null,
-                city:u.city||null, ip:u.ip||null,
-                blocked:u.blocked===true, forceLogout:u.forceLogout||null,
-                role:u.role||'free', roleAssignedAt:u.role_assigned_at||null, roleAssignedBy:u.role_assigned_by||null,
-                proExpiresAtMs: Number(u.proExpiresAtMs)||0,
-                appVersion:u.appVersion||u.app_version||null,
-                proDeviceId:u.proDeviceId||null,
-                proDeviceBoundAt:u.proDeviceBoundAt||null,
-                proDeviceChangeAllowed:u.proDeviceChangeAllowed===true
-            }));
-        };
-        const merged=[...parse(us),...parse(ds)];
-        const seen=new Set();
-        allUsers=merged.filter(u=>{ if(seen.has(u.id)) return false; seen.add(u.id); return true; });
-        allUsers.sort((a,b)=>(b.lastActive||0)-(a.lastActive||0));
-        updateUserStats(); userPage=1; renderUsers();
-        if (typeof renderProUsers === 'function') renderProUsers();
-        document.getElementById('lastUpdated').textContent='Last updated: '+new Date().toLocaleTimeString();
-    }).catch(e=>{
-        console.error(e);
-        const msg = String(e.message||e);
-        const isPermDenied=msg.includes('permission_denied')||e.code==='PERMISSION_DENIED';
-        const isTimeout=msg.includes('TIMEOUT');
-        const errMsg=isPermDenied
-            ? '🔒 Access denied. Re-login as the admin account.'
-            : isTimeout
-            ? '⏳ Firebase timed out. Check internet / VPN / firewall, then Retry. Prefer https://bariplux.com/theadm1n.html (not a local file).'
-            : '⚠️ Failed to load users';
-        showToast(errMsg,'danger');
-        tbody.innerHTML='<tr class="state-row"><td colspan="8">'
-            +'<div class="state-icon">⚠️</div>'
-            +'<div style="color:#F44336;font-weight:600;">'+(isPermDenied?'Access Denied':(isTimeout?'Connection timeout':'Failed to load users'))+'</div>'
-            +'<div style="font-size:0.8rem;margin-top:6px;color:var(--muted);">'+esc(msg)+'</div>'
-            +'<button data-act="loadUsers" style="margin-top:12px;padding:8px 20px;background:var(--accent);color:white;border:none;border-radius:8px;cursor:pointer;font-family:\'Poppins\',sans-serif;font-size:0.82rem;">↺ Retry</button>'
-            +'</td></tr>';
-        if(mc) mc.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted);">'
-            +'<div style="font-size:2rem;margin-bottom:8px;">⚠️</div>'
-            +'<div style="color:#F44336;font-weight:600;">'+(isPermDenied?'Access Denied':(isTimeout?'Connection timeout':'Failed to load users'))+'</div>'
-            +'<button data-act="loadUsers" style="margin-top:12px;padding:8px 20px;background:var(--accent);color:white;border:none;border-radius:8px;cursor:pointer;font-family:\'Poppins\',sans-serif;font-size:0.82rem;">↺ Retry</button>'
-            +'</div>';
-    }).finally(()=>{ if (btn) btn.classList.remove('spinning'); });
+        ]), timeout]).then(([us, ds]) => {
+            setDbBannerMode('hidden');
+            applyUsersData(us.val(), ds.val(), 'live');
+        });
+    }).catch(async (directErr) => {
+        console.warn('[loadUsers] direct RTDB failed, trying Worker proxy', directErr);
+        setDbBannerMode('offline');
+        tbody.innerHTML = '<tr class="state-row"><td colspan="8"><div class="state-icon" style="font-size:1.5rem;">⏳</div><div>Direct Firebase blocked — loading via secure proxy…</div></td></tr>';
+        try {
+            const data = await loadUsersViaWorker();
+            _usingProxyMode = true;
+            setDbBannerMode('proxy');
+            applyUsersData(data.users, data.discordUsers, 'proxy');
+            showToast('✅ Users loaded via secure proxy', 'success');
+        } catch (proxyErr) {
+            console.error(proxyErr);
+            const msg = String((proxyErr && proxyErr.message) || proxyErr || directErr);
+            const isPermDenied = msg.includes('permission_denied') || msg.includes('Admin only') || msg.includes('PERMISSION_DENIED');
+            const errMsg = isPermDenied
+                ? '🔒 Access denied. Re-login as the admin account.'
+                : '⏳ Could not reach Firebase (direct or proxy). Check internet, then Retry.';
+            showToast(errMsg, 'danger');
+            tbody.innerHTML = '<tr class="state-row"><td colspan="8">'
+                + '<div class="state-icon">⚠️</div>'
+                + '<div style="color:#F44336;font-weight:600;">' + (isPermDenied ? 'Access Denied' : 'Connection failed') + '</div>'
+                + '<div style="font-size:0.8rem;margin-top:6px;color:var(--muted);">' + esc(msg) + '</div>'
+                + '<button data-act="loadUsers" style="margin-top:12px;padding:8px 20px;background:var(--accent);color:white;border:none;border-radius:8px;cursor:pointer;font-family:\'Poppins\',sans-serif;font-size:0.82rem;">↺ Retry</button>'
+                + '</td></tr>';
+            if (mc) mc.innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted);">'
+                + '<div style="font-size:2rem;margin-bottom:8px;">⚠️</div>'
+                + '<div style="color:#F44336;font-weight:600;">' + (isPermDenied ? 'Access Denied' : 'Connection failed') + '</div>'
+                + '<button data-act="loadUsers" style="margin-top:12px;padding:8px 20px;background:var(--accent);color:white;border:none;border-radius:8px;cursor:pointer;font-family:\'Poppins\',sans-serif;font-size:0.82rem;">↺ Retry</button>'
+                + '</div>';
+        }
+    }).finally(() => { if (btn) btn.classList.remove('spinning'); });
 }
 
 function updateUserStats() {
