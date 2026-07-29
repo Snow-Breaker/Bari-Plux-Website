@@ -70,7 +70,10 @@
         "roles": {
           ".read": "auth != null",
           ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'",
-          ".validate": "newData.hasChildren() && newData.numChildren() >= 1 && newData.numChildren() <= 2"
+          ".validate": "newData.hasChildren()",
+          "$idx": {
+            ".validate": "newData.isString() && newData.val().matches(/^(free|pro|dev|founder)$/)"
+          }
         },
         "proExpiresAtMs": {
           ".read": "auth != null",
@@ -126,7 +129,10 @@
         "roles": {
           ".read": "auth != null",
           ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'",
-          ".validate": "newData.hasChildren() && newData.numChildren() >= 1 && newData.numChildren() <= 2"
+          ".validate": "newData.hasChildren()",
+          "$idx": {
+            ".validate": "newData.isString() && newData.val().matches(/^(free|pro|dev|founder)$/)"
+          }
         },
         "proExpiresAtMs": {
           ".read": "auth != null",
