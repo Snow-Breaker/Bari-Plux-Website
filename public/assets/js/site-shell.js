@@ -388,6 +388,8 @@
     return m ? 'Account' : '';
   }
 
+  var LOGIN_URL = 'https://login.bariplux.com/';
+
   function updateLoginUi() {
     var user = readUser();
     var btn = document.getElementById('loginBtnHeader');
@@ -395,7 +397,16 @@
     var email = document.getElementById('userEmail');
     var avatar = document.getElementById('userAvatar');
     var badge = document.getElementById('userMethodBadge');
+    var profile = document.getElementById('viewProfileBtn');
+    var go = document.getElementById('goToLoginBtn');
+    var logout = document.getElementById('logoutBtn');
+    var dropdown = document.getElementById('userDropdown');
     if (!btn) return;
+
+    if (btn.tagName === 'A') {
+      btn.setAttribute('href', LOGIN_URL);
+    }
+
     if (user) {
       var userName = resolveUserName(user);
       var photo = resolvePhotoUrl(user);
@@ -414,6 +425,8 @@
             '<span>' + shortName + '</span>' +
           '</span>';
       }
+      btn.title = 'Account menu';
+      btn.classList.add('logged-in');
       if (name) name.textContent = userName;
       if (email) email.textContent = user.email || '';
       if (badge) {
@@ -435,8 +448,13 @@
           avatar.innerHTML = initial;
         }
       }
+      if (profile) profile.style.display = '';
+      if (logout) logout.style.display = '';
+      if (go) go.style.display = 'none';
     } else {
       btn.innerHTML = '<i class="fas fa-sign-in-alt" aria-hidden="true"></i><span>Login</span>';
+      btn.title = 'Login';
+      btn.classList.remove('logged-in');
       if (name) name.textContent = 'Guest';
       if (email) email.textContent = 'Sign in to continue';
       if (badge) {
@@ -448,6 +466,10 @@
         avatar.style.backgroundImage = '';
         avatar.innerHTML = '<i class="fas fa-user" aria-hidden="true"></i>';
       }
+      if (profile) profile.style.display = 'none';
+      if (logout) logout.style.display = 'none';
+      if (go) go.style.display = '';
+      if (dropdown) dropdown.setAttribute('hidden', '');
     }
   }
 
@@ -457,68 +479,68 @@
     var go = document.getElementById('goToLoginBtn');
     var logout = document.getElementById('logoutBtn');
     var profile = document.getElementById('viewProfileBtn');
-    var LOGIN_URL = 'https://login.bariplux.com/';
 
     updateLoginUi();
 
-    // Capture-phase: guests always go to canonical login, even if a page used
-    // onclick="toggleUserDropdown()" or other handlers that only open the menu.
-    if (login && !login.dataset.bpShellCapture) {
-      login.dataset.bpShellCapture = '1';
-      login.addEventListener('click', function (e) {
-        if (readUser()) return;
-        e.preventDefault();
-        e.stopImmediatePropagation();
-        location.href = LOGIN_URL;
-      }, true);
-    }
-
+    // One capture handler — kills legacy onclick / duplicate page scripts.
+    // Guests: hard navigate to login. Logged-in: toggle account menu once.
     if (login && !login.dataset.bpShellLogin) {
       login.dataset.bpShellLogin = '1';
       login.addEventListener('click', function (e) {
-        e.preventDefault();
-        e.stopPropagation();
         var user = readUser();
         if (!user) {
-          location.href = LOGIN_URL;
+          e.preventDefault();
+          e.stopImmediatePropagation();
+          window.location.assign(LOGIN_URL);
           return;
         }
+        e.preventDefault();
+        e.stopImmediatePropagation();
         if (!dropdown) return;
         if (dropdown.hasAttribute('hidden')) dropdown.removeAttribute('hidden');
         else dropdown.setAttribute('hidden', '');
-      });
+      }, true);
     }
 
     if (go && !go.dataset.bpWired) {
       go.dataset.bpWired = '1';
-      go.addEventListener('click', function () {
-        location.href = LOGIN_URL;
+      go.addEventListener('click', function (e) {
+        e.preventDefault();
+        window.location.assign(LOGIN_URL);
       });
     }
 
     if (logout && !logout.dataset.bpWired) {
       logout.dataset.bpWired = '1';
       logout.addEventListener('click', function () {
-        try { localStorage.removeItem('bariplux_user'); } catch (e) { /* ignore */ }
+        try {
+          localStorage.removeItem('bariplux_user');
+          localStorage.removeItem('bariplux_login_token');
+        } catch (err) { /* ignore */ }
         if (dropdown) dropdown.setAttribute('hidden', '');
         updateLoginUi();
-        location.href = '/';
+        window.location.assign('/');
       });
     }
 
     if (profile && !profile.dataset.bpWired) {
       profile.dataset.bpWired = '1';
-      profile.addEventListener('click', function () {
-        location.href = LOGIN_URL;
+      profile.addEventListener('click', function (e) {
+        e.preventDefault();
+        window.location.assign(LOGIN_URL);
       });
     }
 
-    document.addEventListener('click', function (e) {
-      var container = document.querySelector('.bp-account');
-      if (dropdown && container && !container.contains(e.target)) {
-        dropdown.setAttribute('hidden', '');
-      }
-    });
+    if (!document.documentElement.dataset.bpLoginDocClick) {
+      document.documentElement.dataset.bpLoginDocClick = '1';
+      document.addEventListener('click', function (e) {
+        var container = document.querySelector('.bp-account');
+        var menu = document.getElementById('userDropdown');
+        if (menu && container && !container.contains(e.target)) {
+          menu.setAttribute('hidden', '');
+        }
+      });
+    }
   }
 
   function polishSurfaces() {
@@ -560,6 +582,10 @@
     stripHtmlLinks();
     ensureSearchScript();
   }
+
+  window.BPShell = {
+    refreshLogin: updateLoginUi
+  };
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', boot);

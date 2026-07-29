@@ -12,197 +12,7 @@
         }, { passive: true });
     }
 
-    // Login Status - Update Header Button
-    function escapeAttr(value) {
-        return String(value == null ? '' : value)
-            .replace(/&/g, '&amp;')
-            .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#39;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;');
-    }
-
-    function escapeHtmlText(value) {
-        return String(value == null ? '' : value)
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;');
-    }
-
-    /** Only allow http(s) image URLs for avatar src (blocks javascript: and data: XSS). */
-    function safeHttpUrl(url) {
-        if (!url) return '';
-        try {
-            const u = new URL(String(url), location.origin);
-            if (u.protocol !== 'http:' && u.protocol !== 'https:') return '';
-            return u.href;
-        } catch (e) {
-            return '';
-        }
-    }
-
-    function resolveUserName(user) {
-        if (!user) return 'User';
-        return user.name || user.displayName || user.username ||
-            (user.email ? String(user.email).split('@')[0] : 'User');
-    }
-
-    function resolvePhotoUrl(user) {
-        if (!user) return '';
-        let photo = user.photoURL || user.photoUrl || user.avatar || '';
-        if (!photo) return '';
-        photo = String(photo);
-        if (/^https?:\/\//i.test(photo)) return safeHttpUrl(photo);
-        let discordId = user.discordId || '';
-        if (!discordId) {
-            try {
-                const d = JSON.parse(localStorage.getItem('discord_user') || 'null');
-                if (d && d.id) discordId = d.id;
-                if (photo.indexOf('/') === -1 && d && d.avatar) photo = d.avatar;
-            } catch (e) { /* ignore */ }
-        }
-        if (discordId && photo.indexOf('/') === -1 && photo.length >= 16 && /^[A-Za-z0-9_-]+$/.test(String(discordId)) && /^[A-Za-z0-9_-]+$/.test(photo)) {
-            return 'https://cdn.discordapp.com/avatars/' + discordId + '/' + photo + '.png?size=128';
-        }
-        return '';
-    }
-
-    function avatarMarkup(user, sizeClass) {
-        const name = resolveUserName(user);
-        const initial = escapeHtmlText(name.charAt(0).toUpperCase());
-        const photo = resolvePhotoUrl(user);
-        const safeClass = escapeAttr(sizeClass || '');
-        if (photo) {
-            return `<img class="${safeClass}" src="${escapeAttr(photo)}" alt="" referrerpolicy="no-referrer" onerror="this.style.display='none';var s=document.createElement('span');s.className='bp-user-chip__initial';s.textContent=this.getAttribute('data-initial')||'?';this.parentNode.insertBefore(s,this);" data-initial="${initial}">`;
-        }
-        return `<span class="bp-user-chip__initial">${initial}</span>`;
-    }
-
-    function updateLoginButton() {
-        const loginBtn = document.getElementById('loginBtnHeader');
-        const dropdown = document.getElementById('userDropdown');
-        if (!loginBtn || !dropdown) return;
-        
-        const storedUser = localStorage.getItem('bariplux_user');
-        
-        if (storedUser) {
-            try {
-                const user = JSON.parse(storedUser);
-                const userName = resolveUserName(user);
-                const userEmail = user.email || '';
-                const photo = resolvePhotoUrl(user);
-                const shortName = userName.length > 14 ? userName.substring(0, 14) + '…' : userName;
-                
-                loginBtn.innerHTML = `<span class="bp-user-chip">${avatarMarkup(user, 'bp-user-chip__avatar')}<span>${escapeHtmlText(shortName)}</span></span>`;
-                loginBtn.style.cursor = 'pointer';
-                
-                const avatarEl = document.getElementById('userAvatar');
-                if (avatarEl) {
-                    avatarEl.style.backgroundImage = '';
-                    if (photo) {
-                        avatarEl.innerHTML = `<img src="${escapeAttr(photo)}" alt="" referrerpolicy="no-referrer">`;
-                    } else {
-                        avatarEl.textContent = userName.charAt(0).toUpperCase();
-                    }
-                }
-                document.getElementById('userName').textContent = userName;
-                document.getElementById('userEmail').textContent = userEmail;
-                const methodBadge = document.getElementById('userMethodBadge');
-                if (methodBadge) {
-                    const m = String(user.loginMethod || '').toLowerCase();
-                    let label = '';
-                    if (m.indexOf('google') >= 0) label = 'Google';
-                    else if (m.indexOf('github') >= 0) label = 'GitHub';
-                    else if (m.indexOf('discord') >= 0) label = 'Discord';
-                    else if (m.indexOf('email') >= 0) label = 'Email';
-                    if (label) {
-                        methodBadge.textContent = label;
-                        methodBadge.hidden = false;
-                        methodBadge.removeAttribute('hidden');
-                    } else {
-                        methodBadge.hidden = true;
-                        methodBadge.setAttribute('hidden', '');
-                    }
-                }
-                
-                document.getElementById('viewProfileBtn').onclick = function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    toggleUserDropdown();
-                };
-                
-                document.getElementById('goToLoginBtn').onclick = function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    window.location.href = 'https://login.bariplux.com/';
-                };
-                
-                document.getElementById('logoutBtn').onclick = function() {
-                    if (confirm('Logout from Bari Plux?')) {
-                        localStorage.removeItem('bariplux_user');
-                        localStorage.removeItem('bariplux_login_token');
-                        location.reload();
-                    }
-                };
-            } catch (e) {
-                console.error('Error parsing user:', e);
-            }
-        } else {
-            loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i><span>Login</span>';
-            /* onclick removed — wired once via wireLoginButton */
-            document.getElementById('userAvatar').innerHTML = '<i class="fas fa-user"></i>';
-            document.getElementById('userName').textContent = 'Guest User';
-            document.getElementById('userEmail').textContent = 'Click below to login';
-            
-            document.getElementById('viewProfileBtn').style.display = 'none';
-            document.getElementById('goToLoginBtn').onclick = function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                window.location.href = 'https://login.bariplux.com/';
-            };
-            document.getElementById('logoutBtn').style.display = 'none';
-            if (dropdown) dropdown.setAttribute('hidden', '');
-        }
-    }
-    
-    function toggleUserDropdown() {
-        const dropdown = document.getElementById('userDropdown');
-        if (!dropdown) return;
-        if (dropdown.hasAttribute('hidden')) dropdown.removeAttribute('hidden');
-        else dropdown.setAttribute('hidden', '');
-    }
-
-    function wireLoginButton() {
-        const loginBtn = document.getElementById('loginBtnHeader');
-        if (!loginBtn || loginBtn.dataset.bpWired === '1') return;
-        loginBtn.dataset.bpWired = '1';
-        loginBtn.addEventListener('click', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            var stored = null;
-            try { stored = localStorage.getItem('bariplux_user'); } catch (err) {}
-            if (!stored) {
-                window.location.href = 'https://login.bariplux.com/';
-                return;
-            }
-            toggleUserDropdown();
-        });
-    }
-
-    document.addEventListener('click', function(e) {
-        const dropdown = document.getElementById('userDropdown');
-        const container = document.querySelector('.bp-account');
-        if (dropdown && container && !container.contains(e.target)) {
-            dropdown.setAttribute('hidden', '');
-        }
-    });
-    
-    // Run on page load
-    updateLoginButton();
-    wireLoginButton();
-    setTimeout(updateLoginButton, 500);
-    setTimeout(updateLoginButton, 1000);
+    // Login chrome is owned by site-shell.js (single click handler).
 
     // Header Scroll Effect
     const header = document.getElementById('bp-header') || document.querySelector('.bp-chrome');
@@ -1690,56 +1500,22 @@ function sanitizeInput(input) {
         initializeChatBot();
         initializeFAQ();
         new WorkingHoursManager();
-        checkLoginStatus();
-        wireLoginButton();
-        
         console.log('🎯 All features initialized successfully!');
     });
 
-    // Check login status and update header button
-    function checkLoginStatus() {
-        const storedUser = localStorage.getItem('bariplux_user');
-        const loginBtn = document.getElementById('loginBtnHeader');
-        if (!loginBtn) return;
-
-        if (storedUser) {
-            try {
-                const user = JSON.parse(storedUser);
-                const label = user.name || (user.email ? String(user.email).split('@')[0] : 'Account');
-                loginBtn.classList.add('logged-in');
-                loginBtn.innerHTML = '<i class="fas fa-user-circle"></i><span>' + label + '</span>';
-                loginBtn.title = 'Account menu';
-            } catch (e) {
-                localStorage.removeItem('bariplux_user');
-            }
-        } else {
-            loginBtn.classList.remove('logged-in');
-            loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i><span>Login</span>';
-            loginBtn.title = 'Login';
-        }
-    }
-
-    function logout() {
-        if (confirm('Are you sure you want to logout?')) {
-            localStorage.removeItem('bariplux_user');
-            localStorage.removeItem('bariplux_user_new');
-            checkLoginStatus();
-            window.location.href = 'https://login.bariplux.com/';
-        }
-    }
-
-    // Check for app sync periodically
+    // Keep homepage in sync if desktop app writes bariplux_user_new
     setInterval(() => {
         const appUser = localStorage.getItem('bariplux_user_new');
         if (appUser) {
             localStorage.setItem('bariplux_user', appUser);
             localStorage.removeItem('bariplux_user_new');
-            checkLoginStatus();
+            if (window.BPShell && typeof window.BPShell.refreshLogin === 'function') {
+                window.BPShell.refreshLogin();
+            }
         }
     }, 5000);
 
 // Export functions used by HTML attributes / external callers
 window.openVideo = openVideo;
 window.closeVideo = closeVideo;
-if (typeof toggleUserDropdown === 'function') window.toggleUserDropdown = toggleUserDropdown;
 if (typeof logout === 'function') window.logout = logout;
