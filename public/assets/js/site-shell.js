@@ -6,7 +6,15 @@
   'use strict';
 
   var LOGO =
-    'https://i.postimg.cc/CKj6nBJP/PLUX-Logo.png';
+    'https://yt3.googleusercontent.com/RPW5Z_kcoEu0ES_VpL4-7ZqI4eI1OQfuVL-DbuCYWmRhXono9hA5NOCSGGMDLzJqNcHUlhOg=s160-c-k-c0x00ffffff-no-rj';
+
+  /* Apex site — auth subdomain must deep-link here (Home, Tools, …) */
+  var SITE_ORIGIN = 'https://bariplux.com';
+  var AUTH_HOSTS = {
+    'login.bariplux.com': 1,
+    'baripluxwebsite.web.app': 1,
+    'baripluxwebsite.firebaseapp.com': 1
+  };
 
   /* Extensionless paths for clean URLs */
   var NAV = [
@@ -21,6 +29,19 @@
     { href: '/optimizationtools', label: 'Tools', match: ['optimizationtools.html', 'optimizationtools'] },
     { href: '/Pro', label: 'Pro', match: ['pro.html', 'pro'] }
   ];
+
+  function isAuthHost() {
+    return !!AUTH_HOSTS[(location.hostname || '').toLowerCase()];
+  }
+
+  /** On login.* host, relative site paths would stay on the auth app — send them to apex. */
+  function navHref(href) {
+    if (!href) return href;
+    if (/^https?:\/\//i.test(href) || href.charAt(0) === '#') return href;
+    if (!isAuthHost()) return href;
+    if (href.charAt(0) === '/') return SITE_ORIGIN + href;
+    return SITE_ORIGIN + '/' + href.replace(/^\.\//, '');
+  }
 
   function pageFile() {
     var path = (location.pathname || '').replace(/\\/g, '/');
@@ -50,13 +71,13 @@
   function chromeHtml() {
     var links = NAV.map(function (item) {
       var cls = 'bp-nav__link' + (isActive(item) ? ' is-active' : '');
-      return '<a href="' + item.href + '" class="' + cls + '">' + item.label + '</a>';
+      return '<a href="' + navHref(item.href) + '" class="' + cls + '">' + item.label + '</a>';
     }).join('');
 
     return (
       '<header class="bp-chrome" id="bp-header" data-bp-shell="1">' +
         '<div class="bp-chrome__inner">' +
-          '<a href="/" class="bp-logo">' +
+          '<a href="' + navHref('/') + '" class="bp-logo">' +
             '<img src="' + LOGO + '" alt="" class="bp-logo__img" width="36" height="36">' +
             '<span class="bp-logo__text">Bari Plux</span>' +
           '</a>' +
@@ -110,7 +131,7 @@
         var label = (a.textContent || '').trim();
         if (!label) continue;
         items.push({
-          href: href,
+          href: navHref(href),
           label: label,
           active: a.classList.contains('is-active') || a.classList.contains('active')
         });
@@ -119,7 +140,7 @@
     if (!items.length) {
       for (var n = 0; n < NAV.length; n++) {
         items.push({
-          href: NAV[n].href,
+          href: navHref(NAV[n].href),
           label: NAV[n].label,
           active: isActive(NAV[n])
         });
@@ -145,7 +166,7 @@
         '<aside class="bp-drawer" id="bp-drawer" role="dialog" aria-modal="true" aria-label="Site menu">' +
           '<div class="bp-drawer__sheen" aria-hidden="true"></div>' +
           '<div class="bp-drawer__head">' +
-            '<a href="/" class="bp-drawer__brand">' +
+            '<a href="' + navHref('/') + '" class="bp-drawer__brand">' +
               '<img src="' + LOGO + '" alt="" width="40" height="40">' +
               '<div>' +
                 '<strong>Bari Plux</strong>' +
@@ -158,7 +179,7 @@
           '</div>' +
           '<nav class="bp-drawer__nav" aria-label="Mobile">' + links + '</nav>' +
           '<div class="bp-drawer__foot">' +
-            '<a href="/Pro" class="bp-drawer__cta">' +
+            '<a href="' + navHref('/Pro') + '" class="bp-drawer__cta">' +
               '<span class="bp-drawer__cta-badge">PRO</span>' +
               '<span class="bp-drawer__cta-copy">' +
                 '<strong>Unlock Bari Plux Pro</strong>' +
@@ -519,7 +540,7 @@
         } catch (err) { /* ignore */ }
         if (dropdown) dropdown.setAttribute('hidden', '');
         updateLoginUi();
-        window.location.assign('/');
+        window.location.assign(navHref('/'));
       });
     }
 
@@ -567,6 +588,26 @@
     }
   }
 
+  function rewriteAuthHostLinks() {
+    if (!isAuthHost()) return;
+    var roots = [
+      document.getElementById('bp-header'),
+      document.getElementById('bp-drawer-root')
+    ];
+    for (var r = 0; r < roots.length; r++) {
+      var root = roots[r];
+      if (!root) continue;
+      var anchors = root.querySelectorAll('a[href]');
+      for (var i = 0; i < anchors.length; i++) {
+        var a = anchors[i];
+        var href = a.getAttribute('href');
+        if (!href || href.indexOf('login.bariplux.com') >= 0) continue;
+        var next = navHref(href);
+        if (next !== href) a.setAttribute('href', next);
+      }
+    }
+  }
+
   function boot() {
     document.documentElement.classList.add('bp-shell');
     document.body.classList.add('bp-body');
@@ -575,6 +616,7 @@
     purgeLegacyChrome();
     injectChrome();
     ensureMobileNav();
+    rewriteAuthHostLinks();
     wireTheme();
     wireScroll();
     wireLogin();
