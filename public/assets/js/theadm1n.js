@@ -172,6 +172,32 @@ function getRoleBadgeHtml(role) {
         ${r.icon} ${r.label}
     </span>`;
 }
+function roleRank(role) {
+    const m = { free: 0, pro: 1, dev: 2, founder: 3 };
+    return m[String(role || '').toLowerCase()] ?? 0;
+}
+/** Normalize stored roles (array / RTDB object / fallback scalar) to 1–2 unique roles. */
+function normalizeRolesList(roles, fallbackRole) {
+    let list = [];
+    if (Array.isArray(roles)) list = roles;
+    else if (roles && typeof roles === 'object') list = Object.values(roles);
+    else if (typeof roles === 'string' && roles.trim()) list = roles.split(/[,|]/);
+    list = [...new Set(list.map(r => String(r || '').trim().toLowerCase()).filter(r => /^(free|pro|dev|founder)$/.test(r)))];
+    if (!list.length && fallbackRole) {
+        const f = String(fallbackRole).trim().toLowerCase();
+        if (/^(free|pro|dev|founder)$/.test(f)) list = [f];
+    }
+    if (!list.length) list = ['free'];
+    if (list.includes('free') && list.length > 1) list = list.filter(r => r !== 'free');
+    list.sort((a, b) => roleRank(b) - roleRank(a));
+    return list.slice(0, 2);
+}
+function primaryRoleOf(roles, fallbackRole) {
+    return normalizeRolesList(roles, fallbackRole)[0] || 'free';
+}
+function getRolesBadgeHtml(roles, fallbackRole) {
+    return normalizeRolesList(roles, fallbackRole).map(getRoleBadgeHtml).join(' ');
+}
 function showToast(msg, type='') {
     const t=document.getElementById('toast');
     t.textContent=msg; t.className='toast'+(type?' '+type:'');
@@ -544,7 +570,9 @@ function parseUserMap(d) {
         country: u.country || null, countryCode: u.countryCode || null,
         city: u.city || null, ip: u.ip || null,
         blocked: u.blocked === true, forceLogout: u.forceLogout || null,
-        role: u.role || 'free', roleAssignedAt: u.role_assigned_at || null, roleAssignedBy: u.role_assigned_by || null,
+        role: primaryRoleOf(u.roles, u.role || 'free'),
+        roles: normalizeRolesList(u.roles, u.role || 'free'),
+        roleAssignedAt: u.role_assigned_at || null, roleAssignedBy: u.role_assigned_by || null,
         proExpiresAtMs: Number(u.proExpiresAtMs) || 0,
         appVersion: u.appVersion || u.app_version || null,
         proDeviceId: u.proDeviceId || null,
@@ -621,16 +649,16 @@ function setFilter(f, btn) {
 function getFilteredUsers() {
     const q=document.getElementById('searchInput').value.toLowerCase();
     return allUsers.filter(u=>{
-        const role = (u.role||'free').toLowerCase();
+        const roleList = normalizeRolesList(u.roles, u.role || 'free');
         const mf=activeFilter==='all'
             ||(activeFilter==='google'&&u.loginMethod.includes('google'))
             ||(activeFilter==='discord'&&u.loginMethod==='discord')
             ||(activeFilter==='github'&&u.loginMethod.includes('github'))
             ||(activeFilter==='email'&&u.loginMethod==='email')
-            ||(activeFilter==='role:free'&&role==='free')
-            ||(activeFilter==='role:pro'&&role==='pro')
-            ||(activeFilter==='role:dev'&&role==='dev')
-            ||(activeFilter==='role:founder'&&role==='founder');
+            ||(activeFilter==='role:free'&&roleList.includes('free'))
+            ||(activeFilter==='role:pro'&&roleList.includes('pro'))
+            ||(activeFilter==='role:dev'&&roleList.includes('dev'))
+            ||(activeFilter==='role:founder'&&roleList.includes('founder'));
         const ms=!q||u.name.toLowerCase().includes(q)||u.email.toLowerCase().includes(q)||u.id.toLowerCase().includes(q)||(u.country||'').toLowerCase().includes(q)||(u.city||'').toLowerCase().includes(q)||(u.ip||'').toLowerCase().includes(q);
         return mf&&ms;
     });
@@ -647,7 +675,7 @@ function renderProUsers() {
     if (!tbody) return;
     const q = (document.getElementById('proSearchInput')?.value || '').toLowerCase();
     const now = Date.now();
-    let list = allUsers.filter(u => (u.role||'').toLowerCase() === 'pro');
+    let list = allUsers.filter(u => normalizeRolesList(u.roles, u.role).includes('pro') || (u.role||'').toLowerCase() === 'pro');
     if (q) {
         list = list.filter(u =>
             (u.name||'').toLowerCase().includes(q) ||
@@ -781,7 +809,7 @@ function renderUsers() {
                 </div></td>
                 <td style="color:var(--muted);font-size:0.82rem;">${esc(u.email)}</td>
                 <td><span class="method-badge ${m.cls}">${m.icon} ${m.label}</span></td>
-                <td>${getRoleBadgeHtml(u.role || 'free')}</td>
+                <td>${getRolesBadgeHtml(u.roles, u.role || 'free')}</td>
                 <td style="font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:var(--accent);">${esc(u.appVersion||'—')}</td>
                 <td><div class="country-cell">${flag?`<span class="country-flag">${flag}</span>`:''}<span>${esc(u.country||'—')}</span></div></td>
                 <td class="time-cell">${fmtDate(u.loginTime)}</td>
@@ -869,12 +897,15 @@ function openUserModal(id) {
     if(u.photoURL) { document.getElementById('umPhotoSection').style.display=''; document.getElementById('umPhotoFull').src=u.photoURL; document.getElementById('umPhotoLink').href=u.photoURL; }
     else document.getElementById('umPhotoSection').style.display='none';
     // Populate role section
-    document.getElementById('modalCurrentRole').innerHTML = getRoleBadgeHtml(u.role || 'free');
-    document.getElementById('modalRoleSelect').value = u.role || 'free';
+    const roleList = normalizeRolesList(u.roles, u.role || 'free');
+    document.getElementById('modalCurrentRole').innerHTML = getRolesBadgeHtml(roleList);
+    document.getElementById('modalRoleSelect').value = roleList[0] || 'free';
+    const sel2 = document.getElementById('modalRoleSelect2');
+    if (sel2) sel2.value = roleList[1] || '';
     let assignedInfo = u.roleAssignedAt
         ? `Assigned ${new Date(u.roleAssignedAt).toLocaleDateString()}`
         : 'Default role';
-    if ((u.role || '').toLowerCase() === 'pro') {
+    if (roleList.includes('pro')) {
         const days = proDaysLeft(u);
         if (u.proExpiresAtMs) {
             assignedInfo += ` · expires ${new Date(u.proExpiresAtMs).toLocaleDateString()}`;
@@ -897,7 +928,7 @@ function renderDangerBtns(u) {
     if(u.blocked) html += `<button class="danger-btn unblock" data-act="askConfirm" data-a1="unblock" data-a2="${esc(u.id)}" data-a3="${esc(u.name)}"><i class="fas fa-unlock"></i> Unblock</button>`;
     else html += `<button class="danger-btn block" data-act="askConfirm" data-a1="block" data-a2="${esc(u.id)}" data-a3="${esc(u.name)}"><i class="fas fa-ban"></i> Block</button>`;
     html += `<button class="danger-btn force-logout" data-act="askConfirm" data-a1="forceLogout" data-a2="${esc(u.id)}" data-a3="${esc(u.name)}"><i class="fas fa-sign-out-alt"></i> Force Logout</button>`;
-    if ((u.role || '').toLowerCase() === 'pro') {
+    if (normalizeRolesList(u.roles, u.role).includes('pro')) {
         if (u.proDeviceChangeAllowed) {
             html += `<button class="danger-btn force-logout" disabled title="Already granted"><i class="fas fa-desktop"></i> PC change pending</button>`;
         } else {
@@ -1069,74 +1100,54 @@ function updateLocalUser(userId, changes) {
 async function assignRole() {
     const userId = _currentUser?.id;
     if (!userId) return;
-    const newRole = document.getElementById('modalRoleSelect').value;
+    const role1 = document.getElementById('modalRoleSelect').value;
+    const role2 = (document.getElementById('modalRoleSelect2')?.value || '').trim();
     const currentUser = firebase.auth().currentUser;
     if (!currentUser) return showToast('Not authenticated', 'danger');
 
-    if (newRole === 'pro') {
-        const daysRaw = prompt('Pro duration in days (default 60):', '60');
-        if (daysRaw === null) return;
-        const days = Math.min(Math.max(parseInt(daysRaw, 10) || 60, 1), 3650);
-        if (!confirm(`Grant PRO for ${days} days to this user?\nA Discord announce will be posted.`)) return;
-        try {
-            const token = await currentUser.getIdToken(true);
-            const { ok, data, status } = await adminWorkerPost('/admin/grant-pro', {
-                uid: userId,
-                days,
-                email: _currentUser.email || null
-            }, token);
-            if (!ok) throw new Error(data?.error || ('HTTP ' + status));
-            const exp = data?.expiresAtByUid?.[userId] || (Date.now() + days * 86400000);
-            document.getElementById('modalCurrentRole').innerHTML = getRoleBadgeHtml('pro');
-            document.getElementById('roleAssignedInfo').textContent =
-                `Pro until ${new Date(exp).toLocaleString()} · ${days} days`;
-            updateLocalUser(userId, {
-                role: 'pro',
-                roleAssignedAt: new Date().toISOString(),
-                roleAssignedBy: 'admin',
-                proExpiresAtMs: exp
-            });
-            renderUsers();
-            renderProUsers();
-            showToast(`PRO granted for ${days} days ✓`, 'success');
-        } catch (err) {
-            showToast('Failed to grant Pro: ' + (err.message || err), 'danger');
-        }
-        return;
+    let roles = normalizeRolesList([role1, role2].filter(Boolean));
+    if (role1 === 'free' && role2) {
+        return showToast('FREE cannot be combined with another role', 'danger');
+    }
+    if (role2 && role1 === role2) {
+        return showToast('Pick two different roles, or leave Role 2 empty', 'danger');
     }
 
-    if (!confirm(`Assign role "${newRole.toUpperCase()}" to this user?`)) return;
+    const primary = primaryRoleOf(roles);
+    let days = null;
+    if (roles.includes('pro')) {
+        const daysRaw = prompt('Pro duration in days (used if Pro is included; default 60):', '60');
+        if (daysRaw === null) return;
+        days = Math.min(Math.max(parseInt(daysRaw, 10) || 60, 1), 3650);
+    }
+
+    const label = roles.map(r => r.toUpperCase()).join(' + ');
+    if (!confirm(`Assign roles [${label}] to this user?\n(Only admin can do this.)`)) return;
 
     try {
-        const userRef = await getCorrectRef(userId);
-        if (!userRef) { showToast('User not found in database', 'danger'); return; }
-        const patch = {
-            role: newRole,
-            role_assigned_at: new Date().toISOString(),
-            role_assigned_by: currentUser.uid
-        };
-        if (newRole === 'free') {
-            patch.proExpiresAtMs = null;
-        }
-        await userRef.update(patch);
-        if (newRole === 'free') {
-            await db.ref(`payhip_subscriptions/${userId}`).remove().catch(()=>{});
-        }
+        const token = await currentUser.getIdToken(true);
+        const body = { uid: userId, roles, email: _currentUser.email || null };
+        if (days != null) body.days = days;
+        const { ok, data, status } = await adminWorkerPost('/admin/set-roles', body, token);
+        if (!ok) throw new Error(data?.error || ('HTTP ' + status));
 
-        document.getElementById('modalCurrentRole').innerHTML = getRoleBadgeHtml(newRole);
-        document.getElementById('roleAssignedInfo').textContent = `Assigned ${new Date().toLocaleDateString()}`;
+        const exp = data?.proExpiresAtMs || (roles.includes('pro') ? (_currentUser.proExpiresAtMs || 0) : 0);
+        document.getElementById('modalCurrentRole').innerHTML = getRolesBadgeHtml(roles);
+        document.getElementById('roleAssignedInfo').textContent =
+            `Assigned ${new Date().toLocaleDateString()}` + (exp ? ` · Pro until ${new Date(exp).toLocaleString()}` : '');
 
         updateLocalUser(userId, {
-            role: newRole,
+            role: primary,
+            roles,
             roleAssignedAt: new Date().toISOString(),
-            roleAssignedBy: currentUser.uid,
-            proExpiresAtMs: newRole === 'free' ? 0 : (_currentUser.proExpiresAtMs || 0)
+            roleAssignedBy: 'admin',
+            proExpiresAtMs: roles.includes('pro') ? (exp || _currentUser.proExpiresAtMs || 0) : 0
         });
         renderUsers();
         renderProUsers();
-        showToast(`Role updated to ${newRole.toUpperCase()} ✓`, 'success');
+        showToast(`Roles updated: ${label} ✓`, 'success');
     } catch (err) {
-        showToast('Failed to assign role: ' + err.message, 'danger');
+        showToast('Failed to assign roles: ' + (err.message || err), 'danger');
     }
 }
 
@@ -3434,6 +3445,17 @@ function applyReportReplyTemplate(kind) {
     fn.apply(null, collectArgs(el));
   }
   document.addEventListener("click", function (e) {
+    if (e.target.classList && e.target.classList.contains("modal-overlay") && e.target.classList.contains("show")) {
+      var closeMap = {
+        userModal: typeof closeUserModal === "function" ? closeUserModal : null,
+        reportModal: typeof closeReportModal === "function" ? closeReportModal : null,
+        errorModal: typeof closeErrorModal === "function" ? closeErrorModal : null,
+        annModal: typeof closeAnnEditor === "function" ? closeAnnEditor : null,
+        confirmModal: typeof closeConfirm === "function" ? closeConfirm : null
+      };
+      if (closeMap[e.target.id]) closeMap[e.target.id]();
+      return;
+    }
     var el = e.target.closest("[data-act]");
     if (!el) return;
     if (el.tagName === "SELECT" || el.tagName === "INPUT" || el.tagName === "TEXTAREA") return;

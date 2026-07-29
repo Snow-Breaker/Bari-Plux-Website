@@ -67,6 +67,11 @@
           ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'",
           ".validate": "newData.isString() && newData.val().matches(/^(free|pro|dev|founder)$/)"
         },
+        "roles": {
+          ".read": "auth != null",
+          ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'",
+          ".validate": "newData.hasChildren() && newData.numChildren() >= 1 && newData.numChildren() <= 2"
+        },
         "proExpiresAtMs": {
           ".read": "auth != null",
           ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'",
@@ -117,6 +122,11 @@
           ".read": "auth != null",
           ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'",
           ".validate": "newData.isString() && newData.val().matches(/^(free|pro|dev|founder)$/)"
+        },
+        "roles": {
+          ".read": "auth != null",
+          ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'",
+          ".validate": "newData.hasChildren() && newData.numChildren() >= 1 && newData.numChildren() <= 2"
         },
         "proExpiresAtMs": {
           ".read": "auth != null",

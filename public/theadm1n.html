@@ -1259,7 +1259,7 @@
 </div>
 
 <!-- ANNOUNCEMENT EDITOR -->
-<div class="modal-overlay" id="annModal" data-act="if" data-a1="event.target===this)closeAnnEditor(">
+<div class="modal-overlay" id="annModal">
     <div class="modal-box" style="max-width:620px;">
         <button class="modal-close" data-act="closeAnnEditor"><i class="fas fa-times"></i></button>
         <h2 style="margin:0 0 16px;font-size:1.1rem;"><i class="fas fa-bullhorn" style="color:var(--accent);"></i> <span id="annModalTitle">New Announcement</span></h2>
@@ -1295,7 +1295,7 @@
 </div>
 
 <!-- USER DETAILS MODAL -->
-<div class="modal-overlay" id="userModal" data-act="if" data-a1="event.target===this)closeUserModal(">
+<div class="modal-overlay" id="userModal">
     <div class="modal-box" style="max-width:500px;">
         <button class="modal-close" data-act="closeUserModal"><i class="fas fa-times"></i></button>
         <div style="display:flex;align-items:center;gap:18px;margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid var(--border);">
@@ -1353,25 +1353,35 @@
         </div>
         <div class="modal-section">
             <h3><i class="fas fa-shield-alt"></i> Role Management</h3>
-            <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
-                <div style="flex:1;min-width:200px;">
-                    <div style="font-size:11px;color:#718096;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px;">Current Role</div>
-                    <div id="modalCurrentRole" style="font-size:14px;"></div>
+            <div style="display:flex;flex-direction:column;gap:12px;">
+                <div>
+                    <div style="font-size:11px;color:#718096;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px;">Current Roles</div>
+                    <div id="modalCurrentRole" style="font-size:14px;display:flex;flex-wrap:wrap;gap:6px;"></div>
                 </div>
-                <div style="flex:1;min-width:200px;">
-                    <div style="font-size:11px;color:#718096;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px;">Assign New Role</div>
-                    <div style="display:flex;gap:8px;align-items:center;">
-                        <select id="modalRoleSelect" style="background:#1a2035;border:1px solid #2d3748;color:#E2E8F0;padding:6px 10px;border-radius:6px;font-size:13px;flex:1;cursor:pointer;">
+                <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;">
+                    <div style="flex:1;min-width:140px;">
+                        <div style="font-size:11px;color:#718096;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px;">Role 1</div>
+                        <select id="modalRoleSelect" style="width:100%;background:#1a2035;border:1px solid #2d3748;color:#E2E8F0;padding:6px 10px;border-radius:6px;font-size:13px;cursor:pointer;">
                             <option value="free">● FREE</option>
                             <option value="pro">⭐ PRO</option>
                             <option value="dev">🛠️ DEV</option>
                             <option value="founder">👑 FOUNDER</option>
                         </select>
-                        <button data-act="assignRole" style="background:linear-gradient(135deg,#667EEA,#764BA2);color:white;border:none;padding:6px 16px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;">
-                            Assign
-                        </button>
                     </div>
+                    <div style="flex:1;min-width:140px;">
+                        <div style="font-size:11px;color:#718096;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px;">Role 2 (optional)</div>
+                        <select id="modalRoleSelect2" style="width:100%;background:#1a2035;border:1px solid #2d3748;color:#E2E8F0;padding:6px 10px;border-radius:6px;font-size:13px;cursor:pointer;">
+                            <option value="">— none —</option>
+                            <option value="pro">⭐ PRO</option>
+                            <option value="dev">🛠️ DEV</option>
+                            <option value="founder">👑 FOUNDER</option>
+                        </select>
+                    </div>
+                    <button data-act="assignRole" style="background:linear-gradient(135deg,#667EEA,#764BA2);color:white;border:none;padding:8px 16px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;">
+                        Assign
+                    </button>
                 </div>
+                <div style="font-size:11px;color:#718096;line-height:1.4;">Admin-only. Up to 2 roles. App entitlements use the higher role; both badges are shown.</div>
             </div>
             <div id="roleAssignedInfo" style="margin-top:8px;font-size:11px;color:#718096;"></div>
         </div>
@@ -1383,7 +1393,7 @@
 </div>
 
 <!-- BUG REPORT DETAILS MODAL -->
-<div class="modal-overlay" id="reportModal" data-act="if" data-a1="event.target===this)closeReportModal(">
+<div class="modal-overlay" id="reportModal">
     <div class="modal-box">
         <button class="modal-close" data-act="closeReportModal"><i class="fas fa-times"></i></button>
         <div class="modal-header">
@@ -1457,7 +1467,7 @@
 </div>
 
 <!-- CONFIRM MODAL -->
-<div class="modal-overlay" id="errorModal" data-act="if" data-a1="event.target===this)closeErrorModal(">
+<div class="modal-overlay" id="errorModal">
     <div class="modal-box" style="max-width:720px;">
         <button class="modal-close" data-act="closeErrorModal"><i class="fas fa-times"></i></button>
         <div class="modal-header">
@@ -1501,7 +1511,7 @@
 
 <div class="toast" id="toast"></div>
 
-<script src="assets/js/theadm1n.js?v=20260729fb5"></script>
+<script src="assets/js/theadm1n.js?v=20260729roles1"></script>
 
 
 </body>
