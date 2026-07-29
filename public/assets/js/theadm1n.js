@@ -332,9 +332,9 @@ function showTotpVerificationStep(mode) {
             } else if (mode === 'google') {
                 const user = firebase.auth().currentUser;
                 if (!user) throw new Error('Not signed in');
-                const idToken = await user.getIdToken();
-                const { ok } = await adminWorkerPost('/admin/session-unlock', { totpCode: code }, idToken);
-                if (ok) {
+                const idToken = await user.getIdToken(true);
+                const { ok, data } = await adminWorkerPost('/admin/session-unlock', { totpCode: code }, idToken);
+                if (ok && data?.ok) {
                     gateContent.removeChild(step);
                     sessionStorage.setItem('bp_admin', '1');
                     document.getElementById('gate').classList.add('hidden');
@@ -342,6 +342,14 @@ function showTotpVerificationStep(mode) {
                     initApp();
                     return;
                 }
+                document.getElementById('totpError').style.display = 'block';
+                document.getElementById('totpError').textContent = (data && data.error === 'invalid_totp')
+                    ? 'Invalid code. Please try again.'
+                    : ('Unlock failed: ' + ((data && data.error) || 'unknown'));
+                document.getElementById('totpInput').value = '';
+                document.getElementById('totpInput').focus();
+                btn.disabled = false;
+                return;
             }
             document.getElementById('totpError').style.display = 'block';
             document.getElementById('totpInput').value = '';
@@ -367,20 +375,31 @@ document.getElementById('btnGoogleLogin').addEventListener('click', async functi
     const provider = new firebase.auth.GoogleAuthProvider();
     provider.setCustomParameters({ prompt: 'select_account' });
     btn.disabled = true;
-    btn.innerHTML = '<div class="loading-spinner" style="border-color:#999;border-top-color:#333;width:16px;height:16px;border-width:2px;"></div> Redirecting...';
+    btn.innerHTML = '<div class="loading-spinner" style="border-color:#999;border-top-color:#333;width:16px;height:16px;border-width:2px;"></div> Signing in...';
     try {
-        const result = await firebase.auth().signInWithPopup(provider);
+        // Prefer popup; fall back to redirect if COOP / popup blockers break window.closed.
+        let result = null;
+        try {
+            result = await firebase.auth().signInWithPopup(provider);
+        } catch (popupErr) {
+            const code = popupErr && popupErr.code;
+            if (code === 'auth/popup-blocked' || code === 'auth/popup-closed-by-user' ||
+                /cross-origin-opener-policy|window\.closed/i.test(String(popupErr && popupErr.message || ''))) {
+                await firebase.auth().signInWithRedirect(provider);
+                return; // page will navigate away
+            }
+            throw popupErr;
+        }
         const user = result.user;
-        if (user.email !== ADMIN_EMAIL) {
+        const email = (user.email || '').toLowerCase();
+        if (email !== ADMIN_EMAIL.toLowerCase()) {
             showToast('Access denied: ' + user.email + ' is not authorized', 'danger');
             await firebase.auth().signOut();
-            btn.disabled = false;
-            btn.innerHTML = '<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"> Sign in with Google';
             return;
         }
-        const idToken = await user.getIdToken();
+        const idToken = await user.getIdToken(true);
         const unlock = await adminWorkerPost('/admin/session-unlock', {}, idToken);
-        if (unlock.ok) {
+        if (unlock.ok && unlock.data?.ok) {
             sessionStorage.setItem('bp_admin', '1');
             document.getElementById('gate').classList.add('hidden');
             document.getElementById('app').classList.add('show');
@@ -388,15 +407,44 @@ document.getElementById('btnGoogleLogin').addEventListener('click', async functi
         } else if (unlock.data?.needTotp || unlock.data?.error === 'invalid_totp') {
             showTotpVerificationStep('google');
         } else {
-            showToast('Admin unlock failed', 'danger');
+            showToast('Admin unlock failed: ' + (unlock.data?.error || unlock.status), 'danger');
             await firebase.auth().signOut();
         }
     } catch (error) {
         if (error.code !== 'auth/popup-closed-by-user')
             showToast('Google login failed: ' + error.message, 'danger');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"> Sign in with Google';
     }
-    btn.disabled = false;
-    btn.innerHTML = '<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"> Sign in with Google';
+});
+
+// Complete Google redirect sign-in (COOP-safe fallback)
+firebase.auth().getRedirectResult().then(async (result) => {
+    if (!result || !result.user) return;
+    const user = result.user;
+    if ((user.email || '').toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
+        showToast('Access denied: ' + user.email + ' is not authorized', 'danger');
+        await firebase.auth().signOut();
+        return;
+    }
+    const idToken = await user.getIdToken(true);
+    const unlock = await adminWorkerPost('/admin/session-unlock', {}, idToken);
+    if (unlock.ok && unlock.data?.ok) {
+        sessionStorage.setItem('bp_admin', '1');
+        document.getElementById('gate').classList.add('hidden');
+        document.getElementById('app').classList.add('show');
+        initApp();
+    } else if (unlock.data?.needTotp || unlock.data?.error === 'invalid_totp') {
+        showTotpVerificationStep('google');
+    } else {
+        showToast('Admin unlock failed: ' + (unlock.data?.error || unlock.status), 'danger');
+        await firebase.auth().signOut();
+    }
+}).catch((e) => {
+    if (e && e.code !== 'auth/redirect-cancelled-by-user') {
+        console.warn('getRedirectResult', e);
+    }
 });
 
 function logout() {
@@ -1631,6 +1679,7 @@ const PAGE_FLAG_CATALOG = [
     { key: 'report', title: 'Bug Report', icon: 'fa-bug' },
     { key: 'settings', title: 'Settings', icon: 'fa-cog' },
     { key: 'adbdiagnostic', title: 'ADB Diagnostic', icon: 'fa-stethoscope' },
+    { key: 'keymap', title: 'MuMu Keymap', icon: 'fa-keyboard' },
 ];
 const PAGE_FLAG_KEYS = new Set(PAGE_FLAG_CATALOG.map(p => p.key));
 
@@ -1767,6 +1816,11 @@ const PAGE_FEATURE_CATALOG = {
         { key: 'adb_summary', title: 'Summary Result', icon: 'fa-clipboard-check', desc: 'Final status, recommendation, and retry' },
         { key: 'adb_copy_report', title: 'Copy Report', icon: 'fa-copy', desc: 'Copy human-readable diagnostic report' },
         { key: 'adb_steps', title: 'Diagnostic Steps', icon: 'fa-list-ol', desc: 'Per-step diagnostic log list' },
+    ],
+    keymap: [
+        { key: 'keymap_selection', title: 'Keymap Selection', icon: 'fa-keyboard', desc: 'Browse and apply MuMu keymaps from the database' },
+        { key: 'keymap_backup', title: 'Backup / Restore', icon: 'fa-save', desc: 'Backup and restore MuMu keymap config folder' },
+        { key: 'keymap_info', title: 'Info / Notes', icon: 'fa-info-circle', desc: 'Bottom how-it-works and warning tip cards' },
     ],
 };
 
