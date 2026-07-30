@@ -1819,8 +1819,9 @@ const PAGE_FEATURE_CATALOG = {
     ],
     keymap: [
         { key: 'keymap_selection', title: 'Keymap Selection', icon: 'fa-keyboard', desc: 'Browse and apply MuMu keymaps from the database' },
-        { key: 'keymap_backup', title: 'Backup / Restore', icon: 'fa-save', desc: 'Backup and restore MuMu keymap config folder' },
-        { key: 'keymap_info', title: 'Info / Notes', icon: 'fa-info-circle', desc: 'Bottom how-it-works and warning tip cards' },
+        { key: 'keymap_backup', title: 'Backup / Restore', icon: 'fa-save', desc: 'Backup, restore, delete MuMu keymap config; open config folder' },
+        { key: 'keymap_autobackup', title: 'Auto Backup', icon: 'fa-clock', desc: '30-minute auto-backup timer with toggle, status badge, and delete config' },
+        { key: 'keymap_info', title: 'Info / Notes', icon: 'fa-info-circle', desc: 'How it works, about keymaps, and important notes tip cards' },
     ],
 };
 

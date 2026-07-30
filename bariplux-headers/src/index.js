@@ -26,6 +26,8 @@ export default {
     headers.set('X-Frame-Options', 'DENY');
     headers.set('X-Content-Type-Options', 'nosniff');
     headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+    // Needed for Firebase Google signInWithPopup (window.closed checks).
+    headers.set('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
     // Real frame-ancestors (meta cannot deliver this). Append — browsers combine CSPs.
     headers.append('Content-Security-Policy', "frame-ancestors 'none'");
 
