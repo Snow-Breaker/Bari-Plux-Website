@@ -14,3 +14,10 @@ package-lock.json
 
 WEBSITE.zip
 
+# Firebase local artifacts
+*.tgz
+firebase-debug.log
+
+# Stale local copy of RTDB rules (canonical copy lives at repo root and is referenced by firebase.json)
+public/database.rules.json
+
