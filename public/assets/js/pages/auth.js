@@ -1275,7 +1275,8 @@ function tryProtocolUrls(base64Claim) {
     const secretParam = currentClaimSecret ? ('&secret=' + encodeURIComponent(currentClaimSecret)) : '';
     const appUrls = [
         'baripluxtool23://login?token=' + base64Claim + secretParam,
-        'bptv223://login?token=' + base64Claim + secretParam
+        'bptv223://login?token=' + base64Claim + secretParam,
+        'baripluxtoolwin://login?token=' + base64Claim + secretParam
     ];
     let tried = 0;
     const tick = function () {
