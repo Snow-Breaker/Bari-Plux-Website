@@ -1,0 +1,28 @@
+name = "discord-auth-worker"
+main = "src/index.js"
+compatibility_date = "2024-01-01"
+
+[vars]
+DISCORD_CLIENT_ID = "1504446428959871127"
+GITHUB_CLIENT_ID = "Ov23liYBk9X5ykqEvjCA"
+ALLOWED_ORIGINS = "https://bariplux-ytb.github.io,https://bariplux.com,https://login.bariplux.com,https://baripluxwebsite.firebaseapp.com,https://baripluxwebsite.web.app"
+FIREBASE_PROJECT_ID = "baripluxwebsite"
+FIREBASE_API_KEY = "AIzaSyBH_t3Uue7fbb-DahwjSJGjG2-quCqiLEs"
+PAYHIP_PRODUCT_KEYS = "0rSWG,OrSWG"
+PAYHIP_MIN_PRICE_CENTS = "200"
+PAYHIP_PRO_DAYS = "60"
+STRIPE_PRICE_CENTS = "200"
+STRIPE_SUCCESS_URL = "https://login.bariplux.com/Pro?stripe=success"
+STRIPE_CANCEL_URL = "https://login.bariplux.com/Pro?stripe=cancel"
+DISCORD_PRO_ANNOUNCE_CHANNEL_ID = "1531890005176225894"
+# Secrets: PAYHIP_API_KEY, PAYHIP_PRODUCT_SECRET_KEY, STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET,
+#          FIREBASE_SERVICE_ACCOUNT, DISCORD_CLIENT_SECRET, GITHUB_CLIENT_SECRET,
+#          DISCORD_BOT_TOKEN (or DISCORD_PRO_WEBHOOK_URL) for Pro announce channel
+
+
+[[r2_buckets]]
+binding = "CLOUD_BACKUP_BUCKET"
+bucket_name = "bptv2-cloud-backup"
+
+[triggers]
+crons = ["0 * * * *"]
