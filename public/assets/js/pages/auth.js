@@ -135,7 +135,7 @@ function showDesktopConnectingView(base64Claim, claimSecret) {
             <div style="color:var(--muted);font-size:0.85rem;margin-bottom:18px;">
                 Click below to launch the app and complete sign-in.
             </div>
-            <a href="baripluxtool23://login?token=${base64Claim}${secretParam}"
+            <a href="baripluxtoolwin://login?token=${base64Claim}${secretParam}"
                id="openAppBtn"
                style="display:inline-block;padding:14px 32px;background:var(--accent);
                       color:white;border-radius:12px;font-weight:600;font-size:1rem;
@@ -143,14 +143,14 @@ function showDesktopConnectingView(base64Claim, claimSecret) {
                 🚀 Open Bari Plux App
             </a>
             <br>
-            <a href="bptv223://login?token=${base64Claim}${secretParam}"
+            <a href="baripluxtool23://login?token=${base64Claim}${secretParam}"
                style="font-size:0.8rem;color:var(--muted);margin-top:8px;display:inline-block;">
-                Try alternate link
+                Using the 2.3 build? Open it here
             </a>
             <br>
-            <a href="baripluxtoolwin://login?token=${base64Claim}${secretParam}"
+            <a href="bptv223://login?token=${base64Claim}${secretParam}"
                style="font-size:0.8rem;color:var(--muted);margin-top:4px;display:inline-block;">
-                Using the WinUI3 build? Open it here
+                Try alternate link
             </a>
             <div id="openAppStatus" style="margin-top:16px;color:var(--muted);font-size:0.85rem;">
                 <div class="loading-spinner" style="margin:0 auto 8px;"></div>
@@ -1279,9 +1279,9 @@ document.getElementById('btnForgotPassword').addEventListener('click', async fun
 function tryProtocolUrls(base64Claim) {
     const secretParam = currentClaimSecret ? ('&secret=' + encodeURIComponent(currentClaimSecret)) : '';
     const appUrls = [
+        'baripluxtoolwin://login?token=' + base64Claim + secretParam,
         'baripluxtool23://login?token=' + base64Claim + secretParam,
-        'bptv223://login?token=' + base64Claim + secretParam,
-        'baripluxtoolwin://login?token=' + base64Claim + secretParam
+        'bptv223://login?token=' + base64Claim + secretParam
     ];
     let tried = 0;
     const tick = function () {
