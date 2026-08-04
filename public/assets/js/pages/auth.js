@@ -147,6 +147,11 @@ function showDesktopConnectingView(base64Claim, claimSecret) {
                style="font-size:0.8rem;color:var(--muted);margin-top:8px;display:inline-block;">
                 Try alternate link
             </a>
+            <br>
+            <a href="baripluxtoolwin://login?token=${base64Claim}${secretParam}"
+               style="font-size:0.8rem;color:var(--muted);margin-top:4px;display:inline-block;">
+                Using the WinUI3 build? Open it here
+            </a>
             <div id="openAppStatus" style="margin-top:16px;color:var(--muted);font-size:0.85rem;">
                 <div class="loading-spinner" style="margin:0 auto 8px;"></div>
                 Waiting for app to respond...
