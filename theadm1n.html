@@ -982,50 +982,95 @@
             </div>
 
             <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:22px;margin-bottom:16px;">
-                <div style="font-size:0.9rem;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px;">
+                <div style="font-size:0.9rem;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px;">
                     <i class="fas fa-cloud-download-alt" style="color:var(--accent);"></i>
-                    Publish update for Bari Plux Tool
+                    Publish update — 3.x (WinUI3, current)
                 </div>
+                <div style="font-size:0.76rem;color:var(--muted);margin-bottom:16px;">Read by the current Bari Plux Tool (WinUI3) app only.</div>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
                     <div>
                         <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Latest Version</div>
-                        <input type="text" id="updVersionInput" placeholder="e.g. 2.3.0" style="width:100%;padding:10px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.9rem;">
+                        <input type="text" id="updVersionInput_3x" placeholder="e.g. 3.0.0" style="width:100%;padding:10px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.9rem;">
                     </div>
                     <div>
                         <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Installer Download URL</div>
-                        <input type="text" id="updDownloadUrlInput" placeholder="https://download.bariplux.com/..." style="width:100%;padding:10px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.82rem;">
+                        <input type="text" id="updDownloadUrlInput_3x" placeholder="https://download.bariplux.com/..." style="width:100%;padding:10px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.82rem;">
                     </div>
                     <div style="display:flex;gap:22px;align-items:center;padding-top:8px;">
                         <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
-                            <input type="checkbox" id="updCheckEnabledInput" checked style="width:16px;height:16px;accent-color:var(--accent);">
+                            <input type="checkbox" id="updCheckEnabledInput_3x" checked style="width:16px;height:16px;accent-color:var(--accent);">
                             <span style="font-size:0.85rem;">Update checks enabled</span>
                         </label>
                         <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
-                            <input type="checkbox" id="updMandatoryInput" style="width:16px;height:16px;accent-color:var(--warning);">
+                            <input type="checkbox" id="updMandatoryInput_3x" style="width:16px;height:16px;accent-color:var(--warning);">
                             <span style="font-size:0.85rem;">Mandatory update</span>
                         </label>
                     </div>
                     <div style="padding-top:4px;">
                         <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Client preview</div>
-                        <div id="updPreviewBox" style="padding:10px 12px;background:rgba(0,0,0,0.25);border:1px solid var(--border);border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:0.85rem;color:var(--accent2);">2.2.0</div>
+                        <div id="updPreviewBox_3x" style="padding:10px 12px;background:rgba(0,0,0,0.25);border:1px solid var(--border);border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:0.85rem;color:var(--accent2);">3.0.0</div>
                     </div>
                     <div style="grid-column:1/-1;">
                         <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Changelog (optional)</div>
-                        <textarea id="updChangelogInput" rows="4" placeholder="What's new in this release…" style="width:100%;padding:10px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Poppins',sans-serif;font-size:0.85rem;resize:vertical;"></textarea>
+                        <textarea id="updChangelogInput_3x" rows="4" placeholder="What's new in this release…" style="width:100%;padding:10px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Poppins',sans-serif;font-size:0.85rem;resize:vertical;"></textarea>
                     </div>
                 </div>
                 <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;">
-                    <button class="action-btn view" data-act="saveUpdateConfig" style="padding:10px 18px;font-weight:600;"><i class="fas fa-save"></i> Save &amp; Publish</button>
-                    <button class="action-btn" data-act="seedUpdateConfigFromLegacy" style="padding:10px 18px;"><i class="fas fa-seedling"></i> Seed from version.txt</button>
+                    <button class="action-btn view" data-act="saveUpdateConfig" data-a1="3x" style="padding:10px 18px;font-weight:600;"><i class="fas fa-save"></i> Save &amp; Publish (3.x)</button>
                 </div>
-                <div style="margin-top:14px;font-size:0.78rem;color:var(--muted);line-height:1.5;">
-                    Clients read <code style="color:var(--accent2);">app_config/update</code> from Firebase first.
-                    If missing, they fall back to <code style="color:var(--accent2);">download.bariplux.com/version.txt</code>.
-                    Disable “Update checks enabled” to stop prompting users without changing the version number.
-                </div>
+                <div class="last-updated" id="updatesLastUpdated_3x" style="margin-top:10px;"></div>
             </div>
 
-            <div class="last-updated" id="updatesLastUpdated"></div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:22px;margin-bottom:16px;">
+                <div style="font-size:0.9rem;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px;">
+                    <i class="fas fa-cloud-download-alt" style="color:var(--muted);"></i>
+                    Publish update — 2.x (WPF legacy)
+                </div>
+                <div style="font-size:0.76rem;color:var(--muted);margin-bottom:16px;">Read by the older Bari Plux Tool (WPF) app only — separate from 3.x above, so this never gets pointed at the WinUI3 installer.</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+                    <div>
+                        <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Latest Version</div>
+                        <input type="text" id="updVersionInput_2x" placeholder="e.g. 2.3.0" style="width:100%;padding:10px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.9rem;">
+                    </div>
+                    <div>
+                        <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Installer Download URL</div>
+                        <input type="text" id="updDownloadUrlInput_2x" placeholder="https://download.bariplux.com/..." style="width:100%;padding:10px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.82rem;">
+                    </div>
+                    <div style="display:flex;gap:22px;align-items:center;padding-top:8px;">
+                        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+                            <input type="checkbox" id="updCheckEnabledInput_2x" checked style="width:16px;height:16px;accent-color:var(--accent);">
+                            <span style="font-size:0.85rem;">Update checks enabled</span>
+                        </label>
+                        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+                            <input type="checkbox" id="updMandatoryInput_2x" style="width:16px;height:16px;accent-color:var(--warning);">
+                            <span style="font-size:0.85rem;">Mandatory update</span>
+                        </label>
+                    </div>
+                    <div style="padding-top:4px;">
+                        <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Client preview</div>
+                        <div id="updPreviewBox_2x" style="padding:10px 12px;background:rgba(0,0,0,0.25);border:1px solid var(--border);border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:0.85rem;color:var(--accent2);">2.3.0</div>
+                    </div>
+                    <div style="grid-column:1/-1;">
+                        <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Changelog (optional)</div>
+                        <textarea id="updChangelogInput_2x" rows="4" placeholder="What's new in this release…" style="width:100%;padding:10px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Poppins',sans-serif;font-size:0.85rem;resize:vertical;"></textarea>
+                    </div>
+                </div>
+                <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;">
+                    <button class="action-btn view" data-act="saveUpdateConfig" data-a1="2x" style="padding:10px 18px;font-weight:600;"><i class="fas fa-save"></i> Save &amp; Publish (2.x)</button>
+                    <button class="action-btn" data-act="seedUpdateConfigFromLegacy" style="padding:10px 18px;"><i class="fas fa-seedling"></i> Seed from version.txt</button>
+                </div>
+                <div class="last-updated" id="updatesLastUpdated_2x" style="margin-top:10px;"></div>
+            </div>
+
+            <div style="font-size:0.78rem;color:var(--muted);line-height:1.5;margin-bottom:16px;">
+                3.x clients read <code style="color:var(--accent2);">app_config/update_3x</code>; 2.x clients read
+                <code style="color:var(--accent2);">app_config/update_2x</code> — two independent Firebase nodes, so
+                publishing one line never triggers an update prompt (or points at the wrong installer) for the other.
+                The legacy flat <code style="color:var(--accent2);">download.bariplux.com/version.txt</code> file only
+                ever represented the 2.x line and is used as its fallback/seed source, never 3.x's.
+                Disable “Update checks enabled” on either line to stop prompting that line's users without changing
+                its version number.
+            </div>
         </div>
 
         <div id="pauseSection" style="display:none;">

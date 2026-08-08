@@ -177,8 +177,8 @@ function showDesktopClaimedView() {
                 ✅ Successfully signed in!
             </span>
             <br>
-            <span style="font-size:0.85rem;color:var(--muted);margin-top:4px;display:block;">
-                You can close this tab.
+            <span id="closeStatusNote" style="font-size:0.85rem;color:var(--muted);margin-top:4px;display:block;">
+                Closing this tab...
             </span>
         `;
     }
@@ -191,6 +191,17 @@ function showDesktopClaimedView() {
         if (logoutBtn) logoutBtn.addEventListener('click', doWebsiteLogout);
         view.appendChild(wrap);
     }
+
+    // Best-effort auto-close: browsers only close tabs the page can prove it
+    // "owns" (Chrome/Edge use no-back-history as the heuristic, which covers the
+    // tab the desktop app opened via Process.Start). If a browser refuses the
+    // close, execution continues past it and the note below falls back to the
+    // manual-close instruction instead of staying stuck on "Closing this tab...".
+    setTimeout(function () {
+        window.close();
+        const note = document.getElementById('closeStatusNote');
+        if (note) note.textContent = 'You can close this tab.';
+    }, 1200);
 }
 
 function showDesktopTokenError(retryFn) {

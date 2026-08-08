@@ -2450,15 +2450,27 @@ async function toggleEnabled(key, newVal) {
     }
 }
 
-const DEFAULT_UPDATE_DOWNLOAD_URL = 'https://download.bariplux.com/bariplux-files/BariPluxToolProSetup.exe';
+// Two independent product lines, each with its own Firebase config node so publishing a 3.x
+// (WinUI3) release never shows up as an "update available" prompt for 2.x (WPF) users and
+// vice versa — they used to share a single app_config/update node, which meant the 3.0.0
+// launch would have pointed every still-supported 2.3.0 WPF user at the wrong installer.
+const DEFAULT_UPDATE_DOWNLOAD_URL_3X = 'https://download.bariplux.com/bariplux-files/BariPluxToolProSetup.exe';
+const DEFAULT_UPDATE_DOWNLOAD_URL_2X = 'https://download.bariplux.com/bariplux-files/BariPluxToolSetup.exe';
 const LEGACY_VERSION_TXT_URL = 'https://download.bariplux.com/version.txt';
 let _legacyVersionTxt = null;
 
-function refreshUpdatePreview() {
-    const version = (document.getElementById('updVersionInput')?.value || '').trim() || '—';
-    const mandatory = document.getElementById('updMandatoryInput')?.checked;
-    const checks = document.getElementById('updCheckEnabledInput')?.checked;
-    const box = document.getElementById('updPreviewBox');
+function updateConfigPath(line) {
+    return line === '3x' ? 'app_config/update_3x' : 'app_config/update_2x';
+}
+function defaultDownloadUrl(line) {
+    return line === '3x' ? DEFAULT_UPDATE_DOWNLOAD_URL_3X : DEFAULT_UPDATE_DOWNLOAD_URL_2X;
+}
+
+function refreshUpdatePreview(line) {
+    const version = (document.getElementById(`updVersionInput_${line}`)?.value || '').trim() || '—';
+    const mandatory = document.getElementById(`updMandatoryInput_${line}`)?.checked;
+    const checks = document.getElementById(`updCheckEnabledInput_${line}`)?.checked;
+    const box = document.getElementById(`updPreviewBox_${line}`);
     if (!box) return;
     if (!checks) {
         box.textContent = 'checks disabled (clients will not be prompted)';
@@ -2486,56 +2498,62 @@ async function fetchLegacyVersionTxt() {
     return _legacyVersionTxt;
 }
 
-function fillUpdateForm(cfg) {
-    const version = (cfg && cfg.version) || (_legacyVersionTxt ? _legacyVersionTxt.split('|')[0].trim() : '2.2.0');
-    const mandatory = !!(cfg && cfg.mandatory) || (!!_legacyVersionTxt && /\|mandatory/i.test(_legacyVersionTxt));
+function fillUpdateForm(line, cfg) {
+    const legacyFallback = line === '2x' && _legacyVersionTxt ? _legacyVersionTxt.split('|')[0].trim() : null;
+    const version = (cfg && cfg.version) || legacyFallback || (line === '3x' ? '3.0.0' : '2.3.0');
+    const mandatory = !!(cfg && cfg.mandatory) || (line === '2x' && !!_legacyVersionTxt && /\|mandatory/i.test(_legacyVersionTxt));
     const checkEnabled = cfg && typeof cfg.check_enabled === 'boolean' ? cfg.check_enabled : true;
-    const downloadUrl = (cfg && cfg.download_url) || DEFAULT_UPDATE_DOWNLOAD_URL;
+    const downloadUrl = (cfg && cfg.download_url) || defaultDownloadUrl(line);
     const changelog = (cfg && cfg.changelog) || '';
 
-    document.getElementById('updVersionInput').value = version;
-    document.getElementById('updMandatoryInput').checked = mandatory;
-    document.getElementById('updCheckEnabledInput').checked = checkEnabled;
-    document.getElementById('updDownloadUrlInput').value = downloadUrl;
-    document.getElementById('updChangelogInput').value = changelog;
+    document.getElementById(`updVersionInput_${line}`).value = version;
+    document.getElementById(`updMandatoryInput_${line}`).checked = mandatory;
+    document.getElementById(`updCheckEnabledInput_${line}`).checked = checkEnabled;
+    document.getElementById(`updDownloadUrlInput_${line}`).value = downloadUrl;
+    document.getElementById(`updChangelogInput_${line}`).value = changelog;
 
-    document.getElementById('updStatVersion').textContent = version;
-    document.getElementById('updStatChecks').textContent = checkEnabled ? 'ON' : 'OFF';
-    document.getElementById('updStatMandatory').textContent = mandatory ? 'YES' : 'NO';
-    refreshUpdatePreview();
+    if (line === '3x') {
+        document.getElementById('updStatVersion').textContent = version;
+        document.getElementById('updStatChecks').textContent = checkEnabled ? 'ON' : 'OFF';
+        document.getElementById('updStatMandatory').textContent = mandatory ? 'YES' : 'NO';
+    }
+    refreshUpdatePreview(line);
 }
 
 async function loadUpdateConfig() {
     if (!db) return;
     await fetchLegacyVersionTxt();
-    try {
-        const snap = await db.ref('app_config/update').once('value');
-        const cfg = snap.val();
-        fillUpdateForm(cfg || null);
-        const lu = document.getElementById('updatesLastUpdated');
-        if (lu) {
-            const ts = cfg && cfg.updated_at ? new Date(cfg.updated_at).toLocaleString() : 'never published';
-            lu.textContent = 'Firebase config last updated: ' + ts;
+    for (const line of ['3x', '2x']) {
+        try {
+            const snap = await db.ref(updateConfigPath(line)).once('value');
+            const cfg = snap.val();
+            fillUpdateForm(line, cfg || null);
+            const lu = document.getElementById(`updatesLastUpdated_${line}`);
+            if (lu) {
+                const ts = cfg && cfg.updated_at ? new Date(cfg.updated_at).toLocaleString() : 'never published';
+                lu.textContent = 'Firebase config last updated: ' + ts;
+            }
+        } catch (e) {
+            fillUpdateForm(line, null);
+            showToast(`⚠️ Failed to load ${line} update config: ` + e.message, 'danger');
         }
-    } catch (e) {
-        fillUpdateForm(null);
-        showToast('⚠️ Failed to load update config: ' + e.message, 'danger');
     }
 }
 
-async function saveUpdateConfig() {
+async function saveUpdateConfig(line) {
     if (!db) return;
-    const version = (document.getElementById('updVersionInput').value || '').trim();
+    line = line === '2x' ? '2x' : '3x';
+    const version = (document.getElementById(`updVersionInput_${line}`).value || '').trim();
     if (!/^[0-9]+(\.[0-9]+){1,3}$/.test(version)) {
-        showToast('⚠️ Version must look like 2.3.0', 'danger');
+        showToast(`⚠️ Version must look like ${line === '3x' ? '3.0.0' : '2.3.0'}`, 'danger');
         return;
     }
-    const downloadUrl = (document.getElementById('updDownloadUrlInput').value || '').trim() || DEFAULT_UPDATE_DOWNLOAD_URL;
+    const downloadUrl = (document.getElementById(`updDownloadUrlInput_${line}`).value || '').trim() || defaultDownloadUrl(line);
     if (downloadUrl.length > 500) {
         showToast('⚠️ Download URL is too long', 'danger');
         return;
     }
-    const changelog = (document.getElementById('updChangelogInput').value || '').trim();
+    const changelog = (document.getElementById(`updChangelogInput_${line}`).value || '').trim();
     if (changelog.length > 4000) {
         showToast('⚠️ Changelog is too long', 'danger');
         return;
@@ -2543,16 +2561,16 @@ async function saveUpdateConfig() {
 
     const payload = {
         version,
-        mandatory: !!document.getElementById('updMandatoryInput').checked,
-        check_enabled: !!document.getElementById('updCheckEnabledInput').checked,
+        mandatory: !!document.getElementById(`updMandatoryInput_${line}`).checked,
+        check_enabled: !!document.getElementById(`updCheckEnabledInput_${line}`).checked,
         download_url: downloadUrl,
         changelog,
         updated_at: Date.now()
     };
 
     try {
-        await db.ref('app_config/update').set(payload);
-        showToast(`✅ Update config published: ${version}${payload.mandatory ? ' (mandatory)' : ''}`, 'success');
+        await db.ref(updateConfigPath(line)).set(payload);
+        showToast(`✅ ${line === '3x' ? '3.x (WinUI3)' : '2.x (WPF)'} update config published: ${version}${payload.mandatory ? ' (mandatory)' : ''}`, 'success');
         loadUpdateConfig();
     } catch (e) {
         showToast('⚠️ Failed to save: ' + e.message, 'danger');
@@ -2566,23 +2584,25 @@ async function seedUpdateConfigFromLegacy() {
         return;
     }
     const parts = _legacyVersionTxt.split('|');
-    fillUpdateForm({
+    fillUpdateForm('2x', {
         version: parts[0].trim(),
         mandatory: parts.length > 1 && parts[1].trim().toLowerCase() === 'mandatory',
         check_enabled: true,
-        download_url: DEFAULT_UPDATE_DOWNLOAD_URL,
+        download_url: DEFAULT_UPDATE_DOWNLOAD_URL_2X,
         changelog: ''
     });
-    showToast('Seeded form from version.txt — click Save & Publish to write Firebase', 'success');
+    showToast('Seeded 2.x form from version.txt — click Save & Publish (2.x) to write Firebase', 'success');
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    ['updVersionInput', 'updMandatoryInput', 'updCheckEnabledInput'].forEach(id => {
-        const el = document.getElementById(id);
-        if (!el) return;
-        el.addEventListener('input', refreshUpdatePreview);
-        el.addEventListener('change', refreshUpdatePreview);
-    });
+    for (const line of ['3x', '2x']) {
+        ['updVersionInput', 'updMandatoryInput', 'updCheckEnabledInput'].forEach(base => {
+            const el = document.getElementById(`${base}_${line}`);
+            if (!el) return;
+            el.addEventListener('input', () => refreshUpdatePreview(line));
+            el.addEventListener('change', () => refreshUpdatePreview(line));
+        });
+    }
 });
 
 const DEFAULT_PAUSE_TITLE = 'Temporarily Unavailable';
