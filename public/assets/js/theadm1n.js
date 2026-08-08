@@ -2454,8 +2454,8 @@ async function toggleEnabled(key, newVal) {
 // (WinUI3) release never shows up as an "update available" prompt for 2.x (WPF) users and
 // vice versa — they used to share a single app_config/update node, which meant the 3.0.0
 // launch would have pointed every still-supported 2.3.0 WPF user at the wrong installer.
-const DEFAULT_UPDATE_DOWNLOAD_URL_3X = 'https://download.bariplux.com/bariplux-files/BariPluxToolProSetup.exe';
-const DEFAULT_UPDATE_DOWNLOAD_URL_2X = 'https://download.bariplux.com/bariplux-files/BariPluxToolSetup.exe';
+const DEFAULT_UPDATE_DOWNLOAD_URL_3X = 'https://dl.bariplux.com/BariPluxToolSetup.exe';
+const DEFAULT_UPDATE_DOWNLOAD_URL_2X = 'https://dl.bariplux.com/BariPluxToolProSetup.exe';
 const LEGACY_VERSION_TXT_URL = 'https://download.bariplux.com/version.txt';
 let _legacyVersionTxt = null;
 
