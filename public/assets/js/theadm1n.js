@@ -2637,6 +2637,19 @@ function refreshPausePreview() {
     if (live) live.textContent = 'ON';
 }
 
+// BPT (3.x) gets its own maintenance switch, independent from the legacy WPF (2.x) app - same
+// split already established for update-config (see updateConfigPath above). 2.x keeps writing the
+// original shared node since BPTV2 is already shipped and won't read a new path unless it's
+// updated again.
+let _pauseLine = '3x';
+function pauseConfigPath(line) {
+    return line === '2x' ? 'app_config/maintenance' : 'app_config/maintenance_3x';
+}
+function onPauseLineChange() {
+    _pauseLine = document.querySelector('input[name="pauseLine"]:checked')?.value === '2x' ? '2x' : '3x';
+    loadPauseConfig();
+}
+
 function fillPauseForm(cfg) {
     const enabled = !!(cfg && cfg.enabled);
     const title = (cfg && cfg.title) || DEFAULT_PAUSE_TITLE;
@@ -2656,7 +2669,7 @@ function fillPauseForm(cfg) {
 async function loadPauseConfig() {
     if (!db) return;
     try {
-        const snap = await db.ref('app_config/maintenance').once('value');
+        const snap = await db.ref(pauseConfigPath(_pauseLine)).once('value');
         const cfg = snap.val();
         fillPauseForm(cfg || null);
         const lu = document.getElementById('pauseLastUpdated');
@@ -2692,7 +2705,7 @@ async function savePauseConfig() {
     };
 
     try {
-        await db.ref('app_config/maintenance').set(payload);
+        await db.ref(pauseConfigPath(_pauseLine)).set(payload);
         showToast(enabled
             ? '⏸ App paused — clients will show the gate shortly'
             : '▶️ Pause cleared — clients can use the app again', 'success');
@@ -2709,13 +2722,13 @@ async function resumeAppNow() {
     document.getElementById('pauseEnabledInput').checked = false;
     refreshPausePreview();
     try {
-        await db.ref('app_config/maintenance').set({
+        await db.ref(pauseConfigPath(_pauseLine)).set({
             enabled: false,
             title,
             message,
             updated_at: Date.now()
         });
-        showToast('▶️ App resumed for all clients', 'success');
+        showToast('▶️ App resumed', 'success');
         loadPauseConfig();
     } catch (e) {
         showToast('⚠️ Failed to resume: ' + e.message, 'danger');
@@ -2756,12 +2769,24 @@ function mapToLines(obj, { decodeEmails = false } = {}) {
         .join('\n');
 }
 
+// BPT (3.x) gets its own access-policy switch, independent from the legacy WPF (2.x) app - same
+// split already established for update-config/maintenance above. 2.x keeps writing the original
+// shared node since BPTV2 is already shipped and won't read a new path unless it's updated again.
+let _accessLine = '3x';
+function accessConfigPath(line) {
+    return line === '2x' ? 'app_config/access' : 'app_config/access_3x';
+}
+function onAccessLineChange() {
+    _accessLine = document.querySelector('input[name="accessLine"]:checked')?.value === '2x' ? '2x' : '3x';
+    loadAccessConfig();
+}
+
 async function loadAccessConfig() {
     if (!db) return;
     const status = document.getElementById('accessStatus');
     if (status) status.textContent = 'Loading…';
     try {
-        const snap = await db.ref('app_config/access').once('value');
+        const snap = await db.ref(accessConfigPath(_accessLine)).once('value');
         const data = snap.val() || { mode: 'everyone', min_role: 'free', emails: {}, uids: {} };
         const mode = data.mode || 'everyone';
         document.querySelectorAll('input[name="accessMode"]').forEach(r => { r.checked = r.value === mode; });
@@ -2791,7 +2816,7 @@ async function saveAccessConfig() {
         updated_at: Date.now()
     };
     try {
-        await db.ref('app_config/access').set(payload);
+        await db.ref(accessConfigPath(_accessLine)).set(payload);
         const status = document.getElementById('accessStatus');
         if (status) status.textContent = 'Saved ' + new Date().toLocaleString();
         showToast('Access policy saved', 'success');
@@ -3461,7 +3486,7 @@ async function replyReportMailbox(reportKey) {
         await db.ref('bugReports/' + reportKey + '/adminReply').set({
             body,
             at: Date.now(),
-            byEmail: (auth && auth.currentUser && auth.currentUser.email) || 'admin',
+            byEmail: (firebase.auth().currentUser && firebase.auth().currentUser.email) || 'admin',
             mailboxMsgId: msgId
         });
         await db.ref('bugReports/' + reportKey + '/repliedAt').set(Date.now());

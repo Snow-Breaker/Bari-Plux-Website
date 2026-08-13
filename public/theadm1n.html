@@ -1081,8 +1081,13 @@
             </div>
 
             <div class="toolbar">
-                <span class="toolbar-title">Pause App <span style="color:var(--muted);font-size:0.8rem;font-weight:400;">blocks all desktop clients until you resume</span></span>
+                <span class="toolbar-title">Pause App <span style="color:var(--muted);font-size:0.8rem;font-weight:400;">blocks desktop clients on the selected app line until you resume</span></span>
                 <button class="icon-btn teal" data-act="loadPauseConfig"><i class="fas fa-sync-alt"></i> Refresh</button>
+            </div>
+
+            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;">
+                <label class="filter-btn" style="cursor:pointer;"><input type="radio" name="pauseLine" value="3x" checked data-act="onPauseLineChange" style="margin-right:6px;"> BPT (3.x)</label>
+                <label class="filter-btn" style="cursor:pointer;"><input type="radio" name="pauseLine" value="2x" data-act="onPauseLineChange" style="margin-right:6px;"> Legacy WPF (2.x, shared)</label>
             </div>
 
             <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:22px;margin-bottom:16px;">
@@ -1121,7 +1126,8 @@
                     <button class="action-btn" data-act="resumeAppNow" style="padding:10px 18px;"><i class="fas fa-play"></i> Resume now</button>
                 </div>
                 <div style="margin-top:14px;font-size:0.78rem;color:var(--muted);line-height:1.5;">
-                    Writes to <code style="color:var(--accent2);">app_config/maintenance</code>.
+                    Writes to <code style="color:var(--accent2);">app_config/maintenance_3x</code> (BPT) or
+                    <code style="color:var(--accent2);">app_config/maintenance</code> (legacy 2.x, shared) depending on the line selected above.
                     While paused, you can change title/message and Save again — open clients refresh the gate text automatically.
                     Use <strong>Resume now</strong> to clear the pause immediately.
                 </div>
@@ -1170,6 +1176,10 @@
             <div class="toolbar">
                 <span class="toolbar-title">App Access Control</span>
                 <button class="icon-btn teal" data-act="loadAccessConfig"><i class="fas fa-sync-alt"></i> Refresh</button>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;">
+                <label class="filter-btn" style="cursor:pointer;"><input type="radio" name="accessLine" value="3x" checked data-act="onAccessLineChange" style="margin-right:6px;"> BPT (3.x)</label>
+                <label class="filter-btn" style="cursor:pointer;"><input type="radio" name="accessLine" value="2x" data-act="onAccessLineChange" style="margin-right:6px;"> Legacy WPF (2.x, shared)</label>
             </div>
             <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px;max-width:720px;">
                 <div style="font-size:0.82rem;color:var(--muted);margin-bottom:16px;line-height:1.5;">
