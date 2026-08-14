@@ -125,6 +125,11 @@ export default {
       return handleFeaturePublicKey(request, env, corsHeaders);
     }
 
+    // GET /manifest/status — signed status manifest (maintenance_3x + update_3x), unauthenticated
+    if (request.method === 'GET' && path === '/manifest/status') {
+      return handleManifestStatus(request, env, corsHeaders);
+    }
+
     // POST /pending-token — Worker mints pending_tokens + HMAC (client cannot write RTDB)
     if (request.method === 'POST' && path === '/pending-token') {
       return handlePendingTokenCreate(request, env, corsHeaders);
@@ -220,6 +225,13 @@ async function readFeatureFlags(env) {
 
 async function readUserRole(uid, idToken, env) {
   const url = `${getDatabaseUrl(env)}/users/${uid}/role.json?auth=${encodeURIComponent(idToken)}`;
+  const res = await fetch(url);
+  if (!res.ok) return null;
+  return res.json();
+}
+
+async function readAppConfigNode(node, env) {
+  const url = `${getDatabaseUrl(env)}/app_config/${node}.json`;
   const res = await fetch(url);
   if (!res.ok) return null;
   return res.json();
@@ -1094,6 +1106,57 @@ async function handleFeaturePublicKey(request, env, corsHeaders) {
   return new Response(JSON.stringify({
     jwks_url: jwksUrl,
     client_email: serviceAccount.client_email
+  }), { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+}
+
+/**
+ * Signed status manifest — aggregates the two security/business-critical BPT-only kill-switch
+ * nodes (app_config/maintenance_3x, app_config/update_3x, both already publicly .read:true) into
+ * one RS256 JWT using the same service-account key/signJwt() pair as /feature/entitlement, so BPT
+ * can trust a verified "pause the app" / "force update" signal even if the raw unauthenticated RTDB
+ * read path were ever spoofed. Deliberately excludes access/license data — per product decision,
+ * the Manifest configures behavior, it does not become a new security-trust boundary; app_config/
+ * access_3x stays gated solely by AppAccessGate's existing unsigned direct read.
+ */
+async function handleManifestStatus(request, env, corsHeaders) {
+  const [maintenanceRaw, updateRaw] = await Promise.all([
+    readAppConfigNode('maintenance_3x', env),
+    readAppConfigNode('update_3x', env)
+  ]);
+
+  const now = Math.floor(Date.now() / 1000);
+
+  const maintenance = {
+    enabled: !!(maintenanceRaw && maintenanceRaw.enabled === true),
+    title: (maintenanceRaw && typeof maintenanceRaw.title === 'string') ? maintenanceRaw.title : '',
+    message: (maintenanceRaw && typeof maintenanceRaw.message === 'string') ? maintenanceRaw.message : '',
+    updated_at: (maintenanceRaw && typeof maintenanceRaw.updated_at === 'number') ? maintenanceRaw.updated_at : 0
+  };
+
+  const update = {
+    version: (updateRaw && typeof updateRaw.version === 'string') ? updateRaw.version : '',
+    mandatory: !!(updateRaw && updateRaw.mandatory === true),
+    check_enabled: !updateRaw || updateRaw.check_enabled !== false,
+    download_url: (updateRaw && typeof updateRaw.download_url === 'string') ? updateRaw.download_url : '',
+    changelog: (updateRaw && typeof updateRaw.changelog === 'string') ? updateRaw.changelog : ''
+  };
+
+  const payload = {
+    manifestVersion: 1,
+    generatedAt: now,
+    maintenance,
+    update,
+    iat: now,
+    exp: now + 300
+  };
+
+  const serviceAccount = JSON.parse(env.FIREBASE_SERVICE_ACCOUNT);
+  const privateKey = await importPrivateKey(serviceAccount.private_key);
+  const token = await signJwt(payload, privateKey, serviceAccount.private_key_id);
+
+  return new Response(JSON.stringify({
+    token,
+    expires_at: (now + 300) * 1000
   }), { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
 }
 
