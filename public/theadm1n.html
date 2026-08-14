@@ -888,6 +888,15 @@
                 <button class="icon-btn" style="background:var(--accent);color:#fff;border:none;" data-act="seedMissingPageFlags"><i class="fas fa-seedling"></i> Seed missing pages</button>
             </div>
 
+            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;">
+                <label class="filter-btn" style="cursor:pointer;"><input type="radio" name="featureFlagsLine" value="3x" checked data-act="onFeatureFlagsLineChange" style="margin-right:6px;"> BPT (3.x)</label>
+                <label class="filter-btn" style="cursor:pointer;"><input type="radio" name="featureFlagsLine" value="2x" data-act="onFeatureFlagsLineChange" style="margin-right:6px;"> Legacy WPF (2.x, unwired)</label>
+            </div>
+            <div style="font-size:0.78rem;color:var(--muted);margin:-8px 0 14px;line-height:1.5;">
+                Writes to <code style="color:var(--accent2);">feature_flags_3x</code> (BPT, actively read by the app) or
+                <code style="color:var(--accent2);">feature_flags</code> (legacy, not currently read by any client) depending on the line selected above.
+            </div>
+
             <div class="ff-section-title" id="ffPagesSectionTitle"><i class="fas fa-th-large"></i> App Pages <span class="hint">Open a page to manage its capabilities · Show/Hide = menu · Enable/Disable = can open · Emulator = which profile sees it</span></div>
             <div id="ffPagesGrid" class="ff-pages-grid">
                 <div style="grid-column:1/-1;text-align:center;padding:28px;color:var(--muted);">Loading pages…</div>

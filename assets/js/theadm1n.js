@@ -2057,18 +2057,32 @@ function renderPageDetailContent(data) {
     })).join('');
 }
 
+// BPT (3.x) gets its own Feature Flags catalog, independent from the legacy WPF (2.x) app - same
+// split already established for update-config/maintenance/access above. This catalog (page
+// visibility/enable + ~108 in-page capability flags) had zero consumers on either app line before
+// BPT's RemoteFeatureFlagService was built to read feature_flags_3x specifically, so "2x" here just
+// keeps writing the original unversioned node in case it's ever wired up for the old app too.
+let _featureFlagsLine = '3x';
+function featureFlagsRoot(line) {
+    return line === '2x' ? 'feature_flags' : 'feature_flags_3x';
+}
+function onFeatureFlagsLineChange() {
+    _featureFlagsLine = document.querySelector('input[name="featureFlagsLine"]:checked')?.value === '2x' ? '2x' : '3x';
+    loadFeatureFlags();
+}
+
 async function seedPageFeatures(pageKey, { silentIfNone = false } = {}) {
     const features = getPageFeatures(pageKey);
     if (!features.length) {
         if (!silentIfNone) showToast('ℹ️ No feature catalog for this page yet', 'success');
         return 0;
     }
-    const snap = await db.ref('feature_flags').once('value');
+    const snap = await db.ref(featureFlagsRoot(_featureFlagsLine)).once('value');
     const data = snap.val() || {};
     const ops = [];
     for (const f of features) {
         if (data[f.key]) continue;
-        ops.push(db.ref(`feature_flags/${f.key}`).set(defaultPageFlagPayload({ page: pageKey })));
+        ops.push(db.ref(`${featureFlagsRoot(_featureFlagsLine)}/${f.key}`).set(defaultPageFlagPayload({ page: pageKey })));
     }
     if (!ops.length) {
         if (!silentIfNone) showToast('✅ All features already seeded', 'success');
@@ -2090,17 +2104,17 @@ async function seedPageFeaturesForCurrent() {
 }
 
 async function ensureFeatureFlagExists(key, pageKey) {
-    const snap = await db.ref(`feature_flags/${key}`).once('value');
+    const snap = await db.ref(`${featureFlagsRoot(_featureFlagsLine)}/${key}`).once('value');
     if (snap.exists()) return snap.val() || {};
     const payload = defaultPageFlagPayload(pageKey ? { page: pageKey } : {});
-    await db.ref(`feature_flags/${key}`).set(payload);
+    await db.ref(`${featureFlagsRoot(_featureFlagsLine)}/${key}`).set(payload);
     return payload;
 }
 
 async function updateFeatureFlagRole(key, role) {
     try {
         await ensureFeatureFlagExists(key, _ffOpenPageKey);
-        await db.ref(`feature_flags/${key}`).update({ min_role: role, updated_at: Date.now() });
+        await db.ref(`${featureFlagsRoot(_featureFlagsLine)}/${key}`).update({ min_role: role, updated_at: Date.now() });
         showToast(`✅ ${key} → min role ${role}`, 'success');
         loadFeatureFlags();
     } catch (e) {
@@ -2111,7 +2125,7 @@ async function updateFeatureFlagRole(key, role) {
 async function toggleFeatureFlagVisible(key, newVal) {
     try {
         await ensureFeatureFlagExists(key, _ffOpenPageKey);
-        await db.ref(`feature_flags/${key}`).update({ visible: !!newVal, updated_at: Date.now() });
+        await db.ref(`${featureFlagsRoot(_featureFlagsLine)}/${key}`).update({ visible: !!newVal, updated_at: Date.now() });
         showToast(newVal ? `👁 ${key} shown` : `🙈 ${key} hidden`, 'success');
         loadFeatureFlags();
     } catch (e) {
@@ -2122,7 +2136,7 @@ async function toggleFeatureFlagVisible(key, newVal) {
 async function toggleFeatureFlagEnabled(key, newVal) {
     try {
         await ensureFeatureFlagExists(key, _ffOpenPageKey);
-        await db.ref(`feature_flags/${key}`).update({ enabled: !!newVal, updated_at: Date.now() });
+        await db.ref(`${featureFlagsRoot(_featureFlagsLine)}/${key}`).update({ enabled: !!newVal, updated_at: Date.now() });
         showToast(newVal ? `✅ ${key} enabled` : `⛔ ${key} disabled`, 'success');
         loadFeatureFlags();
     } catch (e) {
@@ -2133,12 +2147,12 @@ async function toggleFeatureFlagEnabled(key, newVal) {
 async function seedMissingPageFlags() {
     if (!db) return;
     try {
-        const snap = await db.ref('feature_flags').once('value');
+        const snap = await db.ref(featureFlagsRoot(_featureFlagsLine)).once('value');
         const data = snap.val() || {};
         const ops = [];
         for (const p of PAGE_FLAG_CATALOG) {
             if (data[p.key]) continue;
-            ops.push(db.ref(`feature_flags/${p.key}`).set(defaultPageFlagPayload()));
+            ops.push(db.ref(`${featureFlagsRoot(_featureFlagsLine)}/${p.key}`).set(defaultPageFlagPayload()));
         }
         if (!ops.length) {
             showToast('✅ All app pages already seeded', 'success');
@@ -2155,11 +2169,11 @@ async function seedMissingPageFlags() {
 async function updatePageFlagRole(key, role) {
     if (!isPageFlagKey(key)) return;
     try {
-        const snap = await db.ref(`feature_flags/${key}`).once('value');
+        const snap = await db.ref(`${featureFlagsRoot(_featureFlagsLine)}/${key}`).once('value');
         if (!snap.exists()) {
-            await db.ref(`feature_flags/${key}`).set(defaultPageFlagPayload({ min_role: role }));
+            await db.ref(`${featureFlagsRoot(_featureFlagsLine)}/${key}`).set(defaultPageFlagPayload({ min_role: role }));
         } else {
-            await db.ref(`feature_flags/${key}`).update({ min_role: role, updated_at: Date.now() });
+            await db.ref(`${featureFlagsRoot(_featureFlagsLine)}/${key}`).update({ min_role: role, updated_at: Date.now() });
         }
         showToast(`✅ ${key} → min role ${role}`, 'success');
         loadFeatureFlags();
@@ -2173,7 +2187,7 @@ async function updatePageFlagEmulator(key, emulator) {
     const scope = normalizeEmulatorScope(emulator);
     try {
         await ensurePageFlagExists(key);
-        await db.ref(`feature_flags/${key}`).update({ emulator: scope, updated_at: Date.now() });
+        await db.ref(`${featureFlagsRoot(_featureFlagsLine)}/${key}`).update({ emulator: scope, updated_at: Date.now() });
         showToast(`✅ ${key} → emulator ${scope}`, 'success');
         loadFeatureFlags();
     } catch (e) {
@@ -2185,11 +2199,11 @@ async function updateFeatureFlagEmulator(key, emulator) {
     if (isPageFlagKey(key)) return;
     const scope = normalizeEmulatorScope(emulator);
     try {
-        const snap = await db.ref(`feature_flags/${key}`).once('value');
+        const snap = await db.ref(`${featureFlagsRoot(_featureFlagsLine)}/${key}`).once('value');
         if (!snap.exists()) {
-            await db.ref(`feature_flags/${key}`).set(defaultPageFlagPayload({ emulator: scope }));
+            await db.ref(`${featureFlagsRoot(_featureFlagsLine)}/${key}`).set(defaultPageFlagPayload({ emulator: scope }));
         } else {
-            await db.ref(`feature_flags/${key}`).update({ emulator: scope, updated_at: Date.now() });
+            await db.ref(`${featureFlagsRoot(_featureFlagsLine)}/${key}`).update({ emulator: scope, updated_at: Date.now() });
         }
         showToast(`✅ ${key} → emulator ${scope}`, 'success');
         loadFeatureFlags();
@@ -2199,10 +2213,10 @@ async function updateFeatureFlagEmulator(key, emulator) {
 }
 
 async function ensurePageFlagExists(key) {
-    const snap = await db.ref(`feature_flags/${key}`).once('value');
+    const snap = await db.ref(`${featureFlagsRoot(_featureFlagsLine)}/${key}`).once('value');
     if (snap.exists()) return snap.val() || {};
     const payload = defaultPageFlagPayload();
-    await db.ref(`feature_flags/${key}`).set(payload);
+    await db.ref(`${featureFlagsRoot(_featureFlagsLine)}/${key}`).set(payload);
     return payload;
 }
 
@@ -2210,7 +2224,7 @@ async function togglePageFlagVisible(key, newVal) {
     if (!isPageFlagKey(key)) return;
     try {
         await ensurePageFlagExists(key);
-        await db.ref(`feature_flags/${key}`).update({ visible: !!newVal, updated_at: Date.now() });
+        await db.ref(`${featureFlagsRoot(_featureFlagsLine)}/${key}`).update({ visible: !!newVal, updated_at: Date.now() });
         showToast(newVal ? `👁 ${key} shown in menu` : `🙈 ${key} hidden from menu`, 'success');
         loadFeatureFlags();
     } catch (e) {
@@ -2222,7 +2236,7 @@ async function togglePageFlagEnabled(key, newVal) {
     if (!isPageFlagKey(key)) return;
     try {
         await ensurePageFlagExists(key);
-        await db.ref(`feature_flags/${key}`).update({ enabled: !!newVal, updated_at: Date.now() });
+        await db.ref(`${featureFlagsRoot(_featureFlagsLine)}/${key}`).update({ enabled: !!newVal, updated_at: Date.now() });
         showToast(newVal ? `✅ ${key} enabled` : `⛔ ${key} disabled`, 'success');
         loadFeatureFlags();
     } catch (e) {
@@ -2240,13 +2254,13 @@ function loadFeatureFlags() {
     const pagesGrid = document.getElementById('ffPagesGrid');
     tbody.innerHTML = '<tr class="state-row"><td colspan="5"><div class="state-icon">⏳</div><div>Loading feature flags...</div></td></tr>';
     if (pagesGrid && !_ffOpenPageKey) pagesGrid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:28px;color:var(--muted);">Loading pages…</div>';
-    db.ref('feature_flags').once('value').then(async snap => {
+    db.ref(featureFlagsRoot(_featureFlagsLine)).once('value').then(async snap => {
         let data = snap.val() || {};
         // Auto-seed any missing shell pages (shown + enabled + free).
         const missing = PAGE_FLAG_CATALOG.filter(p => !data[p.key]);
         if (missing.length) {
-            await Promise.all(missing.map(p => db.ref(`feature_flags/${p.key}`).set(defaultPageFlagPayload())));
-            const again = await db.ref('feature_flags').once('value');
+            await Promise.all(missing.map(p => db.ref(`${featureFlagsRoot(_featureFlagsLine)}/${p.key}`).set(defaultPageFlagPayload())));
+            const again = await db.ref(featureFlagsRoot(_featureFlagsLine)).once('value');
             data = again.val() || {};
         }
         // Backfill visible=true on older page flags that only had enabled.
@@ -2254,7 +2268,7 @@ function loadFeatureFlags() {
         for (const p of PAGE_FLAG_CATALOG) {
             const f = data[p.key];
             if (f && typeof f.visible !== 'boolean') {
-                backfill.push(db.ref(`feature_flags/${p.key}/visible`).set(true));
+                backfill.push(db.ref(`${featureFlagsRoot(_featureFlagsLine)}/${p.key}/visible`).set(true));
                 f.visible = true;
             }
         }
@@ -2344,7 +2358,7 @@ function showFeatureFlagForm(key) {
     keyError.style.display = 'none';
     if (key) {
         _editingFFKey = key;
-        db.ref(`feature_flags/${key}`).once('value').then(snap => {
+        db.ref(`${featureFlagsRoot(_featureFlagsLine)}/${key}`).once('value').then(snap => {
             const data = snap.val() || {};
             keyInput.value = key;
             keyInput.disabled = true;
@@ -2411,7 +2425,7 @@ async function saveFeatureFlag() {
     const saveKey = isEdit ? _editingFFKey : key;
 
     try {
-        await db.ref(`feature_flags/${saveKey}`).update(data);
+        await db.ref(`${featureFlagsRoot(_featureFlagsLine)}/${saveKey}`).update(data);
         showToast(isEdit ? '✅ Flag updated' : '✅ Flag created', 'success');
         cancelFeatureFlagForm();
         loadFeatureFlags();
@@ -2431,7 +2445,7 @@ async function deleteFeatureFlag(key) {
     }
     if (!confirm(`Delete feature flag "${key}"? This cannot be undone.`)) return;
     try {
-        await db.ref(`feature_flags/${key}`).remove();
+        await db.ref(`${featureFlagsRoot(_featureFlagsLine)}/${key}`).remove();
         showToast('🗑️ Flag deleted', 'success');
         if (_editingFFKey === key) cancelFeatureFlagForm();
         loadFeatureFlags();
@@ -2442,7 +2456,7 @@ async function deleteFeatureFlag(key) {
 
 async function toggleEnabled(key, newVal) {
     try {
-        await db.ref(`feature_flags/${key}`).update({ enabled: !!newVal, updated_at: Date.now() });
+        await db.ref(`${featureFlagsRoot(_featureFlagsLine)}/${key}`).update({ enabled: !!newVal, updated_at: Date.now() });
         showToast(newVal ? '✅ Flag enabled' : '⛔ Flag disabled', 'success');
         loadFeatureFlags();
     } catch (e) {
