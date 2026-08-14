@@ -330,6 +330,12 @@
         },
         "min_ram_gb": {
           ".validate": "newData.isNumber() && newData.val() >= 0"
+        },
+        "min_emulator_version": {
+          ".validate": "newData.isString() && newData.val().length <= 32"
+        },
+        "max_emulator_version": {
+          ".validate": "newData.isString() && newData.val().length <= 32"
         }
       }
     },
