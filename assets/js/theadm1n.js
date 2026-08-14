@@ -2960,6 +2960,53 @@ async function saveAccessConfig() {
     }
 }
 
+/** Remote Config (BPT) - tunable runtime behavior (poll cadence, request timeout, download
+ * mirror) read by RemoteConfigService.cs the same fail-open way as Maintenance/Feature Flags.
+ * Unlike those, this has no legacy predecessor in BPTV2 (the concept didn't exist there), so
+ * there's only one node - no line selector, no _2x sibling. */
+async function loadRemoteConfig() {
+    if (!db) return;
+    try {
+        const snap = await db.ref('app_config/remote_config_3x').once('value');
+        const data = snap.val() || {};
+        document.getElementById('rcFeatureFlagsPoll').value = data.feature_flags_poll_seconds > 0 ? data.feature_flags_poll_seconds : '';
+        document.getElementById('rcMaintenancePoll').value = data.maintenance_poll_seconds > 0 ? data.maintenance_poll_seconds : '';
+        document.getElementById('rcHttpTimeout').value = data.http_request_timeout_seconds > 0 ? data.http_request_timeout_seconds : '';
+        document.getElementById('rcDownloadMirror').value = data.download_url_mirror || '';
+        const status = document.getElementById('rcStatus');
+        if (status) status.textContent = data.updated_at
+            ? 'Last saved ' + new Date(data.updated_at).toLocaleString()
+            : 'Not configured yet - BPT is using its built-in defaults';
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+async function saveRemoteConfig() {
+    if (!db) return;
+    try {
+        const num = (id) => {
+            const v = Number(document.getElementById(id).value);
+            return isFinite(v) && v > 0 ? v : null;
+        };
+        const mirror = (document.getElementById('rcDownloadMirror').value || '').trim();
+        const payload = {
+            feature_flags_poll_seconds: num('rcFeatureFlagsPoll'),
+            maintenance_poll_seconds: num('rcMaintenancePoll'),
+            http_request_timeout_seconds: num('rcHttpTimeout'),
+            download_url_mirror: mirror || null,
+            updated_at: Date.now()
+        };
+        // update() with a null value removes that key - RTDB doesn't store nulls, and "missing"
+        // is how RemoteConfigService.Parse (BPT) already reads "use the built-in default".
+        await db.ref('app_config/remote_config_3x').update(payload);
+        showToast('✅ Remote config saved', 'success');
+        loadRemoteConfig();
+    } catch (e) {
+        showToast('⚠️ Failed to save remote config: ' + e.message, 'danger');
+    }
+}
+
 function switchTab(tab, btn) {
     document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
@@ -2990,7 +3037,7 @@ function switchTab(tab, btn) {
     if(tab==='reports') loadReports();
     if(tab==='errors') loadErrors();
     if(tab==='chatMod') loadChatMod();
-    if(tab==='featureFlags') loadFeatureFlags();
+    if(tab==='featureFlags') { loadFeatureFlags(); loadRemoteConfig(); }
     else if (typeof closePageFlagDetail === 'function') closePageFlagDetail();
     if(tab==='updates') loadUpdateConfig();
     if(tab==='pause') loadPauseConfig();

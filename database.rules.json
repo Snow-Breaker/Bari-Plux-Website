@@ -29,6 +29,23 @@
       },
       "access_3x": {
         ".validate": "!newData.exists() || (newData.hasChild('mode') && newData.child('mode').isString() && newData.child('mode').val().matches(/^(everyone|allowlist|role)$/) && (!newData.hasChild('min_role') || (newData.child('min_role').isString() && newData.child('min_role').val().matches(/^(free|pro|dev|founder)$/))) && (!newData.hasChild('updated_at') || newData.child('updated_at').isNumber()))"
+      },
+      "remote_config_3x": {
+        "feature_flags_poll_seconds": {
+          ".validate": "newData.isNumber() && newData.val() > 0"
+        },
+        "maintenance_poll_seconds": {
+          ".validate": "newData.isNumber() && newData.val() > 0"
+        },
+        "http_request_timeout_seconds": {
+          ".validate": "newData.isNumber() && newData.val() > 0"
+        },
+        "download_url_mirror": {
+          ".validate": "newData.isString() && newData.val().length <= 500"
+        },
+        "updated_at": {
+          ".validate": "newData.isNumber()"
+        }
       }
     },
     "payhip_orders": {

@@ -936,6 +936,38 @@
                 <code style="color:var(--accent2);">feature_flags</code> (legacy, not currently read by any client) depending on the line selected above.
             </div>
 
+            <div id="remoteConfigCard" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px;margin-bottom:20px;">
+                <div style="font-size:0.9rem;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px;">
+                    <i class="fas fa-sliders-h" style="color:var(--accent);"></i> Remote Config (BPT)
+                </div>
+                <div style="font-size:0.78rem;color:var(--muted);margin-bottom:14px;line-height:1.5;">
+                    Tunable runtime behavior for BPT 3.x - poll cadence, request timeout, and an optional download mirror.
+                    Writes to <code style="color:var(--accent2);">app_config/remote_config_3x</code>. Blank or 0 = built-in default, shown as placeholder.
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;align-items:end;">
+                    <div>
+                        <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Feature flags poll (sec)</div>
+                        <input type="number" min="0" step="1" id="rcFeatureFlagsPoll" placeholder="90" style="width:100%;padding:9px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.82rem;">
+                    </div>
+                    <div>
+                        <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Maintenance poll (sec)</div>
+                        <input type="number" min="0" step="1" id="rcMaintenancePoll" placeholder="60" style="width:100%;padding:9px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.82rem;">
+                    </div>
+                    <div>
+                        <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">HTTP request timeout (sec)</div>
+                        <input type="number" min="0" step="1" id="rcHttpTimeout" placeholder="30" style="width:100%;padding:9px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.82rem;">
+                    </div>
+                    <div>
+                        <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Download mirror URL</div>
+                        <input type="text" id="rcDownloadMirror" placeholder="https://..." style="width:100%;padding:9px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.82rem;">
+                    </div>
+                    <div>
+                        <button class="action-btn view" data-act="saveRemoteConfig" style="padding:9px 16px;font-size:0.82rem;font-weight:600;width:100%;"><i class="fas fa-save"></i> Save</button>
+                    </div>
+                </div>
+                <div id="rcStatus" style="font-size:0.72rem;color:var(--muted);margin-top:10px;"></div>
+            </div>
+
             <div class="ff-section-title" id="ffPagesSectionTitle"><i class="fas fa-th-large"></i> App Pages <span class="hint">Open a page to manage its capabilities · Show/Hide = menu · Enable/Disable = can open · Emulator(s) = which profile(s) see it, pick several or leave on All</span></div>
             <div id="ffPagesGrid" class="ff-pages-grid">
                 <div style="grid-column:1/-1;text-align:center;padding:28px;color:var(--muted);">Loading pages…</div>
