@@ -1244,6 +1244,10 @@
                 <button class="icon-btn teal" data-act="loadAnnouncementsAdmin"><i class="fas fa-sync-alt"></i> Refresh</button>
                 <button class="icon-btn" style="background:var(--accent);color:#fff;border:none;" data-act="openAnnEditor"><i class="fas fa-plus"></i> New</button>
             </div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;">
+                <label class="filter-btn" style="cursor:pointer;"><input type="radio" name="announcementsLine" value="3x" checked data-act="onAnnouncementsLineChange" style="margin-right:6px;"> BPT (3.x)</label>
+                <label class="filter-btn" style="cursor:pointer;"><input type="radio" name="announcementsLine" value="2x" data-act="onAnnouncementsLineChange" style="margin-right:6px;"> Legacy WPF (2.x, shared)</label>
+            </div>
             <div class="filter-btns ann-filters" id="annFilters">
                 <button class="filter-btn active" data-annf="all" data-act="setAnnFilter" data-a1="all" data-pass-el="1">All</button>
                 <button class="filter-btn" data-annf="live" data-act="setAnnFilter" data-a1="live" data-pass-el="1">Published</button>
@@ -1260,6 +1264,10 @@
             <div class="toolbar">
                 <span class="toolbar-title">Mailbox Studio</span>
                 <button class="icon-btn teal" data-act="renderMailboxOutbox"><i class="fas fa-history"></i> Refresh outbox</button>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;">
+                <label class="filter-btn" style="cursor:pointer;"><input type="radio" name="mailboxLine" value="3x" checked data-act="onMailboxLineChange" style="margin-right:6px;"> BPT (3.x)</label>
+                <label class="filter-btn" style="cursor:pointer;"><input type="radio" name="mailboxLine" value="2x" data-act="onMailboxLineChange" style="margin-right:6px;"> Legacy WPF (2.x, shared)</label>
             </div>
             <div class="mb-layout">
                 <div class="mb-panel">

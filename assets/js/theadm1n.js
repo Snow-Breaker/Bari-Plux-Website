@@ -3292,12 +3292,24 @@ function renderAnnouncementsAdmin() {
         </div>`).join('');
 }
 
+// BPT (3.x) gets its own announcements node, independent from the legacy WPF (2.x) app - same
+// split already established for update-config/maintenance/access above. 2.x keeps reading the
+// original shared node since BPTV2 is already shipped and won't read a new path unless updated.
+let _announcementsLine = '3x';
+function announcementsPath(line) {
+    return line === '2x' ? 'announcements' : 'announcements_3x';
+}
+function onAnnouncementsLineChange() {
+    _announcementsLine = document.querySelector('input[name="announcementsLine"]:checked')?.value === '2x' ? '2x' : '3x';
+    loadAnnouncementsAdmin();
+}
+
 async function loadAnnouncementsAdmin() {
     if (!db) return;
     const wrap = document.getElementById('annCards');
     if (wrap) wrap.innerHTML = '<div class="state-row" style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted);"><div class="state-icon">⏳</div><div>Loading…</div></div>';
     try {
-        const snap = await db.ref('announcements').once('value');
+        const snap = await db.ref(announcementsPath(_announcementsLine)).once('value');
         const data = snap.val() || {};
         allAnnouncementsAdmin = Object.entries(data).map(([key, a]) => ({
             key,
@@ -3356,7 +3368,7 @@ async function saveAnnouncement() {
     const status = document.getElementById('annStatus').value;
     const published = document.getElementById('annPublished').checked;
     if (!title || !description) { showToast('Title and description required', 'danger'); return; }
-    const key = document.getElementById('annEditKey').value || db.ref('announcements').push().key;
+    const key = document.getElementById('annEditKey').value || db.ref(announcementsPath(_announcementsLine)).push().key;
     const existing = allAnnouncementsAdmin.find(x => x.key === key);
     const now = Date.now();
     const date = new Date().toISOString().slice(0, 10);
@@ -3371,7 +3383,7 @@ async function saveAnnouncement() {
         updatedAt: now
     };
     try {
-        await db.ref('announcements/' + key).set(payload);
+        await db.ref(announcementsPath(_announcementsLine) + '/' + key).set(payload);
         showToast('Announcement saved', 'success');
         closeAnnEditor();
         loadAnnouncementsAdmin();
@@ -3383,8 +3395,8 @@ async function saveAnnouncement() {
 async function toggleAnnPublish(key, next) {
     if (!db) return;
     try {
-        await db.ref('announcements/' + key + '/published').set(next === true || next === 'true');
-        await db.ref('announcements/' + key + '/updatedAt').set(Date.now());
+        await db.ref(announcementsPath(_announcementsLine) + '/' + key + '/published').set(next === true || next === 'true');
+        await db.ref(announcementsPath(_announcementsLine) + '/' + key + '/updatedAt').set(Date.now());
         showToast(next === true || next === 'true' ? 'Published' : 'Unpublished', 'success');
         loadAnnouncementsAdmin();
     } catch (e) {
@@ -3395,7 +3407,7 @@ async function toggleAnnPublish(key, next) {
 async function deleteAnnouncement(key) {
     if (!confirm('Delete this announcement?')) return;
     try {
-        await db.ref('announcements/' + key).remove();
+        await db.ref(announcementsPath(_announcementsLine) + '/' + key).remove();
         showToast('Deleted', 'success');
         loadAnnouncementsAdmin();
     } catch (e) {
@@ -3487,10 +3499,22 @@ function renderMailboxOutbox() {
         </div>`).join('');
 }
 
-async function sendMailboxMessage(uid, title, body, type, relatedReportKey, relatedReportId) {
+// BPT (3.x) gets its own mailbox node, independent from the legacy WPF (2.x) app - same split
+// already established above for announcements/update-config/maintenance/access. 2.x keeps
+// reading the original shared node since BPTV2 is already shipped and won't read a new path
+// unless updated again.
+let _mailboxLine = '3x';
+function mailboxPath(uid, line) {
+    return (line === '2x' ? 'mailbox' : 'mailbox_3x') + '/' + uid;
+}
+function onMailboxLineChange() {
+    _mailboxLine = document.querySelector('input[name="mailboxLine"]:checked')?.value === '2x' ? '2x' : '3x';
+}
+
+async function sendMailboxMessage(uid, title, body, type, relatedReportKey, relatedReportId, line) {
     if (!db) throw new Error('No database');
     if (!uid || !title || !body) throw new Error('uid, title, body required');
-    const msgRef = db.ref('mailbox/' + uid).push();
+    const msgRef = db.ref(mailboxPath(uid, line || _mailboxLine)).push();
     const payload = {
         id: msgRef.key,
         type: type || 'admin',
@@ -3529,6 +3553,10 @@ async function replyReportMailbox(reportKey) {
     const body = (document.getElementById('rmReplyBody')?.value || '').trim();
     if (!uid) { showToast('Reporter has no account id', 'danger'); return; }
     if (!body) { showToast('Write a reply first', 'danger'); return; }
+    // The Bug Reports tab has no line selector of its own (reports come from either app) - infer
+    // BPT vs legacy WPF from the reporter's own app version so the reply lands in the mailbox the
+    // reporter's app actually reads, instead of always defaulting to one line.
+    const reportLine = (r.programInfo && String(r.programInfo.appVersion || '').startsWith('v2.')) ? '2x' : '3x';
     try {
         const msgId = await sendMailboxMessage(
             uid,
@@ -3536,7 +3564,8 @@ async function replyReportMailbox(reportKey) {
             body,
             'report_reply',
             reportKey,
-            r.id || ''
+            r.id || '',
+            reportLine
         );
         await db.ref('bugReports/' + reportKey + '/adminReply').set({
             body,
