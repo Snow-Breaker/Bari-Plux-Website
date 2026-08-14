@@ -2979,6 +2979,140 @@ function fmtTs(ts) {
     return d.toLocaleString();
 }
 
+// Pin + message moderation - the admin panel's Chat Mod tab previously had no way to pin/unpin
+// or delete a message without being logged into the chat client itself, even though BPT's own
+// staff menu (SetPinAsync/ClearPinAsync/DeleteAsync) already reads/writes exactly these paths.
+let cmPinRoom = 'general';
+
+function onCmPinRoomChange() {
+    cmPinRoom = document.getElementById('cmPinRoomSelect')?.value || 'general';
+    loadChatModPin();
+    loadChatModMessages();
+}
+
+async function loadChatModPin() {
+    if (!db) return;
+    const status = document.getElementById('cmPinStatus');
+    const input = document.getElementById('cmPinTextInput');
+    if (status) status.textContent = 'Loading…';
+    try {
+        const snap = await db.ref('lobby_chat/pins/' + cmPinRoom).once('value');
+        const data = snap.val();
+        if (data && data.text) {
+            if (input) input.value = data.text;
+            if (status) status.textContent = `Pinned by ${data.name || 'staff'} · ${data.ts ? new Date(data.ts).toLocaleString() : ''}`;
+        } else {
+            if (input) input.value = '';
+            if (status) status.textContent = 'No pin set for this room';
+        }
+    } catch (e) {
+        if (status) status.textContent = 'Failed to load pin';
+    }
+}
+
+async function setChatPin() {
+    if (!db) return;
+    const text = (document.getElementById('cmPinTextInput')?.value || '').trim();
+    if (!text) { showToast('Write pin text first', 'danger'); return; }
+    try {
+        await db.ref('lobby_chat/pins/' + cmPinRoom).set({
+            text: text.slice(0, 400),
+            name: (firebase.auth().currentUser && (firebase.auth().currentUser.displayName || firebase.auth().currentUser.email)) || 'Admin',
+            byUid: (firebase.auth().currentUser && firebase.auth().currentUser.uid) || 'admin',
+            ts: Date.now()
+        });
+        showToast('📌 Pin set for ' + cmPinRoom, 'success');
+        loadChatModPin();
+    } catch (e) {
+        showToast('⚠️ Failed to set pin: ' + e.message, 'danger');
+    }
+}
+
+async function clearChatPin() {
+    if (!db) return;
+    if (!confirm('Clear the pinned message for this room?')) return;
+    try {
+        await db.ref('lobby_chat/pins/' + cmPinRoom).remove();
+        showToast('Pin cleared', 'success');
+        loadChatModPin();
+    } catch (e) {
+        showToast('⚠️ Failed to clear pin: ' + e.message, 'danger');
+    }
+}
+
+async function loadChatModMessages() {
+    if (!db) return;
+    const tbody = document.getElementById('cmMessagesTableBody');
+    if (tbody) tbody.innerHTML = '<tr class="state-row"><td colspan="4"><div class="state-icon">⏳</div><div>Loading…</div></td></tr>';
+    try {
+        const snap = await db.ref('lobby_chat/messages').orderByChild('ts').limitToLast(80).once('value');
+        const data = snap.val() || {};
+        const list = Object.entries(data)
+            .map(([id, m]) => ({ id, uid: m.uid || '', name: m.name || '?', text: m.text || '', room: m.room || 'general', ts: m.ts || 0 }))
+            .filter(m => m.room === cmPinRoom)
+            .sort((a, b) => (b.ts || 0) - (a.ts || 0))
+            .slice(0, 40);
+        const label = document.getElementById('cmMessagesCountLabel');
+        if (label) label.textContent = `(${list.length})`;
+        renderChatModMessages(list);
+    } catch (e) {
+        if (tbody) tbody.innerHTML = `<tr class="state-row"><td colspan="4"><div class="state-icon">⚠️</div><div>${esc(e.message)}</div></td></tr>`;
+    }
+}
+
+function renderChatModMessages(list) {
+    const tbody = document.getElementById('cmMessagesTableBody');
+    if (!tbody) return;
+    if (!list.length) {
+        tbody.innerHTML = '<tr class="state-row"><td colspan="4"><div class="state-icon">💬</div><div>No recent messages in this room</div></td></tr>';
+        return;
+    }
+    tbody.innerHTML = list.map(m => `
+        <tr>
+            <td class="time-cell">${fmtTs(m.ts)}</td>
+            <td><div class="user-name">${esc(m.name)}</div><div class="user-id">${esc(m.uid)}</div></td>
+            <td><div class="report-desc" title="${escAttr(m.text)}">${esc(m.text)}</div></td>
+            <td>
+                <div class="action-btns">
+                    <button class="action-btn" data-act="pinChatMessage" data-a1="${escAttr(m.id)}">Pin</button>
+                    <button class="action-btn danger" data-act="deleteChatMessage" data-a1="${escAttr(m.id)}">Delete</button>
+                </div>
+            </td>
+        </tr>`).join('');
+}
+
+async function pinChatMessage(messageId) {
+    if (!db) return;
+    try {
+        const snap = await db.ref('lobby_chat/messages/' + messageId).once('value');
+        const m = snap.val();
+        if (!m) { showToast('Message not found (may already be deleted)', 'danger'); return; }
+        const room = m.room || cmPinRoom;
+        await db.ref('lobby_chat/pins/' + room).set({
+            text: String(m.text || '').slice(0, 400),
+            name: m.name || 'User',
+            byUid: (firebase.auth().currentUser && firebase.auth().currentUser.uid) || 'admin',
+            ts: Date.now()
+        });
+        showToast('📌 Message pinned in ' + room, 'success');
+        if (room === cmPinRoom) loadChatModPin();
+    } catch (e) {
+        showToast('⚠️ Failed to pin: ' + e.message, 'danger');
+    }
+}
+
+async function deleteChatMessage(messageId) {
+    if (!db) return;
+    if (!confirm('Delete this message? This cannot be undone.')) return;
+    try {
+        await db.ref('lobby_chat/messages/' + messageId).remove();
+        showToast('🗑️ Message deleted', 'danger');
+        loadChatModMessages();
+    } catch (e) {
+        showToast('⚠️ Failed to delete: ' + e.message, 'danger');
+    }
+}
+
 async function loadChatMod() {
     if (!db) return;
     const usersBody = document.getElementById('cmUsersTableBody');
@@ -2986,6 +3120,8 @@ async function loadChatMod() {
     usersBody.innerHTML = '<tr class="state-row"><td colspan="7"><div class="state-icon">⏳</div><div>Loading moderation…</div></td></tr>';
     reportsBody.innerHTML = '<tr class="state-row"><td colspan="8"><div class="state-icon">⏳</div><div>Loading reports…</div></td></tr>';
     loadBannedWords();
+    loadChatModPin();
+    loadChatModMessages();
     try {
         const [modSnap, repSnap, banSnap] = await Promise.all([
             db.ref('lobby_chat/user_moderation').once('value'),

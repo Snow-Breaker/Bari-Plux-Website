@@ -809,6 +809,45 @@
                 </div>
             </div>
 
+            <div class="toolbar" style="align-items:flex-start;flex-wrap:wrap;">
+                <div style="flex:1;min-width:260px;">
+                    <span class="toolbar-title"><i class="fas fa-thumbtack"></i> Pinned message</span>
+                    <div style="font-size:0.72rem;color:var(--muted);margin-top:4px;">Shown as a banner at the top of the selected room's chat.</div>
+                    <div style="display:flex;gap:8px;margin-top:8px;align-items:center;">
+                        <select id="cmPinRoomSelect" data-act="onCmPinRoomChange" style="background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:8px 10px;">
+                            <option value="general">General</option>
+                            <option value="help">Help</option>
+                            <option value="offtopic">Off-topic</option>
+                        </select>
+                        <span id="cmPinStatus" style="font-size:0.72rem;color:var(--muted);"></span>
+                    </div>
+                    <textarea id="cmPinTextInput" rows="2" maxlength="400" style="width:100%;margin-top:8px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:10px;font-size:0.82rem;resize:vertical;" placeholder="Pinned message text…"></textarea>
+                    <div style="display:flex;gap:8px;margin-top:8px;">
+                        <button class="icon-btn teal" data-act="setChatPin"><i class="fas fa-thumbtack"></i> Set pin</button>
+                        <button class="icon-btn" data-act="clearChatPin"><i class="fas fa-times"></i> Clear pin</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="toolbar">
+                <span class="toolbar-title">Recent messages <span id="cmMessagesCountLabel" style="color:var(--muted);font-size:0.8rem;font-weight:400;"></span></span>
+                <button class="icon-btn teal" data-act="loadChatModMessages"><i class="fas fa-sync-alt"></i> Refresh</button>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>When</th>
+                            <th>User</th>
+                            <th>Text</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cmMessagesTableBody"><tr class="state-row"><td colspan="4"><div class="state-icon">💬</div><div>Pick a room above to load…</div></td></tr></tbody>
+                </table>
+            </div>
+
             <div class="toolbar">
                 <span class="toolbar-title">Scores &amp; violations <span id="cmUserCountLabel" style="color:var(--muted);font-size:0.8rem;font-weight:400;"></span></span>
                 <div class="search-wrap">
