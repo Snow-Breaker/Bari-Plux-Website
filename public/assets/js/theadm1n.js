@@ -1887,14 +1887,16 @@ function normalizeEmulatorScopes(value) {
 }
 
 function readPageFlagState(flag) {
-    if (!flag) return { missing: true, enabled: true, visible: true, role: 'free', emulator: [] };
+    if (!flag) return { missing: true, enabled: true, visible: true, role: 'free', emulator: [], minWindowsBuild: 0, minRamGb: 0 };
     const visible = typeof flag.visible === 'boolean' ? flag.visible : true;
     return {
         missing: false,
         enabled: flag.enabled === true,
         visible,
         role: flag.min_role || 'free',
-        emulator: normalizeEmulatorScopes(flag.emulator)
+        emulator: normalizeEmulatorScopes(flag.emulator),
+        minWindowsBuild: typeof flag.min_windows_build === 'number' && flag.min_windows_build > 0 ? flag.min_windows_build : 0,
+        minRamGb: typeof flag.min_ram_gb === 'number' && flag.min_ram_gb > 0 ? flag.min_ram_gb : 0
     };
 }
 
@@ -1937,12 +1939,18 @@ function emulatorBadgeLabel(emulator) {
 
 function renderFlagControlCard({ key, title, icon, desc, s, kind }) {
     const emu = normalizeEmulatorScopes(s.emulator);
+    const minBuild = s.minWindowsBuild || 0;
+    const minRam = s.minRamGb || 0;
+    const compatBadge = (minBuild > 0 || minRam > 0)
+        ? `<span class="ff-page-badge off" title="Compatibility rule active">${minBuild > 0 ? `WIN≥${minBuild}` : ''}${minBuild > 0 && minRam > 0 ? ' ' : ''}${minRam > 0 ? `RAM≥${minRam}GB` : ''}</span>`
+        : '';
     const badges = s.missing
         ? `<span class="ff-page-badge off">NOT SEEDED</span>`
         : `<div class="ff-page-badges">
             <span class="ff-page-badge ${s.visible ? 'on' : 'off'}">${s.visible ? 'SHOWN' : 'HIDDEN'}</span>
             <span class="ff-page-badge ${s.enabled ? 'on' : 'off'}">${s.enabled ? 'ON' : 'OFF'}</span>
             <span class="ff-page-badge ${emu.length === 0 ? 'on' : 'off'}">${emulatorBadgeLabel(emu)}</span>
+            ${compatBadge}
            </div>`;
     const visLabel = s.visible ? '<i class="fas fa-eye-slash"></i> Hide' : '<i class="fas fa-eye"></i> Show';
     const visStyle = s.visible
@@ -1955,6 +1963,8 @@ function renderFlagControlCard({ key, title, icon, desc, s, kind }) {
     const cardOff = !s.missing && (!s.visible || !s.enabled);
     const roleAct = kind === 'page' ? 'updatePageFlagRole' : 'updateFeatureFlagRole';
     const emuAct = kind === 'page' ? 'updatePageFlagEmulator' : 'updateFeatureFlagEmulator';
+    const buildAct = kind === 'page' ? 'updatePageFlagMinWindowsBuild' : 'updateFeatureFlagMinWindowsBuild';
+    const ramAct = kind === 'page' ? 'updatePageFlagMinRamGb' : 'updateFeatureFlagMinRamGb';
     const visAct = kind === 'page' ? 'togglePageFlagVisible' : 'toggleFeatureFlagVisible';
     const enAct = kind === 'page' ? 'togglePageFlagEnabled' : 'toggleFeatureFlagEnabled';
     const visNext = s.visible ? 'false' : 'true';
@@ -1977,6 +1987,14 @@ function renderFlagControlCard({ key, title, icon, desc, s, kind }) {
             <label>
                 <span class="lbl">Emulator(s)</span>
                 ${emulatorChipsHtml(emu, emuAct, key)}
+            </label>
+            <label>
+                <span class="lbl">Min. Windows build (0 = no restriction, 22000 = Windows 11)</span>
+                <input type="number" min="0" step="1" value="${minBuild || ''}" placeholder="0" data-act="${buildAct}" data-a1="${esc(key)}" data-pass-value="1">
+            </label>
+            <label>
+                <span class="lbl">Min. RAM in GB (0 = no restriction)</span>
+                <input type="number" min="0" step="0.5" value="${minRam || ''}" placeholder="0" data-act="${ramAct}" data-a1="${esc(key)}" data-pass-value="1">
             </label>
             <div class="ff-page-toggles">
                 <button class="action-btn" style="${visStyle}" data-act="${visAct}" data-a1="${esc(key)}" data-a2="${visNext}" title="Show or hide in the app UI">${visLabel}</button>
@@ -2250,6 +2268,67 @@ async function updateFeatureFlagEmulator(key, tag) {
         loadFeatureFlags();
     } catch (e) {
         showToast('⚠️ Failed to update emulator: ' + e.message, 'danger');
+    }
+}
+
+/** Writes a compatibility-rule number field (min_windows_build / min_ram_gb) back to RTDB, or
+ * clears the key entirely for 0/blank - "missing" is how RemoteFeatureFlagService.Parse (BPT) and
+ * this panel's readPageFlagState already read "no restriction". */
+async function writeFlagCompatRule(key, field, rawValue) {
+    const ref = db.ref(`${featureFlagsRoot(_featureFlagsLine)}/${key}`);
+    const value = Number(rawValue);
+    if (!isFinite(value) || value <= 0) {
+        await ref.update({ [field]: null, updated_at: Date.now() });
+    } else {
+        await ref.update({ [field]: value, updated_at: Date.now() });
+    }
+}
+
+async function updatePageFlagMinWindowsBuild(key, rawValue) {
+    if (!isPageFlagKey(key)) return;
+    try {
+        await ensurePageFlagExists(key);
+        await writeFlagCompatRule(key, 'min_windows_build', rawValue);
+        showToast(`✅ ${key} → min Windows build ${Number(rawValue) > 0 ? rawValue : 'none'}`, 'success');
+        loadFeatureFlags();
+    } catch (e) {
+        showToast('⚠️ Failed to update min Windows build: ' + e.message, 'danger');
+    }
+}
+
+async function updateFeatureFlagMinWindowsBuild(key, rawValue) {
+    if (isPageFlagKey(key)) return;
+    try {
+        await ensureFeatureFlagExists(key, _ffOpenPageKey);
+        await writeFlagCompatRule(key, 'min_windows_build', rawValue);
+        showToast(`✅ ${key} → min Windows build ${Number(rawValue) > 0 ? rawValue : 'none'}`, 'success');
+        loadFeatureFlags();
+    } catch (e) {
+        showToast('⚠️ Failed to update min Windows build: ' + e.message, 'danger');
+    }
+}
+
+async function updatePageFlagMinRamGb(key, rawValue) {
+    if (!isPageFlagKey(key)) return;
+    try {
+        await ensurePageFlagExists(key);
+        await writeFlagCompatRule(key, 'min_ram_gb', rawValue);
+        showToast(`✅ ${key} → min RAM ${Number(rawValue) > 0 ? rawValue + ' GB' : 'none'}`, 'success');
+        loadFeatureFlags();
+    } catch (e) {
+        showToast('⚠️ Failed to update min RAM: ' + e.message, 'danger');
+    }
+}
+
+async function updateFeatureFlagMinRamGb(key, rawValue) {
+    if (isPageFlagKey(key)) return;
+    try {
+        await ensureFeatureFlagExists(key, _ffOpenPageKey);
+        await writeFlagCompatRule(key, 'min_ram_gb', rawValue);
+        showToast(`✅ ${key} → min RAM ${Number(rawValue) > 0 ? rawValue + ' GB' : 'none'}`, 'success');
+        loadFeatureFlags();
+    } catch (e) {
+        showToast('⚠️ Failed to update min RAM: ' + e.message, 'danger');
     }
 }
 
@@ -3785,7 +3864,9 @@ function applyReportReplyTemplate(kind) {
   document.addEventListener("input", function (e) {
     var el = e.target.closest("input[data-act], textarea[data-act]");
     if (!el) return;
-    if (el.type === "checkbox" || el.type === "radio") return;
+    // number inputs commit on blur/Enter via the "change" listener below, not per keystroke -
+    // firing per keystroke would re-render the flag grid mid-type and drop focus/cursor.
+    if (el.type === "checkbox" || el.type === "radio" || el.type === "number") return;
     run(el);
   });
   document.addEventListener("change", function (e) {

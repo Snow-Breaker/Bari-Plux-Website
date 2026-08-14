@@ -307,6 +307,12 @@
         },
         "page": {
           ".validate": "newData.isString() && newData.val().matches(/^[a-z0-9_]+$/)"
+        },
+        "min_windows_build": {
+          ".validate": "newData.isNumber() && newData.val() >= 0"
+        },
+        "min_ram_gb": {
+          ".validate": "newData.isNumber() && newData.val() >= 0"
         }
       }
     },
