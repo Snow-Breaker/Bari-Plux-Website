@@ -1859,63 +1859,90 @@ function roleSelectHtml(selected, act, key) {
     return `<select data-act="${act}" data-a1="${esc(key)}" data-pass-value="1">${opts}</select>`;
 }
 
-/** visible defaults true when missing (backward compat); enabled must be explicit true. */
-function normalizeEmulatorScope(value) {
-    const s = String(value || 'all').trim().toLowerCase();
-    return (s === 'gameloop' || s === 'mumu') ? s : 'all';
+/** The full set of emulators a flag can be scoped to - kept in one place so the admin-panel
+ * selector, badge, and RTDB writer all agree on the same tag list. */
+const EMULATOR_TAGS = [
+    ['gameloop', 'GameLoop'],
+    ['mumu', 'MuMu'],
+    ['ldplayer14', 'LDPlayer 14'],
+    ['ldplayer9', 'LDPlayer 9'],
+    ['bluestacks', 'BlueStacks'],
+    ['tac', 'TAC'],
+];
+const EMULATOR_TAG_SET = new Set(EMULATOR_TAGS.map(([v]) => v));
+
+/** Accepts the current schema (an array/object of tags) or the original single-string schema
+ * ("all"/"gameloop"/"mumu") for backward compat with flags saved before the multi-select chip UI
+ * shipped. Always returns a sorted array of known tags; empty = no restriction ("all"). */
+function normalizeEmulatorScopes(value) {
+    let raw;
+    if (Array.isArray(value)) raw = value;
+    else if (value && typeof value === 'object') raw = Object.values(value);
+    else if (typeof value === 'string' && value && value !== 'all') raw = [value];
+    else raw = [];
+    const tags = raw
+        .map(v => String(v || '').trim().toLowerCase())
+        .filter(v => EMULATOR_TAG_SET.has(v));
+    return [...new Set(tags)].sort();
 }
 
 function readPageFlagState(flag) {
-    if (!flag) return { missing: true, enabled: true, visible: true, role: 'free', emulator: 'all' };
+    if (!flag) return { missing: true, enabled: true, visible: true, role: 'free', emulator: [] };
     const visible = typeof flag.visible === 'boolean' ? flag.visible : true;
     return {
         missing: false,
         enabled: flag.enabled === true,
         visible,
         role: flag.min_role || 'free',
-        emulator: normalizeEmulatorScope(flag.emulator)
+        emulator: normalizeEmulatorScopes(flag.emulator)
     };
 }
 
 function defaultPageFlagPayload(extra = {}) {
     const now = Date.now();
-    return {
+    const payload = {
         enabled: true,
         visible: true,
         min_role: 'free',
-        emulator: 'all',
         created_at: now,
         updated_at: now,
         ...extra
     };
+    // "all" (no restriction) is represented by omitting the key entirely - RTDB doesn't store an
+    // empty array anyway, and the BPT/admin parsers already treat "missing" as "all".
+    if (Array.isArray(payload.emulator) && payload.emulator.length === 0) delete payload.emulator;
+    return payload;
 }
 
-function emulatorSelectHtml(selected, act, key) {
-    const opts = [
-        ['all', '🖥 All emulators'],
-        ['gameloop', '🎮 GameLoop only'],
-        ['mumu', '📱 MuMu only'],
-    ].map(([v, label]) =>
-        `<option value="${v}"${normalizeEmulatorScope(selected) === v ? ' selected' : ''}>${label}</option>`
+function toggleEmulatorTag(list, tag) {
+    return list.includes(tag) ? list.filter(t => t !== tag) : [...list, tag].sort();
+}
+
+function emulatorChipsHtml(selected, act, key) {
+    const list = normalizeEmulatorScopes(selected);
+    const onStyle = 'border-color:rgba(33,150,243,0.4);color:#2196F3;background:rgba(33,150,243,0.12);';
+    const offStyle = 'border-color:rgba(255,255,255,0.12);color:var(--muted);';
+    const allChip = `<button type="button" class="action-btn" style="${list.length === 0 ? onStyle : offStyle}" data-act="${act}" data-a1="${esc(key)}" data-a2="__all__">All</button>`;
+    const tagChips = EMULATOR_TAGS.map(([tag, label]) =>
+        `<button type="button" class="action-btn" style="${list.includes(tag) ? onStyle : offStyle}" data-act="${act}" data-a1="${esc(key)}" data-a2="${tag}">${esc(label)}</button>`
     ).join('');
-    return `<select data-act="${act}" data-a1="${esc(key)}" data-pass-value="1">${opts}</select>`;
+    return `<div style="display:flex;flex-wrap:wrap;gap:6px;">${allChip}${tagChips}</div>`;
 }
 
 function emulatorBadgeLabel(emulator) {
-    const e = normalizeEmulatorScope(emulator);
-    if (e === 'gameloop') return 'GAMELOOP';
-    if (e === 'mumu') return 'MUMU';
-    return 'ALL';
+    const list = normalizeEmulatorScopes(emulator);
+    if (!list.length) return 'ALL';
+    return list.map(t => t.toUpperCase()).join('+');
 }
 
 function renderFlagControlCard({ key, title, icon, desc, s, kind }) {
-    const emu = normalizeEmulatorScope(s.emulator);
+    const emu = normalizeEmulatorScopes(s.emulator);
     const badges = s.missing
         ? `<span class="ff-page-badge off">NOT SEEDED</span>`
         : `<div class="ff-page-badges">
             <span class="ff-page-badge ${s.visible ? 'on' : 'off'}">${s.visible ? 'SHOWN' : 'HIDDEN'}</span>
             <span class="ff-page-badge ${s.enabled ? 'on' : 'off'}">${s.enabled ? 'ON' : 'OFF'}</span>
-            <span class="ff-page-badge ${emu === 'all' ? 'on' : 'off'}">${emulatorBadgeLabel(emu)}</span>
+            <span class="ff-page-badge ${emu.length === 0 ? 'on' : 'off'}">${emulatorBadgeLabel(emu)}</span>
            </div>`;
     const visLabel = s.visible ? '<i class="fas fa-eye-slash"></i> Hide' : '<i class="fas fa-eye"></i> Show';
     const visStyle = s.visible
@@ -1948,8 +1975,8 @@ function renderFlagControlCard({ key, title, icon, desc, s, kind }) {
                 ${roleSelectHtml(s.role, roleAct, key)}
             </label>
             <label>
-                <span class="lbl">Emulator</span>
-                ${emulatorSelectHtml(emu, emuAct, key)}
+                <span class="lbl">Emulator(s)</span>
+                ${emulatorChipsHtml(emu, emuAct, key)}
             </label>
             <div class="ff-page-toggles">
                 <button class="action-btn" style="${visStyle}" data-act="${visAct}" data-a1="${esc(key)}" data-a2="${visNext}" title="Show or hide in the app UI">${visLabel}</button>
@@ -2182,30 +2209,44 @@ async function updatePageFlagRole(key, role) {
     }
 }
 
-async function updatePageFlagEmulator(key, emulator) {
+/** Writes the resolved emulator array back to RTDB, or clears the key entirely for "all" -
+ * RTDB doesn't store an empty array, and "missing" is already how every parser reads "all". */
+async function writeFlagEmulatorScope(key, list) {
+    const ref = db.ref(`${featureFlagsRoot(_featureFlagsLine)}/${key}`);
+    if (list.length === 0) {
+        await ref.update({ emulator: null, updated_at: Date.now() });
+    } else {
+        await ref.update({ emulator: list, updated_at: Date.now() });
+    }
+}
+
+async function updatePageFlagEmulator(key, tag) {
     if (!isPageFlagKey(key)) return;
-    const scope = normalizeEmulatorScope(emulator);
     try {
-        await ensurePageFlagExists(key);
-        await db.ref(`${featureFlagsRoot(_featureFlagsLine)}/${key}`).update({ emulator: scope, updated_at: Date.now() });
-        showToast(`✅ ${key} → emulator ${scope}`, 'success');
+        const existing = await ensurePageFlagExists(key);
+        const current = normalizeEmulatorScopes(existing.emulator);
+        const next = tag === '__all__' ? [] : toggleEmulatorTag(current, tag);
+        await writeFlagEmulatorScope(key, next);
+        showToast(`✅ ${key} → emulator ${next.length ? next.join('+') : 'all'}`, 'success');
         loadFeatureFlags();
     } catch (e) {
         showToast('⚠️ Failed to update emulator: ' + e.message, 'danger');
     }
 }
 
-async function updateFeatureFlagEmulator(key, emulator) {
+async function updateFeatureFlagEmulator(key, tag) {
     if (isPageFlagKey(key)) return;
-    const scope = normalizeEmulatorScope(emulator);
     try {
         const snap = await db.ref(`${featureFlagsRoot(_featureFlagsLine)}/${key}`).once('value');
-        if (!snap.exists()) {
-            await db.ref(`${featureFlagsRoot(_featureFlagsLine)}/${key}`).set(defaultPageFlagPayload({ emulator: scope }));
+        const existing = snap.exists() ? (snap.val() || {}) : null;
+        const current = normalizeEmulatorScopes(existing && existing.emulator);
+        const next = tag === '__all__' ? [] : toggleEmulatorTag(current, tag);
+        if (!existing) {
+            await db.ref(`${featureFlagsRoot(_featureFlagsLine)}/${key}`).set(defaultPageFlagPayload({ emulator: next }));
         } else {
-            await db.ref(`${featureFlagsRoot(_featureFlagsLine)}/${key}`).update({ emulator: scope, updated_at: Date.now() });
+            await writeFlagEmulatorScope(key, next);
         }
-        showToast(`✅ ${key} → emulator ${scope}`, 'success');
+        showToast(`✅ ${key} → emulator ${next.length ? next.join('+') : 'all'}`, 'success');
         loadFeatureFlags();
     } catch (e) {
         showToast('⚠️ Failed to update emulator: ' + e.message, 'danger');

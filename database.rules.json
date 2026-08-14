@@ -278,7 +278,10 @@
           ".validate": "newData.isBoolean()"
         },
         "emulator": {
-          ".validate": "newData.isString() && newData.val().matches(/^(all|gameloop|mumu)$/)"
+          ".validate": "newData.hasChildren() || !newData.exists()",
+          "$idx": {
+            ".validate": "newData.isString() && newData.val().matches(/^(gameloop|mumu|ldplayer14|ldplayer9|bluestacks|tac)$/)"
+          }
         },
         "page": {
           ".validate": "newData.isString() && newData.val().matches(/^[a-z0-9_]+$/)"
