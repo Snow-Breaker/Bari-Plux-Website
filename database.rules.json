@@ -69,6 +69,49 @@
       ".read": false,
       ".write": false
     },
+    "devices_3x": {
+      ".read": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'",
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com')",
+        "$deviceId": {
+          ".write": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com')",
+          ".validate": "newData.hasChildren(['machineId', 'lastSeen']) && (auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || !newData.hasChild('banned') || (!data.exists() && newData.child('banned').val() !== true) || (data.exists() && newData.child('banned').val() === data.child('banned').val()))",
+          "machineId": {
+            ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 64"
+          },
+          "pcModel": {
+            ".validate": "!newData.exists() || (newData.isString() && newData.val().length <= 200)"
+          },
+          "cpu": {
+            ".validate": "!newData.exists() || (newData.isString() && newData.val().length <= 200)"
+          },
+          "gpu": {
+            ".validate": "!newData.exists() || (newData.isString() && newData.val().length <= 200)"
+          },
+          "ram": {
+            ".validate": "!newData.exists() || (newData.isString() && newData.val().length <= 64)"
+          },
+          "os": {
+            ".validate": "!newData.exists() || (newData.isString() && newData.val().length <= 200)"
+          },
+          "appVersion": {
+            ".validate": "!newData.exists() || (newData.isString() && newData.val().length <= 32)"
+          },
+          "lastSeen": {
+            ".validate": "newData.isNumber()"
+          },
+          "firstSeen": {
+            ".validate": "!newData.exists() || newData.isNumber()"
+          },
+          "banned": {
+            ".validate": "!newData.exists() || newData.isBoolean()"
+          },
+          "banReason": {
+            ".validate": "!newData.exists() || (newData.isString() && newData.val().length <= 500)"
+          }
+        }
+      }
+    },
     "users": {
       ".read": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'",
       "$uid": {

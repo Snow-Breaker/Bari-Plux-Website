@@ -965,8 +965,68 @@ function openUserModal(id) {
     }
     document.getElementById('roleAssignedInfo').textContent = assignedInfo;
     renderDangerBtns(u);
+    loadUserDevices(u.id);
     document.getElementById('userModal').classList.add('show');
     document.body.style.overflow='hidden';
+}
+
+/** Devices tab of the user modal - reads devices_3x/{uid}, written by BPT's own
+ * AppAccessGate.SyncDeviceAsync on every presence-sync tick (piggybacked, no separate BPT-side
+ * timer). Each device can be banned independently of the account itself - AppAccessGate denies
+ * sign-in on that specific machine while every other device the user owns keeps working. */
+async function loadUserDevices(uid) {
+    const list = document.getElementById('umDevicesList');
+    const countEl = document.getElementById('umDevicesCount');
+    if (!list) return;
+    list.innerHTML = `<div style="font-size:0.78rem;color:var(--muted);">Loading…</div>`;
+    if (countEl) countEl.textContent = '';
+    try {
+        const snap = await db.ref(`devices_3x/${uid}`).once('value');
+        const data = snap.val() || {};
+        const devices = Object.entries(data).map(([deviceId, d]) => ({ deviceId, ...d }));
+        if (countEl) countEl.textContent = devices.length ? `(${devices.length})` : '';
+        if (!devices.length) {
+            list.innerHTML = `<div style="font-size:0.78rem;color:var(--muted);">No devices seen yet.</div>`;
+            return;
+        }
+        devices.sort((a, b) => (b.lastSeen || 0) - (a.lastSeen || 0));
+        list.innerHTML = devices.map(d => {
+            const banned = d.banned === true;
+            const action = banned
+                ? `<button class="action-btn" style="border-color:rgba(76,175,80,0.3);color:#4CAF50;" data-act="unbanDevice" data-a1="${esc(uid)}" data-a2="${esc(d.deviceId)}"><i class="fas fa-unlock"></i> Unban</button>`
+                : `<button class="action-btn" style="border-color:rgba(244,67,54,0.3);color:#F44336;" data-act="banDevice" data-a1="${esc(uid)}" data-a2="${esc(d.deviceId)}"><i class="fas fa-ban"></i> Ban device</button>`;
+            return `<div style="background:var(--surface2);border:1px solid ${banned ? 'rgba(244,67,54,0.3)' : 'var(--border)'};border-radius:8px;padding:10px 12px;display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;justify-content:space-between;">
+                <div style="font-size:0.78rem;line-height:1.5;">
+                    <div style="font-weight:600;${banned ? 'color:#F44336;' : ''}">${esc(d.pcModel || d.machineId || 'Unknown device')}${banned ? ' <span style="font-size:0.68rem;">(BANNED)</span>' : ''}</div>
+                    <div style="color:var(--muted);">${esc(d.cpu || '—')} · ${esc(d.gpu || '—')} · ${esc(d.ram || '—')}</div>
+                    <div style="color:var(--muted);">v${esc(d.appVersion || '—')} · last seen ${d.lastSeen ? timeAgo(d.lastSeen) : '—'}</div>
+                </div>
+                ${action}
+            </div>`;
+        }).join('');
+    } catch (e) {
+        list.innerHTML = `<div style="font-size:0.78rem;color:var(--danger);">Failed to load devices: ${esc(e.message || e)}</div>`;
+    }
+}
+
+async function banDevice(uid, deviceId) {
+    try {
+        await db.ref(`devices_3x/${uid}/${deviceId}`).update({ banned: true });
+        showToast('✅ Device banned', 'success');
+        loadUserDevices(uid);
+    } catch (e) {
+        showToast('⚠️ Failed to ban device: ' + e.message, 'danger');
+    }
+}
+
+async function unbanDevice(uid, deviceId) {
+    try {
+        await db.ref(`devices_3x/${uid}/${deviceId}`).update({ banned: false });
+        showToast('✅ Device unbanned', 'success');
+        loadUserDevices(uid);
+    } catch (e) {
+        showToast('⚠️ Failed to unban device: ' + e.message, 'danger');
+    }
 }
 
 function renderDangerBtns(u) {
