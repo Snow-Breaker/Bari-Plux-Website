@@ -69,6 +69,15 @@
       ".read": false,
       ".write": false
     },
+    "device_accounts_3x": {
+      "$deviceId": {
+        ".read": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'",
+        "$uid": {
+          ".write": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com')",
+          ".validate": "newData.isNumber()"
+        }
+      }
+    },
     "devices_3x": {
       ".read": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'",
       "$uid": {

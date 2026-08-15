@@ -990,18 +990,48 @@ async function loadUserDevices(uid) {
             return;
         }
         devices.sort((a, b) => (b.lastSeen || 0) - (a.lastSeen || 0));
-        list.innerHTML = devices.map(d => {
+
+        // Cross-reference the device→accounts reverse index so admins can see, right on this
+        // device card, every other account that has ever signed in from the same machine -
+        // the actual multi-accounting signal. Best-effort per device: a lookup failure just
+        // means that one card shows no linked-account info, it never blocks the rest.
+        const linkedByDevice = await Promise.all(devices.map(async d => {
+            try {
+                const idxSnap = await db.ref(`device_accounts_3x/${d.deviceId}`).once('value');
+                const idx = idxSnap.val() || {};
+                return Object.keys(idx);
+            } catch (_) { return [uid]; }
+        }));
+
+        list.innerHTML = devices.map((d, i) => {
             const banned = d.banned === true;
             const action = banned
-                ? `<button class="action-btn" style="border-color:rgba(76,175,80,0.3);color:#4CAF50;" data-act="unbanDevice" data-a1="${esc(uid)}" data-a2="${esc(d.deviceId)}"><i class="fas fa-unlock"></i> Unban</button>`
-                : `<button class="action-btn" style="border-color:rgba(244,67,54,0.3);color:#F44336;" data-act="banDevice" data-a1="${esc(uid)}" data-a2="${esc(d.deviceId)}"><i class="fas fa-ban"></i> Ban device</button>`;
-            return `<div style="background:var(--surface2);border:1px solid ${banned ? 'rgba(244,67,54,0.3)' : 'var(--border)'};border-radius:8px;padding:10px 12px;display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;justify-content:space-between;">
-                <div style="font-size:0.78rem;line-height:1.5;">
-                    <div style="font-weight:600;${banned ? 'color:#F44336;' : ''}">${esc(d.pcModel || d.machineId || 'Unknown device')}${banned ? ' <span style="font-size:0.68rem;">(BANNED)</span>' : ''}</div>
-                    <div style="color:var(--muted);">${esc(d.cpu || '—')} · ${esc(d.gpu || '—')} · ${esc(d.ram || '—')}</div>
-                    <div style="color:var(--muted);">v${esc(d.appVersion || '—')} · last seen ${d.lastSeen ? timeAgo(d.lastSeen) : '—'}</div>
+                ? `<button class="action-btn" style="border-color:rgba(76,175,80,0.3);color:#4CAF50;" data-act="askConfirmDeviceToggle" data-a1="${esc(uid)}" data-a2="${esc(d.deviceId)}" data-a3="false"><i class="fas fa-unlock"></i> Unban</button>`
+                : `<button class="action-btn" style="border-color:rgba(244,67,54,0.3);color:#F44336;" data-act="askConfirmDeviceToggle" data-a1="${esc(uid)}" data-a2="${esc(d.deviceId)}" data-a3="true"><i class="fas fa-ban"></i> Ban device</button>`;
+
+            const linkedUids = linkedByDevice[i] || [uid];
+            let linkedHtml = '';
+            if (linkedUids.length > 1) {
+                const names = linkedUids.map(lu => {
+                    const lUser = allUsers.find(x => x.id === lu);
+                    return esc(lUser ? (lUser.name || lUser.email || lu.substring(0,12)+'…') : lu.substring(0,12)+'…');
+                }).join(', ');
+                linkedHtml = `<div style="margin-top:6px;padding:8px 10px;background:rgba(244,67,54,0.08);border:1px solid rgba(244,67,54,0.25);border-radius:6px;">
+                    <div style="font-size:0.72rem;color:#F44336;font-weight:600;"><i class="fas fa-triangle-exclamation"></i> Used by ${linkedUids.length} accounts: ${names}</div>
+                    <button class="action-btn" style="margin-top:6px;border-color:rgba(244,67,54,0.4);color:#F44336;" data-act="askConfirmBanLinked" data-a1="${esc(uid)}" data-a2="${esc(d.deviceId)}"><i class="fas fa-ban"></i> Ban device + all ${linkedUids.length} accounts</button>
+                </div>`;
+            }
+
+            return `<div style="background:var(--surface2);border:1px solid ${banned ? 'rgba(244,67,54,0.3)' : 'var(--border)'};border-radius:8px;padding:10px 12px;">
+                <div style="display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;justify-content:space-between;">
+                    <div style="font-size:0.78rem;line-height:1.5;">
+                        <div style="font-weight:600;${banned ? 'color:#F44336;' : ''}">${esc(d.pcModel || d.machineId || 'Unknown device')}${banned ? ' <span style="font-size:0.68rem;">(BANNED)</span>' : ''}</div>
+                        <div style="color:var(--muted);">${esc(d.cpu || '—')} · ${esc(d.gpu || '—')} · ${esc(d.ram || '—')}</div>
+                        <div style="color:var(--muted);">v${esc(d.appVersion || '—')} · last seen ${d.lastSeen ? timeAgo(d.lastSeen) : '—'}</div>
+                    </div>
+                    ${action}
                 </div>
-                ${action}
+                ${linkedHtml}
             </div>`;
         }).join('');
     } catch (e) {
@@ -1009,24 +1039,29 @@ async function loadUserDevices(uid) {
     }
 }
 
-async function banDevice(uid, deviceId) {
+/** Entry point for the "Ban device + all N accounts" button - resolves the current linked-uid
+ * list fresh (it can only shrink/grow since the card was rendered) and routes through the same
+ * askConfirm/submitConfirm password+TOTP reauth flow every other sensitive admin action uses,
+ * rather than writing directly like the single-device banDevice/unbanDevice shortcut does. */
+async function askConfirmBanLinked(uid, deviceId) {
     try {
-        await db.ref(`devices_3x/${uid}/${deviceId}`).update({ banned: true });
-        showToast('✅ Device banned', 'success');
-        loadUserDevices(uid);
+        const idxSnap = await db.ref(`device_accounts_3x/${deviceId}`).once('value');
+        const idx = idxSnap.val() || {};
+        const uids = Object.keys(idx);
+        if (!uids.length) uids.push(uid);
+        const primaryUser = allUsers.find(x => x.id === uid);
+        askConfirm('banLinkedAccounts', uid, primaryUser ? (primaryUser.name || primaryUser.email || uid) : uid, { deviceId, uids });
     } catch (e) {
-        showToast('⚠️ Failed to ban device: ' + e.message, 'danger');
+        showToast('⚠️ Failed to load linked accounts: ' + e.message, 'danger');
     }
 }
 
-async function unbanDevice(uid, deviceId) {
-    try {
-        await db.ref(`devices_3x/${uid}/${deviceId}`).update({ banned: false });
-        showToast('✅ Device unbanned', 'success');
-        loadUserDevices(uid);
-    } catch (e) {
-        showToast('⚠️ Failed to unban device: ' + e.message, 'danger');
-    }
+/** Single-device ban/unban toggle, routed through the same password+TOTP reauth flow as every
+ * other sensitive admin action (block/deleteUser/etc) rather than writing directly. */
+function askConfirmDeviceToggle(uid, deviceId, nextBanned) {
+    const primaryUser = allUsers.find(x => x.id === uid);
+    const name = primaryUser ? (primaryUser.name || primaryUser.email || uid) : uid;
+    askConfirm(nextBanned ? 'banDeviceOnly' : 'unbanDeviceOnly', uid, name, { deviceId });
 }
 
 function renderDangerBtns(u) {
@@ -1056,13 +1091,16 @@ const confirmConfigs = {
     forceLogout: { icon: '🔄', iconColor: 'rgba(108,99,255,0.12)', title: 'Force Logout', desc: 'The user will be logged out of all active sessions immediately. They can log back in afterward.', submitClass: 'accent', submitText: '<i class="fas fa-sign-out-alt"></i> Force Logout' },
     allowProPcChange: { icon: '💻', iconColor: 'rgba(0,191,166,0.12)', title: 'Allow 1 PC change', desc: 'Grants a one-time exception so this Pro account can bind to a different PC on next login. Default is locked forever unless you grant this.', submitClass: 'accent', submitText: '<i class="fas fa-desktop"></i> Allow once' },
     deleteUser: { icon: '🗑️', iconColor: 'rgba(244,67,54,0.12)', title: 'Delete User', desc: 'This will permanently delete the user profile and sessions from the database. This action CANNOT be undone.', submitClass: '', submitText: '<i class="fas fa-trash-alt"></i> Delete Permanently' },
-    wipeCloud: { icon: '☁️', iconColor: 'rgba(244,67,54,0.12)', title: 'Delete Cloud App Data', desc: 'Deletes all cloud backup / database files for this user (keymapping, bookmarks, Active.sav, history). Local PC files are not removed.', submitClass: '', submitText: '<i class="fas fa-cloud"></i> Wipe Cloud Files' }
+    wipeCloud: { icon: '☁️', iconColor: 'rgba(244,67,54,0.12)', title: 'Delete Cloud App Data', desc: 'Deletes all cloud backup / database files for this user (keymapping, bookmarks, Active.sav, history). Local PC files are not removed.', submitClass: '', submitText: '<i class="fas fa-cloud"></i> Wipe Cloud Files' },
+    banLinkedAccounts: { icon: '🕵️', iconColor: 'rgba(244,67,54,0.12)', title: 'Ban device + all linked accounts', desc: 'Blocks every account that has signed in from this device, and bans the device itself so a newly-created account cannot use it either. Use for confirmed multi-accounting/free-trial abuse.', submitClass: '', submitText: '<i class="fas fa-ban"></i> Ban all' },
+    banDeviceOnly: { icon: '🖥️', iconColor: 'rgba(244,67,54,0.12)', title: 'Ban Device', desc: 'This specific machine will be blocked from signing in on any account. Other devices belonging to this user are unaffected.', submitClass: 'warn', submitText: '<i class="fas fa-ban"></i> Ban Device' },
+    unbanDeviceOnly: { icon: '✅', iconColor: 'rgba(76,175,80,0.12)', title: 'Unban Device', desc: 'This device will be allowed to sign in again.', submitClass: 'accent', submitText: '<i class="fas fa-unlock"></i> Unban Device' }
 };
 
-function askConfirm(action, userId, userName) {
+function askConfirm(action, userId, userName, extra) {
     const cfg = confirmConfigs[action];
     if(!cfg) return;
-    _confirmAction = { action, userId, userName };
+    _confirmAction = { action, userId, userName, extra };
     document.getElementById('confirmIcon').textContent = cfg.icon;
     document.getElementById('confirmIcon').style.background = cfg.iconColor;
     document.getElementById('confirmTitle').textContent = cfg.title;
@@ -1111,11 +1149,39 @@ async function submitConfirm() {
         return;
     }
     document.getElementById('confirmErr').classList.remove('show');
-    const {action, userId} = _confirmAction;
+    const {action, userId, extra} = _confirmAction;
     closeConfirm();
     try {
         if(action === 'wipeCloud') {
             await wipeUserCloudData(userId);
+            return;
+        }
+
+        if(action === 'banDeviceOnly' || action === 'unbanDeviceOnly') {
+            const nextBanned = action === 'banDeviceOnly';
+            await db.ref(`devices_3x/${userId}/${extra.deviceId}`).update({ banned: nextBanned });
+            showToast(nextBanned ? '🚫 Device banned' : '✅ Device unbanned', nextBanned ? 'danger' : 'success');
+            loadUserDevices(userId);
+            return;
+        }
+
+        if(action === 'banLinkedAccounts') {
+            const { deviceId, uids } = extra;
+            await db.ref(`devices_3x/${userId}/${deviceId}`).update({ banned: true });
+            let blockedCount = 0;
+            for (const lu of uids) {
+                try {
+                    const ref = await getCorrectRef(lu);
+                    if (!ref) continue;
+                    await ref.update({ blocked: true, blockedAt: Date.now() });
+                    await db.ref('sessions/' + lu).remove().catch(()=>{});
+                    updateLocalUser(lu, {blocked: true});
+                    blockedCount++;
+                } catch (_) { /* keep going, best-effort per account */ }
+            }
+            showToast(`🚫 Device banned + ${blockedCount}/${uids.length} linked account(s) blocked`, 'danger');
+            renderUsers();
+            loadUserDevices(userId);
             return;
         }
 
