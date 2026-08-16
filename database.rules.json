@@ -45,6 +45,21 @@
         },
         "updated_at": {
           ".validate": "newData.isNumber()"
+        },
+        "chat_slow_mode_free_ms": {
+          ".validate": "newData.isNumber() && newData.val() > 0"
+        },
+        "chat_slow_mode_pro_ms": {
+          ".validate": "newData.isNumber() && newData.val() > 0"
+        },
+        "chat_slow_mode_staff_ms": {
+          ".validate": "newData.isNumber() && newData.val() > 0"
+        },
+        "chat_auto_delete_hours": {
+          ".validate": "newData.isNumber() && newData.val() > 0"
+        },
+        "chat_config_updated_at": {
+          ".validate": "newData.isNumber()"
         }
       }
     },

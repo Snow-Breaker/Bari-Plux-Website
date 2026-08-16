@@ -811,6 +811,37 @@
 
             <div class="toolbar" style="align-items:flex-start;flex-wrap:wrap;">
                 <div style="flex:1;min-width:260px;">
+                    <span class="toolbar-title"><i class="fas fa-hourglass-half"></i> Slow mode &amp; auto-delete</span>
+                    <div style="font-size:0.72rem;color:var(--muted);margin-top:4px;line-height:1.5;">
+                        Per-role send interval and message retention for lobby chat. Writes to <code style="color:var(--accent2);">app_config/remote_config_3x</code>. Blank or 0 = built-in default (Free/Pro 10s, Founder/Dev 3s, auto-delete off).
+                    </div>
+                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:10px;align-items:end;">
+                        <div>
+                            <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Free slow mode (sec)</div>
+                            <input type="number" min="0" step="1" id="cmSlowModeFree" placeholder="10" style="width:100%;padding:9px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.82rem;">
+                        </div>
+                        <div>
+                            <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Pro slow mode (sec)</div>
+                            <input type="number" min="0" step="1" id="cmSlowModePro" placeholder="10" style="width:100%;padding:9px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.82rem;">
+                        </div>
+                        <div>
+                            <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Founder/Dev slow mode (sec)</div>
+                            <input type="number" min="0" step="1" id="cmSlowModeStaff" placeholder="3" style="width:100%;padding:9px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.82rem;">
+                        </div>
+                        <div>
+                            <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Auto-delete after (hours)</div>
+                            <input type="number" min="0" step="1" id="cmAutoDeleteHours" placeholder="0 = off" style="width:100%;padding:9px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.82rem;">
+                        </div>
+                    </div>
+                    <div style="display:flex;gap:8px;margin-top:10px;align-items:center;">
+                        <button class="icon-btn teal" data-act="saveChatSlowMode"><i class="fas fa-save"></i> Save</button>
+                        <span id="cmSlowModeStatus" style="font-size:0.72rem;color:var(--muted);"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="toolbar" style="align-items:flex-start;flex-wrap:wrap;">
+                <div style="flex:1;min-width:260px;">
                     <span class="toolbar-title"><i class="fas fa-thumbtack"></i> Pinned message</span>
                     <div style="font-size:0.72rem;color:var(--muted);margin-top:4px;">Shown as a banner at the top of the selected room's chat.</div>
                     <div style="display:flex;gap:8px;margin-top:8px;align-items:center;">

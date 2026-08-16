@@ -3214,6 +3214,58 @@ async function saveRemoteConfig() {
     }
 }
 
+/** Chat slow mode (per role tier) + auto-delete sweep age, both admin-configurable knobs read
+ * by LobbyChatService.SendIntervalMsForRole / SweepExpiredMessagesAsync (BPT). Same node as the
+ * Remote Config card above (app_config/remote_config_3x) - a partial update() merges these four
+ * keys in without touching feature_flags_poll_seconds/etc, so this card and the Feature Flags
+ * tab's Remote Config card can be saved independently in either order. Admin enters seconds for
+ * the three slow-mode fields (matches this card's own placeholder defaults); BPT reads
+ * milliseconds, so the *1000/ /1000 conversion happens here, not on the BPT side. */
+async function loadChatSlowMode() {
+    if (!db) return;
+    try {
+        const snap = await db.ref('app_config/remote_config_3x').once('value');
+        const data = snap.val() || {};
+        const secs = (ms) => (ms > 0 ? Math.round(ms / 1000) : '');
+        document.getElementById('cmSlowModeFree').value = secs(data.chat_slow_mode_free_ms);
+        document.getElementById('cmSlowModePro').value = secs(data.chat_slow_mode_pro_ms);
+        document.getElementById('cmSlowModeStaff').value = secs(data.chat_slow_mode_staff_ms);
+        document.getElementById('cmAutoDeleteHours').value = data.chat_auto_delete_hours > 0 ? data.chat_auto_delete_hours : '';
+        const status = document.getElementById('cmSlowModeStatus');
+        if (status) status.textContent = data.chat_config_updated_at
+            ? 'Last saved ' + new Date(data.chat_config_updated_at).toLocaleString()
+            : 'Not configured yet - BPT is using its built-in defaults (Free/Pro 10s, Founder/Dev 3s, auto-delete off)';
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+async function saveChatSlowMode() {
+    if (!db) return;
+    try {
+        const secondsToMs = (id) => {
+            const v = Number(document.getElementById(id).value);
+            return isFinite(v) && v > 0 ? Math.round(v * 1000) : null;
+        };
+        const hours = (() => {
+            const v = Number(document.getElementById('cmAutoDeleteHours').value);
+            return isFinite(v) && v > 0 ? Math.round(v) : null;
+        })();
+        const payload = {
+            chat_slow_mode_free_ms: secondsToMs('cmSlowModeFree'),
+            chat_slow_mode_pro_ms: secondsToMs('cmSlowModePro'),
+            chat_slow_mode_staff_ms: secondsToMs('cmSlowModeStaff'),
+            chat_auto_delete_hours: hours,
+            chat_config_updated_at: Date.now()
+        };
+        await db.ref('app_config/remote_config_3x').update(payload);
+        showToast('✅ Chat slow mode saved', 'success');
+        loadChatSlowMode();
+    } catch (e) {
+        showToast('⚠️ Failed to save chat slow mode: ' + e.message, 'danger');
+    }
+}
+
 function switchTab(tab, btn) {
     document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
@@ -3243,7 +3295,7 @@ function switchTab(tab, btn) {
     }
     if(tab==='reports') loadReports();
     if(tab==='errors') loadErrors();
-    if(tab==='chatMod') loadChatMod();
+    if(tab==='chatMod') { loadChatMod(); loadChatSlowMode(); }
     if(tab==='featureFlags') { loadFeatureFlags(); loadRemoteConfig(); }
     else if (typeof closePageFlagDetail === 'function') closePageFlagDetail();
     if(tab==='updates') loadUpdateConfig();
