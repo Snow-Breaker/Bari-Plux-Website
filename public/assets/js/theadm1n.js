@@ -68,6 +68,38 @@ async function workerRtdbWrite(op, path, writeData) {
 }
 
 /** Firebase-compatible DB shim backed by Cloudflare Worker + service account. */
+/** Firebase's own published push-ID algorithm (48-bit ms timestamp + 72 bits of randomness, both
+ * base64-ish encoded into a 20-char, lexicographically-sortable string) - reimplemented here since
+ * createProxyDb's ref() is a bespoke object, not a real Firebase SDK Reference, so it never had a
+ * .push() to begin with. Monotonic across same-millisecond calls (increments the random suffix
+ * instead of re-rolling it), matching the real SDK's guarantee that push IDs sort chronologically
+ * even for rapid-fire pushes. */
+const generateProxyPushId = (() => {
+    const PUSH_CHARS = '-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz';
+    let lastPushTime = 0;
+    const lastRandChars = [];
+    return function () {
+        let now = Date.now();
+        const duplicateTime = now === lastPushTime;
+        lastPushTime = now;
+        const timeStampChars = new Array(8);
+        for (let i = 7; i >= 0; i--) {
+            timeStampChars[i] = PUSH_CHARS.charAt(now % 64);
+            now = Math.floor(now / 64);
+        }
+        let id = timeStampChars.join('');
+        if (!duplicateTime) {
+            for (let i = 0; i < 12; i++) lastRandChars[i] = Math.floor(Math.random() * 64);
+        } else {
+            let i;
+            for (i = 11; i >= 0 && lastRandChars[i] === 63; i--) lastRandChars[i] = 0;
+            lastRandChars[i]++;
+        }
+        for (let i = 0; i < 12; i++) id += PUSH_CHARS.charAt(lastRandChars[i]);
+        return id;
+    };
+})();
+
 function createProxyDb() {
     function makeSnap(val) {
         return {
@@ -113,7 +145,17 @@ function createProxyDb() {
             },
             set(data) { return workerRtdbWrite('set', p, data); },
             update(data) { return workerRtdbWrite('update', p, data); },
-            remove() { return workerRtdbWrite('remove', p); }
+            remove() { return workerRtdbWrite('remove', p); },
+            // Mints a new child key and returns a ref already pointed at it (same shape as the
+            // real Firebase SDK's ref().push() - callers read .key immediately or call .set() on
+            // the same returned object right after, both of which just work since this is really
+            // ref(p + '/' + key) with .key attached, not a distinct code path).
+            push() {
+                const key = generateProxyPushId();
+                const child = ref(p ? p + '/' + key : key);
+                child.key = key;
+                return child;
+            }
         };
         return api;
     }
