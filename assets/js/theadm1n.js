@@ -1809,7 +1809,7 @@ const PAGE_FLAG_CATALOG = [
     { key: 'report', title: 'Bug Report', icon: 'fa-bug' },
     { key: 'settings', title: 'Settings', icon: 'fa-cog' },
     { key: 'adbdiagnostic', title: 'ADB Diagnostic', icon: 'fa-stethoscope' },
-    { key: 'keymap', title: 'MuMu Keymap', icon: 'fa-keyboard' },
+    { key: 'keymap', title: 'Keymap', icon: 'fa-keyboard' },
 ];
 const PAGE_FLAG_KEYS = new Set(PAGE_FLAG_CATALOG.map(p => p.key));
 
@@ -1819,11 +1819,11 @@ const PAGE_FLAG_KEYS = new Set(PAGE_FLAG_CATALOG.map(p => p.key));
  */
 const PAGE_FEATURE_CATALOG = {
     home: [
-        { key: 'home_language', title: 'Language Selector', icon: 'fa-globe', desc: 'Language picker in the Home hero' },
         { key: 'home_time', title: 'Time Card', icon: 'fa-clock', desc: 'Live clock and day-progress atmosphere card' },
         { key: 'home_system_status', title: 'System Status', icon: 'fa-heartbeat', desc: 'CPU / RAM / network / uptime metrics' },
-        { key: 'home_overview', title: 'Overview', icon: 'fa-info-circle', desc: 'About Bari Plux + core feature tiles' },
         { key: 'home_activity_log', title: 'Activity Log', icon: 'fa-list', desc: 'Recent activity list with clear / export' },
+        { key: 'home_backup_trust', title: 'Backup / Trust Card', icon: 'fa-shield-alt', desc: 'Backup status and Back Up Now card' },
+        { key: 'install_agent', title: 'Install Agent Button', icon: 'fa-mobile-alt', desc: 'Install Companion Agent button on the Emulator card' },
     ],
     tools: [
         { key: 'tools_game_files', title: 'Game Files', icon: 'fa-file-archive', desc: 'Backup / restore PUBG .pak files' },
@@ -1844,8 +1844,6 @@ const PAGE_FEATURE_CATALOG = {
         { key: 'optimization_smart_settings', title: 'AI Smart GameLoop Settings', icon: 'fa-magic', desc: 'Auto-tune GameLoop Perf / Quality' },
         { key: 'optimization_one_tap', title: 'One-Tap Optimize', icon: 'fa-bolt', desc: 'Safe Windows / GameLoop tune pack' },
         { key: 'optimization_game_boost', title: 'Game Boost', icon: 'fa-rocket', desc: 'Windows Game Mode style boost' },
-        { key: 'optimization_system_optimize', title: 'System Optimize', icon: 'fa-tachometer-alt', desc: 'Quick system optimize / scan' },
-        { key: 'optimization_adb_boost', title: 'ADB Boost', icon: 'fa-mobile-alt', desc: 'Emulator ADB boost packs' },
         { key: 'optimization_deep_clean', title: 'Deep Cleaner', icon: 'fa-broom', desc: 'Scan / clean GameLoop junk' },
         { key: 'optimization_temp_files', title: 'Temp Files', icon: 'fa-file', desc: 'Open / clean Windows TEMP' },
         { key: 'optimization_user_temp', title: 'User Temp', icon: 'fa-folder', desc: 'Open / clean user temp folder' },
@@ -1853,14 +1851,12 @@ const PAGE_FEATURE_CATALOG = {
         { key: 'optimization_junk_ram', title: 'Junk & RAM Cleaner', icon: 'fa-memory', desc: 'Junk cleanup + RAM cleaner' },
         { key: 'optimization_clean_all', title: 'Clean All', icon: 'fa-trash', desc: 'Combined cleanup pass' },
         { key: 'optimization_shader_cache', title: 'PUBG Shader Cache', icon: 'fa-cube', desc: 'Open / clean PUBG shader cache' },
-        { key: 'optimization_driver_cleanup', title: 'Driver Cleanup', icon: 'fa-hdd', desc: 'Remove old / unused drivers' },
         { key: 'optimization_optimize_drivers', title: 'Optimize Drivers', icon: 'fa-cogs', desc: 'Scan / update drivers' },
         { key: 'optimization_gpu_high_perf', title: 'GPU High Performance', icon: 'fa-tv', desc: 'Force high-perf GPU preference' },
         { key: 'optimization_mmcss', title: 'MMCSS Games Profile', icon: 'fa-sliders-h', desc: 'Apply / restore MMCSS Games profile' },
         { key: 'optimization_responsiveness', title: 'System Responsiveness', icon: 'fa-heartbeat', desc: 'Apply / restore responsiveness tweak' },
         { key: 'optimization_game_dvr', title: 'Game DVR / Game Bar', icon: 'fa-video', desc: 'Apply / restore Game DVR disable' },
         { key: 'optimization_virtual_memory', title: 'Virtual Memory', icon: 'fa-server', desc: 'Increase / revert pagefile' },
-        { key: 'optimization_system_services', title: 'System Services', icon: 'fa-wrench', desc: 'Optimize / restore Windows services' },
         { key: 'optimization_network', title: 'Network Optimization', icon: 'fa-network-wired', desc: 'Optimize / restore network tweaks' },
         { key: 'optimization_delivery_opt', title: 'Delivery Optimization', icon: 'fa-cloud-download-alt', desc: 'Delivery Optimization P2P settings' },
         { key: 'optimization_background_services', title: 'Background Services', icon: 'fa-layer-group', desc: 'Optimize / restore background services' },
@@ -1876,8 +1872,6 @@ const PAGE_FEATURE_CATALOG = {
         { key: 'filemanager_device_ops', title: 'Device Transfer Ops', icon: 'fa-exchange-alt', desc: 'Push / Pull / Install APK toolbar' },
         { key: 'filemanager_folder_ops', title: 'Folder Create Ops', icon: 'fa-folder-plus', desc: 'New file / New folder toolbar' },
         { key: 'filemanager_view_filter', title: 'View & Filter', icon: 'fa-th-list', desc: 'Display mode and file filter dropdowns' },
-        { key: 'filemanager_pc_places', title: 'PC Places', icon: 'fa-desktop', desc: 'This PC and Windows folder shortcuts' },
-        { key: 'filemanager_android_places', title: 'Android Places', icon: 'fa-mobile-alt', desc: 'SdCard, data, OBB, system shortcuts' },
         { key: 'filemanager_bookmarks', title: 'Bookmarks', icon: 'fa-star', desc: 'Saved bookmark list' },
         { key: 'filemanager_transfer_history', title: 'Transfer History', icon: 'fa-history', desc: 'Sidebar transfer history entry' },
         { key: 'filemanager_storage', title: 'Storage Meter', icon: 'fa-hdd', desc: 'Bottom sidebar free-space card' },
@@ -1891,11 +1885,9 @@ const PAGE_FEATURE_CATALOG = {
         { key: 'settings_ui_scale', title: 'UI Scale', icon: 'fa-text-height', desc: 'Window zoom / UI scale controls' },
         { key: 'settings_program_info', title: 'Program Information', icon: 'fa-info-circle', desc: 'App name, version, and build info' },
         { key: 'settings_system_specs', title: 'System Specifications', icon: 'fa-microchip', desc: 'CPU / RAM / display specs panel' },
-        { key: 'settings_report_bug', title: 'Report Bug', icon: 'fa-bug', desc: 'Shortcut to the report page' },
-        { key: 'settings_whats_new', title: "What's New", icon: 'fa-star', desc: 'Changelog / release notes card' },
+        { key: 'settings_pubg_version', title: 'PUBG Mobile Version', icon: 'fa-mobile-alt', desc: 'PUBG / BGMI package version selector (moved here from FPS)' },
     ],
     fps: [
-        { key: 'fps_pubg_version', title: 'PUBG Mobile Version', icon: 'fa-mobile-alt', desc: 'PUBG / BGMI package version selector on the FPS page' },
         { key: 'fps_domain_scope', title: 'Domain Scope', icon: 'fa-layer-group', desc: 'All / Combat / Lobby / Hub / Home scope tabs' },
         { key: 'fps_graphics_quality', title: 'Graphics Quality', icon: 'fa-image', desc: 'Smooth through Ultra HD quality presets' },
         { key: 'fps_comparison', title: 'Quality Comparison', icon: 'fa-columns', desc: 'Side-by-side graphics comparison preview' },
@@ -1908,12 +1900,7 @@ const PAGE_FEATURE_CATALOG = {
     ipad: [
         { key: 'ipad_monitor_display', title: 'Monitor Display', icon: 'fa-desktop', desc: 'Open Windows custom resolutions window' },
         { key: 'ipad_keymapping_backup', title: 'Keymapping Backup', icon: 'fa-save', desc: 'Backup / restore / fix TVM_100 keymapping' },
-        { key: 'ipad_ratio_4_3', title: '4:3 Presets', icon: 'fa-tablet-alt', desc: 'Classic iPad 4:3 resolution presets' },
-        { key: 'ipad_ratio_5_4', title: '5:4 Presets', icon: 'fa-tablet-alt', desc: '5:4 resolution presets' },
-        { key: 'ipad_ratio_32_27', title: '32:27 Presets', icon: 'fa-tablet-alt', desc: '32:27 resolution presets' },
-        { key: 'ipad_ratio_96_95', title: '96:95 Presets', icon: 'fa-tablet-alt', desc: 'Near-square 96:95 resolution presets' },
         { key: 'ipad_custom_resolution', title: 'Custom Resolution', icon: 'fa-edit', desc: 'Manual width × height apply' },
-        { key: 'ipad_info', title: 'How It Works / Notes', icon: 'fa-info-circle', desc: 'Bottom info tip cards' },
     ],
     contact: [
         { key: 'contact_support', title: 'Direct Support', icon: 'fa-headset', desc: 'Website / Telegram / Discord / Email tiles' },
@@ -1934,7 +1921,6 @@ const PAGE_FEATURE_CATALOG = {
     ],
     report: [
         { key: 'report_form', title: 'Bug Description Form', icon: 'fa-align-left', desc: 'Main bug description text area' },
-        { key: 'report_formatting', title: 'Text Formatting', icon: 'fa-bold', desc: 'Bold / italic / underline / strike toolbar' },
         { key: 'report_email', title: 'Contact Email', icon: 'fa-envelope', desc: 'Optional contact email field' },
         { key: 'report_screenshots', title: 'Screenshots', icon: 'fa-image', desc: 'Attach up to 3 screenshots' },
         { key: 'report_submit', title: 'Submit Report', icon: 'fa-paper-plane', desc: 'Submit bug report button card' },
@@ -1944,7 +1930,6 @@ const PAGE_FEATURE_CATALOG = {
         { key: 'adb_run', title: 'Run Diagnostic', icon: 'fa-play', desc: 'Start / retry ADB diagnostic button' },
         { key: 'adb_progress', title: 'Progress Card', icon: 'fa-spinner', desc: 'Live diagnostic progress bar' },
         { key: 'adb_summary', title: 'Summary Result', icon: 'fa-clipboard-check', desc: 'Final status, recommendation, and retry' },
-        { key: 'adb_copy_report', title: 'Copy Report', icon: 'fa-copy', desc: 'Copy human-readable diagnostic report' },
         { key: 'adb_steps', title: 'Diagnostic Steps', icon: 'fa-list-ol', desc: 'Per-step diagnostic log list' },
     ],
     keymap: [
