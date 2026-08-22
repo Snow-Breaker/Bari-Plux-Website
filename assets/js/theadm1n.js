@@ -2910,6 +2910,60 @@ async function loadUpdateConfig() {
             showToast(`⚠️ Failed to load ${line} update config: ` + e.message, 'danger');
         }
     }
+    try {
+        const snap = await db.ref('app_config/agent_config').once('value');
+        const cfg = snap.val();
+        const vInput = document.getElementById('agentVersionInput');
+        if (vInput && cfg?.version) vInput.value = cfg.version;
+        const lu = document.getElementById('agentLastUpdated');
+        if (lu) {
+            lu.textContent = cfg?.version
+                ? `Published: v${cfg.version} — ${cfg.updated_at ? new Date(cfg.updated_at).toLocaleString() : '?'}${cfg.sha256 ? ' — sha256 ' + cfg.sha256.slice(0, 12) + '…' : ''}`
+                : 'No Agent build published yet.';
+        }
+    } catch (e) {
+        showToast('⚠️ Failed to load Agent config: ' + e.message, 'danger');
+    }
+}
+
+async function publishAgentUpdate() {
+    const version = (document.getElementById('agentVersionInput').value || '').trim();
+    const fileInput = document.getElementById('agentApkInput');
+    const changelog = (document.getElementById('agentChangelogInput').value || '').trim();
+    const statusEl = document.getElementById('agentPublishStatus');
+    if (!/^[0-9]+(\.[0-9]+){1,3}$/.test(version)) {
+        showToast('Enter a valid version, e.g. 1.1.0', 'danger');
+        return;
+    }
+    const file = fileInput?.files?.[0];
+    if (!file) {
+        showToast('Choose an APK file first', 'danger');
+        return;
+    }
+    const authUser = firebase.auth().currentUser;
+    if (!authUser) {
+        showToast('Not signed in', 'danger');
+        return;
+    }
+    if (statusEl) statusEl.textContent = `Uploading ${file.name} (${(file.size / 1048576).toFixed(1)} MB)…`;
+    try {
+        const idToken = await authUser.getIdToken(true);
+        const qs = new URLSearchParams({ version, changelog }).toString();
+        const res = await fetch(WORKER_URL + '/admin/agent/publish?' + qs, {
+            method: 'POST',
+            headers: { Authorization: 'Bearer ' + idToken, 'Content-Type': 'application/octet-stream' },
+            body: file
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || !data.ok) throw new Error(data.error || `Publish failed (${res.status})`);
+        showToast(`Agent v${data.version} published`, 'success');
+        if (statusEl) statusEl.textContent = '';
+        fileInput.value = '';
+        loadUpdateConfig();
+    } catch (e) {
+        showToast(e.message, 'danger');
+        if (statusEl) statusEl.textContent = '';
+    }
 }
 
 async function saveUpdateConfig(line) {

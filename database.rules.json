@@ -30,6 +30,9 @@
       "access_3x": {
         ".validate": "!newData.exists() || (newData.hasChild('mode') && newData.child('mode').isString() && newData.child('mode').val().matches(/^(everyone|allowlist|role)$/) && (!newData.hasChild('min_role') || (newData.child('min_role').isString() && newData.child('min_role').val().matches(/^(free|pro|dev|founder)$/))) && (!newData.hasChild('updated_at') || newData.child('updated_at').isNumber()))"
       },
+      "agent_config": {
+        ".validate": "!newData.exists() || (newData.hasChild('version') && newData.child('version').isString() && newData.child('version').val().matches(/^[0-9]+(\\.[0-9]+){1,3}$/) && newData.child('version').val().length <= 32 && (!newData.hasChild('download_url') || (newData.child('download_url').isString() && newData.child('download_url').val().length <= 500)) && (!newData.hasChild('sha256') || (newData.child('sha256').isString() && newData.child('sha256').val().matches(/^[0-9a-f]{64}$/))) && (!newData.hasChild('changelog') || (newData.child('changelog').isString() && newData.child('changelog').val().length <= 4000)) && (!newData.hasChild('updated_at') || newData.child('updated_at').isNumber()))"
+      },
       "remote_config_3x": {
         "feature_flags_poll_seconds": {
           ".validate": "newData.isNumber() && newData.val() > 0"

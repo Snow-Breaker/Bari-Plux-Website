@@ -24,5 +24,13 @@ DISCORD_PRO_ANNOUNCE_CHANNEL_ID = "1531890005176225894"
 binding = "CLOUD_BACKUP_BUCKET"
 bucket_name = "bptv2-cloud-backup"
 
+# Same bucket already serving the custom domain dl.bariplux.com (confirmed via
+# `wrangler r2 bucket domain list pluxdl`) - BariPluxToolSetup.exe/BariPluxToolProSetup.exe
+# already live there. The Agent APK publish endpoint writes into this same bucket/domain so it
+# gets a URL of the same shape (https://dl.bariplux.com/BariPluxAgent.apk).
+[[r2_buckets]]
+binding = "DOWNLOADS_BUCKET"
+bucket_name = "pluxdl"
+
 [triggers]
 crons = ["0 * * * *"]

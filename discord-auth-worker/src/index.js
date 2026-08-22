@@ -108,6 +108,11 @@ export default {
       return handleAdminRtdbWrite(request, env, corsHeaders);
     }
 
+    // POST /admin/agent/publish — admin publishes a new Companion Agent APK build
+    if (request.method === 'POST' && path === '/admin/agent/publish') {
+      return handleAdminAgentPublish(request, env, corsHeaders);
+    }
+
     // GET/POST /admin/legacy-version — fetch download.bariplux.com/version.txt server-side (avoids browser CORS)
     if ((request.method === 'GET' || request.method === 'POST') && path === '/admin/legacy-version') {
       return handleAdminLegacyVersion(request, env, corsHeaders);
@@ -973,6 +978,64 @@ async function handleAdminSetRoles(request, env, corsHeaders) {
     roles,
     proExpiresAtMs,
     tree: writeTree
+  }), { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+}
+
+// POST /admin/agent/publish?version=1.2.3&changelog=... - raw APK bytes as the request body.
+// Publishes a new Companion Agent build independently of a BPT app release: uploads to the same
+// R2 bucket/custom domain already serving BariPluxToolSetup.exe (dl.bariplux.com), then writes
+// app_config/agent_config so BPT clients can compare their connected Agent's own reported
+// AgentVersion (from the pairing handshake) against this and offer an in-app update - see BPT's
+// AgentUpdateService. Kept as its own endpoint/object key (not folded into handleBackupUpload)
+// since this is a public download artifact, not a per-user private backup file.
+async function handleAdminAgentPublish(request, env, corsHeaders) {
+  const idToken = getAuthUid(request);
+  const adminUser = await verifyFirebaseUser(idToken, env);
+  if (!adminUser || !isAdminFirebaseUser(adminUser)) {
+    return new Response(JSON.stringify({ error: 'Admin only' }),
+      { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+  }
+
+  const url = new URL(request.url);
+  const version = String(url.searchParams.get('version') || '').trim();
+  if (!version || version.length > 32 || !/^[0-9]+(\.[0-9]+){1,3}$/.test(version)) {
+    return new Response(JSON.stringify({ error: 'version query param required, e.g. 1.2.3' }),
+      { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+  }
+  const changelog = String(url.searchParams.get('changelog') || '').slice(0, 4000);
+
+  const fileBytes = await request.arrayBuffer();
+  if (!fileBytes.byteLength) {
+    return new Response(JSON.stringify({ error: 'Empty request body - send the APK as raw bytes' }),
+      { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+  }
+  // Cheap sanity check that this is actually an APK (a ZIP) and not something pasted/uploaded by
+  // mistake - real validation (signature, manifest) happens on-device at adb install time anyway.
+  const magic = new Uint8Array(fileBytes.slice(0, 4));
+  if (!(magic[0] === 0x50 && magic[1] === 0x4b)) {
+    return new Response(JSON.stringify({ error: 'Not a valid APK (missing ZIP signature)' }),
+      { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+  }
+
+  const digest = await crypto.subtle.digest('SHA-256', fileBytes);
+  const sha256 = [...new Uint8Array(digest)].map(b => b.toString(16).padStart(2, '0')).join('');
+
+  await env.DOWNLOADS_BUCKET.put('BariPluxAgent.apk', fileBytes, {
+    httpMetadata: { contentType: 'application/vnd.android.package-archive' },
+    customMetadata: { version, uploadedBy: adminUser.email || adminUser.uid, uploadedAt: new Date().toISOString() }
+  });
+
+  const downloadUrl = 'https://dl.bariplux.com/BariPluxAgent.apk';
+  const okConfig = await adminPutDatabase('app_config/agent_config', {
+    version, download_url: downloadUrl, sha256, changelog, updated_at: Date.now()
+  }, env);
+  if (!okConfig) {
+    return new Response(JSON.stringify({ error: 'APK uploaded but failed to write app_config/agent_config' }),
+      { status: 502, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+  }
+
+  return new Response(JSON.stringify({
+    ok: true, version, sha256, size: fileBytes.byteLength, download_url: downloadUrl
   }), { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
 }
 

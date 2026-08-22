@@ -1174,6 +1174,37 @@
                 <div class="last-updated" id="updatesLastUpdated_2x" style="margin-top:10px;"></div>
             </div>
 
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:22px;margin-bottom:16px;">
+                <div style="font-size:0.9rem;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px;">
+                    <i class="fas fa-mobile-alt" style="color:var(--accent);"></i>
+                    Publish Companion Agent build
+                </div>
+                <div style="font-size:0.76rem;color:var(--muted);margin-bottom:16px;">
+                    Ships to <code style="color:var(--accent2);">dl.bariplux.com/BariPluxAgent.apk</code> independently
+                    of a BPT release — connected clients compare their paired Agent's own reported version against this
+                    and offer an in-app update, not a full BPT update.
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+                    <div>
+                        <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">APK Version</div>
+                        <input type="text" id="agentVersionInput" placeholder="e.g. 1.1.0" style="width:100%;padding:10px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.9rem;">
+                    </div>
+                    <div>
+                        <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">APK File</div>
+                        <input type="file" id="agentApkInput" accept=".apk" style="width:100%;padding:8px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:0.82rem;">
+                    </div>
+                    <div style="grid-column:1/-1;">
+                        <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Changelog (optional)</div>
+                        <textarea id="agentChangelogInput" rows="3" placeholder="What changed in this Agent build…" style="width:100%;padding:10px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Poppins',sans-serif;font-size:0.85rem;resize:vertical;"></textarea>
+                    </div>
+                </div>
+                <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;align-items:center;">
+                    <button class="action-btn view" data-act="publishAgentUpdate" style="padding:10px 18px;font-weight:600;"><i class="fas fa-upload"></i> Upload &amp; Publish</button>
+                    <span id="agentPublishStatus" style="font-size:0.78rem;color:var(--muted);"></span>
+                </div>
+                <div class="last-updated" id="agentLastUpdated" style="margin-top:10px;"></div>
+            </div>
+
             <div style="font-size:0.78rem;color:var(--muted);line-height:1.5;margin-bottom:16px;">
                 3.x clients read <code style="color:var(--accent2);">app_config/update_3x</code>; 2.x clients read
                 <code style="color:var(--accent2);">app_config/update_2x</code> — two independent Firebase nodes, so
