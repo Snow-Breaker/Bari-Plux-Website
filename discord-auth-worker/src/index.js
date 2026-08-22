@@ -1020,12 +1020,25 @@ async function handleAdminAgentPublish(request, env, corsHeaders) {
   const digest = await crypto.subtle.digest('SHA-256', fileBytes);
   const sha256 = [...new Uint8Array(digest)].map(b => b.toString(16).padStart(2, '0')).join('');
 
+  // no-cache (not a short max-age): dl.bariplux.com caches aggressively by default (~4h TTL,
+  // confirmed live during testing - a fresh upload kept serving the previous file's bytes for
+  // hours with no way to purge it from this Worker's own OAuth token scope). no-cache still lets
+  // Cloudflare/browsers keep a cached copy, but forces revalidation against R2's ETag on every
+  // request - a fresh publish is picked up on the very next download, not after some TTL window.
   await env.DOWNLOADS_BUCKET.put('BariPluxAgent.apk', fileBytes, {
-    httpMetadata: { contentType: 'application/vnd.android.package-archive' },
+    httpMetadata: { contentType: 'application/vnd.android.package-archive', cacheControl: 'no-cache, must-revalidate' },
     customMetadata: { version, uploadedBy: adminUser.email || adminUser.uid, uploadedAt: new Date().toISOString() }
   });
 
-  const downloadUrl = 'https://dl.bariplux.com/BariPluxAgent.apk';
+  // ?v={version} is not cosmetic - dl.bariplux.com sits behind a zone-level Cache Rule that
+  // overrides this object's own Cache-Control header entirely (confirmed live: a fresh upload
+  // kept serving the previous file's bytes under cf-cache-status: HIT for hours, with no purge
+  // permission available to this Worker's OAuth token to fix it directly). A different version
+  // number is a different cache key, so every real publish is guaranteed a fresh fetch without
+  // needing cache-purge access at all - this must stay in sync with whatever AgentUpdateService
+  // (BPT repo) reads as download_url, which it already does since that's just whatever string is
+  // published here.
+  const downloadUrl = `https://dl.bariplux.com/BariPluxAgent.apk?v=${encodeURIComponent(version)}`;
   const okConfig = await adminPutDatabase('app_config/agent_config', {
     version, download_url: downloadUrl, sha256, changelog, updated_at: Date.now()
   }, env);
