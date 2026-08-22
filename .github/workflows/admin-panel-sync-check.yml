@@ -1,0 +1,41 @@
+# Guards the one duplication AUDIT.md's deployment-path section flags as a real risk: the admin
+# panel is served from two places (GitHub Pages reads repo root; Firebase Hosting reads public/)
+# and nothing enforced the two copies staying identical. They are today, but a future edit to only
+# one copy would silently diverge with no signal until someone noticed different admin-panel
+# behavior in production depending on which host they hit. Scoped to just the admin panel (not a
+# blanket root vs public/ diff) because the rest of public/ is intentionally NOT a mirror of root
+# (e.g. index.html is a deliberately different, smaller "Firebase fallback" page there).
+name: Admin panel sync check
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "theadm1n.html"
+      - "assets/js/theadm1n.js"
+      - "public/theadm1n.html"
+      - "public/assets/js/theadm1n.js"
+  pull_request:
+    paths:
+      - "theadm1n.html"
+      - "assets/js/theadm1n.js"
+      - "public/theadm1n.html"
+      - "public/assets/js/theadm1n.js"
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Diff root vs public/ admin panel copies
+        run: |
+          status=0
+          for f in theadm1n.html assets/js/theadm1n.js; do
+            if ! cmp -s "$f" "public/$f"; then
+              echo "::error file=$f::$f and public/$f have diverged - the admin panel served by GitHub Pages and Firebase Hosting would now differ."
+              diff -u "$f" "public/$f" || true
+              status=1
+            fi
+          done
+          exit $status
