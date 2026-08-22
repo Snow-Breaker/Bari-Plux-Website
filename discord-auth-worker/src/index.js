@@ -890,7 +890,11 @@ async function handleAdminSetRoles(request, env, corsHeaders) {
       { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
   }
 
-  const ROLE_RANK = { free: 0, pro: 1, dev: 2, founder: 3 };
+  // staff ranks above founder so it always wins the "primary" role slot in a 2-role combo
+  // (e.g. a paying Pro customer who's also a chat moderator) - moderation in database.rules.json
+  // is gated on the singular primary `role` field, not the `roles` array, so staff must win that
+  // slot for its chat-moderation grant to actually take effect when combined with another role.
+  const ROLE_RANK = { free: 0, pro: 1, dev: 2, founder: 3, staff: 4 };
   const raw = Array.isArray(body?.roles) ? body.roles : [];
   let roles = [...new Set(raw.map(r => String(r || '').trim().toLowerCase()).filter(r => Object.prototype.hasOwnProperty.call(ROLE_RANK, r)))];
   if (!roles.length) {
@@ -1031,7 +1035,13 @@ async function handleAdminGrantPro(request, env, corsHeaders) {
 }
 
 // ── Feature entitlement handlers ─────────────────────────────
-const ROLE_HIERARCHY = { free: 0, pro: 1, dev: 2, founder: 3 };
+// staff sits at entitlement level 0, same as free - it grants no Pro-tier feature-flag
+// unlock (that's the deliberate scope: chat moderation only, not app entitlement). It still
+// needs its own key here (rather than falling through to normalizeRole's 'free' default) so a
+// "staff" role string survives into the signed JWT's `role` claim intact instead of being
+// silently downgraded to "free" - BPT's own client-side UserRole.Staff depends on that string
+// arriving unchanged.
+const ROLE_HIERARCHY = { free: 0, pro: 1, dev: 2, founder: 3, staff: 0 };
 
 /** Normalize role strings so "Founder" / "PRO" still map into the hierarchy. */
 function normalizeRole(role) {

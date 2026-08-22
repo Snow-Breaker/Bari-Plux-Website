@@ -159,6 +159,7 @@ function getRoleBadgeHtml(role) {
     const roles = {
         founder: { icon: '👑', label: 'FOUNDER', color: '#F6AD55', bg: 'rgba(246,173,85,0.15)' },
         dev:     { icon: '🛠️', label: 'DEV',     color: '#68D391', bg: 'rgba(104,211,145,0.15)' },
+        staff:   { icon: '🛡️', label: 'STAFF',   color: '#B794F4', bg: 'rgba(183,148,244,0.15)' },
         pro:     { icon: '⭐', label: 'PRO',     color: '#63B3ED', bg: 'rgba(99,179,237,0.15)' },
         free:    { icon: '●',  label: 'FREE',    color: '#718096', bg: 'rgba(113,128,150,0.15)' }
     };
@@ -173,7 +174,9 @@ function getRoleBadgeHtml(role) {
     </span>`;
 }
 function roleRank(role) {
-    const m = { free: 0, pro: 1, dev: 2, founder: 3 };
+    // staff ranks above founder to match the Worker's ROLE_RANK (index.js) - moderation is
+    // gated on the singular primary role, so staff must win that slot in any 2-role combo.
+    const m = { free: 0, pro: 1, dev: 2, founder: 3, staff: 4 };
     return m[String(role || '').toLowerCase()] ?? 0;
 }
 /** Normalize stored roles (array / RTDB object / fallback scalar) to 1–2 unique roles. */
@@ -182,10 +185,10 @@ function normalizeRolesList(roles, fallbackRole) {
     if (Array.isArray(roles)) list = roles;
     else if (roles && typeof roles === 'object') list = Object.values(roles);
     else if (typeof roles === 'string' && roles.trim()) list = roles.split(/[,|]/);
-    list = [...new Set(list.map(r => String(r || '').trim().toLowerCase()).filter(r => /^(free|pro|dev|founder)$/.test(r)))];
+    list = [...new Set(list.map(r => String(r || '').trim().toLowerCase()).filter(r => /^(free|pro|dev|founder|staff)$/.test(r)))];
     if (!list.length && fallbackRole) {
         const f = String(fallbackRole).trim().toLowerCase();
-        if (/^(free|pro|dev|founder)$/.test(f)) list = [f];
+        if (/^(free|pro|dev|founder|staff)$/.test(f)) list = [f];
     }
     if (!list.length) list = ['free'];
     if (list.includes('free') && list.length > 1) list = list.filter(r => r !== 'free');
@@ -706,7 +709,8 @@ function getFilteredUsers() {
             ||(activeFilter==='role:free'&&roleList.includes('free'))
             ||(activeFilter==='role:pro'&&roleList.includes('pro'))
             ||(activeFilter==='role:dev'&&roleList.includes('dev'))
-            ||(activeFilter==='role:founder'&&roleList.includes('founder'));
+            ||(activeFilter==='role:founder'&&roleList.includes('founder'))
+            ||(activeFilter==='role:staff'&&roleList.includes('staff'));
         const ms=!q||u.name.toLowerCase().includes(q)||u.email.toLowerCase().includes(q)||u.id.toLowerCase().includes(q)||(u.country||'').toLowerCase().includes(q)||(u.city||'').toLowerCase().includes(q)||(u.ip||'').toLowerCase().includes(q);
         return mf&&ms;
     });
