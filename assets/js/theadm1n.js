@@ -1868,6 +1868,11 @@ const PAGE_FEATURE_CATALOG = {
         { key: 'install_agent', title: 'Install Agent Button', icon: 'fa-mobile-alt', desc: 'Install Companion Agent button on the Emulator card' },
     ],
     tools: [
+        { key: 'tools_section_launch_shortcuts', title: 'Section: Launch & Shortcuts', icon: 'fa-th-large', desc: 'Landing row for the Launch & Shortcuts section' },
+        { key: 'tools_section_tweaks_customization', title: 'Section: Tweaks & Customization', icon: 'fa-th-large', desc: 'Landing row for the Tweaks & Customization section' },
+        { key: 'tools_section_game_files', title: 'Section: Game Files', icon: 'fa-th-large', desc: 'Landing row for the Game Files (ADB) section' },
+        { key: 'tools_section_maintenance', title: 'Section: Maintenance', icon: 'fa-th-large', desc: 'Landing row for the Maintenance section' },
+        { key: 'tools_section_display_resolution', title: 'Section: Windows Display Resolution', icon: 'fa-th-large', desc: 'Landing row for the Windows Display Resolution section' },
         { key: 'tools_game_files', title: 'Game Files', icon: 'fa-file-archive', desc: 'Backup / restore PUBG .pak files' },
         { key: 'tools_configuration', title: 'Configuration', icon: 'fa-sliders-h', desc: 'Active.sav + keymap helpers' },
         { key: 'tools_custom_obb', title: 'Custom OBB', icon: 'fa-cube', desc: 'Install custom OBB packages' },
@@ -1882,6 +1887,12 @@ const PAGE_FEATURE_CATALOG = {
         { key: 'tools_downloads', title: 'Downloads', icon: 'fa-external-link-alt', desc: 'Open PUBG / GameLoop download pages' },
     ],
     optimization: [
+        { key: 'optimization_section_cleanup', title: 'Section: Cleanup', icon: 'fa-th-large', desc: 'Landing row for the Cleanup section' },
+        { key: 'optimization_section_performance', title: 'Section: Performance Tuning', icon: 'fa-th-large', desc: 'Landing row for the Performance Tuning section' },
+        { key: 'optimization_section_game_mode', title: 'Section: Game Mode', icon: 'fa-th-large', desc: 'Landing row for the Game Mode section' },
+        { key: 'optimization_section_background_services', title: 'Section: Background Services', icon: 'fa-th-large', desc: 'Landing row for the Background Services section' },
+        { key: 'optimization_section_startup_apps', title: 'Section: Startup Apps', icon: 'fa-th-large', desc: 'Landing row for the Startup Apps section' },
+        { key: 'optimization_section_automation', title: 'Section: Automation & Presets', icon: 'fa-th-large', desc: 'Landing row for the Automation & Presets section' },
         { key: 'optimization_match_prep', title: 'Match Prep', icon: 'fa-flag-checkered', desc: 'Pre-match pipeline (ADB + shaders)' },
         { key: 'optimization_smart_settings', title: 'AI Smart GameLoop Settings', icon: 'fa-magic', desc: 'Auto-tune GameLoop Perf / Quality' },
         { key: 'optimization_one_tap', title: 'One-Tap Optimize', icon: 'fa-bolt', desc: 'Safe Windows / GameLoop tune pack' },
@@ -3265,6 +3276,7 @@ async function loadRemoteConfig() {
         document.getElementById('rcMaintenancePoll').value = data.maintenance_poll_seconds > 0 ? data.maintenance_poll_seconds : '';
         document.getElementById('rcHttpTimeout').value = data.http_request_timeout_seconds > 0 ? data.http_request_timeout_seconds : '';
         document.getElementById('rcDownloadMirror').value = data.download_url_mirror || '';
+        document.getElementById('rcPubgMobileLightEnabled').checked = data.pubg_mobile_light_enabled === true;
         const status = document.getElementById('rcStatus');
         if (status) status.textContent = data.updated_at
             ? 'Last saved ' + new Date(data.updated_at).toLocaleString()
@@ -3287,10 +3299,13 @@ async function saveRemoteConfig() {
             maintenance_poll_seconds: num('rcMaintenancePoll'),
             http_request_timeout_seconds: num('rcHttpTimeout'),
             download_url_mirror: mirror || null,
+            pubg_mobile_light_enabled: document.getElementById('rcPubgMobileLightEnabled').checked ? true : null,
             updated_at: Date.now()
         };
         // update() with a null value removes that key - RTDB doesn't store nulls, and "missing"
-        // is how RemoteConfigService.Parse (BPT) already reads "use the built-in default".
+        // is how RemoteConfigService.Parse (BPT) already reads "use the built-in default" (or, for
+        // pubg_mobile_light_enabled specifically, "still coming soon" - see that field's own doc
+        // comment in IRemoteConfigService.cs for why its default is off, not a positive fallback).
         await db.ref('app_config/remote_config_3x').update(payload);
         showToast('✅ Remote config saved', 'success');
         loadRemoteConfig();
