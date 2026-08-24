@@ -1954,6 +1954,8 @@ const PAGE_FEATURE_CATALOG = {
         { key: 'ipad_monitor_display', title: 'Monitor Display', icon: 'fa-desktop', desc: 'Open Windows custom resolutions window' },
         { key: 'ipad_keymapping_backup', title: 'Keymapping Backup', icon: 'fa-save', desc: 'Backup / restore / fix TVM_100 keymapping' },
         { key: 'ipad_custom_resolution', title: 'Custom Resolution', icon: 'fa-edit', desc: 'Manual width × height apply' },
+        { key: 'ipad_beta_keymapping', title: 'PUBG Mobile Beta Keymapping', icon: 'fa-code-merge', desc: 'Merge the PUBG Mobile Beta (com.tencent.igce) keymapping into the main TVM_100.xml' },
+        { key: 'ipad_bari_plux_fallback', title: 'Bari Plux Fallback Keymapping', icon: 'fa-life-ring', desc: 'Temporarily swap in a known-working Bari Plux keymapping for PUBG Mobile (Global)' },
     ],
     contact: [
         { key: 'contact_support', title: 'Direct Support', icon: 'fa-headset', desc: 'Website / Telegram / Discord / Email tiles' },
