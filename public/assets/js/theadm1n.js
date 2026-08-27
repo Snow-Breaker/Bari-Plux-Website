@@ -1852,6 +1852,7 @@ const PAGE_FLAG_CATALOG = [
     { key: 'settings', title: 'Settings', icon: 'fa-cog' },
     { key: 'adbdiagnostic', title: 'ADB Diagnostic', icon: 'fa-stethoscope' },
     { key: 'keymap', title: 'Keymap', icon: 'fa-keyboard' },
+    { key: 'procenter', title: 'Pro Center', icon: 'fa-crown' },
 ];
 const PAGE_FLAG_KEYS = new Set(PAGE_FLAG_CATALOG.map(p => p.key));
 
@@ -1992,6 +1993,10 @@ const PAGE_FEATURE_CATALOG = {
         { key: 'keymap_backup', title: 'Backup / Restore', icon: 'fa-save', desc: 'Backup, restore, delete MuMu keymap config; open config folder' },
         { key: 'keymap_autobackup', title: 'Auto Backup', icon: 'fa-clock', desc: '30-minute auto-backup timer with toggle, status badge, and delete config' },
         { key: 'keymap_info', title: 'Info / Notes', icon: 'fa-info-circle', desc: 'How it works, about keymaps, and important notes tip cards' },
+    ],
+    procenter: [
+        { key: 'procenter_comparison', title: 'Feature Comparison', icon: 'fa-table', desc: 'Free vs Pro feature comparison table' },
+        { key: 'procenter_upgrade_cta', title: 'Upgrade CTA', icon: 'fa-crown', desc: 'Get Pro button and plan status chip' },
     ],
 };
 
