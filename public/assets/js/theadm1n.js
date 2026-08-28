@@ -1853,6 +1853,7 @@ const PAGE_FLAG_CATALOG = [
     { key: 'adbdiagnostic', title: 'ADB Diagnostic', icon: 'fa-stethoscope' },
     { key: 'keymap', title: 'Keymap', icon: 'fa-keyboard' },
     { key: 'procenter', title: 'Pro Center', icon: 'fa-crown' },
+    { key: 'mousedpi', title: 'Mouse DPI', icon: 'fa-mouse' },
 ];
 const PAGE_FLAG_KEYS = new Set(PAGE_FLAG_CATALOG.map(p => p.key));
 
@@ -1997,6 +1998,12 @@ const PAGE_FEATURE_CATALOG = {
     procenter: [
         { key: 'procenter_comparison', title: 'Feature Comparison', icon: 'fa-table', desc: 'Free vs Pro feature comparison table' },
         { key: 'procenter_upgrade_cta', title: 'Upgrade CTA', icon: 'fa-crown', desc: 'Get Pro button and plan status chip' },
+    ],
+    mousedpi: [
+        { key: 'mousedpi_detected_devices', title: 'Detected Mice', icon: 'fa-search', desc: 'Mouse picker and detected-device list' },
+        { key: 'mousedpi_hardware_dpi', title: 'Hardware DPI', icon: 'fa-microchip', desc: 'Real hardware DPI read/write card (Pro-gated)' },
+        { key: 'mousedpi_calculator', title: 'Sensitivity Calculator', icon: 'fa-calculator', desc: 'Free ratio-based sensitivity calculator, every mouse' },
+        { key: 'mousedpi_pointer_speed', title: 'Desktop Pointer Speed', icon: 'fa-sliders-h', desc: 'Free Windows pointer-speed control, every mouse' },
     ],
 };
 
