@@ -1891,6 +1891,7 @@ const PAGE_FEATURE_CATALOG = {
         { key: 'mousedpi_hardware_dpi', title: 'Mouse DPI: Hardware DPI', icon: 'fa-microchip', desc: 'Real hardware DPI read/write card (Pro-gated)' },
         { key: 'mousedpi_calculator', title: 'Mouse DPI: Sensitivity Calculator', icon: 'fa-calculator', desc: 'Free ratio-based sensitivity calculator, every mouse' },
         { key: 'mousedpi_pointer_speed', title: 'Mouse DPI: Desktop Pointer Speed', icon: 'fa-sliders-h', desc: 'Free Windows pointer-speed control, every mouse' },
+        { key: 'mousedpi_razer', title: 'Mouse DPI: Razer Hardware DPI', icon: 'fa-mouse-pointer', desc: 'Real Razer DPI protocol - keep OFF until confirmed working on real hardware, never live-verified' },
     ],
     optimization: [
         { key: 'optimization_section_cleanup', title: 'Section: Cleanup', icon: 'fa-th-large', desc: 'Landing row for the Cleanup section' },
