@@ -31,7 +31,28 @@ function markDesktopFlowIfNeeded() {
         if (new URLSearchParams(window.location.search).get('desktop') === '1') {
             sessionStorage.setItem('desktop_login_flow', '1');
         }
+        // Persisted the same way desktop_login_flow survives OAuth redirects (Google/GitHub/
+        // Discord all bounce the tab away from this origin and back) - the state value the
+        // desktop app generated before opening this page has to make it all the way to the
+        // baripluxtoolwin:// callback link, however many redirects happen in between.
+        var state = new URLSearchParams(window.location.search).get('state');
+        if (state) {
+            sessionStorage.setItem('desktop_login_state', state);
+        }
     } catch (e) {}
+}
+
+// Desktop app's per-flow anti-hijack token (AuthSessionService.BeginProtocolLoginState on the
+// WinUI3 client) - threaded from the initial ?state=... query param through to every
+// baripluxtoolwin://login callback link this page constructs, so the app can refuse to apply a
+// claim that didn't originate from a flow it actually started. Empty string (not appended) for
+// an older client build that doesn't send one yet, or a page load with no desktop flow at all.
+function getDesktopLoginState() {
+    try {
+        return new URLSearchParams(window.location.search).get('state')
+            || sessionStorage.getItem('desktop_login_state')
+            || '';
+    } catch (e) { return ''; }
 }
 
 // ==================== PENDING TOKEN ====================
@@ -116,6 +137,11 @@ function cleanupDesktopLogin() {
 
 function showDesktopConnectingView(base64Claim, claimSecret) {
     const secretParam = claimSecret ? `&secret=${claimSecret}` : '';
+    // Only appended to the current WinUI3 client's scheme - the 2.x/legacy links below are a
+    // separate app build this state check hasn't been added to on the receiving end, and an
+    // unrecognized extra query param there is harmless (ignored, same as any other unknown param).
+    const desktopState = getDesktopLoginState();
+    const stateParam = desktopState ? `&state=${encodeURIComponent(desktopState)}` : '';
     document.getElementById('loginFormView').style.display = 'none';
     document.getElementById('loggedInView').classList.add('active');
 
@@ -135,7 +161,7 @@ function showDesktopConnectingView(base64Claim, claimSecret) {
             <div style="color:var(--muted);font-size:0.85rem;margin-bottom:18px;">
                 Click below to launch the app and complete sign-in.
             </div>
-            <a href="baripluxtoolwin://login?token=${base64Claim}${secretParam}"
+            <a href="baripluxtoolwin://login?token=${base64Claim}${secretParam}${stateParam}"
                id="openAppBtn"
                style="display:inline-block;padding:14px 32px;background:var(--accent);
                       color:white;border-radius:12px;font-weight:600;font-size:1rem;
@@ -1289,8 +1315,12 @@ document.getElementById('btnForgotPassword').addEventListener('click', async fun
 // ==================== OPEN APP ====================
 function tryProtocolUrls(base64Claim) {
     const secretParam = currentClaimSecret ? ('&secret=' + encodeURIComponent(currentClaimSecret)) : '';
+    // Only appended to the current WinUI3 client's scheme - see the matching comment in
+    // showDesktopConnectingView above.
+    const desktopState = getDesktopLoginState();
+    const stateParam = desktopState ? ('&state=' + encodeURIComponent(desktopState)) : '';
     const appUrls = [
-        'baripluxtoolwin://login?token=' + base64Claim + secretParam,
+        'baripluxtoolwin://login?token=' + base64Claim + secretParam + stateParam,
         'baripluxtool23://login?token=' + base64Claim + secretParam,
         'bptv223://login?token=' + base64Claim + secretParam
     ];
