@@ -1117,6 +1117,11 @@
                         <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Installer Download URL</div>
                         <input type="text" id="updDownloadUrlInput_3x" placeholder="https://download.bariplux.com/..." style="width:100%;padding:10px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.82rem;">
                     </div>
+                    <div style="grid-column:1/-1;">
+                        <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Installer SHA-256 (auto-published by CI on a GitHub release - only fill this in by hand if publishing outside that pipeline)</div>
+                        <input type="text" id="updSha256Input_3x" placeholder="64 hex characters - leave blank to keep the client's integrity check inert" style="width:100%;padding:10px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.82rem;">
+                        <div style="font-size:0.7rem;color:var(--warning);margin-top:4px;">Saving this form always writes whatever is in this box (blank clears it) - if CI already published a hash for the current version, leave this field as loaded or you will silently strip the client's integrity check for every user's next update.</div>
+                    </div>
                     <div style="display:flex;gap:22px;align-items:center;padding-top:8px;">
                         <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
                             <input type="checkbox" id="updCheckEnabledInput_3x" checked style="width:16px;height:16px;accent-color:var(--accent);">

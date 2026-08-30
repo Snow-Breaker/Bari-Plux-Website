@@ -2909,6 +2909,12 @@ function fillUpdateForm(line, cfg) {
     document.getElementById(`updChangelogInput_${line}`).value = changelog;
 
     if (line === '3x') {
+        // UpdateCheckService.cs's one client-side integrity check against a downloaded installer -
+        // CI (publish-release.yml) already writes this automatically for a real GitHub release, so
+        // this input normally just round-trips CI's own value; it exists so saveUpdateConfig (a
+        // full RTDB overwrite, not a merge) doesn't silently erase it on an unrelated manual edit,
+        // and so a manual publish outside the CI pipeline still has a way to set it.
+        document.getElementById('updSha256Input_3x').value = (cfg && cfg.sha256) || '';
         document.getElementById('updStatVersion').textContent = version;
         document.getElementById('updStatChecks').textContent = checkEnabled ? 'ON' : 'OFF';
         document.getElementById('updStatMandatory').textContent = mandatory ? 'YES' : 'NO';
@@ -2927,7 +2933,8 @@ async function loadUpdateConfig() {
             const lu = document.getElementById(`updatesLastUpdated_${line}`);
             if (lu) {
                 const ts = cfg && cfg.updated_at ? new Date(cfg.updated_at).toLocaleString() : 'never published';
-                lu.textContent = 'Firebase config last updated: ' + ts;
+                const shaNote = line === '3x' ? (cfg && cfg.sha256 ? ' — integrity check ARMED (sha256 set)' : ' — integrity check INERT (no sha256 published)') : '';
+                lu.textContent = 'Firebase config last updated: ' + ts + shaNote;
             }
         } catch (e) {
             fillUpdateForm(line, null);
@@ -3009,6 +3016,18 @@ async function saveUpdateConfig(line) {
         return;
     }
 
+    // 3.x only - UpdateCheckService.cs's client-side installer integrity check. Included in the
+    // payload (not omitted) specifically so this Save button can no longer silently erase a hash
+    // CI already published via a full-overwrite .set() - see fillUpdateForm's comment on this field.
+    let sha256 = '';
+    if (line === '3x') {
+        sha256 = (document.getElementById('updSha256Input_3x').value || '').trim().toLowerCase();
+        if (sha256 && !/^[0-9a-f]{64}$/.test(sha256)) {
+            showToast('⚠️ SHA-256 must be exactly 64 hex characters (or left blank)', 'danger');
+            return;
+        }
+    }
+
     const payload = {
         version,
         mandatory: !!document.getElementById(`updMandatoryInput_${line}`).checked,
@@ -3017,6 +3036,7 @@ async function saveUpdateConfig(line) {
         changelog,
         updated_at: Date.now()
     };
+    if (line === '3x') payload.sha256 = sha256 || null;
 
     try {
         await db.ref(updateConfigPath(line)).set(payload);
