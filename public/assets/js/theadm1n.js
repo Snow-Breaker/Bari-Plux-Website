@@ -1865,8 +1865,12 @@ const PAGE_FEATURE_CATALOG = {
         { key: 'home_time', title: 'Time Card', icon: 'fa-clock', desc: 'Live clock and day-progress atmosphere card' },
         { key: 'home_system_status', title: 'System Status', icon: 'fa-heartbeat', desc: 'CPU / RAM / network / uptime metrics' },
         { key: 'home_activity_log', title: 'Activity Log', icon: 'fa-list', desc: 'Recent activity list with clear / export' },
-        { key: 'home_backup_trust', title: 'Backup / Trust Card', icon: 'fa-shield-alt', desc: 'Backup status and Back Up Now card' },
-        { key: 'install_agent', title: 'Install Agent Button', icon: 'fa-mobile-alt', desc: 'Install Companion Agent button on the Emulator card' },
+        { key: 'home_install_agent', title: 'Install Agent Button', icon: 'fa-mobile-alt', desc: 'Install Companion Agent button on the Emulator card (renamed from install_agent for naming consistency)' },
+        { key: 'home_emulator_status', title: 'Emulator Status Card', icon: 'fa-tablet-alt', desc: 'Whole Emulator Status card (row 1)' },
+        { key: 'home_gamestatus', title: 'Game Status Card', icon: 'fa-play-circle', desc: 'Whole Game Status card (row 1)' },
+        { key: 'home_quickactions', title: 'Quick Actions Card', icon: 'fa-bolt', desc: 'Whole Quick Actions card (row 2)' },
+        { key: 'home_recommendations', title: "What's Next Card", icon: 'fa-flag', desc: 'Whole Recommendations / What\'s Next card (row 3)' },
+        { key: 'home_news', title: 'News & Updates Card', icon: 'fa-newspaper', desc: 'Whole News & Updates card (row 4)' },
     ],
     tools: [
         { key: 'tools_section_launch_shortcuts', title: 'Section: Launch & Shortcuts', icon: 'fa-th-large', desc: 'Landing row for the Launch & Shortcuts section' },
@@ -1943,7 +1947,7 @@ const PAGE_FEATURE_CATALOG = {
     ],
     settings: [
         { key: 'settings_account', title: 'Account / Login', icon: 'fa-user', desc: 'Sign-in card and account details' },
-        { key: 'cloud_backup', title: 'Cloud Backup', icon: 'fa-cloud', desc: 'Backup / restore settings to the cloud' },
+        { key: 'settings_cloud_backup', title: 'Cloud Backup', icon: 'fa-cloud', desc: 'Backup / restore settings to the cloud (renamed from cloud_backup for naming consistency)' },
         { key: 'settings_theme', title: 'Appearance / Theme', icon: 'fa-palette', desc: 'Theme swatch picker' },
         { key: 'settings_emulator_profile', title: 'Emulator Profile', icon: 'fa-mobile-alt', desc: 'GameLoop / MuMu profile and paths' },
         { key: 'settings_ui_scale', title: 'UI Scale', icon: 'fa-text-height', desc: 'Window zoom / UI scale controls' },
