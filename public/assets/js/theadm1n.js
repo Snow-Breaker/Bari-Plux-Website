@@ -3310,6 +3310,7 @@ async function loadRemoteConfig() {
         document.getElementById('rcHttpTimeout').value = data.http_request_timeout_seconds > 0 ? data.http_request_timeout_seconds : '';
         document.getElementById('rcDownloadMirror').value = data.download_url_mirror || '';
         document.getElementById('rcPubgMobileLightEnabled').checked = data.pubg_mobile_light_enabled === true;
+        document.getElementById('rcBgmiLiteEnabled').checked = data.bgmi_lite_enabled === true;
         const status = document.getElementById('rcStatus');
         if (status) status.textContent = data.updated_at
             ? 'Last saved ' + new Date(data.updated_at).toLocaleString()
@@ -3333,6 +3334,7 @@ async function saveRemoteConfig() {
             http_request_timeout_seconds: num('rcHttpTimeout'),
             download_url_mirror: mirror || null,
             pubg_mobile_light_enabled: document.getElementById('rcPubgMobileLightEnabled').checked ? true : null,
+            bgmi_lite_enabled: document.getElementById('rcBgmiLiteEnabled').checked ? true : null,
             updated_at: Date.now()
         };
         // update() with a null value removes that key - RTDB doesn't store nulls, and "missing"
