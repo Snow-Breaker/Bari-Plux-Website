@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bari Plux Tool — TAC (New GameLoop) ADB Guide</title>
+  <meta name="description" content="How to enable USB debugging in TAC / Tencent Android Connect (the newer GameLoop engine) and connect it to Bari Plux Tool.">
+  <meta name="robots" content="index,follow">
+  <link rel="icon" href="https://i.postimg.cc/CKj6nBJP/PLUX-Logo.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/bariplux.css?v=20260728ai">
+  <link rel="stylesheet" href="assets/css/site.css?v=20260729mnav">
+  <link rel="stylesheet" href="assets/css/shell.css?v=20260728ai">
+  <link rel="stylesheet" href="assets/css/pages/editorial.css?v=20260728ai">
+  <script src="assets/js/boot.js?v=20260729nomobile"></script>
+  <script src="assets/js/protect.js" defer></script>
+  <script src="assets/js/signal-ambient.js?v=20260728ai" defer></script>
+  <script src="assets/js/site-shell.js?v=20260729home" defer></script>
+</head>
+<body class="bp-body">
+  <div id="bp-aurora" class="bp-aurora bp-ambient" aria-hidden="true"></div>
+  <main class="bp-editorial">
+    <header class="bp-editorial__hero glass">
+      <p class="bp-editorial__kicker">Bari Plux Tool · Emulator Guides</p>
+      <h1>TAC ("New GameLoop") — Enable ADB</h1>
+      <p class="bp-editorial__lead">TAC (Tencent Android Connect, also shown as "GameLoop" in newer installs) is a genuinely different engine from legacy GameLoop — it has no Home screen or app market by default, so reaching Android's own Settings takes one extra step the first time.</p>
+      <p class="bp-editorial__meta">Last updated: 31 August 2026 · If your GameLoop install has an app market and a normal Home screen, use the <a href="/GameLoop-ADB-Guide">legacy GameLoop guide</a> instead — this one is for the newer engine specifically</p>
+    </header>
+
+    <article class="bp-editorial__panel glass" id="why">
+      <h2>Why this is different from other emulators</h2>
+      <p>TAC's launcher boots directly into one app (normally the game itself) with no Home screen to switch away from — so there's no obvious way to reach Android's Settings app to turn on USB debugging, the same way you would on GameLoop, MuMu, or LDPlayer. Bari Plux Tool already knows how to work around this automatically.</p>
+    </article>
+
+    <article class="bp-editorial__panel glass" id="automatic">
+      <h2>The automatic path (do this)</h2>
+      <ol>
+        <li>In BPT's <strong>Settings → Emulator Profile</strong>, select <strong>TAC</strong>.</li>
+        <li>Open TAC as you normally would.</li>
+        <li>In BPT, go to <strong>Home</strong> and click <strong>Connect Emulator</strong>. If USB debugging isn't on yet, BPT automatically launches TAC directly into Android's own Settings screen for you — no file manager, no extra app install, nothing to download inside the emulator.</li>
+        <li>From that Settings screen, the rest is the one manual step nothing can automate: go to <strong>About phone</strong>, tap <strong>Build number</strong> about 7 times until it says "You are now a developer," then open the new <strong>Developer options</strong> entry and toggle <strong>USB debugging</strong> on.</li>
+        <li>Click <strong>Connect Emulator</strong> again in BPT — it should connect immediately, no restart needed.</li>
+      </ol>
+      <p>This is a one-time step per TAC install. Once USB debugging is on, it stays on — you won't need to repeat this the next time you open TAC.</p>
+    </article>
+
+    <article class="bp-editorial__panel glass" id="manual">
+      <h2>If BPT can't reach the Settings screen automatically</h2>
+      <ol>
+        <li>Make sure TAC is fully closed and reopened once, then try <strong>Connect Emulator</strong> again — a half-started session can interfere with the automatic launch.</li>
+        <li>Click BPT's <strong>Repair ADB</strong> (Home → Quick Actions), then try again.</li>
+        <li>Note: TAC's Wireless debugging toggle doesn't work in this environment (there's no real Wi-Fi radio inside the virtual device) — this is expected and not something to troubleshoot. USB debugging is the one you need, and it's enough on its own.</li>
+      </ol>
+    </article>
+
+    <article class="bp-editorial__panel glass" id="notes">
+      <h2>Worth knowing</h2>
+      <ul>
+        <li>TAC reports a different spoofed device model almost every session — this is normal for this specific emulator and not a sign anything is broken. It doesn't affect whether BPT can connect or apply FPS/Active.sav/keymap features.</li>
+        <li>The Companion Agent (used elsewhere for live screen resolution/refresh-rate readouts on the Home card) cannot run on TAC — TAC only ever runs the one app it was provisioned for and blocks any other app from starting, by design. This isn't a bug to troubleshoot; ADB-based features (FPS presets, Active.sav, keymap) work normally regardless.</li>
+      </ul>
+    </article>
+
+    <div class="bp-editorial__actions">
+      <a class="bp-btn bp-btn--glass" href="/tool">Back to Bari Plux Tool</a>
+      <a class="bp-btn bp-btn--ghost" href="/#contact">Still stuck? Contact us</a>
+    </div>
+  </main>
+</body>
+</html>

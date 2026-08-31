@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bari Plux Tool — GameLoop ADB Guide</title>
+  <meta name="description" content="How to connect Bari Plux Tool to GameLoop via ADB, and what to do if it doesn't connect automatically.">
+  <meta name="robots" content="index,follow">
+  <link rel="icon" href="https://i.postimg.cc/CKj6nBJP/PLUX-Logo.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/bariplux.css?v=20260728ai">
+  <link rel="stylesheet" href="assets/css/site.css?v=20260729mnav">
+  <link rel="stylesheet" href="assets/css/shell.css?v=20260728ai">
+  <link rel="stylesheet" href="assets/css/pages/editorial.css?v=20260728ai">
+  <script src="assets/js/boot.js?v=20260729nomobile"></script>
+  <script src="assets/js/protect.js" defer></script>
+  <script src="assets/js/signal-ambient.js?v=20260728ai" defer></script>
+  <script src="assets/js/site-shell.js?v=20260729home" defer></script>
+</head>
+<body class="bp-body">
+  <div id="bp-aurora" class="bp-aurora bp-ambient" aria-hidden="true"></div>
+  <main class="bp-editorial">
+    <header class="bp-editorial__hero glass">
+      <p class="bp-editorial__kicker">Bari Plux Tool · Emulator Guides</p>
+      <h1>GameLoop — Connect ADB</h1>
+      <p class="bp-editorial__lead">GameLoop is the most common setup and usually connects to Bari Plux Tool with zero manual steps. This page covers what "connected" actually needs, and the fallback if it doesn't happen automatically.</p>
+      <p class="bp-editorial__meta">Last updated: 31 August 2026 · Applies to legacy GameLoop (not TAC / "New GameLoop" — see the <a href="/TAC-ADB-Guide">TAC guide</a> if your GameLoop was installed recently and has no separate app market)</p>
+    </header>
+
+    <article class="bp-editorial__panel glass" id="why">
+      <h2>Why ADB matters</h2>
+      <p>ADB (Android Debug Bridge) is how Bari Plux Tool talks to the Android system running inside GameLoop — reading device info, applying FPS/graphics presets, managing keymaps, and backing up your PUBG Mobile save data all go through this connection. Without it, BPT can still change Windows-level settings, but anything that touches the game itself needs ADB.</p>
+    </article>
+
+    <article class="bp-editorial__panel glass" id="automatic">
+      <h2>The automatic path (try this first)</h2>
+      <ul>
+        <li>Open GameLoop and let it fully load to its home screen before opening BPT.</li>
+        <li>In BPT, go to <strong>Home</strong> and click <strong>Connect Emulator</strong> (or <strong>Manage</strong> on the Emulator card).</li>
+        <li>If BPT reports the Companion Agent isn't installed, click <strong>Install Agent</strong> — this is a one-time step per GameLoop install.</li>
+        <li>If ADB was recently blocked by GameLoop itself, BPT's <strong>Repair ADB</strong> button (Home → Quick Actions) flips GameLoop's own ADB bridge registry setting back on and restarts the ADB server — no manual registry editing needed.</li>
+      </ul>
+      <p>For most users this is the whole story — GameLoop ships with ADB reachable by default, and BPT's own tools handle the rest.</p>
+    </article>
+
+    <article class="bp-editorial__panel glass" id="manual">
+      <h2>If it still won't connect</h2>
+      <ol>
+        <li>Close GameLoop completely (not just minimize), then reopen it and wait for the home screen.</li>
+        <li>In BPT, click <strong>Repair ADB</strong>, then try <strong>Connect Emulator</strong> again.</li>
+        <li>Check that no antivirus or firewall rule is blocking BPT's bundled <code>adb.exe</code> — add BPT's install folder to your antivirus exclusions if you're unsure.</li>
+        <li>Restart your PC if GameLoop was recently updated — a stale background service can hold the ADB port open.</li>
+      </ol>
+    </article>
+
+    <article class="bp-editorial__panel glass" id="notes">
+      <h2>Worth knowing</h2>
+      <p>GameLoop and Tencent's newer "TAC" emulator (also branded GameLoop, installed to a similar-looking folder) are genuinely different products under the hood — if your install has no app market and boots straight into one game, follow the <a href="/TAC-ADB-Guide">TAC guide</a> instead, not this one.</p>
+    </article>
+
+    <div class="bp-editorial__actions">
+      <a class="bp-btn bp-btn--glass" href="/tool">Back to Bari Plux Tool</a>
+      <a class="bp-btn bp-btn--ghost" href="/#contact">Still stuck? Contact us</a>
+    </div>
+  </main>
+</body>
+</html>

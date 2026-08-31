@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bari Plux Tool — MuMu Player ADB Guide</title>
+  <meta name="description" content="How to connect Bari Plux Tool to MuMu Player via ADB, and what to do if it doesn't connect automatically.">
+  <meta name="robots" content="index,follow">
+  <link rel="icon" href="https://i.postimg.cc/CKj6nBJP/PLUX-Logo.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/bariplux.css?v=20260728ai">
+  <link rel="stylesheet" href="assets/css/site.css?v=20260729mnav">
+  <link rel="stylesheet" href="assets/css/shell.css?v=20260728ai">
+  <link rel="stylesheet" href="assets/css/pages/editorial.css?v=20260728ai">
+  <script src="assets/js/boot.js?v=20260729nomobile"></script>
+  <script src="assets/js/protect.js" defer></script>
+  <script src="assets/js/signal-ambient.js?v=20260728ai" defer></script>
+  <script src="assets/js/site-shell.js?v=20260729home" defer></script>
+</head>
+<body class="bp-body">
+  <div id="bp-aurora" class="bp-aurora bp-ambient" aria-hidden="true"></div>
+  <main class="bp-editorial">
+    <header class="bp-editorial__hero glass">
+      <p class="bp-editorial__kicker">Bari Plux Tool · Emulator Guides</p>
+      <h1>MuMu Player — Connect ADB</h1>
+      <p class="bp-editorial__lead">MuMu Player (both MuMu 12 and MuMu 15) ships with ADB reachable by default and normally connects to Bari Plux Tool automatically. This page covers the connection requirements and what to check if it doesn't.</p>
+      <p class="bp-editorial__meta">Last updated: 31 August 2026 · Applies to MuMu Player 12 and 15</p>
+    </header>
+
+    <article class="bp-editorial__panel glass" id="why">
+      <h2>Why ADB matters</h2>
+      <p>ADB is how Bari Plux Tool reads and manages your PUBG Mobile install inside MuMu — FPS presets, keymap backup/restore, Active.sav backup, and file transfers all go through this connection.</p>
+    </article>
+
+    <article class="bp-editorial__panel glass" id="automatic">
+      <h2>The automatic path (try this first)</h2>
+      <ul>
+        <li>Set your MuMu install folder once in BPT's <strong>Settings → Emulator Profile</strong> (the folder that contains <code>nx_main</code>).</li>
+        <li>Open MuMu Player and let it fully boot to its home screen before opening BPT.</li>
+        <li>In BPT, go to <strong>Home</strong> and click <strong>Connect Emulator</strong>.</li>
+        <li>If you run multiple MuMu instances at once, make sure the profile selected in BPT's Settings (MuMu 12 vs. MuMu 15) matches the instance you actually want BPT talking to.</li>
+      </ul>
+      <p>MuMu doesn't have a separate "enable ADB" toggle to hunt for in most versions — the bundled ADB bridge is already on. If BPT still can't see it, the install path is almost always the culprit.</p>
+    </article>
+
+    <article class="bp-editorial__panel glass" id="manual">
+      <h2>If it still won't connect</h2>
+      <ol>
+        <li>Double-check <strong>Settings → Emulator Profile → MuMu Install Path</strong> in BPT actually points at MuMu's real install folder — use the <strong>Detect</strong> button there instead of typing it by hand.</li>
+        <li>Click BPT's <strong>Repair ADB</strong> (Home → Quick Actions), then try <strong>Connect Emulator</strong> again.</li>
+        <li>Close every running MuMu instance, reopen only the one you want to use, and wait for its home screen before reconnecting.</li>
+        <li>Add BPT's install folder to your antivirus/firewall exclusions if a security tool may be blocking its bundled <code>adb.exe</code>.</li>
+      </ol>
+    </article>
+
+    <div class="bp-editorial__actions">
+      <a class="bp-btn bp-btn--glass" href="/tool">Back to Bari Plux Tool</a>
+      <a class="bp-btn bp-btn--ghost" href="/#contact">Still stuck? Contact us</a>
+    </div>
+  </main>
+</body>
+</html>

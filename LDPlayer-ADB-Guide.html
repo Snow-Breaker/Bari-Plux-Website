@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bari Plux Tool — LDPlayer ADB Guide</title>
+  <meta name="description" content="How to connect Bari Plux Tool to LDPlayer via ADB, and what to do if it doesn't connect automatically.">
+  <meta name="robots" content="index,follow">
+  <link rel="icon" href="https://i.postimg.cc/CKj6nBJP/PLUX-Logo.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/bariplux.css?v=20260728ai">
+  <link rel="stylesheet" href="assets/css/site.css?v=20260729mnav">
+  <link rel="stylesheet" href="assets/css/shell.css?v=20260728ai">
+  <link rel="stylesheet" href="assets/css/pages/editorial.css?v=20260728ai">
+  <script src="assets/js/boot.js?v=20260729nomobile"></script>
+  <script src="assets/js/protect.js" defer></script>
+  <script src="assets/js/signal-ambient.js?v=20260728ai" defer></script>
+  <script src="assets/js/site-shell.js?v=20260729home" defer></script>
+</head>
+<body class="bp-body">
+  <div id="bp-aurora" class="bp-aurora bp-ambient" aria-hidden="true"></div>
+  <main class="bp-editorial">
+    <header class="bp-editorial__hero glass">
+      <p class="bp-editorial__kicker">Bari Plux Tool · Emulator Guides</p>
+      <h1>LDPlayer — Connect ADB</h1>
+      <p class="bp-editorial__lead">LDPlayer (both LDPlayer 9 and LDPlayer 14) ships with its own bundled ADB and normally connects to Bari Plux Tool without any extra setup. This page covers what to check if it doesn't.</p>
+      <p class="bp-editorial__meta">Last updated: 31 August 2026 · Applies to LDPlayer 9 and LDPlayer 14 (treated as separate profiles in BPT — pick the one matching your actual install in Settings)</p>
+    </header>
+
+    <article class="bp-editorial__panel glass" id="why">
+      <h2>Why ADB matters</h2>
+      <p>ADB is how Bari Plux Tool talks to LDPlayer's Android system — FPS presets, keymap and Active.sav backup/restore, and file transfers all rely on this connection.</p>
+    </article>
+
+    <article class="bp-editorial__panel glass" id="automatic">
+      <h2>The automatic path (try this first)</h2>
+      <ul>
+        <li>In BPT's <strong>Settings → Emulator Profile</strong>, pick whichever you actually have installed — <strong>LDPlayer 9</strong> or <strong>LDPlayer 14</strong>. They're kept as separate profiles since they run different Android versions and behave differently.</li>
+        <li>Open LDPlayer and wait for it to fully boot to its home screen before opening BPT.</li>
+        <li>In BPT, go to <strong>Home</strong> and click <strong>Connect Emulator</strong>.</li>
+        <li>If you run more than one LDPlayer instance, make sure the one you want is actually running (not just listed) — a stopped instance can't be reached over ADB even if it appears in LDPlayer's own multi-instance manager.</li>
+      </ul>
+    </article>
+
+    <article class="bp-editorial__panel glass" id="manual">
+      <h2>If it still won't connect</h2>
+      <ol>
+        <li>Confirm <strong>Settings → Advanced → ADB debugging</strong> is switched on inside LDPlayer's own settings (usually on by default, but a fresh install or a reset can turn it off).</li>
+        <li>Click BPT's <strong>Repair ADB</strong> (Home → Quick Actions), then try <strong>Connect Emulator</strong> again.</li>
+        <li>Fully close LDPlayer's multi-instance manager and every running instance, then reopen just the one you want to use.</li>
+        <li>If you have Hyper-V and LDPlayer 9 installed together, virtualization conflicts are a known LDPlayer 9 issue — LDPlayer 14 has native Hyper-V support and doesn't have this problem.</li>
+      </ol>
+    </article>
+
+    <div class="bp-editorial__actions">
+      <a class="bp-btn bp-btn--glass" href="/tool">Back to Bari Plux Tool</a>
+      <a class="bp-btn bp-btn--ghost" href="/#contact">Still stuck? Contact us</a>
+    </div>
+  </main>
+</body>
+</html>

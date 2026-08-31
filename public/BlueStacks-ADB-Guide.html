@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bari Plux Tool — BlueStacks ADB Guide</title>
+  <meta name="description" content="How to enable Android Debug Bridge (ADB) in BlueStacks and connect it to Bari Plux Tool.">
+  <meta name="robots" content="index,follow">
+  <link rel="icon" href="https://i.postimg.cc/CKj6nBJP/PLUX-Logo.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/bariplux.css?v=20260728ai">
+  <link rel="stylesheet" href="assets/css/site.css?v=20260729mnav">
+  <link rel="stylesheet" href="assets/css/shell.css?v=20260728ai">
+  <link rel="stylesheet" href="assets/css/pages/editorial.css?v=20260728ai">
+  <script src="assets/js/boot.js?v=20260729nomobile"></script>
+  <script src="assets/js/protect.js" defer></script>
+  <script src="assets/js/signal-ambient.js?v=20260728ai" defer></script>
+  <script src="assets/js/site-shell.js?v=20260729home" defer></script>
+</head>
+<body class="bp-body">
+  <div id="bp-aurora" class="bp-aurora bp-ambient" aria-hidden="true"></div>
+  <main class="bp-editorial">
+    <header class="bp-editorial__hero glass">
+      <p class="bp-editorial__kicker">Bari Plux Tool · Emulator Guides</p>
+      <h1>BlueStacks — Enable ADB</h1>
+      <p class="bp-editorial__lead">Unlike GameLoop, MuMu, and LDPlayer, BlueStacks ships with ADB <strong>switched off by default</strong> — this one manual toggle is required before Bari Plux Tool can connect to it at all.</p>
+      <p class="bp-editorial__meta">Last updated: 31 August 2026 · Applies to BlueStacks 5</p>
+    </header>
+
+    <article class="bp-editorial__panel glass" id="why">
+      <h2>Why this step is required</h2>
+      <p>BlueStacks disables its Android Debug Bridge by default for every instance. This is a one-time setting per instance, not a per-launch step — once it's on, it stays on until you turn it off again.</p>
+    </article>
+
+    <article class="bp-editorial__panel glass" id="steps">
+      <h2>Turn on ADB in BlueStacks</h2>
+      <ol>
+        <li>Open BlueStacks and start the instance you use for PUBG Mobile.</li>
+        <li>Click the <strong>gear icon (Settings)</strong> in the side toolbar.</li>
+        <li>Go to the <strong>Advanced</strong> tab.</li>
+        <li>Find <strong>Android Debug Bridge</strong> and turn the toggle <strong>on</strong>.</li>
+        <li>BlueStacks will show a message like "ADB is listening on 127.0.0.1:<em>port</em>" — the port number changes on every restart, but Bari Plux Tool reads it automatically, so you don't need to note it down yourself.</li>
+      </ol>
+    </article>
+
+    <article class="bp-editorial__panel glass" id="connect">
+      <h2>Connect from Bari Plux Tool</h2>
+      <ul>
+        <li>In BPT's <strong>Settings → Emulator Profile</strong>, select <strong>BlueStacks</strong>.</li>
+        <li>With BlueStacks running and ADB enabled as above, go to <strong>Home</strong> and click <strong>Connect Emulator</strong>.</li>
+        <li>If you restart BlueStacks, the ADB toggle stays on from before — you only need to repeat the steps above if you reset BlueStacks or create a new instance.</li>
+      </ul>
+    </article>
+
+    <article class="bp-editorial__panel glass" id="source">
+      <h2>Source</h2>
+      <p>These steps match BlueStacks' own official support documentation: <a href="https://support.bluestacks.com/hc/en-us/articles/23925869130381-How-to-enable-Android-Debug-Bridge-on-BlueStacks-5" target="_blank" rel="noopener">How to enable Android Debug Bridge on BlueStacks 5</a>.</p>
+    </article>
+
+    <div class="bp-editorial__actions">
+      <a class="bp-btn bp-btn--glass" href="/tool">Back to Bari Plux Tool</a>
+      <a class="bp-btn bp-btn--ghost" href="/#contact">Still stuck? Contact us</a>
+    </div>
+  </main>
+</body>
+</html>
