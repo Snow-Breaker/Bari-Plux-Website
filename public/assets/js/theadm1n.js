@@ -1938,6 +1938,8 @@ const PAGE_FEATURE_CATALOG = {
         { key: 'filemanager_transfer_history', title: 'Transfer History', icon: 'fa-history', desc: 'Sidebar transfer history entry' },
         { key: 'filemanager_storage', title: 'Storage Meter', icon: 'fa-hdd', desc: 'Bottom sidebar free-space card' },
         { key: 'filemanager_properties', title: 'Properties Panel', icon: 'fa-info-circle', desc: 'Right-side file properties inspector' },
+        { key: 'filemanager_advanced_ops', title: 'Advanced Ops (Pro)', icon: 'fa-lock', desc: 'Compress / Extract / Encrypt / Decrypt - Pro-gated via LicensedFeature.FileManagerAdvancedOps' },
+        { key: 'filemanager_batch_rename', title: 'Batch Rename (Pro)', icon: 'fa-lock', desc: 'Pattern-based multi-item rename - Pro-gated via LicensedFeature.FileManagerBatchRename' },
     ],
     settings: [
         { key: 'settings_account', title: 'Account / Login', icon: 'fa-user', desc: 'Sign-in card and account details' },
