@@ -1016,6 +1016,24 @@
                 <div id="rcStatus" style="font-size:0.72rem;color:var(--muted);margin-top:10px;"></div>
             </div>
 
+            <div id="databaseAssetsCard" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px;margin-bottom:20px;">
+                <div style="font-size:0.9rem;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px;">
+                    <i class="fas fa-folder-open" style="color:var(--accent);"></i> Content Updates (BPT)
+                </div>
+                <div style="font-size:0.78rem;color:var(--muted);margin-bottom:14px;line-height:1.5;">
+                    Ship an updated keymap/iPad-profile/ADB package to installed users without a full app release.
+                    Zip the folder, upload it as a GitHub Release asset (or anywhere under bariplux.com), paste its
+                    URL + SHA-256 below, and bump the version string. Writes to
+                    <code style="color:var(--accent2);">app_config/database_assets_3x</code> - BPT polls this and offers the
+                    update in Settings the next time the app checks (blank = no update offered for that folder).
+                </div>
+                <div id="dbAssetRows" style="display:flex;flex-direction:column;gap:14px;"></div>
+                <div style="margin-top:14px;">
+                    <button class="action-btn view" data-act="saveDatabaseAssets" style="padding:9px 16px;font-size:0.82rem;font-weight:600;"><i class="fas fa-save"></i> Save</button>
+                </div>
+                <div id="dbAssetsStatus" style="font-size:0.72rem;color:var(--muted);margin-top:10px;"></div>
+            </div>
+
             <div class="ff-section-title" id="ffPagesSectionTitle"><i class="fas fa-th-large"></i> App Pages <span class="hint">Open a page to manage its capabilities · Show/Hide = menu · Enable/Disable = can open · Emulator(s) = which profile(s) see it, pick several or leave on All</span></div>
             <div id="ffPagesGrid" class="ff-pages-grid">
                 <div style="grid-column:1/-1;text-align:center;padding:28px;color:var(--muted);">Loading pages…</div>

@@ -3356,6 +3356,82 @@ async function saveRemoteConfig() {
     }
 }
 
+/** Content Updates (BPT) - the 4 real DataBase folders DatabaseAssetUpdateService.cs offers as
+ * standalone updates (CustomKeymaps/iPadView/MuMuKeymap/ADB). Same "blank/missing = no update
+ * offered" fail-open shape as every other app_config/*_3x node here - the client only offers an
+ * update when a folder's remote version differs from what's already applied locally, and only
+ * ever downloads from a URL matching UpdateCheckService.IsTrustedDownloadHost's allowlist
+ * (bariplux.com/github.com family), so this card intentionally doesn't host uploads itself -
+ * paste a link to wherever the zip already lives (a GitHub Release asset is the natural choice,
+ * matching how the exe installer itself ships). */
+const DB_ASSET_KEYS = [
+    { key: 'customkeymaps', folder: 'CustomKeymaps' },
+    { key: 'ipadview', folder: 'iPadView' },
+    { key: 'mumukeymap', folder: 'MuMuKeymap' },
+    { key: 'adb', folder: 'ADB' },
+];
+
+function renderDatabaseAssetRows() {
+    const container = document.getElementById('dbAssetRows');
+    if (!container || container.children.length) return; // build once, loadDatabaseAssets fills values
+    container.innerHTML = DB_ASSET_KEYS.map(({ key, folder }) => `
+        <div style="border:1px solid var(--border);border-radius:8px;padding:12px;">
+            <div style="font-size:0.82rem;font-weight:600;margin-bottom:8px;">${folder}</div>
+            <div style="display:grid;grid-template-columns:100px 1fr 1fr;gap:10px;">
+                <input type="text" id="dbAsset_${key}_version" placeholder="version" style="width:100%;padding:9px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.8rem;">
+                <input type="text" id="dbAsset_${key}_url" placeholder="https://github.com/.../${folder}.zip" style="width:100%;padding:9px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.8rem;">
+                <input type="text" id="dbAsset_${key}_sha256" placeholder="sha256" style="width:100%;padding:9px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.8rem;">
+            </div>
+        </div>
+    `).join('');
+}
+
+async function loadDatabaseAssets() {
+    if (!db) return;
+    renderDatabaseAssetRows();
+    try {
+        const snap = await db.ref('app_config/database_assets_3x').once('value');
+        const data = snap.val() || {};
+        for (const { key } of DB_ASSET_KEYS) {
+            const entry = data[key] || {};
+            document.getElementById(`dbAsset_${key}_version`).value = entry.version || '';
+            document.getElementById(`dbAsset_${key}_url`).value = entry.download_url || '';
+            document.getElementById(`dbAsset_${key}_sha256`).value = entry.sha256 || '';
+        }
+        const status = document.getElementById('dbAssetsStatus');
+        if (status) status.textContent = data.updated_at
+            ? 'Last saved ' + new Date(data.updated_at).toLocaleString()
+            : 'Not configured yet - no content updates offered to any client';
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+async function saveDatabaseAssets() {
+    if (!db) return;
+    try {
+        const payload = { updated_at: Date.now() };
+        for (const { key, folder } of DB_ASSET_KEYS) {
+            const version = (document.getElementById(`dbAsset_${key}_version`).value || '').trim();
+            const url = (document.getElementById(`dbAsset_${key}_url`).value || '').trim();
+            const sha256 = (document.getElementById(`dbAsset_${key}_sha256`).value || '').trim();
+            // Partial entries are never written - DatabaseAssetUpdateService.ParseManifest (BPT)
+            // requires all three fields to trust an entry, so a half-filled row would silently
+            // never be offered anyway; refusing to save it here surfaces that immediately instead.
+            if (!version || !url || !sha256) {
+                payload[key] = null;
+                continue;
+            }
+            payload[key] = { folder, version, download_url: url, sha256 };
+        }
+        await db.ref('app_config/database_assets_3x').update(payload);
+        showToast('✅ Content update manifest saved', 'success');
+        loadDatabaseAssets();
+    } catch (e) {
+        showToast('⚠️ Failed to save content updates: ' + e.message, 'danger');
+    }
+}
+
 /** Chat slow mode (per role tier) + auto-delete sweep age, both admin-configurable knobs read
  * by LobbyChatService.SendIntervalMsForRole / SweepExpiredMessagesAsync (BPT). Same node as the
  * Remote Config card above (app_config/remote_config_3x) - a partial update() merges these four
@@ -3438,7 +3514,7 @@ function switchTab(tab, btn) {
     if(tab==='reports') loadReports();
     if(tab==='errors') loadErrors();
     if(tab==='chatMod') { loadChatMod(); loadChatSlowMode(); }
-    if(tab==='featureFlags') { loadFeatureFlags(); loadRemoteConfig(); }
+    if(tab==='featureFlags') { loadFeatureFlags(); loadRemoteConfig(); loadDatabaseAssets(); }
     else if (typeof closePageFlagDetail === 'function') closePageFlagDetail();
     if(tab==='updates') loadUpdateConfig();
     if(tab==='pause') loadPauseConfig();
