@@ -89,10 +89,6 @@
             '<button type="button" id="bp-search-open" class="bp-icon-btn" title="Search (Ctrl+K)" aria-label="Search">' +
               '<i class="fas fa-search" aria-hidden="true"></i>' +
             '</button>' +
-            '<button type="button" id="theme-toggle" class="bp-icon-btn" title="Toggle theme" aria-label="Toggle theme">' +
-              '<i class="fas fa-moon moon-icon" aria-hidden="true"></i>' +
-              '<i class="fas fa-sun sun-icon" aria-hidden="true"></i>' +
-            '</button>' +
             '<div class="bp-account user-menu-container">' +
               '<button type="button" id="loginBtnHeader" class="bp-btn bp-btn--glass login-btn-header" title="Login">' +
                 '<i class="fas fa-sign-in-alt" aria-hidden="true"></i>' +
