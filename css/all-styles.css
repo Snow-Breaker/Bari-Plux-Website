@@ -195,6 +195,17 @@ html { scrollbar-width: thin; scrollbar-color: rgba(129, 140, 248, 0.55) transpa
 .login-btn-header:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); color: var(--text); }
 .login-btn-header.logged-in { cursor: pointer; }
 
+/* Light mode disabled site-wide: hide every theme toggle so it cannot be switched */
+#theme-toggle,
+.theme-toggle,
+#themeToggle,
+.bp-icon-btn[title="Toggle theme"],
+#mobile-theme-toggle,
+.mobile-theme-toggle {
+  display: none !important;
+  visibility: hidden !important;
+}
+
 /* ========================
    HERO SECTION
    ======================== */

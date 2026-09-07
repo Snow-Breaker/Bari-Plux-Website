@@ -31,26 +31,18 @@
         const themeToggle = document.getElementById('theme-toggle');
         if (!themeToggle) return;
 
-        const storedTheme = localStorage.getItem('theme');
-        const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-        const currentTheme = storedTheme || systemTheme || 'dark';
-
+        // Light mode disabled site-wide — always dark
         function applyTheme(theme) {
-            document.documentElement.setAttribute('data-theme', theme);
-            document.body.setAttribute('data-theme', theme);
-            localStorage.setItem('theme', theme);
+            document.documentElement.setAttribute('data-theme', 'dark');
+            document.body.setAttribute('data-theme', 'dark');
+            try { localStorage.setItem('theme', 'dark'); } catch (e) { /* ignore */ }
             var metaTheme = document.querySelector('meta[name="theme-color"]');
             if (metaTheme) {
-                metaTheme.setAttribute('content', theme === 'light' ? '#eef0f6' : '#030305');
+                metaTheme.setAttribute('content', '#030305');
             }
         }
 
-        applyTheme(currentTheme);
-
-        themeToggle.addEventListener('click', () => {
-            const current = document.documentElement.getAttribute('data-theme') || 'dark';
-            applyTheme(current === 'light' ? 'dark' : 'light');
-        });
+        applyTheme('dark');
     }
 
     // Scroll to top

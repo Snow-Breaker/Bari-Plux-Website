@@ -7,13 +7,13 @@
   'use strict';
 
   try {
-    var stored = localStorage.getItem('theme');
-    var systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    var theme = stored || (systemDark ? 'dark' : 'light');
+    var theme = 'dark';
     document.documentElement.setAttribute('data-theme', theme);
+    document.body.setAttribute('data-theme', theme);
+    try { localStorage.setItem('theme', 'dark'); } catch (_) { /* ignore */ }
     var metaTheme = document.querySelector('meta[name="theme-color"]');
     if (metaTheme) {
-      metaTheme.setAttribute('content', theme === 'light' ? '#eef0f6' : '#030305');
+      metaTheme.setAttribute('content', '#030305');
     }
   } catch (_) { /* ignore */ }
 

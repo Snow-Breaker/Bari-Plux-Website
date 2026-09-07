@@ -356,7 +356,7 @@
 
     var stored = null;
     try { stored = localStorage.getItem('theme'); } catch (e) { /* ignore */ }
-    apply(stored || document.documentElement.getAttribute('data-theme') || 'dark');
+    apply('dark');
 
     btn.addEventListener('click', function () {
       var cur = document.documentElement.getAttribute('data-theme') || 'dark';
