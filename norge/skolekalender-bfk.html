@@ -1056,7 +1056,7 @@ function setLang(l){
   });
   render();
 }
-function setMode(m){mode=m;filter='all';statusTab='all';searchQuery='';clearSearch();render()}
+function setMode(m){mode=m;filter='all';statusTab='all';searchQuery='';clearSearch();syncHash();render()}
 function setView(v){
   viewMode=v;
   document.getElementById('vb-g').classList.toggle('on',v==='grid');
@@ -1101,7 +1101,20 @@ document.addEventListener('click',e=>{
   }
 });
 
+/* HASH ROUTING (#vgs / #university) */
+const HASH_MODE={vgs:'school',skole:'school',school:'school',university:'uni',universitet:'uni',uni:'uni'};
+function applyHash(){
+  const h=(location.hash||'').replace(/^#/,'').toLowerCase();
+  if(HASH_MODE[h])mode=HASH_MODE[h];
+}
+function syncHash(){
+  const h=mode==='uni'?'university':'vgs';
+  if((location.hash||'').replace(/^#/,'').toLowerCase()!==h)history.replaceState(null,'','#'+h);
+}
+window.addEventListener('hashchange',()=>{applyHash();render();});
+
 /* INIT */
+applyHash();
 render();
 </script>
 </body>
