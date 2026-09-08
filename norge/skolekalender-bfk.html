@@ -3,6 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="description" content="Skolekalender for Buskerud videregående skoler 2026–2029 – feriedager, fridager, helligdager, Ramadan og Eid, samt semesterdatoer for Universitetet i Oslo.">
+<meta name="keywords" content="skolekalender, skolerute, skoleferie, feriedager, Videregående skole, Buskerud, UiO, Universitetet i Oslo, 2026, 2027, 2028, 2029">
+<meta name="author" content="Bari Plux">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#c41e2a">
+<link rel="canonical" href="https://snow-breaker.github.io/Bari-Plux-Website/norge/skolekalender-bfk.html">
+<link rel="icon" type="image/png" href="flagofnorway.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Skolekalender · Norge 2026–2029">
+<meta property="og:description" content="Feriedager og skolerute for Buskerud videregående skoler 2026–2029, og semesterdatoer for Universitetet i Oslo.">
+<meta property="og:image" content="https://snow-breaker.github.io/Bari-Plux-Website/norge/flagofnorway.png">
+<meta property="og:locale" content="nb_NO">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Skolekalender · Norge 2026–2029">
+<meta name="twitter:description" content="Feriedager og skolerute for Buskerud videregående skoler 2026–2029, og semesterdatoer for Universitetet i Oslo.">
+<meta name="twitter:image" content="https://snow-breaker.github.io/Bari-Plux-Website/norge/flagofnorway.png">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","name":"Skolekalender · Norge 2026–2029","description":"Feriedager, fridager, helligdager og semesterdatoer for Buskerud videregående skoler og Universitetet i Oslo, 2026–2029.","inLanguage":"nb","about":[{"@type":"EducationalOccupationalProgram","name":"Videregående opplæring i Buskerud","provider":{"@type":"EducationalOrganization","name":"Buskerud fylkeskommune","url":"https://bfk.no"}},{"@type":"CollegeOrUniversity","name":"Universitetet i Oslo","url":"https://www.uio.no"}]}
+</script>
 <title>Skolekalender · Norge 2026–2029</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600&family=Nunito:wght@400;500;600;700;800;900&family=DM+Mono:wght@400;500&family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -137,6 +156,43 @@ body.fa .sbc-l{font-family:var(--f-fa)}
 .uni-note{display:none;margin:0 0 14px;padding:14px 18px;border:1.5px dashed var(--nor-rim);border-radius:14px;background:rgba(240,98,70,.05);font-size:13px;line-height:1.55;color:var(--ink2);}
 .uni-note.show{display:block}
 body.fa .uni-note{font-family:var(--f-fa)}
+
+/* ACCESSIBILITY + SHARE + EXPORT + NEXT PIN */
+:focus-visible{outline:3px solid var(--blu2);outline-offset:2px;border-radius:6px}
+.skip{position:absolute;left:-9999px;top:0;z-index:999;background:var(--ink);color:#fff;padding:10px 16px;border-radius:0 0 12px 0;font-size:12px;font-weight:700;text-decoration:none}
+.skip:focus{left:0}
+body.fa .skip{font-family:var(--f-fa)}
+@media(max-width:640px){.skip:focus{position:fixed}}
+.hero-links{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+.hrl{display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--rim);background:var(--card);color:var(--ink2);font-family:var(--f-b);font-size:11px;font-weight:700;padding:7px 14px;border-radius:50px;cursor:pointer;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.hrl:hover{border-color:var(--blu2);color:var(--blu2);transform:translateY(-1px)}
+body.fa .hrl{font-family:var(--f-fa)}
+.hrl-u{border-color:var(--pur-rim)}.hrl-u:hover{border-color:var(--pur2);color:var(--pur2)}
+.hero-pin{display:none;align-items:center;gap:8px;margin-top:16px;padding:9px 14px;border-left:3px solid var(--nor);background:rgba(196,30,42,.05);border-radius:0 12px 12px 0;font-size:12px;color:var(--ink2);flex-wrap:wrap;max-width:420px}
+body.fa .hero-pin{border-left:none;border-right:3px solid var(--nor);border-radius:12px 0 0 12px}
+.pin-lbl{font-family:var(--f-m);font-size:9px;color:var(--nor);letter-spacing:1.5px;text-transform:uppercase;flex-shrink:0}
+.pin-nm{font-weight:800;color:var(--ink)}
+.pin-dt{font-family:var(--f-m);font-size:10.5px;color:var(--ink3)}
+body.fa .pin-lbl,body.fa .pin-dt{font-family:var(--f-fa)}
+.exp-row{display:flex;gap:8px;margin-left:auto}
+@media(max-width:640px){.exp-row{margin-left:0;width:100%}}
+.exp-btn{display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--grn-rim);background:rgba(26,122,88,.08);color:var(--grn2);font-family:var(--f-b);font-size:11px;font-weight:700;padding:9px 14px;border-radius:12px;cursor:pointer;transition:all .2s;box-shadow:0 2px 8px rgba(26,122,88,.08)}
+.exp-btn:hover{background:rgba(26,122,88,.16);transform:translateY(-1px)}
+body.fa .exp-btn{font-family:var(--f-fa)}
+#toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;font-family:var(--f-b);font-size:13px;font-weight:700;padding:12px 20px;border-radius:50px;box-shadow:0 8px 30px rgba(0,0,0,.3);opacity:0;pointer-events:none;transition:all .3s;z-index:900;max-width:90vw;text-align:center}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+body.fa #toast{font-family:var(--f-fa)}
+@media print{
+  #scene,.nav,.mcd-btn,.controls-row,.filter-btn-wrap,.search-tabs-row,.sh,.hero-R,.exp-row,.hero-links,.hero-pin,#toast,.footer{display:none!important}
+  body{background:#fff}
+  .page{max-width:100%;padding:0 0 24px}
+  .hero{min-height:0;border:none;background:none}
+  .hero-L{padding:0 0 12px}
+  .hero-h1{font-size:34px}
+  .stats-bar{grid-template-columns:repeat(5,1fr);gap:8px;margin:12px 0}
+  .sbc{background:#fff;border-color:#ddd;box-shadow:none}
+  .uni-note.show{display:block;border-color:#ccc;background:#fff}
+}
 
 /* ═══════════════════════════════════════
    CONTROLS ROW — NEW DESIGN
@@ -408,6 +464,8 @@ body.fa .footer-t{font-family:var(--f-fa)}
 </head>
 <body>
 
+<a class="skip" id="skip-link" href="#content">Hopp til innhold</a>
+
 <div id="scene">
   <div class="scene-grain"></div>
   <div class="blob blob1"></div><div class="blob blob2"></div>
@@ -420,7 +478,7 @@ body.fa .footer-t{font-family:var(--f-fa)}
   <div class="doodle d5">🎓</div><div class="doodle d6">📐</div>
 </div>
 
-<div class="page">
+<div class="page" id="content">
 
 <nav class="nav">
   <div class="nav-L">
@@ -455,6 +513,11 @@ body.fa .footer-t{font-family:var(--f-fa)}
     <div class="hero-ey" id="h-ey">Buskerud · 2026–2029</div>
     <h1 class="hero-h1" id="h-h1">Skole<br><em>Kalender</em></h1>
     <p class="hero-desc" id="h-desc">Feriedager, helligdager og viktige datoer for Buskerud videregående skoler og Universitetet i Oslo.</p>
+    <div class="hero-pin" id="h-pin"><span class="pin-lbl" id="pin-lbl">Neste</span><span class="pin-nm" id="pin-nm">—</span><span class="pin-dt" id="pin-dt"></span></div>
+    <div class="hero-links">
+      <button class="hrl" onclick="copyDeep('vgs')">🔗 <span id="hl-st">Skole #vgs</span></button>
+      <button class="hrl hrl-u" onclick="copyDeep('university')">🎓 <span id="hl-ut">Universitet #university</span></button>
+    </div>
   </div>
   <div class="hero-R">
     <img class="hero-img" id="h-img" src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=1400&q=80" alt="">
@@ -534,6 +597,12 @@ body.fa .footer-t{font-family:var(--f-fa)}
     </div>
   </div>
 
+  <!-- Export row -->
+  <div class="exp-row">
+    <button class="exp-btn" onclick="exportIcs()">📅 <span id="et-ics">ICS (.ics)</span></button>
+    <button class="exp-btn" onclick="window.print()">🖨️ <span id="et-pr">Skriv ut</span></button>
+  </div>
+
 </div>
 
 <!-- SEARCH + STATUS TABS ROW -->
@@ -571,6 +640,8 @@ body.fa .footer-t{font-family:var(--f-fa)}
   <div class="footer-b">Skole<em>Kalender</em> 2026–2029</div>
 </footer>
 </div>
+
+<div id="toast" role="status" aria-live="polite"></div>
 
 <script>
 /* ════════════════════════ DATA ════════════════════════ */
@@ -651,6 +722,8 @@ const TX={
     hSl:"hendelser",uNote:"Programmene medisin, odontologi, klinisk ernæring og profesjonsstudiet i psykologi har en annen deling mellom høst og vår. Kontakt studieprogrammet for datoer.",
     srchPh:"Søk etter hendelse, type eller dato...",
     tabAll:"Alle hendelser",tabLive:"Pågår nå",tabUp:"Kommende",tabEnd:"Avsluttet",
+    skipT:"Hopp til innhold",pinLbl:"Neste",hlSk:"Skole #vgs",hlUn:"Universitet #university",
+    etIcs:"ICS (.ics)",etPr:"Skriv ut",cpOk:"Lenke kopiert!",icsOk:"Kalender (.ics) lastet ned",
   },
   en:{
     navTt:"School Calendar · Norway",navSb:"2026–2029 · Buskerud & Oslo",
@@ -673,6 +746,8 @@ const TX={
     hSl:"events",uNote:"The medicine, dentistry, clinical nutrition and professional psychology programmes divide the year differently between autumn and spring. Contact your programme for dates.",
     srchPh:"Search events by name, type or date...",
     tabAll:"All Events",tabLive:"Live Now",tabUp:"Upcoming",tabEnd:"Ended",
+    skipT:"Skip to content",pinLbl:"Next",hlSk:"School #vgs",hlUn:"University #university",
+    etIcs:"ICS (.ics)",etPr:"Print",cpOk:"Link copied!",icsOk:"Calendar (.ics) downloaded",
   },
   fa:{
     navTt:"تقویم مدرسه · نروژ",navSb:"۲۰۲۶–۲۰۲۹ · بوسکرود و اسلو",
@@ -695,6 +770,8 @@ const TX={
     hSl:"رویداد",uNote:"برنامه‌های پزشکی، دندان‌پزشکی، تغذیه بالینی و روان‌شناسی حرفه‌ای تقسیم‌بندی متفاوتی بین پاییز و بهار دارند. برای تاریخ‌ها با برنامه تحصیلی خود تماس بگیرید.",
     srchPh:"جستجو در رویدادها...",
     tabAll:"همه رویدادها",tabLive:"در جریان",tabUp:"آینده",tabEnd:"گذشته",
+    skipT:"پرش به محتوا",pinLbl:"بعدی",hlSk:"مدرسه #vgs",hlUn:"دانشگاه #university",
+    etIcs:"ICS (.ics)",etPr:"چاپ",cpOk:"پیوند کپی شد!",icsOk:"تقویم (.ics) دانلود شد",
   }
 };
 
@@ -861,6 +938,14 @@ function render(){
   document.getElementById('stab-live-t').textContent=t.tabLive;
   document.getElementById('stab-up-t').textContent=t.tabUp;
   document.getElementById('stab-end-t').textContent=t.tabEnd;
+  document.documentElement.setAttribute('lang',lang==='fa'?'fa':(lang==='en'?'en':'no'));
+  document.documentElement.setAttribute('dir',fa?'rtl':'ltr');
+  document.getElementById('skip-link').textContent=t.skipT;
+  document.getElementById('hl-st').textContent=t.hlSk;
+  document.getElementById('hl-ut').textContent=t.hlUn;
+  document.getElementById('et-ics').textContent=t.etIcs;
+  document.getElementById('et-pr').textContent=t.etPr;
+  renderNextPin(t);
 
   const imgs={school:"https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=1400&q=80",uni:"https://images.unsplash.com/photo-1562774053-701939374585?w=1400&q=80"};
   document.getElementById('h-img').src=imgs[mode];
@@ -1100,6 +1185,74 @@ document.addEventListener('click',e=>{
     document.getElementById('filter-btn').classList.remove('open');
   }
 });
+
+/* NEXT-EVENT PIN + SHARE + EXPORT */
+function renderNextPin(t){
+  const wrap=document.getElementById('h-pin');
+  const evs=getEvents();
+  const next=evs.filter(ev=>getState(ev)!=='past').sort((a,b)=>pd(a.start)-pd(b.start))[0];
+  if(!next){wrap.style.display='none';return}
+  wrap.style.display='inline-flex';
+  document.getElementById('pin-lbl').textContent=t.pinLbl;
+  document.getElementById('pin-nm').textContent=gName(next);
+  document.getElementById('pin-dt').textContent=gDesc(next);
+}
+let tostIv=null;
+function showToast(msg){
+  const el=document.getElementById('toast');
+  if(!el)return;
+  el.textContent=msg;el.classList.add('show');
+  clearTimeout(tostIv);tostIv=setTimeout(()=>el.classList.remove('show'),2200);
+}
+function copyDeep(tag){
+  const url=location.origin+location.pathname+location.search+'#'+tag;
+  const done=()=>showToast(TX[lang].cpOk);
+  function fallback(){
+    const ta=document.createElement('textarea');
+    ta.value=url;ta.style.position='fixed';ta.style.opacity='0';
+    document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');done()}catch(e){prompt(TX[lang].cpOk,url)}
+    ta.remove();
+  }
+  if(navigator.clipboard&&window.isSecureContext){
+    navigator.clipboard.writeText(url).then(done).catch(fallback);
+  }else fallback();
+}
+function exportIcs(){
+  const evs=getEvents();
+  const dCal=x=>{
+    const d=typeof x==='string'?pd(x):new Date(x.getFullYear(),x.getMonth(),x.getDate());
+    return ''+d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0');
+  };
+  const esc=s=>s.replace(/([,;\\])/g,'\\$1').replace(/\n/g,'\\n');
+  const L=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//BariPlux//Skolekalender//NO','CALSCALE:GREGORIAN'];
+  evs.forEach(ev=>{
+    L.push('BEGIN:VEVENT');
+    L.push('UID:'+ev.id+'@bariplux');
+    L.push('DTSTAMP:'+new Date().toISOString().replace(/[-:]/g,'').split('.')[0]+'Z');
+    if(ev.time){
+      const p=ev.time.split(':'),hh=+p[0],mm=p[1];
+      L.push('DTSTART:'+dCal(ev.start)+'T'+ev.time.replace(':','')+'00');
+      L.push('DTEND:'+dCal(ev.start)+'T'+String((hh+1)%24).padStart(2,'0')+mm+'00');
+    }else{
+      L.push('DTSTART;VALUE=DATE:'+dCal(ev.start));
+      const e=pd(ev.end);
+      L.push('DTEND;VALUE=DATE:'+dCal(new Date(e.getFullYear(),e.getMonth(),e.getDate()+1)));
+    }
+    L.push('SUMMARY:'+esc(gName(ev)));
+    const desc=esc(gDesc(ev)||'');
+    if(desc)L.push('DESCRIPTION:'+desc);
+    L.push('END:VEVENT');
+  });
+  L.push('END:VCALENDAR');
+  const blob=new Blob([L.join('\r\n')],{type:'text/calendar;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='skolekalender-'+mode+'-'+selY+'.ics';
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+  showToast(TX[lang].icsOk);
+}
 
 /* HASH ROUTING (#vgs / #university) */
 const HASH_MODE={vgs:'school',skole:'school',school:'school',university:'uni',universitet:'uni',uni:'uni'};
