@@ -55,6 +55,8 @@ body.fa .pgb{font-family:var(--f-fa);}
 .yrb.on{background:var(--s4);color:var(--gld2);border:1px solid var(--gldrim);}
 .expbtn{display:flex;align-items:center;gap:5px;border:1px solid var(--gldrim);background:var(--gldbg);color:var(--gld2);font-family:var(--f-u);font-size:9.5px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;padding:7px 13px;border-radius:50px;cursor:pointer;transition:all .2s;flex-shrink:0;}
 .expbtn:hover{background:rgba(184,124,24,.2);box-shadow:0 0 20px rgba(184,124,24,.2);}
+.kal-lnk{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--bord);background:var(--s1);color:var(--t3);font-family:var(--f-u);font-size:9.5px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;padding:7px 13px;border-radius:50px;cursor:pointer;text-decoration:none;transition:all .2s;flex-shrink:0;}
+.kal-lnk:hover{border-color:var(--gldrim);color:var(--gld2);box-shadow:0 0 14px rgba(184,124,24,.15);}
 .expbtn svg{width:11px;height:11px;flex-shrink:0;}
 body.fa .expbtn{font-family:var(--f-fa);}
 
@@ -622,6 +624,7 @@ body.fa .modal-close{font-family:var(--f-fa);}
         <button class="pgb" onclick="setLang('no')">NO</button>
         <button class="pgb" onclick="setLang('fa')">FA</button>
       </div>
+      <a class="kal-lnk" href="skolekalender-bfk.html">🎒 <span>Skolekalender</span></a>
       <div class="yr-sel" id="yr-sel"></div>
       <div class="pg">
         <button class="pgb on" id="vb-all" onclick="setView('all')">⊞ <span id="vt-all">All</span></button>
