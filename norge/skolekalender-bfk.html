@@ -10,6 +10,7 @@
 <meta name="theme-color" content="#c41e2a">
 <link rel="canonical" href="https://snow-breaker.github.io/Bari-Plux-Website/norge/skolekalender-bfk.html">
 <link rel="icon" type="image/png" href="flagofnorway.png">
+<link rel="manifest" href="manifest.webmanifest">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Skolekalender · Norge 2026–2029">
 <meta property="og:description" content="Feriedager og skolerute for Buskerud videregående skoler 2026–2029, og semesterdatoer for Universitetet i Oslo.">
@@ -43,6 +44,7 @@
   --pur:#6030c0;--pur2:#8050e0;--pur3:#a878ff;--pur-l:rgba(96,48,192,.1);--pur-l2:rgba(96,48,192,.06);--pur-rim:rgba(96,48,192,.25);
   --ram:#0e6673;--ram2:#158fa0;--ram3:#1dc0d8;--ram-l:rgba(14,102,115,.1);--ram-l2:rgba(14,102,115,.06);--ram-rim:rgba(14,102,115,.25);
   --f-d:'Fraunces',serif;--f-b:'Nunito',sans-serif;--f-m:'DM Mono',monospace;--f-fa:'Vazirmatn',sans-serif;
+  --acc:var(--blu2);--acc2:var(--blu);--acc-r:var(--blu-rim);--acc-l:rgba(26,80,200,.08);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
@@ -163,16 +165,20 @@ body.fa .sbc-l{font-family:var(--f-fa)}
 body.fa .uni-note{font-family:var(--f-fa)}
 
 /* ACCESSIBILITY + SHARE + EXPORT + NEXT PIN */
-:focus-visible{outline:3px solid var(--blu2);outline-offset:2px;border-radius:6px}
+:focus-visible{outline:3px solid var(--acc2);outline-offset:2px;border-radius:6px}
 .skip{position:absolute;left:-9999px;top:0;z-index:999;background:var(--ink);color:#fff;padding:10px 16px;border-radius:0 0 12px 0;font-size:12px;font-weight:700;text-decoration:none}
 .skip:focus{left:0}
 body.fa .skip{font-family:var(--f-fa)}
 @media(max-width:640px){.skip:focus{position:fixed}}
 .hero-links{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
 .hrl{display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--rim);background:var(--card);color:var(--ink2);font-family:var(--f-b);font-size:11px;font-weight:700;padding:7px 14px;border-radius:50px;cursor:pointer;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,.05)}
-.hrl:hover{border-color:var(--blu2);color:var(--blu2);transform:translateY(-1px)}
+.hrl:hover{border-color:var(--acc2);color:var(--acc2);transform:translateY(-1px)}
 body.fa .hrl{font-family:var(--f-fa)}
 .hrl-u{border-color:var(--pur-rim)}.hrl-u:hover{border-color:var(--pur2);color:var(--pur2)}
+.hrl-wa{color:var(--grn2);border-color:var(--grn-rim)}.hrl-wa:hover{border-color:var(--grn2);color:var(--grn2)}
+.hrl-sm{color:var(--pur2);border-color:var(--pur-rim)}.hrl-sm:hover{border-color:var(--pur2);color:var(--pur2)}
+.acc-lbl{font-family:var(--f-m);font-size:9px;color:var(--ink4);letter-spacing:1.2px;text-transform:uppercase;flex:1}
+body.fa .acc-lbl{font-family:var(--f-fa)}
 .hero-pin{display:none;align-items:center;gap:8px;margin-top:16px;padding:9px 14px;border-left:3px solid var(--nor);background:rgba(196,30,42,.05);border-radius:0 12px 12px 0;font-size:12px;color:var(--ink2);flex-wrap:wrap;max-width:420px}
 body.fa .hero-pin{border-left:none;border-right:3px solid var(--nor);border-radius:12px 0 0 12px}
 .pin-lbl{font-family:var(--f-m);font-size:9px;color:var(--nor);letter-spacing:1.5px;text-transform:uppercase;flex-shrink:0}
@@ -184,6 +190,12 @@ body.fa .pin-lbl,body.fa .pin-dt{font-family:var(--f-fa)}
 .exp-li{display:flex;align-items:center;gap:10px;width:100%;border:1.5px solid var(--rim);background:var(--card);color:var(--ink2);font-family:var(--f-b);font-size:12.5px;font-weight:700;padding:10px 14px;border-radius:12px;cursor:pointer;transition:all .18s;text-decoration:none;text-align:left;white-space:nowrap}
 body.fa .exp-li{font-family:var(--f-fa);text-align:right}
 .exp-li:hover{border-color:var(--grn-rim);background:rgba(26,122,88,.06);color:var(--grn2);transform:translateY(-1px)}
+.acc-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding-top:12px;margin-top:12px;border-top:1.5px dashed var(--rim)}
+.acc-dot{width:26px;height:26px;border-radius:50%;border:2px solid rgba(255,255,255,.6);background:var(--d,var(--blu2));cursor:pointer;transition:transform .18s,box-shadow .18s;box-shadow:0 2px 6px rgba(15,20,40,.25)}
+.acc-dot:hover{transform:scale(1.12)}
+.acc-dot.on{box-shadow:0 0 0 3px var(--acc-l),0 2px 8px rgba(15,20,40,.35);transform:scale(1.16);border-color:#fff}
+.acc-dot:hover{transform:scale(1.15)}
+.acc-dot.on{box-shadow:0 0 0 2px var(--ink),0 2px 8px rgba(15,20,40,.3);transform:scale(1.05)}
 #toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;font-family:var(--f-b);font-size:13px;font-weight:700;padding:12px 20px;border-radius:50px;box-shadow:0 8px 30px rgba(0,0,0,.3);opacity:0;pointer-events:none;transition:all .3s;z-index:900;max-width:90vw;text-align:center}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 body.fa #toast{font-family:var(--f-fa)}
@@ -201,7 +213,7 @@ body.fa .nav-kal{font-family:var(--f-fa)}
 .ov-title{font-size:15px;font-weight:800;color:var(--ink)}
 .ov-year{font-family:var(--f-m);font-size:11px;color:var(--ink3)}
 .ov-close{width:32px;height:32px;border-radius:10px;border:1.5px solid var(--rim);background:var(--card);color:var(--ink2);cursor:pointer;font-size:14px}
-.ov-close:hover{border-color:var(--nor);color:var(--nor)}
+.ov-close:hover{border-color:var(--acc2);color:var(--acc2)}
 body.fa .ov-title,body.fa .ov-year,body.fa .ov-close{font-family:var(--f-fa)}
 .ov-legend{display:flex;gap:14px;flex-wrap:wrap;padding:10px 0 14px;border-bottom:1px solid var(--rim);margin-bottom:14px;font-size:10px;color:var(--ink3)}
 body.fa .ov-legend{font-family:var(--f-fa)}
@@ -220,6 +232,7 @@ body.fa .om-wd{font-family:var(--f-fa)}
 .ov-day.rm{color:var(--ink);border:1px solid var(--teal-rim);background:rgba(17,168,152,.14)}
 .ov-day.is{color:var(--ink);border:1px solid var(--blu-rim);background:rgba(110,139,249,.12)}
 .ov-day.un{color:var(--ink);border:1px solid var(--pur-rim);background:rgba(140,140,245,.12)}
+.ov-day.now{outline:2px solid var(--acc2);outline-offset:-2px}
 .ov-day.off{opacity:.35}
 @media(max-width:640px){.ov-back{padding:16px 8px}.ov-modal{padding:16px}.ov-day{min-height:26px}}
 @media print{
@@ -240,8 +253,12 @@ body.fa .om-wd{font-family:var(--f-fa)}
   .uni-note.show{display:block;border-color:#ccc;background:#fff}
 }
 
+/* STICKY CONTROL BAR */
+.ctl-sticky{position:sticky;top:0;z-index:60;background:rgba(240,242,248,.9);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-radius:0 0 22px 22px;padding:10px 2px 6px;box-shadow:0 10px 26px -22px rgba(15,20,40,.4)}
+@media(max-width:640px){.ctl-sticky{padding:8px 2px 6px}}
+
 /* ═══════════════════════════════════════
-   CONTROLS ROW — NEW DESIGN
+CONTROLS ROW — NEW DESIGN
 ═══════════════════════════════════════ */
 .controls-row{
   display:flex;align-items:center;gap:10px;margin-bottom:0;
@@ -289,8 +306,8 @@ body.fa .isl-title{font-family:var(--f-fa)}
   box-shadow:0 1px 6px rgba(0,0,0,.05);
   white-space:nowrap;
 }
-.wknd-pill:hover{border-color:rgba(60,80,180,.2);background:rgba(255,255,255,.9)}
-.wknd-pill.active{border-color:var(--blu-rim);background:rgba(26,80,200,.07)}
+.wknd-pill:hover{border-color:var(--acc-r);background:rgba(255,255,255,.9)}
+.wknd-pill.active{border-color:var(--acc-r);background:var(--acc-l)}
 .wknd-ico{font-size:15px;flex-shrink:0}
 .wknd-txt{font-size:12px;font-weight:700;color:var(--ink2);text-align:center}
 body.fa .wknd-txt{font-family:var(--f-fa)}
@@ -322,7 +339,7 @@ body.fa .search-ico{left:auto;right:14px}
 }
 body.fa .search-input{padding:10px 42px 10px 16px;text-align:right}
 .search-input::placeholder{color:var(--ink4)}
-.search-input:focus{border-color:rgba(26,80,200,.35);background:#fff;box-shadow:0 4px 20px rgba(26,80,200,.12)}
+.search-input:focus{border-color:var(--acc-r);background:#fff;box-shadow:0 4px 20px var(--acc-l)}
 .search-clear{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:var(--bg3);border:none;border-radius:50%;width:22px;height:22px;cursor:pointer;font-size:12px;color:var(--ink3);display:none;align-items:center;justify-content:center;transition:all .18s;}
 .search-clear.show{display:flex}
 .search-clear:hover{background:var(--nor-l);color:var(--nor)}
@@ -353,8 +370,8 @@ body.fa .stab-live-dot{margin-right:0;margin-left:5px}
 .filter-btn-wrap{position:relative;display:flex}
 .filter-btn{display:flex;align-items:center;gap:7px;justify-content:center;width:100%;padding:0 16px;min-height:44px;border-radius:50px;border:1.5px solid var(--rim);background:rgba(255,255,255,.75);backdrop-filter:blur(8px);cursor:pointer;font-family:var(--f-b);font-size:12px;font-weight:700;color:var(--ink2);transition:all .2s;box-shadow:0 1px 6px rgba(0,0,0,.05);white-space:nowrap;}
 body.fa .filter-btn{font-family:var(--f-fa)}
-.filter-btn:hover{border-color:rgba(60,80,180,.25);background:rgba(255,255,255,.95)}
-.filter-btn.open{border-color:rgba(60,80,180,.3);background:#fff;box-shadow:0 4px 16px rgba(0,0,0,.1)}
+.filter-btn:hover{border-color:var(--acc-r);background:rgba(255,255,255,.95)}
+.filter-btn.open{border-color:var(--acc-r);background:#fff;box-shadow:0 4px 16px rgba(0,0,0,.1)}
 .filter-btn-arrow{font-size:10px;color:var(--ink4);transition:transform .2s}
 .filter-btn.open .filter-btn-arrow{transform:rotate(180deg)}
 .filter-active-dot{width:7px;height:7px;border-radius:50%;background:var(--nor);flex-shrink:0;display:none}
@@ -408,6 +425,17 @@ body.fa .sh-rule{background:linear-gradient(270deg,var(--rim),transparent)}
 .ec-strip.ramazan{background:linear-gradient(90deg,var(--ram),var(--ram3))}
 .ec-strip.uni{background:linear-gradient(90deg,var(--pur),var(--pur3))}
 .ec-img{position:relative;height:185px;overflow:hidden;flex-shrink:0}
+.ec-copy{position:absolute;top:44px;right:10px;z-index:6;width:30px;height:30px;border-radius:10px;border:1.5px solid rgba(255,255,255,.6);background:rgba(15,20,40,.45);color:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px);transition:all .18s;opacity:.85}
+.ec-copy:hover{background:rgba(15,20,40,.78);transform:scale(1.08);opacity:1}
+.ec-prog{position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(255,255,255,.3);z-index:4}
+.ec-prog-fill{height:100%;background:var(--acc2);transition:width 1s linear}
+.ec.live .ec-img{box-shadow:inset 0 0 0 2px var(--grn3)}
+.tl-copy{position:absolute;top:8px;right:8px;z-index:5;width:28px;height:28px;border-radius:9px;border:1.5px solid rgba(255,255,255,.6);background:rgba(15,20,40,.45);color:#fff;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px);transition:all .18s;opacity:.85}
+.tl-copy:hover{background:rgba(15,20,40,.78);transform:scale(1.08);opacity:1}
+.tl-tag.tl-wk{background:var(--bg3);color:var(--ink3)}
+.ec-wk{font-family:var(--f-m);font-size:9.5px;color:var(--ink4);letter-spacing:.4px;font-weight:500}
+body.fa .ec-wk{font-family:var(--f-fa)}
+.ec-meta-line{display:flex;align-items:center;gap:6px;margin-bottom:3px;flex-wrap:wrap}
 .ec-img img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;transition:transform .5s ease}
 .ec:hover .ec-img img{transform:scale(1.05)}
 .ec-img-grad{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(0,0,0,.35) 100%)}
@@ -498,6 +526,9 @@ body.fa .tl-cd-l{font-family:var(--f-fa)}
 .empty{text-align:center;padding:60px 20px;color:var(--ink3)}
 .empty .ei{font-size:44px;margin-bottom:14px;opacity:.6}
 .empty p{font-size:14px;font-weight:600}
+.empty-btn{margin-top:16px;border:1.5px solid var(--acc-r);background:var(--acc-l);color:var(--acc2);font-family:var(--f-b);font-size:12.5px;font-weight:800;padding:9px 24px;border-radius:50px;cursor:pointer;transition:all .18s}
+.empty-btn:hover{transform:translateY(-1px);box-shadow:0 6px 16px var(--acc-l)}
+body.fa .empty-btn{font-family:var(--f-fa)}
 
 /* FOOTER */
 .footer{margin-top:56px;padding:20px 0 14px;border-top:1.5px solid var(--rim);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;}
@@ -568,6 +599,8 @@ body.fa .footer-t{font-family:var(--f-fa)}
     <div class="hero-links">
       <button class="hrl" onclick="copyDeep('vgs')">🔗 <span id="hl-st">Skole #vgs</span></button>
       <button class="hrl hrl-u" onclick="copyDeep('university')">🎓 <span id="hl-ut">Universitet #university</span></button>
+      <a class="hrl hrl-wa" id="hl-wa" href="#" target="_blank" rel="noopener">📲 <span id="hl-wat">WhatsApp</span></a>
+      <a class="hrl hrl-sm" id="hl-sm" href="#" target="_blank" rel="noopener">💬 <span id="hl-smt">SMS</span></a>
     </div>
   </div>
   <div class="hero-R">
@@ -607,6 +640,8 @@ body.fa .footer-t{font-family:var(--f-fa)}
 
 <!-- UNIVERSITY NOTE (uni mode only) -->
 <div class="uni-note" id="uni-note"></div>
+
+<div class="ctl-sticky">
 
 <!-- CONTROLS ROW: Islamic toggle card + weekend pill -->
 <div class="controls-row">
@@ -661,7 +696,16 @@ body.fa .footer-t{font-family:var(--f-fa)}
         <button class="exp-li" onclick="gCalNext()">🗓 <span id="et-gc">Google Kalender</span></button>
         <button class="exp-li" onclick="openOverview()">📆 <span id="et-ov">Årsoversikt</span></button>
         <a class="exp-li" id="et-sb-a" href="skolekalender.ics" download="skolekalender.ics">🔁 <span id="et-sb">Abonner (.ics)</span></a>
+        <button class="exp-li" onclick="exportIcs(true)">🍱 <span id="et-all">Alle år (.ics)</span></button>
+        <button class="exp-li" onclick="gcalSubscribe()">🗓 <span id="et-gcal">Google (alle år)</span></button>
         <button class="exp-li" onclick="window.print()">🖨️ <span id="et-pr">Skriv ut</span></button>
+      </div>
+      <div class="acc-row">
+        <span class="acc-lbl" id="acc-lbl">Akzent</span>
+        <button class="acc-dot" style="--d:#2e6ee0" onclick="setAccent('blu')" title="Nordic blue" aria-label="Nordic blue"></button>
+        <button class="acc-dot" style="--d:#e8303e" onclick="setAccent('nor')" title="Norwegian red" aria-label="Norwegian red"></button>
+        <button class="acc-dot" style="--d:#8050e0" onclick="setAccent('pur')" title="Oslo purple" aria-label="Oslo purple"></button>
+        <button class="acc-dot" style="--d:#22a878" onclick="setAccent('grn')" title="Moss green" aria-label="Moss green"></button>
       </div>
     </div>
   </div>
@@ -681,6 +725,8 @@ body.fa .footer-t{font-family:var(--f-fa)}
     <button class="stab" data-tab="upcoming" onclick="setStatusTab('upcoming')"><span id="stab-up-t">Kommende</span></button>
     <button class="stab ended" data-tab="ended" onclick="setStatusTab('ended')"><span id="stab-end-t">Avsluttet</span></button>
   </div>
+</div>
+
 </div>
 
 <!-- SECTION HEADER -->
@@ -802,6 +848,7 @@ const TX={
     ovTitle:"Årsoversikt · Skoleår",lgSk:"Skole (start)",lgHd:"Helligdag",lgFr:"Ferie/tilrettelagt",
     lgRm:"Ramadan/Eid",lgIs:"Islamsk (ca.)",lgUn:"Universitet",noNxt:"Ingen kommende hendelser",
     wd:["ma","ti","on","to","fr","lø","sø"],
+    emT:"Ingen hendelser funnet",emBtn:"Vis alle",wkT:"Uke",wa:"WhatsApp",sm:"SMS",shTxt:"Skolekalender 2026–2029 · sjekk datoene:",accL:"Akzent",
   },
   en:{
     navTt:"School Calendar · Norway",navSb:"2026–2029 · Buskerud & Oslo",
@@ -830,6 +877,7 @@ const TX={
     ovTitle:"Year Overview",lgSk:"School (start)",lgHd:"Public holiday",lgFr:"Holiday/off",
     lgRm:"Ramadan/Eid",lgIs:"Islamic (approx.)",lgUn:"University",noNxt:"No upcoming events",
     wd:["Mo","Tu","We","Th","Fr","Sa","Su"],
+    emT:"No events found",emBtn:"Show all",wkT:"Week",wa:"WhatsApp",sm:"SMS",shTxt:"School Calendar 2026–2029 · check the dates:",accL:"Accent",
   },
   fa:{
     navTt:"تقویم مدرسه · نروژ",navSb:"۲۰۲۶–۲۰۲۹ · بوسکرود و اسلو",
@@ -858,6 +906,7 @@ const TX={
     ovTitle:"نمای سالانه",lgSk:"مدرسه (شروع)",lgHd:"تعطیل رسمی",lgFr:"تعطیلی",
     lgRm:"رمضان/عید",lgIs:"اعیاد اسلامی (تقریبی)",lgUn:"دانشگاه",noNxt:"رویدادی در پیش نیست",
     wd:["د","س","چ","پ","ج","ش","ی"],
+    emT:"رویدادی یافت نشد",emBtn:"نمایش همه",wkT:"هفته",wa:"واتساپ",sm:"پیامک",shTxt:"تقویم مدرسه ۲۰۲۶-۲۰۲۹ · تاریخها را ببینید:",accL:"رنگ",
   }
 };
 
@@ -1037,6 +1086,13 @@ function render(){
   document.getElementById('et-sb').textContent=t.etSb;
   document.getElementById('exp-btn-txt').textContent=t.expT;
   document.getElementById('exp-popup-title').textContent=t.expTtl;
+  document.getElementById('acc-lbl').textContent=t.accL;
+  document.getElementById('hl-wat').textContent=t.wa;
+  document.getElementById('hl-smt').textContent=t.sm;
+  const shareUrl=location.origin+location.pathname+location.search+(mode==='uni'?'#university':'#vgs');
+  const shareText=encodeURIComponent(t.shTxt+' '+shareUrl);
+  document.getElementById('hl-wa').href='https://wa.me/?text='+shareText;
+  document.getElementById('hl-sm').href='sms:?&body='+shareText;
   renderNextPin(t);
 
   const imgs={school:"https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=1400&q=80",uni:"https://images.unsplash.com/photo-1562774053-701939374585?w=1400&q=80"};
@@ -1129,7 +1185,7 @@ function renderSection(t){
 /* ════════════════════════ GRID ════════════════════════ */
 function renderGrid(evs,t){
   const g=document.getElementById('v-grid');
-  if(!evs.length){g.innerHTML=`<div class="empty"><div class="ei">📭</div><p>${lang==='fa'?'رویدادی یافت نشد':'Ingen hendelser funnet'}</p></div>`;return}
+  if(!evs.length){g.innerHTML=emptyHtml(t);return}
   g.innerHTML=evs.map((ev,i)=>{
     const state=getState(ev);
     const past=state==='past';
@@ -1140,7 +1196,16 @@ function renderGrid(evs,t){
     const typeL={ferie:t.cFer,helligdag:t.cHel,skole:t.cSk,islamsk:lang==='fa'?'اسلامی':t.cIsl,ramazan:t.cRam,uni:'UiO'}[ev.type]||ev.type;
     const cdBoxId=`cd-${ev.id}`;
     const wkLabel=(skipWeekend&&state==='future')?countWeekdays(new Date(),pd(ev.end)):null;
-    return `<div class="ec${past?' past':''}" style="animation-delay:${i*.04}s">
+    const nowT=new Date();
+    let progPct=0;
+    if(state==='future'){
+      const s=pd(ev.start),e=pd(ev.end),rem=(s-nowT)/86400000,win=((e-s)/86400000)+rem;
+      progPct=win>0?Math.max(0,Math.min(100,(rem/win)*100)):0;
+    }else if(state==='active'){
+      const s=pd(ev.start),e=pd(ev.end),tot=((e-s)/86400000)||1;
+      progPct=Math.max(0,Math.min(100,(((e-nowT)/86400000)/tot)*100));
+    }
+    return `<div class="ec${past?' past':''}${active?' live':''}" style="animation-delay:${i*.04}s">
       <div class="ec-strip ${ev.type}"></div>
       <div class="ec-img">
         <img src="${ev.img}" alt="${gName(ev)}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&q=75'">
@@ -1148,13 +1213,15 @@ function renderGrid(evs,t){
         <div class="ec-tb ${ev.type}">${typeL}${ev.approx?' ≈':''}</div>
         ${past?`<div class="ec-past-badge">${t.past}</div>`:''}
         ${active?`<div class="ec-live-badge"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#fff;animation:pulse 1.5s infinite;margin-right:4px"></span>${t.iT2}</div>`:''}
+        <button class="ec-copy" onclick="event.stopPropagation();copyEvt('${ev.id}')" aria-label="Copy">📋</button>
+        ${past?'':`<div class="ec-prog"><div class="ec-prog-fill" style="width:${progPct}%"></div></div>`}
         <div class="ec-cd-box" id="${cdBoxId}"></div>
       </div>
       <div class="ec-b">
         <div class="ec-row1">
           <div class="ec-cal"><div class="ec-cal-d">${d}</div><div class="ec-cal-m">${mo}</div><div class="ec-cal-y">${yr}</div></div>
           <div class="ec-meta">
-            ${ev.time?`<div class="ec-time">⏰ ${ev.time}</div>`:''}
+            <div class="ec-meta-line">${ev.time?`<span class="ec-time">⏰ ${ev.time}</span>`:''}<span class="ec-wk">${ev.time?'· ':''}${t.wkT} ${isoWeek(dt)}</span></div>
             <div class="ec-name">${gName(ev)}</div>
           </div>
         </div>
@@ -1175,7 +1242,7 @@ function renderGrid(evs,t){
 /* ════════════════════════ LIST ════════════════════════ */
 function renderList(evs,t){
   const tl=document.getElementById('v-tl');
-  if(!evs.length){tl.innerHTML=`<div class="empty"><div class="ei">📭</div><p>${lang==='fa'?'رویدادی یافت نشد':'Ingen hendelser funnet'}</p></div>`;return}
+  if(!evs.length){tl.innerHTML=emptyHtml(t);return}
   tl.innerHTML=evs.map((ev,i)=>{
     const state=getState(ev);
     const past=state==='past';
@@ -1185,11 +1252,11 @@ function renderList(evs,t){
     return `<div class="tl-item" style="animation-delay:${i*.04}s">
       <div class="tl-dot ${ev.type}"></div>
       <div class="tl-card${past?' past':''}">
-        <div class="tl-img"><img src="${ev.img}" alt="${gName(ev)}" loading="lazy"></div>
+        <div class="tl-img"><img src="${ev.img}" alt="${gName(ev)}" loading="lazy"><button class="tl-copy" onclick="event.stopPropagation();copyEvt('${ev.id}')" aria-label="Copy">📋</button></div>
         <div class="tl-body">
           <div class="tl-name">${gName(ev)}</div>
           <div class="tl-desc">${gDesc(ev)}</div>
-          <div class="tl-tags"><span class="tl-tag ${ev.type}">${typeL}${ev.approx?' ≈':''}</span></div>
+          <div class="tl-tags"><span class="tl-tag ${ev.type}">${typeL}${ev.approx?' ≈':''}</span><span class="tl-tag tl-wk">${t.wkT} ${isoWeek(dt)}</span></div>
           <div class="tl-cd" id="${cdId}"></div>
         </div>
         <div class="tl-R"><div class="tl-R-d">${dt.getDate()}</div><div class="tl-R-m">${t.mths[dt.getMonth()]}</div><div class="tl-R-y">${dt.getFullYear()}</div></div>
@@ -1316,22 +1383,53 @@ function showToast(msg){
   el.textContent=msg;el.classList.add('show');
   clearTimeout(tostIv);tostIv=setTimeout(()=>el.classList.remove('show'),2200);
 }
-function copyDeep(tag){
-  const url=location.origin+location.pathname+location.search+'#'+tag;
+function copyTxt(txt){
   const done=()=>showToast(TX[lang].cpOk);
   function fallback(){
     const ta=document.createElement('textarea');
-    ta.value=url;ta.style.position='fixed';ta.style.opacity='0';
+    ta.value=txt;ta.style.position='fixed';ta.style.opacity='0';
     document.body.appendChild(ta);ta.select();
-    try{document.execCommand('copy');done()}catch(e){prompt(TX[lang].cpOk,url)}
+    try{document.execCommand('copy');done()}catch(e){prompt(TX[lang].cpOk,txt)}
     ta.remove();
   }
   if(navigator.clipboard&&window.isSecureContext){
-    navigator.clipboard.writeText(url).then(done).catch(fallback);
+    navigator.clipboard.writeText(txt).then(done).catch(fallback);
   }else fallback();
 }
-function exportIcs(){
-  const evs=getEvents();
+function copyDeep(tag){
+  copyTxt(location.origin+location.pathname+location.search+'#'+tag);
+}
+function copyEvt(id){
+  const ev=getEvents().find(e=>e.id===id);
+  if(!ev)return;
+  copyTxt(gName(ev)+' · '+gDesc(ev)+' · '+location.origin+location.pathname+(mode==='uni'?'#university':'#vgs'));
+}
+function emptyHtml(t){
+  return `<div class="empty"><div class="ei">🗂️</div><p>${t.emT}</p><button class="empty-btn" onclick="resetResults()">${t.emBtn}</button></div>`;
+}
+function resetResults(){
+  filter='all';statusTab='all';searchQuery='';
+  const si=document.getElementById('search-input');if(si)si.value='';
+  document.getElementById('search-clear').classList.remove('show');
+  document.getElementById('filter-dot').classList.remove('show');
+  setFilter('all');setStatusTab('all');
+  renderSection(TX[lang]);
+}
+function isoWeek(d){
+  const date=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));
+  const dayNum=date.getUTCDay()||7;
+  date.setUTCDate(date.getUTCDate()+4-dayNum);
+  const ys=new Date(Date.UTC(date.getUTCFullYear(),0,1));
+  return Math.ceil((((date-ys)/86400000)+1)/7);
+}
+function allEvents(){
+  const out=[];
+  Object.keys(SCHOOL).forEach(y=>SCHOOL[y].forEach(e=>out.push(Object.assign({},e,{cat:'Skole'}))));
+  Object.keys(UNI).forEach(y=>UNI[y].forEach(e=>out.push(Object.assign({},e,{cat:'Universitet'}))));
+  return out.sort((a,b)=>pd(a.start)-pd(b.start));
+}
+function exportIcs(all){
+  const evs=all?allEvents():getEvents();
   const dCal=x=>{
     const d=typeof x==='string'?pd(x):new Date(x.getFullYear(),x.getMonth(),x.getDate());
     return ''+d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0');
@@ -1354,13 +1452,14 @@ function exportIcs(){
     L.push('SUMMARY:'+esc(gName(ev)));
     const desc=esc(gDesc(ev)||'');
     if(desc)L.push('DESCRIPTION:'+desc);
+    if(ev.cat)L.push('CATEGORIES:'+ev.cat);
     L.push('END:VEVENT');
   });
   L.push('END:VCALENDAR');
   const blob=new Blob([L.join('\r\n')],{type:'text/calendar;charset=utf-8'});
   const a=document.createElement('a');
   a.href=URL.createObjectURL(blob);
-  a.download='skolekalender-'+mode+'-'+selY+'.ics';
+  a.download=all?'skolekalender-alle-ar-2026-2029.ics':'skolekalender-'+mode+'-'+selY+'.ics';
   document.body.appendChild(a);a.click();a.remove();
   setTimeout(()=>URL.revokeObjectURL(a.href),2000);
   showToast(TX[lang].icsOk);
@@ -1374,6 +1473,10 @@ function gCalNext(){
   const d=p=>{const x=pd(p);return String(x.getFullYear())+String(x.getMonth()+1).padStart(2,'0')+String(x.getDate()).padStart(2,'0')};
   const u='https://calendar.google.com/calendar/render?action=TEMPLATE&text='+encodeURIComponent(gName(next))+'&dates='+d(next.start)+'/'+d(next.end)+'&details='+encodeURIComponent(gDesc(next)||'');
   window.open(u,'_blank');
+}
+function gcalSubscribe(){
+  const base=location.href.replace(/[^/]*$/,'')+'skolekalender.ics';
+  window.open('https://calendar.google.com/calendar/r?cid=webcal://'+base.replace(/^https?:\/\//,''),'_blank');
 }
 function openOverview(){
   const t=TX[lang];
@@ -1412,6 +1515,7 @@ function monthBlock(m,evs){
   const days=new Date(y,mo+1,0).getDate();
   const P={ramazan:7,helligdag:6,ferie:5,islamsk:4,uni:3,skole:2};
   const cls={ramazan:'rm',helligdag:'hd',ferie:'fr',islamsk:'is',uni:'un',skole:'ok'};
+  const tw=isoWeek(new Date());
   for(let day=1;day<=days;day++){
     const dd=new Date(y,mo,day);
     const cell=document.createElement('div');
@@ -1424,6 +1528,7 @@ function monthBlock(m,evs){
       }
     });
     cell.classList.add(cls[best]);
+    if(day===tw)cell.classList.add('now');
     cell.textContent=String(day);
     gr.appendChild(cell);
   }
@@ -1433,7 +1538,9 @@ function monthBlock(m,evs){
 
 /* HASH ROUTING (#vgs / #university) */
 const SKEX='skl';
-function saveSt(){try{localStorage.setItem(SKEX,JSON.stringify({lang,mode,selY,showIsl,skipWeekend}))}catch(e){}}
+const ACCENTS={blu:{a:'#2e6ee0',b:'#1a50c8',r:'rgba(26,80,200,.25)',l:'rgba(26,80,200,.08)'},nor:{a:'#e8303e',b:'#c41e2a',r:'rgba(196,30,42,.25)',l:'rgba(196,30,42,.08)'},pur:{a:'#8050e0',b:'#6030c0',r:'rgba(96,48,192,.25)',l:'rgba(96,48,192,.08)'},grn:{a:'#22a878',b:'#1a7a58',r:'rgba(26,122,88,.25)',l:'rgba(26,122,88,.08)'}};
+let accent='blu';
+function saveSt(){try{localStorage.setItem(SKEX,JSON.stringify({lang,mode,selY,showIsl,skipWeekend,accent}))}catch(e){}}
 function loadSt(){
   try{
     const o=JSON.parse(localStorage.getItem(SKEX)||'null');
@@ -1443,8 +1550,17 @@ function loadSt(){
     if(YEARS.includes(o.selY))selY=o.selY;
     if(typeof o.showIsl==='boolean')showIsl=o.showIsl;
     if(typeof o.skipWeekend==='boolean')skipWeekend=o.skipWeekend;
+    if(ACCENTS[o.accent])accent=o.accent;
   }catch(e){}
 }
+function setAccent(k){accent=ACCENTS[k]?k:'blu';saveSt();applyAccent();}
+function applyAccent(){
+  const x=ACCENTS[accent]||ACCENTS.blu;
+  const rs=document.documentElement.style;
+  rs.setProperty('--acc',x.a);rs.setProperty('--acc2',x.b);rs.setProperty('--acc-r',x.r);rs.setProperty('--acc-l',x.l);
+  renderAccentDots();
+}
+function renderAccentDots(){document.querySelectorAll('.acc-dot').forEach(b=>b.classList.toggle('on',b.getAttribute('onclick')==='setAccent(\''+accent+'\')'));}
 const HASH_MODE={vgs:'school',skole:'school',school:'school',university:'uni',universitet:'uni',uni:'uni'};
 function applyHash(){
   const h=(location.hash||'').replace(/^#/,'').toLowerCase();
@@ -1459,7 +1575,20 @@ window.addEventListener('hashchange',()=>{applyHash();render();});
 /* INIT */
 loadSt();
 applyHash();
-window.addEventListener('keydown',e=>{if(e.key==='Escape')closeOverview()});
+applyAccent();
+window.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){closeOverview();return}
+  if(e.metaKey||e.ctrlKey||e.altKey)return;
+  const tag=(e.target||document.body).tagName;
+  if(tag==='INPUT'||tag==='TEXTAREA')return;
+  if(e.key==='/'){e.preventDefault();document.getElementById('search-input').focus();}
+  else if(e.key==='g'){setMode('school');history.replaceState(null,'','#vgs');render();}
+  else if(e.key==='u'){setMode('uni');history.replaceState(null,'','#university');render();}
+  else if(e.key==='f')toggleFilterPopup();
+  else if(e.key==='e')toggleExpPopup();
+  else if(e.key==='p')window.print();
+});
+if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 render();
 </script>
 </body>

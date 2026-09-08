@@ -1,0 +1,16 @@
+{
+  "name": "Skolekalender · Norge 2026–2029",
+  "short_name": "Skolekalender",
+  "description": "Feriedager, skolerute og semesterdatoer for Buskerud videregående skoler og Universitetet i Oslo, 2026–2029.",
+  "lang": "nb",
+  "start_url": "skolekalender-bfk.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f0f2f8",
+  "theme_color": "#c41e2a",
+  "icons": [
+    {"src":"icon.svg", "sizes":"any", "type":"image/svg+xml", "purpose":"any"},
+    {"src":"flagofnorway.png", "sizes":"any", "type":"image/png", "purpose":"any"}
+  ]
+}
