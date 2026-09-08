@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Skolekalender · Norge 2025–2028</title>
+<title>Skolekalender · Norge 2026–2029</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600&family=Nunito:wght@400;500;600;700;800;900&family=DM+Mono:wght@400;500&family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -132,6 +132,10 @@ body.fa .mcu-l{font-family:var(--f-fa);font-size:9px}
 .sbc-n.r{color:var(--nor)}.sbc-n.g{color:var(--grn2)}.sbc-n.b{color:var(--blu2)}.sbc-n.gd{color:var(--gld2)}.sbc-n.p{color:var(--pur2)}.sbc-n.t{color:var(--ram2)}
 .sbc-l{font-size:11px;color:var(--ink3);font-weight:600}
 body.fa .sbc-l{font-family:var(--f-fa)}
+
+.uni-note{display:none;margin:0 0 14px;padding:14px 18px;border:1.5px dashed var(--nor-rim);border-radius:14px;background:rgba(240,98,70,.05);font-size:13px;line-height:1.55;color:var(--ink2);}
+.uni-note.show{display:block}
+body.fa .uni-note{font-family:var(--f-fa)}
 
 /* ═══════════════════════════════════════
    CONTROLS ROW — NEW DESIGN
@@ -422,7 +426,7 @@ body.fa .footer-t{font-family:var(--f-fa)}
     <div class="nav-ico">🇳🇴</div>
     <div>
       <div class="nav-tt" id="n-tt">Skolekalender · Norge</div>
-      <div class="nav-sb" id="n-sb">2025–2028 · Buskerud & Oslo</div>
+      <div class="nav-sb" id="n-sb">2026–2029 · Buskerud & Oslo</div>
     </div>
   </div>
   <div class="nav-R">
@@ -447,7 +451,7 @@ body.fa .footer-t{font-family:var(--f-fa)}
 <!-- HERO -->
 <div class="hero">
   <div class="hero-L">
-    <div class="hero-ey" id="h-ey">Buskerud · 2025–2028</div>
+    <div class="hero-ey" id="h-ey">Buskerud · 2026–2029</div>
     <h1 class="hero-h1" id="h-h1">Skole<br><em>Kalender</em></h1>
     <p class="hero-desc" id="h-desc">Feriedager, helligdager og viktige datoer for Buskerud videregående skoler og Universitetet i Oslo.</p>
   </div>
@@ -485,6 +489,9 @@ body.fa .footer-t{font-family:var(--f-fa)}
 
 <!-- STATS -->
 <div class="stats-bar" id="stats-bar"></div>
+
+<!-- UNIVERSITY NOTE (uni mode only) -->
+<div class="uni-note" id="uni-note"></div>
 
 <!-- CONTROLS ROW: Islamic toggle card + weekend pill -->
 <div class="controls-row">
@@ -556,95 +563,76 @@ body.fa .footer-t{font-family:var(--f-fa)}
 
 <footer class="footer">
   <div class="footer-t" id="ft-txt">
-    Skolekalender 2025–2028 · <a href="https://www.udir.no" target="_blank">Udir.no</a> ·
+    Skolekalender 2026–2029 · <a href="https://www.udir.no" target="_blank">Udir.no</a> ·
     <a href="https://www.uio.no" target="_blank">Universitetet i Oslo</a> ·
     Islamske datoer: <a href="https://islamsk.no" target="_blank">Islamsk Råd Norge</a>
   </div>
-  <div class="footer-b">Skole<em>Kalender</em> 2025–2028</div>
+  <div class="footer-b">Skole<em>Kalender</em> 2026–2029</div>
 </footer>
 </div>
 
 <script>
 /* ════════════════════════ DATA ════════════════════════ */
 const SCHOOL={
-  "2025-2026":[
-    {id:"s01",type:"skole",start:"2025-08-19",end:"2025-08-19",time:"08:30",img:"https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&q=75",no:"Første skoledag 2025/2026",en:"First School Day 2025/2026",fa:"اولین روز مدرسه ۲۰۲۵/۲۰۲۶",dno:"ti. 19.08.2025 · Skoleåret 2025/2026 starter · Møtetid 08:30",den:"Tue 19 Aug 2025 · School year begins",dfa:"سه‌شنبه ۱۹ اوت ۲۰۲۵",days:1},
-    {id:"s02",type:"ferie",start:"2025-10-06",end:"2025-10-10",time:null,img:"https://wordpress.visitgreateroslo.com/wp-content/uploads/2025/10/Hostferie-1.jpg?w=800&q=75",no:"Høstferie",en:"Autumn Holiday",fa:"تعطیلات پاییزی",dno:"ma. 06.10 – fr. 10.10.2025 · 5 dager",den:"Mon 06 – Fri 10 Oct 2025 · 5 days",dfa:"دوشنبه ۶ – جمعه ۱۰ اکتبر ۲۰۲۵",days:5},
-    {id:"s03",type:"ferie",start:"2025-12-22",end:"2026-01-02",time:null,img:"https://4kwallpapers.com/images/wallpapers/christmas-tree-3840x2160-14452.jpg?w=800&q=75",no:"Juleferie",en:"Christmas Holiday",fa:"تعطیلات کریسمس",dno:"ma. 22.12.2025 – fr. 02.01.2026 · 12 dager",den:"Mon 22 Dec 2025 – Fri 02 Jan 2026 · 12 days",dfa:"دوشنبه ۲۲ دسامبر ۲۰۲۵ – جمعه ۲ ژانویه ۲۰۲۶",days:12},
-    {id:"s_ram26",type:"ramazan",start:"2026-02-18",end:"2026-03-19",time:null,approx:true,img:"https://assets.hongkiat.com/uploads/ramadan-desktop-wallpapers/4k/original/1.jpg?w=800&q=75",no:"Ramadan 1447",en:"Ramadan 1447",fa:"رمضان ۱۴۴۷",dno:"on. 18.02 – to. 19.03.2026 · Tilnærmet dato · 29 dager",den:"Wed 18 Feb – Thu 19 Mar 2026 · Approx. · 29 days",dfa:"چهارشنبه ۱۸ فوریه – پنجشنبه ۱۹ مارس ۲۰۲۶ · تقریبی",days:29},
-    {id:"s04",type:"ferie",start:"2026-02-23",end:"2026-02-27",time:null,img:"https://images.unsplash.com/photo-1548777123-e216912df7d8?w=800&q=75",no:"Vinterferie",en:"Winter Holiday",fa:"تعطیلات زمستانی",dno:"ma. 23.02 – fr. 27.02.2026 · 5 dager",den:"Mon 23 – Fri 27 Feb 2026 · 5 days",dfa:"دوشنبه ۲۳ – جمعه ۲۷ فوریه ۲۰۲۶",days:5},
-    {id:"s05",type:"islamsk",start:"2026-03-20",end:"2026-03-21",time:"06:00",approx:true,img:"https://media.nbclosangeles.com/2019/09/GettyImages-1146394962.jpg?w=800&q=75",no:"Eid al-Fitr",en:"Eid al-Fitr",fa:"عید فطر",dno:"fr. 20.03 – lø. 21.03.2026 · Tilnærmet dato",den:"Fri 20 – Sat 21 Mar 2026 · Approx.",dfa:"جمعه ۲۰ – شنبه ۲۱ مارس ۲۰۲۶",days:2},
-    {id:"s06",type:"ferie",start:"2026-03-30",end:"2026-04-06",time:null,img:"https://steinerbarnehagen-moss.no/wp-content/uploads/paskeegg.jpg?w=800&q=75",no:"Påskeferie",en:"Easter Holiday",fa:"تعطیلات عید پاک",dno:"ma. 30.03 – ma. 06.04.2026 · 8 dager",den:"Mon 30 Mar – Mon 06 Apr 2026 · 8 days",dfa:"دوشنبه ۳۰ مارس – دوشنبه ۶ آوریل ۲۰۲۶",days:8},
-    {id:"s07",type:"helligdag",start:"2026-05-01",end:"2026-05-01",time:null,img:"https://media.snl.no/media/42688/standard_compressed_foerste-mai2.jpg?w=800&q=75",no:"Arbeidernes dag",en:"Labour Day",fa:"روز کارگر",dno:"fr. 01.05.2026",den:"Fri 01 May 2026",dfa:"جمعه ۱ مه ۲۰۲۶",days:1},
-    {id:"s08",type:"helligdag",start:"2026-05-14",end:"2026-05-14",time:null,img:"https://studenttorget.no/UserFiles/content/Redaksjon/Mathilde%20Aarvold%20Bakke/Kristi%20himmefartsdag/shutterstock_1114041656-1250-812.jpg?w=800&q=75",no:"Kristi himmelfartsdag",en:"Ascension Day",fa:"روز صعود مسیح",dno:"to. 14.05.2026",den:"Thu 14 May 2026",dfa:"پنجشنبه ۱۴ مه ۲۰۲۶",days:1},
-    {id:"s09",type:"helligdag",start:"2026-05-17",end:"2026-05-17",time:null,img:"https://aktivioslo.no/wp-content/uploads/2011/08/17.-mai-oslo.jpg?w=800&q=75",no:"17. mai – Grunnlovsdagen",en:"Constitution Day",fa:"روز قانون اساسی",dno:"sø. 17.05.2026 · Norges nasjonaldag",den:"Sun 17 May 2026 · Norway's National Day",dfa:"یکشنبه ۱۷ مه ۲۰۲۶",days:1},
-    {id:"s10",type:"helligdag",start:"2026-05-25",end:"2026-05-25",time:null,img:"https://premium.vgc.no/v2/images/df49fcaa-ec5f-4e7f-84bc-26d4290df3ce?fit=crop&format=auto&h=1070&w=1900&s=f70cfbdc36f66de593ea0ac88b2a6cd5fb939db5",no:"2. pinsedag",en:"Whit Monday",fa:"دوشنبه پنطیکاست",dno:"ma. 25.05.2026",den:"Mon 25 May 2026",dfa:"دوشنبه ۲۵ مه ۲۰۲۶",days:1},
-    {id:"s11",type:"islamsk",start:"2026-05-27",end:"2026-05-28",time:"06:00",approx:true,img:"https://media.nbclosangeles.com/2019/09/GettyImages-1146394962.jpg?w=800&q=75",no:"Eid al-Adha",en:"Eid al-Adha",fa:"عید قربان",dno:"on. 27.05 – to. 28.05.2026 · Tilnærmet dato",den:"Wed 27 – Thu 28 May 2026 · Approx.",dfa:"چهارشنبه ۲۷ – پنجشنبه ۲۸ مه ۲۰۲۶",days:2},
-    {id:"s12",type:"ferie",start:"2026-06-20",end:"2026-08-16",time:null,img:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=75",no:"Sommerferie",en:"Summer Holiday",fa:"تعطیلات تابستانی",dno:"lø. 20.06 – sø. 16.08.2026 · 8 uker",den:"Sat 20 Jun – Sun 16 Aug 2026 · 8 weeks",dfa:"شنبه ۲۰ ژوئن – یکشنبه ۱۶ اوت ۲۰۲۶",days:57},
-  ],
   "2026-2027":[
     {id:"t01",type:"skole",start:"2026-08-17",end:"2026-08-17",time:"08:30",img:"https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&q=75",no:"Første skoledag 2026/2027",en:"First School Day 2026/2027",fa:"اولین روز مدرسه ۲۰۲۶/۲۰۲۷",dno:"ma. 17.08.2026",den:"Mon 17 Aug 2026",dfa:"دوشنبه ۱۷ اوت ۲۰۲۶",days:1},
-    {id:"t02",type:"ferie",start:"2026-10-05",end:"2026-10-09",time:null,img:"https://wordpress.visitgreateroslo.com/wp-content/uploads/2025/10/Hostferie-1.jpg?w=800&q=75",no:"Høstferie",en:"Autumn Holiday",fa:"تعطیلات پاییزی",dno:"ma. 05.10 – fr. 09.10.2026 · 5 dager",den:"Mon 05 – Fri 09 Oct 2026 · 5 days",dfa:"دوشنبه ۵ – جمعه ۹ اکتبر ۲۰۲۶",days:5},
-    {id:"t03",type:"ferie",start:"2026-12-21",end:"2027-01-01",time:null,img:"https://4kwallpapers.com/images/wallpapers/christmas-tree-3840x2160-14452.jpg?w=800&q=75",no:"Juleferie",en:"Christmas Holiday",fa:"تعطیلات کریسمس",dno:"ma. 21.12.2026 – fr. 01.01.2027 · 12 dager",den:"Mon 21 Dec 2026 – Fri 01 Jan 2027",dfa:"دوشنبه ۲۱ دسامبر – جمعه ۱ ژانویه ۲۰۲۷",days:12},
+    {id:"t02",type:"ferie",start:"2026-09-28",end:"2026-10-02",time:null,img:"https://wordpress.visitgreateroslo.com/wp-content/uploads/2025/10/Hostferie-1.jpg?w=800&q=75",no:"Høstferie",en:"Autumn Holiday",fa:"تعطیلات پاییزی",dno:"ma. 28.09 – fr. 02.10.2026 · Uke 40 · 5 dager",den:"Mon 28 Sep – Fri 02 Oct 2026 · 5 days",dfa:"دوشنبه ۲۸ سپتامبر – جمعه ۲ اکتبر ۲۰۲۶",days:5},
+    {id:"t03",type:"ferie",start:"2026-12-21",end:"2027-01-03",time:null,img:"https://4kwallpapers.com/images/wallpapers/christmas-tree-3840x2160-14452.jpg?w=800&q=75",no:"Juleferie",en:"Christmas Holiday",fa:"تعطیلات کریسمس",dno:"ma. 21.12.2026 – søn. 03.01.2027 · Første skoledag 04.01",den:"Mon 21 Dec 2026 – Sun 03 Jan 2027",dfa:"دوشنبه ۲۱ دسامبر – یکشنبه ۳ ژانویه ۲۰۲۷",days:14},
     {id:"t_ram27",type:"ramazan",start:"2027-02-07",end:"2027-03-08",time:null,approx:true,img:"https://assets.hongkiat.com/uploads/ramadan-desktop-wallpapers/4k/original/1.jpg?w=800&q=75",no:"Ramadan 1448",en:"Ramadan 1448",fa:"رمضان ۱۴۴۸",dno:"sø. 07.02 – ma. 08.03.2027 · Tilnærmet dato · 29 dager",den:"Sun 07 Feb – Mon 08 Mar 2027 · Approx.",dfa:"یکشنبه ۷ فوریه – دوشنبه ۸ مارس ۲۰۲۷ · تقریبی",days:29},
-    {id:"t04",type:"ferie",start:"2027-02-22",end:"2027-02-26",time:null,img:"https://images.unsplash.com/photo-1548777123-e216912df7d8?w=800&q=75",no:"Vinterferie",en:"Winter Holiday",fa:"تعطیلات زمستانی",dno:"ma. 22.02 – fr. 26.02.2027 · 5 dager",den:"Mon 22 – Fri 26 Feb 2027",dfa:"دوشنبه ۲۲ – جمعه ۲۶ فوریه ۲۰۲۷",days:5},
+    {id:"t04",type:"ferie",start:"2027-03-01",end:"2027-03-05",time:null,img:"https://images.unsplash.com/photo-1548777123-e216912df7d8?w=800&q=75",no:"Vinterferie",en:"Winter Holiday",fa:"تعطیلات زمستانی",dno:"ma. 01.03 – fr. 05.03.2027 · Uke 9 · 5 dager",den:"Mon 01 – Fri 05 Mar 2027",dfa:"دوشنبه ۱ – جمعه ۵ مارس ۲۰۲۷",days:5},
     {id:"t05",type:"islamsk",start:"2027-03-10",end:"2027-03-11",time:"06:00",approx:true,img:"https://media.nbclosangeles.com/2019/09/GettyImages-1146394962.jpg?w=800&q=75",no:"Eid al-Fitr",en:"Eid al-Fitr",fa:"عید فطر",dno:"on. 10.03 – to. 11.03.2027 · Tilnærmet dato",den:"Wed 10 – Thu 11 Mar 2027 · Approx.",dfa:"چهارشنبه ۱۰ – پنجشنبه ۱۱ مارس ۲۰۲۷",days:2},
-    {id:"t06",type:"ferie",start:"2027-03-29",end:"2027-04-05",time:null,img:"https://steinerbarnehagen-moss.no/wp-content/uploads/paskeegg.jpg?w=800&q=75",no:"Påskeferie",en:"Easter Holiday",fa:"تعطیلات عید پاک",dno:"ma. 29.03 – ma. 05.04.2027 · 8 dager",den:"Mon 29 Mar – Mon 05 Apr 2027",dfa:"دوشنبه ۲۹ مارس – دوشنبه ۵ آوریل ۲۰۲۷",days:8},
+    {id:"t06",type:"ferie",start:"2027-03-22",end:"2027-03-29",time:null,img:"https://steinerbarnehagen-moss.no/wp-content/uploads/paskeegg.jpg?w=800&q=75",no:"Påskeferie",en:"Easter Holiday",fa:"تعطیلات عید پاک",dno:"ma. 22.03 – ma. 29.03.2027 · 8 dager",den:"Mon 22 – Mon 29 Mar 2027",dfa:"دوشنبه ۲۲ – دوشنبه ۲۹ مارس ۲۰۲۷",days:8},
     {id:"t07",type:"islamsk",start:"2027-05-17",end:"2027-05-18",time:"06:00",approx:true,img:"https://media.nbclosangeles.com/2019/09/GettyImages-1146394962.jpg?w=800&q=75",no:"Eid al-Adha",en:"Eid al-Adha",fa:"عید قربان",dno:"ma. 17.05 – ti. 18.05.2027 · Tilnærmet dato",den:"Mon 17 – Tue 18 May 2027 · Approx.",dfa:"دوشنبه ۱۷ – سه‌شنبه ۱۸ مه ۲۰۲۷",days:2},
-    {id:"t08",type:"helligdag",start:"2027-05-17",end:"2027-05-17",time:null,img:"https://aktivioslo.no/wp-content/uploads/2011/08/17.-mai-oslo.jpg?w=800&q=75",no:"17. mai – Grunnlovsdagen",en:"Constitution Day",fa:"روز قانون اساسی",dno:"ma. 17.05.2027 · Norges nasjonaldag",den:"Mon 17 May 2027 · Norway's National Day",dfa:"دوشنبه ۱۷ مه ۲۰۲۷",days:1},
+    {id:"t08",type:"helligdag",start:"2027-05-17",end:"2027-05-17",time:null,img:"https://aktivioslo.no/wp-content/uploads/2011/08/17.-mai-oslo.jpg?w=800&q=75",no:"17. mai – Grunnlovsdagen",en:"Constitution Day",fa:"روز قانون اساسی",dno:"ma. 17.05.2027 · Norges nasjonaldag og 2. pinsedag",den:"Mon 17 May 2027 · National Day & Whit Monday",dfa:"دوشنبه ۱۷ مه ۲۰۲۷",days:1},
     {id:"t09",type:"ferie",start:"2027-06-19",end:"2027-08-15",time:null,img:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=75",no:"Sommerferie",en:"Summer Holiday",fa:"تعطیلات تابستانی",dno:"lø. 19.06 – sø. 15.08.2027 · ~8 uker",den:"Sat 19 Jun – Sun 15 Aug 2027",dfa:"شنبه ۱۹ ژوئن – یکشنبه ۱۵ اوت ۲۰۲۷",days:57},
   ],
   "2027-2028":[
-    {id:"u01",type:"skole",start:"2027-08-16",end:"2027-08-16",time:"08:30",img:"https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&q=75",no:"Første skoledag 2027/2028",en:"First School Day 2027/2028",fa:"اولین روز مدرسه ۲۰۲۷/۲۰۲۸",dno:"ma. 16.08.2027",den:"Mon 16 Aug 2027",dfa:"دوشنبه ۱۶ اوت ۲۰۲۷",days:1},
-    {id:"u02",type:"ferie",start:"2027-10-04",end:"2027-10-08",time:null,img:"https://wordpress.visitgreateroslo.com/wp-content/uploads/2025/10/Hostferie-1.jpg?w=800&q=75",no:"Høstferie",en:"Autumn Holiday",fa:"تعطیلات پاییزی",dno:"ma. 04.10 – fr. 08.10.2027 · 5 dager",den:"Mon 04 – Fri 08 Oct 2027",dfa:"دوشنبه ۴ – جمعه ۸ اکتبر ۲۰۲۷",days:5},
-    {id:"u03",type:"ferie",start:"2027-12-20",end:"2027-12-31",time:null,img:"https://4kwallpapers.com/images/wallpapers/christmas-tree-3840x2160-14452.jpg?w=800&q=75",no:"Juleferie",en:"Christmas Holiday",fa:"تعطیلات کریسمس",dno:"ma. 20.12 – fr. 31.12.2027 · 12 dager",den:"Mon 20 – Fri 31 Dec 2027",dfa:"دوشنبه ۲۰ – جمعه ۳۱ دسامبر ۲۰۲۷",days:12},
+    {id:"u01",type:"skole",start:"2027-08-18",end:"2027-08-18",time:"08:30",img:"https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&q=75",no:"Første skoledag 2027/2028",en:"First School Day 2027/2028",fa:"اولین روز مدرسه ۲۰۲۷/۲۰۲۸",dno:"on. 18.08.2027 · Skoleåret starter · Møtetid 08:30",den:"Wed 18 Aug 2027 · School year begins",dfa:"چهارشنبه ۱۸ اوت ۲۰۲۷",days:1},
+    {id:"u02",type:"ferie",start:"2027-10-04",end:"2027-10-08",time:null,img:"https://wordpress.visitgreateroslo.com/wp-content/uploads/2025/10/Hostferie-1.jpg?w=800&q=75",no:"Høstferie",en:"Autumn Holiday",fa:"تعطیلات پاییزی",dno:"ma. 04.10 – fr. 08.10.2027 · Uke 40 · 5 dager",den:"Mon 04 – Fri 08 Oct 2027 · 5 days",dfa:"دوشنبه ۴ – جمعه ۸ اکتبر ۲۰۲۷",days:5},
+    {id:"u03",type:"ferie",start:"2027-12-20",end:"2028-01-02",time:null,img:"https://4kwallpapers.com/images/wallpapers/christmas-tree-3840x2160-14452.jpg?w=800&q=75",no:"Juleferie",en:"Christmas Holiday",fa:"تعطیلات کریسمس",dno:"ma. 20.12.2027 – søn. 02.01.2028 · Første skoledag 03.01",den:"Mon 20 Dec 2027 – Sun 02 Jan 2028",dfa:"دوشنبه ۲۰ دسامبر – یکشنبه ۲ ژانویه ۲۰۲۸",days:14},
     {id:"u_ram28",type:"ramazan",start:"2028-01-28",end:"2028-02-25",time:null,approx:true,img:"https://assets.hongkiat.com/uploads/ramadan-desktop-wallpapers/4k/original/1.jpg?w=800&q=75",no:"Ramadan 1449",en:"Ramadan 1449",fa:"رمضان ۱۴۴۹",dno:"fr. 28.01 – lø. 25.02.2028 · Tilnærmet dato · 29 dager",den:"Fri 28 Jan – Sat 25 Feb 2028 · Approx.",dfa:"جمعه ۲۸ ژانویه – شنبه ۲۵ فوریه ۲۰۲۸ · تقریبی",days:29},
     {id:"u04",type:"islamsk",start:"2028-02-28",end:"2028-02-29",time:"06:00",approx:true,img:"https://media.nbclosangeles.com/2019/09/GettyImages-1146394962.jpg?w=800&q=75",no:"Eid al-Fitr",en:"Eid al-Fitr",fa:"عید فطر",dno:"ti. 28.02 – on. 29.02.2028 · Tilnærmet dato",den:"Tue 28 – Wed 29 Feb 2028 · Approx.",dfa:"سه‌شنبه ۲۸ – چهارشنبه ۲۹ فوریه ۲۰۲۸",days:2},
-    {id:"u05",type:"ferie",start:"2028-04-10",end:"2028-04-14",time:null,img:"https://images.unsplash.com/photo-1548777123-e216912df7d8?w=800&q=75",no:"Vinterferie",en:"Winter Holiday",fa:"تعطیلات زمستانی",dno:"ma. 10.04 – fr. 14.04.2028 · 5 dager",den:"Mon 10 – Fri 14 Apr 2028",dfa:"دوشنبه ۱۰ – جمعه ۱۴ آوریل ۲۰۲۸",days:5},
+    {id:"u05",type:"ferie",start:"2028-02-28",end:"2028-03-03",time:null,img:"https://images.unsplash.com/photo-1548777123-e216912df7d8?w=800&q=75",no:"Vinterferie",en:"Winter Holiday",fa:"تعطیلات زمستانی",dno:"ma. 28.02 – fr. 03.03.2028 · Uke 9 · 5 dager",den:"Mon 28 Feb – Fri 03 Mar 2028",dfa:"دوشنبه ۲۸ فوریه – جمعه ۳ مارس ۲۰۲۸",days:5},
+    {id:"u_pask28",type:"ferie",start:"2028-04-10",end:"2028-04-17",time:null,img:"https://steinerbarnehagen-moss.no/wp-content/uploads/paskeegg.jpg?w=800&q=75",no:"Påskeferie",en:"Easter Holiday",fa:"تعطیلات عید پاک",dno:"ma. 10.04 – ma. 17.04.2028 · 8 dager",den:"Mon 10 – Mon 17 Apr 2028",dfa:"دوشنبه ۱۰ – دوشنبه ۱۷ آوریل ۲۰۲۸",days:8},
     {id:"u06",type:"islamsk",start:"2028-05-06",end:"2028-05-07",time:"06:00",approx:true,img:"https://media.nbclosangeles.com/2019/09/GettyImages-1146394962.jpg?w=800&q=75",no:"Eid al-Adha",en:"Eid al-Adha",fa:"عید قربان",dno:"lø. 06.05 – sø. 07.05.2028 · Tilnærmet dato",den:"Sat 06 – Sun 07 May 2028 · Approx.",dfa:"شنبه ۶ – یکشنبه ۷ مه ۲۰۲۸",days:2},
     {id:"u07",type:"helligdag",start:"2028-05-17",end:"2028-05-17",time:null,img:"https://aktivioslo.no/wp-content/uploads/2011/08/17.-mai-oslo.jpg?w=800&q=75",no:"17. mai – Grunnlovsdagen",en:"Constitution Day",fa:"روز قانون اساسی",dno:"on. 17.05.2028 · Norges nasjonaldag",den:"Wed 17 May 2028",dfa:"چهارشنبه ۱۷ مه ۲۰۲۸",days:1},
-    {id:"u08",type:"ferie",start:"2028-06-17",end:"2028-08-13",time:null,img:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=75",no:"Sommerferie",en:"Summer Holiday",fa:"تعطیلات تابستانی",dno:"lø. 17.06 – sø. 13.08.2028 · ~8 uker",den:"Sat 17 Jun – Sun 13 Aug 2028",dfa:"شنبه ۱۷ ژوئن – یکشنبه ۱۳ اوت ۲۰۲۸",days:57},
+    {id:"u08",type:"ferie",start:"2028-06-23",end:"2028-08-20",time:null,img:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=75",no:"Sommerferie",en:"Summer Holiday",fa:"تعطیلات تابستانی",dno:"fr. 23.06 – søn. 20.08.2028 · ~8 uker",den:"Fri 23 Jun – Sun 20 Aug 2028",dfa:"جمعه ۲۳ ژوئن – یکشنبه ۲۰ اوت ۲۰۲۸",days:59},
+  ],
+  "2028-2029":[
+    {id:"w01",type:"skole",start:"2028-08-21",end:"2028-08-21",time:"08:30",img:"https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&q=75",no:"Første skoledag 2028/2029",en:"First School Day 2028/2029",fa:"اولین روز مدرسه ۲۰۲۸/۲۰۲۹",dno:"ma. 21.08.2028 · Skoleåret starter · Møtetid 08:30",den:"Mon 21 Aug 2028 · School year begins",dfa:"دوشنبه ۲۱ اوت ۲۰۲۸",days:1},
+    {id:"w02",type:"ferie",start:"2028-10-02",end:"2028-10-06",time:null,img:"https://wordpress.visitgreateroslo.com/wp-content/uploads/2025/10/Hostferie-1.jpg?w=800&q=75",no:"Høstferie",en:"Autumn Holiday",fa:"تعطیلات پاییزی",dno:"ma. 02.10 – fr. 06.10.2028 · Uke 40 · 5 dager",den:"Mon 02 – Fri 06 Oct 2028 · 5 days",dfa:"دوشنبه ۲ – جمعه ۶ اکتبر ۲۰۲۸",days:5},
+    {id:"w03",type:"ferie",start:"2028-12-21",end:"2029-01-02",time:null,img:"https://4kwallpapers.com/images/wallpapers/christmas-tree-3840x2160-14452.jpg?w=800&q=75",no:"Juleferie",en:"Christmas Holiday",fa:"تعطیلات کریسمس",dno:"to. 21.12.2028 – ti. 02.01.2029 · Første skoledag 03.01",den:"Thu 21 Dec 2028 – Tue 02 Jan 2029",dfa:"پنجشنبه ۲۱ دسامبر – سه‌شنبه ۲ ژانویه ۲۰۲۹",days:13},
+    {id:"w_ram29",type:"ramazan",start:"2029-01-17",end:"2029-02-15",time:null,approx:true,img:"https://assets.hongkiat.com/uploads/ramadan-desktop-wallpapers/4k/original/1.jpg?w=800&q=75",no:"Ramadan 1450",en:"Ramadan 1450",fa:"رمضان ۱۴۵۰",dno:"on. 17.01 – to. 15.02.2029 · Tilnærmet dato · 30 dager",den:"Wed 17 Jan – Thu 15 Feb 2029 · Approx.",dfa:"چهارشنبه ۱۷ ژانویه – پنجشنبه ۱۵ فوریه ۲۰۲۹ · تقریبی",days:30},
+    {id:"w04",type:"islamsk",start:"2029-02-16",end:"2029-02-17",time:"06:00",approx:true,img:"https://media.nbclosangeles.com/2019/09/GettyImages-1146394962.jpg?w=800&q=75",no:"Eid al-Fitr",en:"Eid al-Fitr",fa:"عید فطر",dno:"fr. 16.02 – lø. 17.02.2029 · Tilnærmet dato",den:"Fri 16 – Sat 17 Feb 2029 · Approx.",dfa:"جمعه ۱۶ – شنبه ۱۷ فوریه ۲۰۲۹",days:2},
+    {id:"w05",type:"ferie",start:"2029-02-26",end:"2029-03-02",time:null,img:"https://images.unsplash.com/photo-1548777123-e216912df7d8?w=800&q=75",no:"Vinterferie",en:"Winter Holiday",fa:"تعطیلات زمستانی",dno:"ma. 26.02 – fr. 02.03.2029 · Uke 9 · 5 dager",den:"Mon 26 Feb – Fri 02 Mar 2029",dfa:"دوشنبه ۲۶ فوریه – جمعه ۲ مارس ۲۰۲۹",days:5},
+    {id:"w06",type:"ferie",start:"2029-03-26",end:"2029-04-02",time:null,img:"https://steinerbarnehagen-moss.no/wp-content/uploads/paskeegg.jpg?w=800&q=75",no:"Påskeferie",en:"Easter Holiday",fa:"تعطیلات عید پاک",dno:"ma. 26.03 – ma. 02.04.2029 · 8 dager",den:"Mon 26 Mar – Mon 02 Apr 2029",dfa:"دوشنبه ۲۶ مارس – دوشنبه ۲ آوریل ۲۰۲۹",days:8},
+    {id:"w07",type:"islamsk",start:"2029-04-24",end:"2029-04-25",time:"06:00",approx:true,img:"https://media.nbclosangeles.com/2019/09/GettyImages-1146394962.jpg?w=800&q=75",no:"Eid al-Adha",en:"Eid al-Adha",fa:"عید قربان",dno:"ti. 24.04 – on. 25.04.2029 · Tilnærmet dato",den:"Tue 24 – Wed 25 Apr 2029 · Approx.",dfa:"سه‌شنبه ۲۴ – چهارشنبه ۲۵ آوریل ۲۰۲۹",days:2},
+    {id:"w08",type:"helligdag",start:"2029-05-17",end:"2029-05-17",time:null,img:"https://aktivioslo.no/wp-content/uploads/2011/08/17.-mai-oslo.jpg?w=800&q=75",no:"17. mai – Grunnlovsdagen",en:"Constitution Day",fa:"روز قانون اساسی",dno:"to. 17.05.2029 · Norges nasjonaldag",den:"Thu 17 May 2029",dfa:"پنجشنبه ۱۷ مه ۲۰۲۹",days:1},
+    {id:"w09",type:"ferie",start:"2029-06-23",end:"2029-08-19",time:null,img:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=75",no:"Sommerferie",en:"Summer Holiday",fa:"تعطیلات تابستانی",dno:"lø. 23.06 – sø. 19.08.2029 · ~8 uker",den:"Sat 23 Jun – Sun 19 Aug 2029",dfa:"شنبه ۲۳ ژوئن – یکشنبه ۱۹ اوت ۲۰۲۹",days:58},
   ]
 };
 
 const UNI={
-  "2025-2026":[
-    {id:"uu1",type:"uni",start:"2025-08-11",end:"2025-08-15",time:"09:00",img:"https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=75",no:"Studiestart – introduksjonsuke",en:"Study Start – Intro Week",fa:"شروع تحصیل – هفته معارفه",dno:"ma. 11.08 – fr. 15.08.2025 · Fadderuke",den:"Mon 11 – Fri 15 Aug 2025",dfa:"دوشنبه ۱۱ – جمعه ۱۵ اوت ۲۰۲۵",days:5},
-    {id:"uu2",type:"uni",start:"2025-08-18",end:"2025-08-18",time:"08:15",img:"https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&q=75",no:"Semesterstart høst 2025",en:"Autumn Semester Start 2025",fa:"آغاز ترم پاییز ۲۰۲۵",dno:"ma. 18.08.2025 · Første forelesningsdag",den:"Mon 18 Aug 2025",dfa:"دوشنبه ۱۸ اوت ۲۰۲۵",days:1},
-    {id:"uu3",type:"uni",start:"2025-11-17",end:"2025-11-28",time:null,img:"https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800&q=75",no:"Eksamensperiode – høst 2025",en:"Exam Period – Autumn 2025",fa:"دوره امتحانات – پاییز ۲۰۲۵",dno:"ma. 17.11 – fr. 28.11.2025 · 12 dager",den:"Mon 17 – Fri 28 Nov 2025",dfa:"دوشنبه ۱۷ – جمعه ۲۸ نوامبر ۲۰۲۵",days:12},
-    {id:"uu4",type:"uni",start:"2026-01-06",end:"2026-01-06",time:"08:15",img:"https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&q=75",no:"Semesterstart vår 2026",en:"Spring Semester Start 2026",fa:"آغاز ترم بهار ۲۰۲۶",dno:"ti. 06.01.2026",den:"Tue 06 Jan 2026",dfa:"سه‌شنبه ۶ ژانویه ۲۰۲۶",days:1},
-    {id:"uu_ram26",type:"ramazan",start:"2026-02-18",end:"2026-03-19",time:null,approx:true,img:"https://images.unsplash.com/photo-1564769662533-4f00a87b4056?w=800&q=75",no:"Ramadan 1447",en:"Ramadan 1447",fa:"رمضان ۱۴۴۷",dno:"on. 18.02 – to. 19.03.2026 · Tilnærmet · 29 dager",den:"Wed 18 Feb – Thu 19 Mar 2026 · Approx.",dfa:"چهارشنبه ۱۸ فوریه – پنجشنبه ۱۹ مارس ۲۰۲۶",days:29},
-    {id:"uu5",type:"islamsk",start:"2026-03-20",end:"2026-03-21",time:"06:00",approx:true,img:"https://media.nbclosangeles.com/2019/09/GettyImages-1146394962.jpg?w=800&q=75",no:"Eid al-Fitr",en:"Eid al-Fitr",fa:"عید فطر",dno:"fr. 20.03 – lø. 21.03.2026 · Tilnærmet",den:"Fri 20 – Sat 21 Mar 2026 · Approx.",dfa:"جمعه ۲۰ – شنبه ۲۱ مارس ۲۰۲۶",days:2},
-    {id:"uu6",type:"uni",start:"2026-04-27",end:"2026-05-15",time:null,img:"https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800&q=75",no:"Eksamensperiode – vår 2026",en:"Exam Period – Spring 2026",fa:"دوره امتحانات – بهار ۲۰۲۶",dno:"ma. 27.04 – fr. 15.05.2026 · 19 dager",den:"Mon 27 Apr – Fri 15 May 2026",dfa:"دوشنبه ۲۷ آوریل – جمعه ۱۵ مه ۲۰۲۶",days:19},
-    {id:"uu7",type:"islamsk",start:"2026-05-27",end:"2026-05-28",time:"06:00",approx:true,img:"https://media.nbclosangeles.com/2019/09/GettyImages-1146394962.jpg?w=800&q=75",no:"Eid al-Adha",en:"Eid al-Adha",fa:"عید قربان",dno:"on. 27.05 – to. 28.05.2026 · Tilnærmet",den:"Wed 27 – Thu 28 May 2026 · Approx.",dfa:"چهارشنبه ۲۷ – پنجشنبه ۲۸ مه ۲۰۲۶",days:2},
-    {id:"uu8",type:"uni",start:"2026-06-15",end:"2026-08-09",time:null,img:"https://media.nbclosangeles.com/2019/09/GettyImages-1146394962.jpg?quality=85&strip=all&resize=1200%2C675?w=800&q=75",no:"Sommerferie – UiO",en:"Summer Break – UiO",fa:"تعطیلات تابستانی",dno:"ma. 15.06 – sø. 09.08.2026",den:"Mon 15 Jun – Sun 09 Aug 2026",dfa:"دوشنبه ۱۵ ژوئن – یکشنبه ۹ اوت ۲۰۲۶",days:55},
-  ],
   "2026-2027":[
-    {id:"vv1",type:"uni",start:"2026-08-10",end:"2026-08-14",time:"09:00",img:"https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=75",no:"Studiestart – introduksjonsuke",en:"Study Start – Intro Week",fa:"شروع تحصیل",dno:"ma. 10.08 – fr. 14.08.2026",den:"Mon 10 – Fri 14 Aug 2026",dfa:"دوشنبه ۱۰ – جمعه ۱۴ اوت ۲۰۲۶",days:5},
-    {id:"vv2",type:"uni",start:"2026-08-17",end:"2026-08-17",time:"08:15",img:"https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&q=75",no:"Semesterstart høst 2026",en:"Autumn Semester Start 2026",fa:"آغاز ترم پاییز ۲۰۲۶",dno:"ma. 17.08.2026",den:"Mon 17 Aug 2026",dfa:"دوشنبه ۱۷ اوت ۲۰۲۶",days:1},
-    {id:"vv_ram27",type:"ramazan",start:"2027-02-07",end:"2027-03-08",time:null,approx:true,img:"https://images.unsplash.com/photo-1564769662533-4f00a87b4056?w=800&q=75",no:"Ramadan 1448",en:"Ramadan 1448",fa:"رمضان ۱۴۴۸",dno:"sø. 07.02 – ma. 08.03.2027 · Tilnærmet",den:"Sun 07 Feb – Mon 08 Mar 2027 · Approx.",dfa:"یکشنبه ۷ فوریه – دوشنبه ۸ مارس ۲۰۲۷",days:29},
-    {id:"vv3",type:"islamsk",start:"2027-03-10",end:"2027-03-11",time:"06:00",approx:true,img:"https://media.nbclosangeles.com/2019/09/GettyImages-1146394962.jpg?w=800&q=75",no:"Eid al-Fitr",en:"Eid al-Fitr",fa:"عید فطر",dno:"on. 10.03 – to. 11.03.2027 · Tilnærmet",den:"Wed 10 – Thu 11 Mar 2027 · Approx.",dfa:"چهارشنبه ۱۰ – پنجشنبه ۱۱ مارس ۲۰۲۷",days:2},
-    {id:"vv4",type:"uni",start:"2027-04-26",end:"2027-05-14",time:null,img:"https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800&q=75",no:"Eksamensperiode – vår 2027",en:"Exam Period – Spring 2027",fa:"دوره امتحانات – بهار ۲۰۲۷",dno:"ma. 26.04 – fr. 14.05.2027",den:"Mon 26 Apr – Fri 14 May 2027",dfa:"دوشنبه ۲۶ آوریل – جمعه ۱۴ مه ۲۰۲۷",days:19},
-    {id:"vv5",type:"islamsk",start:"2027-05-17",end:"2027-05-18",time:"06:00",approx:true,img:"https://media.nbclosangeles.com/2019/09/GettyImages-1146394962.jpg?w=800&q=75",no:"Eid al-Adha",en:"Eid al-Adha",fa:"عید قربان",dno:"ma. 17.05 – ti. 18.05.2027 · Tilnærmet",den:"Mon 17 – Tue 18 May 2027 · Approx.",dfa:"دوشنبه ۱۷ – سه‌شنبه ۱۸ مه ۲۰۲۷",days:2},
-    {id:"vv6",type:"uni",start:"2027-06-14",end:"2027-08-08",time:null,img:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=75",no:"Sommerferie – UiO",en:"Summer Break – UiO",fa:"تعطیلات تابستانی",dno:"ma. 14.06 – sø. 08.08.2027",den:"Mon 14 Jun – Sun 08 Aug 2027",dfa:"دوشنبه ۱۴ ژوئن – یکشنبه ۸ اوت ۲۰۲۷",days:55},
+    {id:"oa1",type:"uni",start:"2026-08-10",end:"2026-12-22",time:null,img:"https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=75",no:"Haustsemester 2026",en:"Autumn Semester 2026",fa:"ترم پاییز ۲۰۲۶",dno:"ma. 10.08.2026 – ti. 22.12.2026 · UiO",den:"Mon 10 Aug – Tue 22 Dec 2026 · UiO",dfa:"دوشنبه ۱۰ اوت – سه‌شنبه ۲۲ دسامبر ۲۰۲۶",days:135},
+    {id:"oa2",type:"uni",start:"2027-01-04",end:"2027-06-18",time:null,img:"https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=75",no:"Vårsemester 2027",en:"Spring Semester 2027",fa:"ترم بهار ۲۰۲۷",dno:"ma. 04.01.2027 – fr. 18.06.2027 · UiO",den:"Mon 04 Jan – Fri 18 Jun 2027 · UiO",dfa:"دوشنبه ۴ ژانویه – جمعه ۱۸ ژوئن ۲۰۲۷",days:166},
   ],
   "2027-2028":[
-    {id:"ww1",type:"uni",start:"2027-08-09",end:"2027-08-13",time:"09:00",img:"https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=75",no:"Studiestart – introduksjonsuke",en:"Study Start – Intro Week",fa:"شروع تحصیل",dno:"ma. 09.08 – fr. 13.08.2027",den:"Mon 09 – Fri 13 Aug 2027",dfa:"دوشنبه ۹ – جمعه ۱۳ اوت ۲۰۲۷",days:5},
-    {id:"ww2",type:"uni",start:"2027-08-16",end:"2027-08-16",time:"08:15",img:"https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&q=75",no:"Semesterstart høst 2027",en:"Autumn Semester Start 2027",fa:"آغاز ترم پاییز ۲۰۲۷",dno:"ma. 16.08.2027",den:"Mon 16 Aug 2027",dfa:"دوشنبه ۱۶ اوت ۲۰۲۷",days:1},
-    {id:"ww_ram28",type:"ramazan",start:"2028-01-28",end:"2028-02-25",time:null,approx:true,img:"https://images.unsplash.com/photo-1564769662533-4f00a87b4056?w=800&q=75",no:"Ramadan 1449",en:"Ramadan 1449",fa:"رمضان ۱۴۴۹",dno:"fr. 28.01 – lø. 25.02.2028 · Tilnærmet",den:"Fri 28 Jan – Sat 25 Feb 2028 · Approx.",dfa:"جمعه ۲۸ ژانویه – شنبه ۲۵ فوریه ۲۰۲۸",days:29},
-    {id:"ww3",type:"islamsk",start:"2028-02-28",end:"2028-02-29",time:"06:00",approx:true,img:"https://media.nbclosangeles.com/2019/09/GettyImages-1146394962.jpg?w=800&q=75",no:"Eid al-Fitr",en:"Eid al-Fitr",fa:"عید فطر",dno:"ti. 28.02 – on. 29.02.2028 · Tilnærmet",den:"Tue 28 – Wed 29 Feb 2028 · Approx.",dfa:"سه‌شنبه ۲۸ – چهارشنبه ۲۹ فوریه ۲۰۲۸",days:2},
-    {id:"ww4",type:"uni",start:"2028-04-24",end:"2028-05-17",time:null,img:"https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800&q=75",no:"Eksamensperiode – vår 2028",en:"Exam Period – Spring 2028",fa:"دوره امتحانات – بهار ۲۰۲۸",dno:"ma. 24.04 – fr. 17.05.2028",den:"Mon 24 Apr – Fri 17 May 2028",dfa:"دوشنبه ۲۴ آوریل – جمعه ۱۷ مه ۲۰۲۸",days:23},
-    {id:"ww5",type:"islamsk",start:"2028-05-06",end:"2028-05-07",time:"06:00",approx:true,img:"https://media.nbclosangeles.com/2019/09/GettyImages-1146394962.jpg?w=800&q=75",no:"Eid al-Adha",en:"Eid al-Adha",fa:"عید قربان",dno:"lø. 06.05 – sø. 07.05.2028 · Tilnærmet",den:"Sat 06 – Sun 07 May 2028 · Approx.",dfa:"شنبه ۶ – یکشنبه ۷ مه ۲۰۲۸",days:2},
-    {id:"ww6",type:"uni",start:"2028-06-12",end:"2028-08-11",time:null,img:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=75",no:"Sommerferie – UiO",en:"Summer Break – UiO",fa:"تعطیلات تابستانی",dno:"ti. 12.06 – sø. 11.08.2028",den:"Tue 12 Jun – Sun 11 Aug 2028",dfa:"سه‌شنبه ۱۲ ژوئن – یکشنبه ۱۱ اوت ۲۰۲۸",days:60},
+    {id:"ob1",type:"uni",start:"2027-08-16",end:"2027-12-22",time:null,img:"https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=75",no:"Haustsemester 2027",en:"Autumn Semester 2027",fa:"ترم پاییز ۲۰۲۷",dno:"ma. 16.08.2027 – on. 22.12.2027 · UiO",den:"Mon 16 Aug – Wed 22 Dec 2027 · UiO",dfa:"دوشنبه ۱۶ اوت – چهارشنبه ۲۲ دسامبر ۲۰۲۷",days:129},
+    {id:"ob2",type:"uni",start:"2028-01-03",end:"2028-06-16",time:null,approx:true,img:"https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=75",no:"Vårsemester 2028",en:"Spring Semester 2028",fa:"ترم بهار ۲۰۲۸",dno:"ma. 03.01.2028 – fr. 16.06.2028 · UiO · Tilnærmet",den:"Mon 03 Jan – Fri 16 Jun 2028 · Approx.",dfa:"دوشنبه ۳ ژانویه – جمعه ۱۶ ژوئن ۲۰۲۸ · تقریبی",days:166},
+  ],
+  "2028-2029":[
+    {id:"oc1",type:"uni",start:"2028-08-14",end:"2028-12-20",time:null,approx:true,img:"https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=75",no:"Haustsemester 2028",en:"Autumn Semester 2028",fa:"ترم پاییز ۲۰۲۸",dno:"ma. 14.08.2028 – on. 20.12.2028 · Tilnærmet · UiO",den:"Mon 14 Aug – Wed 20 Dec 2028 · Approx.",dfa:"دوشنبه ۱۴ اوت – چهارشنبه ۲۰ دسامبر ۲۰۲۸ · تقریبی",days:129},
+    {id:"oc2",type:"uni",start:"2029-01-02",end:"2029-06-15",time:null,approx:true,img:"https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=75",no:"Vårsemester 2029",en:"Spring Semester 2029",fa:"ترم بهار ۲۰۲۹",dno:"ti. 02.01.2029 – fr. 15.06.2029 · Tilnærmet · UiO",den:"Tue 02 Jan – Fri 15 Jun 2029 · Approx.",dfa:"سه‌شنبه ۲ ژانویه – جمعه ۱۵ ژوئن ۲۰۲۹ · تقریبی",days:165},
   ]
 };
 
 /* ════════════════════════ TRANSLATIONS ════════════════════════ */
 const TX={
   no:{
-    navTt:"Skolekalender · Norge",navSb:"2025–2028 · Buskerud & Oslo",
+    navTt:"Skolekalender · Norge",navSb:"2026–2029 · Buskerud & Oslo",
     hEy:"Buskerud · {y}",hH1s:["Skole","Kalender"],hH1u:["Universitets","Kalender"],
-    hDs:"Feriedager og helligdager for Buskerud videregående skoler.",hDu:"Semesterdatoer og eksamensperioder for Universitetet i Oslo.",
+    hDs:"Feriedager og helligdager for Buskerud videregående skoler.",hDu:"Semesterdatoer for Universitetet i Oslo.",
     hPS:"Buskerud Videregående",hPU:"Universitetet i Oslo",
     cdL:"Neste hendelse",
     sF:"Ferieperioder",sH:"Helligdager",sI:"Islamske høytider",sR:"Ramadan",sS:"Skole",sU:"Universitetet",sTot:"Totalt",
@@ -657,14 +645,14 @@ const TX={
     dL:"Varighet",wdL:"Hverdager",approxL:"Tilnærmet dato",
     mths:["jan","feb","mar","apr","mai","jun","jul","aug","sep","okt","nov","des"],
     cD:"Dager",cH:"Timer",cM:"Min",cS:"Sek",iT2:"I dag!",past:"Passert",
-    yr:["2025–26","2026–27","2027–28"],
-    ft:"Skolekalender 2025–2028 · <a href='https://www.udir.no' target='_blank'>Udir.no</a> · <a href='https://www.uio.no' target='_blank'>Universitetet i Oslo</a>",
-    hSl:"hendelser",
+    yr:["2026–27","2027–28","2028–29"],
+    ft:"Skolekalender 2026–2029 · <a href='https://www.udir.no' target='_blank'>Udir.no</a> · <a href='https://www.uio.no' target='_blank'>Universitetet i Oslo</a>",
+    hSl:"hendelser",uNote:"Programmene medisin, odontologi, klinisk ernæring og profesjonsstudiet i psykologi har en annen deling mellom høst og vår. Kontakt studieprogrammet for datoer.",
     srchPh:"Søk etter hendelse, type eller dato...",
     tabAll:"Alle hendelser",tabLive:"Pågår nå",tabUp:"Kommende",tabEnd:"Avsluttet",
   },
   en:{
-    navTt:"School Calendar · Norway",navSb:"2025–2028 · Buskerud & Oslo",
+    navTt:"School Calendar · Norway",navSb:"2026–2029 · Buskerud & Oslo",
     hEy:"Buskerud · {y}",hH1s:["School","Calendar"],hH1u:["University","Calendar"],
     hDs:"Holidays for Buskerud upper secondary schools.",hDu:"Semester dates for University of Oslo.",
     hPS:"Buskerud Upper Secondary",hPU:"University of Oslo",
@@ -679,14 +667,14 @@ const TX={
     dL:"Duration",wdL:"Weekdays",approxL:"Approximate date",
     mths:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
     cD:"Days",cH:"Hrs",cM:"Min",cS:"Sec",iT2:"Today!",past:"Past",
-    yr:["2025–26","2026–27","2027–28"],
-    ft:"School Calendar 2025–2028 · <a href='https://www.udir.no' target='_blank'>Udir.no</a> · <a href='https://www.uio.no' target='_blank'>UiO</a>",
-    hSl:"events",
+    yr:["2026–27","2027–28","2028–29"],
+    ft:"School Calendar 2026–2029 · <a href='https://www.udir.no' target='_blank'>Udir.no</a> · <a href='https://www.uio.no' target='_blank'>UiO</a>",
+    hSl:"events",uNote:"The medicine, dentistry, clinical nutrition and professional psychology programmes divide the year differently between autumn and spring. Contact your programme for dates.",
     srchPh:"Search events by name, type or date...",
     tabAll:"All Events",tabLive:"Live Now",tabUp:"Upcoming",tabEnd:"Ended",
   },
   fa:{
-    navTt:"تقویم مدرسه · نروژ",navSb:"۲۰۲۵–۲۰۲۸ · بوسکرود و اسلو",
+    navTt:"تقویم مدرسه · نروژ",navSb:"۲۰۲۶–۲۰۲۹ · بوسکرود و اسلو",
     hEy:"بوسکرود · {y}",hH1s:["تقویم","مدرسه"],hH1u:["تقویم","دانشگاه"],
     hDs:"تعطیلات مدارس متوسطه بوسکرود.",hDu:"تاریخ‌های ترم دانشگاه اسلو.",
     hPS:"دبیرستان بوسکرود",hPU:"دانشگاه اسلو",
@@ -701,19 +689,19 @@ const TX={
     dL:"مدت",wdL:"روز کاری",approxL:"تاریخ تقریبی",
     mths:["ژان","فور","مار","آور","مه","ژون","ژوئ","اوت","سپت","اکت","نوو","دسم"],
     cD:"روز",cH:"ساعت",cM:"دقیقه",cS:"ثانیه",iT2:"امروز!",past:"گذشته",
-    yr:["۲۰۲۵–۲۶","۲۰۲۶–۲۷","۲۰۲۷–۲۸"],
-    ft:"تقویم مدرسه ۲۰۲۵–۲۰۲۸ · <a href='https://www.udir.no' target='_blank'>Udir.no</a> · <a href='https://www.uio.no' target='_blank'>دانشگاه اسلو</a>",
-    hSl:"رویداد",
+    yr:["۲۰۲۶–۲۷","۲۰۲۷–۲۸","۲۰۲۸–۲۹"],
+    ft:"تقویم مدرسه ۲۰۲۶–۲۰۲۹ · <a href='https://www.udir.no' target='_blank'>Udir.no</a> · <a href='https://www.uio.no' target='_blank'>دانشگاه اسلو</a>",
+    hSl:"رویداد",uNote:"برنامه‌های پزشکی، دندان‌پزشکی، تغذیه بالینی و روان‌شناسی حرفه‌ای تقسیم‌بندی متفاوتی بین پاییز و بهار دارند. برای تاریخ‌ها با برنامه تحصیلی خود تماس بگیرید.",
     srchPh:"جستجو در رویدادها...",
     tabAll:"همه رویدادها",tabLive:"در جریان",tabUp:"آینده",tabEnd:"گذشته",
   }
 };
 
 /* ════════════════════════ STATE ════════════════════════ */
-let lang='no', mode='school', selY='2025-2026', viewMode='grid', filter='all';
+let lang='no', mode='school', selY='2026-2027', viewMode='grid', filter='all';
 let showIsl=false, skipWeekend=false, filterPopupOpen=false;
 let searchQuery='', statusTab='all'; // 'all' | 'live' | 'upcoming' | 'ended'
-const YEARS=['2025-2026','2026-2027','2027-2028'];
+const YEARS=['2026-2027','2027-2028','2028-2029'];
 let mainCdIv=null;
 const cardCdIvs={};
 
@@ -864,6 +852,7 @@ function render(){
   document.getElementById('vt-g').textContent=t.vG;
   document.getElementById('vt-l').textContent=t.vL;
   document.getElementById('ft-txt').innerHTML=t.ft;
+  const uniNoteEl=document.getElementById('uni-note');uniNoteEl.textContent=t.uNote;uniNoteEl.classList.toggle('show',isUni);
   document.getElementById('filter-btn-txt').textContent=t.fBtn;
   document.getElementById('fp-title').textContent=t.fpTitle;
   document.getElementById('search-input').placeholder=t.srchPh;
