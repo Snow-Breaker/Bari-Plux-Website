@@ -253,10 +253,6 @@ body.fa .om-wd{font-family:var(--f-fa)}
   .uni-note.show{display:block;border-color:#ccc;background:#fff}
 }
 
-/* STICKY CONTROL BAR */
-.ctl-sticky{position:sticky;top:0;z-index:60;background:rgba(240,242,248,.9);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-radius:0 0 22px 22px;padding:10px 2px 6px;box-shadow:0 10px 26px -22px rgba(15,20,40,.4)}
-@media(max-width:640px){.ctl-sticky{padding:8px 2px 6px}}
-
 /* ═══════════════════════════════════════
 CONTROLS ROW — NEW DESIGN
 ═══════════════════════════════════════ */
@@ -641,8 +637,6 @@ body.fa .footer-t{font-family:var(--f-fa)}
 <!-- UNIVERSITY NOTE (uni mode only) -->
 <div class="uni-note" id="uni-note"></div>
 
-<div class="ctl-sticky">
-
 <!-- CONTROLS ROW: Islamic toggle card + weekend pill -->
 <div class="controls-row">
 
@@ -725,8 +719,6 @@ body.fa .footer-t{font-family:var(--f-fa)}
     <button class="stab" data-tab="upcoming" onclick="setStatusTab('upcoming')"><span id="stab-up-t">Kommende</span></button>
     <button class="stab ended" data-tab="ended" onclick="setStatusTab('ended')"><span id="stab-end-t">Avsluttet</span></button>
   </div>
-</div>
-
 </div>
 
 <!-- SECTION HEADER -->
