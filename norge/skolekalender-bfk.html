@@ -64,6 +64,7 @@ body.fa{font-family:var(--f-fa);direction:rtl}
 .nav{position:sticky;top:0;z-index:300;display:flex;align-items:center;justify-content:space-between;padding:10px 24px;margin:0 -24px;background:rgba(240,242,248,.88);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1.5px solid var(--rim);gap:10px;flex-wrap:wrap;}
 .nav-L{display:flex;align-items:center;gap:12px}
 .nav-ico{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--nor),#8b0000);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;box-shadow:0 3px 12px rgba(196,30,42,.35);}
+.nav-ico img{width:100%;height:100%;object-fit:cover;border-radius:10px;}
 .nav-tt{font-size:13px;font-weight:800;letter-spacing:-.2px;color:var(--ink);}
 .nav-sb{font-family:var(--f-m);font-size:9.5px;color:var(--ink4);letter-spacing:.5px;margin-top:1px;}
 .nav-R{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
@@ -423,7 +424,7 @@ body.fa .footer-t{font-family:var(--f-fa)}
 
 <nav class="nav">
   <div class="nav-L">
-    <div class="nav-ico">🇳🇴</div>
+    <div class="nav-ico"><img src="flagofnorway.png" alt="Norge"></div>
     <div>
       <div class="nav-tt" id="n-tt">Skolekalender · Norge</div>
       <div class="nav-sb" id="n-sb">2026–2029 · Buskerud & Oslo</div>
@@ -614,15 +615,15 @@ const SCHOOL={
 
 const UNI={
   "2026-2027":[
-    {id:"oa1",type:"uni",start:"2026-08-10",end:"2026-12-22",time:null,img:"https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=75",no:"Haustsemester 2026",en:"Autumn Semester 2026",fa:"ترم پاییز ۲۰۲۶",dno:"ma. 10.08.2026 – ti. 22.12.2026 · UiO",den:"Mon 10 Aug – Tue 22 Dec 2026 · UiO",dfa:"دوشنبه ۱۰ اوت – سه‌شنبه ۲۲ دسامبر ۲۰۲۶",days:135},
+    {id:"oa1",type:"uni",start:"2026-08-10",end:"2026-12-22",time:null,img:"https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=75",no:"Høstsemester 2026",en:"Autumn Semester 2026",fa:"ترم پاییز ۲۰۲۶",dno:"ma. 10.08.2026 – ti. 22.12.2026 · UiO",den:"Mon 10 Aug – Tue 22 Dec 2026 · UiO",dfa:"دوشنبه ۱۰ اوت – سه‌شنبه ۲۲ دسامبر ۲۰۲۶",days:135},
     {id:"oa2",type:"uni",start:"2027-01-04",end:"2027-06-18",time:null,img:"https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=75",no:"Vårsemester 2027",en:"Spring Semester 2027",fa:"ترم بهار ۲۰۲۷",dno:"ma. 04.01.2027 – fr. 18.06.2027 · UiO",den:"Mon 04 Jan – Fri 18 Jun 2027 · UiO",dfa:"دوشنبه ۴ ژانویه – جمعه ۱۸ ژوئن ۲۰۲۷",days:166},
   ],
   "2027-2028":[
-    {id:"ob1",type:"uni",start:"2027-08-16",end:"2027-12-22",time:null,img:"https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=75",no:"Haustsemester 2027",en:"Autumn Semester 2027",fa:"ترم پاییز ۲۰۲۷",dno:"ma. 16.08.2027 – on. 22.12.2027 · UiO",den:"Mon 16 Aug – Wed 22 Dec 2027 · UiO",dfa:"دوشنبه ۱۶ اوت – چهارشنبه ۲۲ دسامبر ۲۰۲۷",days:129},
+    {id:"ob1",type:"uni",start:"2027-08-16",end:"2027-12-22",time:null,img:"https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=75",no:"Høstsemester 2027",en:"Autumn Semester 2027",fa:"ترم پاییز ۲۰۲۷",dno:"ma. 16.08.2027 – on. 22.12.2027 · UiO",den:"Mon 16 Aug – Wed 22 Dec 2027 · UiO",dfa:"دوشنبه ۱۶ اوت – چهارشنبه ۲۲ دسامبر ۲۰۲۷",days:129},
     {id:"ob2",type:"uni",start:"2028-01-03",end:"2028-06-16",time:null,approx:true,img:"https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=75",no:"Vårsemester 2028",en:"Spring Semester 2028",fa:"ترم بهار ۲۰۲۸",dno:"ma. 03.01.2028 – fr. 16.06.2028 · UiO · Tilnærmet",den:"Mon 03 Jan – Fri 16 Jun 2028 · Approx.",dfa:"دوشنبه ۳ ژانویه – جمعه ۱۶ ژوئن ۲۰۲۸ · تقریبی",days:166},
   ],
   "2028-2029":[
-    {id:"oc1",type:"uni",start:"2028-08-14",end:"2028-12-20",time:null,approx:true,img:"https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=75",no:"Haustsemester 2028",en:"Autumn Semester 2028",fa:"ترم پاییز ۲۰۲۸",dno:"ma. 14.08.2028 – on. 20.12.2028 · Tilnærmet · UiO",den:"Mon 14 Aug – Wed 20 Dec 2028 · Approx.",dfa:"دوشنبه ۱۴ اوت – چهارشنبه ۲۰ دسامبر ۲۰۲۸ · تقریبی",days:129},
+    {id:"oc1",type:"uni",start:"2028-08-14",end:"2028-12-20",time:null,approx:true,img:"https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=75",no:"Høstsemester 2028",en:"Autumn Semester 2028",fa:"ترم پاییز ۲۰۲۸",dno:"ma. 14.08.2028 – on. 20.12.2028 · Tilnærmet · UiO",den:"Mon 14 Aug – Wed 20 Dec 2028 · Approx.",dfa:"دوشنبه ۱۴ اوت – چهارشنبه ۲۰ دسامبر ۲۰۲۸ · تقریبی",days:129},
     {id:"oc2",type:"uni",start:"2029-01-02",end:"2029-06-15",time:null,approx:true,img:"https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=75",no:"Vårsemester 2029",en:"Spring Semester 2029",fa:"ترم بهار ۲۰۲۹",dno:"ti. 02.01.2029 – fr. 15.06.2029 · Tilnærmet · UiO",den:"Tue 02 Jan – Fri 15 Jun 2029 · Approx.",dfa:"سه‌شنبه ۲ ژانویه – جمعه ۱۵ ژوئن ۲۰۲۹ · تقریبی",days:165},
   ]
 };
