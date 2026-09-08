@@ -179,15 +179,14 @@ body.fa .hero-pin{border-left:none;border-right:3px solid var(--nor);border-radi
 .pin-nm{font-weight:800;color:var(--ink)}
 .pin-dt{font-family:var(--f-m);font-size:10.5px;color:var(--ink3)}
 body.fa .pin-lbl,body.fa .pin-dt{font-family:var(--f-fa)}
-.exp-row{display:flex;gap:8px;margin-left:auto}
-@media(max-width:640px){.exp-row{margin-left:0;width:100%}}
-.exp-btn{display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--grn-rim);background:rgba(26,122,88,.08);color:var(--grn2);font-family:var(--f-b);font-size:11px;font-weight:700;padding:9px 14px;border-radius:12px;cursor:pointer;transition:all .2s;box-shadow:0 2px 8px rgba(26,122,88,.08)}
-.exp-btn:hover{background:rgba(26,122,88,.16);transform:translateY(-1px)}
-body.fa .exp-btn{font-family:var(--f-fa)}
+.exp-popup{min-width:280px;max-width:calc(100vw - 32px)}
+.exp-list{display:flex;flex-direction:column;gap:6px}
+.exp-li{display:flex;align-items:center;gap:10px;width:100%;border:1.5px solid var(--rim);background:var(--card);color:var(--ink2);font-family:var(--f-b);font-size:12.5px;font-weight:700;padding:10px 14px;border-radius:12px;cursor:pointer;transition:all .18s;text-decoration:none;text-align:left;white-space:nowrap}
+body.fa .exp-li{font-family:var(--f-fa);text-align:right}
+.exp-li:hover{border-color:var(--grn-rim);background:rgba(26,122,88,.06);color:var(--grn2);transform:translateY(-1px)}
 #toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;font-family:var(--f-b);font-size:13px;font-weight:700;padding:12px 20px;border-radius:50px;box-shadow:0 8px 30px rgba(0,0,0,.3);opacity:0;pointer-events:none;transition:all .3s;z-index:900;max-width:90vw;text-align:center}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 body.fa #toast{font-family:var(--f-fa)}
-a.exp-btn{text-decoration:none}
 
 /* CROSS-LINK */
 .nav-kal{display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--rim);background:var(--card);color:var(--ink2);font-family:var(--f-b);font-size:10.5px;font-weight:700;padding:8px 13px;border-radius:50px;cursor:pointer;text-decoration:none;transition:all .2s}
@@ -230,7 +229,7 @@ body.fa .om-wd{font-family:var(--f-fa)}
   .ov-month{break-inside:avoid}
 }
 @media print{
-  #scene,.nav,.mcd-btn,.controls-row,.filter-btn-wrap,.search-tabs-row,.sh,.hero-R,.exp-row,.hero-links,.hero-pin,#toast,.footer{display:none!important}
+  #scene,.nav,.mcd-btn,.controls-row,.filter-btn-wrap,.search-tabs-row,.sh,.hero-R,.hero-links,.hero-pin,#toast,.footer{display:none!important}
   body{background:#fff}
   .page{max-width:100%;padding:0 0 24px}
   .hero{min-height:0;border:none;background:none}
@@ -250,11 +249,16 @@ body.fa .om-wd{font-family:var(--f-fa)}
   padding:16px 0 0;
 }
 
-/* ── Big Islamic Toggle Card (Image 1 style) ── */
+/* ── Uniform control pill sizing (flexible, all match) ── */
+.controls-row>*{flex:1;min-width:200px}
+@media(max-width:640px){.controls-row>*{min-width:calc(50% - 5px)}}
+.controls-row .isl-toggle-card{flex:1.3}
+.controls-row .filter-btn-wrap,.controls-row .exp-btn-wrap{flex:1;min-width:200px}
+
+/* ── Islamic Toggle pill (compact, same size as other options) ── */
 .isl-toggle-card{
-  flex:1;min-width:260px;
-  display:flex;align-items:center;gap:12px;
-  padding:14px 18px;border-radius:16px;
+  display:flex;align-items:center;gap:10px;
+  padding:0 16px;min-height:44px;border-radius:50px;
   border:1.5px solid var(--gld-rim);
   background:linear-gradient(135deg,rgba(176,112,16,.07) 0%,rgba(240,176,64,.05) 100%);
   cursor:pointer;transition:all .22s;user-select:none;
@@ -262,24 +266,23 @@ body.fa .om-wd{font-family:var(--f-fa)}
 }
 .isl-toggle-card:hover{border-color:var(--gld2);background:linear-gradient(135deg,rgba(176,112,16,.12) 0%,rgba(240,176,64,.08) 100%);}
 .isl-toggle-card.active{border-color:var(--gld2);background:linear-gradient(135deg,rgba(176,112,16,.13) 0%,rgba(240,176,64,.09) 100%);box-shadow:0 4px 18px rgba(176,112,16,.15);}
-.isl-ico{font-size:22px;flex-shrink:0}
-.isl-texts{flex:1;min-width:0}
-.isl-title{font-size:13px;font-weight:800;color:var(--ink);margin-bottom:2px}
-.isl-sub{font-family:var(--f-m);font-size:9.5px;color:var(--gld);letter-spacing:.3px}
-body.fa .isl-title,.isl-sub{font-family:var(--f-fa)}
+.isl-ico{font-size:18px;flex-shrink:0}
+.isl-texts{flex:1;min-width:0;display:flex;align-items:center}
+.isl-title{font-size:12.5px;font-weight:800;color:var(--ink);white-space:nowrap}
+body.fa .isl-title{font-family:var(--f-fa)}
 
-/* Large toggle switch */
-.big-sw{position:relative;width:52px;height:28px;flex-shrink:0}
+/* Large toggle switch (same compact size as weekend switch) */
+.big-sw{position:relative;width:42px;height:24px;flex-shrink:0}
 .big-sw input{opacity:0;width:0;height:0;position:absolute}
-.big-track{position:absolute;inset:0;border-radius:14px;background:var(--bg3);border:1.5px solid var(--rim);cursor:pointer;transition:all .28s;}
-.big-sw input:checked ~ .big-track{background:var(--gld2);border-color:var(--gld-rim);box-shadow:0 0 12px rgba(216,144,32,.4)}
-.big-thumb{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .28s cubic-bezier(.34,1.56,.64,1);box-shadow:0 2px 6px rgba(0,0,0,.25);}
-.big-sw input:checked ~ .big-track .big-thumb{transform:translateX(24px)}
+.big-track{position:absolute;inset:0;border-radius:12px;background:var(--bg3);border:1.5px solid var(--rim);cursor:pointer;transition:all .25s;}
+.big-sw input:checked ~ .big-track{background:var(--gld2);border-color:var(--gld-rim);box-shadow:0 0 10px rgba(216,144,32,.35)}
+.big-thumb{position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform .25s cubic-bezier(.34,1.56,.64,1);box-shadow:0 1px 4px rgba(0,0,0,.25);}
+.big-sw input:checked ~ .big-track .big-thumb{transform:translateX(18px)}
 
-/* weekend toggle (smaller pill) */
+/* weekend toggle (same size pill) */
 .wknd-pill{
   display:flex;align-items:center;gap:9px;
-  padding:10px 16px;border-radius:50px;
+  padding:0 16px;min-height:44px;border-radius:50px;
   border:1.5px solid var(--rim);
   background:rgba(255,255,255,.75);backdrop-filter:blur(8px);
   cursor:pointer;transition:all .2s;user-select:none;
@@ -289,7 +292,7 @@ body.fa .isl-title,.isl-sub{font-family:var(--f-fa)}
 .wknd-pill:hover{border-color:rgba(60,80,180,.2);background:rgba(255,255,255,.9)}
 .wknd-pill.active{border-color:var(--blu-rim);background:rgba(26,80,200,.07)}
 .wknd-ico{font-size:15px;flex-shrink:0}
-.wknd-txt{font-size:12px;font-weight:700;color:var(--ink2)}
+.wknd-txt{font-size:12px;font-weight:700;color:var(--ink2);text-align:center}
 body.fa .wknd-txt{font-family:var(--f-fa)}
 .med-sw{position:relative;width:42px;height:24px;flex-shrink:0}
 .med-sw input{opacity:0;width:0;height:0;position:absolute}
@@ -347,8 +350,8 @@ body.fa .stab{font-family:var(--f-fa)}
 body.fa .stab-live-dot{margin-right:0;margin-left:5px}
 
 /* ── Filter popup (keep) ── */
-.filter-btn-wrap{position:relative}
-.filter-btn{display:flex;align-items:center;gap:7px;padding:10px 16px;border-radius:50px;border:1.5px solid var(--rim);background:rgba(255,255,255,.75);backdrop-filter:blur(8px);cursor:pointer;font-family:var(--f-b);font-size:12px;font-weight:700;color:var(--ink2);transition:all .2s;box-shadow:0 1px 6px rgba(0,0,0,.05);white-space:nowrap;}
+.filter-btn-wrap{position:relative;display:flex}
+.filter-btn{display:flex;align-items:center;gap:7px;justify-content:center;width:100%;padding:0 16px;min-height:44px;border-radius:50px;border:1.5px solid var(--rim);background:rgba(255,255,255,.75);backdrop-filter:blur(8px);cursor:pointer;font-family:var(--f-b);font-size:12px;font-weight:700;color:var(--ink2);transition:all .2s;box-shadow:0 1px 6px rgba(0,0,0,.05);white-space:nowrap;}
 body.fa .filter-btn{font-family:var(--f-fa)}
 .filter-btn:hover{border-color:rgba(60,80,180,.25);background:rgba(255,255,255,.95)}
 .filter-btn.open{border-color:rgba(60,80,180,.3);background:#fff;box-shadow:0 4px 16px rgba(0,0,0,.1)}
@@ -356,7 +359,7 @@ body.fa .filter-btn{font-family:var(--f-fa)}
 .filter-btn.open .filter-btn-arrow{transform:rotate(180deg)}
 .filter-active-dot{width:7px;height:7px;border-radius:50%;background:var(--nor);flex-shrink:0;display:none}
 .filter-active-dot.show{display:block}
-.filter-popup{position:absolute;top:calc(100% + 8px);right:0;background:rgba(255,255,255,.97);backdrop-filter:blur(20px);border:1.5px solid var(--rim);border-radius:18px;padding:14px;box-shadow:0 12px 50px rgba(0,0,0,.14);display:none;z-index:400;min-width:300px;animation:popIn .18s cubic-bezier(.34,1.56,.64,1) both;}
+.filter-popup{position:absolute;top:calc(100% + 8px);right:0;background:rgba(255,255,255,.97);backdrop-filter:blur(20px);border:1.5px solid var(--rim);border-radius:18px;padding:14px;box-shadow:0 12px 50px rgba(0,0,0,.14);display:none;z-index:400;min-width:300px;max-width:calc(100vw - 32px);animation:popIn .18s cubic-bezier(.34,1.56,.64,1) both;}
 .filter-popup.open{display:block}
 @keyframes popIn{from{opacity:0;transform:translateY(-8px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
 .filter-popup-title{font-family:var(--f-m);font-size:9px;color:var(--ink4);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;padding:0 2px}
@@ -608,12 +611,11 @@ body.fa .footer-t{font-family:var(--f-fa)}
 <!-- CONTROLS ROW: Islamic toggle card + weekend pill -->
 <div class="controls-row">
 
-  <!-- Islamic + Ramadan combined big toggle card -->
+  <!-- Islamic + Ramadan combined toggle pill -->
   <label class="isl-toggle-card" id="isl-card" onclick="onIslToggle(event)">
     <span class="isl-ico">☪️</span>
     <div class="isl-texts">
       <div class="isl-title" id="isl-title">Vis islamske høytider</div>
-      <div class="isl-sub" id="isl-sub">Eid al-Fitr, Eid al-Adha og Ramadan · Tilnærmede datoer</div>
     </div>
     <label class="big-sw" onclick="event.stopPropagation()">
       <input type="checkbox" id="isl-chk" onchange="onIslToggle(null)">
@@ -645,13 +647,23 @@ body.fa .footer-t{font-family:var(--f-fa)}
     </div>
   </div>
 
-  <!-- Export row -->
-  <div class="exp-row">
-    <button class="exp-btn" onclick="exportIcs()">📅 <span id="et-ics">ICS (.ics)</span></button>
-    <button class="exp-btn" onclick="gCalNext()">🗓 <span id="et-gc">Google Kalender</span></button>
-    <button class="exp-btn" onclick="openOverview()">📆 <span id="et-ov">Årsoversikt</span></button>
-    <a class="exp-btn" id="et-sb-a" href="skolekalender.ics" download="skolekalender.ics">🔁 <span id="et-sb">Abonner (.ics)</span></a>
-    <button class="exp-btn" onclick="window.print()">🖨️ <span id="et-pr">Skriv ut</span></button>
+  <!-- Tools / export popup -->
+  <div class="filter-btn-wrap exp-btn-wrap" id="exp-btn-wrap">
+    <button class="filter-btn" id="exp-btn" onclick="toggleExpPopup()" aria-haspopup="true" aria-expanded="false">
+      <span>⚙️</span>
+      <span id="exp-btn-txt">Verktøy</span>
+      <span class="filter-btn-arrow">▾</span>
+    </button>
+    <div class="filter-popup exp-popup" id="exp-popup">
+      <div class="filter-popup-title" id="exp-popup-title">Eksporter</div>
+      <div class="exp-list">
+        <button class="exp-li" onclick="exportIcs()">📅 <span id="et-ics">ICS (.ics)</span></button>
+        <button class="exp-li" onclick="gCalNext()">🗓 <span id="et-gc">Google Kalender</span></button>
+        <button class="exp-li" onclick="openOverview()">📆 <span id="et-ov">Årsoversikt</span></button>
+        <a class="exp-li" id="et-sb-a" href="skolekalender.ics" download="skolekalender.ics">🔁 <span id="et-sb">Abonner (.ics)</span></a>
+        <button class="exp-li" onclick="window.print()">🖨️ <span id="et-pr">Skriv ut</span></button>
+      </div>
+    </div>
   </div>
 
 </div>
@@ -786,7 +798,7 @@ const TX={
     tabAll:"Alle hendelser",tabLive:"Pågår nå",tabUp:"Kommende",tabEnd:"Avsluttet",
     skipT:"Hopp til innhold",pinLbl:"Neste",hlSk:"Skole #vgs",hlUn:"Universitet #university",
     etIcs:"ICS (.ics)",etPr:"Skriv ut",cpOk:"Lenke kopiert!",icsOk:"Kalender (.ics) lastet ned",
-    kalT:"Norsk Kalender",etGc:"Google Kalender",etOv:"Årsoversikt",etSb:"Abonner (.ics)",
+    kalT:"Norsk Kalender",etGc:"Google Kalender",etOv:"Årsoversikt",etSb:"Abonner (.ics)",expT:"Verktøy",expTtl:"Eksporter",
     ovTitle:"Årsoversikt · Skoleår",lgSk:"Skole (start)",lgHd:"Helligdag",lgFr:"Ferie/tilrettelagt",
     lgRm:"Ramadan/Eid",lgIs:"Islamsk (ca.)",lgUn:"Universitet",noNxt:"Ingen kommende hendelser",
     wd:["ma","ti","on","to","fr","lø","sø"],
@@ -814,7 +826,7 @@ const TX={
     tabAll:"All Events",tabLive:"Live Now",tabUp:"Upcoming",tabEnd:"Ended",
     skipT:"Skip to content",pinLbl:"Next",hlSk:"School #vgs",hlUn:"University #university",
     etIcs:"ICS (.ics)",etPr:"Print",cpOk:"Link copied!",icsOk:"Calendar (.ics) downloaded",
-    kalT:"Norway Calendar",etGc:"Google Calendar",etOv:"Year Overview",etSb:"Subscribe (.ics)",
+    kalT:"Norway Calendar",etGc:"Google Calendar",etOv:"Year Overview",etSb:"Subscribe (.ics)",expT:"Tools",expTtl:"Export",
     ovTitle:"Year Overview",lgSk:"School (start)",lgHd:"Public holiday",lgFr:"Holiday/off",
     lgRm:"Ramadan/Eid",lgIs:"Islamic (approx.)",lgUn:"University",noNxt:"No upcoming events",
     wd:["Mo","Tu","We","Th","Fr","Sa","Su"],
@@ -842,7 +854,7 @@ const TX={
     tabAll:"همه رویدادها",tabLive:"در جریان",tabUp:"آینده",tabEnd:"گذشته",
     skipT:"پرش به محتوا",pinLbl:"بعدی",hlSk:"مدرسه #vgs",hlUn:"دانشگاه #university",
     etIcs:"ICS (.ics)",etPr:"چاپ",cpOk:"پیوند کپی شد!",icsOk:"تقویم (.ics) دانلود شد",
-    kalT:"تقویم نروژ",etGc:"تقویم گوگل",etOv:"نمای سالانه",etSb:"اشتراک (.ics)",
+    kalT:"تقویم نروژ",etGc:"تقویم گوگل",etOv:"نمای سالانه",etSb:"اشتراک (.ics)",expT:"ابزارها",expTtl:"خروجی",
     ovTitle:"نمای سالانه",lgSk:"مدرسه (شروع)",lgHd:"تعطیل رسمی",lgFr:"تعطیلی",
     lgRm:"رمضان/عید",lgIs:"اعیاد اسلامی (تقریبی)",lgUn:"دانشگاه",noNxt:"رویدادی در پیش نیست",
     wd:["د","س","چ","پ","ج","ش","ی"],
@@ -998,7 +1010,7 @@ function render(){
   document.getElementById('msk-t').textContent=t.mSk;
   document.getElementById('mun-t').textContent=t.mUn;
   document.getElementById('isl-title').textContent=t.islCardTitle;
-  document.getElementById('isl-sub').textContent=t.islCardSub;
+  document.getElementById('isl-card').title=t.islCardSub;
   document.getElementById('wknd-txt').textContent=t.wkndTxt;
   document.getElementById('sh-h2').textContent=t.shH;
   document.getElementById('vt-g').textContent=t.vG;
@@ -1023,6 +1035,8 @@ function render(){
   document.getElementById('et-gc').textContent=t.etGc;
   document.getElementById('et-ov').textContent=t.etOv;
   document.getElementById('et-sb').textContent=t.etSb;
+  document.getElementById('exp-btn-txt').textContent=t.expT;
+  document.getElementById('exp-popup-title').textContent=t.expTtl;
   renderNextPin(t);
 
   const imgs={school:"https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=1400&q=80",uni:"https://images.unsplash.com/photo-1562774053-701939374585?w=1400&q=80"};
@@ -1257,14 +1271,31 @@ function toggleFilterPopup(){
   filterPopupOpen=!filterPopupOpen;
   document.getElementById('filter-popup').classList.toggle('open',filterPopupOpen);
   document.getElementById('filter-btn').classList.toggle('open',filterPopupOpen);
+  document.getElementById('filter-btn').setAttribute('aria-expanded',filterPopupOpen);
+  if(filterPopupOpen)closeExpPopup();
+}
+function closeFilterPopup(){
+  filterPopupOpen=false;
+  document.getElementById('filter-popup').classList.remove('open');
+  document.getElementById('filter-btn').classList.remove('open');
+  document.getElementById('filter-btn').setAttribute('aria-expanded',false);
+}
+function toggleExpPopup(){
+  const open=document.getElementById('exp-popup').classList.toggle('open');
+  document.getElementById('exp-btn').classList.toggle('open',open);
+  document.getElementById('exp-btn').setAttribute('aria-expanded',open);
+  if(open)closeFilterPopup();
+}
+function closeExpPopup(){
+  document.getElementById('exp-popup').classList.remove('open');
+  document.getElementById('exp-btn').classList.remove('open');
+  document.getElementById('exp-btn').setAttribute('aria-expanded',false);
 }
 document.addEventListener('click',e=>{
-  const wrap=document.getElementById('filter-btn-wrap');
-  if(wrap&&!wrap.contains(e.target)&&filterPopupOpen){
-    filterPopupOpen=false;
-    document.getElementById('filter-popup').classList.remove('open');
-    document.getElementById('filter-btn').classList.remove('open');
-  }
+  const fw=document.getElementById('filter-btn-wrap');
+  if(fw&&!fw.contains(e.target)&&filterPopupOpen)closeFilterPopup();
+  const ew=document.getElementById('exp-btn-wrap');
+  if(ew&&!ew.contains(e.target)&&document.getElementById('exp-popup').classList.contains('open'))closeExpPopup();
 });
 
 /* NEXT-EVENT PIN + SHARE + EXPORT */
