@@ -439,6 +439,7 @@
         }
         .ff-page-badge.on { background: rgba(76,175,80,0.15); color: #4CAF50; }
         .ff-page-badge.off { background: rgba(244,67,54,0.15); color: #F44336; }
+        .ff-page-badge.pro-gated { background: rgba(156,39,176,0.15); color: #CE93D8; }
         .ff-page-controls { display: flex; gap: 8px; align-items: end; flex-wrap: wrap; }
         .ff-page-controls label { flex: 1; min-width: 120px; }
         .ff-page-controls .lbl { display: block; font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 4px; }
@@ -1065,7 +1066,7 @@
                     <i class="fas fa-flag" style="color:var(--accent);"></i>
                     <span id="ffFormTitle">Add Feature Flag</span>
                 </div>
-                <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:12px;align-items:end;">
+                <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto auto;gap:12px;align-items:end;">
                     <div>
                         <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Feature Key</div>
                         <input type="text" id="ffKeyInput" placeholder="e.g. cloud_backup" style="width:100%;padding:9px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.82rem;">
@@ -1087,6 +1088,13 @@
                             <span style="font-size:0.85rem;">Enabled</span>
                         </label>
                     </div>
+                    <div>
+                        <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">&nbsp;</div>
+                        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:9px 0;">
+                            <input type="checkbox" id="ffProGateInput" style="width:16px;height:16px;cursor:pointer;accent-color:var(--accent);">
+                            <span style="font-size:0.85rem;">Pro-gated</span>
+                        </label>
+                    </div>
                     <div style="display:flex;gap:6px;">
                         <button class="action-btn view" id="ffSaveBtn" data-act="saveFeatureFlag" style="padding:9px 16px;font-size:0.82rem;font-weight:600;"><i class="fas fa-save"></i> Save</button>
                         <button class="action-btn" data-act="cancelFeatureFlagForm" style="padding:9px 16px;font-size:0.82rem;"><i class="fas fa-times"></i> Cancel</button>
@@ -1101,11 +1109,12 @@
                             <th>Key</th>
                             <th>Min Role</th>
                             <th>Enabled</th>
+                            <th>Pro-Gated</th>
                             <th>Created</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
-                    <tbody id="featureFlagsTableBody"><tr class="state-row"><td colspan="5"><div class="state-icon">🏁</div><div>Loading...</div></td></tr></tbody>
+                    <tbody id="featureFlagsTableBody"><tr class="state-row"><td colspan="6"><div class="state-icon">🏁</div><div>Loading...</div></td></tr></tbody>
                 </table>
             </div>
 

@@ -2075,12 +2075,13 @@ function normalizeEmulatorScopes(value) {
 }
 
 function readPageFlagState(flag) {
-    if (!flag) return { missing: true, enabled: true, visible: true, role: 'free', emulator: [], minWindowsBuild: 0, minRamGb: 0, minEmulatorVersion: '', maxEmulatorVersion: '' };
+    if (!flag) return { missing: true, enabled: true, visible: true, isProGated: false, role: 'free', emulator: [], minWindowsBuild: 0, minRamGb: 0, minEmulatorVersion: '', maxEmulatorVersion: '' };
     const visible = typeof flag.visible === 'boolean' ? flag.visible : true;
     return {
         missing: false,
         enabled: flag.enabled === true,
         visible,
+        isProGated: flag.is_pro_gated === true,
         role: flag.min_role || 'free',
         emulator: normalizeEmulatorScopes(flag.emulator),
         minWindowsBuild: typeof flag.min_windows_build === 'number' && flag.min_windows_build > 0 ? flag.min_windows_build : 0,
@@ -2095,6 +2096,7 @@ function defaultPageFlagPayload(extra = {}) {
     const payload = {
         enabled: true,
         visible: true,
+        is_pro_gated: false,
         min_role: 'free',
         created_at: now,
         updated_at: now,
@@ -2147,6 +2149,7 @@ function renderFlagControlCard({ key, title, icon, desc, s, kind }) {
             <span class="ff-page-badge ${s.enabled ? 'on' : 'off'}">${s.enabled ? 'ON' : 'OFF'}</span>
             <span class="ff-page-badge ${emu.length === 0 ? 'on' : 'off'}">${emulatorBadgeLabel(emu)}</span>
             ${compatBadge}
+            ${s.isProGated ? `<span class="ff-page-badge pro-gated" title="This flag's content is gated to Pro+ subscribers (is_pro_gated=true)">PRO-GATED</span>` : ''}
            </div>`;
     const visLabel = s.visible ? '<i class="fas fa-eye-slash"></i> Hide' : '<i class="fas fa-eye"></i> Show';
     const visStyle = s.visible
@@ -2165,6 +2168,7 @@ function renderFlagControlCard({ key, title, icon, desc, s, kind }) {
     const maxVerAct = kind === 'page' ? 'updatePageFlagMaxEmulatorVersion' : 'updateFeatureFlagMaxEmulatorVersion';
     const visAct = kind === 'page' ? 'togglePageFlagVisible' : 'toggleFeatureFlagVisible';
     const enAct = kind === 'page' ? 'togglePageFlagEnabled' : 'toggleFeatureFlagEnabled';
+    const proAct = kind === 'page' ? 'updatePageFlagProGate' : 'updateFeatureFlagProGate';
     const visNext = s.visible ? 'false' : 'true';
     const enNext = s.enabled ? 'false' : 'true';
     const descHtml = desc ? `<div style="font-size:0.75rem;color:var(--muted);line-height:1.4;margin-top:2px;">${esc(desc)}</div>` : '';
@@ -2201,6 +2205,10 @@ function renderFlagControlCard({ key, title, icon, desc, s, kind }) {
             <label>
                 <span class="lbl">Max. emulator version</span>
                 <input type="text" value="${esc(s.maxEmulatorVersion || '')}" placeholder="e.g. 7.9" data-act="${maxVerAct}" data-a1="${esc(key)}" data-pass-value="1" data-commit-on-change="1">
+            </label>
+            <label class="ff-progate-toggle" style="flex-direction:row;align-items:center;gap:8px;">
+                <input type="checkbox" ${s.isProGated ? 'checked' : ''} data-act="${proAct}" data-a1="${esc(key)}" data-pass-el="1">
+                <span class="lbl" style="margin:0;">Pro-gated (content requires Pro+; gate not wired to any feature yet)</span>
             </label>
             <div class="ff-page-toggles">
                 <button class="action-btn" style="${visStyle}" data-act="${visAct}" data-a1="${esc(key)}" data-a2="${visNext}" title="Show or hide in the app UI">${visLabel}</button>
@@ -2392,6 +2400,35 @@ async function toggleFeatureFlagEnabled(key, newVal) {
         loadFeatureFlags();
     } catch (e) {
         showToast('⚠️ Failed to toggle: ' + e.message, 'danger');
+    }
+}
+
+async function updateFeatureFlagProGate(key, el) {
+    const value = !!(el && el.checked);
+    try {
+        await ensureFeatureFlagExists(key, _ffOpenPageKey);
+        await db.ref(`${featureFlagsRoot(_featureFlagsLine)}/${key}`).update({ is_pro_gated: value, updated_at: Date.now() });
+        showToast(value ? `🔒 ${key} pro-gated` : `🔓 ${key} not pro-gated`, 'success');
+        loadFeatureFlags();
+    } catch (e) {
+        showToast('⚠️ Failed to update pro gate: ' + e.message, 'danger');
+    }
+}
+
+async function updatePageFlagProGate(key, el) {
+    if (!isPageFlagKey(key)) return;
+    const value = !!(el && el.checked);
+    try {
+        const snap = await db.ref(`${featureFlagsRoot(_featureFlagsLine)}/${key}`).once('value');
+        if (!snap.exists()) {
+            await db.ref(`${featureFlagsRoot(_featureFlagsLine)}/${key}`).set(defaultPageFlagPayload({ is_pro_gated: value }));
+        } else {
+            await db.ref(`${featureFlagsRoot(_featureFlagsLine)}/${key}`).update({ is_pro_gated: value, updated_at: Date.now() });
+        }
+        showToast(value ? `🔒 ${key} pro-gated` : `🔓 ${key} not pro-gated`, 'success');
+        loadFeatureFlags();
+    } catch (e) {
+        showToast('⚠️ Failed to update pro gate: ' + e.message, 'danger');
     }
 }
 
@@ -2641,7 +2678,7 @@ async function togglePageFlag(key, newVal) {
 function loadFeatureFlags() {
     const tbody = document.getElementById('featureFlagsTableBody');
     const pagesGrid = document.getElementById('ffPagesGrid');
-    tbody.innerHTML = '<tr class="state-row"><td colspan="5"><div class="state-icon">⏳</div><div>Loading feature flags...</div></td></tr>';
+    tbody.innerHTML = '<tr class="state-row"><td colspan="6"><div class="state-icon">⏳</div><div>Loading feature flags...</div></td></tr>';
     if (pagesGrid && !_ffOpenPageKey) pagesGrid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:28px;color:var(--muted);">Loading pages…</div>';
     db.ref(featureFlagsRoot(_featureFlagsLine)).once('value').then(async snap => {
         let data = snap.val() || {};
@@ -2677,18 +2714,21 @@ function loadFeatureFlags() {
         featureEntries.sort((a, b) => a.key.localeCompare(b.key));
 
         if (!featureEntries.length) {
-            tbody.innerHTML = '<tr class="state-row"><td colspan="5"><div class="state-icon">🧩</div><div>No orphan capability flags. Open a page above to manage its features.</div></td></tr>';
+            tbody.innerHTML = '<tr class="state-row"><td colspan="6"><div class="state-icon">🧩</div><div>No orphan capability flags. Open a page above to manage its features.</div></td></tr>';
             document.getElementById('featureFlagsCards').innerHTML = '';
         } else {
             tbody.innerHTML = featureEntries.map((e, i) => {
                 const enabled = e.enabled === true;
+                const isProGated = e.is_pro_gated === true;
                 const toggleBtn = enabled
                     ? `<button class="action-btn" data-act="toggleEnabled" data-a1="${esc(e.key)}" data-a2="false" style="border-color:rgba(76,175,80,0.3);color:#4CAF50;"><i class="fas fa-toggle-on"></i> Enabled</button>`
                     : `<button class="action-btn" data-act="toggleEnabled" data-a1="${esc(e.key)}" data-a2="true" style="border-color:rgba(244,67,54,0.3);color:#F44336;"><i class="fas fa-toggle-off"></i> Disabled</button>`;
+                const proBadge = isProGated ? '<span class="ff-page-badge pro-gated" title="is_pro_gated=true">PRO</span>' : '';
                 return `<tr style="animation-delay:${i*0.025}s">
                     <td style="font-family:'JetBrains Mono',monospace;font-size:0.82rem;font-weight:600;">${esc(e.key)}</td>
                     <td>${getRoleBadgeHtml(e.min_role || 'free')}</td>
                     <td>${toggleBtn}</td>
+                    <td>${proBadge}</td>
                     <td class="time-cell">${e.created_at ? fmtDate(e.created_at) : '—'}</td>
                     <td style="white-space:nowrap;">
                         <button class="action-btn view" data-act="showFeatureFlagForm" data-a1="${esc(e.key)}"><i class="fas fa-edit"></i></button>
@@ -2699,10 +2739,17 @@ function loadFeatureFlags() {
 
             document.getElementById('featureFlagsCards').innerHTML = featureEntries.map((e, i) => {
                 const enabled = e.enabled === true;
+                const isProGated = e.is_pro_gated === true;
+                const statusBadge = isProGated
+                    ? `<span style="font-size:0.72rem;padding:2px 8px;border-radius:4px;background:rgba(156,39,176,0.18);color:#CE93D8;font-weight:700;">PRO</span>`
+                    : '';
                 return `<div class="user-card" style="animation-delay:${i*0.03}s">
                     <div class="user-card-header">
                         <div style="font-weight:700;font-family:'JetBrains Mono',monospace;font-size:0.85rem;">${esc(e.key)}</div>
-                        <span style="font-size:0.72rem;padding:2px 8px;border-radius:4px;background:${enabled?'rgba(76,175,80,0.15)':'rgba(244,67,54,0.15)'};color:${enabled?'#4CAF50':'#F44336'};font-weight:700;">${enabled?'ON':'OFF'}</span>
+                        <span style="display:flex;gap:4px;align-items:center;">
+                            ${statusBadge}
+                            <span style="font-size:0.72rem;padding:2px 8px;border-radius:4px;background:${enabled?'rgba(76,175,80,0.15)':'rgba(244,67,54,0.15)'};color:${enabled?'#4CAF50':'#F44336'};font-weight:700;">${enabled?'ON':'OFF'}</span>
+                        </span>
                     </div>
                     <div class="user-card-body">
                         <div class="user-card-field"><span class="uf-label">Min Role</span><span class="uf-value">${esc(e.min_role || 'free')}</span></div>
@@ -2719,7 +2766,7 @@ function loadFeatureFlags() {
         document.getElementById('featureFlagsLastUpdated').textContent = 'Last updated: ' + new Date().toLocaleTimeString();
     }).catch(e => {
         console.error(e);
-        tbody.innerHTML = '<tr class="state-row"><td colspan="5"><div class="state-icon">⚠️</div><div>Failed to load feature flags.</div></td></tr>';
+        tbody.innerHTML = '<tr class="state-row"><td colspan="6"><div class="state-icon">⚠️</div><div>Failed to load feature flags.</div></td></tr>';
         showToast('⚠️ Failed to load feature flags', 'danger');
     });
 }
@@ -2753,6 +2800,7 @@ function showFeatureFlagForm(key) {
             keyInput.disabled = true;
             roleSelect.value = data.min_role || 'free';
             enabledInput.checked = data.enabled === true;
+            proGateInput.checked = data.is_pro_gated === true;
             title.textContent = 'Edit Feature Flag';
             form.style.display = 'block';
             form.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -2763,6 +2811,7 @@ function showFeatureFlagForm(key) {
         keyInput.disabled = false;
         roleSelect.value = 'free';
         enabledInput.checked = true;
+        proGateInput.checked = false;
         title.textContent = 'Add Feature Flag';
         form.style.display = 'block';
         form.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -2780,6 +2829,7 @@ async function saveFeatureFlag() {
     const keyInput = document.getElementById('ffKeyInput');
     const roleSelect = document.getElementById('ffRoleSelect');
     const enabledInput = document.getElementById('ffEnabledInput');
+    const proGateInput = document.getElementById('ffProGateInput');
     const keyError = document.getElementById('ffKeyError');
     const key = keyInput.value.trim();
     const isEdit = _editingFFKey !== null;
@@ -2807,6 +2857,7 @@ async function saveFeatureFlag() {
     const data = {
         min_role: roleSelect.value,
         enabled: enabledInput.checked,
+        is_pro_gated: proGateInput.checked,
         updated_at: Date.now()
     };
     if (!isEdit) data.created_at = Date.now();
