@@ -1,9 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" id="pg">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="description" content="Norsk Kalender 2025–2029 – offisielle norske helligdager, islamske høytider, persiske feiringer og månefaser. Eksporter til PDF, A4 og iCal.">
+<meta name="keywords" content="norsk kalender, helligdager, offentlige helligdager, høytider, islamske høytider, ramadan, eid, persisk kalender, norouz, yalda, månefaser, ferie, Norge">
+<meta name="author" content="Bari Plux">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#04060e">
+<link rel="canonical" href="https://snow-breaker.github.io/Bari-Plux-Website/norge/kalender.html">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="manifest" href="manifest-kalender.webmanifest">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Norsk Kalender · 2025–2029">
+<meta property="og:description" content="Norske helligdager, islamske høytider, persiske feiringer og månefaser for 2025–2029.">
+<meta property="og:image" content="https://snow-breaker.github.io/Bari-Plux-Website/norge/flagofnorway.png">
+<meta property="og:locale" content="nb_NO">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Norsk Kalender · 2025–2029">
+<meta name="twitter:description" content="Norske helligdager, islamske høytider, persiske feiringer og månefaser for 2025–2029.">
+<meta name="twitter:image" content="https://snow-breaker.github.io/Bari-Plux-Website/norge/flagofnorway.png">
 <title>Norsk Kalender · Norwegian Calendar</title>
+<link rel="alternate" hreflang="nb" href="https://snow-breaker.github.io/Bari-Plux-Website/norge/kalender.html">
+<link rel="alternate" hreflang="en" href="https://snow-breaker.github.io/Bari-Plux-Website/norge/kalender.html">
+<link rel="alternate" hreflang="fa" href="https://snow-breaker.github.io/Bari-Plux-Website/norge/kalender.html">
+<link rel="alternate" hreflang="x-default" href="https://snow-breaker.github.io/Bari-Plux-Website/norge/kalender.html">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","name":"Norsk Kalender","description":"Norske helligdager, islamske høytider, persiske feiringer og månefaser for 2025–2029.","inLanguage":"nb","about":[{"@type":"GovernmentOrganization","name":"Lovdata","url":"https://lovdata.no"},{"@type":"NGO","name":"Islamsk Råd Norge","url":"https://islamsk.no"}]}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Vazirmatn:wght@300;400;500;600;700;800;900&family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Kufi+Arabic:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -560,6 +584,49 @@ body.fa .modal-close{font-family:var(--f-fa);}
 .pc-foot-src{font-family:'JetBrains Mono',monospace;font-size:5.5px;color:#a0aac0;letter-spacing:.3px;}
 .pc-foot-pg{font-family:'Playfair Display',serif;font-size:7px;font-style:italic;color:#a0aac0;}
 
+/* ═══ WEEK NUMBERS ═══ */
+.mc-dn{grid-template-columns:22px repeat(7,1fr);}
+.dnh.wk{font-size:6px;color:rgba(168,136,48,.5);user-select:none;}
+.mc-dg{grid-template-columns:22px repeat(7,1fr);}
+.dc-wk{display:flex;align-items:center;justify-content:center;font-family:var(--f-m);font-size:6px;font-weight:600;color:var(--t4);user-select:none;pointer-events:none;min-height:26px;}
+body.fa .dc-wk{direction:ltr;}
+.sv-dn{grid-template-columns:30px repeat(7,1fr);padding:10px 14px 6px;}
+.sv-dnc.wk{font-size:7.5px;color:var(--moon);opacity:.55;user-select:none;}
+.sv-dg{grid-template-columns:30px repeat(7,1fr);padding:10px 14px 20px;}
+.sdc-wk{display:flex;align-items:center;justify-content:center;font-family:var(--f-m);font-size:7.5px;font-weight:600;color:var(--t3);user-select:none;pointer-events:none;min-height:50px;}
+body.fa .sdc-wk{direction:ltr;}
+
+/* ═══ FILTER OFF / EMPTY ═══ */
+.dc.off,.sdc.off{opacity:.14;pointer-events:none;}
+.ymc.off{opacity:.25;}
+.empty{grid-column:1/-1;text-align:center;padding:38px 20px;background:var(--s1);border:1px dashed var(--bord2);border-radius:12px;color:var(--t3);flex:1;min-width:100%;}
+.empty .ei{font-size:26px;margin-bottom:8px;}
+.empty p{font-size:12px;margin-bottom:12px;color:var(--t2);}
+body.fa .empty p{font-family:var(--f-fa);}
+.empty-btn{border:1px solid var(--gldrim);background:var(--gldbg);color:var(--gld2);font-family:var(--f-u);font-size:10.5px;font-weight:700;letter-spacing:.4px;padding:7px 15px;border-radius:50px;cursor:pointer;transition:all .18s;}
+body.fa .empty-btn{font-family:var(--f-fa);}
+.empty-btn:hover{background:rgba(184,124,24,.2);box-shadow:0 0 18px rgba(184,124,24,.2);}
+
+/* ═══ TOOLBAR HINT / EXPORT ROW ═══ */
+.kt-hint{font-family:var(--f-m);font-size:9px;color:var(--t4);letter-spacing:.4px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;width:100%;}
+.kt-hint kbd{border:1px solid var(--bord);background:var(--s2);color:var(--t3);font-family:var(--f-m);font-size:8px;padding:1px 5px;border-radius:4px;}
+body.fa .kt-hint{font-family:var(--f-fa);}
+.kt-hint b{color:var(--moon);font-weight:600;}
+.eopt.gold{border-color:var(--gldrim);background:var(--gldbg);}
+.eopt.gold:hover{background:rgba(184,124,24,.18);}
+
+/* ═══ KILDER ═══ */
+.kil-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:8px;}
+.kilc{display:flex;align-items:center;gap:11px;background:var(--s1);border:1px solid var(--bord);border-radius:9px;padding:12px 14px;text-decoration:none;color:var(--t2);transition:all .17s;}
+.kilc:hover{border-color:var(--gldrim);box-shadow:0 0 18px rgba(184,124,24,.08);transform:translateY(-1px);}
+.kilc-i{font-size:18px;flex-shrink:0;}
+.kilc-t{font-size:11px;font-weight:700;color:var(--t1);line-height:1.3;}
+.kilc-d{font-size:9px;color:var(--t3);margin-top:2px;}
+body.fa .kilc-t,body.fa .kilc-d{font-family:var(--f-fa);}
+.kil-n{font-size:10.5px;color:var(--t4);line-height:1.7;margin-top:10px;}
+.kil-n em{color:var(--moon);font-style:normal;}
+body.fa .kil-n{font-family:var(--f-fa);}
+
 /* ═══ RESPONSIVE ═══ */
 @media(max-width:1100px){#grid-all{grid-template-columns:repeat(2,1fr);}}
 @media(max-width:640px){
@@ -602,6 +669,16 @@ body.fa .modal-close{font-family:var(--f-fa);}
         <div class="eopt-ico">🖼️</div>
         <div class="eopt-nm" id="m-o2">A4 Preview</div>
         <div class="eopt-ds" id="m-o2d">Full calendar in a<br>clean new window</div>
+      </div>
+      <div class="eopt gold" onclick="doExport('ics')">
+        <div class="eopt-ico">📅</div>
+        <div class="eopt-nm" id="m-o3">iCal (.ics)</div>
+        <div class="eopt-ds" id="m-o3d">Download all events<br>2025–2029 as iCal</div>
+      </div>
+      <div class="eopt gold" onclick="doExport('gcal')">
+        <div class="eopt-ico">🔔</div>
+        <div class="eopt-nm" id="m-o4">Google Calendar</div>
+        <div class="eopt-ds" id="m-o4d">Subscribe to the<br>live calendar</div>
       </div>
     </div>
     <button class="modal-close" id="m-cls" onclick="closeModal()">Cancel</button>
@@ -680,6 +757,7 @@ body.fa .modal-close{font-family:var(--f-fa);}
       <input class="srch-in" id="srch" type="text" oninput="doSearch(this.value)">
     </div>
     <div class="chips" id="chips"></div>
+    <div class="kt-hint" id="kt-hint"></div>
   </div>
 
   <div id="grid-all"></div>
@@ -704,9 +782,15 @@ body.fa .modal-close{font-family:var(--f-fa);}
     <div class="moon-g" id="moon-g"></div>
   </div>
 
+  <div class="inf-wrap kilders">
+    <div class="inf-hd"><h2 class="inf-h2" id="kil-t">Kilder</h2><div class="inf-rule"></div></div>
+    <div class="kil-g" id="kil-g"></div>
+    <div class="kil-n" id="kil-n"></div>
+  </div>
+
   <footer class="footer">
     <div class="footer-t" id="ftxt"></div>
-    <div class="footer-badge">Norsk Kalender <em>2025–2027</em></div>
+    <div class="footer-badge">Norsk Kalender <em>2025–2029</em></div>
   </footer>
 </div>
 
@@ -785,42 +869,73 @@ function buildHOL(y){
 const ISL_DATA={
   2025:{"3-30":{en:"Eid al-Fitr",no:"Id al-Fitr",fa:"عید فطر",approx:true,de_en:"End of Ramadan. 3-day celebration. Approx. date.",de_no:"Slutten på Ramadan. Tre dager med feiring. Ca. dato.",de_fa:"پایان ماه رمضان. جشن سه روزه. تاریخ تقریبی."},"6-7":{en:"Eid al-Adha",no:"Id al-Adha",fa:"عید قربان",approx:true,de_en:"Feast of Sacrifice. Coincides with Hajj pilgrimage. Approx. date.",de_no:"Offerets fest. Sammenfaller med Hajj-pilegrimsreisen. Ca. dato.",de_fa:"عید قربانی. مقارن با حج. تاریخ تقریبی."}},
   2026:{"3-20":{en:"Eid al-Fitr",no:"Id al-Fitr",fa:"عید فطر",approx:true,de_en:"End of Ramadan. 3-day celebration after a month of fasting. Approx. date.",de_no:"Slutten på Ramadan. Tre dager med feiring etter en måneds faste. Ca. dato.",de_fa:"پایان ماه رمضان. سه روز جشن. تاریخ تقریبی."},"5-27":{en:"Eid al-Adha",no:"Id al-Adha",fa:"عید قربان",approx:true,de_en:"Feast of Sacrifice. Commemorates Ibrahim's willingness to sacrifice his son. Approx. date.",de_no:"Offerets fest. Minnes Ibrahims vilje til å ofre sin sønn. Ca. dato.",de_fa:"عید قربانی. یادبود آمادگی حضرت ابراهیم. تاریخ تقریبی."}},
-  2027:{"3-10":{en:"Eid al-Fitr",no:"Id al-Fitr",fa:"عید فطر",approx:true,de_en:"End of Ramadan. Approx. date.",de_no:"Slutten på Ramadan. Ca. dato.",de_fa:"پایان ماه رمضان. تاریخ تقریبی."},"5-17":{en:"Eid al-Adha",no:"Id al-Adha",fa:"عید قربان",approx:true,de_en:"Feast of Sacrifice. Approx. date.",de_no:"Offerets fest. Ca. dato.",de_fa:"عید قربانی. تاریخ تقریبی."}}
+  2027:{"3-10":{en:"Eid al-Fitr",no:"Id al-Fitr",fa:"عید فطر",approx:true,de_en:"End of Ramadan. Approx. date.",de_no:"Slutten på Ramadan. Ca. dato.",de_fa:"پایان ماه رمضان. تاریخ تقریبی."},"5-17":{en:"Eid al-Adha",no:"Id al-Adha",fa:"عید قربان",approx:true,de_en:"Feast of Sacrifice. Approx. date.",de_no:"Offerets fest. Ca. dato.",de_fa:"عید قربانی. تاریخ تقریبی."}},
+  2028:{"2-26":{en:"Eid al-Fitr",no:"Id al-Fitr",fa:"عید فطر",approx:true,de_en:"End of Ramadan. Approx. date.",de_no:"Slutten på Ramadan. Ca. dato.",de_fa:"پایان ماه رمضان. تاریخ تقریبی."},"5-5":{en:"Eid al-Adha",no:"Id al-Adha",fa:"عید قربان",approx:true,de_en:"Feast of Sacrifice. Approx. date.",de_no:"Offerets fest. Ca. dato.",de_fa:"عید قربانی. تاریخ تقریبی."}},
+  2029:{"2-14":{en:"Eid al-Fitr",no:"Id al-Fitr",fa:"عید فطر",approx:true,de_en:"End of Ramadan. Approx. date.",de_no:"Slutten på Ramadan. Ca. dato.",de_fa:"پایان ماه رمضان. تاریخ تقریبی."},"4-23":{en:"Eid al-Adha",no:"Id al-Adha",fa:"عید قربان",approx:true,de_en:"Feast of Sacrifice. Approx. date.",de_no:"Offerets fest. Ca. dato.",de_fa:"عید قربانی. تاریخ تقریبی."}}
 };
 
 const PERS_DATA={
   2025:{"3-20":{en:"Nowruz — Persian New Year",no:"Nouruz — Persisk nyttår",fa:"نوروز — سال نو فارسی",de_en:"Persian New Year & first day of spring (spring equinox). Over 3,000 years old, celebrated by 300+ million people worldwide.",de_no:"Persisk nyttår og vårens første dag. Over 3000 år gammel feiring av over 300 millioner mennesker.",de_fa:"سال نو فارسی و آغاز بهار. بیش از سه هزار سال قدمت، توسط بیش از ۳۰۰ میلیون نفر در سراسر جهان."},"12-21":{en:"Yalda Night",no:"Yalda-natt",fa:"شب یلدا",de_en:"The longest night of the year (winter solstice). Ancient Iranian celebration of light's victory over darkness. Families gather to read Hafez poetry, eat pomegranates and watermelon.",de_no:"Årets lengste natt (vintersolverv). Gammel iransk feiring. Familier samles, leser Hafez-poesi og spiser granatepler.",de_fa:"بلندترین شب سال. جشن کهن فارسی. خانواده‌ها دور هم جمع می‌شوند، شعر حافظ می‌خوانند و انار و هندوانه می‌خورند."}},
   2026:{"3-20":{en:"Nowruz — Persian New Year",no:"Nouruz — Persisk nyttår",fa:"نوروز — سال نو فارسی",de_en:"Persian New Year & first day of spring. Over 3,000 years old, celebrated by 300+ million people worldwide.",de_no:"Persisk nyttår og vårens første dag. Over 3000 år gammel.",de_fa:"سال نو فارسی و آغاز بهار. بیش از سه هزار سال قدمت."},"12-21":{en:"Yalda Night",no:"Yalda-natt",fa:"شب یلدا",de_en:"The longest night of the year (winter solstice). Families gather for Hafez poetry, pomegranates and stories.",de_no:"Årets lengste natt. Familier samles til Hafez-poesi, granatepler og historier.",de_fa:"بلندترین شب سال. خانواده‌ها دور هم جمع می‌شوند، شعر حافظ می‌خوانند."}},
-  2027:{"3-20":{en:"Nowruz — Persian New Year",no:"Nouruz — Persisk nyttår",fa:"نوروز — سال نو فارسی",de_en:"Persian New Year & first day of spring. Over 3,000 years old.",de_no:"Persisk nyttår og vårens første dag.",de_fa:"سال نو فارسی و آغاز بهار."},"12-21":{en:"Yalda Night",no:"Yalda-natt",fa:"شب یلدا",de_en:"The longest night of the year (winter solstice).",de_no:"Årets lengste natt.",de_fa:"بلندترین شب سال."}}
+  2027:{"3-20":{en:"Nowruz — Persian New Year",no:"Nouruz — Persisk nyttår",fa:"نوروز — سال نو فارسی",de_en:"Persian New Year & first day of spring. Over 3,000 years old.",de_no:"Persisk nyttår og vårens første dag.",de_fa:"سال نو فارسی و آغاز بهار."},"12-21":{en:"Yalda Night",no:"Yalda-natt",fa:"شب یلدا",de_en:"The longest night of the year (winter solstice).",de_no:"Årets lengste natt.",de_fa:"بلندترین شب سال."}},
+  2028:{"3-20":{en:"Nowruz — Persian New Year",no:"Nouruz — Persisk nyttår",fa:"نوروز — سال نو فارسی",de_en:"Persian New Year & first day of spring. Over 3,000 years old.",de_no:"Persisk nyttår og vårens første dag.",de_fa:"سال نو فارسی و آغاز بهار."},"12-21":{en:"Yalda Night",no:"Yalda-natt",fa:"شب یلدا",de_en:"The longest night of the year (winter solstice).",de_no:"Årets lengste natt.",de_fa:"بلندترین شب سال."}},
+  2029:{"3-20":{en:"Nowruz — Persian New Year",no:"Nouruz — Persisk nyttår",fa:"نوروز — سال نو فارسی",de_en:"Persian New Year & first day of spring. Over 3,000 years old.",de_no:"Persisk nyttår og vårens første dag.",de_fa:"سال نو فارسی و آغاز بهار."},"12-21":{en:"Yalda Night",no:"Yalda-natt",fa:"شب یلدا",de_en:"The longest night of the year (winter solstice).",de_no:"Årets lengste natt.",de_fa:"بلندترین شب سال."}}
 };
 
-const SHAMSI={2025:1403,2026:1404,2027:1405};
+const SHAMSI={2025:1403,2026:1404,2027:1405,2028:1406,2029:1407};
 
 // Ramadan approximate dates (aligned with ISL_DATA Eid al-Fitr dates)
 const RAMADAN_DATA={
   2025:{start:new Date(2025,1,28),end:new Date(2025,2,29)},  // Feb 28 – Mar 29
   2026:{start:new Date(2026,1,18),end:new Date(2026,2,19)},  // Feb 18 – Mar 19
   2027:{start:new Date(2027,1,7), end:new Date(2027,2,8)},   // Feb 7  – Mar 8
+  2028:{start:new Date(2028,0,28),end:new Date(2028,1,26)},  // Jan 28 – Feb 26
+  2029:{start:new Date(2029,0,16),end:new Date(2029,1,14)},  // Jan 16 – Feb 14
 };
 
 const MOON_DATA={
   2025:{"1-13":"🌕","1-21":"🌗","1-29":"🌑","2-5":"🌓","2-12":"🌕","2-20":"🌗","2-28":"🌑","3-6":"🌓","3-14":"🌕","3-22":"🌗","3-29":"🌑","4-5":"🌓","4-13":"🌕","4-21":"🌗","4-27":"🌑","5-4":"🌓","5-12":"🌕","5-20":"🌗","5-27":"🌑","6-2":"🌓","6-11":"🌕","6-19":"🌗","6-25":"🌑","7-2":"🌓","7-10":"🌕","7-18":"🌗","7-24":"🌑","7-31":"🌓","8-9":"🌕","8-16":"🌗","8-23":"🌑","8-30":"🌓","9-7":"🌕","9-14":"🌗","9-21":"🌑","9-29":"🌓","10-7":"🌕","10-13":"🌗","10-21":"🌑","10-29":"🌓","11-5":"🌕","11-12":"🌗","11-20":"🌑","11-28":"🌓","12-4":"🌕","12-11":"🌗","12-20":"🌑","12-27":"🌓"},
   2026:{"1-3":"🌕","1-10":"🌗","1-18":"🌑","1-26":"🌓","2-1":"🌕","2-9":"🌗","2-17":"🌑","2-24":"🌓","3-3":"🌕","3-11":"🌗","3-19":"🌑","3-25":"🌓","4-2":"🌓","4-10":"🌗","4-17":"🌑","4-24":"🌓","5-1":"🌕","5-9":"🌗","5-16":"🌑","5-23":"🌓","5-31":"🌕","6-8":"🌓","6-15":"🌑","6-21":"🌓","6-30":"🌕","7-7":"🌗","7-15":"🌑","7-21":"🌓","7-29":"🌕","8-6":"🌗","8-12":"🌑","8-20":"🌓","8-28":"🌕","9-4":"🌗","9-11":"🌑","9-18":"🌓","9-26":"🌕","10-3":"🌗","10-10":"🌑","10-18":"🌓","10-26":"🌕","11-1":"🌗","11-9":"🌑","11-17":"🌓","11-24":"🌕","12-1":"🌗","12-9":"🌑","12-17":"🌓","12-23":"🌕","12-30":"🌗"},
-  2027:{"1-7":"🌕","1-15":"🌗","1-22":"🌑","1-29":"🌓","2-6":"🌕","2-14":"🌗","2-20":"🌑","2-28":"🌓","3-8":"🌕","3-15":"🌗","3-22":"🌑","3-29":"🌓","4-6":"🌕","4-13":"🌗","4-20":"🌑","4-28":"🌓","5-6":"🌕","5-13":"🌗","5-20":"🌑","5-27":"🌓","6-4":"🌕","6-11":"🌗","6-18":"🌑","6-26":"🌓","7-4":"🌕","7-10":"🌗","7-18":"🌑","7-25":"🌓","8-2":"🌕","8-9":"🌗","8-17":"🌑","8-24":"🌓","8-31":"🌕","9-8":"🌗","9-15":"🌑","9-22":"🌓","9-30":"🌕","10-7":"🌗","10-15":"🌑","10-22":"🌓","10-30":"🌕","11-6":"🌗","11-13":"🌑","11-20":"🌓","11-28":"🌕","12-6":"🌗","12-13":"🌑","12-20":"🌓","12-28":"🌕"}
+  2027:{"1-7":"🌕","1-15":"🌗","1-22":"🌑","1-29":"🌓","2-6":"🌕","2-14":"🌗","2-20":"🌑","2-28":"🌓","3-8":"🌕","3-15":"🌗","3-22":"🌑","3-29":"🌓","4-6":"🌕","4-13":"🌗","4-20":"🌑","4-28":"🌓","5-6":"🌕","5-13":"🌗","5-20":"🌑","5-27":"🌓","6-4":"🌕","6-11":"🌗","6-18":"🌑","6-26":"🌓","7-4":"🌕","7-10":"🌗","7-18":"🌑","7-25":"🌓","8-2":"🌕","8-9":"🌗","8-17":"🌑","8-24":"🌓","8-31":"🌕","9-8":"🌗","9-15":"🌑","9-22":"🌓","9-30":"🌕","10-7":"🌗","10-15":"🌑","10-22":"🌓","10-30":"🌕","11-6":"🌗","11-13":"🌑","11-20":"🌓","11-28":"🌕","12-6":"🌗","12-13":"🌑","12-20":"🌓","12-28":"🌕"},
+  2028:{"1-4":"🌗","1-12":"🌑","1-19":"🌓","1-27":"🌕","2-3":"🌗","2-10":"🌑","2-18":"🌓","2-25":"🌕","3-3":"🌗","3-11":"🌑","3-18":"🌓","3-26":"🌕","4-2":"🌗","4-9":"🌑","4-17":"🌓","4-24":"🌕","5-2":"🌗","5-9":"🌑","5-16":"🌓","5-24":"🌕","5-31":"🌗","6-7":"🌑","6-15":"🌓","6-22":"🌕","6-30":"🌗","7-7":"🌑","7-14":"🌓","7-22":"🌕","7-29":"🌗","8-5":"🌑","8-13":"🌓","8-20":"🌕","8-28":"🌗","9-4":"🌑","9-11":"🌓","9-19":"🌕","9-26":"🌗","10-4":"🌑","10-11":"🌓","10-18":"🌕","10-26":"🌗","11-2":"🌑","11-9":"🌓","11-17":"🌕","11-24":"🌗","12-2":"🌑","12-9":"🌓","12-16":"🌕","12-24":"🌗","12-31":"🌑"},
+  2029:{"1-8":"🌓","1-15":"🌕","1-22":"🌗","1-30":"🌑","2-6":"🌓","2-13":"🌕","2-21":"🌗","2-28":"🌑","3-8":"🌓","3-15":"🌕","3-22":"🌗","3-30":"🌑","4-6":"🌓","4-13":"🌕","4-21":"🌗","4-28":"🌑","5-6":"🌓","5-13":"🌕","5-20":"🌗","5-28":"🌑","6-4":"🌓","6-12":"🌕","6-19":"🌗","6-26":"🌑","7-4":"🌓","7-11":"🌕","7-18":"🌗","7-26":"🌑","8-2":"🌓","8-10":"🌕","8-17":"🌗","8-24":"🌑","9-1":"🌓","9-8":"🌕","9-16":"🌗","9-23":"🌑","9-30":"🌓","10-8":"🌕","10-15":"🌗","10-22":"🌑","10-30":"🌓","11-6":"🌕","11-14":"🌗","11-21":"🌑","11-28":"🌓","12-6":"🌕","12-13":"🌗","12-20":"🌑","12-28":"🌓"}
 };
 
 /* ══ STATE ══ */
 let lang='en', selYear=2026, viewMode='all', curM=new Date().getMonth();
+let filt='all', q='';
+const NKEX='nkl';
 const TODAY=new Date();
 const todayY=TODAY.getFullYear();
 const isCY=(y)=>y===todayY;
+const YEARS=[2025,2026,2027,2028,2029];
+function saveSt(){try{localStorage.setItem(NKEX,JSON.stringify({lang,selYear,viewMode,curM,filt,q}))}catch(e){}}
+function loadSt(){
+  try{
+    const o=JSON.parse(localStorage.getItem(NKEX)||'null');
+    if(!o)return;
+    if(['en','no','fa'].includes(o.lang))lang=o.lang;
+    if(YEARS.includes(o.selYear))selYear=o.selYear;
+    if(['all','single'].includes(o.viewMode))viewMode=o.viewMode;
+    if(Number.isInteger(o.curM)&&o.curM>=0&&o.curM<=11)curM=Math.min(o.curM,11);
+    if(['all','h','we','i','p','m'].includes(o.filt))filt=o.filt;
+    if(typeof o.q==='string')q=o.q;
+  }catch(e){}
+}
+function applyLang(){
+  const el=document.documentElement;
+  el.lang=lang;
+  el.dir=lang==='fa'?'rtl':'ltr';
+  const h=document.querySelector('.hero-h1');
+  if(h)h.setAttribute('dir',el.dir);
+}
 
 /* ══ TRANSLATIONS ══ */
 const TX={
   en:{
     navTt:"Norsk Kalender",navSb:"Official Holidays · Moon Phases",
     ey:"Kingdom of Norway",h1n:"Norsk",h1em:"Kalender",
-    desc:"Official Norwegian public holidays, Islamic feasts, Persian celebrations and lunar moon phases for 2025, 2026 and 2027.",
+    desc:"Official Norwegian public holidays, Islamic feasts, Persian celebrations and lunar moon phases for 2025, 2026, 2027, 2028 and 2029.",
     sH:"Public Holidays",sW:"Weekends",sWD:"Work Days",sI:"Islamic & Persian",
     qA:"Next holiday",qB:"Weeks left",qC:"Nowruz",qD:"Yalda",
     up:"Upcoming Events",vAll:"All",vOne:"Month",expT:"Export",
@@ -842,11 +957,16 @@ const TX={
     pcLeg:["Public Holiday","Weekend","Islamic Feast","Persian","Today","Moon"],
     pcP2Title:"Holidays & Celebrations — Details",
     nextEvt:"Next:",countIn:"in",stNow:"NOW",shamsi:"Shamsi",cet:"CET",cest:"CEST",
+    kHint:"<b>⌨️</b><kbd>/</kbd> search <kbd>1</kbd> all <kbd>2</kbd> month <kbd>←</kbd><kbd>→</kbd> month <kbd>P</kbd> print",
+    o3:"iCal (.ics)",o3d:"Download all events\n2025–2029",o4:"Google Calendar",o4d:"Subscribe to the\nlive calendar",
+    emT:"No events match your search or filter.",emBtn:"Show everything",
+    kilT:"Kilder",kilN:"Islamic dates are approximate (marked <em>Ca.</em>) and follow moon sightings. Moon phase dates are astronomical approximations.",
+    kilSrc:[{u:"https://lovdata.no",t:"Lovdata",d:"Public holidays (offentlige helligdager)"},{u:"https://islamsk.no",t:"Islamsk Råd Norge",d:"Islamic feasts, Ramadan and Eid"},{u:"https://en.wikipedia.org/wiki/Persian_calendar",t:"Persian calendar",d:"Nouruz and Yalda"},{u:"https://www.timeanddate.com/moon/norway",t:"Time and Date",d:"Moon phases (astronomical data)"}],
   },
   no:{
     navTt:"Norsk Kalender",navSb:"Offentlige helligdager · Månefaser",
     ey:"Kongeriket Norge",h1n:"Norsk",h1em:"Kalender",
-    desc:"Offisielle norske helligdager, islamske høytider, persiske feiringer og månefaser for 2025, 2026 og 2027.",
+    desc:"Offisielle norske helligdager, islamske høytider, persiske feiringer og månefaser for 2025, 2026, 2027, 2028 og 2029.",
     sH:"Helligdager",sW:"Helgedager",sWD:"Arbeidsdager",sI:"Islamsk & Persisk",
     qA:"Neste helligdag",qB:"Gjenstående uker",qC:"Nouruz",qD:"Yalda",
     up:"Kommende hendelser",vAll:"Alle",vOne:"Månedvis",expT:"Eksporter",
@@ -868,11 +988,16 @@ const TX={
     pcLeg:["Helligdag","Helgedag","Islamsk","Persisk","I dag","Månefase"],
     pcP2Title:"Helligdager & Feiringer — Detaljer",
     nextEvt:"Neste:",countIn:"om",stNow:"NÅ",shamsi:"Shamsi",cet:"CET",cest:"CEST",
+    kHint:"<b>⌨️</b><kbd>/</kbd> søk <kbd>1</kbd> alle <kbd>2</kbd> måned <kbd>←</kbd><kbd>→</kbd> måned <kbd>P</kbd> skriv ut",
+    o3:"iCal (.ics)",o3d:"Last ned alle hendelser\n2025–2029",o4:"Google Kalender",o4d:"Abonner på den\nlevende kalenderen",
+    emT:"Ingen hendelser matcher søket eller filteret.",emBtn:"Vis alt",
+    kilT:"Kilder",kilN:"Islamske datoer er tilnærmet (merket <em>Ca.</em>) og følger månesikter. Månefasedatoer er astronomiske tilnærminger.",
+    kilSrc:[{u:"https://lovdata.no",t:"Lovdata",d:"Offentlige helligdager"},{u:"https://islamsk.no",t:"Islamsk Råd Norge",d:"Islamske høytider, Ramadan og Eid"},{u:"https://no.wikipedia.org/wiki/Iransk_kalender",t:"Persisk kalender",d:"Nouruz og Yalda"},{u:"https://www.timeanddate.com/moon/norway",t:"Time And Date",d:"Månefaser (astronomiske data)"}],
   },
   fa:{
     navTt:"تقویم نروژ",navSb:"تعطیلات رسمی · فازهای ماه",
     ey:"پادشاهی نروژ",h1n:"تقویم",h1em:"نروژ",
-    desc:"تعطیلات رسمی نروژ، اعیاد اسلامی، جشن‌های فارسی و فازهای ماه برای سال‌های ۲۰۲۵، ۲۰۲۶ و ۲۰۲۷.",
+    desc:"تعطیلات رسمی نروژ، اعیاد اسلامی، جشن‌های فارسی و فازهای ماه برای سال‌های ۲۰۲۵ تا ۲۰۲۹.",
     sH:"تعطیلات رسمی",sW:"آخر هفته",sWD:"روزهای کاری",sI:"اسلامی و فارسی",
     qA:"تعطیل بعدی",qB:"هفته‌های باقی‌مانده",qC:"نوروز",qD:"یلدا",
     up:"رویدادهای پیش رو",vAll:"همه",vOne:"ماهانه",expT:"خروجی",
@@ -894,8 +1019,61 @@ const TX={
     pcLeg:["تعطیل رسمی","آخر هفته","عید اسلامی","فارسی","امروز","ماه"],
     pcP2Title:"تعطیلات و جشن‌ها — توضیحات",
     nextEvt:"بعدی:",countIn:"تا",stNow:"الان",shamsi:"شمسی",cet:"CET",cest:"CEST",
+    kHint:"<b>⌨️</b><kbd>/</kbd> جستجو <kbd>1</kbd> همه <kbd>2</kbd> ماه <kbd>←</kbd><kbd>→</kbd> ماه <kbd>P</kbd> چاپ",
+    o3:"پرونده ICS",o3d:"دانلود همه رویدادها\n۲۰۲۵ تا ۲۰۲۹",o4:"تقویم گوگل",o4d:"اشتراک در تقویم زنده",
+    emT:"رویدادی با جستجو یا فیلتر شما مطابقت ندارد.",emBtn:"نمایش همه",
+    kilT:"منابع",kilN:"تاریخ‌های اسلامی تقریبی هستند (علامت <em>Ca.</em>) و بر اساس رؤیت هلال اعلام می‌شوند. تاریخ‌های فاز ماه تقریب‌های نجومی هستند.",
+    kilSrc:[{u:"https://lovdata.no",t:"Lowdata",d:"تعطیلات رسمی"},{u:"https://islamsk.no",t:"شورای اسلامی نروژ",d:"اعیاد اسلامی، رمضان و عید"},{u:"https://en.wikipedia.org/wiki/Persian_calendar",t:"تقویم فارسی",d:"نوروز و یلدا"},{u:"https://www.timeanddate.com/moon/norway",t:"Time And Date",d:"فازهای ماه (داده‌های نجومی)"}]
   }
 };
+
+/* ══ DATA CACHE + FILTER ══ */
+let DT={};
+function getData(y){
+  if(!DT[y])DT[y]={HOL:buildHOL(y),ISL:ISL_DATA[y]||{},PER:PERS_DATA[y]||{},MOON:MOON_DATA[y]||{},RAM:RAMADAN_DATA[y]||null};
+  return DT[y];
+}
+function isoWeek(d){
+  const date=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));
+  const dayNum=date.getUTCDay()||7;
+  date.setUTCDate(date.getUTCDate()+4-dayNum);
+  const ys=new Date(Date.UTC(date.getUTCFullYear(),0,1));
+  return Math.ceil((((date-ys)/86400000)+1)/7);
+}
+const emptyHtml=(t)=>`<div class="empty"><div class="ei">🔍</div><p>${t.emT||''}</p><button class="empty-btn" onclick="resetResults()">${t.emBtn||'Reset'}</button></div>`;
+function dayAct(k,dow,HOL,ISL,PER,MOON){
+  return {r:!!HOL[k],g:!!ISL[k],p:!!PER[k],m:!!MOON[k],we:dow===0||dow===6};
+}
+function dayVisible(acts,k,HOL,ISL,PER,MOON,t){
+  const any=acts.r||acts.g||acts.p||acts.m||acts.we;
+  if(!any)return false;
+  if(filt==='h'&&!acts.r)return false;
+  if(filt==='we'&&!acts.we)return false;
+  if(filt==='i'&&!acts.g)return false;
+  if(filt==='p'&&!acts.p)return false;
+  if(filt==='m'&&!acts.m)return false;
+  if(q){
+    const parts=[];
+    if(HOL[k])parts.push((HOL[k][lang]||HOL[k].en)+' '+(HOL[k].de_en||''));
+    if(ISL[k])parts.push((ISL[k][lang]||ISL[k].en)+' '+(ISL[k].de_en||''));
+    if(PER[k])parts.push((PER[k][lang]||PER[k].en)+' '+(PER[k].de_en||''));
+    if(MOON[k]){const mn=t.moon.find(x=>x.i===MOON[k]);if(mn)parts.push(mn.n+' '+mn.d);}
+    if(parts.join(' ').toLowerCase().indexOf(q.toLowerCase())<0)return false;
+  }
+  return true;
+}
+function onChip(el,id){
+  filt=id;
+  render();
+}
+function doSearch(v){
+  q=v;
+  render();
+}
+function resetResults(){
+  q='';filt='all';
+  render();
+}
 
 /* ══ TIMER ══ */
 function getCETInfo(){
@@ -926,9 +1104,7 @@ function updateTimer(){
   document.getElementById('tz-cest').className='tz-badge'+(isCEST?' active':'');
   document.getElementById('tz-cet').textContent=`CET UTC+1`;
   document.getElementById('tz-cest').textContent=`CEST UTC+2`;
-  const HOL=buildHOL(selYear);
-  const ISL=ISL_DATA[selYear]||{};
-  const PER=PERS_DATA[selYear]||{};
+  const {HOL,ISL,PER}=getData(selYear);
   const allEvts=[];
   [...Object.entries(HOL),...Object.entries(ISL),...Object.entries(PER)].forEach(([k,v])=>{
     const[mo,d]=k.split('-').map(Number);
@@ -958,6 +1134,7 @@ setInterval(updateTimer,1000);
 function render(){
   const t=TX[lang],fa=lang==='fa';
   document.body.className=fa?'fa':'';
+  applyLang();
   document.getElementById('nav-tt').textContent=t.navTt;
   document.getElementById('nav-sb').textContent=t.navSb;
   document.getElementById('h-ey').textContent=t.ey;
@@ -975,10 +1152,23 @@ function render(){
   document.getElementById('m-o2').textContent=t.o2;
   document.getElementById('m-o2d').innerHTML=t.o2d.replace('\n','<br>');
   document.getElementById('m-cls').textContent=t.mCls;
-  document.getElementById('srch').placeholder=t.srPH;
+  const sri=document.getElementById('srch');
+  sri.placeholder=t.srPH;
+  if(document.activeElement!==sri)sri.value=q;
+  sri.classList.toggle('hasq',!!q);
+  document.getElementById('kt-hint').innerHTML=t.kHint;
+  document.getElementById('m-o3').textContent=t.o3||'iCal';
+  document.getElementById('m-o3d').innerHTML=(t.o3d||'').replace('\n','<br>');
+  document.getElementById('m-o4').textContent=t.o4||'Google';
+  document.getElementById('m-o4d').innerHTML=(t.o4d||'').replace('\n','<br>');
   document.getElementById('inf-h2').textContent=`${t.inH} ${selYear}`;
   document.getElementById('moon-h2').textContent=t.moonH;
   document.getElementById('ftxt').innerHTML=t.foot;
+  document.getElementById('kil-t').textContent=t.kilT||'Kilder';
+  document.getElementById('kil-g').innerHTML=(t.kilSrc||[]).map(s=>
+    `<a class="kilc" href="${s.u}" target="_blank" rel="noopener"><div class="kilc-i">📖</div><div><div class="kilc-t">${s.t}</div><div class="kilc-d">${s.d}</div></div></a>`
+  ).join('');
+  document.getElementById('kil-n').innerHTML=t.kilN||'';
   renderYrSel();
   renderStats(t);
   renderUpcoming(t);
@@ -990,12 +1180,13 @@ function render(){
   renderHolCards(t);
   renderMoonGuide(t);
   updateTimer();
+  saveSt();
 }
 
 function renderYrSel(){
   const div=document.getElementById('yr-sel');
   div.innerHTML='';
-  [2025,2026,2027].forEach(y=>{
+  YEARS.forEach(y=>{
     const b=document.createElement('button');
     b.className='yrb'+(y===selYear?' on':'');
     const sh=SHAMSI[y]||'';
@@ -1048,27 +1239,45 @@ function renderStats(t){
 }
 
 function renderUpcoming(t){
-  const HOL=buildHOL(selYear);
-  const ISL=ISL_DATA[selYear]||{};
-  const PER=PERS_DATA[selYear]||{};
+  const {HOL,ISL,PER,MOON,RAM}=getData(selYear);
   const evs=[];
   const add=(obj,cls)=>Object.entries(obj).forEach(([k,v])=>{
     const[mo,d]=k.split('-').map(Number);
     const dt=new Date(selYear,mo-1,d);
     const delta=Math.round((dt-TODAY)/86400000);
-    evs.push({dt,delta,mo,d,v,k,cls});
+    evs.push({dt,delta,mo,d,v,k,cls,nm:v[lang]||v.en,de:v[`de_${lang}`]||v.de_en||''});
   });
   add(HOL,'r');add(ISL,'g');add(PER,'p');
+  Object.entries(MOON).forEach(([k,ico])=>{
+    const[mo,d]=k.split('-').map(Number);
+    const dt=new Date(selYear,mo-1,d);
+    const mn=t.moon.find(x=>x.i===ico);
+    evs.push({dt,delta:Math.round((dt-TODAY)/86400000),mo,d,cls:'m',nm:ico+' '+(mn?mn.n:''),de:mn?mn.d:''});
+  });
+  if(RAM){
+    const dt=new Date(RAM.start);
+    const dst=RAM.start.getDate()+' '+t.mAb[RAM.start.getMonth()];
+    const den=RAM.end.getDate()+' '+t.mAb[RAM.end.getMonth()];
+    evs.push({dt,delta:Math.round((dt-TODAY)/86400000),mo:dt.getMonth(),d:dt.getDate(),cls:'g',nm:(lang==='fa'?'رمضان':'Ramadan'),de:'Start '+dst+' · End '+den});
+  }
   evs.sort((a,b)=>Math.abs(a.delta)-Math.abs(b.delta));
-  document.getElementById('ev-row').innerHTML=evs.slice(0,12).map(ev=>{
-    const nm=ev.v[lang]||ev.v.en;
+  const shown=evs.filter(ev=>{
+    if(filt==='h'&&ev.cls!=='r')return false;
+    if(filt==='we')return false;
+    if(filt==='i'&&ev.cls!=='g')return false;
+    if(filt==='p'&&ev.cls!=='p')return false;
+    if(filt==='m'&&ev.cls!=='m')return false;
+    if(q&&(ev.nm+' '+ev.de).toLowerCase().indexOf(q.toLowerCase())<0)return false;
+    return true;
+  }).slice(0,12);
+  document.getElementById('ev-row').innerHTML=shown.length?shown.map(ev=>{
     const dow=t.dFull[ev.dt.getDay()];
     let ds,dc;
     if(ev.delta===0){ds=t.today;dc='now';}
     else if(ev.delta>0){ds=t.inDays.replace('{n}',ev.delta);dc=ev.cls;}
     else{ds=t.past.replace('{n}',-ev.delta);dc='past';}
-    return `<div class="evc ${ev.cls}"><div class="evc-dt">${dow}, ${ev.d} ${t.mAb[ev.mo-1]}</div><div class="evc-nm">${nm}</div><div class="evc-dl ${dc}">${ds}</div></div>`;
-  }).join('');
+    return `<div class="evc ${ev.cls}"><div class="evc-dt">${dow}, ${ev.d} ${t.mAb[ev.mo-1]}</div><div class="evc-nm">${ev.nm}</div><div class="evc-dl ${dc}">${ds}</div></div>`;
+  }).join(''):emptyHtml(t);
 }
 
 function renderYM(t){
@@ -1125,12 +1334,8 @@ function renderLegend(t){
 function renderChips(t){
   const ds=[{id:'all',cl:'all'},{id:'h',cl:'r'},{id:'we',cl:'v'},{id:'i',cl:'g'},{id:'p',cl:'p'},{id:'m',cl:'m'}];
   document.getElementById('chips').innerHTML=ds.map((c,i)=>
-    `<button class="chip ${c.cl}${i===0?' on':''}" onclick="onChip(this,'${c.id}')">${t.chips[i]}</button>`
+    `<button class="chip ${c.cl}${filt===c.id?' on':''}" aria-pressed="${filt===c.id}" onclick="onChip(this,'${c.id}')">${t.chips[i]}</button>`
   ).join('');
-}
-function onChip(el){
-  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
-  el.classList.add('on');
 }
 
 function renderGrid(t){
@@ -1165,12 +1370,26 @@ function buildMC(m,t){
       ${ec?`<div class="mc-ec">${ec} ev</div>`:''}
     </div>
     <div class="mc-pills">${uniq.map(p=>`<span class="mcp ${p.cl}">${p.nm}</span>`).join('')||'<span style="font-size:7.5px;color:var(--t4)">&nbsp;</span>'}</div>
-    <div class="mc-dn">${t.days.map((n,i)=>`<div class="dnh${i>=5?' we':''}">${n.substring(0,2)}</div>`).join('')}</div>
+    <div class="mc-dn"><div class="dnh wk">W</div>${t.days.map((n,i)=>`<div class="dnh${i>=5?' we':''}">${n.substring(0,2)}</div>`).join('')}</div>
     <div class="mc-dg-wrap"><div class="mc-dg" id="mcdg-${m}"></div></div>
   `;
   const dg=card.querySelector(`#mcdg-${m}`);
-  for(let i=0;i<off;i++){const e=document.createElement('div');e.className='dc dc-e';dg.appendChild(e);}
-  for(let d=1;d<=dim;d++) dg.appendChild(buildDC(m,d,t,false));
+  const totalSlots=off+dim;
+  let lastWeek=-1;
+  for(let slot=0;slot<totalSlots;slot++){
+    const colPos=slot%7;
+    if(colPos===0){
+      const firstDayOfRow=slot-off+1;
+      const dayForWeek=Math.max(1,Math.min(firstDayOfRow,dim));
+      const wn=isoWeek(new Date(selYear,m,dayForWeek));
+      const wk=document.createElement('div');
+      wk.className='dc-wk';
+      if(wn!==lastWeek){wk.textContent=wn;lastWeek=wn;}
+      dg.appendChild(wk);
+    }
+    if(slot<off){const e=document.createElement('div');e.className='dc dc-e';dg.appendChild(e);}
+    else dg.appendChild(buildDC(m,slot-off+1,t,false));
+  }
   return card;
 }
 
@@ -1195,6 +1414,10 @@ function buildDC(m,d,t,large){
   else if(isWE)cls+=' we';
   if(isT)cls+=' tod';
   if(!large&&!isH&&!isI&&!isP&&!isWE&&moon)cls+=' ms';
+  if(filt!=='all'||q){
+    const acts=dayAct(k,dow,HOL,ISL,PER,MOON);
+    if(!dayVisible(acts,k,HOL,ISL,PER,MOON,t))cls+=' off';
+  }
   const el=document.createElement('div');
   el.className=cls;
   const dotList=[];
@@ -1301,26 +1524,52 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeTip();});
 function renderSingle(t){
   const fa=lang==='fa';
   document.getElementById('sv-ttl').innerHTML=`${t.months[curM]} <em>${selYear}</em>`;
-  document.getElementById('sv-dn').innerHTML=t.days.map((n,i)=>`<div class="sv-dnc${i>=5?' we':''}">${n}</div>`).join('');
+  document.getElementById('sv-dn').innerHTML=`<div class="sv-dnc wk">W</div>${t.days.map((n,i)=>`<div class="sv-dnc${i>=5?' we':''}">${n}</div>`).join('')}`;
   const sg=document.getElementById('sv-dg');sg.innerHTML='';
   const fd=new Date(selYear,curM,1).getDay();
   const off=fd===0?6:fd-1;
   const dim=new Date(selYear,curM+1,0).getDate();
-  for(let i=0;i<off;i++){const e=document.createElement('div');e.className='sdc sdc-e';sg.appendChild(e);}
-  for(let d=1;d<=dim;d++) sg.appendChild(buildDC(curM,d,t,true));
+  const totalSlots=off+dim;
+  let lastWeek=-1;
+  for(let slot=0;slot<totalSlots;slot++){
+    const colPos=slot%7;
+    if(colPos===0){
+      const firstDayOfRow=slot-off+1;
+      const dayForWeek=Math.max(1,Math.min(firstDayOfRow,dim));
+      const wn=isoWeek(new Date(selYear,curM,dayForWeek));
+      const wk=document.createElement('div');
+      wk.className='sdc-wk';
+      if(wn!==lastWeek){wk.textContent=wn;lastWeek=wn;}
+      sg.appendChild(wk);
+    }
+    if(slot<off){const e=document.createElement('div');e.className='sdc sdc-e';sg.appendChild(e);}
+    else sg.appendChild(buildDC(curM,slot-off+1,t,true));
+  }
   document.querySelectorAll('.ymc').forEach((el,i)=>el.classList.toggle('on',i===curM));
 }
 
 function renderHolCards(t){
-  const HOL=buildHOL(selYear);
-  const ISL=ISL_DATA[selYear]||{};
-  const PER=PERS_DATA[selYear]||{};
+  const {HOL,ISL,PER}=getData(selYear);
   const all=[
     ...Object.entries(HOL).map(([k,v])=>({k,v,tp:'n'})),
     ...Object.entries(ISL).map(([k,v])=>({k,v,tp:'i'})),
     ...Object.entries(PER).map(([k,v])=>({k,v,tp:'p'})),
   ].sort((a,b)=>{const[am,ad]=a.k.split('-').map(Number),[bm,bd]=b.k.split('-').map(Number);return am!==bm?am-bm:ad-bd;});
-  document.getElementById('hol-g').innerHTML=all.map(({k,v,tp})=>{
+  const clsOf=tp=>tp==='n'?'r':tp==='i'?'g':'p';
+  const shown=all.filter(({v,tp})=>{
+    const cls=clsOf(tp);
+    if(filt==='h'&&cls!=='r')return false;
+    if(filt==='i'&&cls!=='g')return false;
+    if(filt==='p'&&cls!=='p')return false;
+    if(filt==='m'||filt==='we')return false;
+    if(q){
+      const nm=v[lang]||v.en;
+      const de=v[`de_${lang}`]||v.de_en||'';
+      if((nm+' '+de).toLowerCase().indexOf(q.toLowerCase())<0)return false;
+    }
+    return true;
+  });
+  document.getElementById('hol-g').innerHTML=shown.length?shown.map(({k,v,tp})=>{
     const[mo,d]=k.split('-').map(Number);
     const nm=v[lang]||v.en;
     const de=v[`de_${lang}`]||v.de_en||'';
@@ -1342,15 +1591,13 @@ function renderHolCards(t){
         <div class="hcb-tags">${tags}</div>
       </div>
     </div>`;
-  }).join('');
+  }).join(''):emptyHtml(t);
 }
 
 function renderMoonGuide(t){
   document.getElementById('moon-g').innerHTML=t.moon.map(p=>`
     <div class="moonc"><div class="moonico">${p.i}</div><div><div class="moonnm">${p.n}</div><div class="moonds">${p.d}</div></div></div>`).join('');
 }
-
-function doSearch(v){}
 
 /* ══ VIEW ══ */
 function setView(v){
@@ -1360,8 +1607,9 @@ function setView(v){
   document.getElementById('grid-all').classList.toggle('hide',v==='single');
   document.getElementById('grid-single').classList.toggle('show',v==='single');
   if(v==='single')renderSingle(TX[lang]);
+  saveSt();
 }
-function navM(d){curM=(curM+d+12)%12;renderSingle(TX[lang]);}
+function navM(d){curM=(curM+d+12)%12;renderSingle(TX[lang]);saveSt();}
 
 /* ══ LANG ══ */
 function setLang(l){
@@ -1653,8 +1901,70 @@ function buildPC(){
   return pc;
 }
 
+/* ══ ICS / GOOGLE SUBSCRIBE ══ */
+const ICS_SRC={ramazan:'https://islamsk.no',helligdag:'https://lovdata.no',islamsk:'https://islamsk.no',persisk:'https://en.wikipedia.org/wiki/Persian_calendar',maane:'https://www.timeanddate.com/moon/norway'};
+function icsEvents(y){
+  const t=TX[lang];
+  const {HOL,ISL,PER,MOON,RAM}=getData(y);
+  const out=[];
+  Object.entries(HOL).forEach(([k,v])=>{
+    const[mo,d]=k.split('-').map(Number);
+    out.push({st:new Date(y,mo-1,d),en:new Date(y,mo-1,d),sum:v[lang]||v.en,des:v[`de_${lang}`]||v.de_en||'',cat:'Helligdag',src:'helligdag'});
+  });
+  Object.entries(ISL).forEach(([k,v])=>{
+    const[mo,d]=k.split('-').map(Number);
+    const des=(v[`de_${lang}`]||v.de_en||'')+(v.approx?'\nCa. dato.':'');
+    out.push({st:new Date(y,mo-1,d),en:new Date(y,mo-1,d),sum:v[lang]||v.en,des,cat:'Islamsk',src:'islamsk'});
+  });
+  Object.entries(PER).forEach(([k,v])=>{
+    const[mo,d]=k.split('-').map(Number);
+    out.push({st:new Date(y,mo-1,d),en:new Date(y,mo-1,d),sum:v[lang]||v.en,des:v[`de_${lang}`]||v.de_en||'',cat:'Persisk',src:'persisk'});
+  });
+  if(RAM){
+    out.push({st:new Date(RAM.start),en:new Date(RAM.end),sum:lang==='fa'?'رمضان':'Ramadan',des:lang==='fa'?'ماه مقدس روزه‌داری. تاریخ تقریبی.':'Fastemåneden. Datoene er tilnærmet.',cat:'Islamsk',src:'ramazan'});
+  }
+  Object.entries(MOON).forEach(([k,ico])=>{
+    const[mo,d]=k.split('-').map(Number);
+    const mn=t.moon.find(x=>x.i===ico);
+    out.push({st:new Date(y,mo-1,d),en:new Date(y,mo-1,d),sum:ico+' '+(mn?mn.n:''),des:mn?mn.d:'',cat:'Månefase',src:'maane'});
+  });
+  return out.sort((a,b)=>a.st-b.st);
+}
+function downloadIcs(){
+  const L=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//BariPlux//Norsk Kalender//NO','CALSCALE:GREGORIAN'];
+  const dCal=x=>''+x.getFullYear()+String(x.getMonth()+1).padStart(2,'0')+String(x.getDate()).padStart(2,'0');
+  const esc=s=>String(s).replace(/([,;\\])/g,'\\$1').replace(/\n/g,'\\n');
+  let uid=0;
+  YEARS.forEach(y=>icsEvents(y).forEach(ev=>{
+    uid++;
+    L.push('BEGIN:VEVENT');
+    L.push('UID:norsk-kalender-'+uid+'@bariplux');
+    L.push('DTSTAMP:'+new Date().toISOString().replace(/[-:]/g,'').split('.')[0]+'Z');
+    L.push('DTSTART;VALUE=DATE:'+dCal(ev.st));
+    L.push('DTEND;VALUE=DATE:'+dCal(new Date(ev.en.getFullYear(),ev.en.getMonth(),ev.en.getDate()+1)));
+    L.push('SUMMARY:'+esc(ev.sum));
+    const full=ev.des+(ICS_SRC[ev.src]?((ev.des?'\n':'')+'Kilde: '+ICS_SRC[ev.src]):'');
+    if(full)L.push('DESCRIPTION:'+esc(full));
+    if(ev.cat)L.push('CATEGORIES:'+'Norsk kalender, '+ev.cat);
+    L.push('END:VEVENT');
+  }));
+  L.push('END:VCALENDAR');
+  const blob=new Blob([L.join('\r\n')],{type:'text/calendar;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='norsk-kalender-'+YEARS[0]+'-'+YEARS[YEARS.length-1]+'.ics';
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+}
+function gcalSubscribe(){
+  const base=location.href.replace(/[^/]*$/,'')+'kalender.ics';
+  window.open('https://calendar.google.com/calendar/r?cid=webcal://'+base.replace(/^https?:\/\//,''),'_blank');
+}
+
 function doExport(type){
   closeModal();
+  if(type==='ics'){downloadIcs();return;}
+  if(type==='gcal'){gcalSubscribe();return;}
   const pc=buildPC();
   const fa=lang==='fa';
   let css='';
@@ -1736,7 +2046,26 @@ else{for(var i=0;i<total;i++){imgs[i].addEventListener('load',function(){done++;
 
 /* ══ INIT ══ */
 curM=TODAY.getMonth();
+loadSt();
+window.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){closeModal();closeTip();return;}
+  if(document.getElementById('overlay').classList.contains('open'))return;
+  if(e.metaKey||e.ctrlKey||e.altKey)return;
+  const tag=(e.target||document.body).tagName;
+  if(tag==='INPUT'||tag==='TEXTAREA'){
+    if(e.key==='Escape')e.target.blur();
+    return;
+  }
+  if(e.key==='/'){e.preventDefault();const s=document.getElementById('srch');s.focus();s.select();}
+  else if(e.key==='1')setView('all');
+  else if(e.key==='2')setView('single');
+  else if(e.key==='p'||e.key==='P')openModal();
+  else if(e.key==='ArrowRight')navM(1);
+  else if(e.key==='ArrowLeft')navM(-1);
+});
+if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 render();
+setView(viewMode);
 </script>
 </body>
 </html>

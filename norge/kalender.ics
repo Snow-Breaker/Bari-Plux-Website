@@ -1,0 +1,2975 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//BariPlux//Norsk Kalender//NO
+CALSCALE:GREGORIAN
+BEGIN:VEVENT
+UID:norsk-kalender-1@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20250101
+DTEND;VALUE=DATE:20250102
+SUMMARY:Nyttårsdag
+DESCRIPTION:Årets første dag. Offentlige kontorer\, banker og de fleste bedrifter er stengt.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-2@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20250417
+DTEND;VALUE=DATE:20250418
+SUMMARY:Skjærtorsdag
+DESCRIPTION:Torsdag før påske. Minnedag for Jesu siste nattverd med disiplene.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-3@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20250418
+DTEND;VALUE=DATE:20250419
+SUMMARY:Langfredag
+DESCRIPTION:Minnedag for Jesu Kristi korsfestelse.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-4@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20250420
+DTEND;VALUE=DATE:20250421
+SUMMARY:Første påskedag
+DESCRIPTION:Feirer Jesu oppstandelse. Viktigste kristne høytid.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-5@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20250421
+DTEND;VALUE=DATE:20250422
+SUMMARY:Andre påskedag
+DESCRIPTION:Andre dag i påsken. Offentlig helligdag i alle nordiske land.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-6@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20250501
+DTEND;VALUE=DATE:20250502
+SUMMARY:Arbeidernes dag
+DESCRIPTION:Internasjonal arbeiderdag. Feiret med tog i Oslo.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-7@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20250529
+DTEND;VALUE=DATE:20250530
+SUMMARY:Kristi himmelfartsdag
+DESCRIPTION:39 dager etter påske. Markerer Jesu himmelfart.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-8@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20250517
+DTEND;VALUE=DATE:20250518
+SUMMARY:Grunnlovsdagen
+DESCRIPTION:Norges nasjonaldag. Grunnloven ble undertegnet 17. mai 1814.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-9@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20250608
+DTEND;VALUE=DATE:20250609
+SUMMARY:Første pinsedag
+DESCRIPTION:50 dager etter påske.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-10@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20250609
+DTEND;VALUE=DATE:20250610
+SUMMARY:Andre pinsedag
+DESCRIPTION:Dagen etter første pinsedag.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-11@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20251225
+DTEND;VALUE=DATE:20251226
+SUMMARY:Første juledag
+DESCRIPTION:Jesu Kristi fødsel.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-12@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20251226
+DTEND;VALUE=DATE:20251227
+SUMMARY:Andre juledag
+DESCRIPTION:Den andre juledagen.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-13@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20250330
+DTEND;VALUE=DATE:20250331
+SUMMARY:Id al-Fitr
+DESCRIPTION:Slutten på Ramadan. Tre dager med feiring. Ca. dato.\nCa. dato.\nKilde: https://islamsk.no
+CATEGORIES:Norsk kalender, Islamsk
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-14@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20250607
+DTEND;VALUE=DATE:20250608
+SUMMARY:Id al-Adha
+DESCRIPTION:Offerets fest. Sammenfaller med Hajj-pilegrimsreisen. Ca. dato.\nCa. dato.\nKilde: https://islamsk.no
+CATEGORIES:Norsk kalender, Islamsk
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-15@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20250320
+DTEND;VALUE=DATE:20250321
+SUMMARY:Nouruz — Persisk nyttår
+DESCRIPTION:Persisk nyttår og vårens første dag. Over 3000 år gammel feiring av over 300 millioner mennesker.\nKilde: https://en.wikipedia.org/wiki/Persian_calendar
+CATEGORIES:Norsk kalender, Persisk
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-16@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20251221
+DTEND;VALUE=DATE:20251222
+SUMMARY:Yalda-natt
+DESCRIPTION:Årets lengste natt (vintersolverv). Gammel iransk feiring. Familier samles\, leser Hafez-poesi og spiser granatepler.\nKilde: https://en.wikipedia.org/wiki/Persian_calendar
+CATEGORIES:Norsk kalender, Persisk
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-17@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20250228
+DTEND;VALUE=DATE:20250330
+SUMMARY:Ramadan
+DESCRIPTION:Fastemåneden. Datoene er tilnærmet.\nKilde: https://islamsk.no
+CATEGORIES:Norsk kalender, Islamsk
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-18@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20250113
+DTEND;VALUE=DATE:20250114
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-19@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20250121
+DTEND;VALUE=DATE:20250122
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-20@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20250129
+DTEND;VALUE=DATE:20250130
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-21@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20250205
+DTEND;VALUE=DATE:20250206
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-22@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20250212
+DTEND;VALUE=DATE:20250213
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-23@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20250220
+DTEND;VALUE=DATE:20250221
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-24@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20250228
+DTEND;VALUE=DATE:20250301
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-25@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20250306
+DTEND;VALUE=DATE:20250307
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-26@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20250314
+DTEND;VALUE=DATE:20250315
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-27@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20250322
+DTEND;VALUE=DATE:20250323
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-28@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20250329
+DTEND;VALUE=DATE:20250330
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-29@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20250405
+DTEND;VALUE=DATE:20250406
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-30@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20250413
+DTEND;VALUE=DATE:20250414
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-31@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20250421
+DTEND;VALUE=DATE:20250422
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-32@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20250427
+DTEND;VALUE=DATE:20250428
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-33@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20250504
+DTEND;VALUE=DATE:20250505
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-34@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20250512
+DTEND;VALUE=DATE:20250513
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-35@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20250520
+DTEND;VALUE=DATE:20250521
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-36@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20250527
+DTEND;VALUE=DATE:20250528
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-37@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20250602
+DTEND;VALUE=DATE:20250603
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-38@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20250611
+DTEND;VALUE=DATE:20250612
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-39@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20250619
+DTEND;VALUE=DATE:20250620
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-40@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20250625
+DTEND;VALUE=DATE:20250626
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-41@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20250702
+DTEND;VALUE=DATE:20250703
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-42@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20250710
+DTEND;VALUE=DATE:20250711
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-43@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20250718
+DTEND;VALUE=DATE:20250719
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-44@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20250724
+DTEND;VALUE=DATE:20250725
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-45@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20250731
+DTEND;VALUE=DATE:20250801
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-46@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20250809
+DTEND;VALUE=DATE:20250810
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-47@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20250816
+DTEND;VALUE=DATE:20250817
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-48@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20250823
+DTEND;VALUE=DATE:20250824
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-49@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20250830
+DTEND;VALUE=DATE:20250831
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-50@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20250907
+DTEND;VALUE=DATE:20250908
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-51@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20250914
+DTEND;VALUE=DATE:20250915
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-52@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20250921
+DTEND;VALUE=DATE:20250922
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-53@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20250929
+DTEND;VALUE=DATE:20250930
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-54@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20251007
+DTEND;VALUE=DATE:20251008
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-55@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20251013
+DTEND;VALUE=DATE:20251014
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-56@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20251021
+DTEND;VALUE=DATE:20251022
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-57@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20251029
+DTEND;VALUE=DATE:20251030
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-58@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20251105
+DTEND;VALUE=DATE:20251106
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-59@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20251112
+DTEND;VALUE=DATE:20251113
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-60@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20251120
+DTEND;VALUE=DATE:20251121
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-61@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20251128
+DTEND;VALUE=DATE:20251129
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-62@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20251204
+DTEND;VALUE=DATE:20251205
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-63@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20251211
+DTEND;VALUE=DATE:20251212
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-64@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20251220
+DTEND;VALUE=DATE:20251221
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-65@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20251227
+DTEND;VALUE=DATE:20251228
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-66@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20260101
+DTEND;VALUE=DATE:20260102
+SUMMARY:Nyttårsdag
+DESCRIPTION:Årets første dag. Offentlige kontorer\, banker og de fleste bedrifter er stengt.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-67@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20260402
+DTEND;VALUE=DATE:20260403
+SUMMARY:Skjærtorsdag
+DESCRIPTION:Torsdag før påske. Minnedag for Jesu siste nattverd med disiplene.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-68@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20260403
+DTEND;VALUE=DATE:20260404
+SUMMARY:Langfredag
+DESCRIPTION:Minnedag for Jesu Kristi korsfestelse.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-69@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20260405
+DTEND;VALUE=DATE:20260406
+SUMMARY:Første påskedag
+DESCRIPTION:Feirer Jesu oppstandelse. Viktigste kristne høytid.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-70@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20260406
+DTEND;VALUE=DATE:20260407
+SUMMARY:Andre påskedag
+DESCRIPTION:Andre dag i påsken. Offentlig helligdag i alle nordiske land.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-71@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20260501
+DTEND;VALUE=DATE:20260502
+SUMMARY:Arbeidernes dag
+DESCRIPTION:Internasjonal arbeiderdag. Feiret med tog i Oslo.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-72@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20260514
+DTEND;VALUE=DATE:20260515
+SUMMARY:Kristi himmelfartsdag
+DESCRIPTION:39 dager etter påske. Markerer Jesu himmelfart.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-73@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20260517
+DTEND;VALUE=DATE:20260518
+SUMMARY:Grunnlovsdagen
+DESCRIPTION:Norges nasjonaldag. Grunnloven ble undertegnet 17. mai 1814.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-74@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20260524
+DTEND;VALUE=DATE:20260525
+SUMMARY:Første pinsedag
+DESCRIPTION:50 dager etter påske.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-75@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20260525
+DTEND;VALUE=DATE:20260526
+SUMMARY:Andre pinsedag
+DESCRIPTION:Dagen etter første pinsedag.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-76@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20261225
+DTEND;VALUE=DATE:20261226
+SUMMARY:Første juledag
+DESCRIPTION:Jesu Kristi fødsel.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-77@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20261226
+DTEND;VALUE=DATE:20261227
+SUMMARY:Andre juledag
+DESCRIPTION:Den andre juledagen.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-78@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20260320
+DTEND;VALUE=DATE:20260321
+SUMMARY:Id al-Fitr
+DESCRIPTION:Slutten på Ramadan. Tre dager med feiring etter en måneds faste. Ca. dato.\nCa. dato.\nKilde: https://islamsk.no
+CATEGORIES:Norsk kalender, Islamsk
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-79@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20260527
+DTEND;VALUE=DATE:20260528
+SUMMARY:Id al-Adha
+DESCRIPTION:Offerets fest. Minnes Ibrahims vilje til å ofre sin sønn. Ca. dato.\nCa. dato.\nKilde: https://islamsk.no
+CATEGORIES:Norsk kalender, Islamsk
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-80@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20260320
+DTEND;VALUE=DATE:20260321
+SUMMARY:Nouruz — Persisk nyttår
+DESCRIPTION:Persisk nyttår og vårens første dag. Over 3000 år gammel.\nKilde: https://en.wikipedia.org/wiki/Persian_calendar
+CATEGORIES:Norsk kalender, Persisk
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-81@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20261221
+DTEND;VALUE=DATE:20261222
+SUMMARY:Yalda-natt
+DESCRIPTION:Årets lengste natt. Familier samles til Hafez-poesi\, granatepler og historier.\nKilde: https://en.wikipedia.org/wiki/Persian_calendar
+CATEGORIES:Norsk kalender, Persisk
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-82@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20260218
+DTEND;VALUE=DATE:20260320
+SUMMARY:Ramadan
+DESCRIPTION:Fastemåneden. Datoene er tilnærmet.\nKilde: https://islamsk.no
+CATEGORIES:Norsk kalender, Islamsk
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-83@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20260103
+DTEND;VALUE=DATE:20260104
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-84@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20260110
+DTEND;VALUE=DATE:20260111
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-85@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20260118
+DTEND;VALUE=DATE:20260119
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-86@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20260126
+DTEND;VALUE=DATE:20260127
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-87@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20260201
+DTEND;VALUE=DATE:20260202
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-88@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20260209
+DTEND;VALUE=DATE:20260210
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-89@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20260217
+DTEND;VALUE=DATE:20260218
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-90@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20260224
+DTEND;VALUE=DATE:20260225
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-91@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20260303
+DTEND;VALUE=DATE:20260304
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-92@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20260311
+DTEND;VALUE=DATE:20260312
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-93@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20260319
+DTEND;VALUE=DATE:20260320
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-94@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20260325
+DTEND;VALUE=DATE:20260326
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-95@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20260402
+DTEND;VALUE=DATE:20260403
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-96@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20260410
+DTEND;VALUE=DATE:20260411
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-97@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20260417
+DTEND;VALUE=DATE:20260418
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-98@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20260424
+DTEND;VALUE=DATE:20260425
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-99@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20260501
+DTEND;VALUE=DATE:20260502
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-100@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20260509
+DTEND;VALUE=DATE:20260510
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-101@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20260516
+DTEND;VALUE=DATE:20260517
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-102@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20260523
+DTEND;VALUE=DATE:20260524
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-103@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20260531
+DTEND;VALUE=DATE:20260601
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-104@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20260608
+DTEND;VALUE=DATE:20260609
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-105@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20260615
+DTEND;VALUE=DATE:20260616
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-106@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20260621
+DTEND;VALUE=DATE:20260622
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-107@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20260630
+DTEND;VALUE=DATE:20260701
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-108@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20260707
+DTEND;VALUE=DATE:20260708
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-109@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20260715
+DTEND;VALUE=DATE:20260716
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-110@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20260721
+DTEND;VALUE=DATE:20260722
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-111@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20260729
+DTEND;VALUE=DATE:20260730
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-112@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20260806
+DTEND;VALUE=DATE:20260807
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-113@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20260812
+DTEND;VALUE=DATE:20260813
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-114@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20260820
+DTEND;VALUE=DATE:20260821
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-115@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20260828
+DTEND;VALUE=DATE:20260829
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-116@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20260904
+DTEND;VALUE=DATE:20260905
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-117@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20260911
+DTEND;VALUE=DATE:20260912
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-118@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20260918
+DTEND;VALUE=DATE:20260919
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-119@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20260926
+DTEND;VALUE=DATE:20260927
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-120@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20261003
+DTEND;VALUE=DATE:20261004
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-121@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20261010
+DTEND;VALUE=DATE:20261011
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-122@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20261018
+DTEND;VALUE=DATE:20261019
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-123@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20261026
+DTEND;VALUE=DATE:20261027
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-124@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20261101
+DTEND;VALUE=DATE:20261102
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-125@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20261109
+DTEND;VALUE=DATE:20261110
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-126@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20261117
+DTEND;VALUE=DATE:20261118
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-127@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20261124
+DTEND;VALUE=DATE:20261125
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-128@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20261201
+DTEND;VALUE=DATE:20261202
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-129@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20261209
+DTEND;VALUE=DATE:20261210
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-130@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20261217
+DTEND;VALUE=DATE:20261218
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-131@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20261223
+DTEND;VALUE=DATE:20261224
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-132@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20261230
+DTEND;VALUE=DATE:20261231
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-133@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20270101
+DTEND;VALUE=DATE:20270102
+SUMMARY:Nyttårsdag
+DESCRIPTION:Årets første dag. Offentlige kontorer\, banker og de fleste bedrifter er stengt.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-134@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20270325
+DTEND;VALUE=DATE:20270326
+SUMMARY:Skjærtorsdag
+DESCRIPTION:Torsdag før påske. Minnedag for Jesu siste nattverd med disiplene.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-135@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20270326
+DTEND;VALUE=DATE:20270327
+SUMMARY:Langfredag
+DESCRIPTION:Minnedag for Jesu Kristi korsfestelse.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-136@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20270328
+DTEND;VALUE=DATE:20270329
+SUMMARY:Første påskedag
+DESCRIPTION:Feirer Jesu oppstandelse. Viktigste kristne høytid.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-137@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20270329
+DTEND;VALUE=DATE:20270330
+SUMMARY:Andre påskedag
+DESCRIPTION:Andre dag i påsken. Offentlig helligdag i alle nordiske land.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-138@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20270501
+DTEND;VALUE=DATE:20270502
+SUMMARY:Arbeidernes dag
+DESCRIPTION:Internasjonal arbeiderdag. Feiret med tog i Oslo.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-139@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20270506
+DTEND;VALUE=DATE:20270507
+SUMMARY:Kristi himmelfartsdag
+DESCRIPTION:39 dager etter påske. Markerer Jesu himmelfart.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-140@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20270517
+DTEND;VALUE=DATE:20270518
+SUMMARY:Andre pinsedag
+DESCRIPTION:Dagen etter første pinsedag.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-141@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20270516
+DTEND;VALUE=DATE:20270517
+SUMMARY:Første pinsedag
+DESCRIPTION:50 dager etter påske.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-142@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20271225
+DTEND;VALUE=DATE:20271226
+SUMMARY:Første juledag
+DESCRIPTION:Jesu Kristi fødsel.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-143@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20271226
+DTEND;VALUE=DATE:20271227
+SUMMARY:Andre juledag
+DESCRIPTION:Den andre juledagen.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-144@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20270310
+DTEND;VALUE=DATE:20270311
+SUMMARY:Id al-Fitr
+DESCRIPTION:Slutten på Ramadan. Ca. dato.\nCa. dato.\nKilde: https://islamsk.no
+CATEGORIES:Norsk kalender, Islamsk
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-145@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20270517
+DTEND;VALUE=DATE:20270518
+SUMMARY:Id al-Adha
+DESCRIPTION:Offerets fest. Ca. dato.\nCa. dato.\nKilde: https://islamsk.no
+CATEGORIES:Norsk kalender, Islamsk
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-146@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20270320
+DTEND;VALUE=DATE:20270321
+SUMMARY:Nouruz — Persisk nyttår
+DESCRIPTION:Persisk nyttår og vårens første dag.\nKilde: https://en.wikipedia.org/wiki/Persian_calendar
+CATEGORIES:Norsk kalender, Persisk
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-147@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20271221
+DTEND;VALUE=DATE:20271222
+SUMMARY:Yalda-natt
+DESCRIPTION:Årets lengste natt.\nKilde: https://en.wikipedia.org/wiki/Persian_calendar
+CATEGORIES:Norsk kalender, Persisk
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-148@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20270207
+DTEND;VALUE=DATE:20270309
+SUMMARY:Ramadan
+DESCRIPTION:Fastemåneden. Datoene er tilnærmet.\nKilde: https://islamsk.no
+CATEGORIES:Norsk kalender, Islamsk
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-149@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20270107
+DTEND;VALUE=DATE:20270108
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-150@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20270115
+DTEND;VALUE=DATE:20270116
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-151@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20270122
+DTEND;VALUE=DATE:20270123
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-152@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20270129
+DTEND;VALUE=DATE:20270130
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-153@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20270206
+DTEND;VALUE=DATE:20270207
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-154@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20270214
+DTEND;VALUE=DATE:20270215
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-155@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20270220
+DTEND;VALUE=DATE:20270221
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-156@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20270228
+DTEND;VALUE=DATE:20270301
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-157@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20270308
+DTEND;VALUE=DATE:20270309
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-158@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20270315
+DTEND;VALUE=DATE:20270316
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-159@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20270322
+DTEND;VALUE=DATE:20270323
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-160@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20270329
+DTEND;VALUE=DATE:20270330
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-161@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20270406
+DTEND;VALUE=DATE:20270407
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-162@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20270413
+DTEND;VALUE=DATE:20270414
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-163@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20270420
+DTEND;VALUE=DATE:20270421
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-164@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20270428
+DTEND;VALUE=DATE:20270429
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-165@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20270506
+DTEND;VALUE=DATE:20270507
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-166@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20270513
+DTEND;VALUE=DATE:20270514
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-167@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20270520
+DTEND;VALUE=DATE:20270521
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-168@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20270527
+DTEND;VALUE=DATE:20270528
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-169@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20270604
+DTEND;VALUE=DATE:20270605
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-170@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20270611
+DTEND;VALUE=DATE:20270612
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-171@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20270618
+DTEND;VALUE=DATE:20270619
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-172@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20270626
+DTEND;VALUE=DATE:20270627
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-173@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20270704
+DTEND;VALUE=DATE:20270705
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-174@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20270710
+DTEND;VALUE=DATE:20270711
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-175@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20270718
+DTEND;VALUE=DATE:20270719
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-176@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20270725
+DTEND;VALUE=DATE:20270726
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-177@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20270802
+DTEND;VALUE=DATE:20270803
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-178@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20270809
+DTEND;VALUE=DATE:20270810
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-179@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20270817
+DTEND;VALUE=DATE:20270818
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-180@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20270824
+DTEND;VALUE=DATE:20270825
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-181@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20270831
+DTEND;VALUE=DATE:20270901
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-182@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20270908
+DTEND;VALUE=DATE:20270909
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-183@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20270915
+DTEND;VALUE=DATE:20270916
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-184@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20270922
+DTEND;VALUE=DATE:20270923
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-185@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20270930
+DTEND;VALUE=DATE:20271001
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-186@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20271007
+DTEND;VALUE=DATE:20271008
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-187@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20271015
+DTEND;VALUE=DATE:20271016
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-188@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20271022
+DTEND;VALUE=DATE:20271023
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-189@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20271030
+DTEND;VALUE=DATE:20271031
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-190@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20271106
+DTEND;VALUE=DATE:20271107
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-191@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20271113
+DTEND;VALUE=DATE:20271114
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-192@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20271120
+DTEND;VALUE=DATE:20271121
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-193@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20271128
+DTEND;VALUE=DATE:20271129
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-194@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20271206
+DTEND;VALUE=DATE:20271207
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-195@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20271213
+DTEND;VALUE=DATE:20271214
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-196@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20271220
+DTEND;VALUE=DATE:20271221
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-197@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20271228
+DTEND;VALUE=DATE:20271229
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-198@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20280101
+DTEND;VALUE=DATE:20280102
+SUMMARY:Nyttårsdag
+DESCRIPTION:Årets første dag. Offentlige kontorer\, banker og de fleste bedrifter er stengt.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-199@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20280413
+DTEND;VALUE=DATE:20280414
+SUMMARY:Skjærtorsdag
+DESCRIPTION:Torsdag før påske. Minnedag for Jesu siste nattverd med disiplene.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-200@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20280414
+DTEND;VALUE=DATE:20280415
+SUMMARY:Langfredag
+DESCRIPTION:Minnedag for Jesu Kristi korsfestelse.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-201@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20280416
+DTEND;VALUE=DATE:20280417
+SUMMARY:Første påskedag
+DESCRIPTION:Feirer Jesu oppstandelse. Viktigste kristne høytid.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-202@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20280417
+DTEND;VALUE=DATE:20280418
+SUMMARY:Andre påskedag
+DESCRIPTION:Andre dag i påsken. Offentlig helligdag i alle nordiske land.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-203@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20280501
+DTEND;VALUE=DATE:20280502
+SUMMARY:Arbeidernes dag
+DESCRIPTION:Internasjonal arbeiderdag. Feiret med tog i Oslo.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-204@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20280525
+DTEND;VALUE=DATE:20280526
+SUMMARY:Kristi himmelfartsdag
+DESCRIPTION:39 dager etter påske. Markerer Jesu himmelfart.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-205@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20280517
+DTEND;VALUE=DATE:20280518
+SUMMARY:Grunnlovsdagen
+DESCRIPTION:Norges nasjonaldag. Grunnloven ble undertegnet 17. mai 1814.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-206@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20280604
+DTEND;VALUE=DATE:20280605
+SUMMARY:Første pinsedag
+DESCRIPTION:50 dager etter påske.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-207@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20280605
+DTEND;VALUE=DATE:20280606
+SUMMARY:Andre pinsedag
+DESCRIPTION:Dagen etter første pinsedag.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-208@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20281225
+DTEND;VALUE=DATE:20281226
+SUMMARY:Første juledag
+DESCRIPTION:Jesu Kristi fødsel.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-209@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20281226
+DTEND;VALUE=DATE:20281227
+SUMMARY:Andre juledag
+DESCRIPTION:Den andre juledagen.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-210@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20280226
+DTEND;VALUE=DATE:20280227
+SUMMARY:Id al-Fitr
+DESCRIPTION:Slutten på Ramadan. Ca. dato.\nCa. dato.\nKilde: https://islamsk.no
+CATEGORIES:Norsk kalender, Islamsk
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-211@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20280505
+DTEND;VALUE=DATE:20280506
+SUMMARY:Id al-Adha
+DESCRIPTION:Offerets fest. Ca. dato.\nCa. dato.\nKilde: https://islamsk.no
+CATEGORIES:Norsk kalender, Islamsk
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-212@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20280320
+DTEND;VALUE=DATE:20280321
+SUMMARY:Nouruz — Persisk nyttår
+DESCRIPTION:Persisk nyttår og vårens første dag.\nKilde: https://en.wikipedia.org/wiki/Persian_calendar
+CATEGORIES:Norsk kalender, Persisk
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-213@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20281221
+DTEND;VALUE=DATE:20281222
+SUMMARY:Yalda-natt
+DESCRIPTION:Årets lengste natt.\nKilde: https://en.wikipedia.org/wiki/Persian_calendar
+CATEGORIES:Norsk kalender, Persisk
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-214@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20280128
+DTEND;VALUE=DATE:20280227
+SUMMARY:Ramadan
+DESCRIPTION:Fastemåneden. Datoene er tilnærmet.\nKilde: https://islamsk.no
+CATEGORIES:Norsk kalender, Islamsk
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-215@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20280104
+DTEND;VALUE=DATE:20280105
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-216@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20280112
+DTEND;VALUE=DATE:20280113
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-217@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20280119
+DTEND;VALUE=DATE:20280120
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-218@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20280127
+DTEND;VALUE=DATE:20280128
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-219@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20280203
+DTEND;VALUE=DATE:20280204
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-220@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20280210
+DTEND;VALUE=DATE:20280211
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-221@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20280218
+DTEND;VALUE=DATE:20280219
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-222@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20280225
+DTEND;VALUE=DATE:20280226
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-223@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20280303
+DTEND;VALUE=DATE:20280304
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-224@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20280311
+DTEND;VALUE=DATE:20280312
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-225@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20280318
+DTEND;VALUE=DATE:20280319
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-226@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20280326
+DTEND;VALUE=DATE:20280327
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-227@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20280402
+DTEND;VALUE=DATE:20280403
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-228@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20280409
+DTEND;VALUE=DATE:20280410
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-229@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20280417
+DTEND;VALUE=DATE:20280418
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-230@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20280424
+DTEND;VALUE=DATE:20280425
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-231@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20280502
+DTEND;VALUE=DATE:20280503
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-232@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20280509
+DTEND;VALUE=DATE:20280510
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-233@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20280516
+DTEND;VALUE=DATE:20280517
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-234@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20280524
+DTEND;VALUE=DATE:20280525
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-235@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20280531
+DTEND;VALUE=DATE:20280601
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-236@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20280607
+DTEND;VALUE=DATE:20280608
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-237@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20280615
+DTEND;VALUE=DATE:20280616
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-238@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20280622
+DTEND;VALUE=DATE:20280623
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-239@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20280630
+DTEND;VALUE=DATE:20280701
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-240@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20280707
+DTEND;VALUE=DATE:20280708
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-241@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20280714
+DTEND;VALUE=DATE:20280715
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-242@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20280722
+DTEND;VALUE=DATE:20280723
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-243@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20280729
+DTEND;VALUE=DATE:20280730
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-244@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20280805
+DTEND;VALUE=DATE:20280806
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-245@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20280813
+DTEND;VALUE=DATE:20280814
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-246@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20280820
+DTEND;VALUE=DATE:20280821
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-247@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20280828
+DTEND;VALUE=DATE:20280829
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-248@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20280904
+DTEND;VALUE=DATE:20280905
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-249@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20280911
+DTEND;VALUE=DATE:20280912
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-250@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20280919
+DTEND;VALUE=DATE:20280920
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-251@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20280926
+DTEND;VALUE=DATE:20280927
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-252@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20281004
+DTEND;VALUE=DATE:20281005
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-253@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20281011
+DTEND;VALUE=DATE:20281012
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-254@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20281018
+DTEND;VALUE=DATE:20281019
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-255@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20281026
+DTEND;VALUE=DATE:20281027
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-256@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20281102
+DTEND;VALUE=DATE:20281103
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-257@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20281109
+DTEND;VALUE=DATE:20281110
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-258@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20281117
+DTEND;VALUE=DATE:20281118
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-259@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20281124
+DTEND;VALUE=DATE:20281125
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-260@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20281202
+DTEND;VALUE=DATE:20281203
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-261@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20281209
+DTEND;VALUE=DATE:20281210
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-262@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20281216
+DTEND;VALUE=DATE:20281217
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-263@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20281224
+DTEND;VALUE=DATE:20281225
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-264@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20281231
+DTEND;VALUE=DATE:20290101
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-265@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20290101
+DTEND;VALUE=DATE:20290102
+SUMMARY:Nyttårsdag
+DESCRIPTION:Årets første dag. Offentlige kontorer\, banker og de fleste bedrifter er stengt.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-266@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20290329
+DTEND;VALUE=DATE:20290330
+SUMMARY:Skjærtorsdag
+DESCRIPTION:Torsdag før påske. Minnedag for Jesu siste nattverd med disiplene.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-267@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20290330
+DTEND;VALUE=DATE:20290331
+SUMMARY:Langfredag
+DESCRIPTION:Minnedag for Jesu Kristi korsfestelse.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-268@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20290401
+DTEND;VALUE=DATE:20290402
+SUMMARY:Første påskedag
+DESCRIPTION:Feirer Jesu oppstandelse. Viktigste kristne høytid.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-269@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20290402
+DTEND;VALUE=DATE:20290403
+SUMMARY:Andre påskedag
+DESCRIPTION:Andre dag i påsken. Offentlig helligdag i alle nordiske land.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-270@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20290501
+DTEND;VALUE=DATE:20290502
+SUMMARY:Arbeidernes dag
+DESCRIPTION:Internasjonal arbeiderdag. Feiret med tog i Oslo.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-271@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20290510
+DTEND;VALUE=DATE:20290511
+SUMMARY:Kristi himmelfartsdag
+DESCRIPTION:39 dager etter påske. Markerer Jesu himmelfart.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-272@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20290517
+DTEND;VALUE=DATE:20290518
+SUMMARY:Grunnlovsdagen
+DESCRIPTION:Norges nasjonaldag. Grunnloven ble undertegnet 17. mai 1814.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-273@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20290520
+DTEND;VALUE=DATE:20290521
+SUMMARY:Første pinsedag
+DESCRIPTION:50 dager etter påske.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-274@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20290521
+DTEND;VALUE=DATE:20290522
+SUMMARY:Andre pinsedag
+DESCRIPTION:Dagen etter første pinsedag.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-275@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20291225
+DTEND;VALUE=DATE:20291226
+SUMMARY:Første juledag
+DESCRIPTION:Jesu Kristi fødsel.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-276@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20291226
+DTEND;VALUE=DATE:20291227
+SUMMARY:Andre juledag
+DESCRIPTION:Den andre juledagen.\nKilde: https://lovdata.no
+CATEGORIES:Norsk kalender, Helligdag
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-277@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20290214
+DTEND;VALUE=DATE:20290215
+SUMMARY:Id al-Fitr
+DESCRIPTION:Slutten på Ramadan. Ca. dato.\nCa. dato.\nKilde: https://islamsk.no
+CATEGORIES:Norsk kalender, Islamsk
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-278@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20290423
+DTEND;VALUE=DATE:20290424
+SUMMARY:Id al-Adha
+DESCRIPTION:Offerets fest. Ca. dato.\nCa. dato.\nKilde: https://islamsk.no
+CATEGORIES:Norsk kalender, Islamsk
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-279@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20290320
+DTEND;VALUE=DATE:20290321
+SUMMARY:Nouruz — Persisk nyttår
+DESCRIPTION:Persisk nyttår og vårens første dag.\nKilde: https://en.wikipedia.org/wiki/Persian_calendar
+CATEGORIES:Norsk kalender, Persisk
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-280@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20291221
+DTEND;VALUE=DATE:20291222
+SUMMARY:Yalda-natt
+DESCRIPTION:Årets lengste natt.\nKilde: https://en.wikipedia.org/wiki/Persian_calendar
+CATEGORIES:Norsk kalender, Persisk
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-281@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20290116
+DTEND;VALUE=DATE:20290215
+SUMMARY:Ramadan
+DESCRIPTION:Fastemåneden. Datoene er tilnærmet.\nKilde: https://islamsk.no
+CATEGORIES:Norsk kalender, Islamsk
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-282@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20290108
+DTEND;VALUE=DATE:20290109
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-283@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20290115
+DTEND;VALUE=DATE:20290116
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-284@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20290122
+DTEND;VALUE=DATE:20290123
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-285@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20290130
+DTEND;VALUE=DATE:20290131
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-286@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20290206
+DTEND;VALUE=DATE:20290207
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-287@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20290213
+DTEND;VALUE=DATE:20290214
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-288@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20290221
+DTEND;VALUE=DATE:20290222
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-289@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20290228
+DTEND;VALUE=DATE:20290301
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-290@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20290308
+DTEND;VALUE=DATE:20290309
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-291@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20290315
+DTEND;VALUE=DATE:20290316
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-292@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20290322
+DTEND;VALUE=DATE:20290323
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-293@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20290330
+DTEND;VALUE=DATE:20290331
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-294@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20290406
+DTEND;VALUE=DATE:20290407
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-295@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20290413
+DTEND;VALUE=DATE:20290414
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-296@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20290421
+DTEND;VALUE=DATE:20290422
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-297@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20290428
+DTEND;VALUE=DATE:20290429
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-298@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20290506
+DTEND;VALUE=DATE:20290507
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-299@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20290513
+DTEND;VALUE=DATE:20290514
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-300@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20290520
+DTEND;VALUE=DATE:20290521
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-301@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20290528
+DTEND;VALUE=DATE:20290529
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-302@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20290604
+DTEND;VALUE=DATE:20290605
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-303@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20290612
+DTEND;VALUE=DATE:20290613
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-304@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20290619
+DTEND;VALUE=DATE:20290620
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-305@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20290626
+DTEND;VALUE=DATE:20290627
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-306@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20290704
+DTEND;VALUE=DATE:20290705
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-307@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20290711
+DTEND;VALUE=DATE:20290712
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-308@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20290718
+DTEND;VALUE=DATE:20290719
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-309@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20290726
+DTEND;VALUE=DATE:20290727
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-310@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20290802
+DTEND;VALUE=DATE:20290803
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-311@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20290810
+DTEND;VALUE=DATE:20290811
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-312@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20290817
+DTEND;VALUE=DATE:20290818
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-313@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20290824
+DTEND;VALUE=DATE:20290825
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-314@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20290901
+DTEND;VALUE=DATE:20290902
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-315@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20290908
+DTEND;VALUE=DATE:20290909
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-316@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20290916
+DTEND;VALUE=DATE:20290917
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-317@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20290923
+DTEND;VALUE=DATE:20290924
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-318@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20290930
+DTEND;VALUE=DATE:20291001
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-319@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20291008
+DTEND;VALUE=DATE:20291009
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-320@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20291015
+DTEND;VALUE=DATE:20291016
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-321@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20291022
+DTEND;VALUE=DATE:20291023
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-322@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20291030
+DTEND;VALUE=DATE:20291031
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-323@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20291106
+DTEND;VALUE=DATE:20291107
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-324@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20291114
+DTEND;VALUE=DATE:20291115
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-325@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20291121
+DTEND;VALUE=DATE:20291122
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-326@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20291128
+DTEND;VALUE=DATE:20291129
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-327@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20291206
+DTEND;VALUE=DATE:20291207
+SUMMARY:🌕 Fullmåne
+DESCRIPTION:Fullt opplyst. Høyvann.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-328@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20291213
+DTEND;VALUE=DATE:20291214
+SUMMARY:🌗 Siste kvarter
+DESCRIPTION:Venstre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-329@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20291220
+DTEND;VALUE=DATE:20291221
+SUMMARY:🌑 Nymåne
+DESCRIPTION:Usynlig. Start av månedssyklusen.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+BEGIN:VEVENT
+UID:norsk-kalender-330@bariplux
+DTSTAMP:20260901T000000Z
+DTSTART;VALUE=DATE:20291228
+DTEND;VALUE=DATE:20291229
+SUMMARY:🌓 Første kvarter
+DESCRIPTION:Høyre halvdel opplyst.\nKilde: https://www.timeanddate.com/moon/norway
+CATEGORIES:Norsk kalender, Månefase
+END:VEVENT
+END:VCALENDAR

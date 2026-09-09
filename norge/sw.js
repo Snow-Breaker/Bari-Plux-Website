@@ -1,5 +1,5 @@
-const C='skolekalender-v1';
-const ASSETS=['skolekalender-bfk.html','kalender.html','skolekalender.ics','manifest.webmanifest','icon.svg','flagofnorway.png'];
+const C='norge-v2';
+const ASSETS=['skolekalender-bfk.html','kalender.html','skolekalender.ics','kalender.ics','manifest.webmanifest','manifest-kalender.webmanifest','icon.svg','flagofnorway.png'];
 
 self.addEventListener('install',e=>{
   e.waitUntil(caches.open(C).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting()));

@@ -1,0 +1,16 @@
+{
+  "name": "Norsk Kalender · 2025–2029",
+  "short_name": "Norsk Kalender",
+  "description": "Norske helligdager, islamske høytider, persiske feiringer og månefaser for 2025–2029.",
+  "lang": "nb",
+  "start_url": "kalender.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#04060e",
+  "theme_color": "#04060e",
+  "icons": [
+    {"src":"icon.svg", "sizes":"any", "type":"image/svg+xml", "purpose":"any"},
+    {"src":"flagofnorway.png", "sizes":"any", "type":"image/png", "purpose":"any"}
+  ]
+}
