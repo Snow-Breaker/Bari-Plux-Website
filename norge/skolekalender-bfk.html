@@ -521,6 +521,13 @@ body.fa .tl-cd-l{font-family:var(--f-fa)}
 body.fa .empty-btn{font-family:var(--f-fa)}
 
 /* FOOTER */
+.kilder{margin:28px 0 0;padding:18px 20px;background:var(--card);border:1.5px solid var(--rim);border-radius:18px}
+.kilder-t{font-family:var(--f-m);font-size:9px;letter-spacing:1.6px;text-transform:uppercase;color:var(--ink3);margin-bottom:10px}
+.kilder-l{display:flex;flex-wrap:wrap;gap:8px}
+.kilder-l a{font-size:12px;font-weight:700;color:var(--blu);text-decoration:none;border:1px solid var(--rim);background:var(--bg);padding:6px 13px;border-radius:50px;transition:all .18s}
+.kilder-l a:hover{border-color:var(--acc-r);color:var(--acc2)}
+.kilder-n{margin-top:10px;font-size:10.5px;color:var(--ink4)}
+body.fa .kilder-l a,body.fa .kilder-n{font-family:var(--f-fa)}
 .footer{margin-top:56px;padding:20px 0 14px;border-top:1.5px solid var(--rim);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;}
 .footer-t{font-size:11px;color:var(--ink3);line-height:1.8;font-weight:500}
 .footer-t a{color:var(--nor);text-decoration:none}
@@ -724,6 +731,18 @@ body.fa .footer-t{font-family:var(--f-fa)}
 <div id="v-grid"></div>
 <div id="v-list"><div class="tl" id="v-tl"></div></div>
 
+<section class="kilder" aria-label="Kilder">
+  <div class="kilder-t" id="kil-t">Kilder</div>
+  <div class="kilder-l">
+    <a href="https://www.udir.no" target="_blank" rel="noopener">Utdanningsdirektoratet</a>
+    <a href="https://www.bfk.no" target="_blank" rel="noopener">Buskerud fylkeskommune</a>
+    <a href="https://www.uio.no" target="_blank" rel="noopener">Universitetet i Oslo</a>
+    <a href="https://islamsk.no" target="_blank" rel="noopener">Islamsk Råd Norge</a>
+    <a href="https://lovdata.no" target="_blank" rel="noopener">Lovdata</a>
+  </div>
+  <div class="kilder-n" id="kil-n"></div>
+</section>
+
 <footer class="footer">
   <div class="footer-t" id="ft-txt">
     Skolekalender 2026–2029 · <a href="https://www.udir.no" target="_blank">Udir.no</a> ·
@@ -832,7 +851,7 @@ const TX={
     ovTitle:"Årsoversikt · Skoleår",lgSk:"Skole (start)",lgHd:"Helligdag",lgFr:"Ferie/tilrettelagt",
     lgRm:"Ramadan/Eid",lgIs:"Islamsk (ca.)",lgUn:"Universitet",noNxt:"Ingen kommende hendelser",
     wd:["ma","ti","on","to","fr","lø","sø"],
-    emT:"Ingen hendelser funnet",emBtn:"Vis alle",wkT:"Uke",accL:"Akzent",
+    emT:"Ingen hendelser funnet",emBtn:"Vis alle",wkT:"Uke",accL:"Akzent",kilT:"Kilder",kilN:"Islamske høytider er tilnærmede (± 1–2 dager) og fastsettes ved måneobservasjon.",
   },
   en:{
     navTt:"School Calendar · Norway",navSb:"2026–2029 · Buskerud & Oslo",
@@ -861,7 +880,7 @@ const TX={
     ovTitle:"Year Overview",lgSk:"School (start)",lgHd:"Public holiday",lgFr:"Holiday/off",
     lgRm:"Ramadan/Eid",lgIs:"Islamic (approx.)",lgUn:"University",noNxt:"No upcoming events",
     wd:["Mo","Tu","We","Th","Fr","Sa","Su"],
-    emT:"No events found",emBtn:"Show all",wkT:"Week",accL:"Accent",
+    emT:"No events found",emBtn:"Show all",wkT:"Week",accL:"Accent",kilT:"Sources",kilN:"Islamic holidays are approximate (±1–2 days) and are confirmed by moon sighting.",
   },
   fa:{
     navTt:"تقویم مدرسه · نروژ",navSb:"۲۰۲۶–۲۰۲۹ · بوسکرود و اسلو",
@@ -890,7 +909,7 @@ const TX={
     ovTitle:"نمای سالانه",lgSk:"مدرسه (شروع)",lgHd:"تعطیل رسمی",lgFr:"تعطیلی",
     lgRm:"رمضان/عید",lgIs:"اعیاد اسلامی (تقریبی)",lgUn:"دانشگاه",noNxt:"رویدادی در پیش نیست",
     wd:["د","س","چ","پ","ج","ش","ی"],
-    emT:"رویدادی یافت نشد",emBtn:"نمایش همه",wkT:"هفته",accL:"رنگ",
+    emT:"رویدادی یافت نشد",emBtn:"نمایش همه",wkT:"هفته",accL:"رنگ",kilT:"منابع",kilN:"اعیاد اسلامی تقریبی است (± ۱–۲ روز) و پس از رؤیت هلال تأیید میشود.",
   }
 };
 
@@ -1071,6 +1090,8 @@ function render(){
   document.getElementById('exp-btn-txt').textContent=t.expT;
   document.getElementById('exp-popup-title').textContent=t.expTtl;
   document.getElementById('acc-lbl').textContent=t.accL;
+  document.getElementById('kil-t').textContent=t.kilT;
+  document.getElementById('kil-n').textContent=t.kilN;
   renderNextPin(t);
 
   const imgs={school:"https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=1400&q=80",uni:"https://images.unsplash.com/photo-1562774053-701939374585?w=1400&q=80"};
@@ -1400,6 +1421,7 @@ function allEvents(){
   Object.keys(UNI).forEach(y=>UNI[y].forEach(e=>out.push(Object.assign({},e,{cat:'Universitet'}))));
   return out.sort((a,b)=>pd(a.start)-pd(b.start));
 }
+const SRC={ramazan:'https://islamsk.no',islamsk:'https://islamsk.no',helligdag:'https://lovdata.no',skole:'https://www.udir.no',ferie:'https://bfk.no',uni:'https://www.uio.no'};
 function exportIcs(all){
   const evs=all?allEvents():getEvents();
   const dCal=x=>{
@@ -1422,8 +1444,9 @@ function exportIcs(all){
       L.push('DTEND;VALUE=DATE:'+dCal(new Date(e.getFullYear(),e.getMonth(),e.getDate()+1)));
     }
     L.push('SUMMARY:'+esc(gName(ev)));
-    const desc=esc(gDesc(ev)||'');
-    if(desc)L.push('DESCRIPTION:'+desc);
+    const gd=gDesc(ev)||'';
+    const full=gd+(SRC[ev.type]?((gd?'\n':'')+'Kilde: '+SRC[ev.type]):'');
+    if(full)L.push('DESCRIPTION:'+esc(full));
     if(ev.cat)L.push('CATEGORIES:'+ev.cat);
     L.push('END:VEVENT');
   });
