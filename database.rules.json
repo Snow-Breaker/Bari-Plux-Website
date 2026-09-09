@@ -386,6 +386,9 @@
         "visible": {
           ".validate": "newData.isBoolean()"
         },
+        "is_pro_gated": {
+          ".validate": "newData.isBoolean()"
+        },
         "emulator": {
           ".validate": "newData.hasChildren() || !newData.exists()",
           "$idx": {
