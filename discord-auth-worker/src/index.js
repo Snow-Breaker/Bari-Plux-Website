@@ -1,6 +1,7 @@
 import { purgeExpiredPro, enforceProExpiryForUid, grantProSafe, proDurationMs } from './proBilling.js';
 import { handleStripeCreateCheckout, handleStripeWebhook } from './stripe.js';
 import { createAdminAuthRouter } from './adminAuth.js';
+import { handleChatMessageSend, handleChatMessageEdit, handleChatMessageDelete } from './chatMessages.js';
 
 export default {
   async fetch(request, env) {
@@ -149,8 +150,22 @@ export default {
     if (request.method === 'POST' && path === '/chat/media/upload') {
       return handleChatMediaUpload(request, env, corsHeaders);
     }
+    // GET /chat/media/download
     if (request.method === 'GET' && path === '/chat/media/download') {
       return handleChatMediaDownload(request, env, corsHeaders);
+    }
+
+    // ── Chat messages (rule-enforcing endpoints; direct client writes to
+    //    lobby_chat/messages are disabled in database.rules.json) ──
+    const chatDeps = buildChatDeps(env);
+    if (request.method === 'POST' && path === '/chat/message/send') {
+      return handleChatMessageSend(request, corsHeaders, chatDeps);
+    }
+    if (request.method === 'POST' && path === '/chat/message/edit') {
+      return handleChatMessageEdit(request, corsHeaders, chatDeps);
+    }
+    if (request.method === 'POST' && path === '/chat/message/delete') {
+      return handleChatMessageDelete(request, corsHeaders, chatDeps);
     }
 
     // ── Admin panel gate (password + TOTP; does not touch Discord OAuth / claim-token) ──
@@ -1534,6 +1549,24 @@ async function adminPatchDatabase(path, data, env) {
     return false;
   }
   return true;
+}
+
+/** Service-account RTDB deps for the chat message endpoints. */
+function buildChatDeps(env) {
+  return {
+    verifyUser: async (idToken) => {
+      const user = await verifyFirebaseUser(idToken, env);
+      if (!user) return null;
+      return {
+        uid: user.localId,
+        email: (user.email || '').toLowerCase()
+      };
+    },
+    read: (path) => adminGetDatabaseAccess(path, env),
+    writeNode: (path, data) => adminPutDatabase(path, data, env),
+    patchNode: (path, data) => adminPatchDatabase(path, data, env),
+    deleteNode: (path) => adminDeleteDatabase(path, null, env)
+  };
 }
 
 /** Rule-bypassing delete (service account access_token). */
