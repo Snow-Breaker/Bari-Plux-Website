@@ -2851,6 +2851,14 @@ async function saveFeatureFlag() {
             showToast('⚠️ That key is a catalogued page feature — open its page', 'danger');
             return;
         }
+        if (key === TAC_GRAPHICS_APPLY_ENABLED_KEY) {
+            // Guard the app's default-OFF safety property: the generic form defaults to
+            // enabled:true, which would immediately re-enable TAC graphics apply. The dedicated
+            // TAC Graphics Preset Apply card is the only sanctioned way to flip this key.
+            keyError.style.display = 'block';
+            showToast('⚠️ tac_graphics_apply_enabled is managed via the TAC Graphics Preset Apply card', 'danger');
+            return;
+        }
     }
     keyError.style.display = 'none';
 
@@ -3407,6 +3415,55 @@ async function saveRemoteConfig() {
     }
 }
 
+/** TAC graphics-preset apply remote switch (feature_flags_3x/tac_graphics_apply_enabled). This is
+ * the inverse-default sibling of every other flag in this panel: BPT's TacGraphicsApplyGate only
+ * allows applying graphics presets on the TAC profile when the key is present AND enabled
+ * (IsExplicitlyOn), so an absent key is blocked, not open - the exact opposite of GetFlag's
+ * fail-open default. The generic "Add Flag" form is deliberately barred from creating this key too
+ * (see saveFeatureFlag), so the only place it can be turned on is this card, which always writes
+ * enabled:false until the admin checks the box. Scoped to 'tac' so no other emulator can ever be
+ * affected by it, matching the admin panel's EMULATOR_TAGS vocabulary. */
+const TAC_GRAPHICS_APPLY_ENABLED_KEY = 'tac_graphics_apply_enabled';
+const TAC_GRAPHICS_APPLY_ROOT = 'feature_flags_3x/' + TAC_GRAPHICS_APPLY_ENABLED_KEY;
+
+async function loadTacGraphicsApplyToggle() {
+    if (!db) return;
+    const box = document.getElementById('tacGraphicsApplyEnabled');
+    const status = document.getElementById('tacGraphicsApplyStatus');
+    if (!box) return;
+    try {
+        const snap = await db.ref(TAC_GRAPHICS_APPLY_ROOT).once('value');
+        const flag = snap.val();
+        box.checked = !!(flag && flag.enabled === true);
+        if (status) status.textContent = box.checked
+            ? 'ON - graphics preset apply is allowed on TenStore Android Connect right now'
+            : 'OFF by default - graphics preset apply stays blocked on TenStore Android Connect';
+    } catch (e) {
+        if (status) status.textContent = '';
+        console.error(e);
+    }
+}
+
+async function saveTacGraphicsApplyToggle() {
+    if (!db) return;
+    const enabled = document.getElementById('tacGraphicsApplyEnabled').checked;
+    try {
+        await db.ref(TAC_GRAPHICS_APPLY_ROOT).set({
+            enabled,
+            visible: true,
+            is_pro_gated: false,
+            min_role: 'free',
+            emulator: ['tac'],
+            updated_at: Date.now()
+        });
+        showToast(enabled ? '✅ TAC graphics preset apply ENABLED (TenStore Android Connect)' : '⏸️ TAC graphics preset apply disabled (TenStore Android Connect)', 'success');
+        loadTacGraphicsApplyToggle();
+        loadFeatureFlags();
+    } catch (e) {
+        showToast('⚠️ Failed to save TAC graphics apply toggle: ' + e.message, 'danger');
+    }
+}
+
 /** Content Updates (BPT) - the 4 real DataBase folders DatabaseAssetUpdateService.cs offers as
  * standalone updates (CustomKeymaps/iPadView/MuMuKeymap/ADB). Same "blank/missing = no update
  * offered" fail-open shape as every other app_config/*_3x node here - the client only offers an
@@ -3565,7 +3622,7 @@ function switchTab(tab, btn) {
     if(tab==='reports') loadReports();
     if(tab==='errors') loadErrors();
     if(tab==='chatMod') { loadChatMod(); loadChatSlowMode(); }
-    if(tab==='featureFlags') { loadFeatureFlags(); loadRemoteConfig(); loadDatabaseAssets(); }
+    if(tab==='featureFlags') { loadFeatureFlags(); loadRemoteConfig(); loadDatabaseAssets(); loadTacGraphicsApplyToggle(); }
     else if (typeof closePageFlagDetail === 'function') closePageFlagDetail();
     if(tab==='updates') loadUpdateConfig();
     if(tab==='pause') loadPauseConfig();
