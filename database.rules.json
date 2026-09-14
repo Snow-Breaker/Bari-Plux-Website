@@ -205,9 +205,9 @@
       }
     },
     "discordUsers": {
-      ".read": "auth != null",
+      ".read": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'",
       "$uid": {
-        ".read": "auth != null",
+        ".read": "auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com'",
         ".write": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com')",
         ".validate": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || auth.token.email === 'mister.attaye@gmail.com' || ((!newData.hasChild('blocked') || ((!data.exists() || !data.hasChild('blocked')) && newData.child('blocked').val() !== true) || newData.child('blocked').val() === data.child('blocked').val()) && (!newData.hasChild('forceLogout') || (!data.hasChild('forceLogout') && !newData.hasChild('forceLogout')) || (data.hasChild('forceLogout') && newData.child('forceLogout').val() === data.child('forceLogout').val())) && (!newData.hasChild('role') || (!data.exists() && !newData.hasChild('role')) || (data.hasChild('role') && newData.child('role').val() === data.child('role').val()) || (!data.hasChild('role') && !newData.hasChild('role'))))",
         "joinedAt": {
