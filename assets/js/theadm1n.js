@@ -20,6 +20,8 @@ let cmUserFilter = 'all', cmReportFilter = 'all';
 let activeFilter = 'all', activeReportFilter = 'all';
 let userPage = 1, reportPage = 1;
 const PAGE_SIZE = 15;
+let usersMasked = true;                 /* hide user IDs/emails in lists by default */
+const revealedUserRows = new Set();     /* per-row reveals; cleared on Hide All */
 let db = null, _currentUser = null;
 let usersListener = null, reportsListener = null, errorsListener = null;
 let allErrors = [];
@@ -566,6 +568,7 @@ function initApp() {
     }
 
     ensureDb();
+    updateMaskButtons();
 
     if (_appInited) {
         loadUsers();
@@ -672,6 +675,82 @@ function parseUserMap(d) {
         proDeviceBoundAt: u.proDeviceBoundAt || null,
         proDeviceChangeAllowed: u.proDeviceChangeAllowed === true
     }));
+}
+
+/* ===== Sensitive-field masking (IDs/emails hidden by default, j***@g***.com) ===== */
+
+function maskEmailAddress(email) {
+    const s = String(email == null ? '' : email).trim();
+    if (!s) return '—';
+    const at = s.indexOf('@');
+    if (at <= 0) return '***';
+    const local = s.slice(0, at);
+    const domain = s.slice(at + 1);
+    const lastDot = domain.lastIndexOf('.');
+    const tld = lastDot > 0 ? domain.slice(lastDot) : '';
+    const domRoot = lastDot > 0 ? domain.slice(0, lastDot) : domain;
+    const mk = part => (part.length ? part[0] : '') + '***';
+    return mk(local) + '@' + mk(domRoot) + tld;
+}
+
+function maskUserIdText(id) {
+    const s = String(id == null ? '' : id);
+    if (!s) return '—';
+    return s.length > 8 ? s.slice(0, 6) + '***' : s.slice(0, 2) + '***';
+}
+
+function rowRevealed(id) { return !usersMasked || revealedUserRows.has(id); }
+
+function displayEmailFor(u) {
+    if (!u.email || u.email === '—') return '—';
+    return rowRevealed(u.id) ? u.email : maskEmailAddress(u.email);
+}
+
+function displayIdFor(u) {
+    return rowRevealed(u.id) ? u.id : maskUserIdText(u.id);
+}
+
+function setUsersMasked(masked) {
+    usersMasked = !!masked;
+    if (usersMasked) revealedUserRows.clear();
+    renderUsers();
+    if (typeof renderProUsers === 'function') renderProUsers();
+    updateMaskButtons();
+    if (_currentUser) refreshUserModalSensitive();
+}
+
+function toggleRevealUserRow(id) {
+    revealedUserRows.has(id) ? revealedUserRows.delete(id) : revealedUserRows.add(id);
+    renderUsers();
+    if (typeof renderProUsers === 'function') renderProUsers();
+    if (_currentUser && _currentUser.id === id) refreshUserModalSensitive();
+    updateMaskButtons();
+}
+
+function eyeButtonFor(u, cls) {
+    const open = rowRevealed(u.id);
+    return `<button class="mask-eye${open ? ' on' : ''} ${cls || ''}" data-act="toggleRevealUserRow" data-a1="${esc(u.id)}" data-stop="1" title="${open ? 'Hide ID &amp; email' : 'Show ID &amp; email'}"><i class="fas ${open ? 'fa-eye-slash' : 'fa-eye'}"></i></button>`;
+}
+
+function updateMaskButtons() {
+    document.querySelectorAll('.mask-toggle-btn').forEach(b => {
+        const isShowAll = b.getAttribute('data-a1') === 'false';
+        b.classList.toggle('active', isShowAll ? !usersMasked : usersMasked);
+    });
+}
+
+function refreshUserModalSensitive() {
+    if (!_currentUser) return;
+    const u = _currentUser;
+    const idEl = document.getElementById('umId');
+    const emEl = document.getElementById('umEmail');
+    if (idEl) idEl.textContent = rowRevealed(u.id) ? u.id : maskUserIdText(u.id);
+    if (emEl) emEl.textContent = rowRevealed(u.id) ? (u.email || '—') : (u.email && u.email !== '—' ? maskEmailAddress(u.email) : '—');
+    const btn = document.getElementById('umRevealBtn');
+    if (btn) {
+        btn.classList.toggle('on', rowRevealed(u.id));
+        btn.setAttribute('data-a1', u.id);
+    }
 }
 
 function applyUsersData(usersObj, discordObj, sourceLabel) {
@@ -813,8 +892,8 @@ function renderProUsers() {
             const expires = u.proExpiresAtMs ? fmtDate(u.proExpiresAtMs) : '—';
             const source = u.roleAssignedBy || '—';
             return `<tr style="cursor:pointer;" data-act="openUserModal" data-a1="${esc(u.id)}">
-                <td><div class="user-name">${esc(u.name)}</div><div class="user-id">${u.id.substring(0,18)}…</div></td>
-                <td style="color:var(--muted);font-size:0.82rem;">${esc(u.email)}</td>
+                <td><div class="user-name">${esc(u.name)}</div><div class="user-id">${esc(displayIdFor(u))}</div></td>
+                <td style="color:var(--muted);font-size:0.82rem;">${esc(displayEmailFor(u))} ${eyeButtonFor(u)}</td>
                 <td class="time-cell">${activated}</td>
                 <td class="time-cell">${expires}</td>
                 <td>${daysHtml}</td>
@@ -899,9 +978,9 @@ function renderUsers() {
                     <div class="user-avatar" style="background:${ac}20;color:${ac};">
                         ${u.photoURL?`<img src="${esc(u.photoURL)}" onerror="this.style.display='none';this.parentElement.textContent='${init}'">`:''}${!u.photoURL?init:''}
                     </div>
-                    <div><div class="user-name">${esc(u.name)}${blockedHtml}</div><div class="user-id">${u.id.substring(0,18)}…</div></div>
+                    <div><div class="user-name">${esc(u.name)}${blockedHtml}</div><div class="user-id">${esc(displayIdFor(u))}</div></div>
                 </div></td>
-                <td style="color:var(--muted);font-size:0.82rem;">${esc(u.email)}</td>
+                <td style="color:var(--muted);font-size:0.82rem;">${esc(displayEmailFor(u))} ${eyeButtonFor(u)}</td>
                 <td><span class="method-badge ${m.cls}">${m.icon} ${m.label}</span></td>
                 <td>${getRolesBadgeHtml(u.roles, u.role || 'free')}</td>
                 <td style="font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:var(--accent);">${esc(u.appVersion||'—')}</td>
@@ -931,7 +1010,7 @@ function renderUsers() {
                     </div>
                     <div style="flex:1;min-width:0;">
                         <div style="font-weight:600;font-size:0.9rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(u.name)} ${u.blocked?'🚫':''}</div>
-                        <div style="font-size:0.75rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(u.email)}</div>
+                        <div style="font-size:0.75rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(displayEmailFor(u))} ${eyeButtonFor(u, 'inline')}</div>
                     </div>
                     <span class="method-badge ${m.cls}" style="flex-shrink:0;">${m.icon} ${m.label}</span>
                 </div>
@@ -976,8 +1055,7 @@ function openUserModal(id) {
     document.getElementById('umMethodBadge').innerHTML=`<span class="method-badge ${m.cls}">${m.icon} ${m.label}</span>`;
     const flag=u.countryCode?countryFlag(u.countryCode):'';
     document.getElementById('umCountryBadge').textContent=flag?(flag+' '+(u.country||'')):'';
-    document.getElementById('umId').textContent=u.id;
-    document.getElementById('umEmail').textContent=u.email;
+    refreshUserModalSensitive();
     document.getElementById('umMethod').textContent=m.label;
     document.getElementById('umPlatform').textContent=u.platform||'website';
     document.getElementById('umCountry').textContent=u.country?(flag+' '+u.country):'—';
@@ -1060,7 +1138,7 @@ async function loadUserDevices(uid) {
             if (linkedUids.length > 1) {
                 const names = linkedUids.map(lu => {
                     const lUser = allUsers.find(x => x.id === lu);
-                    return esc(lUser ? (lUser.name || lUser.email || lu.substring(0,12)+'…') : lu.substring(0,12)+'…');
+                    return esc(lUser ? (lUser.name || maskEmailAddress(lUser.email) || maskUserIdText(lu)) : maskUserIdText(lu));
                 }).join(', ');
                 linkedHtml = `<div style="margin-top:6px;padding:8px 10px;background:rgba(244,67,54,0.08);border:1px solid rgba(244,67,54,0.25);border-radius:6px;">
                     <div style="font-size:0.72rem;color:#F44336;font-weight:600;"><i class="fas fa-triangle-exclamation"></i> Used by ${linkedUids.length} accounts: ${names}</div>
@@ -4291,7 +4369,7 @@ function onMbUserSearch() {
     box.innerHTML = hits.map(u => `
         <div class="mb-user-item" data-act="pickMbUser" data-a1="${esc(u.id)}" data-a2="${esc(u.name||'')}" data-a3="${esc(u.email||'')}">
             <strong>${esc(u.name || 'User')}</strong>
-            <span>${esc(u.email || '')} · ${esc(u.id)}</span>
+            <span>${esc(rowRevealed(u.id) ? (u.email || '') : (u.email ? maskEmailAddress(u.email) : ''))} · ${esc(rowRevealed(u.id) ? u.id : maskUserIdText(u.id))}</span>
         </div>`).join('');
     box.classList.add('show');
 }

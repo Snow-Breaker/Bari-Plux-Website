@@ -120,6 +120,11 @@
         .icon-btn.teal { background: rgba(0,191,166,0.1); border-color: rgba(0,191,166,0.25); color: var(--accent2); }
         .icon-btn.teal:hover { background: rgba(0,191,166,0.18); }
         .icon-btn.spinning i { animation: spin 0.8s linear infinite; }
+        .icon-btn.active { background: rgba(0,191,166,0.18); border-color: rgba(0,191,166,0.4); color: var(--accent2); }
+        .mask-eye { background: rgba(108,99,255,0.08); border: 1px solid rgba(108,99,255,0.25); color: var(--accent); border-radius: 6px; padding: 2px 6px; margin-left: 4px; font-size: 0.72rem; cursor: pointer; vertical-align: middle; display: inline-flex; align-items: center; gap: 4px; transition: all 0.2s; }
+        .mask-eye:hover { background: rgba(108,99,255,0.16); }
+        .mask-eye.on { background: rgba(0,191,166,0.1); border-color: rgba(0,191,166,0.35); color: var(--accent2); }
+        .mask-eye.inline { padding: 0 4px; margin-left: 2px; font-size: 0.68rem; }
         @keyframes spin { to{transform:rotate(360deg)} }
 
         .table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; }
@@ -626,6 +631,8 @@
                     <button class="filter-btn" data-act="setFilter" data-a1="role:staff" data-pass-el="1">🛡️ Staff</button>
                 </div>
                 <button class="icon-btn teal" id="refreshBtn" data-act="loadUsers"><i class="fas fa-sync-alt"></i> Refresh</button>
+                <button class="icon-btn mask-toggle-btn" id="maskShowAll" data-act="setUsersMasked" data-a1="false"><i class="fas fa-eye"></i> Show All</button>
+                <button class="icon-btn mask-toggle-btn active" id="maskHideAll" data-act="setUsersMasked" data-a1="true"><i class="fas fa-eye-slash"></i> Hide All</button>
             </div>
 
             <div class="table-wrap">
@@ -675,6 +682,8 @@
                     <input type="text" class="search-input" id="proSearchInput" placeholder="Search Pro users..." data-act="renderProUsers">
                 </div>
                 <button class="icon-btn teal" data-act="renderProUsers"><i class="fas fa-sync-alt"></i> Refresh</button>
+                <button class="icon-btn mask-toggle-btn" data-act="setUsersMasked" data-a1="false"><i class="fas fa-eye"></i> Show All</button>
+                <button class="icon-btn mask-toggle-btn active" data-act="setUsersMasked" data-a1="true"><i class="fas fa-eye-slash"></i> Hide All</button>
             </div>
             <div class="table-wrap">
                 <table>
@@ -1584,7 +1593,7 @@
             </div>
         </div>
         <div class="modal-section">
-            <h3><i class="fas fa-id-card"></i> Account Info</h3>
+            <h3><i class="fas fa-id-card"></i> Account Info <button class="mask-eye" id="umRevealBtn" data-act="toggleRevealUserRow" data-a1="" data-stop="1" title="Show ID &amp; email"><i class="fas fa-eye"></i></button></h3>
             <div class="modal-grid">
                 <div class="field" style="grid-column:1/-1;"><span class="label">User ID</span><span class="value" id="umId" style="font-family:'JetBrains Mono',monospace;font-size:0.74rem;word-break:break-all;"></span></div>
                 <div class="field" style="grid-column:1/-1;"><span class="label">Email</span><span class="value" id="umEmail"></span></div>
