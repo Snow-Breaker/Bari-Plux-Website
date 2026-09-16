@@ -16,7 +16,24 @@
   <link rel="stylesheet" href="/assets/css/bariplux.css?v=20260907dark">
   <link rel="stylesheet" href="/assets/css/site.css?v=20260729mnav">
   <link rel="stylesheet" href="/assets/css/shell.css?v=20260728ai">
-  <link rel="stylesheet" href="/assets/css/pages/editorial.css?v=20260728ai">
+  <link rel="stylesheet" href="/assets/css/pages/editorial.css?v=20260916story">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "What Happened with Bari Plux Tool So Far",
+    "datePublished": "2025-01-01",
+    "dateModified": "2026-09-16",
+    "author": { "@type": "Person", "name": "Bari Plux Team" },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Bari Plux",
+      "logo": { "@type": "ImageObject", "url": "https://i.postimg.cc/CKj6nBJP/PLUX-Logo.png" }
+    },
+    "image": "https://i.postimg.cc/CKj6nBJP/PLUX-Logo.png",
+    "description": "From the cancellation of v2.3 to the fresh start of v3.0.0 — the full story behind Bari Plux Tool's evolution."
+  }
+  </script>
   <script src="/assets/js/boot.js?v=20260907dark"></script>
   <script src="/assets/js/protect.js" defer></script>
   <script src="/assets/js/signal-ambient.js?v=20260728ai" defer></script>
@@ -24,78 +41,162 @@
 </head>
 <body class="bp-body">
   <div id="bp-aurora" class="bp-aurora bp-ambient" aria-hidden="true"></div>
-  <main class="bp-editorial">
-    <header class="bp-editorial__hero glass">
-      <p class="bp-editorial__kicker">Bari Plux Tool</p>
+  <div id="bp-progress" class="story-progress" aria-hidden="true"></div>
+
+  <main class="bp-editorial bp-editorial--long">
+    <header class="bp-editorial__hero bp-editorial__hero--art glass">
+      <p class="bp-editorial__kicker">Bari Plux Tool · Development Story</p>
       <h1>What Happened with Bari Plux Tool So Far</h1>
       <p class="bp-editorial__lead">
         Hello everyone, I apologize for the delay in the new update. My goal was to make Bari Plux Tool a
         high-performance app that supports all emulators. Here is the full story of what happened — and
         where things are headed next.
       </p>
-      <p class="bp-editorial__meta"><i class="far fa-calendar-alt" aria-hidden="true"></i> 2025 · 4 min read</p>
+      <div class="story-stats">
+        <span class="story-chip"><i class="far fa-calendar-alt" aria-hidden="true"></i> 2025</span>
+        <span class="story-chip"><i class="far fa-clock" aria-hidden="true"></i> 4 min read</span>
+        <span class="story-chip"><i class="fas fa-code-branch" aria-hidden="true"></i> v2.3 → v3.0.0</span>
+        <span class="story-chip"><i class="fas fa-rocket" aria-hidden="true"></i> Built from scratch</span>
+      </div>
     </header>
 
-    <article class="bp-editorial__panel glass">
-      <h2>The Vision Behind Version 2.3</h2>
-      <p>The goal was ambitious: build a high-performance application that supports all emulators. Version 2.3
-        was developed and released exclusively on the dev channel to test this vision in real-world conditions.</p>
-      <p>However, during testing a major issue surfaced — the app worked slowly and was not stable across all
-        specific PCs. Beyond performance, version 2.3 also had significant UI/UX problems that made features
-        and their functions difficult to understand, with some features being outright unintelligible.</p>
+    <nav class="bp-editorial__toc" aria-label="Article sections">
+      <a href="#vision">Vision</a>
+      <a href="#design">Design feedback</a>
+      <a href="#rebuild">The rebuild</a>
+      <a href="#whats-next">What's coming</a>
+      <a href="#timeline">Timeline</a>
+    </nav>
+
+    <article class="bp-editorial__story glass">
+      <section id="vision">
+        <h2><span class="sec-num">1</span>The Vision Behind Version 2.3</h2>
+        <p class="story-lead">The goal was ambitious: build a high-performance application that supports all
+          emulators. Version 2.3 was developed and released exclusively on the dev channel to test this vision
+          in real-world conditions.</p>
+        <p>However, during testing a major issue surfaced — the app worked slowly and was not stable across all
+          specific PCs. Beyond performance, version 2.3 also had significant UI/UX problems that made features
+          and their functions difficult to understand, with some features being outright unintelligible.</p>
+      </section>
+
+      <section id="design">
+        <h2><span class="sec-num">2</span>A Design That Missed the Mark</h2>
+        <p>The new design introduced in version 2.3 looked good from a developer's perspective. But feedback from
+          others painted a different picture — it was described as a <strong>"fantasy app"</strong> with a
+          third-party background, over 100 images (icons), and too many colors everywhere.</p>
+        <blockquote>Sometimes the hardest but most necessary choice is knowing when to start over.</blockquote>
+      </section>
+
+      <section id="rebuild">
+        <h2><span class="sec-num">3</span>Built From Scratch With a New Foundation</h2>
+        <p>Build 3.0.0 was written fresh from scratch and built with a focus on performance and stability. The
+          entire app UI was changed from <strong>WPF to WinUI 3 Fluent design</strong>, which will look exactly
+          like an official Windows app and be easy to use.</p>
+        <div class="bp-editorial__callout">
+          <p>This is not an incremental update — it is a complete rebuild. Every layer of the application was
+            rethought with the end user in mind: faster, cleaner, and more reliable than anything before it.</p>
+        </div>
+        <p>For more information and the exact release date, follow the official Bari Plux social media channels.</p>
+      </section>
+
+      <section id="whats-next">
+        <h2><span class="sec-num">4</span>What's Coming Next</h2>
+        <p><strong>Bari Plux Tool (App) version 3.0.0 will be released this week for developers</strong>, with
+          the main release for everyone following soon. It is estimated to be released by the end of this week
+          or, at the latest, in the first few days of next week for any necessary fixes.</p>
+      </section>
+
+      <section id="timeline">
+        <h2><span class="sec-num">5</span>Timeline</h2>
+        <div class="story-tl">
+          <div class="story-tl__item">
+            <div class="story-tl__label">Phase 1 · Dev channel</div>
+            <p class="story-tl__title">Version 2.3</p>
+            <p class="story-tl__desc">Developed for the dev channel; found to be slow, unstable, and difficult to navigate.</p>
+          </div>
+          <div class="story-tl__item">
+            <div class="story-tl__label">Feedback</div>
+            <p class="story-tl__title">Design feedback</p>
+            <p class="story-tl__desc">Described as a "fantasy app" with too many visual elements and unclear functionality.</p>
+          </div>
+          <div class="story-tl__item">
+            <div class="story-tl__label">Decision</div>
+            <p class="story-tl__title">Version 2.3 cancelled</p>
+            <p class="story-tl__desc">After months of work, the decision was made to never release it.</p>
+          </div>
+          <div class="story-tl__item">
+            <div class="story-tl__label">Rebuild</div>
+            <p class="story-tl__title">Version 3.0.0</p>
+            <p class="story-tl__desc">Built from scratch with a focus on performance, stability, and WinUI 3 Fluent design.</p>
+          </div>
+          <div class="story-tl__item">
+            <div class="story-tl__label">Release</div>
+            <p class="story-tl__title">Developer release</p>
+            <p class="story-tl__desc">Expected this week or early next week.</p>
+          </div>
+          <div class="story-tl__item">
+            <div class="story-tl__label">Launch</div>
+            <p class="story-tl__title">Main release</p>
+            <p class="story-tl__desc">To follow shortly after for all users.</p>
+          </div>
+        </div>
+      </section>
     </article>
 
-    <article class="bp-editorial__panel glass">
-      <h2>A Design That Missed the Mark</h2>
-      <p>The new design introduced in version 2.3 looked good from a developer's perspective. But feedback from
-        others painted a different picture — it was described as a "fantasy app" with a third-party background,
-        over 100 images (icons), and too many colors everywhere.</p>
-      <div class="bp-editorial__callout">
-        <p>After months of development, the decision was made to cancel this version entirely so that it will
-          not be released ever. Sometimes the hardest but most necessary choice is knowing when to start over.</p>
+    <div class="story-author">
+      <img class="story-author__img" src="https://i.postimg.cc/CKj6nBJP/PLUX-Logo.png" alt="Bari Plux">
+      <div>
+        <div class="story-author__name">Bari Plux Team</div>
+        <div class="story-author__date">Published 2025 · Updated September 2026</div>
       </div>
-    </article>
-
-    <article class="bp-editorial__panel glass">
-      <h2>Bari Plux Tool Coming Stronger Than the Past</h2>
-      <p>Despite the setback, the story doesn't end there. <strong>Bari Plux Tool (App) version 3.0.0 will be
-        released this week for developers</strong>, with the main release for everyone following soon. It is
-        estimated to be released by the end of this week or, at the latest, in the first few days of next week
-        for any necessary fixes.</p>
-    </article>
-
-    <article class="bp-editorial__panel glass">
-      <h2>Built From Scratch With a New Foundation</h2>
-      <p>Build 3.0.0 was written fresh from scratch and built with a focus on performance and stability. The
-        entire app UI was changed from <strong>WPF to WinUI 3 Fluent design</strong>, which will look exactly
-        like an official Windows app and be easy to use.</p>
-      <div class="bp-editorial__callout">
-        <p>This is not an incremental update — it is a complete rebuild. Every layer of the application was
-          rethought with the end user in mind: faster, cleaner, and more reliable than anything before it.</p>
+      <div class="story-share">
+        <button onclick="if(navigator.share){navigator.share({title:document.title,url:location.href}).catch(function(){})}else if(navigator.clipboard){navigator.clipboard.writeText(location.href)}" aria-label="Share article"><i class="fas fa-share-alt" aria-hidden="true"></i></button>
+        <button onclick="navigator.clipboard?.writeText(location.href)" aria-label="Copy link"><i class="fas fa-link" aria-hidden="true"></i></button>
       </div>
-      <p>For more information and the exact release date, follow the official Bari Plux social media channels.</p>
-    </article>
+    </div>
 
-    <article class="bp-editorial__panel glass">
-      <h2>Timeline Summary</h2>
-      <ul>
-        <li><strong>Version 2.3</strong> — Developed for the dev channel; found to be slow, unstable, and
-          difficult to navigate.</li>
-        <li><strong>Design feedback</strong> — Described as a "fantasy app" with too many visual elements
-          and unclear functionality.</li>
-        <li><strong>Version 2.3 cancelled</strong> — After months of work, the decision was made to never
-          release it.</li>
-        <li><strong>Version 3.0.0</strong> — Built from scratch with a focus on performance, stability, and
-          WinUI 3 Fluent design.</li>
-        <li><strong>Developer release</strong> — Expected this week or early next week.</li>
-        <li><strong>Main release</strong> — To follow shortly after for all users.</li>
-      </ul>
-    </article>
+    <div class="story-related">
+      <p class="story-related__title">Related stories</p>
+      <div class="bp-plux-grid">
+        <a class="bp-plux-card" href="/The Fall of GameLoop.html">
+          <div class="story-card-art"><i class="fas fa-gamepad" aria-hidden="true"></i></div>
+          <div><h3>The Fall of GameLoop</h3><p>How the once-dominant emulator lost its edge.</p></div>
+        </a>
+        <a class="bp-plux-card" href="/The Optimization Illusion.html">
+          <div class="story-card-art"><i class="fas fa-brain" aria-hidden="true"></i></div>
+          <div><h3>The Optimization Illusion</h3><p>What most players misunderstand about performance.</p></div>
+        </a>
+        <a class="bp-plux-card" href="/Plux Gaming Times.html">
+          <div class="story-card-art"><i class="fas fa-newspaper" aria-hidden="true"></i></div>
+          <div><h3>Plux Gaming Times</h3><p>Browse every article and guide from Bari Plux.</p></div>
+        </a>
+      </div>
+    </div>
 
     <div class="bp-editorial__actions">
       <a class="bp-btn bp-btn--glass" href="/#plux-times">Back to Plux Times</a>
       <a class="bp-btn bp-btn--ghost" href="/">Home</a>
     </div>
   </main>
+
+  <script>
+  (function(){
+    var bar=document.getElementById('bp-progress');
+    var sections=Array.prototype.slice.call(document.querySelectorAll('.bp-editorial__story section[id]'));
+    var tocLinks=Array.prototype.slice.call(document.querySelectorAll('.bp-editorial__toc a'));
+    if(!bar||!sections.length)return;
+    function update(){
+      var h=document.documentElement;
+      var max=h.scrollHeight-h.clientHeight;
+      bar.style.width=(max>0?Math.min(1,h.scrollTop/max):0)*100+'%';
+      var cur='';
+      for(var i=0;i<sections.length;i++){if(sections[i].getBoundingClientRect().top<=90)cur=sections[i].id;}
+      for(var j=0;j<tocLinks.length;j++){tocLinks[j].classList.toggle('active',tocLinks[j].getAttribute('href')==='#'+cur);}
+    }
+    window.addEventListener('scroll',update,{passive:true});
+    window.addEventListener('resize',update,{passive:true});
+    update();
+  })();
+  </script>
 </body>
 </html>
