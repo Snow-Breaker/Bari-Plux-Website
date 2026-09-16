@@ -1248,7 +1248,10 @@ async function handleManifestStatus(request, env, corsHeaders) {
     maintenance,
     update,
     iat: now,
-    exp: now + 300
+    // 45s < BPT's default 60s maintenance/update poll, so every poll refetches a fresh signed
+    // manifest instead of holding the old one for its full 5-minute lifetime — an admin Pause or
+    // forced-update toggle lands within the client's next poll tick rather than after a restart.
+    exp: now + 45
   };
 
   const serviceAccount = JSON.parse(env.FIREBASE_SERVICE_ACCOUNT);
@@ -1257,8 +1260,8 @@ async function handleManifestStatus(request, env, corsHeaders) {
 
   return new Response(JSON.stringify({
     token,
-    expires_at: (now + 300) * 1000
-  }), { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    expires_at: (now + 45) * 1000
+  }), { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } });
 }
 
 // ── JWT signing helpers ──────────────────────────────────────
