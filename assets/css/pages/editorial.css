@@ -421,6 +421,21 @@ html[data-theme="light"] .bp-plux-card h3 {
 
 .bp-editorial__story strong { color: var(--bp-text, #f5f5f7); font-weight: 650; }
 
+.bp-editorial__story a {
+  color: var(--bp-accent-2, #a5b4fc);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.bp-editorial__story code {
+  font-family: var(--bp-font-mono, "IBM Plex Mono", monospace);
+  font-size: 0.84em;
+  padding: 0.1rem 0.35rem;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
 .bp-editorial__story blockquote {
   padding: 0.95rem 1.15rem;
   border-left: 3px solid var(--bp-accent-2, #a5b4fc);

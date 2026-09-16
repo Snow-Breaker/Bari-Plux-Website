@@ -15,7 +15,24 @@
   <link rel="stylesheet" href="assets/css/bariplux.css?v=20260907dark">
   <link rel="stylesheet" href="assets/css/site.css?v=20260729mnav">
   <link rel="stylesheet" href="assets/css/shell.css?v=20260728ai">
-  <link rel="stylesheet" href="assets/css/pages/editorial.css?v=20260728ai">
+  <link rel="stylesheet" href="assets/css/pages/editorial.css?v=20260916wide">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Why Chinese GameLoop is Superior to the Global Version",
+    "datePublished": "2025-07-22",
+    "dateModified": "2026-09-16",
+    "author": { "@type": "Person", "name": "Bari Plux Team" },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Bari Plux",
+      "logo": { "@type": "ImageObject", "url": "https://i.postimg.cc/CKj6nBJP/PLUX-Logo.png" }
+    },
+    "image": "https://i.postimg.cc/N0Tgn258/image.png",
+    "description": "Why advanced players and streamers prefer Chinese GameLoop over Global — performance, updates, and what actually changes in practice."
+  }
+  </script>
   <script src="assets/js/boot.js?v=20260907dark"></script>
   <script src="assets/js/protect.js" defer></script>
   <script src="assets/js/signal-ambient.js?v=20260728ai" defer></script>
@@ -24,6 +41,7 @@
     .bp-comic {
       display: grid;
       gap: 0.85rem;
+      margin-top: 0.85rem;
     }
     .bp-comic img {
       width: 100%;
@@ -37,50 +55,120 @@
 </head>
 <body class="bp-body">
   <div id="bp-aurora" class="bp-aurora bp-ambient" aria-hidden="true"></div>
-  <main class="bp-editorial">
-    <header class="bp-editorial__hero glass">
+  <div id="bp-progress" class="story-progress" aria-hidden="true"></div>
+
+  <main class="bp-editorial bp-editorial--long">
+    <header class="bp-editorial__hero bp-editorial__hero--art glass">
       <p class="bp-editorial__kicker">Review · Plux Gaming Times</p>
       <h1>Why Chinese GameLoop is Superior to the Global Version</h1>
       <p class="bp-editorial__lead">
-        For years, Tencent’s GameLoop has been the main bridge from mobile PUBG to PC.
+        For years, Tencent's GameLoop has been the main bridge from mobile PUBG to PC.
         Advanced users and streamers keep landing on the same conclusion: the Chinese build
         usually feels faster, leaner, and more willing to keep pace with competitive play.
       </p>
-      <p class="bp-editorial__meta"><i class="far fa-calendar-alt" aria-hidden="true"></i> July 22, 2025 · 4 min read</p>
+      <div class="story-stats">
+        <span class="story-chip"><i class="far fa-calendar-alt" aria-hidden="true"></i> July 22, 2025</span>
+        <span class="story-chip"><i class="far fa-clock" aria-hidden="true"></i> 4 min read</span>
+        <span class="story-chip"><i class="fas fa-tasks" aria-hidden="true"></i> Chinese vs Global</span>
+        <span class="story-chip"><i class="fas fa-bolt" aria-hidden="true"></i> FPS-first</span>
+      </div>
     </header>
 
-    <article class="bp-editorial__panel glass">
-      <h2>What “superior” actually means here</h2>
-      <p>It is not about logos or region branding. Players care about frame time, input feel, crash rate, and how quickly the emulator tracks game updates. On those axes, Chinese GameLoop consistently wins for a large share of power users.</p>
-      <ul>
-        <li><strong>Performance headroom</strong> — many setups report higher average FPS and fewer stutter spikes on the Chinese client.</li>
-        <li><strong>Update cadence</strong> — Chinese builds often ship engine / package changes earlier for the titles that matter.</li>
-        <li><strong>Less bloat in practice</strong> — Global can feel heavier with extras that do not help competitive matches.</li>
-      </ul>
+    <nav class="bp-editorial__toc" aria-label="Article sections">
+      <a href="#meaning">What "superior" means</a>
+      <a href="#comic">The comic pages</a>
+      <a href="#global">When Global makes sense</a>
+    </nav>
+
+    <article class="bp-editorial__story glass">
+      <section id="meaning">
+        <h2><span class="sec-num">1</span>What "Superior" Actually Means Here</h2>
+        <p class="story-lead">It is not about logos or region branding. Players care about frame time, input feel,
+          crash rate, and how quickly the emulator tracks game updates. On those axes, Chinese GameLoop
+          consistently wins for a large share of power users.</p>
+        <ul>
+          <li><strong>Performance headroom</strong> — many setups report higher average FPS and fewer stutter spikes on the Chinese client.</li>
+          <li><strong>Update cadence</strong> — Chinese builds often ship engine / package changes earlier for the titles that matter.</li>
+          <li><strong>Less bloat in practice</strong> — Global can feel heavier with extras that do not help competitive matches.</li>
+        </ul>
+      </section>
+
+      <section id="comic">
+        <h2><span class="sec-num">2</span>Plux Gaming Times — Comic Pages</h2>
+        <p>The original Plux Times strip that compared Chinese vs Global GameLoop:</p>
+        <div class="bp-comic">
+          <img src="https://i.postimg.cc/pTV392cy/gameloop1.jpg" alt="Plux Gaming Times — Chinese GameLoop page 1" loading="lazy">
+          <img src="https://i.postimg.cc/jjcFYpqT/gameloop2.jpg" alt="Plux Gaming Times — Chinese GameLoop page 2" loading="lazy">
+        </div>
+      </section>
+
+      <section id="global">
+        <h2><span class="sec-num">3</span>When Global Still Makes Sense</h2>
+        <p>If you need the most "official" Global-facing installer path, simpler store-like packaging, or a safer
+          default for beginners, Global is fine. For FPS-first and streamer setups, Chinese is usually the first
+          build we test — then we only fall back if a specific title or anti-cheat path demands it.</p>
+        <div class="bp-editorial__callout">
+          <p>Use what is stable on <em>your</em> machine. Benchmark a few matches before you commit — Chinese is
+            the common winner, not a guarantee on every GPU / CPU combo.</p>
+        </div>
+      </section>
     </article>
 
-    <article class="bp-editorial__panel glass">
-      <h2>Plux Gaming Times — comic pages</h2>
-      <p>The original Plux Times strip that compared Chinese vs Global GameLoop:</p>
-      <div class="bp-comic" style="margin-top:0.85rem;">
-        <img src="https://i.postimg.cc/pTV392cy/gameloop1.jpg" alt="Plux Gaming Times — Chinese GameLoop page 1" loading="lazy">
-        <img src="https://i.postimg.cc/jjcFYpqT/gameloop2.jpg" alt="Plux Gaming Times — Chinese GameLoop page 2" loading="lazy">
+    <div class="story-author">
+      <img class="story-author__img" src="https://i.postimg.cc/CKj6nBJP/PLUX-Logo.png" alt="Bari Plux">
+      <div>
+        <div class="story-author__name">Bari Plux Team</div>
+        <div class="story-author__date">Published July 2025 · Updated September 2026</div>
       </div>
-    </article>
+      <div class="story-share">
+        <button onclick="if(navigator.share){navigator.share({title:document.title,url:location.href}).catch(function(){})}else if(navigator.clipboard){navigator.clipboard.writeText(location.href)}" aria-label="Share article"><i class="fas fa-share-alt" aria-hidden="true"></i></button>
+        <button onclick="navigator.clipboard?.writeText(location.href)" aria-label="Copy link"><i class="fas fa-link" aria-hidden="true"></i></button>
+      </div>
+    </div>
 
-    <article class="bp-editorial__panel glass">
-      <h2>When Global still makes sense</h2>
-      <p>If you need the most “official” Global-facing installer path, simpler store-like packaging, or a safer default for beginners, Global is fine. For FPS-first and streamer setups, Chinese is usually the first build we test — then we only fall back if a specific title or anti-cheat path demands it.</p>
-      <div class="bp-editorial__callout">
-        <p>Use what is stable on <em>your</em> machine. Benchmark a few matches before you commit — Chinese is the common winner, not a guarantee on every GPU / CPU combo.</p>
+    <div class="story-related">
+      <p class="story-related__title">Related stories</p>
+      <div class="bp-plux-grid">
+        <a class="bp-plux-card" href="/The Fall of GameLoop.html">
+          <div class="story-card-art"><i class="fas fa-gamepad" aria-hidden="true"></i></div>
+          <div><h3>The Fall of GameLoop</h3><p>When reliability dies, the platform follows.</p></div>
+        </a>
+        <a class="bp-plux-card" href="/The Optimization Illusion.html">
+          <div class="story-card-art"><i class="fas fa-brain" aria-hidden="true"></i></div>
+          <div><h3>The Optimization Illusion</h3><p>When an emulator becomes more than just a tool.</p></div>
+        </a>
+        <a class="bp-plux-card" href="/Plux Gaming Times.html">
+          <div class="story-card-art"><i class="fas fa-newspaper" aria-hidden="true"></i></div>
+          <div><h3>Plux Gaming Times</h3><p>Browse every article and guide from Bari Plux.</p></div>
+        </a>
       </div>
-    </article>
+    </div>
 
     <div class="bp-editorial__actions">
       <a class="bp-btn bp-btn--glass" href="/gameloopdown">Download GameLoop</a>
       <a class="bp-btn bp-btn--ghost" href="/#plux-times">Back to Plux Times</a>
-      <a class="bp-btn bp-btn--ghost" href="/Plux Gaming Times">All stories</a>
+      <a class="bp-btn bp-btn--ghost" href="/Plux Gaming Times.html">All stories</a>
     </div>
   </main>
+
+  <script>
+  (function(){
+    var bar=document.getElementById('bp-progress');
+    var sections=Array.prototype.slice.call(document.querySelectorAll('.bp-editorial__story section[id]'));
+    var tocLinks=Array.prototype.slice.call(document.querySelectorAll('.bp-editorial__toc a'));
+    if(!bar||!sections.length)return;
+    function update(){
+      var h=document.documentElement;
+      var max=h.scrollHeight-h.clientHeight;
+      bar.style.width=(max>0?Math.min(1,h.scrollTop/max):0)*100+'%';
+      var cur='';
+      for(var i=0;i<sections.length;i++){if(sections[i].getBoundingClientRect().top<=90)cur=sections[i].id;}
+      for(var j=0;j<tocLinks.length;j++){tocLinks[j].classList.toggle('active',tocLinks[j].getAttribute('href')==='#'+cur);}
+    }
+    window.addEventListener('scroll',update,{passive:true});
+    window.addEventListener('resize',update,{passive:true});
+    update();
+  })();
+  </script>
 </body>
 </html>

@@ -12,7 +12,24 @@
   <link rel="stylesheet" href="assets/css/bariplux.css?v=20260907dark">
   <link rel="stylesheet" href="assets/css/site.css?v=20260729mnav">
   <link rel="stylesheet" href="assets/css/shell.css?v=20260728ai">
-  <link rel="stylesheet" href="assets/css/pages/editorial.css?v=20260728ai">
+  <link rel="stylesheet" href="assets/css/pages/editorial.css?v=20260916wide">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "LDPlayer — Connect ADB",
+    "datePublished": "2026-08-31",
+    "dateModified": "2026-09-16",
+    "author": { "@type": "Person", "name": "Bari Plux Team" },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Bari Plux",
+      "logo": { "@type": "ImageObject", "url": "https://i.postimg.cc/CKj6nBJP/PLUX-Logo.png" }
+    },
+    "image": "https://i.postimg.cc/CKj6nBJP/PLUX-Logo.png",
+    "description": "How to connect Bari Plux Tool to LDPlayer via ADB, and what to do if it doesn't connect automatically."
+  }
+  </script>
   <script src="assets/js/boot.js?v=20260907dark"></script>
   <script src="assets/js/protect.js" defer></script>
   <script src="assets/js/signal-ambient.js?v=20260728ai" defer></script>
@@ -20,43 +37,109 @@
 </head>
 <body class="bp-body">
   <div id="bp-aurora" class="bp-aurora bp-ambient" aria-hidden="true"></div>
-  <main class="bp-editorial">
-    <header class="bp-editorial__hero glass">
+  <div id="bp-progress" class="story-progress" aria-hidden="true"></div>
+
+  <main class="bp-editorial bp-editorial--long">
+    <header class="bp-editorial__hero bp-editorial__hero--art glass">
       <p class="bp-editorial__kicker">Bari Plux Tool · Emulator Guides</p>
       <h1>LDPlayer — Connect ADB</h1>
-      <p class="bp-editorial__lead">LDPlayer (both LDPlayer 9 and LDPlayer 14) ships with its own bundled ADB and normally connects to Bari Plux Tool without any extra setup. This page covers what to check if it doesn't.</p>
-      <p class="bp-editorial__meta">Last updated: 31 August 2026 · Applies to LDPlayer 9 and LDPlayer 14 (treated as separate profiles in BPT — pick the one matching your actual install in Settings)</p>
+      <p class="bp-editorial__lead">LDPlayer (both LDPlayer 9 and LDPlayer 14) ships with its own bundled ADB
+        and normally connects to Bari Plux Tool without any extra setup. This page covers what to check if it
+        doesn't.</p>
+      <div class="story-stats">
+        <span class="story-chip"><i class="far fa-clock" aria-hidden="true"></i> Last updated: 31 August 2026</span>
+        <span class="story-chip"><i class="fas fa-tablet-alt" aria-hidden="true"></i> Applies to LDPlayer 9 and 14</span>
+      </div>
     </header>
 
-    <article class="bp-editorial__panel glass" id="why">
-      <h2>Why ADB matters</h2>
-      <p>ADB is how Bari Plux Tool talks to LDPlayer's Android system — FPS presets, keymap and Active.sav backup/restore, and file transfers all rely on this connection.</p>
+    <nav class="bp-editorial__toc" aria-label="Guide sections">
+      <a href="#why">Why ADB matters</a>
+      <a href="#automatic">The automatic path</a>
+      <a href="#manual">If it won't connect</a>
+    </nav>
+
+    <article class="bp-editorial__story glass">
+      <section id="why">
+        <h2><span class="sec-num">1</span>Why ADB Matters</h2>
+        <p class="story-lead">ADB is how Bari Plux Tool talks to LDPlayer's Android system — FPS presets, keymap
+          and Active.sav backup/restore, and file transfers all rely on this connection.</p>
+      </section>
+
+      <section id="automatic">
+        <h2><span class="sec-num">2</span>The Automatic Path (Try This First)</h2>
+        <ul>
+          <li>In BPT's <strong>Settings → Emulator Profile</strong>, pick whichever you actually have installed — <strong>LDPlayer 9</strong> or <strong>LDPlayer 14</strong>. They're kept as separate profiles since they run different Android versions and behave differently.</li>
+          <li>Open LDPlayer and wait for it to fully boot to its home screen before opening BPT.</li>
+          <li>In BPT, go to <strong>Home</strong> and click <strong>Connect Emulator</strong>.</li>
+          <li>If you run more than one LDPlayer instance, make sure the one you want is actually running (not just listed) — a stopped instance can't be reached over ADB even if it appears in LDPlayer's own multi-instance manager.</li>
+        </ul>
+      </section>
+
+      <section id="manual">
+        <h2><span class="sec-num">3</span>If It Still Won't Connect</h2>
+        <ol>
+          <li>Confirm <strong>Settings → Advanced → ADB debugging</strong> is switched on inside LDPlayer's own settings (usually on by default, but a fresh install or a reset can turn it off).</li>
+          <li>Click BPT's <strong>Repair ADB</strong> (Home → Quick Actions), then try <strong>Connect Emulator</strong> again.</li>
+          <li>Fully close LDPlayer's multi-instance manager and every running instance, then reopen just the one you want to use.</li>
+          <li>If you have Hyper-V and LDPlayer 9 installed together, virtualization conflicts are a known LDPlayer 9 issue — LDPlayer 14 has native Hyper-V support and doesn't have this problem.</li>
+        </ol>
+      </section>
     </article>
 
-    <article class="bp-editorial__panel glass" id="automatic">
-      <h2>The automatic path (try this first)</h2>
-      <ul>
-        <li>In BPT's <strong>Settings → Emulator Profile</strong>, pick whichever you actually have installed — <strong>LDPlayer 9</strong> or <strong>LDPlayer 14</strong>. They're kept as separate profiles since they run different Android versions and behave differently.</li>
-        <li>Open LDPlayer and wait for it to fully boot to its home screen before opening BPT.</li>
-        <li>In BPT, go to <strong>Home</strong> and click <strong>Connect Emulator</strong>.</li>
-        <li>If you run more than one LDPlayer instance, make sure the one you want is actually running (not just listed) — a stopped instance can't be reached over ADB even if it appears in LDPlayer's own multi-instance manager.</li>
-      </ul>
-    </article>
+    <div class="story-author">
+      <img class="story-author__img" src="https://i.postimg.cc/CKj6nBJP/PLUX-Logo.png" alt="Bari Plux">
+      <div>
+        <div class="story-author__name">Bari Plux Team</div>
+        <div class="story-author__date">Last updated 31 August 2026</div>
+      </div>
+      <div class="story-share">
+        <button onclick="if(navigator.share){navigator.share({title:document.title,url:location.href}).catch(function(){})}else if(navigator.clipboard){navigator.clipboard.writeText(location.href)}" aria-label="Share guide"><i class="fas fa-share-alt" aria-hidden="true"></i></button>
+        <button onclick="navigator.clipboard?.writeText(location.href)" aria-label="Copy link"><i class="fas fa-link" aria-hidden="true"></i></button>
+      </div>
+    </div>
 
-    <article class="bp-editorial__panel glass" id="manual">
-      <h2>If it still won't connect</h2>
-      <ol>
-        <li>Confirm <strong>Settings → Advanced → ADB debugging</strong> is switched on inside LDPlayer's own settings (usually on by default, but a fresh install or a reset can turn it off).</li>
-        <li>Click BPT's <strong>Repair ADB</strong> (Home → Quick Actions), then try <strong>Connect Emulator</strong> again.</li>
-        <li>Fully close LDPlayer's multi-instance manager and every running instance, then reopen just the one you want to use.</li>
-        <li>If you have Hyper-V and LDPlayer 9 installed together, virtualization conflicts are a known LDPlayer 9 issue — LDPlayer 14 has native Hyper-V support and doesn't have this problem.</li>
-      </ol>
-    </article>
+    <div class="story-related">
+      <p class="story-related__title">More emulator guides</p>
+      <div class="bp-plux-grid">
+        <a class="bp-plux-card" href="/MuMu-ADB-Guide.html">
+          <div class="story-card-art"><i class="fas fa-tablet-alt" aria-hidden="true"></i></div>
+          <div><h3>MuMu Player — Connect ADB</h3><p>Connect Bari Plux Tool to MuMu 12 / 15.</p></div>
+        </a>
+        <a class="bp-plux-card" href="/BlueStacks-ADB-Guide.html">
+          <div class="story-card-art"><i class="fas fa-tablet-alt" aria-hidden="true"></i></div>
+          <div><h3>BlueStacks — Enable ADB</h3><p>The one manual toggle BlueStacks requires.</p></div>
+        </a>
+        <a class="bp-plux-card" href="/TAC-ADB-Guide.html">
+          <div class="story-card-art"><i class="fas fa-tablet-alt" aria-hidden="true"></i></div>
+          <div><h3>TAC ("New GameLoop")</h3><p>Enable USB debugging in the newer engine.</p></div>
+        </a>
+      </div>
+    </div>
 
     <div class="bp-editorial__actions">
       <a class="bp-btn bp-btn--glass" href="/tool">Back to Bari Plux Tool</a>
       <a class="bp-btn bp-btn--ghost" href="/#contact">Still stuck? Contact us</a>
     </div>
   </main>
+
+  <script>
+  (function(){
+    var bar=document.getElementById('bp-progress');
+    var sections=Array.prototype.slice.call(document.querySelectorAll('.bp-editorial__story section[id]'));
+    var tocLinks=Array.prototype.slice.call(document.querySelectorAll('.bp-editorial__toc a'));
+    if(!bar||!sections.length)return;
+    function update(){
+      var h=document.documentElement;
+      var max=h.scrollHeight-h.clientHeight;
+      bar.style.width=(max>0?Math.min(1,h.scrollTop/max):0)*100+'%';
+      var cur='';
+      for(var i=0;i<sections.length;i++){if(sections[i].getBoundingClientRect().top<=90)cur=sections[i].id;}
+      for(var j=0;j<tocLinks.length;j++){tocLinks[j].classList.toggle('active',tocLinks[j].getAttribute('href')==='#'+cur);}
+    }
+    window.addEventListener('scroll',update,{passive:true});
+    window.addEventListener('resize',update,{passive:true});
+    update();
+  })();
+  </script>
 </body>
 </html>
