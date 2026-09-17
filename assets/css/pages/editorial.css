@@ -285,6 +285,16 @@ html[data-theme="light"] .bp-plux-card h3 {
   width: min(1120px, calc(100% - 2 * var(--bp-gutter, 24px)));
 }
 
+.bp-editorial--long .bp-editorial__hero h1 {
+  font-size: clamp(2rem, 4.2vw, 2.9rem);
+}
+
+.bp-editorial--long .bp-editorial__lead {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  max-width: 62ch;
+}
+
 .bp-editorial--long .bp-editorial__toc {
   position: sticky;
   top: 8px;
@@ -341,17 +351,17 @@ html[data-theme="light"] .bp-plux-card h3 {
 .story-stats {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.45rem;
-  margin: 1rem 0 0;
+  gap: 0.5rem;
+  margin: 1.15rem 0 0;
 }
 
 .story-chip {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  padding: 0.35rem 0.75rem;
+  padding: 0.38rem 0.8rem;
   border-radius: 999px;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   font-weight: 600;
   color: var(--bp-accent-2, #a5b4fc);
   background: rgba(129, 140, 248, 0.12);
@@ -361,7 +371,7 @@ html[data-theme="light"] .bp-plux-card h3 {
 .story-chip i { font-size: 0.9em; }
 
 .bp-editorial__story {
-  padding: clamp(1.5rem, 4vw, 2.4rem);
+  padding: clamp(1.75rem, 4vw, 2.75rem);
   border-radius: 22px;
   background:
     linear-gradient(170deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.04) 55%, transparent 100%),
@@ -378,10 +388,10 @@ html[data-theme="light"] .bp-plux-card h3 {
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  margin: 1.9rem 0 0.7rem;
-  font-size: 1.22rem;
+  margin: 2.1rem 0 0.75rem;
+  font-size: 1.3rem;
   font-weight: 700;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
   color: var(--bp-text, #f5f5f7);
 }
 
@@ -403,19 +413,20 @@ html[data-theme="light"] .bp-plux-card h3 {
 .bp-editorial__story p,
 .bp-editorial__story li,
 .bp-editorial__story blockquote {
-  margin: 0;
+  margin: 0 auto;
   color: var(--bp-text-2, #c0c0c8);
-  font-size: 1rem;
-  line-height: 1.75;
+  font-size: 1.02rem;
+  line-height: 1.8;
+  max-width: 72ch;
 }
 
 .bp-editorial__story p + p,
 .bp-editorial__story ul,
 .bp-editorial__story blockquote,
 .bp-editorial__story .bp-editorial__callout,
-.bp-editorial__story .story-tl { margin-top: 0.9rem; }
+.bp-editorial__story .story-tl { margin-top: 1rem; }
 
-.bp-editorial__story ul { padding-left: 1.2rem; list-style: disc; }
+.bp-editorial__story ul { padding-left: 1.2rem; list-style: disc; margin-inline: auto; max-width: 72ch; }
 
 .bp-editorial__story li + li { margin-top: 0.35rem; }
 
@@ -448,14 +459,11 @@ html[data-theme="light"] .bp-plux-card h3 {
 .story-lead::first-letter {
   float: left;
   font-family: var(--bp-font-display, "Space Grotesk", sans-serif);
-  font-size: 3.1em;
+  font-size: 3.2em;
   font-weight: 700;
-  line-height: 0.85;
+  line-height: 0.82;
   margin: 0.06em 0.14em 0 0;
-  background: linear-gradient(135deg, #fff 12%, var(--bp-accent-2, #a5b4fc) 60%, var(--bp-accent, #818cf8) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: var(--bp-text, #f5f5f7);
 }
 
 /* Timeline */
