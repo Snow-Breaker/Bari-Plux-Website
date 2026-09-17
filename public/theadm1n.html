@@ -1028,18 +1028,22 @@
 
             <div id="tacGraphicsApplyCard" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px;margin-bottom:20px;">
                 <div style="font-size:0.9rem;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px;">
-                    <i class="fas fa-brush" style="color:var(--accent);"></i> TAC Graphics Preset Apply (BPT)
+                    <i class="fas fa-brush" style="color:var(--accent);"></i> TAC Master Switch (BPT)
                 </div>
                 <div style="font-size:0.78rem;color:var(--muted);margin-bottom:14px;line-height:1.5;">
-                    Remote re-enable switch for <code style="color:var(--accent2);">feature_flags_3x/tac_graphics_apply_enabled</code>.
-                    BPT 3.1.2+ refuses to apply graphics presets on TenStore Android Connect until this is switched on, and
-                    treats an absent key as OFF. Keep it OFF until the TAC build exposes a read/write path to the in-game
-                    <code style="color:var(--accent2);">Active.sav</code>.
+                    Remote re-enable switch for <code style="color:var(--accent2);">feature_flags_3x/tac_emulator_enabled</code>
+                    (renamed from <code style="color:var(--accent2);">tac_graphics_apply_enabled</code> in BPT commit 2bc3230 -
+                    this card's key was out of sync with that rename until now, so toggling it previously wrote to a key BPT no
+                    longer reads). BPT treats an absent key as OFF. Once ON: TAC becomes selectable in Settings, and File
+                    Manager/DNS/generic optimization/game launch/FPS cap (via TAC's own host-side Configs.db, BPT commit a0e0e46)
+                    all work. Full graphics quality/style presets still cannot apply on TAC - Active.sav is still blocked by
+                    scoped storage with no root (BPT docs/EmulatorSupport.md §2.5i/§2.5k) - so leave this OFF unless you want
+                    users to reach that honest partial-support state.
                 </div>
                 <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
                     <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.82rem;">
                         <input type="checkbox" id="tacGraphicsApplyEnabled" style="width:16px;height:16px;">
-                        Allow applying graphics presets on TenStore Android Connect
+                        Allow selecting TAC and applying its supported capabilities (FPS cap, File Manager, ...)
                     </label>
                     <button class="action-btn view" data-act="saveTacGraphicsApplyToggle" style="padding:9px 16px;font-size:0.82rem;font-weight:600;"><i class="fas fa-save"></i> Save</button>
                 </div>
@@ -1802,7 +1806,7 @@
 
 <div class="toast" id="toast"></div>
 
-<script src="assets/js/theadm1n.js?v=20260916"></script>
+<script src="assets/js/theadm1n.js?v=20260918"></script>
 
 
 </body>

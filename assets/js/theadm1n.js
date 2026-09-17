@@ -2942,7 +2942,7 @@ async function saveFeatureFlag() {
             // enabled:true, which would immediately re-enable TAC graphics apply. The dedicated
             // TAC Graphics Preset Apply card is the only sanctioned way to flip this key.
             keyError.style.display = 'block';
-            showToast('⚠️ tac_graphics_apply_enabled is managed via the TAC Graphics Preset Apply card', 'danger');
+            showToast(`⚠️ ${TAC_GRAPHICS_APPLY_ENABLED_KEY} is managed via the TAC Graphics Preset Apply card`, 'danger');
             return;
         }
     }
@@ -3501,15 +3501,25 @@ async function saveRemoteConfig() {
     }
 }
 
-/** TAC graphics-preset apply remote switch (feature_flags_3x/tac_graphics_apply_enabled). This is
- * the inverse-default sibling of every other flag in this panel: BPT's TacGraphicsApplyGate only
- * allows applying graphics presets on the TAC profile when the key is present AND enabled
- * (IsExplicitlyOn), so an absent key is blocked, not open - the exact opposite of GetFlag's
- * fail-open default. The generic "Add Flag" form is deliberately barred from creating this key too
- * (see saveFeatureFlag), so the only place it can be turned on is this card, which always writes
- * enabled:false until the admin checks the box. Scoped to 'tac' so no other emulator can ever be
- * affected by it, matching the admin panel's EMULATOR_TAGS vocabulary. */
-const TAC_GRAPHICS_APPLY_ENABLED_KEY = 'tac_graphics_apply_enabled';
+/** TAC master remote switch (feature_flags_3x/tac_emulator_enabled) - gates TAC as a selectable
+ * emulator in BPT's Settings AND whether BPT's TacGraphicsApplyGate lets the FPS/graphics Apply
+ * button do anything at all on TAC. Renamed from tac_graphics_apply_enabled (BPT commit 2bc3230)
+ * when the app widened this same flag to also gate TAC's selectability, not just graphics-apply -
+ * this card's key was never updated to match at the time, so toggling it here kept writing to the
+ * old key, which BPT's current code no longer reads at all. Fixed here to point at the key BPT
+ * actually reads.
+ * This is the inverse-default sibling of every other flag in this panel: an absent key is blocked,
+ * not open (IsExplicitlyOn), the exact opposite of GetFlag's fail-open default. The generic "Add
+ * Flag" form is deliberately barred from creating this key too (see saveFeatureFlag), so the only
+ * place it can be turned on is this card, which always writes enabled:false until the admin checks
+ * the box. Scoped to 'tac' so no other emulator can ever be affected by it, matching the admin
+ * panel's EMULATOR_TAGS vocabulary.
+ * Once this is on: TAC becomes pickable in Settings, File Manager/DNS/generic optimization/game
+ * launch all work, and TAC's FPS cap can be applied via its own host-side Configs.db (BPT commit
+ * a0e0e46) - but full graphics quality/style presets still cannot apply on TAC (Active.sav is still
+ * blocked by scoped storage with no root - BPT docs/EmulatorSupport.md §2.5i/§2.5k), so users will
+ * see an honest partial-success message from that button, not a full preset landing. */
+const TAC_GRAPHICS_APPLY_ENABLED_KEY = 'tac_emulator_enabled';
 const TAC_GRAPHICS_APPLY_ROOT = 'feature_flags_3x/' + TAC_GRAPHICS_APPLY_ENABLED_KEY;
 
 async function loadTacGraphicsApplyToggle() {
@@ -3522,8 +3532,8 @@ async function loadTacGraphicsApplyToggle() {
         const flag = snap.val();
         box.checked = !!(flag && flag.enabled === true);
         if (status) status.textContent = box.checked
-            ? 'ON - graphics preset apply is allowed on TenStore Android Connect right now'
-            : 'OFF by default - graphics preset apply stays blocked on TenStore Android Connect';
+            ? 'ON - TAC is selectable in Settings and FPS cap / File Manager / game launch work; full graphics quality/style presets still cannot apply on TenStore Android Connect'
+            : 'OFF by default - TAC stays hidden from the emulator picker on TenStore Android Connect';
     } catch (e) {
         if (status) status.textContent = '';
         console.error(e);
@@ -3542,7 +3552,7 @@ async function saveTacGraphicsApplyToggle() {
             emulator: ['tac'],
             updated_at: Date.now()
         });
-        showToast(enabled ? '✅ TAC graphics preset apply ENABLED (TenStore Android Connect)' : '⏸️ TAC graphics preset apply disabled (TenStore Android Connect)', 'success');
+        showToast(enabled ? '✅ TAC (TenStore Android Connect) ENABLED - selectable in Settings, FPS cap works' : '⏸️ TAC (TenStore Android Connect) disabled', 'success');
         loadTacGraphicsApplyToggle();
         loadFeatureFlags();
     } catch (e) {
