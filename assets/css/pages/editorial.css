@@ -282,7 +282,7 @@ html[data-theme="light"] .bp-plux-card h3 {
 }
 
 .bp-editorial--long {
-  max-width: 960px;
+  width: min(var(--bp-max, 1400px), calc(100% - 2 * var(--bp-gutter, 24px)));
 }
 
 .bp-editorial--long .bp-editorial__toc {
