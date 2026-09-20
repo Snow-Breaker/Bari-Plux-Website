@@ -394,7 +394,7 @@
         .mb-field { margin-bottom: 12px; }
         .mb-field label { display: block; font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.35px; margin-bottom: 5px; }
         .mb-field input, .mb-field textarea, .mb-field select {
-            width: 100%; padding: 10px 12px; background: var(--surface2); border: 1px solid var(--border);
+            width: 100%; padding: 10px 12px; background-color: var(--surface2); border: 1px solid var(--border);
             border-radius: 10px; color: var(--text); font-family: 'Poppins', sans-serif; font-size: 0.88rem;
         }
         .mb-field textarea { resize: vertical; min-height: 120px; line-height: 1.5; }
@@ -449,7 +449,7 @@
         .ff-page-controls label { flex: 1; min-width: 120px; }
         .ff-page-controls .lbl { display: block; font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 4px; }
         .ff-page-controls select {
-            width: 100%; padding: 8px 10px; background: var(--surface2); border: 1px solid var(--border);
+            width: 100%; padding: 8px 10px; background-color: var(--surface2); border: 1px solid var(--border);
             border-radius: 8px; color: var(--text); font-family: 'Poppins', sans-serif; font-size: 0.82rem; cursor: pointer;
         }
         .ff-page-toggles { display: flex; gap: 6px; flex-wrap: wrap; width: 100%; }
@@ -509,18 +509,63 @@
         .form-card-desc { font-size: 0.8rem; color: var(--muted); margin-bottom: 16px; line-height: 1.5; }
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
         .form-grid-full { grid-column: 1 / -1; }
-        .form-input, .form-select, .form-textarea { width: 100%; padding: 10px 12px; background: rgba(255,255,255,0.06); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: 'Poppins', sans-serif; font-size: 0.85rem; transition: border-color 0.2s; }
+        .form-input, .form-select, .form-textarea { width: 100%; padding: 10px 12px; background-color: rgba(255,255,255,0.06); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: 'Poppins', sans-serif; font-size: 0.85rem; transition: border-color 0.2s; }
         .form-input.mono, .form-textarea.mono, .form-select.mono { font-family: 'JetBrains Mono', monospace; }
         .form-textarea { resize: vertical; line-height: 1.5; }
         .form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(108,99,255,0.12); }
         .form-checkbox-label { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 9px 0; font-size: 0.85rem; }
-        .form-checkbox-label input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--accent); cursor: pointer; }
         .form-actions { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; align-items: center; }
         .form-hint { font-size: 0.78rem; color: var(--muted); margin-top: 10px; line-height: 1.5; }
         .line-picker { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
         .btn-gradient-accent { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; border: none; padding: 9px 18px; border-radius: 8px; font-family: 'Poppins', sans-serif; font-size: 0.82rem; font-weight: 600; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
         .btn-gradient-accent:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(108,99,255,0.3); }
         @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
+
+        /* ===== Global control skin: checkboxes, selects, scrollbars, focus rings =====
+           Native OS checkboxes/select arrows/scrollbars render inconsistently per browser and
+           clash with the dark theme (light scrollbar track, unstyled tick, default arrow glyph).
+           Skinned once globally so every instance across every tab/modal matches automatically -
+           pure CSS, no JS/id/data-act touched, so .checked/.value behavior is unaffected. */
+        input[type="checkbox"] {
+            appearance: none; -webkit-appearance: none; -moz-appearance: none;
+            width: 18px; height: 18px; flex-shrink: 0; margin: 0;
+            border: 1.5px solid var(--border2); border-radius: 5px;
+            background: rgba(255,255,255,0.04); cursor: pointer; position: relative;
+            transition: background 0.15s, border-color 0.15s;
+        }
+        input[type="checkbox"]:hover { border-color: var(--accent); }
+        input[type="checkbox"]:checked { background: linear-gradient(135deg, var(--accent), var(--accent2)); border-color: transparent; }
+        input[type="checkbox"]:checked::after {
+            content: ''; position: absolute; left: 5px; top: 1px;
+            width: 5px; height: 9px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg);
+        }
+        input[type="checkbox"]:disabled { opacity: 0.4; cursor: not-allowed; }
+        input[type="checkbox"]:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+        select {
+            appearance: none; -webkit-appearance: none; -moz-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23e2e8f0' stroke-width='1.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: right 12px center;
+            padding-right: 32px !important; cursor: pointer;
+        }
+        select::-ms-expand { display: none; }
+
+        ::-webkit-scrollbar { width: 10px; height: 10px; }
+        ::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.14); border-radius: 10px; border: 2px solid transparent; background-clip: padding-box; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(108,99,255,0.45); background-clip: padding-box; }
+        ::-webkit-scrollbar-corner { background: transparent; }
+        * { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.16) transparent; }
+
+        button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
+            outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px;
+        }
+        /* Warning-toned checkboxes (mandatory update, pause-everyone) keep a distinct checked color
+           instead of the default accent gradient, since accent-color has no effect once appearance
+           is none above. */
+        #updMandatoryInput_3x:checked, #updMandatoryInput_2x:checked, #pauseEnabledInput:checked {
+            background: linear-gradient(135deg, var(--warning), #e65100);
+        }
 
         /* Keep admin UI above any accidental ambient / global layers */
         #gate, #app { position: relative; z-index: 2; }
@@ -1221,7 +1266,7 @@
                             <span style="font-size:0.85rem;">Update checks enabled</span>
                         </label>
                         <label class="form-checkbox-label" style="padding:0;">
-                            <input type="checkbox" id="updMandatoryInput_3x" style="accent-color:var(--warning);">
+                            <input type="checkbox" id="updMandatoryInput_3x">
                             <span style="font-size:0.85rem;">Mandatory update</span>
                         </label>
                     </div>
@@ -1261,7 +1306,7 @@
                             <span style="font-size:0.85rem;">Update checks enabled</span>
                         </label>
                         <label class="form-checkbox-label" style="padding:0;">
-                            <input type="checkbox" id="updMandatoryInput_2x" style="accent-color:var(--warning);">
+                            <input type="checkbox" id="updMandatoryInput_2x">
                             <span style="font-size:0.85rem;">Mandatory update</span>
                         </label>
                     </div>
@@ -1348,7 +1393,7 @@
                 <div class="form-grid">
                     <div class="form-grid-full" style="display:flex;gap:18px;align-items:center;flex-wrap:wrap;">
                         <label class="form-checkbox-label" style="padding:0;">
-                            <input type="checkbox" id="pauseEnabledInput" style="accent-color:#FF9F0A;" data-act="refreshPausePreview">
+                            <input type="checkbox" id="pauseEnabledInput" data-act="refreshPausePreview">
                             <span style="font-size:0.9rem;font-weight:600;">Pause Bari Plux Tool for everyone</span>
                         </label>
                         <span style="font-size:0.78rem;color:var(--muted);">Clients poll every ~15s — title &amp; message update live while paused.</span>
@@ -1579,9 +1624,9 @@
         <input type="hidden" id="annEditKey">
         <div class="modal-grid" style="display:grid;gap:12px;grid-template-columns:1fr 1fr;">
             <div class="field" style="grid-column:1/-1;"><span class="label">Title</span><input id="annTitle" class="search-input" style="width:100%;" maxlength="120" data-act="refreshAnnPreview"></div>
-            <div class="field" style="grid-column:1/-1;"><span class="label">Description</span><textarea id="annDesc" rows="5" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:10px;font-family:Poppins,sans-serif;" data-act="refreshAnnPreview"></textarea></div>
+            <div class="field" style="grid-column:1/-1;"><span class="label">Description</span><textarea id="annDesc" rows="5" class="form-textarea" data-act="refreshAnnPreview"></textarea></div>
             <div class="field"><span class="label">Status</span>
-                <select id="annStatus" style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:8px;border-radius:8px;" data-act="refreshAnnPreview">
+                <select id="annStatus" class="form-select" data-act="refreshAnnPreview">
                     <option value="new">New</option>
                     <option value="update">Update</option>
                     <option value="breaking">Breaking</option>
@@ -1589,7 +1634,7 @@
                 </select>
             </div>
             <div class="field"><span class="label">Published</span>
-                <label style="display:flex;align-items:center;gap:8px;color:var(--text);height:38px;"><input type="checkbox" id="annPublished" checked data-act="refreshAnnPreview"> Visible in app</label>
+                <label class="form-checkbox-label" style="height:38px;color:var(--text);"><input type="checkbox" id="annPublished" checked data-act="refreshAnnPreview"> Visible in app</label>
             </div>
         </div>
         <div class="ann-preview">
