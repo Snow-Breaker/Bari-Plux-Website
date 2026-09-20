@@ -2875,6 +2875,7 @@ function showFeatureFlagForm(key) {
     const keyInput = document.getElementById('ffKeyInput');
     const roleSelect = document.getElementById('ffRoleSelect');
     const enabledInput = document.getElementById('ffEnabledInput');
+    const proGateInput = document.getElementById('ffProGateInput');
     const keyError = document.getElementById('ffKeyError');
 
     keyError.style.display = 'none';
@@ -3582,9 +3583,9 @@ function renderDatabaseAssetRows() {
         <div style="border:1px solid var(--border);border-radius:8px;padding:12px;">
             <div style="font-size:0.82rem;font-weight:600;margin-bottom:8px;">${folder}</div>
             <div style="display:grid;grid-template-columns:100px 1fr 1fr;gap:10px;">
-                <input type="text" id="dbAsset_${key}_version" placeholder="version" style="width:100%;padding:9px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.8rem;">
-                <input type="text" id="dbAsset_${key}_url" placeholder="https://github.com/.../${folder}.zip" style="width:100%;padding:9px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.8rem;">
-                <input type="text" id="dbAsset_${key}_sha256" placeholder="sha256" style="width:100%;padding:9px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.8rem;">
+                <input type="text" id="dbAsset_${key}_version" placeholder="version" class="form-input mono" style="font-size:0.8rem;">
+                <input type="text" id="dbAsset_${key}_url" placeholder="https://github.com/.../${folder}.zip" class="form-input mono" style="font-size:0.8rem;">
+                <input type="text" id="dbAsset_${key}_sha256" placeholder="sha256" class="form-input mono" style="font-size:0.8rem;">
             </div>
         </div>
     `).join('');

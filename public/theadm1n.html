@@ -496,6 +496,32 @@
         .ann-preview-label { font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 8px; }
         .filter-btns.ann-filters { margin-bottom: 14px; }
 
+        /* ===== Shared form utility classes =====
+           Added to unify Feature Flags/Updates/Pause/Access/Website/Chat Mod/Role Management, which
+           had each accumulated their own one-off inline style="..." blocks over time (same visual
+           intent - a labeled input, a settings card, a two-column grid - repeated dozens of times
+           with slightly different colors/spacing/radii each pass). Pure additive CSS: every element
+           keeps its existing id/data-act attributes, only style="..." attributes are replaced with
+           these classes, so no JS behavior changes. */
+        .mini-label { font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 6px; }
+        .form-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r2); padding: 20px; margin-bottom: 16px; }
+        .form-card-title { font-size: 0.9rem; font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+        .form-card-desc { font-size: 0.8rem; color: var(--muted); margin-bottom: 16px; line-height: 1.5; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .form-grid-full { grid-column: 1 / -1; }
+        .form-input, .form-select, .form-textarea { width: 100%; padding: 10px 12px; background: rgba(255,255,255,0.06); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: 'Poppins', sans-serif; font-size: 0.85rem; transition: border-color 0.2s; }
+        .form-input.mono, .form-textarea.mono, .form-select.mono { font-family: 'JetBrains Mono', monospace; }
+        .form-textarea { resize: vertical; line-height: 1.5; }
+        .form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(108,99,255,0.12); }
+        .form-checkbox-label { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 9px 0; font-size: 0.85rem; }
+        .form-checkbox-label input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--accent); cursor: pointer; }
+        .form-actions { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; align-items: center; }
+        .form-hint { font-size: 0.78rem; color: var(--muted); margin-top: 10px; line-height: 1.5; }
+        .line-picker { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+        .btn-gradient-accent { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; border: none; padding: 9px 18px; border-radius: 8px; font-family: 'Poppins', sans-serif; font-size: 0.82rem; font-weight: 600; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
+        .btn-gradient-accent:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(108,99,255,0.3); }
+        @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
+
         /* Keep admin UI above any accidental ambient / global layers */
         #gate, #app { position: relative; z-index: 2; }
         #app.show { position: relative; z-index: 2; }
@@ -812,7 +838,7 @@
                 <div style="flex:1;min-width:260px;">
                     <span class="toolbar-title"><i class="fas fa-comment-slash"></i> Banned words</span>
                     <div style="font-size:0.72rem;color:var(--muted);margin-top:4px;">One word/phrase per line. Lobby chat blocks these (English word-boundary match).</div>
-                    <textarea id="cmBannedWordsInput" rows="4" style="width:100%;margin-top:8px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:10px;font-family:'JetBrains Mono',monospace;font-size:0.78rem;resize:vertical;" placeholder="badword&#10;another"></textarea>
+                    <textarea id="cmBannedWordsInput" rows="4" class="form-textarea mono" style="margin-top:8px;font-size:0.78rem;" placeholder="badword&#10;another"></textarea>
                     <div style="display:flex;gap:8px;margin-top:8px;align-items:center;">
                         <button class="icon-btn teal" data-act="saveBannedWords"><i class="fas fa-save"></i> Save banned words</button>
                         <span id="cmBannedWordsStatus" style="font-size:0.72rem;color:var(--muted);"></span>
@@ -828,20 +854,20 @@
                     </div>
                     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:10px;align-items:end;">
                         <div>
-                            <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Free slow mode (sec)</div>
-                            <input type="number" min="0" step="1" id="cmSlowModeFree" placeholder="10" style="width:100%;padding:9px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.82rem;">
+                            <div class="mini-label">Free slow mode (sec)</div>
+                            <input type="number" min="0" step="1" id="cmSlowModeFree" placeholder="10" class="form-input mono">
                         </div>
                         <div>
-                            <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Pro slow mode (sec)</div>
-                            <input type="number" min="0" step="1" id="cmSlowModePro" placeholder="10" style="width:100%;padding:9px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.82rem;">
+                            <div class="mini-label">Pro slow mode (sec)</div>
+                            <input type="number" min="0" step="1" id="cmSlowModePro" placeholder="10" class="form-input mono">
                         </div>
                         <div>
-                            <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Founder/Dev slow mode (sec)</div>
-                            <input type="number" min="0" step="1" id="cmSlowModeStaff" placeholder="3" style="width:100%;padding:9px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.82rem;">
+                            <div class="mini-label">Founder/Dev slow mode (sec)</div>
+                            <input type="number" min="0" step="1" id="cmSlowModeStaff" placeholder="3" class="form-input mono">
                         </div>
                         <div>
-                            <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Auto-delete after (hours)</div>
-                            <input type="number" min="0" step="1" id="cmAutoDeleteHours" placeholder="0 = off" style="width:100%;padding:9px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.82rem;">
+                            <div class="mini-label">Auto-delete after (hours)</div>
+                            <input type="number" min="0" step="1" id="cmAutoDeleteHours" placeholder="0 = off" class="form-input mono">
                         </div>
                     </div>
                     <div style="display:flex;gap:8px;margin-top:10px;align-items:center;">
@@ -856,14 +882,14 @@
                     <span class="toolbar-title"><i class="fas fa-thumbtack"></i> Pinned message</span>
                     <div style="font-size:0.72rem;color:var(--muted);margin-top:4px;">Shown as a banner at the top of the selected room's chat.</div>
                     <div style="display:flex;gap:8px;margin-top:8px;align-items:center;">
-                        <select id="cmPinRoomSelect" data-act="onCmPinRoomChange" style="background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:8px 10px;">
+                        <select id="cmPinRoomSelect" data-act="onCmPinRoomChange" class="form-select" style="width:auto;">
                             <option value="general">General</option>
                             <option value="help">Help</option>
                             <option value="offtopic">Off-topic</option>
                         </select>
                         <span id="cmPinStatus" style="font-size:0.72rem;color:var(--muted);"></span>
                     </div>
-                    <textarea id="cmPinTextInput" rows="2" maxlength="400" style="width:100%;margin-top:8px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:10px;font-size:0.82rem;resize:vertical;" placeholder="Pinned message text…"></textarea>
+                    <textarea id="cmPinTextInput" rows="2" maxlength="400" class="form-textarea" style="margin-top:8px;" placeholder="Pinned message text…"></textarea>
                     <div style="display:flex;gap:8px;margin-top:8px;">
                         <button class="icon-btn teal" data-act="setChatPin"><i class="fas fa-thumbtack"></i> Set pin</button>
                         <button class="icon-btn" data-act="clearChatPin"><i class="fas fa-times"></i> Clear pin</button>
@@ -978,40 +1004,40 @@
                 <code style="color:var(--accent2);">feature_flags</code> (legacy, not currently read by any client) depending on the line selected above.
             </div>
 
-            <div id="remoteConfigCard" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px;margin-bottom:20px;">
-                <div style="font-size:0.9rem;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px;">
+            <div id="remoteConfigCard" class="form-card">
+                <div class="form-card-title">
                     <i class="fas fa-sliders-h" style="color:var(--accent);"></i> Remote Config (BPT)
                 </div>
-                <div style="font-size:0.78rem;color:var(--muted);margin-bottom:14px;line-height:1.5;">
+                <div class="form-card-desc">
                     Tunable runtime behavior for BPT 3.x - poll cadence, request timeout, and an optional download mirror.
                     Writes to <code style="color:var(--accent2);">app_config/remote_config_3x</code>. Blank or 0 = built-in default, shown as placeholder.
                 </div>
                 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;align-items:end;">
                     <div>
-                        <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Feature flags poll (sec)</div>
-                        <input type="number" min="0" step="1" id="rcFeatureFlagsPoll" placeholder="90" style="width:100%;padding:9px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.82rem;">
+                        <div class="mini-label">Feature flags poll (sec)</div>
+                        <input type="number" min="0" step="1" id="rcFeatureFlagsPoll" placeholder="90" class="form-input mono">
                     </div>
                     <div>
-                        <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Maintenance poll (sec)</div>
-                        <input type="number" min="0" step="1" id="rcMaintenancePoll" placeholder="60" style="width:100%;padding:9px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.82rem;">
+                        <div class="mini-label">Maintenance poll (sec)</div>
+                        <input type="number" min="0" step="1" id="rcMaintenancePoll" placeholder="60" class="form-input mono">
                     </div>
                     <div>
-                        <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">HTTP request timeout (sec)</div>
-                        <input type="number" min="0" step="1" id="rcHttpTimeout" placeholder="30" style="width:100%;padding:9px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.82rem;">
+                        <div class="mini-label">HTTP request timeout (sec)</div>
+                        <input type="number" min="0" step="1" id="rcHttpTimeout" placeholder="30" class="form-input mono">
                     </div>
                     <div>
-                        <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Download mirror URL</div>
-                        <input type="text" id="rcDownloadMirror" placeholder="https://..." style="width:100%;padding:9px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.82rem;">
+                        <div class="mini-label">Download mirror URL</div>
+                        <input type="text" id="rcDownloadMirror" placeholder="https://..." class="form-input mono">
                     </div>
                     <div>
-                        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:9px 0;font-size:0.82rem;">
-                            <input type="checkbox" id="rcPubgMobileLightEnabled" style="width:16px;height:16px;">
+                        <label class="form-checkbox-label">
+                            <input type="checkbox" id="rcPubgMobileLightEnabled">
                             PUBG Mobile Light unlocked
                         </label>
                     </div>
                     <div>
-                        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:9px 0;font-size:0.82rem;">
-                            <input type="checkbox" id="rcBgmiLiteEnabled" style="width:16px;height:16px;">
+                        <label class="form-checkbox-label">
+                            <input type="checkbox" id="rcBgmiLiteEnabled">
                             BGMI LITE unlocked
                         </label>
                     </div>
@@ -1019,18 +1045,18 @@
                         <button class="action-btn view" data-act="saveRemoteConfig" style="padding:9px 16px;font-size:0.82rem;font-weight:600;width:100%;"><i class="fas fa-save"></i> Save</button>
                     </div>
                 </div>
-                <div style="font-size:0.72rem;color:var(--muted);margin-top:10px;line-height:1.5;">
+                <div class="form-hint">
                     <strong>PUBG Mobile Light</strong> (<code style="color:var(--accent2);">com.tencent.igfit</code>) is listed in BPT's Settings PUBG version picker but stays disabled/"Coming Soon" until this box is checked - flip it on once the game officially releases, no app update needed.<br>
                     <strong>BGMI LITE</strong> (<code style="color:var(--accent2);">com.krafton.bgmilite</code>) works the same way - a separate, independent toggle from PUBG Mobile Light since it's a different game.
                 </div>
-                <div id="rcStatus" style="font-size:0.72rem;color:var(--muted);margin-top:10px;"></div>
+                <div id="rcStatus" class="form-hint" style="margin-top:10px;"></div>
             </div>
 
-            <div id="tacGraphicsApplyCard" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px;margin-bottom:20px;">
-                <div style="font-size:0.9rem;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px;">
+            <div id="tacGraphicsApplyCard" class="form-card">
+                <div class="form-card-title">
                     <i class="fas fa-brush" style="color:var(--accent);"></i> TAC Master Switch (BPT)
                 </div>
-                <div style="font-size:0.78rem;color:var(--muted);margin-bottom:14px;line-height:1.5;">
+                <div class="form-card-desc">
                     Remote re-enable switch for <code style="color:var(--accent2);">feature_flags_3x/tac_emulator_enabled</code>
                     (renamed from <code style="color:var(--accent2);">tac_graphics_apply_enabled</code> in BPT commit 2bc3230 -
                     this card's key was out of sync with that rename until now, so toggling it previously wrote to a key BPT no
@@ -1041,20 +1067,20 @@
                     users to reach that honest partial-support state.
                 </div>
                 <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
-                    <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.82rem;">
-                        <input type="checkbox" id="tacGraphicsApplyEnabled" style="width:16px;height:16px;">
+                    <label class="form-checkbox-label">
+                        <input type="checkbox" id="tacGraphicsApplyEnabled">
                         Allow selecting TAC and applying its supported capabilities (FPS cap, File Manager, ...)
                     </label>
                     <button class="action-btn view" data-act="saveTacGraphicsApplyToggle" style="padding:9px 16px;font-size:0.82rem;font-weight:600;"><i class="fas fa-save"></i> Save</button>
                 </div>
-                <div id="tacGraphicsApplyStatus" style="font-size:0.72rem;color:var(--muted);margin-top:10px;"></div>
+                <div id="tacGraphicsApplyStatus" class="form-hint" style="margin-top:10px;"></div>
             </div>
 
-            <div id="databaseAssetsCard" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px;margin-bottom:20px;">
-                <div style="font-size:0.9rem;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px;">
+            <div id="databaseAssetsCard" class="form-card">
+                <div class="form-card-title">
                     <i class="fas fa-folder-open" style="color:var(--accent);"></i> Content Updates (BPT)
                 </div>
-                <div style="font-size:0.78rem;color:var(--muted);margin-bottom:14px;line-height:1.5;">
+                <div class="form-card-desc">
                     Ship an updated keymap/iPad-profile/ADB package to installed users without a full app release.
                     Zip the folder, upload it as a GitHub Release asset (or anywhere under bariplux.com), paste its
                     URL + SHA-256 below, and bump the version string. Writes to
@@ -1065,7 +1091,7 @@
                 <div style="margin-top:14px;">
                     <button class="action-btn view" data-act="saveDatabaseAssets" style="padding:9px 16px;font-size:0.82rem;font-weight:600;"><i class="fas fa-save"></i> Save</button>
                 </div>
-                <div id="dbAssetsStatus" style="font-size:0.72rem;color:var(--muted);margin-top:10px;"></div>
+                <div id="dbAssetsStatus" class="form-hint" style="margin-top:10px;"></div>
             </div>
 
             <div class="ff-section-title" id="ffPagesSectionTitle"><i class="fas fa-th-large"></i> App Pages <span class="hint">Open a page to manage its capabilities · Show/Hide = menu · Enable/Disable = can open · Emulator(s) = which profile(s) see it, pick several or leave on All</span></div>
@@ -1094,20 +1120,20 @@
                 <button class="icon-btn teal" id="addFeatureFlagBtn" data-act="showFeatureFlagForm"><i class="fas fa-plus"></i> Add Flag</button>
             </div>
 
-            <div id="featureFlagForm" style="display:none;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px;margin-bottom:16px;animation:fadeUp 0.25s ease;">
-                <div style="font-size:0.9rem;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px;">
+            <div id="featureFlagForm" class="form-card" style="display:none;animation:fadeUp 0.25s ease;">
+                <div class="form-card-title" style="margin-bottom:14px;">
                     <i class="fas fa-flag" style="color:var(--accent);"></i>
                     <span id="ffFormTitle">Add Feature Flag</span>
                 </div>
                 <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto auto;gap:12px;align-items:end;">
                     <div>
-                        <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Feature Key</div>
-                        <input type="text" id="ffKeyInput" placeholder="e.g. cloud_backup" style="width:100%;padding:9px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.82rem;">
+                        <div class="mini-label">Feature Key</div>
+                        <input type="text" id="ffKeyInput" placeholder="e.g. cloud_backup" class="form-input mono">
                         <div id="ffKeyError" style="font-size:0.72rem;color:var(--danger);margin-top:3px;display:none;">Only lowercase letters, numbers, and underscores allowed. Page keys are managed above.</div>
                     </div>
                     <div>
-                        <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Minimum Role</div>
-                        <select id="ffRoleSelect" style="width:100%;padding:9px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Poppins',sans-serif;font-size:0.82rem;cursor:pointer;">
+                        <div class="mini-label">Minimum Role</div>
+                        <select id="ffRoleSelect" class="form-select">
                             <option value="free">● Free</option>
                             <option value="pro">⭐ Pro</option>
                             <option value="dev">🛠️ Dev</option>
@@ -1115,16 +1141,16 @@
                         </select>
                     </div>
                     <div>
-                        <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">&nbsp;</div>
-                        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:9px 0;">
-                            <input type="checkbox" id="ffEnabledInput" checked style="width:16px;height:16px;cursor:pointer;accent-color:var(--accent);">
+                        <div class="mini-label">&nbsp;</div>
+                        <label class="form-checkbox-label">
+                            <input type="checkbox" id="ffEnabledInput" checked>
                             <span style="font-size:0.85rem;">Enabled</span>
                         </label>
                     </div>
                     <div>
-                        <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">&nbsp;</div>
-                        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:9px 0;">
-                            <input type="checkbox" id="ffProGateInput" style="width:16px;height:16px;cursor:pointer;accent-color:var(--accent);">
+                        <div class="mini-label">&nbsp;</div>
+                        <label class="form-checkbox-label">
+                            <input type="checkbox" id="ffProGateInput">
                             <span style="font-size:0.85rem;">Pro-gated</span>
                         </label>
                     </div>
@@ -1169,117 +1195,117 @@
                 <button class="icon-btn teal" data-act="loadUpdateConfig"><i class="fas fa-sync-alt"></i> Refresh</button>
             </div>
 
-            <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:22px;margin-bottom:16px;">
-                <div style="font-size:0.9rem;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px;">
+            <div class="form-card">
+                <div class="form-card-title">
                     <i class="fas fa-cloud-download-alt" style="color:var(--accent);"></i>
                     Publish update — 3.x (WinUI3, current)
                 </div>
-                <div style="font-size:0.76rem;color:var(--muted);margin-bottom:16px;">Read by the current Bari Plux Tool (WinUI3) app only.</div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+                <div class="form-card-desc" style="margin-bottom:16px;">Read by the current Bari Plux Tool (WinUI3) app only.</div>
+                <div class="form-grid">
                     <div>
-                        <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Latest Version</div>
-                        <input type="text" id="updVersionInput_3x" placeholder="e.g. 3.0.0" style="width:100%;padding:10px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.9rem;">
+                        <div class="mini-label">Latest Version</div>
+                        <input type="text" id="updVersionInput_3x" placeholder="e.g. 3.0.0" class="form-input mono" style="font-size:0.9rem;">
                     </div>
                     <div>
-                        <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Installer Download URL</div>
-                        <input type="text" id="updDownloadUrlInput_3x" placeholder="https://download.bariplux.com/..." style="width:100%;padding:10px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.82rem;">
+                        <div class="mini-label">Installer Download URL</div>
+                        <input type="text" id="updDownloadUrlInput_3x" placeholder="https://download.bariplux.com/..." class="form-input mono">
                     </div>
-                    <div style="grid-column:1/-1;">
-                        <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Installer SHA-256 (auto-published by CI on a GitHub release - only fill this in by hand if publishing outside that pipeline)</div>
-                        <input type="text" id="updSha256Input_3x" placeholder="64 hex characters - leave blank to keep the client's integrity check inert" style="width:100%;padding:10px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.82rem;">
+                    <div class="form-grid-full">
+                        <div class="mini-label">Installer SHA-256 (auto-published by CI on a GitHub release - only fill this in by hand if publishing outside that pipeline)</div>
+                        <input type="text" id="updSha256Input_3x" placeholder="64 hex characters - leave blank to keep the client's integrity check inert" class="form-input mono">
                         <div style="font-size:0.7rem;color:var(--warning);margin-top:4px;">Saving this form always writes whatever is in this box (blank clears it) - if CI already published a hash for the current version, leave this field as loaded or you will silently strip the client's integrity check for every user's next update.</div>
                     </div>
                     <div style="display:flex;gap:22px;align-items:center;padding-top:8px;">
-                        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
-                            <input type="checkbox" id="updCheckEnabledInput_3x" checked style="width:16px;height:16px;accent-color:var(--accent);">
+                        <label class="form-checkbox-label" style="padding:0;">
+                            <input type="checkbox" id="updCheckEnabledInput_3x" checked>
                             <span style="font-size:0.85rem;">Update checks enabled</span>
                         </label>
-                        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
-                            <input type="checkbox" id="updMandatoryInput_3x" style="width:16px;height:16px;accent-color:var(--warning);">
+                        <label class="form-checkbox-label" style="padding:0;">
+                            <input type="checkbox" id="updMandatoryInput_3x" style="accent-color:var(--warning);">
                             <span style="font-size:0.85rem;">Mandatory update</span>
                         </label>
                     </div>
                     <div style="padding-top:4px;">
-                        <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Client preview</div>
+                        <div class="mini-label">Client preview</div>
                         <div id="updPreviewBox_3x" style="padding:10px 12px;background:rgba(0,0,0,0.25);border:1px solid var(--border);border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:0.85rem;color:var(--accent2);">3.0.0</div>
                     </div>
-                    <div style="grid-column:1/-1;">
-                        <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Changelog (optional)</div>
-                        <textarea id="updChangelogInput_3x" rows="4" placeholder="What's new in this release…" style="width:100%;padding:10px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Poppins',sans-serif;font-size:0.85rem;resize:vertical;"></textarea>
+                    <div class="form-grid-full">
+                        <div class="mini-label">Changelog (optional)</div>
+                        <textarea id="updChangelogInput_3x" rows="4" placeholder="What's new in this release…" class="form-textarea"></textarea>
                     </div>
                 </div>
-                <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;">
+                <div class="form-actions">
                     <button class="action-btn view" data-act="saveUpdateConfig" data-a1="3x" style="padding:10px 18px;font-weight:600;"><i class="fas fa-save"></i> Save &amp; Publish (3.x)</button>
                 </div>
                 <div class="last-updated" id="updatesLastUpdated_3x" style="margin-top:10px;"></div>
             </div>
 
-            <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:22px;margin-bottom:16px;">
-                <div style="font-size:0.9rem;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px;">
+            <div class="form-card">
+                <div class="form-card-title">
                     <i class="fas fa-cloud-download-alt" style="color:var(--muted);"></i>
                     Publish update — 2.x (WPF legacy)
                 </div>
-                <div style="font-size:0.76rem;color:var(--muted);margin-bottom:16px;">Read by the older Bari Plux Tool (WPF) app only — separate from 3.x above, so this never gets pointed at the WinUI3 installer.</div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+                <div class="form-card-desc" style="margin-bottom:16px;">Read by the older Bari Plux Tool (WPF) app only — separate from 3.x above, so this never gets pointed at the WinUI3 installer.</div>
+                <div class="form-grid">
                     <div>
-                        <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Latest Version</div>
-                        <input type="text" id="updVersionInput_2x" placeholder="e.g. 2.3.0" style="width:100%;padding:10px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.9rem;">
+                        <div class="mini-label">Latest Version</div>
+                        <input type="text" id="updVersionInput_2x" placeholder="e.g. 2.3.0" class="form-input mono" style="font-size:0.9rem;">
                     </div>
                     <div>
-                        <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Installer Download URL</div>
-                        <input type="text" id="updDownloadUrlInput_2x" placeholder="https://download.bariplux.com/..." style="width:100%;padding:10px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.82rem;">
+                        <div class="mini-label">Installer Download URL</div>
+                        <input type="text" id="updDownloadUrlInput_2x" placeholder="https://download.bariplux.com/..." class="form-input mono">
                     </div>
                     <div style="display:flex;gap:22px;align-items:center;padding-top:8px;">
-                        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
-                            <input type="checkbox" id="updCheckEnabledInput_2x" checked style="width:16px;height:16px;accent-color:var(--accent);">
+                        <label class="form-checkbox-label" style="padding:0;">
+                            <input type="checkbox" id="updCheckEnabledInput_2x" checked>
                             <span style="font-size:0.85rem;">Update checks enabled</span>
                         </label>
-                        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
-                            <input type="checkbox" id="updMandatoryInput_2x" style="width:16px;height:16px;accent-color:var(--warning);">
+                        <label class="form-checkbox-label" style="padding:0;">
+                            <input type="checkbox" id="updMandatoryInput_2x" style="accent-color:var(--warning);">
                             <span style="font-size:0.85rem;">Mandatory update</span>
                         </label>
                     </div>
                     <div style="padding-top:4px;">
-                        <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Client preview</div>
+                        <div class="mini-label">Client preview</div>
                         <div id="updPreviewBox_2x" style="padding:10px 12px;background:rgba(0,0,0,0.25);border:1px solid var(--border);border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:0.85rem;color:var(--accent2);">2.3.0</div>
                     </div>
-                    <div style="grid-column:1/-1;">
-                        <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Changelog (optional)</div>
-                        <textarea id="updChangelogInput_2x" rows="4" placeholder="What's new in this release…" style="width:100%;padding:10px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Poppins',sans-serif;font-size:0.85rem;resize:vertical;"></textarea>
+                    <div class="form-grid-full">
+                        <div class="mini-label">Changelog (optional)</div>
+                        <textarea id="updChangelogInput_2x" rows="4" placeholder="What's new in this release…" class="form-textarea"></textarea>
                     </div>
                 </div>
-                <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;">
+                <div class="form-actions">
                     <button class="action-btn view" data-act="saveUpdateConfig" data-a1="2x" style="padding:10px 18px;font-weight:600;"><i class="fas fa-save"></i> Save &amp; Publish (2.x)</button>
                     <button class="action-btn" data-act="seedUpdateConfigFromLegacy" style="padding:10px 18px;"><i class="fas fa-seedling"></i> Seed from version.txt</button>
                 </div>
                 <div class="last-updated" id="updatesLastUpdated_2x" style="margin-top:10px;"></div>
             </div>
 
-            <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:22px;margin-bottom:16px;">
-                <div style="font-size:0.9rem;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px;">
+            <div class="form-card">
+                <div class="form-card-title">
                     <i class="fas fa-mobile-alt" style="color:var(--accent);"></i>
                     Publish Companion Agent build
                 </div>
-                <div style="font-size:0.76rem;color:var(--muted);margin-bottom:16px;">
+                <div class="form-card-desc" style="margin-bottom:16px;">
                     Ships to <code style="color:var(--accent2);">dl.bariplux.com/BariPluxAgent.apk</code> independently
                     of a BPT release — connected clients compare their paired Agent's own reported version against this
                     and offer an in-app update, not a full BPT update.
                 </div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+                <div class="form-grid">
                     <div>
-                        <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">APK Version</div>
-                        <input type="text" id="agentVersionInput" placeholder="e.g. 1.1.0" style="width:100%;padding:10px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.9rem;">
+                        <div class="mini-label">APK Version</div>
+                        <input type="text" id="agentVersionInput" placeholder="e.g. 1.1.0" class="form-input mono" style="font-size:0.9rem;">
                     </div>
                     <div>
-                        <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">APK File</div>
-                        <input type="file" id="agentApkInput" accept=".apk" style="width:100%;padding:8px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:0.82rem;">
+                        <div class="mini-label">APK File</div>
+                        <input type="file" id="agentApkInput" accept=".apk" class="form-input" style="padding:8px 12px;font-size:0.82rem;">
                     </div>
-                    <div style="grid-column:1/-1;">
-                        <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Changelog (optional)</div>
-                        <textarea id="agentChangelogInput" rows="3" placeholder="What changed in this Agent build…" style="width:100%;padding:10px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Poppins',sans-serif;font-size:0.85rem;resize:vertical;"></textarea>
+                    <div class="form-grid-full">
+                        <div class="mini-label">Changelog (optional)</div>
+                        <textarea id="agentChangelogInput" rows="3" placeholder="What changed in this Agent build…" class="form-textarea"></textarea>
                     </div>
                 </div>
-                <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;align-items:center;">
+                <div class="form-actions" style="align-items:center;">
                     <button class="action-btn view" data-act="publishAgentUpdate" style="padding:10px 18px;font-weight:600;"><i class="fas fa-upload"></i> Upload &amp; Publish</button>
                     <span id="agentPublishStatus" style="font-size:0.78rem;color:var(--muted);"></span>
                 </div>
@@ -1314,29 +1340,29 @@
                 <label class="filter-btn" style="cursor:pointer;"><input type="radio" name="pauseLine" value="2x" data-act="onPauseLineChange" style="margin-right:6px;"> Legacy WPF (2.x, shared)</label>
             </div>
 
-            <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:22px;margin-bottom:16px;">
-                <div style="font-size:0.9rem;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px;">
+            <div class="form-card" style="padding:22px;">
+                <div class="form-card-title" style="margin-bottom:16px;">
                     <i class="fas fa-pause-circle" style="color:#FF9F0A;"></i>
                     Maintenance / temporary pause
                 </div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
-                    <div style="grid-column:1/-1;display:flex;gap:18px;align-items:center;flex-wrap:wrap;">
-                        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
-                            <input type="checkbox" id="pauseEnabledInput" style="width:16px;height:16px;accent-color:#FF9F0A;" data-act="refreshPausePreview">
+                <div class="form-grid">
+                    <div class="form-grid-full" style="display:flex;gap:18px;align-items:center;flex-wrap:wrap;">
+                        <label class="form-checkbox-label" style="padding:0;">
+                            <input type="checkbox" id="pauseEnabledInput" style="accent-color:#FF9F0A;" data-act="refreshPausePreview">
                             <span style="font-size:0.9rem;font-weight:600;">Pause Bari Plux Tool for everyone</span>
                         </label>
                         <span style="font-size:0.78rem;color:var(--muted);">Clients poll every ~15s — title &amp; message update live while paused.</span>
                     </div>
-                    <div style="grid-column:1/-1;">
-                        <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Title <span id="pauseTitleCount" style="opacity:0.7;">0/120</span></div>
-                        <input type="text" id="pauseTitleInput" maxlength="120" placeholder="e.g. Temporarily Unavailable" data-act="refreshPausePreview" style="width:100%;padding:10px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Poppins',sans-serif;font-size:0.9rem;">
+                    <div class="form-grid-full">
+                        <div class="mini-label">Title <span id="pauseTitleCount" style="opacity:0.7;">0/120</span></div>
+                        <input type="text" id="pauseTitleInput" maxlength="120" placeholder="e.g. Temporarily Unavailable" data-act="refreshPausePreview" class="form-input" style="font-size:0.9rem;">
                     </div>
-                    <div style="grid-column:1/-1;">
-                        <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Message <span id="pauseMessageCount" style="opacity:0.7;">0/2000</span></div>
-                        <textarea id="pauseMessageInput" maxlength="2000" rows="5" placeholder="Explain why the app is paused…" data-act="refreshPausePreview" style="width:100%;padding:10px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Poppins',sans-serif;font-size:0.85rem;resize:vertical;"></textarea>
+                    <div class="form-grid-full">
+                        <div class="mini-label">Message <span id="pauseMessageCount" style="opacity:0.7;">0/2000</span></div>
+                        <textarea id="pauseMessageInput" maxlength="2000" rows="5" placeholder="Explain why the app is paused…" data-act="refreshPausePreview" class="form-textarea"></textarea>
                     </div>
-                    <div style="grid-column:1/-1;">
-                        <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:8px;">Client preview</div>
+                    <div class="form-grid-full">
+                        <div class="mini-label" style="margin-bottom:8px;">Client preview</div>
                         <div id="pausePreviewBox" style="padding:18px 20px;background:rgba(0,0,0,0.28);border:1px solid var(--border);border-radius:14px;text-align:center;">
                             <div style="font-size:0.72rem;color:#FF9F0A;font-weight:600;margin-bottom:6px;">Bari Plux</div>
                             <div id="pausePreviewTitle" style="font-size:1.15rem;font-weight:700;margin-bottom:8px;">Temporarily Unavailable</div>
@@ -1345,11 +1371,11 @@
                         </div>
                     </div>
                 </div>
-                <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;">
+                <div class="form-actions">
                     <button class="action-btn view" data-act="savePauseConfig" style="padding:10px 18px;font-weight:600;"><i class="fas fa-save"></i> Save &amp; Publish</button>
                     <button class="action-btn" data-act="resumeAppNow" style="padding:10px 18px;"><i class="fas fa-play"></i> Resume now</button>
                 </div>
-                <div style="margin-top:14px;font-size:0.78rem;color:var(--muted);line-height:1.5;">
+                <div class="form-hint" style="margin-top:14px;">
                     Writes to <code style="color:var(--accent2);">app_config/maintenance_3x</code> (BPT) or
                     <code style="color:var(--accent2);">app_config/maintenance</code> (legacy 2.x, shared) depending on the line selected above.
                     While paused, you can change title/message and Save again — open clients refresh the gate text automatically.
@@ -1365,21 +1391,21 @@
                 <span class="toolbar-title">Website controls</span>
                 <button class="icon-btn teal" data-act="loadWebsiteConfig"><i class="fas fa-sync-alt"></i> Refresh</button>
             </div>
-            <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px;max-width:720px;margin-bottom:16px;">
-                <div style="font-size:0.82rem;color:var(--muted);margin-bottom:14px;line-height:1.5;">
+            <div class="form-card" style="max-width:720px;">
+                <div class="form-card-desc">
                     Homepage banner shown under the header (optional). Stored at <code style="color:var(--accent2);">website/banner</code>.
                     Leave empty to hide.
                 </div>
-                <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:6px;">Banner text</div>
-                <textarea id="websiteBannerInput" maxlength="280" rows="3" placeholder="e.g. Bari Plux Tool v2.3 is live — see /tool" style="width:100%;padding:10px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Poppins',sans-serif;font-size:0.85rem;resize:vertical;"></textarea>
-                <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin:14px 0 6px;">Banner link (optional)</div>
-                <input id="websiteBannerLink" type="text" placeholder="/tool" style="width:100%;padding:10px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.85rem;">
-                <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;">
+                <div class="mini-label" style="margin-bottom:6px;">Banner text</div>
+                <textarea id="websiteBannerInput" maxlength="280" rows="3" placeholder="e.g. Bari Plux Tool v2.3 is live — see /tool" class="form-textarea"></textarea>
+                <div class="mini-label" style="margin:14px 0 6px;">Banner link (optional)</div>
+                <input id="websiteBannerLink" type="text" placeholder="/tool" class="form-input mono">
+                <div class="form-actions">
                     <button class="action-btn view" data-act="saveWebsiteConfig" style="padding:10px 18px;font-weight:600;"><i class="fas fa-save"></i> Save banner</button>
                     <button class="action-btn" data-act="clearWebsiteBanner" style="padding:10px 18px;"><i class="fas fa-eraser"></i> Clear</button>
                 </div>
             </div>
-            <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px;max-width:720px;">
+            <div class="form-card" style="max-width:720px;margin-bottom:0;">
                 <div class="toolbar-title" style="margin-bottom:10px;">Quick site links</div>
                 <div style="display:flex;flex-wrap:wrap;gap:8px;">
                     <a class="topbar-btn" href="/tool" target="_blank"><i class="fas fa-wrench"></i> Tool page</a>
@@ -1388,14 +1414,14 @@
                     <a class="topbar-btn" href="/privacy-policy" target="_blank"><i class="fas fa-balance-scale"></i> Legal</a>
                     <a class="topbar-btn" href="/404" target="_blank"><i class="fas fa-exclamation-triangle"></i> 404</a>
                 </div>
-                <div style="margin-top:14px;font-size:0.78rem;color:var(--muted);line-height:1.5;">
+                <div class="form-hint">
                     App installer URL is managed under the <strong>Updates</strong> tab. Announcements stay under <strong>Announcements</strong>.
                 </div>
             </div>
             <div class="last-updated" id="websiteLastUpdated"></div>
         </div>
 
-        
+
         <div id="accessSection" style="display:none;">
             <div class="toolbar">
                 <span class="toolbar-title">App Access Control</span>
@@ -1405,32 +1431,32 @@
                 <label class="filter-btn" style="cursor:pointer;"><input type="radio" name="accessLine" value="3x" checked data-act="onAccessLineChange" style="margin-right:6px;"> BPT (3.x)</label>
                 <label class="filter-btn" style="cursor:pointer;"><input type="radio" name="accessLine" value="2x" data-act="onAccessLineChange" style="margin-right:6px;"> Legacy WPF (2.x, shared)</label>
             </div>
-            <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px;max-width:720px;">
-                <div style="font-size:0.82rem;color:var(--muted);margin-bottom:16px;line-height:1.5;">
+            <div class="form-card" style="max-width:720px;margin-bottom:0;">
+                <div class="form-card-desc" style="margin-bottom:16px;">
                     Control who can open the desktop app. Default is <strong style="color:var(--text);">Everyone</strong>.
                     Allowlist accepts emails and/or user IDs (one per line). Role mode requires that role or higher.
                 </div>
-                <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:8px;">Mode</div>
+                <div class="mini-label" style="margin-bottom:8px;">Mode</div>
                 <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px;">
                     <label class="filter-btn" style="cursor:pointer;"><input type="radio" name="accessMode" value="everyone" data-act="onAccessModeChange" style="margin-right:6px;"> Everyone</label>
                     <label class="filter-btn" style="cursor:pointer;"><input type="radio" name="accessMode" value="allowlist" data-act="onAccessModeChange" style="margin-right:6px;"> Allowlist</label>
                     <label class="filter-btn" style="cursor:pointer;"><input type="radio" name="accessMode" value="role" data-act="onAccessModeChange" style="margin-right:6px;"> Min role</label>
                 </div>
                 <div id="accessAllowlistPanel" style="display:none;margin-bottom:16px;">
-                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                    <div class="form-grid">
                         <div>
                             <div style="font-size:0.72rem;color:var(--muted);margin-bottom:4px;">Emails (one per line)</div>
-                            <textarea id="accessEmails" rows="8" placeholder="user@gmail.com" style="width:100%;padding:10px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.78rem;resize:vertical;"></textarea>
+                            <textarea id="accessEmails" rows="8" placeholder="user@gmail.com" class="form-textarea mono" style="font-size:0.78rem;"></textarea>
                         </div>
                         <div>
                             <div style="font-size:0.72rem;color:var(--muted);margin-bottom:4px;">User IDs (one per line)</div>
-                            <textarea id="accessUids" rows="8" placeholder="firebaseUid or discord_…" style="width:100%;padding:10px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.78rem;resize:vertical;"></textarea>
+                            <textarea id="accessUids" rows="8" placeholder="firebaseUid or discord_…" class="form-textarea mono" style="font-size:0.78rem;"></textarea>
                         </div>
                     </div>
                 </div>
                 <div id="accessRolePanel" style="display:none;margin-bottom:16px;">
                     <div style="font-size:0.72rem;color:var(--muted);margin-bottom:4px;">Minimum role</div>
-                    <select id="accessMinRole" style="width:100%;max-width:240px;padding:9px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Poppins',sans-serif;font-size:0.82rem;">
+                    <select id="accessMinRole" class="form-select" style="max-width:240px;">
                         <option value="free">Free</option>
                         <option value="pro">Pro</option>
                         <option value="dev">Dev</option>
@@ -1648,13 +1674,13 @@
             <h3><i class="fas fa-shield-alt"></i> Role Management</h3>
             <div style="display:flex;flex-direction:column;gap:12px;">
                 <div>
-                    <div style="font-size:11px;color:#718096;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px;">Current Roles</div>
+                    <div class="mini-label">Current Roles</div>
                     <div id="modalCurrentRole" style="font-size:14px;display:flex;flex-wrap:wrap;gap:6px;"></div>
                 </div>
                 <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;">
                     <div style="flex:1;min-width:140px;">
-                        <div style="font-size:11px;color:#718096;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px;">Role 1</div>
-                        <select id="modalRoleSelect" style="width:100%;background:#1a2035;border:1px solid #2d3748;color:#E2E8F0;padding:6px 10px;border-radius:6px;font-size:13px;cursor:pointer;">
+                        <div class="mini-label">Role 1</div>
+                        <select id="modalRoleSelect" class="form-select">
                             <option value="free">● FREE</option>
                             <option value="pro">⭐ PRO</option>
                             <option value="dev">🛠️ DEV</option>
@@ -1663,8 +1689,8 @@
                         </select>
                     </div>
                     <div style="flex:1;min-width:140px;">
-                        <div style="font-size:11px;color:#718096;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px;">Role 2 (optional)</div>
-                        <select id="modalRoleSelect2" style="width:100%;background:#1a2035;border:1px solid #2d3748;color:#E2E8F0;padding:6px 10px;border-radius:6px;font-size:13px;cursor:pointer;">
+                        <div class="mini-label">Role 2 (optional)</div>
+                        <select id="modalRoleSelect2" class="form-select">
                             <option value="">— none —</option>
                             <option value="pro">⭐ PRO</option>
                             <option value="dev">🛠️ DEV</option>
@@ -1672,13 +1698,13 @@
                             <option value="staff">🛡️ STAFF</option>
                         </select>
                     </div>
-                    <button data-act="assignRole" style="background:linear-gradient(135deg,#667EEA,#764BA2);color:white;border:none;padding:8px 16px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;">
+                    <button data-act="assignRole" class="btn-gradient-accent">
                         Assign
                     </button>
                 </div>
-                <div style="font-size:11px;color:#718096;line-height:1.4;">Admin-only. Up to 2 roles. App entitlements use the higher role; both badges are shown.</div>
+                <div class="form-hint" style="margin-top:0;">Admin-only. Up to 2 roles. App entitlements use the higher role; both badges are shown.</div>
             </div>
-            <div id="roleAssignedInfo" style="margin-top:8px;font-size:11px;color:#718096;"></div>
+            <div id="roleAssignedInfo" class="form-hint" style="margin-top:8px;"></div>
         </div>
         <div class="danger-zone">
             <div class="danger-zone-title"><i class="fas fa-shield-alt"></i> Admin Actions</div>
