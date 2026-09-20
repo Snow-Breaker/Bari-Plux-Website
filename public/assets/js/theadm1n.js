@@ -987,7 +987,12 @@ function renderUsers() {
                 <td><div class="country-cell">${flag?`<span class="country-flag">${flag}</span>`:''}<span>${esc(u.country||'—')}</span></div></td>
                 <td class="time-cell">${fmtDate(u.loginTime)}</td>
                 <td class="time-cell">${isOnline?'<span class="active-dot"></span>':''}<span>${u.lastActive?timeAgo(u.lastActive):'—'}</span></td>
-                <td><button class="action-btn view" data-act="openUserModal" data-a1="${esc(u.id)}" data-stop="1"><i class="fas fa-eye"></i> Details</button></td>
+                <td>
+                    <div style="display:flex;gap:6px;align-items:center;">
+                        <button class="action-btn view" data-act="openUserModal" data-a1="${esc(u.id)}" data-stop="1"><i class="fas fa-eye"></i> Details</button>
+                        <button class="action-btn row-kebab-btn" data-act="toggleRowMenu" data-a1="${esc(u.id)}" data-a2="${esc(u.name)}" data-a3="${u.blocked ? 'true' : 'false'}" data-pass-el="1" data-stop="1" aria-label="More actions" title="More actions"><i class="fas fa-ellipsis-v"></i></button>
+                    </div>
+                </td>
             </tr>`;
         }).join('');
         renderPagination('usersPagination', userPage, total, p=>{userPage=p;renderUsers();});
@@ -2101,6 +2106,23 @@ const PAGE_FEATURE_CATALOG = {
 
 let _ffFlagsCache = {};
 let _ffOpenPageKey = null;
+// Which flag cards have their "More settings" (Windows build/RAM/emulator version/pro-gate)
+// section expanded - keyed by flag key, survives grid re-renders (loadFeatureFlags reloads and
+// rebuilds the whole grid on every toggle, which would otherwise reset any open panel).
+let _ffCardMoreOpen = new Set();
+
+function toggleFfCardMore(key) {
+    const wrap = document.getElementById(`ffMore_${key}`);
+    if (!wrap) return;
+    const opening = wrap.style.display === 'none';
+    wrap.style.display = opening ? 'flex' : 'none';
+    if (opening) _ffCardMoreOpen.add(key); else _ffCardMoreOpen.delete(key);
+    const btn = document.querySelector(`[data-act="toggleFfCardMore"][data-a1="${key}"]`);
+    if (btn) {
+        btn.classList.toggle('open', opening);
+        btn.setAttribute('aria-expanded', opening ? 'true' : 'false');
+    }
+}
 
 function isPageFlagKey(key) {
     return PAGE_FLAG_KEYS.has(key);
@@ -2276,26 +2298,31 @@ function renderFlagControlCard({ key, title, icon, desc, s, kind }) {
                 <span class="lbl">Emulator(s)</span>
                 ${emulatorChipsHtml(emu, emuAct, key)}
             </label>
-            <label>
-                <span class="lbl">Min. Windows build (0 = no restriction, 22000 = Windows 11)</span>
-                <input type="number" min="0" step="1" value="${minBuild || ''}" placeholder="0" data-act="${buildAct}" data-a1="${esc(key)}" data-pass-value="1">
-            </label>
-            <label>
-                <span class="lbl">Min. RAM in GB (0 = no restriction)</span>
-                <input type="number" min="0" step="0.5" value="${minRam || ''}" placeholder="0" data-act="${ramAct}" data-a1="${esc(key)}" data-pass-value="1">
-            </label>
-            <label>
-                <span class="lbl">Min. emulator version (only enforced if a specific emulator is selected above; GameLoop/MuMu only for now)</span>
-                <input type="text" value="${esc(s.minEmulatorVersion || '')}" placeholder="e.g. 7.0" data-act="${minVerAct}" data-a1="${esc(key)}" data-pass-value="1" data-commit-on-change="1">
-            </label>
-            <label>
-                <span class="lbl">Max. emulator version</span>
-                <input type="text" value="${esc(s.maxEmulatorVersion || '')}" placeholder="e.g. 7.9" data-act="${maxVerAct}" data-a1="${esc(key)}" data-pass-value="1" data-commit-on-change="1">
-            </label>
-            <label class="ff-progate-toggle" style="flex-direction:row;align-items:center;gap:8px;">
-                <input type="checkbox" ${s.isProGated ? 'checked' : ''} data-act="${proAct}" data-a1="${esc(key)}" data-pass-el="1">
-                <span class="lbl" style="margin:0;">Pro-gated (content requires Pro+; gate not wired to any feature yet)</span>
-            </label>
+            <button type="button" class="ff-more-toggle${_ffCardMoreOpen.has(key) ? ' open' : ''}" data-act="toggleFfCardMore" data-a1="${esc(key)}" aria-expanded="${_ffCardMoreOpen.has(key) ? 'true' : 'false'}">
+                <i class="fas fa-sliders-h"></i> More settings <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="ff-more-settings" id="ffMore_${esc(key)}" style="display:${_ffCardMoreOpen.has(key) ? 'flex' : 'none'};">
+                <label>
+                    <span class="lbl">Min. Windows build (0 = no restriction, 22000 = Windows 11)</span>
+                    <input type="number" min="0" step="1" value="${minBuild || ''}" placeholder="0" data-act="${buildAct}" data-a1="${esc(key)}" data-pass-value="1">
+                </label>
+                <label>
+                    <span class="lbl">Min. RAM in GB (0 = no restriction)</span>
+                    <input type="number" min="0" step="0.5" value="${minRam || ''}" placeholder="0" data-act="${ramAct}" data-a1="${esc(key)}" data-pass-value="1">
+                </label>
+                <label>
+                    <span class="lbl">Min. emulator version (only enforced if a specific emulator is selected above; GameLoop/MuMu only for now)</span>
+                    <input type="text" value="${esc(s.minEmulatorVersion || '')}" placeholder="e.g. 7.0" data-act="${minVerAct}" data-a1="${esc(key)}" data-pass-value="1" data-commit-on-change="1">
+                </label>
+                <label>
+                    <span class="lbl">Max. emulator version</span>
+                    <input type="text" value="${esc(s.maxEmulatorVersion || '')}" placeholder="e.g. 7.9" data-act="${maxVerAct}" data-a1="${esc(key)}" data-pass-value="1" data-commit-on-change="1">
+                </label>
+                <label class="ff-progate-toggle" style="flex-direction:row;align-items:center;gap:8px;">
+                    <input type="checkbox" ${s.isProGated ? 'checked' : ''} data-act="${proAct}" data-a1="${esc(key)}" data-pass-el="1">
+                    <span class="lbl" style="margin:0;">Pro-gated (content requires Pro+; gate not wired to any feature yet)</span>
+                </label>
+            </div>
             <div class="ff-page-toggles">
                 <button class="action-btn" style="${visStyle}" data-act="${visAct}" data-a1="${esc(key)}" data-a2="${visNext}" title="Show or hide in the app UI">${visLabel}</button>
                 <button class="action-btn" style="${enStyle}" data-act="${enAct}" data-a1="${esc(key)}" data-a2="${enNext}" title="Allow or block using this capability">${enLabel}</button>
@@ -4545,6 +4572,41 @@ function applyReportReplyTemplate(kind) {
     };
     if (map[kind]) ta.value = map[kind];
 }
+
+/* ===== Table row "more actions" kebab menu (Users table) =====
+   A single shared menu element (#sharedRowMenu, in the static HTML outside the table) is reused
+   for every row, repopulated with that row's actions on open, rather than one instance per row.
+   A per-row instance would live inside <tr>, which has a fadeUp entrance animation - and any
+   ancestor with an active `transform` (even animation-fill-mode:both holding a finished
+   translateY(0)) becomes the containing block for position:fixed descendants instead of the
+   viewport, which would misplace the menu. Keeping one instance outside the table sidesteps that
+   entirely, and also avoids duplicate-id / orphaned-element issues across table re-renders. */
+function toggleRowMenu(uid, name, blocked, btn) {
+    const menu = document.getElementById('sharedRowMenu');
+    if (!menu) return;
+    const wasOpenForThisUser = menu.classList.contains('show') && menu.dataset.forUid === uid;
+    menu.classList.remove('show');
+    if (wasOpenForThisUser) return;
+    menu.dataset.forUid = uid;
+    menu.innerHTML = `
+        <button data-act="composeMailboxTo" data-a1="${esc(uid)}" data-a2="${esc(name)}" data-stop="1"><i class="fas fa-envelope"></i> Send Mailbox</button>
+        ${blocked
+            ? `<button data-act="askConfirm" data-a1="unblock" data-a2="${esc(uid)}" data-a3="${esc(name)}" data-stop="1"><i class="fas fa-unlock"></i> Unblock</button>`
+            : `<button data-act="askConfirm" data-a1="block" data-a2="${esc(uid)}" data-a3="${esc(name)}" data-stop="1"><i class="fas fa-ban"></i> Block</button>`}
+        <button data-act="askConfirm" data-a1="forceLogout" data-a2="${esc(uid)}" data-a3="${esc(name)}" data-stop="1"><i class="fas fa-sign-out-alt"></i> Force Logout</button>
+    `;
+    const r = btn.getBoundingClientRect();
+    menu.style.top = (r.bottom + 4) + 'px';
+    menu.style.right = (window.innerWidth - r.right) + 'px';
+    menu.classList.add('show');
+}
+document.addEventListener('click', function (e) {
+    if (e.target.closest('[data-act="toggleRowMenu"]')) return;
+    document.getElementById('sharedRowMenu')?.classList.remove('show');
+});
+document.addEventListener('scroll', function () {
+    document.getElementById('sharedRowMenu')?.classList.remove('show');
+}, true);
 
 
 /* ===== CSP-safe action delegation (replaces inline onclick=/onchange=) ===== */
