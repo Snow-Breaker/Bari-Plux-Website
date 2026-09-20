@@ -160,7 +160,7 @@
         .report-status.reviewed { background: rgba(255,152,0,0.15); color: #FF9800; border: 1px solid rgba(255,152,0,0.25); }
         .report-status.resolved { background: rgba(76,175,80,0.15); color: #4CAF50; border: 1px solid rgba(76,175,80,0.25); }
 
-        .action-btn { padding: 4px 9px; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; color: var(--muted); font-family: 'Poppins', sans-serif; font-size: 0.72rem; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+        .action-btn { padding: 6px 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; color: var(--muted); font-family: 'Poppins', sans-serif; font-size: 0.75rem; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
         .action-btn:hover { background: var(--surface2); color: var(--text); }
         .action-btn.review { border-color: rgba(255,152,0,0.3); color: #FF9800; }
         .action-btn.review:hover { background: rgba(255,152,0,0.12); }
@@ -519,6 +519,8 @@
         .line-picker { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
         .btn-gradient-accent { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; border: none; padding: 9px 18px; border-radius: 8px; font-family: 'Poppins', sans-serif; font-size: 0.82rem; font-weight: 600; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
         .btn-gradient-accent:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(108,99,255,0.3); }
+        .modal-btn { flex: 1; padding: 10px; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--muted); font-family: 'Poppins', sans-serif; font-size: 0.8rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .modal-btn:hover { background: var(--surface3); color: var(--text); border-color: var(--border2); }
         @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
 
         /* ===== Global control skin: checkboxes, selects, scrollbars, focus rings =====
@@ -588,7 +590,7 @@
         </div>
         <div class="gate-input-wrap">
             <input type="password" id="gateInput" class="gate-input" placeholder="••••••••" autocomplete="off">
-            <button class="gate-eye" data-act="toggleEye"><i class="fas fa-eye" id="gateEyeIcon"></i></button>
+            <button class="gate-eye" data-act="toggleEye" aria-label="Show or hide password"><i class="fas fa-eye" id="gateEyeIcon"></i></button>
         </div>
         <button class="gate-btn" id="gateBtn" data-act="checkPassword">
             <i class="fas fa-unlock-alt"></i> Enter
@@ -1608,18 +1610,18 @@
 
 <!-- IMAGE PREVIEW -->
 <div class="img-preview-overlay" id="imgPreviewOverlay">
-    <button class="preview-btn preview-close" data-act="closeImgPreview"><i class="fas fa-times"></i></button>
-    <button class="preview-btn preview-nav prev" id="previewPrevBtn" data-act="prevImage"><i class="fas fa-chevron-left"></i></button>
+    <button class="preview-btn preview-close" data-act="closeImgPreview" aria-label="Close preview"><i class="fas fa-times"></i></button>
+    <button class="preview-btn preview-nav prev" id="previewPrevBtn" data-act="prevImage" aria-label="Previous image"><i class="fas fa-chevron-left"></i></button>
     <img id="imgPreviewFull" src="" alt="" data-act="closeImgPreview">
-    <button class="preview-btn preview-nav next" id="previewNextBtn" data-act="nextImage"><i class="fas fa-chevron-right"></i></button>
+    <button class="preview-btn preview-nav next" id="previewNextBtn" data-act="nextImage" aria-label="Next image"><i class="fas fa-chevron-right"></i></button>
     <div class="preview-counter" id="imgPreviewCounter"></div>
-    <button class="preview-btn preview-download" data-act="downloadPreview"><i class="fas fa-download"></i></button>
+    <button class="preview-btn preview-download" data-act="downloadPreview" aria-label="Download image"><i class="fas fa-download"></i></button>
 </div>
 
 <!-- ANNOUNCEMENT EDITOR -->
 <div class="modal-overlay" id="annModal">
     <div class="modal-box" style="max-width:620px;">
-        <button class="modal-close" data-act="closeAnnEditor"><i class="fas fa-times"></i></button>
+        <button class="modal-close" data-act="closeAnnEditor" aria-label="Close"><i class="fas fa-times"></i></button>
         <h2 style="margin:0 0 16px;font-size:1.1rem;"><i class="fas fa-bullhorn" style="color:var(--accent);"></i> <span id="annModalTitle">New Announcement</span></h2>
         <input type="hidden" id="annEditKey">
         <div class="modal-grid" style="display:grid;gap:12px;grid-template-columns:1fr 1fr;">
@@ -1655,7 +1657,7 @@
 <!-- USER DETAILS MODAL -->
 <div class="modal-overlay" id="userModal">
     <div class="modal-box" style="max-width:500px;">
-        <button class="modal-close" data-act="closeUserModal"><i class="fas fa-times"></i></button>
+        <button class="modal-close" data-act="closeUserModal" aria-label="Close"><i class="fas fa-times"></i></button>
         <div style="display:flex;align-items:center;gap:18px;margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid var(--border);">
             <div id="umAvatar" style="width:68px;height:68px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.7rem;font-weight:700;flex-shrink:0;overflow:hidden;border:2px solid var(--border);position:relative;"></div>
             <div>
@@ -1668,7 +1670,7 @@
             </div>
         </div>
         <div class="modal-section">
-            <h3><i class="fas fa-id-card"></i> Account Info <button class="mask-eye" id="umRevealBtn" data-act="toggleRevealUserRow" data-a1="" data-stop="1" title="Show ID &amp; email"><i class="fas fa-eye"></i></button></h3>
+            <h3><i class="fas fa-id-card"></i> Account Info <button class="mask-eye" id="umRevealBtn" data-act="toggleRevealUserRow" data-a1="" data-stop="1" title="Show ID &amp; email" aria-label="Show ID and email"><i class="fas fa-eye"></i></button></h3>
             <div class="modal-grid">
                 <div class="field" style="grid-column:1/-1;"><span class="label">User ID</span><span class="value" id="umId" style="font-family:'JetBrains Mono',monospace;font-size:0.74rem;word-break:break-all;"></span></div>
                 <div class="field" style="grid-column:1/-1;"><span class="label">Email</span><span class="value" id="umEmail"></span></div>
@@ -1711,9 +1713,9 @@
             </div>
         </div>
         <div style="display:flex;gap:8px;margin-top:20px;">
-            <button data-act="copyCurrentUserField" data-a1="id" data-a2="ID" style="flex:1;padding:9px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-family:'Poppins',sans-serif;font-size:0.8rem;cursor:pointer;transition:all 0.2s;"><i class="fas fa-copy"></i> Copy ID</button>
-            <button data-act="copyCurrentUserField" data-a1="email" data-a2="Email" style="flex:1;padding:9px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-family:'Poppins',sans-serif;font-size:0.8rem;cursor:pointer;transition:all 0.2s;"><i class="fas fa-envelope"></i> Copy Email</button>
-            <button data-act="copyCurrentUserField" data-a1="ip" data-a2="IP" style="flex:1;padding:9px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-family:'Poppins',sans-serif;font-size:0.8rem;cursor:pointer;transition:all 0.2s;"><i class="fas fa-network-wired"></i> Copy IP</button>
+            <button data-act="copyCurrentUserField" data-a1="id" data-a2="ID" class="modal-btn"><i class="fas fa-copy"></i> Copy ID</button>
+            <button data-act="copyCurrentUserField" data-a1="email" data-a2="Email" class="modal-btn"><i class="fas fa-envelope"></i> Copy Email</button>
+            <button data-act="copyCurrentUserField" data-a1="ip" data-a2="IP" class="modal-btn"><i class="fas fa-network-wired"></i> Copy IP</button>
         </div>
         <div class="modal-section">
             <h3><i class="fas fa-shield-alt"></i> Role Management</h3>
@@ -1761,7 +1763,7 @@
 <!-- BUG REPORT DETAILS MODAL -->
 <div class="modal-overlay" id="reportModal">
     <div class="modal-box">
-        <button class="modal-close" data-act="closeReportModal"><i class="fas fa-times"></i></button>
+        <button class="modal-close" data-act="closeReportModal" aria-label="Close"><i class="fas fa-times"></i></button>
         <div class="modal-header">
             <h2><i class="fas fa-bug" style="color:var(--accent);"></i> Bug Report Details</h2>
             <div class="modal-meta">
@@ -1835,7 +1837,7 @@
 <!-- CONFIRM MODAL -->
 <div class="modal-overlay" id="errorModal">
     <div class="modal-box" style="max-width:720px;">
-        <button class="modal-close" data-act="closeErrorModal"><i class="fas fa-times"></i></button>
+        <button class="modal-close" data-act="closeErrorModal" aria-label="Close"><i class="fas fa-times"></i></button>
         <div class="modal-header">
             <h2><i class="fas fa-bug" style="color:var(--danger);margin-right:8px;"></i>App Error Details</h2>
         </div>
@@ -1859,7 +1861,7 @@
         </div>
         <div class="confirm-pass-wrap">
             <input type="password" id="confirmPass" class="confirm-pass" placeholder="••••••••" autocomplete="off">
-            <button class="confirm-pass-eye" data-act="toggleConfirmEye"><i class="fas fa-eye" id="confirmEyeIcon"></i></button>
+            <button class="confirm-pass-eye" data-act="toggleConfirmEye" aria-label="Show or hide password"><i class="fas fa-eye" id="confirmEyeIcon"></i></button>
         </div>
         <div id="confirmTotpWrap" style="display:none;margin-bottom:14px;">
             <div style="font-size:0.78rem;color:var(--muted);margin-bottom:8px;text-align:center;">
