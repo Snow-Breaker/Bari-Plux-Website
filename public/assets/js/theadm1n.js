@@ -110,9 +110,70 @@ function createProxyDb() {
         };
     }
 
+    /* Firebase's own ordering rank: null < false < true < numbers < strings < objects. */
+    function rankOf(v) {
+        if (v === null || v === undefined) return 0;
+        if (v === false) return 1;
+        if (v === true) return 2;
+        if (typeof v === 'number') return 3;
+        if (typeof v === 'string') return 4;
+        return 5;
+    }
+
+    function compareValues(a, b) {
+        const ra = rankOf(a), rb = rankOf(b);
+        if (ra !== rb) return ra - rb;
+        if (ra === 3) return a - b;
+        if (ra === 4) return a < b ? -1 : a > b ? 1 : 0;
+        return 0;
+    }
+
+    /* The Worker only returns whole paths, so ordering/filtering/limits run here after the
+     * fetch. Same chainable shape as the real SDK's Query (orderByChild('ts').limitToLast(80)),
+     * which the proxy never had - the cause of "db.ref(...).orderByChild is not a function". */
+    function applyQuery(value, q) {
+        if (!value || typeof value !== 'object') return value;
+        let entries = Object.entries(value);
+        const sortValue = ([k, v]) => q.by === 'child' ? (v && typeof v === 'object' ? v[q.child] : undefined)
+            : q.by === 'value' ? v : k;
+        entries.sort((x, y) => {
+            const c = q.by === 'key' ? (x[0] < y[0] ? -1 : x[0] > y[0] ? 1 : 0) : compareValues(sortValue(x), sortValue(y));
+            return c !== 0 ? c : (x[0] < y[0] ? -1 : x[0] > y[0] ? 1 : 0);
+        });
+        if (q.hasEq) entries = entries.filter(e => sortValue(e) === q.eq);
+        if (q.hasStart) entries = entries.filter(e => compareValues(sortValue(e), q.start) >= 0);
+        if (q.hasEnd) entries = entries.filter(e => compareValues(sortValue(e), q.end) <= 0);
+        if (q.first != null) entries = entries.slice(0, q.first);
+        if (q.last != null) entries = entries.slice(Math.max(0, entries.length - q.last));
+        return Object.fromEntries(entries);
+    }
+
+    function query(p, q) {
+        const qapi = {
+            orderByChild(child) { q.by = 'child'; q.child = String(child); return qapi; },
+            orderByKey() { q.by = 'key'; return qapi; },
+            orderByValue() { q.by = 'value'; return qapi; },
+            limitToLast(n) { q.last = n; return qapi; },
+            limitToFirst(n) { q.first = n; return qapi; },
+            equalTo(v) { q.hasEq = true; q.eq = v; return qapi; },
+            startAt(v) { q.hasStart = true; q.start = v; return qapi; },
+            endAt(v) { q.hasEnd = true; q.end = v; return qapi; },
+            once(event) {
+                if (event !== 'value') return Promise.reject(new Error('proxy only supports value'));
+                return workerRtdbGet([p]).then(data => makeSnap(applyQuery(data[p], q)));
+            }
+        };
+        return qapi;
+    }
+
     function ref(path) {
         const p = String(path || '').replace(/^\/+|\/+$/g, '');
         const api = {
+            orderByChild(child) { return query(p, { by: 'key' }).orderByChild(child); },
+            orderByKey() { return query(p, { by: 'key' }); },
+            orderByValue() { return query(p, { by: 'key' }).orderByValue(); },
+            limitToLast(n) { return query(p, { by: 'key' }).limitToLast(n); },
+            limitToFirst(n) { return query(p, { by: 'key' }).limitToFirst(n); },
             once(event) {
                 if (event !== 'value') return Promise.reject(new Error('proxy only supports value'));
                 if (p === '.info/connected') return Promise.resolve(makeSnap(true));
@@ -1935,6 +1996,7 @@ const PAGE_FLAG_CATALOG = [
     { key: 'settings', title: 'Settings', icon: 'fa-cog' },
     { key: 'adbdiagnostic', title: 'ADB Diagnostic', icon: 'fa-stethoscope' },
     { key: 'keymap', title: 'Keymap', icon: 'fa-keyboard' },
+    { key: 'taccenter', title: 'TAC Center', icon: 'fa-sliders-h' },
     { key: 'procenter', title: 'Pro Center', icon: 'fa-crown' },
 ];
 const PAGE_FLAG_KEYS = new Set(PAGE_FLAG_CATALOG.map(p => p.key));
@@ -1981,6 +2043,7 @@ const PAGE_FEATURE_CATALOG = {
         { key: 'mousedpi_calculator', title: 'Mouse DPI: Sensitivity Calculator', icon: 'fa-calculator', desc: 'Free ratio-based sensitivity calculator, every mouse' },
         { key: 'mousedpi_pointer_speed', title: 'Mouse DPI: Desktop Pointer Speed', icon: 'fa-sliders-h', desc: 'Free Windows pointer-speed control, every mouse' },
         { key: 'mousedpi_razer', title: 'Mouse DPI: Razer Hardware DPI', icon: 'fa-mouse-pointer', desc: 'Real Razer DPI protocol - keep OFF until confirmed working on real hardware, never live-verified' },
+        { key: 'tools_gameloop_gapps', title: 'Google Play Services (GameLoop)', icon: 'fa-store', desc: 'Download & install Play Store / Google Play Services into the Chinese GameLoop client' },
     ],
     optimization: [
         { key: 'optimization_section_cleanup', title: 'Section: Cleanup', icon: 'fa-th-large', desc: 'Landing row for the Cleanup section' },
@@ -2045,6 +2108,13 @@ const PAGE_FEATURE_CATALOG = {
         { key: 'settings_program_info', title: 'Program Information', icon: 'fa-info-circle', desc: 'App name, version, and build info' },
         { key: 'settings_system_specs', title: 'System Specifications', icon: 'fa-microchip', desc: 'CPU / RAM / display specs panel' },
         { key: 'settings_pubg_version', title: 'PUBG Mobile Version', icon: 'fa-mobile-alt', desc: 'PUBG / BGMI package version selector (moved here from FPS)' },
+        { key: 'settings_local_backup', title: 'Local Backup (Active.sav)', icon: 'fa-hdd', desc: 'Back up / restore PUBG save data to a folder on the PC' },
+        { key: 'settings_navigation_style', title: 'Navigation Style', icon: 'fa-bars', desc: 'Left / Top menu layout picker' },
+        { key: 'settings_performance_mode', title: 'Performance Mode', icon: 'fa-leaf', desc: 'Turn off the Mica backdrop to save memory' },
+        { key: 'settings_privacy', title: 'Privacy / Crash Reports', icon: 'fa-user-shield', desc: 'Anonymous crash report consent and last crash report' },
+        { key: 'settings_check_update', title: 'Check for Update', icon: 'fa-sync', desc: 'App update check / download / install card' },
+        { key: 'settings_file_integrity', title: 'Verify File Integrity', icon: 'fa-check-double', desc: 'Checksum scan + repair of installed files' },
+        { key: 'settings_content_updates', title: 'Content Updates', icon: 'fa-download', desc: 'Keymaps / iPad profiles / ADB packs updated outside app releases' },
     ],
     fps: [
         { key: 'fps_domain_scope', title: 'Domain Scope', icon: 'fa-layer-group', desc: 'All / Combat / Lobby / Hub / Home scope tabs' },
@@ -2066,6 +2136,7 @@ const PAGE_FEATURE_CATALOG = {
         { key: 'contact_support', title: 'Direct Support', icon: 'fa-headset', desc: 'Website / Telegram / Discord / Email tiles' },
         { key: 'contact_socials', title: 'Social Media', icon: 'fa-share-alt', desc: 'YouTube / Instagram / TikTok / Kick tiles' },
         { key: 'contact_report_bug', title: 'Report Bug Shortcut', icon: 'fa-bug', desc: 'Navigate to the report page from Contact' },
+        { key: 'contact_donate', title: 'Donate (Ko-fi)', icon: 'fa-mug-hot', desc: '"Enjoying Bari Plux Tool?" Ko-fi donation card' },
     ],
     chat: [
         { key: 'chat_rooms', title: 'Rooms', icon: 'fa-door-open', desc: 'General / Help / Offtopic room chips' },
@@ -2097,6 +2168,14 @@ const PAGE_FEATURE_CATALOG = {
         { key: 'keymap_backup', title: 'Backup / Restore', icon: 'fa-save', desc: 'Backup, restore, delete MuMu keymap config; open config folder' },
         { key: 'keymap_autobackup', title: 'Auto Backup', icon: 'fa-clock', desc: '30-minute auto-backup timer with toggle, status badge, and delete config' },
         { key: 'keymap_info', title: 'Info / Notes', icon: 'fa-info-circle', desc: 'How it works, about keymaps, and important notes tip cards' },
+    ],
+    taccenter: [
+        { key: 'tac_center_section_overview', title: 'Tab: Overview', icon: 'fa-th-large', desc: 'Current setup, health and quick actions' },
+        { key: 'tac_center_section_library', title: 'Tab: Library', icon: 'fa-th', desc: 'Installed apps with launch / force stop / uninstall' },
+        { key: 'tac_center_section_performance', title: 'Tab: Performance', icon: 'fa-tachometer-alt', desc: 'FPS, resolution, render engine, guards, VM resources' },
+        { key: 'tac_center_section_device_profiles', title: 'Tab: Device & Profiles', icon: 'fa-id-card', desc: 'Device model, saved profiles, 32-bit PUBG' },
+        { key: 'tac_center_section_maintenance', title: 'Tab: Maintenance', icon: 'fa-wrench', desc: 'Doctor, backups, game cache' },
+        { key: 'tac_center_section_keymap', title: 'Tab: Keymap', icon: 'fa-keyboard', desc: 'Keymap editor, layouts, lock, backup' },
     ],
     procenter: [
         { key: 'procenter_comparison', title: 'Feature Comparison', icon: 'fa-table', desc: 'Free vs Pro feature comparison table' },

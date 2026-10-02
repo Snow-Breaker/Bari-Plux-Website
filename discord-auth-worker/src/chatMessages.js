@@ -158,10 +158,18 @@ async function enforceCanChat(uid, deps) {
     mod = null;
   }
   const accepted = mod && mod.rulesAccepted === true;
-  const versionOk = accepted && Number(mod.rulesVersionAccepted ?? 0) >= CHAT_RULES_VERSION;
-  const strikesOk = accepted && Number(mod.strikesRemaining ?? 0) > 0;
+  // The stored field is `rulesVersion` (that is what the app writes and database.rules.json
+  // validates); this used to read `rulesVersionAccepted`, which no record has, so every user who
+  // had accepted the rules was rejected as 'banned' ("You're currently unable to chat").
+  // `rulesVersionAccepted` stays as a fallback for any record written under that name.
+  const version = Number(mod?.rulesVersion ?? mod?.rulesVersionAccepted ?? 0);
+  // Missing strikes/morality mean "untouched" (full), the same default the app and the admin
+  // panel use - not 0.
+  const strikes = Number(mod?.strikesRemaining ?? 5);
+  const morality = Number(mod?.moralityScore ?? 100);
   if (!accepted) return 'rules_required';
-  if (!versionOk || !strikesOk) return 'banned';
+  if (version < CHAT_RULES_VERSION) return 'rules_required';
+  if (strikes <= 0 || morality <= 0) return 'banned';
   return 'ok';
 }
 

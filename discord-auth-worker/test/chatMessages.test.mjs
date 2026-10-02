@@ -132,6 +132,37 @@ test('send: zero strikes / stale rules version -> rejected', async () => {
   }
 });
 
+test('send: the record the app actually writes (rulesVersion) is allowed', async () => {
+  // Exactly what LobbyChatService.AcceptRulesAsync stores and database.rules.json validates.
+  // The worker used to read rulesVersionAccepted instead, rejecting every such user as 'banned'.
+  for (const mod of [
+    { rulesAccepted: true, rulesVersion: 1, strikesRemaining: 5, moralityScore: 100, displayName: 'Bob' },
+    { rulesAccepted: true, rulesVersion: 1 } // older record without strikes/morality = untouched
+  ]) {
+    const db = basicDb();
+    db['lobby_chat/user_moderation/u1'] = mod;
+    const deps = makeDeps(db);
+    const res = await handleChatMessageSend(
+      post('/chat/message/send', { room: 'general', role: 'free', text: 'hello', name: 'Bob' }),
+      CORS, deps);
+    assert.equal(res.status, 200, JSON.stringify(mod));
+  }
+});
+
+test('send: stale rules version asks to accept rules, zero morality is banned', async () => {
+  const stale = basicDb();
+  stale['lobby_chat/user_moderation/u1'] = { rulesAccepted: true, rulesVersion: 0, strikesRemaining: 5 };
+  let out = await result(await handleChatMessageSend(
+    post('/chat/message/send', { room: 'general', role: 'free', text: 'hi', name: 'x' }), CORS, makeDeps(stale)));
+  assert.equal(out.error, 'rules_required');
+
+  const noMorality = basicDb();
+  noMorality['lobby_chat/user_moderation/u1'] = { rulesAccepted: true, rulesVersion: 1, strikesRemaining: 5, moralityScore: 0 };
+  out = await result(await handleChatMessageSend(
+    post('/chat/message/send', { room: 'general', role: 'free', text: 'hi', name: 'x' }), CORS, makeDeps(noMorality)));
+  assert.equal(out.error, 'banned');
+});
+
 test('send: invalid room rejected', async () => {
   const deps = makeDeps(basicDb());
   const res = await handleChatMessageSend(
