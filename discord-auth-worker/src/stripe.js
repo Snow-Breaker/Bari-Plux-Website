@@ -152,7 +152,7 @@ export async function handleStripeCreateCheckout(request, env, corsHeaders) {
     }, corsHeaders);
   } catch (err) {
     console.error('[Stripe] create-checkout failed', err?.message || err, err?.stripe);
-    return json(502, { error: 'checkout_create_failed', detail: err?.message || 'unknown' }, corsHeaders);
+    return json(502, { error: 'checkout_create_failed' }, corsHeaders);
   }
 }
 

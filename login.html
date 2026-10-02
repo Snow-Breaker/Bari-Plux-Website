@@ -677,7 +677,7 @@
                 const nodePath = isDiscord ? 'discordUsers/' + user.id : 'users/' + user.id;
 
                 const userRef = database.ref(nodePath);
-                userRef.set({
+                userRef.update({
                     name: user.name,
                     email: user.email,
                     loginMethod: user.loginMethod,
@@ -701,7 +701,7 @@
 
         function removeLoginFromFirebase(userId) {
             if (!firebaseInitialized || !database || !userId) return;
-            try { database.ref('users/' + userId).remove(); } catch (error) {}
+            /* Logout no longer deletes the profile node: only an admin may (database rules), so a ban can't be erased by logging out. */
         }
 
         // ==================== NOTIFICATIONS ====================

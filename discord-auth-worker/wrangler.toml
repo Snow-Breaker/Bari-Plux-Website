@@ -34,3 +34,14 @@ bucket_name = "pluxdl"
 
 [triggers]
 crons = ["0 * * * *"]
+
+# Per-IP rate limits (src/security.js). period must be 10 or 60 seconds.
+[[ratelimits]]
+name = "RL_STRICT"
+namespace_id = "1001"
+simple = { limit = 20, period = 60 }
+
+[[ratelimits]]
+name = "RL_GENERAL"
+namespace_id = "1002"
+simple = { limit = 180, period = 60 }
