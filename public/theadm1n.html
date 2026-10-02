@@ -1165,6 +1165,26 @@
                 <div id="dbAssetsStatus" class="form-hint" style="margin-top:10px;"></div>
             </div>
 
+            <div id="proFeaturesCard" class="form-card">
+                <div class="form-card-title">
+                    <i class="fas fa-crown" style="color:#f5b301;"></i> BPT Pro features
+                </div>
+                <div class="form-card-desc">
+                    The Free-vs-Pro list on BPT's <b>BPT Pro</b> page. Add, remove, reorder or hide rows; tick
+                    "Free too" for features every user gets. Rows loaded from the built-in list keep the app's own
+                    translations in every language; new rows show the English title (plus the Persian one, if filled).
+                    Writes <code style="color:var(--accent2);">app_config/pro_features_3x</code> - nothing published means BPT keeps its
+                    built-in list. To hide the whole page, use the <b>BPT Pro</b> card under App Pages below.
+                </div>
+                <div id="proFeatureRows" style="display:flex;flex-direction:column;gap:8px;"></div>
+                <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;">
+                    <button class="action-btn view" data-act="addProFeature" style="padding:9px 16px;font-size:0.82rem;"><i class="fas fa-plus"></i> Add feature</button>
+                    <button class="action-btn review" data-act="loadProFeatureDefaults" style="padding:9px 16px;font-size:0.82rem;"><i class="fas fa-list"></i> Load built-in list</button>
+                    <button class="action-btn view" data-act="saveProFeatures" style="padding:9px 16px;font-size:0.82rem;font-weight:600;"><i class="fas fa-save"></i> Save</button>
+                </div>
+                <div id="proFeaturesStatus" class="form-hint" style="margin-top:10px;"></div>
+            </div>
+
             <div class="ff-section-title" id="ffPagesSectionTitle"><i class="fas fa-th-large"></i> App Pages <span class="hint">Open a page to manage its capabilities · Show/Hide = menu · Enable/Disable = can open · Emulator(s) = which profile(s) see it, pick several or leave on All</span></div>
             <div id="ffPagesGrid" class="ff-pages-grid">
                 <div style="grid-column:1/-1;text-align:center;padding:28px;color:var(--muted);">Loading pages…</div>
@@ -1909,7 +1929,7 @@
 
 <div class="toast" id="toast"></div>
 
-<script src="assets/js/theadm1n.js?v=20261002"></script>
+<script src="assets/js/theadm1n.js?v=20261003"></script>
 
 
 </body>

@@ -1997,7 +1997,7 @@ const PAGE_FLAG_CATALOG = [
     { key: 'adbdiagnostic', title: 'ADB Diagnostic', icon: 'fa-stethoscope' },
     { key: 'keymap', title: 'Keymap', icon: 'fa-keyboard' },
     { key: 'taccenter', title: 'TAC Center', icon: 'fa-sliders-h' },
-    { key: 'procenter', title: 'Pro Center', icon: 'fa-crown' },
+    { key: 'procenter', title: 'BPT Pro', icon: 'fa-crown' },
 ];
 const PAGE_FLAG_KEYS = new Set(PAGE_FLAG_CATALOG.map(p => p.key));
 
@@ -3743,6 +3743,159 @@ async function saveDatabaseAssets() {
     }
 }
 
+/** BPT Pro features - the Free-vs-Pro list on BPT's "BPT Pro" page (ProFeatureCatalog.cs).
+ * Writes app_config/pro_features_3x = { updated_at, items: { id: { order, free, enabled, key?, title, titles? } } }.
+ * Nothing published = the app keeps its built-in list (fail-open). "key" points at the app's own
+ * translation (all 27 languages); a row without one shows its English title, or the per-language
+ * title typed here (only Persian is offered inline - add more languages to titles by hand if needed). */
+const PRO_FEATURE_DEFAULTS = [
+    ['ProCenterFeatureCoreApp', 'All core app features', true],
+    ['ProCenterFeatureFpsAdvanced', 'Advanced FPS options', false],
+    ['ProCenterFeatureCloudBackup', 'Cloud backup', false],
+    ['ProCenterFeatureOneClickOptimize', 'One-click optimize', false],
+    ['ProCenterFeatureDeepClean', 'Deep clean', false],
+    ['ProCenterFeatureServiceOptimization', 'Background service optimization', false],
+    ['ProCenterFeatureMemoryOptimization', 'Memory optimization', false],
+    ['ProCenterFeatureApkManager', 'APK manager', false],
+    ['ProCenterFeaturePakManager', 'PAK manager', false],
+    ['ProCenterFeatureObbManager', 'OBB manager', false],
+    ['ProCenterFeatureFpsCustomPresets', 'Custom FPS presets', false],
+    ['ProCenterFeatureFpsBatchApply', 'FPS batch apply', false],
+    ['ProCenterFeatureClassicTheme', 'Classic theme', false],
+    ['ProCenterFeatureMouseDpiControl', 'Mouse DPI control', false],
+    ['ProCenterFeatureFileManagerAdvancedOps', 'Advanced File Manager operations', false],
+    ['ProCenterFeatureFileManagerBatchRename', 'File Manager batch rename', false],
+    ['ProCenterFeatureSmartAutomation', 'Smart automation', false],
+];
+let proFeatures = [];
+
+function proFeatureId() { return 'f' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
+
+/** Reads the editor's inputs back into proFeatures, so a move/delete/add never loses unsaved typing. */
+function syncProFeaturesFromDom() {
+    proFeatures.forEach((f, i) => {
+        const t = document.getElementById(`proF_${i}_title`);
+        if (!t) return;
+        f.title = t.value.trim();
+        f.titleFa = document.getElementById(`proF_${i}_fa`).value.trim();
+        f.free = document.getElementById(`proF_${i}_free`).checked;
+        f.enabled = document.getElementById(`proF_${i}_enabled`).checked;
+    });
+}
+
+function renderProFeatures() {
+    const box = document.getElementById('proFeatureRows');
+    if (!box) return;
+    if (!proFeatures.length) {
+        box.innerHTML = '<div class="form-hint">No list published - BPT shows its built-in list. Use "Load built-in list" to start from it.</div>';
+        return;
+    }
+    box.innerHTML = proFeatures.map((f, i) => `
+        <div style="border:1px solid var(--border);border-radius:8px;padding:10px 12px;display:grid;grid-template-columns:28px 1fr 1fr auto auto auto;gap:10px;align-items:center;${f.enabled ? '' : 'opacity:0.55;'}">
+            <div style="font-size:0.78rem;color:var(--muted);text-align:center;">${i + 1}</div>
+            <div>
+                <input type="text" id="proF_${i}_title" value="${esc(f.title || '')}" placeholder="English title" class="form-input" style="font-size:0.8rem;">
+                ${f.key ? `<div class="form-hint mono" style="margin-top:4px;font-size:0.7rem;" title="Translated by the app in every language">${esc(f.key)}</div>` : ''}
+            </div>
+            <input type="text" id="proF_${i}_fa" value="${esc(f.titleFa || '')}" placeholder="عنوان فارسی (اختیاری)" dir="rtl" class="form-input" style="font-size:0.8rem;">
+            <label class="form-checkbox-label" style="font-size:0.78rem;white-space:nowrap;"><input type="checkbox" id="proF_${i}_free" ${f.free ? 'checked' : ''}> Free too</label>
+            <label class="form-checkbox-label" style="font-size:0.78rem;white-space:nowrap;"><input type="checkbox" id="proF_${i}_enabled" ${f.enabled ? 'checked' : ''}> Shown</label>
+            <div style="display:flex;gap:4px;">
+                <button class="action-btn" data-act="moveProFeature" data-a1="${i}" data-a2="-1" title="Move up" ${i === 0 ? 'disabled' : ''}><i class="fas fa-arrow-up"></i></button>
+                <button class="action-btn" data-act="moveProFeature" data-a1="${i}" data-a2="1" title="Move down" ${i === proFeatures.length - 1 ? 'disabled' : ''}><i class="fas fa-arrow-down"></i></button>
+                <button class="action-btn del" data-act="removeProFeature" data-a1="${i}" title="Remove"><i class="fas fa-trash"></i></button>
+            </div>
+        </div>
+    `).join('');
+}
+
+async function loadProFeatures() {
+    if (!db) return;
+    try {
+        const snap = await db.ref('app_config/pro_features_3x').once('value');
+        const data = snap.val() || {};
+        const items = data.items || {};
+        proFeatures = Object.keys(items).map(id => {
+            const v = items[id] || {};
+            return {
+                id,
+                key: v.key || '',
+                title: v.title || '',
+                titleFa: (v.titles && v.titles.fa) || '',
+                otherTitles: Object.fromEntries(Object.entries(v.titles || {}).filter(([k]) => k !== 'fa')),
+                free: v.free === true,
+                enabled: v.enabled !== false,
+                order: typeof v.order === 'number' ? v.order : 9999,
+            };
+        }).sort((a, b) => a.order - b.order);
+        renderProFeatures();
+        const status = document.getElementById('proFeaturesStatus');
+        if (status) status.textContent = data.updated_at
+            ? 'Last saved ' + new Date(data.updated_at).toLocaleString()
+            : 'Not published yet - BPT shows its built-in list';
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+function addProFeature() {
+    syncProFeaturesFromDom();
+    proFeatures.push({ id: proFeatureId(), key: '', title: '', titleFa: '', otherTitles: {}, free: false, enabled: true });
+    renderProFeatures();
+    const last = document.getElementById(`proF_${proFeatures.length - 1}_title`);
+    if (last) last.focus();
+}
+
+function moveProFeature(index, delta) {
+    syncProFeaturesFromDom();
+    index = Number(index);
+    const j = index + Number(delta);
+    if (j < 0 || j >= proFeatures.length) return;
+    [proFeatures[index], proFeatures[j]] = [proFeatures[j], proFeatures[index]];
+    renderProFeatures();
+}
+
+function removeProFeature(index) {
+    syncProFeaturesFromDom();
+    proFeatures.splice(Number(index), 1);
+    renderProFeatures();
+}
+
+function loadProFeatureDefaults() {
+    syncProFeaturesFromDom();
+    if (proFeatures.length && !confirm('Replace the list in the editor with BPT\'s built-in list? (Nothing is saved until you press Save.)')) return;
+    proFeatures = PRO_FEATURE_DEFAULTS.map(([key, title, free]) => ({ id: proFeatureId(), key, title, titleFa: '', otherTitles: {}, free, enabled: true }));
+    renderProFeatures();
+}
+
+async function saveProFeatures() {
+    if (!db) return;
+    syncProFeaturesFromDom();
+    const missing = proFeatures.findIndex(f => !f.title && !f.key);
+    if (missing >= 0) {
+        showToast(`⚠️ Row ${missing + 1} needs an English title`, 'danger');
+        return;
+    }
+    try {
+        const items = {};
+        proFeatures.forEach((f, i) => {
+            const titles = { ...(f.otherTitles || {}) };
+            if (f.titleFa) titles.fa = f.titleFa;
+            const item = { order: i + 1, free: !!f.free, enabled: !!f.enabled, title: f.title };
+            if (f.key) item.key = f.key;
+            if (Object.keys(titles).length) item.titles = titles;
+            items[f.id] = item;
+        });
+        // An empty list removes the node, so BPT falls back to its built-in list.
+        if (!proFeatures.length) await db.ref('app_config/pro_features_3x').remove();
+        else await db.ref('app_config/pro_features_3x').set({ updated_at: Date.now(), items });
+        showToast('✅ BPT Pro features saved', 'success');
+        loadProFeatures();
+    } catch (e) {
+        showToast('⚠️ Failed to save BPT Pro features: ' + e.message, 'danger');
+    }
+}
+
 /** Chat slow mode (per role tier) + auto-delete sweep age, both admin-configurable knobs read
  * by LobbyChatService.SendIntervalMsForRole / SweepExpiredMessagesAsync (BPT). Same node as the
  * Remote Config card above (app_config/remote_config_3x) - a partial update() merges these four
@@ -3825,7 +3978,7 @@ function switchTab(tab, btn) {
     if(tab==='reports') loadReports();
     if(tab==='errors') loadErrors();
     if(tab==='chatMod') { loadChatMod(); loadChatSlowMode(); }
-    if(tab==='featureFlags') { loadFeatureFlags(); loadRemoteConfig(); loadDatabaseAssets(); loadTacGraphicsApplyToggle(); }
+    if(tab==='featureFlags') { loadFeatureFlags(); loadRemoteConfig(); loadDatabaseAssets(); loadProFeatures(); loadTacGraphicsApplyToggle(); }
     else if (typeof closePageFlagDetail === 'function') closePageFlagDetail();
     if(tab==='updates') loadUpdateConfig();
     if(tab==='pause') loadPauseConfig();
