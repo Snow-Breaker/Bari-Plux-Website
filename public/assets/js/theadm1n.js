@@ -3761,7 +3761,6 @@ const PRO_FEATURE_DEFAULTS = [
     ['ProCenterFeatureObbManager', 'OBB manager', false],
     ['ProCenterFeatureFpsCustomPresets', 'Custom FPS presets', false],
     ['ProCenterFeatureFpsBatchApply', 'FPS batch apply', false],
-    ['ProCenterFeatureClassicTheme', 'Classic theme', false],
     ['ProCenterFeatureMouseDpiControl', 'Mouse DPI control', false],
     ['ProCenterFeatureFileManagerAdvancedOps', 'Advanced File Manager operations', false],
     ['ProCenterFeatureFileManagerBatchRename', 'File Manager batch rename', false],
