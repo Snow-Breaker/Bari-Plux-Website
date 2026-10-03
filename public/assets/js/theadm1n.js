@@ -737,6 +737,7 @@ function parseUserMap(d) {
         roles: normalizeRolesList(u.roles, u.role || 'free'),
         roleAssignedAt: u.role_assigned_at || null, roleAssignedBy: u.role_assigned_by || null,
         proExpiresAtMs: Number(u.proExpiresAtMs) || 0,
+        lifetime: u.lifetime === true,
         appVersion: u.appVersion || u.app_version || null,
         proDeviceId: u.proDeviceId || null,
         proDeviceBoundAt: u.proDeviceBoundAt || null,
@@ -950,13 +951,13 @@ function renderProUsers() {
     } else {
         tbody.innerHTML = list.map(u => {
             const days = proDaysLeft(u);
-            let daysHtml = '—';
-            if (days != null) {
+            let daysHtml = u.lifetime ? '<span style="color:#FFC107;font-weight:700;">Lifetime</span>' : '—';
+            if (!u.lifetime && days != null) {
                 const color = days < 0 ? '#F44336' : days <= 7 ? '#FF9800' : '#4CAF50';
                 daysHtml = `<span style="color:${color};font-weight:700;">${days < 0 ? 'Expired' : days + 'd'}</span>`;
             }
             const activated = u.roleAssignedAt ? fmtDate(u.roleAssignedAt) : '—';
-            const expires = u.proExpiresAtMs ? fmtDate(u.proExpiresAtMs) : '—';
+            const expires = u.lifetime ? 'Never' : (u.proExpiresAtMs ? fmtDate(u.proExpiresAtMs) : '—');
             const source = u.roleAssignedBy || '—';
             return `<tr style="cursor:pointer;" data-act="openUserModal" data-a1="${esc(u.id)}">
                 <td><div class="user-name">${esc(u.name)}</div><div class="user-id">${esc(displayIdFor(u))}</div></td>
@@ -1151,7 +1152,9 @@ function openUserModal(id) {
         : 'Default role';
     if (roleList.includes('pro')) {
         const days = proDaysLeft(u);
-        if (u.proExpiresAtMs) {
+        if (u.lifetime) {
+            assignedInfo += ' · Lifetime (never expires)';
+        } else if (u.proExpiresAtMs) {
             assignedInfo += ` · expires ${new Date(u.proExpiresAtMs).toLocaleDateString()}`;
             if (days != null) assignedInfo += ` (${days < 0 ? 'expired' : days + 'd left'})`;
         } else {
@@ -1485,19 +1488,22 @@ async function assignRole() {
 
     const primary = primaryRoleOf(roles);
     let days = null;
+    let lifetime = false;
     if (roles.includes('pro')) {
-        const daysRaw = prompt('Pro duration in days (used if Pro is included; default 60):', '60');
+        const daysRaw = prompt('Pro duration in days (default 60). Enter 0 for Lifetime (never expires):', '60');
         if (daysRaw === null) return;
-        days = Math.min(Math.max(parseInt(daysRaw, 10) || 60, 1), 3650);
+        if (String(daysRaw).trim() === '0') lifetime = true;
+        else days = Math.min(Math.max(parseInt(daysRaw, 10) || 60, 1), 3650);
     }
 
-    const label = roles.map(r => r.toUpperCase()).join(' + ');
+    const label = roles.map(r => r.toUpperCase()).join(' + ') + (lifetime ? ' (LIFETIME)' : '');
     if (!confirm(`Assign roles [${label}] to this user?\n(Only admin can do this.)`)) return;
 
     try {
         const token = await currentUser.getIdToken(true);
         const body = { uid: userId, roles, email: _currentUser.email || null };
         if (days != null) body.days = days;
+        if (lifetime) body.lifetime = true;
         const { ok, data, status } = await adminWorkerPost('/admin/set-roles', body, token);
         if (!ok) throw new Error(data?.error || ('HTTP ' + status));
 
@@ -1511,7 +1517,8 @@ async function assignRole() {
             roles,
             roleAssignedAt: new Date().toISOString(),
             roleAssignedBy: 'admin',
-            proExpiresAtMs: roles.includes('pro') ? (exp || _currentUser.proExpiresAtMs || 0) : 0
+            proExpiresAtMs: roles.includes('pro') && !lifetime ? (exp || _currentUser.proExpiresAtMs || 0) : 0,
+            lifetime
         });
         renderUsers();
         renderProUsers();
@@ -3222,6 +3229,63 @@ async function loadUpdateConfig() {
     }
 }
 
+// ── GameLoop (TAC) installer - app_config/emulator_config (EmulatorInstallerService) ──
+const EMU_CONFIG_PATH = 'app_config/emulator_config';
+
+async function loadEmulatorInstallerConfig() {
+    if (!db) return;
+    try {
+        const cfg = (await db.ref(EMU_CONFIG_PATH).once('value')).val();
+        document.getElementById('emuVersionInput').value = cfg?.version || '';
+        document.getElementById('emuUrlInput').value = cfg?.download_url || '';
+        document.getElementById('emuShaInput').value = cfg?.sha256 || '';
+        document.getElementById('emuSizeInput').value = cfg?.size_bytes ? Math.round(cfg.size_bytes / (1024 * 1024)) : '';
+        document.getElementById('emuLastUpdated').textContent = cfg
+            ? 'Published ' + (cfg.updated_at ? new Date(cfg.updated_at).toLocaleString() : '')
+            : 'Not published - BPT uses its built-in installer';
+    } catch (e) {
+        showToast('⚠️ Failed to load installer config: ' + e.message, 'danger');
+    }
+}
+
+async function saveEmulatorInstallerConfig() {
+    if (!db) return;
+    const version = (document.getElementById('emuVersionInput').value || '').trim();
+    const url = (document.getElementById('emuUrlInput').value || '').trim();
+    const sha256 = (document.getElementById('emuShaInput').value || '').trim().toLowerCase();
+    const sizeMb = Number(document.getElementById('emuSizeInput').value || 0);
+    if (!/^[0-9]+(\.[0-9]+){1,3}$/.test(version)) return showToast('Version must look like 7.0.107.0', 'danger');
+    // Same trust rule as the app (UpdateCheckService.IsTrustedDownloadHost) - anything else is ignored there.
+    if (!/^https:\/\/dl\.bariplux\.com\/[^\s]+$/i.test(url)) return showToast('URL must be https://dl.bariplux.com/...', 'danger');
+    if (sha256 && !/^[0-9a-f]{64}$/.test(sha256)) return showToast('SHA-256 must be 64 hex characters (or empty)', 'danger');
+    const payload = {
+        version,
+        download_url: url,
+        sha256: sha256 || null,
+        size_bytes: sizeMb > 0 ? Math.round(sizeMb * 1024 * 1024) : null,
+        updated_at: Date.now()
+    };
+    try {
+        await db.ref(EMU_CONFIG_PATH).set(payload);
+        showToast('✅ GameLoop installer published: ' + version, 'success');
+        loadEmulatorInstallerConfig();
+    } catch (e) {
+        showToast('⚠️ Failed to save: ' + e.message, 'danger');
+    }
+}
+
+async function clearEmulatorInstallerConfig() {
+    if (!db) return;
+    if (!confirm('Remove the published installer? BPT goes back to its built-in one.')) return;
+    try {
+        await db.ref(EMU_CONFIG_PATH).remove();
+        showToast('Built-in installer restored', 'success');
+        loadEmulatorInstallerConfig();
+    } catch (e) {
+        showToast('⚠️ Failed to clear: ' + e.message, 'danger');
+    }
+}
+
 async function publishAgentUpdate() {
     const version = (document.getElementById('agentVersionInput').value || '').trim();
     const fileInput = document.getElementById('agentApkInput');
@@ -3304,7 +3368,15 @@ async function saveUpdateConfig(line) {
     if (line === '3x') payload.sha256 = sha256 || null;
 
     try {
-        await db.ref(updateConfigPath(line)).set(payload);
+        // CI (publish-release.yml) also writes manifest_url / package_url / package_sha256 /
+        // package_from_version into update_3x. A full .set() from here used to erase them - the
+        // app then lost its integrity manifest (fell back to a 404 URL) and delta updates. Same
+        // version: keep CI's fields (update). Different version: they describe the old release,
+        // so replace the node (set) and let the next CI publish fill them again.
+        const ref = db.ref(updateConfigPath(line));
+        const existing = line === '3x' ? (await ref.once('value')).val() : null;
+        if (existing && existing.version === version) await ref.update(payload);
+        else await ref.set(payload);
         showToast(`✅ ${line === '3x' ? '3.x (WinUI3)' : '2.x (WPF)'} update config published: ${version}${payload.mandatory ? ' (mandatory)' : ''}`, 'success');
         loadUpdateConfig();
     } catch (e) {
@@ -3985,7 +4057,7 @@ function switchTab(tab, btn) {
     if(tab==='chatMod') { loadChatMod(); loadChatSlowMode(); }
     if(tab==='featureFlags') { loadFeatureFlags(); loadRemoteConfig(); loadDatabaseAssets(); loadProFeatures(); loadTacGraphicsApplyToggle(); }
     else if (typeof closePageFlagDetail === 'function') closePageFlagDetail();
-    if(tab==='updates') loadUpdateConfig();
+    if(tab==='updates') { loadUpdateConfig(); loadEmulatorInstallerConfig(); }
     if(tab==='pause') loadPauseConfig();
     if(tab==='access') loadAccessConfig();
     if(tab==='website') loadWebsiteConfig();

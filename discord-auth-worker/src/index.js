@@ -998,10 +998,23 @@ async function handleAdminSetRoles(request, env, corsHeaders) {
 
   if (primary === 'free' || !roles.includes('pro')) {
     await adminPutDatabase(`${writeTree}/${uid}/proExpiresAtMs`, null, env);
+    await adminPutDatabase(`${writeTree}/${uid}/lifetime`, null, env);
     await adminDeleteDatabase(`payhip_subscriptions/${uid}`, null, env);
   }
 
-  if (roles.includes('pro')) {
+  // Lifetime Pro: no expiry at all (nothing in payhip_subscriptions for the hourly purge, no
+  // proExpiresAtMs for enforceProExpiryForUid) plus a lifetime flag, so a later purchase or trial
+  // can't turn it back into time-limited Pro (see grantProSafe).
+  const lifetime = roles.includes('pro') && body?.lifetime === true;
+  if (lifetime) {
+    await adminPutDatabase(`${writeTree}/${uid}/proExpiresAtMs`, null, env);
+    await adminPutDatabase(`${writeTree}/${uid}/lifetime`, true, env);
+    await adminDeleteDatabase(`payhip_subscriptions/${uid}`, null, env);
+  } else if (roles.includes('pro')) {
+    await adminPutDatabase(`${writeTree}/${uid}/lifetime`, null, env);
+  }
+
+  if (roles.includes('pro') && !lifetime) {
     let daysRaw = Number(body?.days);
     if (!Number.isFinite(daysRaw) || daysRaw <= 0) {
       daysRaw = Number(env.PRO_DAYS || env.PAYHIP_PRO_DAYS || 60);
@@ -1040,6 +1053,7 @@ async function handleAdminSetRoles(request, env, corsHeaders) {
     role: primary,
     roles,
     proExpiresAtMs,
+    lifetime,
     tree: writeTree
   }), { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
 }
@@ -1223,15 +1237,18 @@ async function handleFeatureEntitlement(request, env, corsHeaders) {
   // For the app's "Pro until ... / Trial: N days left" line - display only, the role is the grant.
   let proExpiresAtMs = null;
   let trial = false;
+  let lifetime = false;
   if (role === 'pro') {
     try {
       const tree = uid.startsWith('discord_') ? 'discordUsers' : 'users';
-      const [exp, by] = await Promise.all([
+      const [exp, by, life] = await Promise.all([
         adminGetDatabaseAccess(`${tree}/${uid}/proExpiresAtMs`, env),
         adminGetDatabaseAccess(`${tree}/${uid}/role_assigned_by`, env),
+        adminGetDatabaseAccess(`${tree}/${uid}/lifetime`, env),
       ]);
       proExpiresAtMs = Number(exp) > 0 ? Number(exp) : null;
       trial = by === 'trial';
+      lifetime = life === true;
     } catch (err) {
       console.warn('[feature] pro expiry read failed', err);
     }
@@ -1258,6 +1275,7 @@ async function handleFeatureEntitlement(request, env, corsHeaders) {
     features,
     pro_expires_at_ms: proExpiresAtMs,
     trial,
+    lifetime,
     server_time_ms: Date.now(),
     iat: now,
     exp: now + 3600

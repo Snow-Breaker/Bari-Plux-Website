@@ -1403,6 +1403,42 @@
                 <div class="last-updated" id="agentLastUpdated" style="margin-top:10px;"></div>
             </div>
 
+            <div class="form-card">
+                <div class="form-card-title">
+                    <i class="fas fa-gamepad" style="color:var(--accent);"></i>
+                    GameLoop (TAC) installer
+                </div>
+                <div class="form-card-desc" style="margin-bottom:16px;">
+                    What BPT's "Install GameLoop (TAC)" card downloads (TAC Center &rarr; Library), from
+                    <code style="color:var(--accent2);">app_config/emulator_config</code>. Leave it unpublished and BPT uses its
+                    built-in installer. The file must be on <code style="color:var(--accent2);">dl.bariplux.com</code>; BPT only
+                    runs it when it carries a valid Tencent signature (and matches the SHA-256, if you set one).
+                </div>
+                <div class="form-grid">
+                    <div>
+                        <div class="mini-label">Version</div>
+                        <input type="text" id="emuVersionInput" placeholder="e.g. 7.0.107.0" class="form-input mono" style="font-size:0.9rem;">
+                    </div>
+                    <div>
+                        <div class="mini-label">Size (MB, optional)</div>
+                        <input type="number" id="emuSizeInput" min="0" placeholder="e.g. 420" class="form-input mono" style="font-size:0.9rem;">
+                    </div>
+                    <div class="form-grid-full">
+                        <div class="mini-label">Download URL</div>
+                        <input type="text" id="emuUrlInput" placeholder="https://dl.bariplux.com/....exe" class="form-input mono" style="font-size:0.85rem;">
+                    </div>
+                    <div class="form-grid-full">
+                        <div class="mini-label">SHA-256 (optional)</div>
+                        <input type="text" id="emuShaInput" placeholder="64 hex characters" class="form-input mono" style="font-size:0.85rem;">
+                    </div>
+                </div>
+                <div class="form-actions" style="align-items:center;">
+                    <button class="action-btn view" data-act="saveEmulatorInstallerConfig" style="padding:10px 18px;font-weight:600;"><i class="fas fa-save"></i> Publish</button>
+                    <button class="action-btn" data-act="clearEmulatorInstallerConfig" style="padding:10px 18px;"><i class="fas fa-undo"></i> Use built-in</button>
+                </div>
+                <div class="last-updated" id="emuLastUpdated" style="margin-top:10px;"></div>
+            </div>
+
             <div style="font-size:0.78rem;color:var(--muted);line-height:1.5;margin-bottom:16px;">
                 3.x clients read <code style="color:var(--accent2);">app_config/update_3x</code>; 2.x clients read
                 <code style="color:var(--accent2);">app_config/update_2x</code> — two independent Firebase nodes, so

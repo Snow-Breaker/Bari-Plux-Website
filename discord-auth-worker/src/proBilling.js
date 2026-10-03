@@ -39,6 +39,11 @@ export async function grantProSafe(uids, env, deps, meta = {}) {
       skipped.push({ uid, reason: 'protected_role', role: current });
       continue;
     }
+    // Lifetime Pro never gets an expiry put back on it by a purchase or grant.
+    if (current === 'pro' && (await deps.adminGet(`${tree}/${uid}/lifetime`)) === true) {
+      skipped.push({ uid, reason: 'lifetime', role: current });
+      continue;
+    }
 
     const existingExp = Number(await deps.adminGet(`${tree}/${uid}/proExpiresAtMs`)) || 0;
     const base = Math.max(now, existingExp);
