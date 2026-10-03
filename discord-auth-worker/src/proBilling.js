@@ -59,6 +59,7 @@ export async function grantProSafe(uids, env, deps, meta = {}) {
     if (ok) {
       granted.push(uid);
       expiresAtByUid[uid] = expiresAtMs;
+      if (meta.silent) continue; // e.g. free trials - not a purchase, no Discord announcement
       try {
         await announceProGranted(env, deps, {
           uid,

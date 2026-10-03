@@ -79,6 +79,10 @@
       ".write": false,
       ".indexOn": ["expiresAtMs"]
     },
+    "trials": {
+      ".read": false,
+      ".write": false
+    },
     "stripe_orders": {
       ".read": false,
       ".write": false

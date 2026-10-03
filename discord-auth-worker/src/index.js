@@ -9,6 +9,7 @@ import { handleStripeCreateCheckout, handleStripeWebhook } from './stripe.js';
 import { createAdminAuthRouter } from './adminAuth.js';
 import { handleChatMessageSend, handleChatMessageEdit, handleChatMessageDelete } from './chatMessages.js';
 import { enforceRateLimit, withSecurityHeaders } from './security.js';
+import { parseDeviceHashes, trialBlockReason, startTrial } from './proTrial.js';
 
 // Every request: rate limit first, then route; security headers on every response (src/security.js).
 async function routeRequest(request, env) {
@@ -131,6 +132,11 @@ async function routeRequest(request, env) {
     // POST /feature/entitlement — returns signed feature entitlement JWT (requires Firebase idToken)
     if (request.method === 'POST' && path === '/feature/entitlement') {
       return handleFeatureEntitlement(request, env, corsHeaders);
+    }
+
+    // POST /pro/trial/status | /pro/trial/start — 3-day Pro trial (one per account and device)
+    if (request.method === 'POST' && (path === '/pro/trial/status' || path === '/pro/trial/start')) {
+      return handleProTrial(request, env, corsHeaders, path.endsWith('/start'));
     }
 
     // GET /feature/public-key — returns JWKS URL for verifying entitlement tokens
@@ -1214,6 +1220,23 @@ async function handleFeatureEntitlement(request, env, corsHeaders) {
 
   const userLevel = ROLE_HIERARCHY[role] ?? 0;
 
+  // For the app's "Pro until ... / Trial: N days left" line - display only, the role is the grant.
+  let proExpiresAtMs = null;
+  let trial = false;
+  if (role === 'pro') {
+    try {
+      const tree = uid.startsWith('discord_') ? 'discordUsers' : 'users';
+      const [exp, by] = await Promise.all([
+        adminGetDatabaseAccess(`${tree}/${uid}/proExpiresAtMs`, env),
+        adminGetDatabaseAccess(`${tree}/${uid}/role_assigned_by`, env),
+      ]);
+      proExpiresAtMs = Number(exp) > 0 ? Number(exp) : null;
+      trial = by === 'trial';
+    } catch (err) {
+      console.warn('[feature] pro expiry read failed', err);
+    }
+  }
+
   const features = {};
   const now = Math.floor(Date.now() / 1000);
 
@@ -1233,6 +1256,9 @@ async function handleFeatureEntitlement(request, env, corsHeaders) {
     uid,
     role,
     features,
+    pro_expires_at_ms: proExpiresAtMs,
+    trial,
+    server_time_ms: Date.now(),
     iat: now,
     exp: now + 3600
   }, privateKey, serviceAccount.private_key_id);
@@ -1241,6 +1267,35 @@ async function handleFeatureEntitlement(request, env, corsHeaders) {
     token,
     expires_at: (now + 3600) * 1000
   }), { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+}
+
+async function handleProTrial(request, env, corsHeaders, start) {
+  const json = (body, status = 200) =>
+    new Response(JSON.stringify(body), { status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+
+  const idToken = getAuthUid(request);
+  const user = idToken ? await verifyFirebaseUser(idToken, env) : null;
+  if (!user?.localId) return json({ error: 'unauthorized' }, 401);
+
+  let body = {};
+  try { body = await request.json(); } catch { /* empty body -> bad_device below */ }
+  const hashes = parseDeviceHashes(body);
+  const ip = request.headers.get('CF-Connecting-IP') || '';
+  const ipHash = ip ? await sha256Hex(`bpt-trial|${ip}`) : null;
+
+  const billing = await buildBillingDeps(env);
+  const deps = {
+    adminGet: billing.adminGet,
+    adminPut: billing.adminPut,
+    grantPro: (uid, durationMs) => grantProSafe([uid], env, billing, { durationMs, assignedBy: 'trial', silent: true }),
+  };
+
+  if (!start) {
+    const reason = await trialBlockReason(user.localId, hashes, ipHash, deps);
+    return json({ available: reason === null, reason });
+  }
+  const result = await startTrial(user.localId, hashes, ipHash, deps, env);
+  return result.ok ? json(result) : json(result, 409);
 }
 
 async function handleFeaturePublicKey(request, env, corsHeaders) {

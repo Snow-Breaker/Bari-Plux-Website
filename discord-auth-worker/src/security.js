@@ -24,6 +24,7 @@ export const SECURITY_HEADERS = {
 /** Paths that authenticate, mint tokens or start payments - tight limit. */
 export const STRICT_PATHS = new Set([
   '/', '/github', '/pending-token', '/claim-token', '/feature/entitlement', '/stripe/create-checkout',
+  '/pro/trial/start',
 ]);
 
 /** Never limited: provider webhooks (their own signature check) and health probes. */
