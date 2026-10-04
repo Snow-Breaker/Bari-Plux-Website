@@ -703,6 +703,14 @@ function showLoggedInView(user) {
     localStorage.setItem('bariplux_user', JSON.stringify(user));
     syncLoginToFirebase(user).catch(e => console.error(e));
 
+    // Came here from the Pro page's "Sign in" (website, not the desktop flow): go back to buy.
+    try {
+        if (!isDesktopFlow() && sessionStorage.getItem('bp_return_to') === '/Pro') {
+            sessionStorage.removeItem('bp_return_to');
+            setTimeout(() => location.replace('/Pro'), 600);
+        }
+    } catch (e) { /* storage blocked - stay here */ }
+
     if (isAppEmbed()) {
         if (notifyDesktopApp(user)) { showAppSigningInView(); return; }
     }

@@ -84,6 +84,47 @@ export async function grantProSafe(uids, env, deps, meta = {}) {
   return { granted, skipped, expiresAtByUid, durationMs };
 }
 
+/**
+ * Subscription renewals: Pro until a fixed time (the paid period's end + a grace day), never
+ * shortening a later expiry the account already has. Skips staff roles and Lifetime.
+ */
+export async function grantProUntil(uid, untilMs, deps, meta = {}) {
+  const tree = roleTree(uid);
+  const current = normalizeRole(await deps.adminGet(`${tree}/${uid}/role`));
+  if (ROLE_RANK[current] >= ROLE_RANK.dev) return { uid, action: 'skip_protected_role', role: current };
+  if (current === 'pro' && (await deps.adminGet(`${tree}/${uid}/lifetime`)) === true) return { uid, action: 'skip_lifetime' };
+
+  const existingExp = current === 'pro' ? Number(await deps.adminGet(`${tree}/${uid}/proExpiresAtMs`)) || 0 : 0;
+  const expiresAtMs = Math.max(existingExp, Math.round(Number(untilMs)));
+  await deps.adminPut(`${tree}/${uid}/role`, 'pro');
+  await deps.adminPut(`${tree}/${uid}/roles`, ['pro']);
+  await deps.adminPut(`${tree}/${uid}/proExpiresAtMs`, expiresAtMs);
+  await deps.adminPut(`${tree}/${uid}/role_assigned_at`, new Date().toISOString());
+  await deps.adminPut(`${tree}/${uid}/role_assigned_by`, meta.assignedBy || 'stripe');
+  await deps.adminPut(`payhip_subscriptions/${uid}`, {
+    expiresAtMs,
+    updatedAt: Date.now(),
+    source: meta.assignedBy || 'stripe',
+    durationMs: Math.max(0, expiresAtMs - Date.now())
+  });
+  return { uid, action: 'granted', expiresAtMs };
+}
+
+/** Lifetime Pro: no expiry, nothing for the hourly purge, lifetime flag (see set-roles). */
+export async function grantLifetimePro(uid, deps, meta = {}) {
+  const tree = roleTree(uid);
+  const current = normalizeRole(await deps.adminGet(`${tree}/${uid}/role`));
+  if (ROLE_RANK[current] >= ROLE_RANK.dev) return { uid, action: 'skip_protected_role', role: current };
+  await deps.adminPut(`${tree}/${uid}/role`, 'pro');
+  await deps.adminPut(`${tree}/${uid}/roles`, ['pro']);
+  await deps.adminPut(`${tree}/${uid}/lifetime`, true);
+  await deps.adminPut(`${tree}/${uid}/proExpiresAtMs`, null);
+  await deps.adminPut(`${tree}/${uid}/role_assigned_at`, new Date().toISOString());
+  await deps.adminPut(`${tree}/${uid}/role_assigned_by`, meta.assignedBy || 'stripe');
+  await deps.adminPut(`payhip_subscriptions/${uid}`, null);
+  return { uid, action: 'granted_lifetime' };
+}
+
 export async function revokeOrShortenPro(uid, env, deps, durationMs) {
   const tree = roleTree(uid);
   const current = normalizeRole(await deps.adminGet(`${tree}/${uid}/role`));
@@ -96,6 +137,13 @@ export async function revokeOrShortenPro(uid, env, deps, durationMs) {
   }
 
   const now = Date.now();
+  if ((await deps.adminGet(`${tree}/${uid}/lifetime`)) === true) {
+    await deps.adminPut(`${tree}/${uid}/role`, 'free');
+    await deps.adminPut(`${tree}/${uid}/lifetime`, null);
+    await deps.adminPut(`${tree}/${uid}/proExpiresAtMs`, null);
+    await deps.adminPut(`payhip_subscriptions/${uid}`, null);
+    return { uid, action: 'revoked_lifetime' };
+  }
   const existingExp = Number(await deps.adminGet(`${tree}/${uid}/proExpiresAtMs`)) || 0;
   const nextExp = existingExp > 0 ? existingExp - durationMs : now;
 
