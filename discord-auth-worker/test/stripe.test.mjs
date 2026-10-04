@@ -119,3 +119,57 @@ test('lifetime accounts are never given an expiry by a renewal', async () => {
   await deliver({ type: 'invoice.paid', livemode: true, data: { object: { id: 'in_9', parent: { subscription_details: { subscription: 'sub_9', metadata: { uid: 'u5', plan: '2m' } } }, lines: { data: [{ period: { end: 2000000000 } }] } } } }, deps);
   assert.equal(deps.data['users/u5/proExpiresAtMs'], undefined);
 });
+
+import { handleStripeCreateCheckout, handleStripePortal } from '../src/stripe.js';
+
+function mockStripe(calls) {
+  return async (url, init) => {
+    calls.push({ url: String(url), body: init?.body ? String(init.body) : '' });
+    if (String(url).includes('/v1/prices')) return new Response(JSON.stringify({ data: [{ id: 'price_x', unit_amount: 500 }] }), { status: 200 });
+    if (String(url).includes('/v1/checkout/sessions')) return new Response(JSON.stringify({ id: 'cs_new', url: 'https://checkout.stripe.com/c/pay/cs_new' }), { status: 200 });
+    if (String(url).includes('/v1/billing_portal/sessions')) return new Response(JSON.stringify({ url: 'https://billing.stripe.com/p/session/x' }), { status: 200 });
+    return new Response('{}', { status: 404 });
+  };
+}
+
+const user = { localId: 'u9', email: 'u9@example.com' };
+const checkoutDeps = (extra = {}) => ({ ...fakeDeps({ 'users/u9/role': 'free', ...extra }), verifyFirebaseUser: async (t) => (t === 'good' ? user : null), isAdmin: () => false });
+const req = (path, body, token = 'good') => new Request('https://w' + path, {
+  method: 'POST', body: JSON.stringify(body), headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token } });
+
+test('checkout: signed-in buyer, server-chosen price, uid in metadata', async () => {
+  const calls = [];
+  const orig = globalThis.fetch; globalThis.fetch = mockStripe(calls);
+  try {
+    const res = await handleStripeCreateCheckout(req('/stripe/create-checkout', { plan: '6m', autoRenew: true }), { STRIPE_SECRET_KEY: 'sk_live' }, {}, checkoutDeps());
+    const body = await res.json();
+    assert.equal(res.status, 200);
+    assert.ok(body.url.startsWith('https://checkout.stripe.com/'));
+    assert.ok(calls[0].url.includes('lookup_keys%5B%5D=pro_6m_sub'));
+    const params = new URLSearchParams(calls[1].body);
+    assert.equal(params.get('mode'), 'subscription');
+    assert.equal(params.get('line_items[0][price]'), 'price_x');
+    assert.equal(params.get('metadata[uid]'), 'u9');
+    assert.equal(params.get('subscription_data[metadata][uid]'), 'u9');
+    assert.equal(params.get('metadata[expected_cents]'), '500');
+  } finally { globalThis.fetch = orig; }
+});
+
+test('checkout: not signed in, bad plan, lifetime owner, sandbox for non-admin', async () => {
+  const env = { STRIPE_SECRET_KEY: 'sk_live', STRIPE_SECRET_KEY_TEST: 'sk_test' };
+  assert.equal((await handleStripeCreateCheckout(req('/x', { plan: '2m' }, 'bad'), env, {}, checkoutDeps())).status, 401);
+  assert.equal((await handleStripeCreateCheckout(req('/x', { plan: '3m' }), env, {}, checkoutDeps())).status, 400);
+  assert.equal((await handleStripeCreateCheckout(req('/x', { plan: '2m' }), env, {}, checkoutDeps({ 'users/u9/lifetime': true }))).status, 409);
+  assert.equal((await handleStripeCreateCheckout(req('/x', { plan: '2m', sandbox: true }), env, {}, checkoutDeps())).status, 403);
+});
+
+test('portal: only for accounts with a Stripe customer', async () => {
+  const calls = [];
+  const orig = globalThis.fetch; globalThis.fetch = mockStripe(calls);
+  try {
+    assert.equal((await handleStripePortal(req('/stripe/portal', {}), { STRIPE_SECRET_KEY: 'sk' }, {}, checkoutDeps())).status, 404);
+    const ok = await handleStripePortal(req('/stripe/portal', {}), { STRIPE_SECRET_KEY: 'sk' }, {}, checkoutDeps({ 'users/u9/stripeCustomerId': 'cus_9' }));
+    assert.equal(ok.status, 200);
+    assert.equal(new URLSearchParams(calls.at(-1).body).get('customer'), 'cus_9');
+  } finally { globalThis.fetch = orig; }
+});

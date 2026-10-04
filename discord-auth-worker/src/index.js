@@ -64,10 +64,18 @@ async function routeRequest(request, env) {
     // ── Stripe billing (PayPal + cards) ──
     if (request.method === 'POST' && (path === '/stripe/create-checkout' || path === '/stripe/portal')) {
       const billing = await buildBillingDeps(env);
-      const deps = { ...billing, isAdmin: isAdminFirebaseUser };
-      return path === '/stripe/portal'
-        ? handleStripePortal(request, env, corsHeaders, deps)
-        : handleStripeCreateCheckout(request, env, corsHeaders, deps);
+      // billing.verifyFirebaseUser is the raw (idToken, env) helper - bind env here.
+      const deps = { ...billing, verifyFirebaseUser: (t) => verifyFirebaseUser(t, env), isAdmin: isAdminFirebaseUser };
+      try {
+        return await (path === '/stripe/portal'
+          ? handleStripePortal(request, env, corsHeaders, deps)
+          : handleStripeCreateCheckout(request, env, corsHeaders, deps));
+      } catch (err) {
+        // Never let an exception become Cloudflare's CORS-less error page ("Failed to fetch").
+        console.error('[Stripe] ' + path + ' failed', err?.message || err);
+        return new Response(JSON.stringify({ error: 'server_error' }),
+          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+      }
     }
     if (request.method === 'POST' && path === '/stripe/webhook') {
       const deps = await buildBillingDeps(env);
