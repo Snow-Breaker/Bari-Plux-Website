@@ -3,7 +3,8 @@ import assert from 'node:assert/strict';
 import {
   handleChatMessageSend,
   handleChatMessageEdit,
-  handleChatMessageDelete
+  handleChatMessageDelete,
+  handleChatBadges
 } from '../src/chatMessages.js';
 
 const CORS = {};
@@ -171,18 +172,55 @@ test('send: invalid room rejected', async () => {
   assert.equal((await result(res)).error, 'invalid');
 });
 
-test('send: role must match stored users/role', async () => {
-  const db = basicDb();
-  db['users/u1/role'] = 'Pro';
-  const deps = makeDeps(db);
-  const mismatch = await handleChatMessageSend(
-    post('/chat/message/send', { room: 'general', role: 'free', text: 'hi', name: 'x' }),
-    CORS, deps);
-  assert.equal((await result(mismatch)).error, 'invalid_role');
-  const match = await handleChatMessageSend(
+test('send: self-reported role is IGNORED and never written to the stored message', async () => {
+  // This replaced "role must match stored users/role". That check existed only to keep a lying
+  // client from getting a Pro badge, and the badge itself was a `role` field inside the stored
+  // message - which made lobby_chat/messages (`.read: auth != null`) a complete, machine-readable
+  // customer list. With the badge moved to POST /chat/badges there is nothing left for a forged
+  // role to influence, so the honest assertion is the opposite of the old one: a client claiming
+  // ANY role is accepted, and `role` is absent from what gets stored either way.
+  for (const claimed of ['pro', 'dev', 'founder', 'staff', 'free', '', 'nonsense']) {
+    const db = basicDb();
+    db['users/u1/role'] = 'free';
+    const deps = makeDeps(db);
+    const res = await handleChatMessageSend(
+      post('/chat/message/send', { room: 'general', role: claimed, text: 'hi', name: 'x' }),
+      CORS, deps);
+    const out = await result(res);
+    assert.equal(out.status, 200, `claiming ${JSON.stringify(claimed)} should still send`);
+    const stored = db[`lobby_chat/messages/${out.id}`];
+    assert.ok(stored);
+    assert.equal('role' in stored, false,
+      `stored message must not carry a role field (claimed ${JSON.stringify(claimed)})`);
+  }
+});
+
+test('send: a genuinely Pro sender is stored exactly like a free one', async () => {
+  // The point of the change in one test: two users with different real tiers produce
+  // byte-identical stored messages apart from uid/name/text, so the message tree carries no
+  // paid-tier signal for anyone to read.
+  const proDb = basicDb();
+  proDb['users/u1/role'] = 'pro';
+  const proDeps = makeDeps(proDb);
+  const proRes = await handleChatMessageSend(
     post('/chat/message/send', { room: 'general', role: 'pro', text: 'hi', name: 'x' }),
-    CORS, deps);
-  assert.equal(match.status, 200);
+    CORS, proDeps);
+  const proOut = await result(proRes);
+
+  const freeDb = basicDb();
+  freeDb['users/u1/role'] = 'free';
+  const freeDeps = makeDeps(freeDb);
+  const freeRes = await handleChatMessageSend(
+    post('/chat/message/send', { room: 'general', role: 'free', text: 'hi', name: 'x' }),
+    CORS, freeDeps);
+  const freeOut = await result(freeRes);
+
+  assert.equal(proOut.status, 200);
+  assert.equal(freeOut.status, 200);
+  const proStored = { ...proDb[`lobby_chat/messages/${proOut.id}`] };
+  const freeStored = { ...freeDb[`lobby_chat/messages/${freeOut.id}`] };
+  assert.deepEqual(Object.keys(proStored).sort(), Object.keys(freeStored).sort());
+  assert.equal(Object.keys(proStored).includes('role'), false);
 });
 
 test('send: english-only enforced on server', async () => {
@@ -326,4 +364,160 @@ test('delete: non-owner non-staff rejected', async () => {
     post('/chat/message/delete', { messageId: 'm1' }),
     CORS, deps);
   assert.equal((await result(res)).error, 'not_owner');
+});
+// ── POST /chat/badges ────────────────────────────────────────────────────────
+// The single replacement for the `role` field that used to live inside every stored chat
+// message. Two properties matter and are asserted separately below:
+//   1. an unentitled viewer gets NOTHING (not an error, not a "this one is free" shape)
+//   2. an entitled viewer gets the tiers, and only for uids it actually asked about
+
+test('badges: free viewer gets an empty map, not an error and not a per-uid answer', async () => {
+  const db = basicDb();
+  db['users/u1/role'] = 'free';
+  db['users/p1/role'] = 'pro';
+  db['users/p2/role'] = 'dev';
+  const res = await handleChatBadges(
+    post('/chat/badges', { uids: ['p1', 'p2'] }), CORS, makeDeps(db));
+  const out = await result(res);
+  assert.equal(out.status, 200);
+  assert.equal(out.ok, true);
+  assert.deepEqual(out.badges, {},
+    'a free viewer must not learn anyone\'s tier, including that p1/p2 exist as paid users');
+});
+
+test('badges: account with no role field at all is treated as unentitled', async () => {
+  const db = basicDb();
+  db['users/p1/role'] = 'pro';
+  // note: no users/u1/role at all - a missing role must fail closed, not fail open
+  const out = await result(await handleChatBadges(
+    post('/chat/badges', { uids: ['p1'] }), CORS, makeDeps(db)));
+  assert.equal(out.status, 200);
+  assert.deepEqual(out.badges, {});
+});
+
+test('badges: pro viewer gets tiers for the uids it asked about', async () => {
+  const db = basicDb();
+  db['users/u1/role'] = 'pro';
+  db['users/p1/role'] = 'dev';
+  db['users/p2/role'] = 'founder';
+  db['users/f1/role'] = 'free';
+  const out = await result(await handleChatBadges(
+    post('/chat/badges', { uids: ['p1', 'p2', 'f1'] }), CORS, makeDeps(db)));
+  assert.equal(out.status, 200);
+  assert.deepEqual(out.badges, { p1: 'dev', p2: 'founder' },
+    'a free account must be omitted rather than answered with "free"');
+});
+
+test('badges: staff tier is returned so a client could recognise it', async () => {
+  const db = basicDb();
+  db['users/u1/role'] = 'staff';
+  db['users/s1/role'] = 'staff';
+  const out = await result(await handleChatBadges(
+    post('/chat/badges', { uids: ['s1'] }), CORS, makeDeps(db)));
+  assert.deepEqual(out.badges, { s1: 'staff' });
+});
+
+test('badges: falls back to discordUsers when the users tree has no role', async () => {
+  const db = basicDb();
+  db['users/u1/role'] = 'pro';
+  db['discordUsers/d1/role'] = 'pro';
+  const out = await result(await handleChatBadges(
+    post('/chat/badges', { uids: ['d1'] }), CORS, makeDeps(db)));
+  assert.deepEqual(out.badges, { d1: 'pro' });
+});
+
+test('badges: an unknown uid is simply absent, never an error', async () => {
+  const db = basicDb();
+  db['users/u1/role'] = 'pro';
+  const out = await result(await handleChatBadges(
+    post('/chat/badges', { uids: ['nobody'] }), CORS, makeDeps(db)));
+  assert.equal(out.status, 200);
+  assert.deepEqual(out.badges, {});
+});
+
+test('badges: duplicate uids collapse and the map is deduplicated', async () => {
+  const db = basicDb();
+  db['users/u1/role'] = 'pro';
+  db['users/p1/role'] = 'pro';
+  const out = await result(await handleChatBadges(
+    post('/chat/badges', { uids: ['p1', 'p1', 'p1'] }), CORS, makeDeps(db)));
+  assert.deepEqual(out.badges, { p1: 'pro' });
+});
+
+test('badges: unauthenticated is rejected', async () => {
+  for (const token of ['', 'wrong-token']) {
+    const res = await handleChatBadges(
+      post('/chat/badges', { uids: ['p1'] }, token), CORS, makeDeps(basicDb()));
+    assert.equal(res.status, 401);
+    assert.equal((await result(res)).error, 'unauthorized');
+  }
+});
+
+test('badges: malformed uids envelopes are rejected before any read', async () => {
+  const db = basicDb();
+  db['users/u1/role'] = 'pro';
+  db['users/p1/role'] = 'pro';
+  let reads = 0;
+  const deps = makeDeps(db, { read: async (path) => { reads++; return db[path] ?? null; } });
+
+  const bad = [
+    {},                                  // no uids
+    { uids: 'p1' },                      // not an array
+    { uids: [] },                        // empty
+    { uids: ['p1', 42] },                // non-string member
+    { uids: [null] },
+    { uids: ['../users/p1'] },           // traversal
+    { uids: ['p1/role'] },               // embedded separator
+    { uids: ['p1$'] },
+    { uids: ['p'.repeat(129)] },         // over the 128-char ceiling
+    { uids: ['p1'], extra: 1 }           // shape is fine; sanity that this one reaches the gate
+  ];
+  for (const body of bad.slice(0, -1)) {
+    const res = await handleChatBadges(post('/chat/badges', body), CORS, deps);
+    assert.equal(res.status, 400, `expected 400 for ${JSON.stringify(body)}`);
+    assert.equal((await result(res)).error, 'invalid_uids');
+  }
+  assert.equal(reads, 0, 'a malformed envelope must be rejected before touching the database');
+
+  // the last one IS well shaped, so it gets past validation and reads the viewer's own role
+  reads = 0;
+  const okRes = await handleChatBadges(post('/chat/badges', bad[bad.length - 1]), CORS, deps);
+  assert.equal((await result(okRes)).status, 200);
+  assert.ok(reads > 0);
+});
+
+test('badges: over the per-request uid ceiling is rejected', async () => {
+  const db = basicDb();
+  db['users/u1/role'] = 'pro';
+  const uids = Array.from({ length: 101 }, (_, i) => `u${i}`);
+  const res = await handleChatBadges(post('/chat/badges', { uids }), CORS, makeDeps(db));
+  assert.equal(res.status, 400);
+  assert.equal((await result(res)).error, 'invalid_uids');
+});
+
+test('badges: exactly at the ceiling is accepted', async () => {
+  const db = basicDb();
+  db['users/u1/role'] = 'pro';
+  const uids = Array.from({ length: 100 }, (_, i) => `u${i}`);
+  const res = await handleChatBadges(post('/chat/badges', { uids }), CORS, makeDeps(db));
+  assert.equal((await result(res)).status, 200);
+});
+
+test('badges: non-JSON body is a 400, not a crash', async () => {
+  const req = new Request('https://worker.test/chat/badges', {
+    method: 'POST',
+    headers: { Authorization: 'Bearer good-token', 'Content-Type': 'application/json' },
+    body: 'not json'
+  });
+  const res = await handleChatBadges(req, CORS, makeDeps(basicDb()));
+  assert.equal(res.status, 400);
+  assert.equal((await result(res)).error, 'invalid_body');
+});
+
+test('badges: a database read failure degrades to an empty map, never a 500', async () => {
+  const deps = makeDeps({}, { read: async () => { throw new Error('rtdb down'); } });
+  const out = await result(await handleChatBadges(
+    post('/chat/badges', { uids: ['p1'] }), CORS, deps));
+  assert.equal(out.status, 200, 'resolveStoredRole already swallows read errors');
+  assert.deepEqual(out.badges, {});
 });

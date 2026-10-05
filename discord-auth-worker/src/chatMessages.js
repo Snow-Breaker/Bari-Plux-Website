@@ -16,6 +16,7 @@
  */
 
 import { containsBannedWord } from './bannedWords.js';
+import { isSafeRtdbKey } from './security.js';
 
 export const CHAT_ROOMS = new Set(['general', 'help', 'offtopic']);
 export const CHAT_RULES_VERSION = 1;
@@ -26,8 +27,16 @@ const SAFE_MSG_ID = /^[A-Za-z0-9_-]{1,64}$/;
 const SAFE_IMAGE_KEY = /^[A-Za-z0-9_-]{4,120}$/;
 const SAFE_PHOTO_URL = /^https?:\/\/[^\s]{10,488}$/;
 const STAFF_ROLES = new Set(['dev', 'founder', 'staff']);
+/** Tiers the chat badge can render. `free` is deliberately absent: an unentitled viewer gets
+ *  nothing back rather than an explicit "this one is free" answer (see handleChatBadges). */
+const BADGE_TIERS = new Set(['pro', 'dev', 'founder', 'staff']);
+const MAX_BADGE_UIDS = 100;
 const ADMIN_UID = 'ZHMxN5tZkNgLcxFnp98QUqfvw963';
 const ADMIN_EMAIL = 'mister.attaye@gmail.com';
+
+function isBadgeTierRole(role) {
+  return typeof role === 'string' && BADGE_TIERS.has(role.toLowerCase());
+}
 
 function json(body, status, corsHeaders) {
   return new Response(JSON.stringify(body), {
@@ -215,12 +224,11 @@ export async function handleChatMessageSend(request, corsHeaders, deps) {
   const gate = await enforceCanChat(user.uid, deps);
   if (gate !== 'ok') return rejected(gate, corsHeaders);
 
-  const role = typeof body.role === 'string' ? body.role : '';
-  const storedRole = await resolveStoredRole(user.uid, deps);
-  const roleOk = storedRole
-    ? role.toLowerCase() === String(storedRole).toLowerCase()
-    : role === 'free';
-  if (!roleOk) return rejected('invalid_role', corsHeaders);
+  // NOTE: the client still sends its own `role` in the body, but it is deliberately
+  // ignored here and NOT written to the message. Storing it made every chat message a
+  // readable "this uid is Pro" record (lobby_chat/messages is `.read: auth != null`), which
+  // handed any signed-in user the customer list for free. The badge is now served per-viewer
+  // by /chat/badges instead - see handleChatBadges.
 
   let words = [];
   try {
@@ -240,7 +248,6 @@ export async function handleChatMessageSend(request, corsHeaders, deps) {
     uid: user.uid,
     name,
     text,
-    role: role.toLowerCase(),
     room,
     ts: { '.sv': 'timestamp' }
   };
@@ -367,6 +374,58 @@ export async function handleChatMessageDelete(request, corsHeaders, deps) {
   if (!deleted) return json({ ok: false, error: 'write_failed' }, 502, corsHeaders);
 
   return json({ ok: true }, 200, corsHeaders);
+}
+
+/**
+ * POST /chat/badges - the chat's Pro/Dev/Founder badge, served per viewer.
+ *
+ * Why this endpoint exists: the badge used to be a `role` field stamped into every stored chat
+ * message, which made `lobby_chat/messages` (`.read: auth != null`) a free, complete, machine-
+ * readable customer list - read every uid's tier and pair it with the `name` on the same node.
+ * The message payload no longer carries `role` at all, so this is the only source of it.
+ *
+ * The access rule is deliberately one-directional: a viewer who is not themselves Pro/ Dev/
+ * Founder/ Staff gets `{}` - not an error, not a redacted-but-shaped answer - so there is nothing
+ * to infer from. Only a viewer who has already paid can learn who else has. Roles are still read
+ * with the service account, so `users/$uid/role` can be closed to owner-or-admin in
+ * database.rules.json without affecting the badge at all.
+ */
+export async function handleChatBadges(request, corsHeaders, deps) {
+  const idToken = bearerToken(request);
+  if (!idToken) return unauthorized(corsHeaders);
+
+  const viewer = await deps.verifyUser(idToken);
+  if (!viewer) return unauthorized(corsHeaders);
+
+  const body = parseBody(await readBodySafe(request));
+  if (!body) return json({ ok: false, error: 'invalid_body' }, 400, corsHeaders);
+
+  // Envelope-checked before any RTDB read: it lands in a database path, so it gets the same
+  // allowlist as every other key the Worker interpolates.
+  const raw = Array.isArray(body.uids) ? body.uids : null;
+  if (!raw || raw.length === 0 || raw.length > MAX_BADGE_UIDS) {
+    return json({ ok: false, error: 'invalid_uids' }, 400, corsHeaders);
+  }
+  const uids = [];
+  for (const entry of raw) {
+    if (typeof entry !== 'string' || !isSafeRtdbKey(entry, 128)) {
+      return json({ ok: false, error: 'invalid_uids' }, 400, corsHeaders);
+    }
+    if (!uids.includes(entry)) uids.push(entry);
+  }
+
+  const viewerRole = await resolveStoredRole(viewer.uid, deps);
+  if (!isBadgeTierRole(viewerRole)) {
+    return json({ ok: true, badges: {} }, 200, corsHeaders);
+  }
+
+  const badges = {};
+  for (const uid of uids) {
+    const role = await resolveStoredRole(uid, deps);
+    if (isBadgeTierRole(role)) badges[uid] = String(role).toLowerCase();
+  }
+
+  return json({ ok: true, badges }, 200, corsHeaders);
 }
 
 async function readBodySafe(request) {

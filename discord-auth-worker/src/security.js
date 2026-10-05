@@ -24,11 +24,33 @@ export const SECURITY_HEADERS = {
 /** Paths that authenticate, mint tokens or start payments - tight limit. */
 export const STRICT_PATHS = new Set([
   '/', '/github', '/pending-token', '/claim-token', '/feature/entitlement', '/stripe/create-checkout',
-  '/pro/trial/start', '/stripe/portal',
+  '/pro/trial/start', '/stripe/portal', '/chat/badges',
 ]);
 
 /** Never limited: provider webhooks (their own signature check) and health probes. */
 const EXEMPT_PATHS = new Set(['/stripe/webhook', '/health']);
+
+/**
+ * A single RTDB key the Worker is about to interpolate into a database path. Deliberately a
+ * charset allowlist, not a denylist and not escaping:
+ *
+ *  - Firebase's REST layer already rejects `..`, `$`, `[`, `]`, control chars and `%2F` in a path
+ *    with "Invalid path: Invalid token in path", so upward traversal cannot happen. This is not a
+ *    substitute for that - it stops a malformed id from silently addressing a different node.
+ *  - `Uri.EscapeDataString`-style encoding is NOT usable here: `.` is RFC 3986 unreserved, so
+ *    escaping leaves `..` intact, and a per-segment escape that splits on `/` preserves the very
+ *    separators it looks like it is neutralising.
+ *  - The charset covers every id this Worker legitimately handles: Firebase Auth uids
+ *    ([A-Za-z0-9_-], up to 128), `discord_<digits>`, and `crypto.randomUUID()` (hex + dashes).
+ *
+ * Matters most on handlers that use Admin SDK / `access_token`, which bypass database rules
+ * entirely - there, a bad path is not caught by any `.write` rule.
+ */
+const RTDB_KEY_RE = /^[A-Za-z0-9_-]{1,128}$/;
+
+export function isSafeRtdbKey(value) {
+  return typeof value === 'string' && RTDB_KEY_RE.test(value);
+}
 
 /** Adds the security headers a handler didn't set itself. Binary downloads keep their own
  * Cache-Control (set by the handler). */

@@ -8,8 +8,8 @@ import { recordLoginInfo } from './loginInfo.js';
 import { purgeExpiredPro, enforceProExpiryForUid, grantProSafe, proDurationMs } from './proBilling.js';
 import { handleStripeCreateCheckout, handleStripePortal, handleStripeWebhook } from './stripe.js';
 import { createAdminAuthRouter } from './adminAuth.js';
-import { handleChatMessageSend, handleChatMessageEdit, handleChatMessageDelete } from './chatMessages.js';
-import { enforceRateLimit, withSecurityHeaders } from './security.js';
+import { handleChatMessageSend, handleChatMessageEdit, handleChatMessageDelete, handleChatBadges } from './chatMessages.js';
+import { enforceRateLimit, withSecurityHeaders, isSafeRtdbKey } from './security.js';
 import { parseDeviceHashes, trialBlockReason, startTrial } from './proTrial.js';
 
 // Every request: rate limit first, then route; security headers on every response (src/security.js).
@@ -192,6 +192,12 @@ async function routeRequest(request, env) {
     }
     if (request.method === 'POST' && path === '/chat/message/delete') {
       return handleChatMessageDelete(request, corsHeaders, chatDeps);
+    }
+    // POST /chat/badges - viewer-gated Pro/Dev/Founder badges for the chat. Strict rate limited:
+    // one call can fan out to MAX_BADGE_UIDS service-account reads, so it must not ride the
+    // loose general bucket that plain reads use.
+    if (request.method === 'POST' && path === '/chat/badges') {
+      return handleChatBadges(request, corsHeaders, chatDeps);
     }
 
     // ── Admin panel gate (password + TOTP; does not touch Discord OAuth / claim-token) ──
@@ -797,7 +803,9 @@ async function handleBackupAdminWipe(request, env, corsHeaders) {
   }
 
   const targetUid = (new URL(request.url).searchParams.get('uid') || '').trim();
-  if (!targetUid || targetUid.length > 128 || targetUid.includes('/') || targetUid.includes('..')) {
+  // One shared allowlist (security.js) instead of a local `includes('/')` denylist: a new handler
+  // then can't accidentally ship a weaker check than the ones before it.
+  if (!isSafeRtdbKey(targetUid)) {
     return new Response(JSON.stringify({ error: 'Invalid uid' }),
       { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
   }
@@ -968,7 +976,7 @@ async function handleAdminSetRoles(request, env, corsHeaders) {
   }
 
   const uid = String(body?.uid || '').trim();
-  if (!uid || uid.length > 128 || uid.includes('/') || uid.includes('..')) {
+  if (!isSafeRtdbKey(uid)) {
     return new Response(JSON.stringify({ error: 'Invalid uid' }),
       { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
   }
@@ -1174,7 +1182,7 @@ async function handleAdminGrantPro(request, env, corsHeaders) {
   }
 
   const uid = String(body?.uid || '').trim();
-  if (!uid || uid.length > 128 || uid.includes('/') || uid.includes('..')) {
+  if (!isSafeRtdbKey(uid)) {
     return new Response(JSON.stringify({ error: 'Invalid uid' }),
       { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
   }
@@ -1905,6 +1913,18 @@ async function handleClaimToken(request, env, corsHeaders) {
     return new Response(JSON.stringify({
       error: 'Missing required fields: uid, sessionId, claimSecret'
     }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+  }
+
+  // Shape-check before either id is interpolated into a database path. Everything below this line
+  // runs with Admin SDK / access_token, which BYPASSES database rules - so unlike every other
+  // handler there is no .write rule here to fall back on, and a malformed id would silently
+  // address a different node instead of being rejected. Not a traversal defence (Firebase rejects
+  // `..` in the path itself); this is input hygiene at a rule-bypass boundary.
+  if (!isSafeRtdbKey(uid) || !isSafeRtdbKey(sessionId)) {
+    console.warn(`[handleClaimToken] Rejected malformed uid/sessionId (uid=${typeof uid === 'string' ? uid.slice(0, 40) : typeof uid})`);
+    return new Response(JSON.stringify({ error: 'Malformed uid or sessionId' }), {
+      status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+    });
   }
 
   try {

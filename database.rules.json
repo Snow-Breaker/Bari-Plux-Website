@@ -156,18 +156,42 @@
           ".write": "auth != null && auth.uid === $uid",
           ".read": "auth != null"
         },
+        // ── Deliberately public to any signed-in user, and the only fields that are ──
+        // The chat profile popup and the Pro/Dev/Founder badge need exactly these: the display
+        // name, the avatar, the join date, and the single primary `role`. LobbyChatService reads
+        // `users/{uid}/role` (line ~1744) and `{tree}/{uid}/joinedAt` (line ~1638) directly with
+        // the viewer's own token, so closing `role` would blank every badge in the chat.
+        //
+        // This is the honest limit of what RTDB rules can hide: anyone can read
+        // `lobby_chat/messages`, see each poster's name, and read that name's `role` - so "who is
+        // Pro" is public BY DESIGN while the badge exists. What is NOT public is the commercial
+        // detail around it: `proExpiresAtMs` (how long they paid / when it lapses), `lifetime`,
+        // `proDeviceId`, `role_assigned_by`, `trialUsedAt` - all owner-or-admin below, and all
+        // written only through the Worker's Admin SDK, which bypasses rules. Anyone can already
+        // see that a given account is Pro; they can no longer see what it cost or when it ends.
         "joinedAt": {
           ".write": "auth != null && auth.uid === $uid",
           ".read": "auth != null",
           ".validate": "newData.exists() && newData.isNumber() && newData.val() > 946684800000 && newData.val() < 4102444800000 && (!data.exists() || data.val() === newData.val())"
         },
         "role": {
-          ".read": "auth != null",
+          // OWNER-OR-ADMIN, deliberately. The chat badge no longer reads this field: the worker
+          // stopped stamping `role` into each message and now serves badges per-viewer from
+          // POST /chat/badges, gated on the viewer already being Pro/ Dev/ Founder/ Staff (which
+          // it checks with the Admin SDK, bypassing these rules). With nothing left that needs a
+          // cross-account read, leaving this at "auth != null" would hand every signed-in user a
+          // "who is Pro" lookup for any uid they can name - the customer list.
+          ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true))",
           ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true)",
           ".validate": "newData.isString() && newData.val().matches(/^(free|pro|dev|founder|staff)$/)"
         },
+        "trialUsedAt": {
+          ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true))",
+          ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true)",
+          ".validate": "!newData.exists() || newData.isNumber()"
+        },
         "roles": {
-          ".read": "auth != null",
+          ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true))",
           ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true)",
           ".validate": "newData.hasChildren()",
           "$idx": {
@@ -175,13 +199,13 @@
           }
         },
         "proExpiresAtMs": {
-          ".read": "auth != null",
+          ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true))",
           ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true)",
           ".validate": "!newData.exists() || newData.isNumber()"
         },
         "appVersion": {
           ".write": "auth != null && auth.uid === $uid",
-          ".read": "auth != null",
+          ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true))",
           ".validate": "!newData.exists() || (newData.isString() && newData.val().length > 0 && newData.val().length <= 32)"
         },
         "proDeviceId": {
@@ -254,12 +278,23 @@
           ".validate": "newData.exists() && newData.isNumber() && newData.val() > 946684800000 && newData.val() < 4102444800000 && (!data.exists() || data.val() === newData.val())"
         },
         "role": {
-          ".read": "auth != null",
+          // OWNER-OR-ADMIN, deliberately. The chat badge no longer reads this field: the worker
+          // stopped stamping `role` into each message and now serves badges per-viewer from
+          // POST /chat/badges, gated on the viewer already being Pro/ Dev/ Founder/ Staff (which
+          // it checks with the Admin SDK, bypassing these rules). With nothing left that needs a
+          // cross-account read, leaving this at "auth != null" would hand every signed-in user a
+          // "who is Pro" lookup for any uid they can name - the customer list.
+          ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true))",
           ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true)",
           ".validate": "newData.isString() && newData.val().matches(/^(free|pro|dev|founder|staff)$/)"
         },
+        "trialUsedAt": {
+          ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true))",
+          ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true)",
+          ".validate": "!newData.exists() || newData.isNumber()"
+        },
         "roles": {
-          ".read": "auth != null",
+          ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true))",
           ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true)",
           ".validate": "newData.hasChildren()",
           "$idx": {
@@ -267,13 +302,13 @@
           }
         },
         "proExpiresAtMs": {
-          ".read": "auth != null",
+          ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true))",
           ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true)",
           ".validate": "!newData.exists() || newData.isNumber()"
         },
         "appVersion": {
           ".write": "auth != null && auth.uid === $uid",
-          ".read": "auth != null",
+          ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true))",
           ".validate": "!newData.exists() || (newData.isString() && newData.val().length > 0 && newData.val().length <= 32)"
         },
         "proDeviceId": {
@@ -511,7 +546,17 @@
           ".read": "auth != null && auth.uid === $myUid",
           ".write": "auth != null && auth.uid === $myUid",
           "$targetUid": {
-            ".validate": "!newData.exists() || (newData.isBoolean() && newData.val() === true && $targetUid.length > 0 && $targetUid.length <= 128 && $targetUid !== $myUid)"
+            // `.validate` (not `.write`) so DELETEs - i.e. unblocking - still pass via the
+            // `!newData.exists()` short-circuit above.
+            //
+            // This is the server-side replacement for the client's old "read the target's role and
+            // hide the Block button if they're staff" check, which could no longer run once
+            // `role` was closed to owner-or-admin. Doing it here is strictly stronger: the client
+            // check was advisory (any modified client skipped it), this rejects the write itself.
+            // Compared with `!==` rather than `.matches()` on purpose - `.val()` is null for an
+            // account with no role field, and calling `.matches()` on null errors the rule out,
+            // which would have denied blocking ordinary free users.
+            ".validate": "!newData.exists() || (newData.isBoolean() && newData.val() === true && $targetUid.length > 0 && $targetUid.length <= 128 && $targetUid !== $myUid && $targetUid !== 'ZHMxN5tZkNgLcxFnp98QUqfvw963' && root.child('users/' + $targetUid + '/role').val() !== 'dev' && root.child('users/' + $targetUid + '/role').val() !== 'founder' && root.child('users/' + $targetUid + '/role').val() !== 'staff' && root.child('discordUsers/' + $targetUid + '/role').val() !== 'dev' && root.child('discordUsers/' + $targetUid + '/role').val() !== 'founder' && root.child('discordUsers/' + $targetUid + '/role').val() !== 'staff')"
           }
         }
       },
