@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Bari Plux | Gaming & Tech Content Creator">
+    <meta name="twitter:description" content="Bari Plux on mobile - gaming and tech content creator specializing in PUBG optimizations, emulator setups, and tech solutions.">
+    <meta name="twitter:image" content="https://i.postimg.cc/CKj6nBJP/PLUX-Logo.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1.0">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -83,7 +87,11 @@
 }
 </script>
 
-<!-- در <head> -->
+<!-- در <head>
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Bari Plux | Gaming & Tech Content Creator">
+    <meta name="twitter:description" content="Bari Plux on mobile - gaming and tech content creator specializing in PUBG optimizations, emulator setups, and tech solutions.">
+    <meta name="twitter:image" content="https://i.postimg.cc/CKj6nBJP/PLUX-Logo.png"> -->
 <!-- Security: Disable right-click and keyboard shortcuts -->
 <script>
     document.addEventListener('contextmenu', e => e.preventDefault());
@@ -97,8 +105,6 @@
 
 <!-- در انتهای <body class="bp-body">
     <div id="bp-aurora" class="bp-aurora bp-ambient" aria-hidden="true"></div> -->
-<script src="js/main.min.js"></script>
-<script src="js/features.min.js"></script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -111,9 +117,6 @@
 <meta name="format-detection" content="email=no">
 <meta name="app-mobile-web-app-title" content="Bari Plux">
 
-<!-- Preload critical resources -->
-<link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Montserrat:wght@700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-
 <!-- Mobile optimization consolidated -->
 
 
@@ -123,12 +126,10 @@
 
     <!-- Fonts and Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Montserrat:wght@700;800&family=Oxanium:wght@400;600;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/all-styles.css?v=20260907dark">
 
     <!-- Preload critical resources -->
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
     
     <!-- Lazy load non-critical resources -->
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
@@ -137,16 +138,6 @@
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js" defer></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js" defer></script>
-    
-    <!-- Particles.js - Lazy loaded for mobile performance -->
-    <script>
-        if (window.innerWidth >= 1024) {
-            var script = document.createElement('script');
-            script.src = 'https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js';
-            script.async = true;
-            document.head.appendChild(script);
-        }
-    </script>
 
     <style>
         :root {
@@ -209,24 +200,6 @@
             position: relative;
             overflow-x: hidden;
             user-select: none;
-        }
-
-        /* Particles.js Container - Disabled on mobile for better performance */
-        #particles-js {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            z-index: -1;
-            pointer-events: none;
-            display: none;
-        }
-        
-        @media (min-width: 1024px) {
-            #particles-js {
-                display: block;
-            }
         }
 
         /* Animated background elements */
@@ -6450,15 +6423,12 @@ input:checked + .slider:before {
     <script src="assets/js/boot.js?v=20260907dark"></script>
     <script src="assets/js/signal-ambient.js?v=20260728ai" defer></script>
     <script src="assets/js/site-shell.js?v=20260907dark" defer></script>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Oxanium:wght@400;600;700&family=Rajdhani:wght@500;600;700&family=Poppins:wght@300;400;500;600;700;800&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
 </head>
 <body class="bp-body">
     <div id="bp-aurora" class="bp-aurora bp-ambient" aria-hidden="true"></div>
     <!-- Scroll Progress Bar -->
     <div class="scroll-progress" id="scrollProgress"></div>
-
-    <!-- Particles.js Container -->
-    <div id="particles-js"></div>
 
     <!-- Animated Background -->
     <div class="bg-animation">
@@ -8193,66 +8163,6 @@ input:checked + .slider:before {
         });
     }
 
-    // Particles.js
-    function initParticles() {
-        if (typeof particlesJS !== 'undefined') {
-            particlesJS('particles-js', {
-                "particles": {
-                    "number": {
-                        "value": 80,
-                        "density": {
-                            "enable": true,
-                            "value_area": 800
-                        }
-                    },
-                    "color": {
-                        "value": "#6C63FF"
-                    },
-                    "shape": {
-                        "type": "circle"
-                    },
-                    "opacity": {
-                        "value": 0.5,
-                        "random": false
-                    },
-                    "size": {
-                        "value": 3,
-                        "random": true
-                    },
-                    "line_linked": {
-                        "enable": true,
-                        "distance": 150,
-                        "color": "#6C63FF",
-                        "opacity": 0.4,
-                        "width": 1
-                    },
-                    "move": {
-                        "enable": true,
-                        "speed": 6,
-                        "direction": "none",
-                        "random": false,
-                        "straight": false,
-                        "out_mode": "out"
-                    }
-                },
-                "interactivity": {
-                    "detect_on": "canvas",
-                    "events": {
-                        "onhover": {
-                            "enable": true,
-                            "mode": "grab"
-                        },
-                        "onclick": {
-                            "enable": true,
-                            "mode": "push"
-                        }
-                    }
-                },
-                "retina_detect": true
-            });
-        }
-    }
-
     // اضافه کردن این تابع در بخش اسکریپت
 function sanitizeInput(input) {
     if (!input) return '';
@@ -9936,7 +9846,6 @@ document.addEventListener('touchend', function(event) {
         setupThemeToggle();
         setupScrollTop();
         setupRippleEffect();
-        initParticles();
         setupCollapsibleSearch();
         initializeChatBot();
         initializeFAQ();
@@ -10034,6 +9943,5 @@ document.addEventListener('touchend', function(event) {
     setTimeout(updateLoginButton, 500);
     setTimeout(updateLoginButton, 1000);
     </script>
-<script src="js/main.js" defer></script>
 </body>
 </html>
