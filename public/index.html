@@ -1,228 +1,530 @@
-<!DOCTYPE html>
-<!-- Desktop fallback only. Canonical source: Bari-Plux-Website / Firebase Hosting. See docs/adr/0004-website-html-ownership.md -->
-<html lang="en" dir="ltr">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
-    <title>Login | Bari Plux</title>
-    <meta name="description" content="Login to your Bari Plux account">
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="icon" type="image/x-icon" href="https://i.postimg.cc/CKj6nBJP/PLUX-Logo.png">
-    
-    <!-- Domain-lock -->
-    <script src="assets/js/domain-lock.js"></script>
+(function () {
+  'use strict';
 
-    <script src="assets/js/pages/auth-guard.js"></script>
+  var LOGO = 'https://yt3.googleusercontent.com/RPW5Z_kcoEu0ES_VpL4-7ZqI4eI1OQfuVL-DbuCYWmRhXono9hA5NOCSGGMDLzJqNcHUlhOg=s160-c-k-c0x00ffffff-no-rj';
+  var SITE_ORIGIN = 'https://bariplux.com';
+  var AUTH_HOSTS = { 'login.bariplux.com': 1, 'baripluxwebsite.web.app': 1, 'baripluxwebsite.firebaseapp.com': 1 };
+  var NAV = [
+    { href: '/', label: 'Home', match: ['', 'index.html', 'index'] },
+    { href: '/#downloads', label: 'Downloads' },
+    { href: '/#videos', label: 'Videos' },
+    { href: '/mapspubg', label: 'Maps', match: ['mapspubg.html', 'mapspubg'] },
+    { href: '/weaponorg', label: 'Weapons', match: ['weaponorg.html', 'weaponorg', 'org.html'] },
+    { href: '/news', label: 'News', match: ['news.html', 'news'] },
+    { href: '/updates', label: 'Updates', match: ['updates.html', 'updates'] },
+    { href: '/tool', label: 'Tool', match: ['tool.html', 'tool'] },
+    { href: '/optimizationtools', label: 'Tools', match: ['optimizationtools.html', 'optimizationtools'] },
+    { href: '/Pro', label: 'Pro', match: ['pro.html', 'pro'] }
+  ];
 
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-<!-- Security headers -->
-    <meta http-equiv="Content-Security-Policy"
-      content="default-src 'self' https:;
-               script-src 'self' https: 'unsafe-eval' blob:;
-               style-src 'self' https: 'unsafe-inline';
-               img-src 'self' https: data: blob:;
-               font-src 'self' https: data:;
-               connect-src 'self' https: wss:;
-               frame-src 'self' https:;
-               worker-src 'self' https: blob: 'unsafe-inline' 'unsafe-eval';
-               object-src 'none';
-               base-uri 'self';">
-    <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
-<link rel="stylesheet" href="assets/css/site.css?v=20260729mnav">
-<link rel="stylesheet" href="assets/css/widgets.css?v=20260728ai">
-<script src="assets/js/signal-ambient.js?v=20260728ai" defer></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/bariplux.css?v=20260907dark">
-    <link rel="stylesheet" href="assets/css/site.css?v=20260729mnav">
-    <link rel="stylesheet" href="assets/css/shell.css?v=20260728ai">
-    <link rel="stylesheet" href="assets/css/widgets.css?v=20260728ai">
-    <link rel="stylesheet" href="assets/css/pages/auth.css?v=20260729gap">
-    <script src="assets/js/boot.js?v=20260907dark"></script>
-    <script src="assets/js/signal-ambient.js?v=20260728ai" defer></script>
-    <script src="assets/js/site-shell.js?v=20260907dark" defer></script>
+  function isAuthHost() {
+    return !!AUTH_HOSTS[(location.hostname || '').toLowerCase()];
+  }
 
-</head>
-<body class="bp-body">
-    <div id="bp-aurora" class="bp-aurora bp-ambient" aria-hidden="true"></div>
-    <script src="assets/js/protect.js" defer></script>
+  function navHref(href) {
+    if (!href) return href;
+    if (/^https?:\/\//i.test(href) || href.charAt(0) === '#') return href;
+    if (!isAuthHost()) return href;
+    if (href.charAt(0) === '/') return SITE_ORIGIN + href;
+    return SITE_ORIGIN + '/' + href.replace(/^\.\//, '');
+  }
 
-    <main class="bp-auth">
-        <div class="login-container">
-            <div id="loginFormView">
-                <div class="login-header">
-                    <img class="login-logo" src="https://i.postimg.cc/CKj6nBJP/PLUX-Logo.png" alt="Bari Plux">
-                    <h1 class="login-title">Welcome Back</h1>
-                    <p class="login-subtitle">Login to your Bari Plux account</p>
-                </div>
+  function pageFile() {
+    var path = (location.pathname || '').replace(/\\/g, '/');
+    var seg = path.split('/').filter(Boolean).pop() || '';
+    return decodeURIComponent(seg).toLowerCase();
+  }
 
-                <div class="firebase-config-note" id="firebaseConfigNote">
-                    <strong><i class="fas fa-info-circle"></i> Setup Required:</strong><br>
-                    To enable real authentication, configure Firebase in the code below.
-                    <br><br>
-                    <code>YOUR_FIREBASE_CONFIG_HERE</code>
-                </div>
+  function isActive(item) {
+    var file = pageFile();
+    if (!item.match) return false;
+    for (var i = 0; i < item.match.length; i++) {
+      if (item.match[i] === file) return true;
+      if (item.match[i] === '' && (file === '' || file === 'index.html' || file === 'index')) return true;
+    }
+    return false;
+  }
 
-                <div class="login-tabs" style="display:none;" aria-hidden="true">
-                    <div class="login-tab active" id="mainTab-social">Social</div>
-                    <div class="login-tab" id="mainTab-email">Email</div>
-                </div>
+  function readUser() {
+    try {
+      var raw = localStorage.getItem('bariplux_user');
+      return raw ? JSON.parse(raw) : null;
+    } catch (e) {
+      return null;
+    }
+  }
 
-                <div id="socialForm" class="login-form">
-                    <button id="btnGoogleLogin" class="btn-google">
-                        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
-                        Sign in with Google
-                    </button>
-                    <button id="btnGitHubLogin" class="btn-github">
-                        <i class="fab fa-github" style="font-size:1.2rem;"></i>
-                        Sign in with GitHub
-                    </button>
-                    <button id="btnDiscordLogin" class="btn-discord">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.003.027.012.053.027.073a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/>
-                        </svg>
-                        Sign in with Discord
-                    </button>
-                    <div class="discord-notice" id="discordNotice">
-                        ⚙️ Discord Client ID not set. Edit the code and replace <code>1504446428959871127</code>.
-                    </div>
-                    
-                    <div class="feature-pills">
-                        <span class="feature-pill"><i class="fas fa-shield-alt"></i> Secure</span>
-                        <span class="feature-pill"><i class="fas fa-bolt"></i> Fast</span>
-                        <span class="feature-pill"><i class="fas fa-sync"></i> Sync</span>
-                    </div>
-                </div>
+  function chromeHtml() {
+    var links = NAV.map(function (item) {
+      var cls = 'bp-nav__link' + (isActive(item) ? ' is-active' : '');
+      return '<a href="' + navHref(item.href) + '" class="' + cls + '">' + item.label + '</a>';
+    }).join('');
 
-                <div id="emailForm" class="login-form" style="display:none !important;" aria-hidden="true">
-                    <div class="sub-tabs">
-                        <div class="sub-tab active" id="subTab-signin">Sign In</div>
-                        <div class="sub-tab" id="subTab-register">Register</div>
-                        <div class="sub-tab" id="subTab-forgot">Forgot?</div>
-                    </div>
+    return '<header class="bp-chrome" id="bp-header" data-bp-shell="1"><div class="bp-chrome__inner"><a href="' + navHref('/') + '" class="bp-logo"><img src="' + LOGO + '" alt="" class="bp-logo__img" width="36" height="36"><span class="bp-logo__text">Bari Plux</span></a><nav class="bp-nav" aria-label="Primary">' + links + '</nav><div class="bp-chrome__actions"><button type="button" class="bp-nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="bp-drawer"><span class="bp-nav-toggle__bars" aria-hidden="true"><span></span><span></span><span></span></span></button><button type="button" id="bp-search-open" class="bp-icon-btn" title="Search (Ctrl+K)" aria-label="Search"><i class="fas fa-search" aria-hidden="true"></i></button><div class="bp-account user-menu-container"><button type="button" id="loginBtnHeader" class="bp-btn bp-btn--glass login-btn-header" title="Login"><i class="fas fa-sign-in-alt" aria-hidden="true"></i><span>Login</span></button><div id="userDropdown" class="bp-menu user-dropdown" hidden><div class="bp-menu__head"><div id="userAvatar" class="bp-menu__avatar"></div><div class="bp-menu__meta"><div id="userName" class="bp-menu__name">Guest</div><div id="userEmail" class="bp-menu__email">Sign in to continue</div><div id="userMethodBadge" class="bp-menu__badge" hidden></div></div></div><div class="bp-menu__divider"></div><button type="button" id="viewProfileBtn" class="bp-menu__item dropdown-btn"><i class="fas fa-user-circle"></i> Account Info</button><button type="button" id="goToLoginBtn" class="bp-menu__item dropdown-btn"><i class="fas fa-sign-in-alt"></i> Login Page</button><button type="button" id="logoutBtn" class="bp-menu__item bp-menu__item--danger dropdown-btn logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button></div></div></div></div></header>';
+  }
 
-                    <div id="subForm-signin" class="sub-form active">
-                        <div class="error-message" id="signInError"></div>
-                        <div class="form-group">
-                            <label class="form-label" for="emailInput">Email</label>
-                            <div class="input-wrapper">
-                                <input type="email" id="emailInput" class="form-input with-icon" placeholder="your@email.com" autocomplete="email">
-                                <i class="fas fa-envelope"></i>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" for="passwordInput">Password</label>
-                            <div class="input-wrapper">
-                                <input type="password" id="passwordInput" class="form-input with-icon" placeholder="Your password" autocomplete="current-password" style="padding-right:45px;">
-                                <i class="fas fa-lock"></i>
-                                <button type="button" class="password-toggle" data-target="passwordInput"><i class="fas fa-eye"></i></button>
-                            </div>
-                        </div>
-                        <div class="form-options">
-                            <label class="remember-me">
-                                <input type="checkbox" id="rememberMe"> Remember me
-                            </label>
-                            <a href="#" class="forgot-password" id="linkForgotPassword">Forgot Password?</a>
-                        </div>
-                        <button id="btnEmailSignIn" class="btn-primary">
-                            <i class="fas fa-sign-in-alt"></i> Sign In
-                        </button>
-                    </div>
+  function collectNavLinks() {
+    var chrome = document.getElementById('bp-header');
+    var nav = chrome && chrome.querySelector('.bp-nav');
+    var items = [];
+    if (nav) {
+      var anchors = nav.querySelectorAll('a.bp-nav__link, a.nav-link, a');
+      for (var i = 0; i < anchors.length; i++) {
+        var a = anchors[i];
+        var href = a.getAttribute('href') || '#';
+        var label = (a.textContent || '').trim();
+        if (!label) continue;
+        items.push({ href: navHref(href), label: label, active: a.classList.contains('is-active') || a.classList.contains('active') });
+      }
+    }
+    if (!items.length) {
+      for (var n = 0; n < NAV.length; n++) {
+        items.push({ href: navHref(NAV[n].href), label: NAV[n].label, active: isActive(NAV[n]) });
+      }
+    }
+    return items;
+  }
 
-                    <div id="subForm-register" class="sub-form">
-                        <div class="error-message" id="regError"></div>
-                        <div class="form-group">
-                            <label class="form-label" for="regName">Full Name</label>
-                            <div class="input-wrapper">
-                                <input type="text" id="regName" class="form-input with-icon" placeholder="Your name" autocomplete="name">
-                                <i class="fas fa-user"></i>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" for="regEmail">Email</label>
-                            <div class="input-wrapper">
-                                <input type="email" id="regEmail" class="form-input with-icon" placeholder="your@email.com" autocomplete="email">
-                                <i class="fas fa-envelope"></i>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" for="regPassword">Password</label>
-                            <div class="input-wrapper">
-                                <input type="password" id="regPassword" class="form-input with-icon" placeholder="At least 6 characters" autocomplete="new-password" style="padding-right:45px;">
-                                <i class="fas fa-lock"></i>
-                                <button type="button" class="password-toggle" data-target="regPassword"><i class="fas fa-eye"></i></button>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" for="regConfirm">Confirm Password</label>
-                            <div class="input-wrapper">
-                                <input type="password" id="regConfirm" class="form-input with-icon" placeholder="Repeat password" autocomplete="new-password" style="padding-right:45px;">
-                                <i class="fas fa-lock"></i>
-                                <button type="button" class="password-toggle" data-target="regConfirm"><i class="fas fa-eye"></i></button>
-                            </div>
-                        </div>
-                        <button id="btnRegister" class="btn-primary">
-                            <i class="fas fa-user-plus"></i> Create Account
-                        </button>
-                    </div>
+  function drawerHtml(items) {
+    var links = items.map(function (item, idx) {
+      var cls = 'bp-drawer__link' + (item.active ? ' is-active' : '');
+      return '<a href="' + item.href + '" class="' + cls + '" style="--bp-i:' + idx + '"><span class="bp-drawer__link-label">' + item.label + '</span><span class="bp-drawer__link-glow" aria-hidden="true"></span></a>';
+    }).join('');
 
-                    <div id="subForm-forgot" class="sub-form">
-                        <p style="color:var(--muted);font-size:0.9rem;margin-bottom:20px;">Enter your email to receive a password reset link.</p>
-                        <div class="error-message" id="forgotError"></div>
-                        <div class="success-message" id="forgotSuccess"></div>
-                        <div class="form-group">
-                            <label class="form-label" for="forgotEmail">Email</label>
-                            <div class="input-wrapper">
-                                <input type="email" id="forgotEmail" class="form-input with-icon" placeholder="your@email.com">
-                                <i class="fas fa-envelope"></i>
-                            </div>
-                        </div>
-                        <button id="btnForgotPassword" class="btn-primary">
-                            <i class="fas fa-paper-plane"></i> Send Reset Link
-                        </button>
-                        <div style="text-align:center;margin-top:15px;">
-                            <a href="#" style="color:var(--accent);font-size:0.9rem;" id="linkBackToSignIn">← Back to Sign In</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    return '<div class="bp-drawer-root" id="bp-drawer-root" hidden><div class="bp-drawer-backdrop" data-bp-drawer-close tabindex="-1" aria-hidden="true"></div><aside class="bp-drawer" id="bp-drawer" role="dialog" aria-modal="true" aria-label="Site menu"><div class="bp-drawer__sheen" aria-hidden="true"></div><div class="bp-drawer__head"><a href="' + navHref('/') + '" class="bp-drawer__brand"><img src="' + LOGO + '" alt="" width="40" height="40"><div><strong>Bari Plux</strong><span>Navigate</span></div></a><button type="button" class="bp-drawer__close" data-bp-drawer-close aria-label="Close menu"><span aria-hidden="true"></span><span aria-hidden="true"></span></button></div><nav class="bp-drawer__nav" aria-label="Mobile">' + links + '</nav><div class="bp-drawer__foot"><a href="' + navHref('/Pro') + '" class="bp-drawer__cta"><span class="bp-drawer__cta-badge">PRO</span><span class="bp-drawer__cta-copy"><strong>Unlock Bari Plux Pro</strong><em>Full toolkit &amp; priority features</em></span><i class="fas fa-arrow-right" aria-hidden="true"></i></a></div></aside></div>';
+  }
 
-            <div id="loggedInView" class="logged-in-view">
-                <div class="login-account-card">
-                    <div class="user-avatar" id="loginUserAvatar">
-                        <img id="loginUserAvatarImg" src="" alt="" style="display: none;">
-                    </div>
-                    <p class="login-account-kicker">Account</p>
-                    <div class="user-name" id="loginUserName">—</div>
-                    <div class="user-email" id="loginUserEmail">—</div>
-                    <div class="login-account-badge" id="loginUserMethod" hidden></div>
-                    <div class="user-id">
-                        <span>ID</span>
-                        <code id="loginUserId">—</code>
-                    </div>
-                </div>
-                <div class="app-token-section" id="appTokenSection" style="display:none;">
-                    <div id="openAppStatus" style="margin-top:10px;display:none;"></div>
-                </div>
-                <button id="btnLogout" class="btn-logout"><i class="fas fa-sign-out-alt"></i> Logout</button>
-                <a href="/" class="back-home"><i class="fas fa-arrow-left"></i> Back to Home</a>
-            </div>
-        </div>
-    </main>
+  function ensureMobileNav() {
+    var chrome = document.getElementById('bp-header');
+    if (!chrome) return;
+    var actions = chrome.querySelector('.bp-chrome__actions');
+    if (actions && !chrome.querySelector('.bp-nav-toggle')) {
+      var toggle = document.createElement('button');
+      toggle.type = 'button';
+      toggle.className = 'bp-nav-toggle';
+      toggle.setAttribute('aria-label', 'Open menu');
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.setAttribute('aria-controls', 'bp-drawer');
+      toggle.innerHTML = '<span class="bp-nav-toggle__bars" aria-hidden="true"><span></span><span></span><span></span></span>';
+      actions.insertBefore(toggle, actions.firstChild);
+    }
 
-    <script src="assets/js/pages/auth.js?v=20260907dark"></script>
+    var existing = document.getElementById('bp-drawer-root');
+    if (existing) existing.remove();
 
-    <footer class="footer" style="border-top: none; margin-top: 0; padding: 15px 0;">
-        <div class="footer-bottom" style="border-top: none; padding-top: 0;">
-            <a href="https://bariplux.com/privacy-policy" class="copyright">&copy; 2026 Bari Plux. All rights reserved.</a>
-        </div>
-    </footer>
-</body>
-</html>
+    var wrap = document.createElement('div');
+    wrap.innerHTML = drawerHtml(collectNavLinks());
+    document.body.appendChild(wrap.firstChild);
+    wireMobileNav();
+  }
+
+  function wireMobileNav() {
+    var root = document.getElementById('bp-drawer-root');
+    var chrome = document.getElementById('bp-header');
+    var toggle = chrome && chrome.querySelector('.bp-nav-toggle');
+    if (!root || !toggle || toggle.dataset.bpWired) return;
+    toggle.dataset.bpWired = '1';
+
+    var closeBtns = root.querySelectorAll('[data-bp-drawer-close]');
+    var links = root.querySelectorAll('.bp-drawer__link, .bp-drawer__cta, .bp-drawer__brand');
+    var closing = false;
+
+    function setOpen(open) {
+      if (open) {
+        closing = false;
+        root.hidden = false;
+        void root.offsetWidth;
+        document.body.classList.add('bp-drawer-open');
+        root.classList.add('is-open');
+        toggle.classList.add('is-open');
+        toggle.setAttribute('aria-expanded', 'true');
+        toggle.setAttribute('aria-label', 'Close menu');
+      } else {
+        if (!root.classList.contains('is-open') && root.hidden) return;
+        closing = true;
+        document.body.classList.remove('bp-drawer-open');
+        root.classList.remove('is-open');
+        toggle.classList.remove('is-open');
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.setAttribute('aria-label', 'Open menu');
+        window.setTimeout(function () {
+          if (closing) {
+            root.hidden = true;
+            closing = false;
+          }
+        }, 420);
+      }
+    }
+
+    toggle.addEventListener('click', function () {
+      setOpen(!root.classList.contains('is-open'));
+    });
+
+    for (var i = 0; i < closeBtns.length; i++) {
+      closeBtns[i].addEventListener('click', function () { setOpen(false); });
+    }
+
+    for (var l = 0; l < links.length; l++) {
+      links[l].addEventListener('click', function () {
+        window.setTimeout(function () { setOpen(false); }, 40);
+      });
+    }
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && root.classList.contains('is-open')) {
+        e.preventDefault();
+        setOpen(false);
+      }
+    });
+  }
+
+  function ensureStyles() {
+    if (document.querySelector('link[data-bp-search-css]')) return;
+    var link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'assets/css/site-search.css?v=20260728ai';
+    link.setAttribute('data-bp-search-css', '1');
+    document.head.appendChild(link);
+  }
+
+  function ensureSearchScript() {
+    if (window.BPSearch) {
+      window.BPSearch.wire();
+      return;
+    }
+    if (document.querySelector('script[data-bp-search-js]')) return;
+    var s = document.createElement('script');
+    s.src = 'assets/js/site-search.js?v=20260728ai';
+    s.defer = true;
+    s.setAttribute('data-bp-search-js', '1');
+    document.head.appendChild(s);
+  }
+
+  function purgeLegacyChrome() {
+    var legacy = document.querySelectorAll('body > .header.glass, body > header.header:not(.bp-chrome)');
+    for (var i = 0; i < legacy.length; i++) legacy[i].remove();
+    var kill = document.querySelectorAll('#particles-js, .bg-animation, .floating-circle, .scroll-progress');
+    for (var k = 0; k < kill.length; k++) kill[k].remove();
+    var mobileMenus = document.querySelectorAll('.mobile-menu, .mobile-nav, .mobile-menu-overlay');
+    for (var m = 0; m < mobileMenus.length; m++) mobileMenus[m].remove();
+  }
+
+  function ensureAmbientHost() {
+    if (document.getElementById('bp-aurora') || document.querySelector('.bp-ambient')) return;
+    var host = document.createElement('div');
+    host.id = 'bp-aurora';
+    host.className = 'bp-aurora bp-ambient';
+    host.setAttribute('aria-hidden', 'true');
+    document.body.insertBefore(host, document.body.firstChild);
+  }
+
+  function injectChrome() {
+    if (document.getElementById('bp-header') && document.querySelector('.bp-chrome')) return;
+    var wrap = document.createElement('div');
+    wrap.innerHTML = chromeHtml();
+    var header = wrap.firstChild;
+    var aurora = document.getElementById('bp-aurora') || document.querySelector('.bp-ambient');
+    if (aurora && aurora.parentNode) {
+      aurora.parentNode.insertBefore(header, aurora.nextSibling);
+    } else {
+      document.body.insertBefore(header, document.body.firstChild);
+    }
+  }
+
+  function wireTheme() {
+    var btn = document.getElementById('theme-toggle');
+    if (!btn || btn.dataset.bpWired) return;
+    btn.dataset.bpWired = '1';
+
+    function apply(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      document.body.setAttribute('data-theme', theme);
+      try { localStorage.setItem('theme', theme); } catch (e) {}
+      var meta = document.querySelector('meta[name="theme-color"]');
+      if (meta) meta.setAttribute('content', theme === 'light' ? '#eef0f6' : '#07070c');
+    }
+
+    var stored = null;
+    try { stored = localStorage.getItem('theme'); } catch (e) {}
+    if (stored === 'light' || stored === 'dark') {
+      apply(stored);
+    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+      apply('light');
+    } else {
+      apply('dark');
+    }
+
+    btn.addEventListener('click', function () {
+      var cur = document.documentElement.getAttribute('data-theme') || 'dark';
+      apply(cur === 'light' ? 'dark' : 'light');
+    });
+  }
+
+  function wireScroll() {
+    var chrome = document.getElementById('bp-header');
+    if (!chrome) return;
+    var onScroll = function () {
+      chrome.classList.toggle('scrolled', window.scrollY > 12);
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
+
+  function wireKeyboardNavigation() {
+    var items = function () {
+      return Array.prototype.slice.call(document.querySelectorAll('.bp-nav__link, .bp-drawer__link, .bp-drawer__cta'));
+    };
+
+    document.addEventListener('keydown', function (e) {
+      if (!/^Arrow(Right|Left|Down|Up)$/.test(e.key)) return;
+      var list = items();
+      if (!list.length) return;
+      var current = list.indexOf(document.activeElement);
+      if (current === -1) return;
+      var step = (e.key === 'ArrowRight' || e.key === 'ArrowDown') ? 1 : -1;
+      var next = (current + step + list.length) % list.length;
+      list[next].focus();
+      e.preventDefault();
+    }, true);
+  }
+
+  function resolveUserName(user) {
+    if (!user) return 'User';
+    return user.name || user.displayName || user.username || (user.email ? String(user.email).split('@')[0] : 'User');
+  }
+
+  function resolvePhotoUrl(user) {
+    if (!user) return '';
+    var photo = user.photoURL || user.photoUrl || user.avatar || '';
+    if (!photo) return '';
+    photo = String(photo);
+    if (/^https?:\/\//i.test(photo)) return photo;
+    var discordId = user.discordId || '';
+    if (!discordId) {
+      try {
+        var d = JSON.parse(localStorage.getItem('discord_user') || 'null');
+        if (d && d.id) discordId = d.id;
+        if ((!photo || photo.indexOf('/') === -1) && d && d.avatar) photo = d.avatar;
+      } catch (e) {}
+    }
+    if (discordId && photo.indexOf('/') === -1 && photo.length >= 16) {
+      return 'https://cdn.discordapp.com/avatars/' + discordId + '/' + photo + '.png?size=128';
+    }
+    return photo;
+  }
+
+  function methodLabel(user) {
+    var m = String((user && (user.loginMethod || user.provider)) || '').toLowerCase();
+    if (m.indexOf('google') >= 0) return 'Google';
+    if (m.indexOf('github') >= 0) return 'GitHub';
+    if (m.indexOf('discord') >= 0) return 'Discord';
+    if (m.indexOf('email') >= 0 || m.indexOf('password') >= 0) return 'Email';
+    return m ? 'Account' : '';
+  }
+
+  var LOGIN_URL = 'https://login.bariplux.com/';
+
+  function updateLoginUi() {
+    var user = readUser();
+    var btn = document.getElementById('loginBtnHeader');
+    var name = document.getElementById('userName');
+    var email = document.getElementById('userEmail');
+    var avatar = document.getElementById('userAvatar');
+    var badge = document.getElementById('userMethodBadge');
+    var profile = document.getElementById('viewProfileBtn');
+    var go = document.getElementById('goToLoginBtn');
+    var logout = document.getElementById('logoutBtn');
+    var dropdown = document.getElementById('userDropdown');
+    if (!btn) return;
+
+    if (btn.tagName === 'A') btn.setAttribute('href', LOGIN_URL);
+
+    if (user) {
+      var userName = resolveUserName(user);
+      var photo = resolvePhotoUrl(user);
+      var shortName = userName.length > 14 ? userName.slice(0, 14) + '…' : userName;
+      var initial = userName.charAt(0).toUpperCase();
+      if (photo) {
+        btn.innerHTML = '<span class="bp-user-chip"><img class="bp-user-chip__avatar" src="' + photo + '" alt="" referrerpolicy="no-referrer"><span>' + shortName + '</span></span>';
+      } else {
+        btn.innerHTML = '<span class="bp-user-chip"><span class="bp-user-chip__initial">' + initial + '</span><span>' + shortName + '</span></span>';
+      }
+      btn.title = 'Account menu';
+      btn.classList.add('logged-in');
+      if (name) name.textContent = userName;
+      if (email) email.textContent = user.email || '';
+      if (badge) {
+        var label = methodLabel(user);
+        if (label) {
+          badge.textContent = label;
+          badge.hidden = false;
+          badge.removeAttribute('hidden');
+        } else {
+          badge.hidden = true;
+          badge.setAttribute('hidden', '');
+        }
+      }
+      if (avatar) {
+        avatar.style.backgroundImage = '';
+        if (photo) {
+          avatar.innerHTML = '<img src="' + photo + '" alt="" referrerpolicy="no-referrer">';
+        } else {
+          avatar.innerHTML = initial;
+        }
+      }
+      if (profile) profile.style.display = '';
+      if (logout) logout.style.display = '';
+      if (go) go.style.display = 'none';
+    } else {
+      btn.innerHTML = '<i class="fas fa-sign-in-alt" aria-hidden="true"></i><span>Login</span>';
+      btn.title = 'Login';
+      btn.classList.remove('logged-in');
+      if (name) name.textContent = 'Guest';
+      if (email) email.textContent = 'Sign in to continue';
+      if (badge) {
+        badge.hidden = true;
+        badge.setAttribute('hidden', '');
+        badge.textContent = '';
+      }
+      if (avatar) {
+        avatar.style.backgroundImage = '';
+        avatar.innerHTML = '<i class="fas fa-user" aria-hidden="true"></i>';
+      }
+      if (profile) profile.style.display = 'none';
+      if (logout) logout.style.display = 'none';
+      if (go) go.style.display = '';
+      if (dropdown) dropdown.setAttribute('hidden', '');
+    }
+  }
+
+  function wireLogin() {
+    var dropdown = document.getElementById('userDropdown');
+    var login = document.getElementById('loginBtnHeader');
+    var go = document.getElementById('goToLoginBtn');
+    var logout = document.getElementById('logoutBtn');
+    var profile = document.getElementById('viewProfileBtn');
+
+    updateLoginUi();
+
+    if (login && !login.dataset.bpShellLogin) {
+      login.dataset.bpShellLogin = '1';
+      login.addEventListener('click', function (e) {
+        var user = readUser();
+        if (!user) {
+          e.preventDefault();
+          e.stopImmediatePropagation();
+          window.location.assign(LOGIN_URL);
+          return;
+        }
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        if (!dropdown) return;
+        if (dropdown.hasAttribute('hidden')) dropdown.removeAttribute('hidden');
+        else dropdown.setAttribute('hidden', '');
+      }, true);
+    }
+
+    if (go && !go.dataset.bpWired) {
+      go.dataset.bpWired = '1';
+      go.addEventListener('click', function (e) {
+        e.preventDefault();
+        window.location.assign(LOGIN_URL);
+      });
+    }
+
+    if (logout && !logout.dataset.bpWired) {
+      logout.dataset.bpWired = '1';
+      logout.addEventListener('click', function () {
+        try {
+          localStorage.removeItem('bariplux_user');
+          localStorage.removeItem('bariplux_login_token');
+        } catch (err) {}
+        if (dropdown) dropdown.setAttribute('hidden', '');
+        updateLoginUi();
+        window.location.assign(navHref('/'));
+      });
+    }
+
+    if (profile && !profile.dataset.bpWired) {
+      profile.dataset.bpWired = '1';
+      profile.addEventListener('click', function (e) {
+        e.preventDefault();
+        window.location.assign(LOGIN_URL);
+      });
+    }
+
+    if (!document.documentElement.dataset.bpLoginDocClick) {
+      document.documentElement.dataset.bpLoginDocClick = '1';
+      document.addEventListener('click', function (e) {
+        var container = document.querySelector('.bp-account');
+        var menu = document.getElementById('userDropdown');
+        if (menu && container && !container.contains(e.target)) {
+          menu.setAttribute('hidden', '');
+        }
+      });
+    }
+  }
+
+  function polishSurfaces() {
+    var sels = ['.download-card', '.video-card', '.pubg-card', '.blog-card', '.card', '.info-card', '.tool-card', '.event-card', '.weapon-card', '.section-title', '.content-card', '.news-card', '.update-card'];
+    for (var i = 0; i < sels.length; i++) {
+      var nodes = document.querySelectorAll(sels[i]);
+      for (var n = 0; n < nodes.length; n++) {
+        if (!nodes[n].classList.contains('glass')) nodes[n].classList.add('glass');
+      }
+    }
+  }
+
+  function stripHtmlLinks() {
+    var anchors = document.querySelectorAll('a[href$=".html"], a[href*=".html#"]');
+    for (var i = 0; i < anchors.length; i++) {
+      var a = anchors[i];
+      var href = a.getAttribute('href');
+      if (!href || href.indexOf('http') === 0) continue;
+      a.setAttribute('href', href.replace(/\.html(?=#|$)/i, ''));
+    }
+  }
+
+  function rewriteAuthHostLinks() {
+    if (!isAuthHost()) return;
+    var roots = [document.getElementById('bp-header'), document.getElementById('bp-drawer-root')];
+    for (var r = 0; r < roots.length; r++) {
+      var root = roots[r];
+      if (!root) continue;
+      var anchors = root.querySelectorAll('a[href]');
+      for (var i = 0; i < anchors.length; i++) {
+        var a = anchors[i];
+        var href = a.getAttribute('href');
+        if (!href || href.indexOf('login.bariplux.com') >= 0) continue;
+        var next = navHref(href);
+        if (next !== href) a.setAttribute('href', next);
+      }
+    }
+  }
+
+  function boot() {
+    document.documentElement.classList.add('bp-shell');
+    document.body.classList.add('bp-body');
+    ensureStyles();
+    ensureAmbientHost();
+    purgeLegacyChrome();
+    injectChrome();
+    ensureMobileNav();
+    rewriteAuthHostLinks();
+    wireTheme();
+    wireScroll();
+    wireLogin();
+    wireKeyboardNavigation();
+    polishSurfaces();
+    stripHtmlLinks();
+    ensureSearchScript();
+  }
+
+  window.BPShell = { refreshLogin: updateLoginUi };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
+})();
