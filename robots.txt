@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://bariplux.com/sitemap.xml
+
+# Disallow admin areas
+Disallow: /theadm1n
+Disallow: /api/
+
+# Disallow archive and test files
+Disallow: /_archive/
+Disallow: /norge/
+Disallow: /skole/

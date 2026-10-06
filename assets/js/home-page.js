@@ -67,11 +67,15 @@
     }
 
     // Video Player Functions
+    let videoModalLastFocus = null;
+
     function openVideo(videoId, title) {
         const modal = document.getElementById('video-modal');
         const videoPlayer = document.getElementById('video-player');
         const titleEl = document.getElementById('video-modal-title');
         if (!modal || !videoPlayer || !videoId) return;
+
+        videoModalLastFocus = document.activeElement;
 
         if (titleEl && title) titleEl.textContent = title;
 
@@ -85,6 +89,10 @@
         modal.hidden = false;
         modal.classList.add('active');
         document.body.style.overflow = 'hidden';
+
+        // Move focus into the dialog (WCAG 2.4.3)
+        const openCloseBtn = document.getElementById('video-modal-close');
+        if (openCloseBtn) openCloseBtn.focus();
     }
 
     function closeVideo() {
@@ -96,6 +104,12 @@
             modal.hidden = true;
         }
         document.body.style.overflow = '';
+
+        // Return focus to the element that opened the dialog
+        if (videoModalLastFocus && typeof videoModalLastFocus.focus === 'function') {
+            videoModalLastFocus.focus();
+        }
+        videoModalLastFocus = null;
     }
 
     function setupVideoLibrary() {
@@ -130,6 +144,24 @@
         if (modal) {
             modal.addEventListener('click', function (e) {
                 if (e.target === modal) closeVideo();
+            });
+            // Keep Tab focus inside the open dialog (WCAG 2.4.3)
+            modal.addEventListener('keydown', function (e) {
+                if (e.key !== 'Tab' || !modal.classList.contains('active')) return;
+                var focusables = modal.querySelectorAll('a[href], button:not([disabled]), iframe, input, [tabindex]:not([tabindex="-1"])');
+                if (!focusables.length) return;
+                var first = focusables[0];
+                var last = focusables[focusables.length - 1];
+                if (!modal.contains(document.activeElement)) {
+                    e.preventDefault();
+                    first.focus();
+                } else if (e.shiftKey && document.activeElement === first) {
+                    e.preventDefault();
+                    last.focus();
+                } else if (!e.shiftKey && document.activeElement === last) {
+                    e.preventDefault();
+                    first.focus();
+                }
             });
         }
         var closeBtn = document.getElementById('video-modal-close');
@@ -226,11 +258,9 @@ function setupRulesModal() {
     const telegramContactItem = document.getElementById('telegram-contact-item'); // اضافه شد
 
     if (!rulesModal || !closeRules || !rulesAcceptBtn) {
-        console.log('Rules modal elements not found');
+        console.warn('Rules modal elements not found');
         return;
     }
-
-    console.log('✓ Rules modal initialized');
 
     // Show rules modal
     function showRulesModal() {
@@ -468,7 +498,14 @@ document.addEventListener('DOMContentLoaded', function() {
         // Smooth progress animation
         progressFill.style.transition = 'width 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
         progressFill.style.width = `${progress}%`;
-        
+
+        // Expose progress to assistive technologies (WCAG 4.1.3)
+        const progressBar = progressFill.closest('[role="progressbar"]');
+        if (progressBar) {
+            progressBar.setAttribute('aria-valuenow', String(Math.round(progress)));
+            progressBar.setAttribute('aria-valuetext', `Question ${quizState.currentQuestion} of ${quizState.totalQuestions}`);
+        }
+
         document.getElementById('current-question').textContent = quizState.currentQuestion;
     }
 
@@ -1383,11 +1420,13 @@ function sanitizeInput(input) {
         setupModal() {
             const timezoneHelpBtn = document.getElementById('timezone-help');
             const modal = document.getElementById('timezone-modal');
-            const modalClose = document.querySelector('.modal-close');
-            
+            // Scope to THIS modal — a document-wide '.modal-close' query grabbed the
+            // video modal's button instead, so this modal's close control never worked.
+            const modalClose = modal ? modal.querySelector('.modal-close') : null;
+
             if (timezoneHelpBtn && modal) {
                 timezoneHelpBtn.addEventListener('click', () => this.openModal());
-                modalClose.addEventListener('click', () => this.closeModal());
+                if (modalClose) modalClose.addEventListener('click', () => this.closeModal());
                 modal.addEventListener('click', (e) => {
                     if (e.target === modal) this.closeModal();
                 });
@@ -1401,13 +1440,22 @@ function sanitizeInput(input) {
         }
         
         openModal() {
-            document.getElementById('timezone-modal').classList.add('active');
+            const modal = document.getElementById('timezone-modal');
+            this._lastFocus = document.activeElement;
+            modal.classList.add('active');
             document.body.style.overflow = 'hidden';
+            const closeBtn = modal.querySelector('.modal-close');
+            if (closeBtn) closeBtn.focus();
         }
         
         closeModal() {
-            document.getElementById('timezone-modal').classList.remove('active');
+            const modal = document.getElementById('timezone-modal');
+            modal.classList.remove('active');
             document.body.style.overflow = '';
+            if (this._lastFocus && typeof this._lastFocus.focus === 'function') {
+                this._lastFocus.focus();
+            }
+            this._lastFocus = null;
         }
         
         updateTime() {
@@ -1447,14 +1495,15 @@ function sanitizeInput(input) {
         }
     });
 
-    // Smooth scrolling for navigation
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    // Smooth scrolling for navigation (skip link excluded so it keeps moving focus, per WCAG)
+    document.querySelectorAll('a[href^="#"]:not(.bp-skip)').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
             const target = document.querySelector(this.getAttribute('href'));
             if (target) {
+                const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
                 target.scrollIntoView({
-                    behavior: 'smooth',
+                    behavior: reduceMotion ? 'auto' : 'smooth',
                     block: 'start'
                 });
             }
@@ -1492,7 +1541,6 @@ function sanitizeInput(input) {
         initializeChatBot();
         initializeFAQ();
         new WorkingHoursManager();
-        console.log('🎯 All features initialized successfully!');
     });
 
     // Keep homepage in sync if desktop app writes bariplux_user_new

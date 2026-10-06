@@ -29,7 +29,7 @@
   --accent-btn-hover: rgba(129, 140, 248, 0.44);
   --text: #f5f5f7;
   --text-2: #c0c0c8;
-  --text-3: #888896;
+  --text-3: #a8a8ba;
   --ok: #22c55e;
   --warn: #f59e0b;
   --danger: #ef4444;
@@ -82,7 +82,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 96px; }
   z-index: 1000;
   padding: 0.65rem 1rem;
   border-radius: 10px;
-  background: var(--accent, #818cf8);
+  background: #4f46e5;
   color: #fff;
   font-weight: 600;
   text-decoration: none;
@@ -91,7 +91,19 @@ html { scroll-behavior: smooth; scroll-padding-top: 96px; }
 .bp-skip:focus-visible {
   left: 12px;
   top: 12px;
-  outline: 2px solid #fff;
+  outline: 2px solid #4f46e5;
+  outline-offset: 2px;
+}
+
+/* WCAG 2.4.7 — visible keyboard focus indicator for interactive elements */
+a:focus-visible,
+button:focus-visible,
+[role="button"]:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--accent, #818cf8);
   outline-offset: 2px;
 }
 @media (prefers-reduced-motion: reduce) {
@@ -1271,6 +1283,81 @@ html[data-theme="light"] .bp-drawer__link:hover { color: #12131a; }
 }
 .bp-reveal.is-in { opacity: 1; transform: none; }
 
+/* Utility classes (replacements for former inline styles) */
+.text-center { text-align: center; }
+.mb-40 { margin-bottom: 40px; }
+.mb-15 { margin-bottom: 15px; }
+.opacity-80 { opacity: 0.8; }
+.width-0 { width: 0%; }
+.display-none { display: none; }
+.flex { display: flex; }
+.gap-15 { gap: 15px; }
+.text-muted { color: var(--muted); }
+.text-90 { font-size: 0.9rem; }
+.status-badge-gaming {
+  background: rgba(175, 76, 76, 0.1);
+  color: #ff8080;
+  border-color: rgba(175, 76, 76, 0.3);
+}
+.status-badge-psychology {
+  background: rgba(76, 175, 80, 0.1);
+  color: #66bb6a;
+  border-color: rgba(76, 175, 80, 0.3);
+}
+.status-badge-review {
+  background: rgba(33, 150, 243, 0.1);
+  color: #4dabf7;
+  border-color: rgba(33, 150, 243, 0.3);
+}
+
+/* ── Light theme contrast fixes (WCAG AA) ─────────────────────────────────
+   Several elements hardcode white text that only worked on the dark theme,
+   and the accent/badge hues that pass on near-black fail on white glass. */
+html[data-theme="light"] .bp-nav__link:hover,
+html[data-theme="light"] .bp-nav__link.is-active,
+html[data-theme="light"] .nav-link:hover,
+html[data-theme="light"] .nav-link.active {
+  color: var(--text, #12131a);
+}
+html[data-theme="light"] .status-badge-gaming {
+  color: #b3261e;
+  border-color: rgba(179, 38, 30, 0.35);
+}
+html[data-theme="light"] .status-badge-psychology {
+  color: #146c2e;
+  border-color: rgba(20, 108, 46, 0.35);
+}
+html[data-theme="light"] .status-badge-review {
+  color: #0b5cad;
+  border-color: rgba(11, 92, 173, 0.35);
+}
+/* Chat panel turns into light glass in light mode, but header/buttons kept white text */
+html[data-theme="light"] .chat-header,
+html[data-theme="light"] .chat-info h3 {
+  color: #12131a !important;
+}
+html[data-theme="light"] .chat-status {
+  color: rgba(18, 19, 26, 0.78) !important;
+}
+html[data-theme="light"] .chat-btn {
+  color: #12131a;
+}
+html[data-theme="light"] .send-btn,
+html[data-theme="light"] .ai-assistant-btn {
+  background: var(--accent, #4f46e5) !important;
+  border-color: var(--accent, #4f46e5) !important;
+  color: #fff !important;
+}
+/* White labels sitting on light-indigo fills (badges, chips, active filters,
+   #downloads buttons — home.css uses an #id rule that beats shell.css light fix) */
+html[data-theme="light"] .pro-badge,
+html[data-theme="light"] .live-chip,
+html[data-theme="light"] #downloads .download-btn,
+html[data-theme="light"] .video-filter.is-active,
+html[data-theme="light"] .video-filter:hover {
+  color: #312e81 !important;
+}
+
 @media (max-width: 1280px) {
   .download-grid, .pubg-content { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .video-grid, .plux-articles, .blog-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -2053,15 +2140,15 @@ body.bp-body {
   height: auto !important;
 }
 .blog-badge--new {
-  background: linear-gradient(135deg, rgba(34,197,94,0.85), rgba(16,185,129,0.7)) !important;
+  background: linear-gradient(135deg, rgba(20,128,60,0.95), rgba(5,96,70,0.92)) !important;
   border-color: rgba(134,239,172,0.45) !important;
 }
 .blog-badge--guide {
-  background: linear-gradient(135deg, rgba(129,140,248,0.9), rgba(99,102,241,0.75)) !important;
+  background: linear-gradient(135deg, rgba(79,70,229,0.95), rgba(59,50,210,0.92)) !important;
   border-color: rgba(165,180,252,0.45) !important;
 }
 .blog-badge--strategy {
-  background: linear-gradient(135deg, rgba(245,158,11,0.9), rgba(234,88,12,0.75)) !important;
+  background: linear-gradient(135deg, rgba(176,80,5,0.95), rgba(140,58,4,0.92)) !important;
   border-color: rgba(253,186,116,0.45) !important;
 }
 .blog-content { padding: 1.05rem 1.15rem 1.2rem; }
