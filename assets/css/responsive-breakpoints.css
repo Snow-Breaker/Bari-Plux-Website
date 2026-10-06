@@ -1,8 +1,37 @@
 /**
  * Bari Plux — Responsive Breakpoints & Laptop View Optimization
- * Phase 3.0 — Enhanced Mobile Support + Desktop Scaling
+ * Phase 3.1 — Enhanced Mobile Support + Desktop Scaling + Download Card Alignment Fix
  * Load AFTER bariplux.css, site.css, home.css
  */
+
+/* ═══════════════════════════════════════════════════════════════
+   GRID FIX: Download Cards & Product Cards Global
+   Ensures consistent 3-column grid on laptop, stacks properly below
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Download cards container — MUST be 3 columns on desktop */
+#downloads,
+.downloads-section,
+.downloads-grid,
+[id*="download"],
+.pubg-section,
+.optimization-tools {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 1.25rem !important;
+  width: 100% !important;
+}
+
+/* Individual download/product cards */
+.download-card,
+.pubg-card,
+.product-card,
+[class*="download-item"],
+[class*="product-card"] {
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+}
 
 /* ═══════════════════════════════════════════════════════════════
    LAPTOP VIEW OPTIMIZATION (1025px+)
@@ -18,6 +47,23 @@
   body.bp-body {
     font-size: 16px;
     line-height: 1.65;
+  }
+
+  /* Download cards — keep 3 in a row */
+  #downloads,
+  .downloads-section,
+  .downloads-grid,
+  .pubg-section,
+  .optimization-tools {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 1.35rem !important;
+  }
+
+  .download-card,
+  .pubg-card,
+  .product-card {
+    min-height: auto;
+    border-radius: 18px;
   }
 
   /* Hero section — more breathing room */
@@ -63,12 +109,6 @@
     font-size: 1.1rem;
     max-width: 56ch;
     margin-bottom: 2rem;
-  }
-
-  /* Cards — bigger gaps on desktop */
-  #blog .blog-grid,
-  #plux-times .plux-articles {
-    gap: 1.35rem;
   }
 
   /* Buttons — better proportions */
@@ -144,6 +184,16 @@
   .container {
     width: min(100% - 96px, 1400px);
   }
+
+  /* Download cards stay 3 in row */
+  #downloads,
+  .downloads-section,
+  .downloads-grid,
+  .pubg-section,
+  .optimization-tools {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 1.5rem !important;
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -154,6 +204,22 @@
 @media (min-width: 769px) and (max-width: 1024px) {
   html {
     font-size: clamp(14.5px, 0.22vw + 13.5px, 15.5px);
+  }
+
+  /* Download cards — still 3 columns but with adjusted padding */
+  #downloads,
+  .downloads-section,
+  .downloads-grid,
+  .pubg-section,
+  .optimization-tools {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 1rem !important;
+  }
+
+  .download-card,
+  .pubg-card,
+  .product-card {
+    border-radius: 16px;
   }
 
   .hero-card {
@@ -169,12 +235,6 @@
     width: min(200px, 45vw);
   }
 
-  #blog .blog-grid,
-  #plux-times .plux-articles {
-    grid-template-columns: 1fr 1fr;
-    gap: 0.95rem;
-  }
-
   .bp-tool-spot__shell {
     grid-template-columns: 1.15fr 0.85fr;
     gap: clamp(1.2rem, 2.5vw, 1.75rem);
@@ -188,12 +248,28 @@
 
 /* ═══════════════════════════════════════════════════════════════
    TABLET LANDSCAPE (641px - 768px)
-   Good landscape tablet support
+   Good landscape tablet support — 2 column grid for cards
    ═══════════════════════════════════════════════════════════════ */
 
 @media (min-width: 641px) and (max-width: 768px) {
   html {
     font-size: clamp(13px, 0.18vw + 12px, 14.5px);
+  }
+
+  /* Download cards — 2 columns on tablet landscape */
+  #downloads,
+  .downloads-section,
+  .downloads-grid,
+  .pubg-section,
+  .optimization-tools {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 1rem !important;
+  }
+
+  .download-card,
+  .pubg-card,
+  .product-card {
+    border-radius: 14px;
   }
 
   .hero {
@@ -228,13 +304,6 @@
     font-size: clamp(1.2rem, 3vw, 1.6rem);
   }
 
-  /* Stack cards */
-  #blog .blog-grid,
-  #plux-times .plux-articles {
-    grid-template-columns: 1fr;
-    gap: 0.85rem;
-  }
-
   .bp-tool-spot__shell {
     grid-template-columns: 1fr;
     gap: 1.25rem;
@@ -253,7 +322,7 @@
 
 /* ═══════════════════════════════════════════════════════════════
    TABLET PORTRAIT (481px - 640px)
-   Optimized tablet portrait view
+   Optimized tablet portrait view — cards in single/double column
    ═══════════════════════════════════════════════════════════════ */
 
 @media (min-width: 481px) and (max-width: 640px) {
@@ -263,6 +332,22 @@
 
   body.bp-body {
     font-size: 14.5px;
+  }
+
+  /* Download cards — 2 columns to fit tablets */
+  #downloads,
+  .downloads-section,
+  .downloads-grid,
+  .pubg-section,
+  .optimization-tools {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 0.85rem !important;
+  }
+
+  .download-card,
+  .pubg-card,
+  .product-card {
+    border-radius: 14px;
   }
 
   .hero {
@@ -321,13 +406,9 @@
     margin-bottom: 1rem;
   }
 
-  #blog .blog-card,
-  #plux-times .plux-article {
-    border-radius: 14px;
-  }
-
-  #blog .blog-img-container {
-    height: 140px;
+  .bp-tool-spot__shell {
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
 
   .live-pane {
@@ -335,18 +416,10 @@
     gap: 0.55rem;
   }
 
-  .live-pane__title {
-    font-size: 1.1rem;
-  }
-
   .bp-chrome__inner {
     height: 56px;
     padding: 0 0.6rem 0 0.75rem;
     gap: 0.8rem;
-  }
-
-  .bp-logo__text {
-    font-size: 0.95rem;
   }
 
   .bp-nav__link {
@@ -377,11 +450,20 @@
   .bp-chrome__inner {
     height: 52px;
   }
+
+  /* Download cards stay accessible in landscape */
+  #downloads,
+  .downloads-section,
+  .downloads-grid,
+  .pubg-section,
+  .optimization-tools {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════════
    MOBILE PHONE (320px - 480px)
-   Full mobile optimization
+   Full mobile optimization — single column
    ═══════════════════════════════════════════════════════════════ */
 
 @media (max-width: 480px) {
@@ -392,6 +474,22 @@
   body.bp-body {
     font-size: 13.5px;
     line-height: 1.5;
+  }
+
+  /* Download cards — 1 column on mobile */
+  #downloads,
+  .downloads-section,
+  .downloads-grid,
+  .pubg-section,
+  .optimization-tools {
+    grid-template-columns: 1fr !important;
+    gap: 0.8rem !important;
+  }
+
+  .download-card,
+  .pubg-card,
+  .product-card {
+    border-radius: 12px;
   }
 
   .hero {
@@ -497,34 +595,6 @@
     min-height: clamp(180px, 40vw, 280px);
   }
 
-  /* Blog cards */
-  #blog .blog-grid,
-  #plux-times .plux-articles {
-    grid-template-columns: 1fr;
-    gap: 0.7rem;
-  }
-
-  #blog .blog-card,
-  #plux-times .plux-article {
-    border-radius: 12px;
-  }
-
-  #blog .blog-img-container {
-    height: 120px;
-  }
-
-  #blog .blog-content,
-  #plux-times .plux-article-content {
-    padding: 0.85rem 0.95rem 1rem;
-    gap: 0.35rem;
-  }
-
-  #blog .blog-title,
-  #plux-times .plux-article-title {
-    font-size: 0.95rem;
-  }
-
-  /* Tool spotlight */
   .bp-tool-spot__shell {
     grid-template-columns: 1fr;
     gap: 1rem;
@@ -718,6 +788,15 @@
     padding: 0.25rem 0.35rem;
     font-size: 0.7rem;
   }
+
+  /* Download cards still single column */
+  #downloads,
+  .downloads-section,
+  .downloads-grid,
+  .pubg-section,
+  .optimization-tools {
+    grid-template-columns: 1fr !important;
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -739,5 +818,14 @@
   :root {
     --bp-max: 100%;
     --bp-gutter: 16px;
+  }
+
+  /* Download cards print properly */
+  #downloads,
+  .downloads-section,
+  .downloads-grid,
+  .pubg-section,
+  .optimization-tools {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
   }
 }
