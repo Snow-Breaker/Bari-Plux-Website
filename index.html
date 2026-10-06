@@ -1,88 +1,1458 @@
-(function () {
-  'use strict';
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bari Plux | Gaming & Tech Content Creator</title>
+    <meta name="description" content="Professional gaming content creator specializing in PUBG optimizations, emulator setups, and tech solutions">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="https://i.postimg.cc/CKj6nBJP/PLUX-Logo.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://i.postimg.cc/CKj6nBJP/PLUX-Logo.png">
 
-  function applyTheme(theme) {
-    var effective = theme || 'dark';
-    document.documentElement.setAttribute('data-theme', effective);
-    document.body.setAttribute('data-theme', effective);
-    try { localStorage.setItem('theme', effective); } catch (e) {}
-    var meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute('content', effective === 'light' ? '#eef0f6' : '#07070c');
-  }
+    <script src="assets/js/boot.js?v=20260907dark"></script>
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Bari Plux | Gaming & Tech Content Creator">
+    <meta property="og:description" content="Bari Plux - Gaming & Tech Content Creator specializing in PUBG optimizations, emulator setups, and tech solutions.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://i.postimg.cc/CKj6nBJP/PLUX-Logo.png">
 
-  function detectPreferredTheme() {
-    try {
-      var stored = localStorage.getItem('theme');
-      if (stored === 'light' || stored === 'dark') return stored;
-    } catch (e) {}
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) return 'light';
-    return 'dark';
-  }
+    <meta http-equiv="Content-Security-Policy" 
+      content="default-src 'self' https:; 
+               script-src 'self' https: 'unsafe-inline' 'unsafe-eval' blob:; 
+               style-src 'self' https: 'unsafe-inline'; 
+               img-src 'self' https: data: blob:; 
+               font-src 'self' https: data:; 
+               connect-src 'self' https: wss:; 
+               frame-src 'self' https:;
+               worker-src 'self' https: blob: 'unsafe-inline' 'unsafe-eval';
+               object-src 'none';
+               base-uri 'self';">
 
-  function wireTheme() {
-    var btn = document.getElementById('theme-toggle');
-    if (!btn || btn.dataset.bpWired) return;
-    btn.dataset.bpWired = '1';
+    <!-- بعد از تگ های Open Graph موجود -->
+<meta name="keywords" content="pubg mobile, gaming optimization, gameloop, bari plux, fps boost, windows optimization, gaming content creator">
+<meta name="author" content="Bari Plux">
+<meta name="robots" content="index, follow">
+<meta property="og:url" content="https://bariplux.com">
+<meta property="og:site_name" content="Bari Plux">
 
-    applyTheme(detectPreferredTheme());
+<!-- Schema Markup -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Bari Plux",
+  "jobTitle": "Professional Gaming Content Creator",
+  "description": "Gaming & Tech Content Creator specializing in PUBG optimizations, emulator setups, and tech solutions",
+  "url": "https://bariplux.com",
+  "sameAs": [
+    "https://www.youtube.com/@BariPlux",
+    "https://t.me/BariPlux",
+    "https://www.instagram.com/BariPlux"
+  ],
+  "knowsAbout": [
+    "PUBG Mobile Optimization",
+    "GameLoop Configuration",
+    "Windows Performance Tuning",
+    "FPS Optimization",
+    "Gaming Content Creation"
+  ]
+}
+</script>
 
-    btn.addEventListener('click', function () {
-      var cur = (document.documentElement.getAttribute('data-theme') || 'dark');
-      applyTheme(cur === 'light' ? 'dark' : 'light');
-    });
-  }
+<!-- Security deterrents: assets/js/protect.js + assets/js/boot.js -->
 
-  function lazyLoadImages() {
-    var images = document.querySelectorAll('img:not([loading])');
-    for (var i = 0; i < images.length; i++) {
-      var img = images[i];
-      if (!img.dataset.lazyApplied) {
-        img.setAttribute('loading', 'lazy');
-        img.setAttribute('decoding', 'async');
-        img.dataset.lazyApplied = '1';
-      }
-    }
-  }
+<!-- External scripts -->
+    <!-- <script src="js/main.min.js"></script> -->
+    <!-- <script src="js/features.min.js"></script> -->
 
-  function wireKeyboardNavigation() {
-    var navItems = function () {
-      return Array.prototype.slice.call(document.querySelectorAll('.bp-nav__link, .bp-drawer__link, .bp-drawer__cta'));
-    };
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+<link rel="dns-prefetch" href="https://www.gstatic.com">
 
-    document.addEventListener('keydown', function (e) {
-      if (!/^Arrow(Right|Left|Down|Up)$/.test(e.key)) return;
-      var items = navItems();
-      if (!items.length) return;
-      var start = items.indexOf(document.activeElement);
-      if (start === -1) return;
-      var step = (e.key === 'ArrowRight' || e.key === 'ArrowDown') ? 1 : -1;
-      var next = (start + step + items.length) % items.length;
-      items[next].focus();
-      e.preventDefault();
-    }, true);
-  }
+<meta name="theme-color" content="#030305">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="/manifest.json">
 
-  function ensureMobileNavVisibility() {
-    var nav = document.querySelector('.bp-nav');
-    var toggle = document.querySelector('.bp-nav-toggle');
-    if (!nav || !toggle) return;
-    if (window.innerWidth <= 767) {
-      nav.style.display = 'none';
-      toggle.style.display = 'grid';
-    }
-  }
+<meta http-equiv="Strict-Transport-Security" content="max-age=31536000; includeSubDomains">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta http-equiv="X-XSS-Protection" content="1; mode=block">
+<meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
 
-  function boot() {
-    wireTheme();
-    lazyLoadImages();
-    wireKeyboardNavigation();
-    ensureMobileNavVisibility();
-    window.addEventListener('resize', ensureMobileNavVisibility, { passive: true });
-  }
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js" defer></script>
+<!-- Performance: Critical CSS inline -->
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', boot, { once: true });
-  } else {
-    boot();
-  }
-})();
+
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="assets/css/bariplux.css?v=20260907dark">
+    <link rel="stylesheet" href="assets/css/site.css?v=20260729mnav">
+    <link rel="stylesheet" href="assets/css/shell.css?v=20260728ai">
+    <link rel="stylesheet" href="assets/css/widgets.css?v=20260728ai">
+    <link rel="stylesheet" href="assets/css/pages/home.css?v=20260728ai">
+    <link rel="stylesheet" href="assets/css/site-search.css?v=20260728ai">
+    <script src="assets/js/protect.js" defer></script>
+    <script src="assets/js/signal-ambient.js?v=20260728ai" defer></script>
+    <script src="assets/js/site-shell.js?v=20260907dark" defer></script>
+    <script src="assets/js/home.js" defer></script>
+
+</head>
+<body class="bp-body">
+    <div id="bp-aurora" class="bp-aurora bp-ambient" aria-hidden="true"></div>
+
+
+<header class="bp-chrome" id="bp-header">
+  <div class="bp-chrome__inner">
+    <a href="#home" class="bp-logo">
+      <img src="https://yt3.googleusercontent.com/RPW5Z_kcoEu0ES_VpL4-7ZqI4eI1OQfuVL-DbuCYWmRhXono9hA5NOCSGGMDLzJqNcHUlhOg=s160-c-k-c0x00ffffff-no-rj" alt="" class="bp-logo__img" width="36" height="36">
+      <span class="bp-logo__text">Bari Plux</span>
+    </a>
+
+    <nav class="bp-nav" aria-label="Primary">
+      <a href="#home" class="bp-nav__link is-active">Home</a>
+      <a href="#downloads" class="bp-nav__link">Downloads</a>
+      <a href="#videos" class="bp-nav__link">Videos</a>
+      <a href="#optimization-quiz" class="bp-nav__link">Quiz</a>
+      <a href="#pubg" class="bp-nav__link">Content</a>
+      <a href="#plux-times" class="bp-nav__link">Plux Times</a>
+      <a href="#contact" class="bp-nav__link">Contact</a>
+    </nav>
+
+    <div class="bp-chrome__actions">
+      <button type="button" id="bp-search-open" class="bp-icon-btn" title="Search (Ctrl+K)" aria-label="Search">
+        <i class="fas fa-search" aria-hidden="true"></i>
+      </button>
+      <button type="button" id="theme-toggle" class="bp-icon-btn" title="Toggle theme" aria-label="Toggle theme">
+        <i class="fas fa-moon moon-icon" aria-hidden="true"></i>
+        <i class="fas fa-sun sun-icon" aria-hidden="true"></i>
+      </button>
+      <div class="bp-account">
+        <a href="https://login.bariplux.com/" id="loginBtnHeader" class="bp-btn bp-btn--glass" title="Login">
+          <i class="fas fa-sign-in-alt" aria-hidden="true"></i>
+          <span>Login</span>
+        </a>
+        <div id="userDropdown" class="bp-menu" hidden>
+          <div class="bp-menu__head">
+            <div id="userAvatar" class="bp-menu__avatar"></div>
+            <div class="bp-menu__meta">
+              <div id="userName" class="bp-menu__name">Guest</div>
+              <div id="userEmail" class="bp-menu__email">Sign in to continue</div>
+              <div id="userMethodBadge" class="bp-menu__badge" hidden></div>
+            </div>
+          </div>
+          <div class="bp-menu__divider"></div>
+          <button type="button" id="viewProfileBtn" class="bp-menu__item"><i class="fas fa-user-circle"></i> Account Info</button>
+          <button type="button" id="goToLoginBtn" class="bp-menu__item"><i class="fas fa-sign-in-alt"></i> Login Page</button>
+          <button type="button" id="logoutBtn" class="bp-menu__item bp-menu__item--danger"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Profile — brand + about + journey + platforms (one composition) -->
+<section id="home" class="hero">
+    <div class="container">
+        <article id="about" class="profile-shell glass liquid">
+            <div class="profile-shell__hero">
+                <div class="profile-shell__copy">
+                    <p class="hero-kicker">Gaming &amp; Tech · PUBG Optimization</p>
+                    <h1 class="hero-title">
+                        <span class="name-gradient">Bari Plux</span>
+                        <span class="pro-badge">BETA</span>
+                    </h1>
+                    <p class="hero-lead">I help gamers push FPS higher and keep systems stable — PUBG Mobile, GameLoop, and Windows tuning, distilled into clear guides.</p>
+                    <div class="hero-actions">
+                        <a href="#downloads" class="bp-btn bp-btn--glass"><i class="fas fa-arrow-down"></i> See the work</a>
+                        <a href="#contact" class="bp-btn bp-btn--ghost" id="contact-me-btn"><i class="fas fa-envelope"></i> Contact Me</a>
+                    </div>
+                    <div class="profile-pills" aria-label="Focus areas">
+                        <span class="profile-pill"><i class="fas fa-tachometer-alt"></i> Performance</span>
+                        <span class="profile-pill"><i class="fas fa-desktop"></i> Emulators</span>
+                        <span class="profile-pill"><i class="fas fa-cogs"></i> Windows</span>
+                    </div>
+                </div>
+                <div class="profile-shell__media">
+                    <img src="https://i.postimg.cc/Z5ZjxB1s/Plux-Logo.png" loading="lazy" alt="Bari Plux" class="profile-img">
+                    <div class="profile-cert glass liquid-nested">
+                        <i class="fas fa-certificate"></i>
+                        <span>IT Site Coding 6/6 Certified</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-shell__stats" aria-label="At a glance">
+                <div class="stat-item"><div class="stat-number">13K+</div><div class="stat-label">Gamers helped</div></div>
+                <div class="stat-item"><div class="stat-number">100K</div><div class="stat-label">YouTube views</div></div>
+                <div class="stat-item"><div class="stat-number">100</div><div class="stat-label">Videos</div></div>
+                <div class="stat-item"><div class="stat-number">4+</div><div class="stat-label">Years</div></div>
+                <div class="stat-item"><div class="stat-number">98%</div><div class="stat-label">Satisfaction</div></div>
+            </div>
+
+            <div class="profile-shell__body">
+                <div class="profile-story">
+                    <h2 class="profile-heading">The craft</h2>
+                    <p>Four years of testing GameLoop builds, Windows plans, and PUBG settings — so you spend less time troubleshooting and more time playing.</p>
+                </div>
+                <div class="profile-platforms">
+                    <h2 class="profile-heading">Find me</h2>
+                    <div class="platforms-row">
+                        <a href="https://www.youtube.com/@BariPlux" class="platform-chip glass liquid-nested" target="_blank" rel="noopener">
+                            <i class="fab fa-youtube"></i>
+                            <span>YouTube</span>
+                            <small>630+ subs</small>
+                        </a>
+                        <a href="https://t.me/BariPlux" class="platform-chip glass liquid-nested" target="_blank" rel="noopener">
+                            <i class="fab fa-telegram"></i>
+                            <span>Telegram</span>
+                            <small>240+ members</small>
+                        </a>
+                        <a href="https://www.kick.com/BariPlux" class="platform-chip glass liquid-nested" target="_blank" rel="noopener">
+                            <i class="fab fa-kickstarter-k"></i>
+                            <span>Kick</span>
+                            <small>Live</small>
+                        </a>
+                        <a href="https://www.instagram.com/BariPlux" class="platform-chip glass liquid-nested" target="_blank" rel="noopener">
+                            <i class="fab fa-instagram"></i>
+                            <span>Instagram</span>
+                            <small>60+</small>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </article>
+    </div>
+</section>
+
+
+    <!-- Downloads Section -->
+    <section id="downloads" class="section">
+        <div class="container">
+            <h2 class="section-title glass">Downloads</h2>
+            <p class="section-subtitle">The links below are not for advertising or sponsorship, they are just made for your convenience!</p>
+
+            <div class="download-grid">
+            <!-- PUBG Mobile -->
+            <div class="download-card glass">
+<div class="download-icon">
+                    <img src="https://img.utdstc.com/icon/ad3/e98/ad3e98abe9de44760d7dfe5f65cd833bd059c163c3cdbe5a8703c2e35a5bb02f:100" 
+                         alt="PUBG Mobile" class="download-img" loading="lazy">
+                </div>
+                <h3 class="download-title">PUBG Mobile</h3>
+                <p class="download-description">Latest version with optimizations and enhanced performance for all devices.</p>
+                
+                <div class="download-meta">
+                    <span class="version">v4.5</span>
+                    <span class="size">1.4 GB</span>
+                </div>
+                
+                <div class="download-buttons">
+                    <a href="pubgdown" class="download-btn">
+                        <i class="fas fa-download"></i>
+                        Download Now
+                    </a>
+                </div>
+            </div>
+
+            <!-- GameLoop -->
+            <div class="download-card glass">
+<div class="download-icon">
+                    <img src="https://img.utdstc.com/icon/2ee/b8c/2eeb8c3735bc95844f4f61d53cda5f6b95a8a49299cc6c2bbabbbd7a20465b93:100" 
+                         alt="GameLoop" class="download-img" loading="lazy">
+                </div>
+                <h3 class="download-title">GameLoop</h3>
+                <p class="download-description">Official Android emulator for PC with optimal performance and stability.</p>
+                
+                <div class="download-meta">
+                    <span class="version">v32/64</span>
+                    <span class="size">3.7 KB</span>
+                </div>
+                
+                <div class="download-buttons">
+                    <a href="gameloopdown" class="download-btn">
+                        <i class="fas fa-download"></i>
+                        Download Now
+                    </a>
+                </div>
+            </div>
+
+            <!-- Windows X-Lite -->
+            <div class="download-card glass">
+<div class="download-icon">
+                    <img src="https://i.postimg.cc/CKqvYgwb/windowsxlite.png" 
+                         alt="Windows X-Lite" class="download-img" loading="lazy">
+                </div>
+                <h3 class="download-title">Windows X-Lite</h3>
+                <p class="download-description">Lightweight Windows optimization for maximum gaming performance.</p>
+                
+                <div class="download-meta">
+                    <span class="version">Optimum 10/11</span>
+                    <span class="size">4.5 GB</span>
+                </div>
+                
+                <div class="download-buttons">
+                    <a href="windowsxlitedown" class="download-btn">
+                        <i class="fas fa-download"></i>
+                        Download Now
+                    </a>
+                </div>
+            </div>
+
+            <!-- Optimization Tools -->
+            <div class="download-card glass">
+<div class="download-icon">
+                    <img src="https://i.postimg.cc/DyxpP6Cm/optimization.png" 
+                         alt="Optimization Tools" class="download-img" loading="lazy">
+                </div>
+                <h3 class="download-title">Optimization Tools</h3>
+                <p class="download-description">Complete optimization suite for gaming performance and system tuning.</p>
+                
+                <div class="download-meta">
+                    <span class="version">Multiple Versions</span>
+                    <span class="size">Tool Collection</span>
+                </div>
+                
+                <div class="download-buttons">
+                    <a href="optimizationtools" class="download-btn">
+                        <i class="fas fa-download"></i>
+                        Download Now
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+    <!-- Bari Plux Tool — product spotlight -->
+    <section class="bp-tool-spot section" id="bari-plux-tool">
+        <div class="container">
+            <article class="bp-tool-spot__shell glass liquid">
+                <div class="bp-tool-spot__copy">
+                    <p class="bp-tool-spot__kicker">Desktop app · v2.3</p>
+                    <h2 class="bp-tool-spot__title">Bari Plux Tool</h2>
+                    <p class="bp-tool-spot__lead">
+                        Graphics, FPS, keymapping, match prep, and ADB — one Windows suite for PUBG Mobile on GameLoop &amp; MuMu.
+                    </p>
+                    <div class="bp-tool-spot__actions">
+                        <a href="tool" class="bp-btn bp-btn--glass">
+                            Explore the Tool
+                            <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="bp-tool-spot__aside" aria-hidden="true">
+                    <img src="https://i.postimg.cc/2yz6NZXC/BPT-Logo-modified.png" alt="" width="160" height="124" loading="lazy">
+                    <ul class="bp-tool-spot__list">
+                        <li>90 / 120 FPS patch</li>
+                        <li>Custom view &amp; keymaps</li>
+                        <li>ADB file manager</li>
+                    </ul>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <!-- Videos: featured + library (merged) -->
+    <section id="videos" class="section videos-section">
+        <div class="container">
+            <header class="section-head">
+                <h2 class="section-title glass">Videos</h2>
+                <p class="section-subtitle">Latest upload and hand-picked optimization guides</p>
+            </header>
+
+            <div class="videos-featured glass liquid">
+                <div class="videos-featured__label"><i class="fas fa-bolt"></i> Latest upload</div>
+                <div class="youtube-container">
+                    <iframe
+                        src="https://www.youtube-nocookie.com/embed/asiy1fJ69O0?rel=0&modestbranding=1"
+                        title="Latest Bari Plux video"
+                        loading="lazy"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen
+                        referrerpolicy="strict-origin-when-cross-origin"></iframe>
+                </div>
+            </div>
+
+            <div class="video-toolbar">
+                <h3 class="video-toolbar__title">More from the channel</h3>
+                <div class="video-filters" role="tablist" aria-label="Filter videos">
+                    <button type="button" class="video-filter is-active" data-filter="all">All</button>
+                    <button type="button" class="video-filter" data-filter="fix">Fixes</button>
+                    <button type="button" class="video-filter" data-filter="guide">Guides</button>
+                </div>
+            </div>
+
+            <div class="video-grid">
+                <article class="video-card glass" data-tags="fix" data-video="cb3S6lu-QF0" tabindex="0" role="button" aria-label="Play GameLoop crash fix video">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/cb3S6lu-QF0/hqdefault.jpg" loading="lazy" alt="" draggable="false">
+                        <div class="video-play" aria-hidden="true"><i class="fas fa-play"></i></div>
+                        <span class="video-chip">Fix</span>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">GameLoop crash &amp; black screen fix</h3>
+                        <div class="video-meta">
+                            <span><i class="fas fa-eye"></i> 12.7K</span>
+                            <span><i class="fas fa-clock"></i> Guide</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="video-card glass" data-tags="guide" data-video="wvAhTWyY4ng" tabindex="0" role="button" aria-label="Play PUBG optimization guide">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/wvAhTWyY4ng/hqdefault.jpg" loading="lazy" alt="" draggable="false">
+                        <div class="video-play" aria-hidden="true"><i class="fas fa-play"></i></div>
+                        <span class="video-chip">Guide</span>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">PUBG Mobile full optimization guide</h3>
+                        <div class="video-meta">
+                            <span><i class="fas fa-eye"></i> 5.6K</span>
+                            <span><i class="fas fa-clock"></i> Guide</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="video-card glass" data-tags="fix" data-video="bDFwDz5eclw" tabindex="0" role="button" aria-label="Play FPS drop fix video">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/bDFwDz5eclw/hqdefault.jpg" loading="lazy" alt="" draggable="false">
+                        <div class="video-play" aria-hidden="true"><i class="fas fa-play"></i></div>
+                        <span class="video-chip">Fix</span>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">Stop FPS drops &amp; lag on GameLoop</h3>
+                        <div class="video-meta">
+                            <span><i class="fas fa-eye"></i> 4.9K</span>
+                            <span><i class="fas fa-clock"></i> Fix</span>
+                        </div>
+                    </div>
+                </article>
+            </div>
+
+            <div class="videos-cta">
+                <a href="https://www.youtube.com/@BariPlux/videos" class="btn btn-secondary" target="_blank" rel="noopener">
+                    <i class="fab fa-youtube"></i> View all on YouTube
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Video Modal (outside section flow) -->
+    <div class="modal" id="video-modal" role="dialog" aria-modal="true" aria-labelledby="video-modal-title" hidden>
+        <div class="modal-content glass liquid video-modal-panel">
+            <div class="modal-header">
+                <h3 id="video-modal-title">Watch Video</h3>
+                <button type="button" class="modal-close" id="video-modal-close" aria-label="Close video">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="video-player" class="video-player-frame"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PUBG Content Section -->
+    <section id="pubg" class="section">
+        <div class="container">
+            <h2 class="section-title glass">Our Content</h2>
+            
+            <div class="pubg-content">
+                <div class="pubg-card glass">
+<div class="pubg-icon">
+                        <i class="fas fa-tachometer-alt"></i>
+                    </div>
+                    <h3 class="pubg-title">Optimization Guides</h3>
+                    <p>Best settings for smooth gameplay and maximum FPS. Step-by-step tutorials for all devices.</p>
+                </div>
+                <div class="pubg-card glass">
+<div class="pubg-icon">
+                        <i class="fas fa-tshirt"></i>
+                    </div>
+                    <h3 class="pubg-title">New Skins</h3>
+                    <p>Latest PUBG mobile upcoming Skins and newest items. Complete showcase and reviews.</p>
+                </div>
+                <div class="pubg-card glass">
+<div class="pubg-icon">
+                        <i class="fas fa-desktop"></i>
+                    </div>
+                    <h3 class="pubg-title">Emulator Setup</h3>
+                    <p>Optimize Gameloop and Windows for best performance. Complete configuration guides.</p>
+                </div>
+                <div class="pubg-card glass">
+<div class="pubg-icon">
+                        <i class="fas fa-stream"></i>
+                    </div>
+                    <h3 class="pubg-title">Live Stream</h3>
+                    <p>PUBG Mobile, Just Chat, other games on different platforms. Regular streaming schedule.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PUBG Optimization Quiz Section - Glass Morphism -->
+<section id="optimization-quiz" class="section">
+    <div class="container">
+        <h2 class="section-title glass">How Optimized is Your System for PUBG?</h2>
+        <p class="section-subtitle" style="text-align: center; margin-bottom: 40px; opacity: 0.8;">Take this 2-minute quiz to get personalized optimization recommendations</p>
+        
+        <div class="quiz-container glass">
+            <div class="quiz-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="quiz-progress" style="width: 0%"></div>
+                </div>
+                <span class="progress-text">Question <span id="current-question">1</span> of 8</span>
+            </div>
+            
+            <div class="quiz-content" id="quiz-content">
+                <!-- Question 1 -->
+                <div class="quiz-question active" id="question-1">
+                    <h3>What's your CPU?</h3>
+                    <div class="quiz-options">
+                        <button class="quiz-option" data-value="3">
+                            <span class="option-text">Intel Core i7/i9 or AMD Ryzen 7/9</span>
+                            <span class="option-badge">Premium</span>
+                        </button>
+                        <button class="quiz-option" data-value="2">
+                            <span class="option-text">Intel Core i5 or AMD Ryzen 5</span>
+                            <span class="option-badge">Good</span>
+                        </button>
+                        <button class="quiz-option" data-value="1">
+                            <span class="option-text">Intel Core i3 or AMD Ryzen 3</span>
+                            <span class="option-badge">Basic</span>
+                        </button>
+                        <button class="quiz-option" data-value="0">
+                            <span class="option-text">Older than 8th Gen Intel</span>
+                            <span class="option-badge">Entry</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Question 2 -->
+                <div class="quiz-question" id="question-2">
+                    <h3>What's your GPU?</h3>
+                    <div class="quiz-options">
+                        <button class="quiz-option" data-value="3">
+                            <span class="option-text">RTX 3060 or higher / RX 6600 or higher</span>
+                            <span class="option-badge">Premium</span>
+                        </button>
+                        <button class="quiz-option" data-value="2">
+                            <span class="option-text">GTX 1660 / RTX 3050 / RX 6500</span>
+                            <span class="option-badge">Good</span>
+                        </button>
+                        <button class="quiz-option" data-value="1">
+                            <span class="option-text">GTX 1050 / RX 560</span>
+                            <span class="option-badge">Basic</span>
+                        </button>
+                        <button class="quiz-option" data-value="0">
+                            <span class="option-text">Integrated Graphics</span>
+                            <span class="option-badge">Entry</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Question 3 -->
+                <div class="quiz-question" id="question-3">
+                    <h3>How much RAM do you have?</h3>
+                    <div class="quiz-options">
+                        <button class="quiz-option" data-value="3">
+                            <span class="option-text">32GB or more</span>
+                            <span class="option-badge">Premium</span>
+                        </button>
+                        <button class="quiz-option" data-value="2">
+                            <span class="option-text">16GB</span>
+                            <span class="option-badge">Good</span>
+                        </button>
+                        <button class="quiz-option" data-value="1">
+                            <span class="option-text">8GB</span>
+                            <span class="option-badge">Basic</span>
+                        </button>
+                        <button class="quiz-option" data-value="0">
+                            <span class="option-text">4GB or less</span>
+                            <span class="option-badge">Entry</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Question 4 -->
+                <div class="quiz-question" id="question-4">
+                    <h3>What storage type are you using?</h3>
+                    <div class="quiz-options">
+                        <button class="quiz-option" data-value="3">
+                            <span class="option-text">NVMe SSD</span>
+                            <span class="option-badge">Premium</span>
+                        </button>
+                        <button class="quiz-option" data-value="2">
+                            <span class="option-text">SATA SSD</span>
+                            <span class="option-badge">Good</span>
+                        </button>
+                        <button class="quiz-option" data-value="1">
+                            <span class="option-text">HDD 7200 RPM</span>
+                            <span class="option-badge">Basic</span>
+                        </button>
+                        <button class="quiz-option" data-value="0">
+                            <span class="option-text">HDD 5400 RPM</span>
+                            <span class="option-badge">Entry</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Question 5 -->
+                <div class="quiz-question" id="question-5">
+                    <h3>What's your current average FPS in PUBG?</h3>
+                    <div class="quiz-options">
+                        <button class="quiz-option" data-value="3">
+                            <span class="option-text">90+ FPS (Smooth/Ultra)</span>
+                            <span class="option-badge">Premium</span>
+                        </button>
+                        <button class="quiz-option" data-value="2">
+                            <span class="option-text">60-89 FPS (Balanced)</span>
+                            <span class="option-badge">Good</span>
+                        </button>
+                        <button class="quiz-option" data-value="1">
+                            <span class="option-text">30-59 FPS (Playable)</span>
+                            <span class="option-badge">Basic</span>
+                        </button>
+                        <button class="quiz-option" data-value="0">
+                            <span class="option-text">Below 30 FPS</span>
+                            <span class="option-badge">Entry</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Question 6 -->
+                <div class="quiz-question" id="question-6">
+                    <h3>Do you experience stuttering or lag spikes?</h3>
+                    <div class="quiz-options">
+                        <button class="quiz-option" data-value="3">
+                            <span class="option-text">Never, smooth gameplay</span>
+                            <span class="option-badge">Premium</span>
+                        </button>
+                        <button class="quiz-option" data-value="2">
+                            <span class="option-text">Rarely in intense fights</span>
+                            <span class="option-badge">Good</span>
+                        </button>
+                        <button class="quiz-option" data-value="1">
+                            <span class="option-text">Sometimes during gameplay</span>
+                            <span class="option-badge">Basic</span>
+                        </button>
+                        <button class="quiz-option" data-value="0">
+                            <span class="option-text">Constant stuttering</span>
+                            <span class="option-badge">Entry</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Question 7 -->
+                <div class="quiz-question" id="question-7">
+                    <h3>What's your internet connection speed?</h3>
+                    <div class="quiz-options">
+                        <button class="quiz-option" data-value="3">
+                            <span class="option-text">100+ Mbps Fiber</span>
+                            <span class="option-badge">Premium</span>
+                        </button>
+                        <button class="quiz-option" data-value="2">
+                            <span class="option-text">50-99 Mbps</span>
+                            <span class="option-badge">Good</span>
+                        </button>
+                        <button class="quiz-option" data-value="1">
+                            <span class="option-text">25-49 Mbps</span>
+                            <span class="option-badge">Basic</span>
+                        </button>
+                        <button class="quiz-option" data-value="0">
+                            <span class="option-text">Below 25 Mbps</span>
+                            <span class="option-badge">Entry</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Question 8 -->
+                <div class="quiz-question" id="question-8">
+                    <h3>Which GameLoop version are you using?</h3>
+                    <div class="quiz-options">
+                        <button class="quiz-option" data-value="3">
+                            <span class="option-text">Latest Chinese Version</span>
+                            <span class="option-badge">Optimized</span>
+                        </button>
+                        <button class="quiz-option" data-value="2">
+                            <span class="option-text">Latest Global Version</span>
+                            <span class="option-badge">Good</span>
+                        </button>
+                        <button class="quiz-option" data-value="1">
+                            <span class="option-text">Older Optimized Version</span>
+                            <span class="option-badge">Basic</span>
+                        </button>
+                        <button class="quiz-option" data-value="0">
+                            <span class="option-text">Don't know / First time</span>
+                            <span class="option-badge">Entry</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Results Section -->
+                <div class="quiz-results" id="quiz-results">
+                    <div class="result-content">
+                        <div class="result-header">
+                            <div class="result-icon" id="result-icon">
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                            <h3>Your Optimization Score</h3>
+                            <div class="result-score">
+                                <span id="result-percentage">0%</span>
+                                <span id="result-level">Beginner</span>
+                            </div>
+                        </div>
+                        
+                        <div class="result-description">
+                            <p id="result-description">Based on your system specifications and current performance.</p>
+                        </div>
+                        
+                        <div class="result-recommendations">
+                            <h4>Recommended Downloads for You:</h4>
+                            <div class="recommendation-list" id="recommendation-list">
+                                <!-- Dynamic recommendations will be inserted here -->
+                            </div>
+                        </div>
+                        
+                        <div class="result-actions">
+                            <button class="btn btn-primary" id="retake-quiz">
+                                <i class="fas fa-redo"></i>
+                                Retake Quiz
+                            </button>
+                            <a href="#downloads" class="btn btn-secondary">
+                                <i class="fas fa-download"></i>
+                                View All Downloads
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="quiz-navigation">
+                <button class="btn btn-secondary" id="prev-question" disabled>
+                    <i class="fas fa-arrow-left"></i>
+                    Previous
+                </button>
+                <button class="btn btn-primary" id="next-question">
+                    Next Question
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+                <button class="btn btn-accent" id="show-results" style="display: none;">
+                    See Results
+                    <i class="fas fa-chart-bar"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Plux Times Section -->
+    <section id="plux-times" class="section">
+        <div class="container">
+            <h2 class="section-title glass">Plux Times</h2>
+            
+            <div class="plux-articles">
+                <div class="plux-article glass">
+                    <img src="https://i.postimg.cc/VvxHrvWx/image.png" loading="lazy" alt="Article Image" class="plux-article-img">
+                    <div class="plux-article-content">
+                        <div class="plux-article-meta" style="display: flex; gap: 15px; margin-bottom: 15px;">
+                            <span class="status-badge" style="background: rgba(175, 76, 76, 0.1); color: #ff5b5b; border-color: rgba(175, 76, 76, 0.3);">Gaming</span>
+                            <span style="color: var(--muted); font-size: 0.9rem;">October 30, 2025</span>
+                        </div>
+                        <h3 class="plux-article-title">The Fall of GameLoop: When an Emulator Reaches Its End</h3>
+                        <p class="plux-article-excerpt">OpenGL rendering breaks without warning. Some sessions won’t even start. On other days, the app opens but refuses to lock the mouse, killing aim and tracking. Mid-match, the client crashes to desktop or the screen freezes while audio keeps playing. And sometimes, GameLoop simply doesn’t launch at all.</p>
+                        <a href="The Fall of GameLoop" class="blog-link">Read More <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                <div class="plux-article glass">
+                    <img src="https://i.postimg.cc/yNRhxjb7/image.png" loading="lazy" alt="Article Image" class="plux-article-img">
+                    <div class="plux-article-content">
+                        <div class="plux-article-meta" style="display: flex; gap: 15px; margin-bottom: 15px;">
+                            <span class="status-badge" style="background: rgba(76,175,80,0.1); color: #4CAF50; border-color: rgba(76,175,80,0.3);">Psychology</span>
+                            <span style="color: var(--muted); font-size: 0.9rem;">August 1, 2025</span>
+                        </div>
+                        <h3 class="plux-article-title">The Optimization Illusion: When an Emulator Becomes More Than Just a Tool</h3>
+                        <p class="plux-article-excerpt">In a world where games have become part of personal identity, the tools we use to play them are no longer just "software." GameLoop, a mobile emulator designed for PC users, appears simple on the surface — yet it reaches deep into the user's mental and emotional experience.</p>
+                        <a href="The Optimization Illusion" class="blog-link">Read More <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                
+                <div class="plux-article glass">
+                    <img src="https://i.postimg.cc/N0Tgn258/image.png" loading="lazy" alt="Article Image" class="plux-article-img">
+                    <div class="plux-article-content">
+                        <div class="plux-article-meta" style="display: flex; gap: 15px; margin-bottom: 15px;">
+                            <span class="status-badge" style="background: rgba(33,150,243,0.1); color: #2196F3; border-color: rgba(33,150,243,0.3);">Review</span>
+                            <span style="color: var(--muted); font-size: 0.9rem;">July 22, 2025</span>
+                        </div>
+                        <h3 class="plux-article-title">Why Chinese GameLoop is Superior to the Global Version</h3>
+                        <p class="plux-article-excerpt">For years, Tencent's GameLoop emulator has served as the primary gateway for mobile gamers transitioning to PC. However, a growing number of advanced users and streamers have discovered a significant difference between the Chinese version and the Global version.</p>
+                        <a href="Why Chinese GameLoop is Superior to the Global Version" class="blog-link">Read More <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog Section -->
+<section id="blog" class="section">
+    <div class="container">
+        <header class="section-head">
+            <h2 class="section-title glass">Latest Blog Posts</h2>
+            <p class="section-subtitle">Updates, weapon intel, and map tactics</p>
+        </header>
+        <div class="blog-grid">
+            <article class="blog-card glass">
+                <div class="blog-img-container">
+                    <img src="assets/img/blog/update.jpg" loading="lazy" alt="" class="blog-img" draggable="false">
+                    <div class="blog-overlay"></div>
+                    <span class="blog-badge blog-badge--new">New</span>
+                </div>
+                <div class="blog-content">
+                    <div class="blog-meta">
+                        <span><i class="far fa-calendar-alt"></i> May 15, 2025</span>
+                        <span><i class="far fa-clock"></i> 5 min</span>
+                    </div>
+                    <h3 class="blog-title">New Update Details</h3>
+                    <p class="blog-excerpt">What changed in the latest patch — performance notes, emulator tips, and what to tweak first.</p>
+                    <a href="updates" class="blog-link">Read more <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </article>
+
+            <article class="blog-card glass">
+                <div class="blog-img-container">
+                    <img src="assets/img/blog/weapon.jpg" loading="lazy" alt="" class="blog-img" draggable="false">
+                    <div class="blog-overlay"></div>
+                    <span class="blog-badge blog-badge--guide">Guide</span>
+                </div>
+                <div class="blog-content">
+                    <div class="blog-meta">
+                        <span><i class="far fa-calendar-alt"></i> April 28, 2025</span>
+                        <span><i class="far fa-clock"></i> 7 min</span>
+                    </div>
+                    <h3 class="blog-title">Weapon Tier List</h3>
+                    <p class="blog-excerpt">Season rankings by damage, recoil, and versatility — from S-tier picks to skips.</p>
+                    <a href="weaponorg" class="blog-link">Read more <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </article>
+
+            <article class="blog-card glass">
+                <div class="blog-img-container">
+                    <img src="assets/img/blog/maps.jpg" loading="lazy" alt="" class="blog-img" draggable="false">
+                    <div class="blog-overlay"></div>
+                    <span class="blog-badge blog-badge--strategy">Strategy</span>
+                </div>
+                <div class="blog-content">
+                    <div class="blog-meta">
+                        <span><i class="far fa-calendar-alt"></i> April 10, 2025</span>
+                        <span><i class="far fa-clock"></i> 4 min</span>
+                    </div>
+                    <h3 class="blog-title">Map Strategies</h3>
+                    <p class="blog-excerpt">Landing spots, loot routes, and mid-game rotates for every major battleground.</p>
+                    <a href="mapspubg" class="blog-link">Read more <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </article>
+        </div>
+    </div>
+</section>
+
+<!-- Feedback & FAQ Section -->
+    <section id="feedback" class="section">
+        <div class="container">
+            <h2 class="section-title">Community Feedback & FAQs</h2>
+            <p class="section-subtitle">See what our community says and find answers to common questions</p>
+            
+            <div class="feedback-faq-container">
+                <!-- Feedback Section -->
+                <div class="feedback-section">
+                    <div class="section-header">
+                        <h3>Community Feedback</h3>
+                        <p>What gamers say about our optimizations</p>
+                    </div>
+                    
+                    <div class="feedback-grid">
+                        <div class="feedback-card">
+                            <div class="feedback-content">
+                                <div class="rating">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <p class="feedback-text">"Bari Plux's optimization guide completely transformed my PUBG Mobile experience! From 40 FPS to stable 90 FPS. Amazing work!"</p>
+                                <div class="feedback-author">
+                                    <img src="https://i.postimg.cc/5NDfgtjm/image.png" loading="lazy" alt="User" class="author-avatar">
+                                <div class="author-info">
+                                        <h4>SE7EN¹</h4>
+                                        <span>PUBG Mobile Player</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="feedback-card">
+                            <div class="feedback-content">
+                                <div class="rating">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                </div>
+                                <p class="feedback-text">"The Windows optimization tips helped me so much! My game doesn't lag anymore even during intense fights. Thank you!"</p>
+                                <div class="feedback-author">
+                                    <img src="https://i.postimg.cc/RZcxTQkz/image.png" loading="lazy" alt="User" class="author-avatar">
+                                <div class="author-info">
+                                        <h4>2⃫ 2⃫ : 5⃫ 5⃫</h4>
+                                        <span>TDM Player</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="feedback-card">
+                            <div class="feedback-content">
+                                <div class="rating">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <p class="feedback-text">"I was about to quit PUBG because of performance issues. Found this website and now I'm enjoying the game like never before!"</p>
+                                <div class="feedback-author">
+                                    <img src="https://i.postimg.cc/bNt7z9NJ/image.png" loading="lazy" alt="User" class="author-avatar">
+                                <div class="author-info">
+                                        <h4>Z A H I D ⁭⁬⁭⁬⁭⁭⁬⁭⁬⁭⁬⁭⁬⁭⁬⁭⁬⁭⁬</h4>
+                                        <span>Competitive Player</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- FAQ Section -->
+                <div class="faq-section">
+                    <div class="section-header">
+                        <h3>Frequently Asked Questions</h3>
+                        <p>Quick answers to common questions</p>
+                    </div>
+                    
+                    <div class="faq-accordion">
+                        <div class="faq-item">
+                            <button type="button" class="faq-question">
+                                <span>How often should I update my GameLoop?</span>
+                                <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                            </button>
+                            <div class="faq-answer">
+                                <p>We recommend updating GameLoop whenever a new stable version is released, typically every 2-3 months. However, for major PUBG updates, you should update immediately for best compatibility.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <button type="button" class="faq-question">
+                                <span>Will these optimizations work on my low-end PC?</span>
+                                <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                            </button>
+                            <div class="faq-answer">
+                                <p>Yes! Our optimizations are designed to work across various hardware configurations. We have specific guides for low-end, mid-range, and high-end systems. Check the system requirements section for each guide.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <button type="button" class="faq-question">
+                                <span>Is it safe to use these optimization tools?</span>
+                                <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                            </button>
+                            <div class="faq-answer">
+                                <p>Absolutely! All tools and optimizations recommended on our site are thoroughly tested and completely safe. We never recommend anything that could harm your system or violate game terms of service.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <button type="button" class="faq-question">
+                                <span>How long does it take to see performance improvements?</span>
+                                <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                            </button>
+                            <div class="faq-answer">
+                                <p>Most users see immediate improvements after applying our optimizations. Some advanced tweaks may require system restarts, but you should notice better FPS and smoother gameplay right away.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <button type="button" class="faq-question">
+                                <span>Do you provide personal optimization support?</span>
+                                <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                            </button>
+                            <div class="faq-answer">
+                                <p>Yes! Join our Telegram community for personalized help. Our community members and moderators are always ready to help with specific optimization challenges.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <button type="button" class="faq-question">
+                                <span>Are the downloads on this site safe from viruses?</span>
+                                <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                            </button>
+                            <div class="faq-answer">
+                                <p>100% safe! All downloads are from official sources or our own tested repositories. We scan everything with multiple antivirus programs before making them available.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-cta">
+                        <h4>Still have questions?</h4>
+                        <p>Join our community for quick answers and support</p>
+                        <a href="https://t.me/BariPlux" class="btn btn-primary" target="_blank">
+                            <i class="fab fa-telegram"></i>
+                            Join Telegram Group
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Live hub — events + support -->
+<section class="live-hub section" id="live">
+    <div class="container">
+        <h2 class="section-title glass">Live now</h2>
+        <p class="section-subtitle">Season boards and support in one place</p>
+
+        <div class="live-hub__shell glass liquid">
+            <article class="live-pane live-pane--events" id="pubg-events">
+                <div class="live-pane__top">
+                    <span class="live-chip">Season 4.5</span>
+                    <span class="live-chip live-chip--soft">PUBG Mobile</span>
+                </div>
+                <h3 class="live-pane__title">Events</h3>
+                <p class="live-pane__text">Current boards, rewards, and what’s coming next.</p>
+                <a href="pubgevents430" class="live-pane__cta bp-btn bp-btn--glass">
+                    Open events
+                    <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                </a>
+            </article>
+
+            <div class="live-hub__rule" aria-hidden="true"></div>
+
+            <article class="live-pane live-pane--support" id="support">
+                <div class="live-pane__top">
+                    <span class="live-chip">Daily window</span>
+                    <span class="live-chip live-chip--soft">4:00–8:00 PM UTC</span>
+                </div>
+                <h3 class="live-pane__title">Support</h3>
+                <div class="live-status">
+                    <div class="live-status__cell">
+                        <span class="meta-label">UTC now</span>
+                        <span class="meta-value" id="current-utc-time">Loading…</span>
+                    </div>
+                    <div class="live-status__cell">
+                        <span class="meta-label">Status</span>
+                        <span class="status-value" id="support-status">Checking…</span>
+                    </div>
+                </div>
+                <div class="live-pane__actions">
+                    <a href="https://t.me/BariPlux" class="bp-btn bp-btn--glass contact-btn" target="_blank" rel="noopener">
+                        <i class="fab fa-telegram" aria-hidden="true"></i>
+                        Telegram
+                    </a>
+                    <button type="button" class="bp-btn bp-btn--ghost timezone-help-btn" id="timezone-help">
+                        Timezone
+                    </button>
+                </div>
+            </article>
+        </div>
+    </div>
+</section>
+
+<!-- Timezone Help Modal -->
+<div class="modal" id="timezone-modal">
+    <div class="modal-content glass">
+        <div class="modal-header">
+            <h3>Timezone Assistance</h3>
+            <span class="modal-close glass">&times;</span>
+        </div>
+        <div class="modal-body">
+            <p>Our support hours are in UTC (Coordinated Universal Time).</p>
+            <div class="timezone-examples glass">
+                <p><strong>Example conversions:</strong></p>
+                <ul>
+                    <li>EST: 12:00 PM - 4:00 PM</li>
+                    <li>PST: 9:00 AM - 1:00 PM</li>
+                    <li>CET: 5:00 PM - 9:00 PM</li>
+                    <li>IST: 9:30 PM - 1:30 AM</li>
+                </ul>
+            </div>
+            <p>Use online tools like <a href="https://www.worldtimebuddy.com" target="_blank">World Time Buddy</a> to convert to your local time.</p>
+        </div>
+    </div>
+</div>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section">
+        <div class="container">
+            <h2 class="section-title glass">Contact Me</h2>
+            
+            <div class="contact-content">
+            <div class="contact-info">
+                <!-- Compact Grid for first 3 items -->
+                <div class="info-grid">
+                    <div class="compact-info-item glass">
+                        <div class="compact-info-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="compact-info-content">
+                            <h3>Email</h3>
+                            <p>BariPlux@gmail.com</p>
+                        </div>
+                    </div>
+                    <div class="compact-info-item glass" id="telegram-contact-item">
+    <div class="compact-info-icon">
+        <i class="fab fa-telegram"></i>
+    </div>
+    <div class="compact-info-content">
+        <h3>Telegram</h3>
+        <p>Support: t.me/BariPlux</p>
+    </div>
+</div>
+                    <div class="compact-info-item glass">
+                        <div class="compact-info-icon">
+                            <i class="fas fa-gamepad"></i>
+                        </div>
+                        <div class="compact-info-content">
+                            <h3>PUBG ID</h3>
+                            <p>51615243300</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Social Links -->
+                <div class="social-links">
+                    <a href="https://www.youtube.com/@BariPlux" class="social-link glass" target="_blank">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                    <a href="https://discord.com/invite/fQkyq8VR59" class="social-link glass" target="_blank">
+                        <i class="fab fa-discord"></i>
+                    </a>
+                    <a href="https://www.twitch.tv/bari_plux" class="social-link glass" target="_blank">
+                        <i class="fab fa-twitch"></i>
+                    </a>
+                    <a href="https://www.instagram.com/BariPlux" class="social-link glass" target="_blank">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://www.tiktok.com/@bariplux" class="social-link glass" target="_blank">
+                        <i class="fab fa-tiktok"></i>
+                    </a>
+                    <a href="https://kick.com/bariplux" class="social-link glass" target="_blank">
+                        <i class="fab fa-kickstarter-k"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-col glass">
+                    <div class="footer-logo">
+                        <img src="https://i.postimg.cc/CKj6nBJP/PLUX-Logo.png" loading="lazy" alt="Bari Plux Logo" class="footer-logo-img">
+                        <span class="footer-logo-text">Bari Plux</span>
+                    </div>
+                    <p class="footer-about">Gaming & Tech Content Creator specializing in PUBG optimizations and performance tuning.</p>
+                </div>
+                <div class="footer-col glass">
+                    <h3 class="footer-title">Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#home" class="footer-link">Home</a></li>
+                        <li><a href="#about" class="footer-link">About</a></li>
+                        <li><a href="#downloads" class="footer-link">Downloads</a></li>
+                        <li><a href="#videos" class="footer-link">Videos</a></li>
+                        <li><a href="#pubg" class="footer-link">Content</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col glass">
+                    <h3 class="footer-title">Content</h3>
+                    <ul class="footer-links">
+                        <li><a href="https://t.me/BariPlux" class="footer-link">Guides</a></li>
+                        <li><a href="https://youtu.be/cb3S6lu-QF0?si=VP0YmHVCWPDt9ZJA" class="footer-link">Tutorials</a></li>
+                        <li><a href="https://youtube.com/playlist?list=PLZLU1S_ro5zq_XRREwTneN1p7FcPGDjsU&si=XHL7xWXrRvqYN6vR" class="footer-link">Streams</a></li>
+                        <li><a href="https://youtu.be/EPggWr5TKVo?si=kqRcobFKXdIi6YmH" class="footer-link">News</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col glass">
+                    <h3 class="footer-title">Legal</h3>
+                    <ul class="footer-links">
+                        <li><a href="/privacy-policy#privacy-policy" class="footer-link">Privacy Policy</a></li>
+                        <li><a href="/privacy-policy#terms-of-service" class="footer-link">Terms of Service</a></li>
+                        <li><a href="/privacy-policy#disclaimer" class="footer-link">Disclaimer</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <a href="/privacy-policy" class="copyright">&copy; 2026 Bari Plux. All rights reserved.</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Rules Modal -->
+<div class="rules-modal" id="rules-modal" role="dialog" aria-modal="true" aria-labelledby="rules-title">
+    <div class="rules-container liquid">
+        <button type="button" class="close-rules" aria-label="Close rules"><i class="fas fa-times"></i></button>
+
+        <header class="rules-head">
+            <div class="rules-icon" aria-hidden="true"><i class="fas fa-shield-alt"></i></div>
+            <h2 class="rules-title" id="rules-title">Community Rules</h2>
+            <p class="rules-lead">A calm space for gamers and builders. Accept these before joining Telegram.</p>
+        </header>
+
+        <div class="rules-content">
+            <article class="rule-card">
+                <span class="rule-num">01</span>
+                <div>
+                    <h3>Respect others</h3>
+                    <p>No harassment, hate speech, or personal attacks.</p>
+                </div>
+            </article>
+            <article class="rule-card">
+                <span class="rule-num">02</span>
+                <div>
+                    <h3>No spam</h3>
+                    <p>Skip repeated ads, floods, and off-topic blasts.</p>
+                </div>
+            </article>
+            <article class="rule-card">
+                <span class="rule-num">03</span>
+                <div>
+                    <h3>Stay on topic</h3>
+                    <p>Keep chat on gaming, tech, and Bari Plux content.</p>
+                </div>
+            </article>
+            <article class="rule-card">
+                <span class="rule-num">04</span>
+                <div>
+                    <h3>No illegal content</h3>
+                    <p>No piracy, cheats, or anything that breaks laws or ToS.</p>
+                </div>
+            </article>
+            <article class="rule-card">
+                <span class="rule-num">05</span>
+                <div>
+                    <h3>Privacy</h3>
+                    <p>Don’t share others’ personal data without consent.</p>
+                </div>
+            </article>
+            <article class="rule-card">
+                <span class="rule-num">06</span>
+                <div>
+                    <h3>Consequences</h3>
+                    <p>Warnings, mutes, or bans for breaking the rules.</p>
+                </div>
+            </article>
+        </div>
+
+        <div class="rules-accept">
+            <button type="button" class="rules-accept-btn">
+                <i class="fas fa-check"></i>
+                I accept — continue to Telegram
+            </button>
+        </div>
+    </div>
+</div>
+
+    <!-- AI Chat Widget -->
+    <div class="ai-chat-widget professional" id="ai-chat-widget">
+        <div class="chat-header">
+            <div class="chat-title">
+                <div class="chat-avatar">
+                    <img src="https://i.pinimg.com/236x/78/49/d2/7849d2c3a70f94b81eaf325065a38ded.jpg" loading="lazy" alt="Bari Plux AI">
+                    <span class="online-status"></span>
+                </div>
+                <div class="chat-info">
+                    <h3>Bari Plux AI Assistant</h3>
+                    <div class="chat-status">
+                        <span class="status-dot"></span>
+                        <span>Online - Ready to help</span>
+                    </div>
+                </div>
+            </div>
+            <div class="chat-controls">
+                <button class="chat-btn minimize" id="chat-minimize" title="Minimize">
+                    <i class="fas fa-minus"></i>
+                </button>
+                <button class="chat-btn close" id="chat-close" title="Close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        
+        <div class="chat-messages" id="chat-messages">
+            <div class="message ai-message welcome">
+                <div class="message-content">
+                    <div class="message-header">
+                        <span class="sender-name">Bari Plux AI</span>
+                        <span class="message-time" id="welcome-time"></span>
+                    </div>
+                    <div class="message-text">
+                        <p>👋 Welcome — ask about PUBG FPS, GameLoop setup, or Windows tuning.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Quick Actions - Collapsible -->
+        <div class="collapsible-section" id="quick-actions-section">
+            <div class="collapsible-header">
+                <span>Quick Actions</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="collapsible-content">
+                <div class="quick-actions">
+                    <div class="actions-header">Common Tasks</div>
+                    <div class="actions-grid">
+                        <button class="action-btn" data-action="optimization">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span>Performance</span>
+                        </button>
+                        <button class="action-btn" data-action="gameloop">
+                            <i class="fas fa-desktop"></i>
+                            <span>GameLoop</span>
+                        </button>
+                        <button class="action-btn" data-action="downloads">
+                            <i class="fas fa-download"></i>
+                            <span>Downloads</span>
+                        </button>
+                        <button class="action-btn" data-action="settings">
+                            <i class="fas fa-cogs"></i>
+                            <span>Settings</span>
+                        </button>
+                        <button class="action-btn" data-action="fps">
+                            <i class="fas fa-rocket"></i>
+                            <span>FPS Boost</span>
+                        </button>
+                        <button class="action-btn" data-action="windows">
+                            <i class="fab fa-windows"></i>
+                            <span>Windows</span>
+                        </button>
+                        <button class="action-btn" data-action="troubleshoot">
+                            <i class="fas fa-wrench"></i>
+                            <span>Troubleshoot</span>
+                        </button>
+                        <button class="action-btn" data-action="system">
+                            <i class="fas fa-desktop"></i>
+                            <span>System</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Suggested Questions - Collapsible -->
+        <div class="collapsible-section" id="suggested-questions-section">
+            <div class="collapsible-header">
+                <span>Common Questions</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="collapsible-content">
+                <div class="suggested-questions">
+                    <div class="suggestions-header">Frequently Asked</div>
+                    <div class="suggestions-list">
+                        <button class="suggestion-btn" data-question="How to increase FPS in PUBG Mobile?">
+                            <i class="fas fa-rocket"></i>
+                            Increase FPS
+                        </button>
+                        <button class="suggestion-btn" data-question="Best GameLoop settings for smooth gameplay">
+                            <i class="fas fa-sliders-h"></i>
+                            GameLoop Settings
+                        </button>
+                        <button class="suggestion-btn" data-question="Windows optimization for gaming">
+                            <i class="fab fa-windows"></i>
+                            Windows Tuning
+                        </button>
+                        <button class="suggestion-btn" data-question="How to fix GameLoop lag and crashes?">
+                            <i class="fas fa-bug"></i>
+                            Fix Lag & Crashes
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="chat-input-container">
+            <div class="chat-input-wrapper">
+                <input type="text" id="chat-input" placeholder="Ask about PUBG optimization, GameLoop settings, or system tuning..." maxlength="500">
+                <div class="input-indicators">
+                    <span class="char-count">0/500</span>
+                </div>
+            </div>
+            <button class="send-btn" id="chat-send" title="Send Message">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+        
+        <div class="chat-footer">
+            <div class="footer-info">
+                <span class="ai-indicator">
+                    <i class="fas fa-robot"></i>
+                    AI Assistant v2.1
+                </span>
+                <span class="response-time">
+                    <i class="fas fa-bolt"></i>
+                    Avg. response: 1.2s
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Minimized Chat State -->
+    <div class="ai-chat-minimized" id="ai-chat-minimized">
+        <div class="minimized-header">
+            <div class="minimized-avatar">
+                <img src="https://i.pinimg.com/236x/78/49/d2/7849d2c3a70f94b81eaf325065a38ded.jpg" loading="lazy" alt="AI Assistant">
+                <span class="online-status"></span>
+            </div>
+            <div class="minimized-info">
+                <span class="minimized-name">Bari Plux AI</span>
+                <span class="minimized-status">Online - Click to chat</span>
+            </div>
+            <div class="minimized-controls">
+                <button class="minimized-btn" id="minimized-expand">
+                    <i class="fas fa-expand"></i>
+                </button>
+                <button class="minimized-btn" id="minimized-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        <div class="notification-badge" id="notification-badge" hidden>0</div>
+    </div>
+
+    <!-- Chat Toggle Button -->
+    <button class="ai-assistant-btn" id="chat-toggle" title="Chat with AI">
+        <span class="ai-btn-icon">
+            <i class="fas fa-headset"></i>
+        </span>
+        <span class="ai-btn-text">Assistant</span>
+        <span class="ai-btn-glow"></span>
+    </button>
+
+    <!-- Scroll to top -->
+    <div id="scroll-top" class="scroll-top" title="Back to top"><i class="fas fa-arrow-up"></i></div>
+
+    <script src="assets/js/site-search.js?v=20260729login" defer></script>
+    <script src="assets/js/home-page.js?v=20260907dark" defer></script>
+</body>
+</html>
