@@ -157,18 +157,14 @@
           ".read": "auth != null"
         },
         // ── Deliberately public to any signed-in user, and the only fields that are ──
-        // The chat profile popup and the Pro/Dev/Founder badge need exactly these: the display
-        // name, the avatar, the join date, and the single primary `role`. LobbyChatService reads
-        // `users/{uid}/role` (line ~1744) and `{tree}/{uid}/joinedAt` (line ~1638) directly with
-        // the viewer's own token, so closing `role` would blank every badge in the chat.
+        // The chat profile popup needs exactly these: the display name, the avatar and the join
+        // date (LobbyChatService reads `{tree}/{uid}/joinedAt` with the viewer's own token).
         //
-        // This is the honest limit of what RTDB rules can hide: anyone can read
-        // `lobby_chat/messages`, see each poster's name, and read that name's `role` - so "who is
-        // Pro" is public BY DESIGN while the badge exists. What is NOT public is the commercial
-        // detail around it: `proExpiresAtMs` (how long they paid / when it lapses), `lifetime`,
-        // `proDeviceId`, `role_assigned_by`, `trialUsedAt` - all owner-or-admin below, and all
-        // written only through the Worker's Admin SDK, which bypasses rules. Anyone can already
-        // see that a given account is Pro; they can no longer see what it cost or when it ends.
+        // `role` is NOT public: the Pro/Dev/Founder badge is served per-viewer by the Worker's
+        // POST /chat/badges, which answers only an already-entitled viewer. Everything commercial -
+        // `role`, `roles`, `proExpiresAtMs`, `lifetime`, `proDeviceId`, `role_assigned_by`,
+        // `trialUsedAt`, `appVersion` - is owner-or-admin below, and written only through the
+        // Worker's Admin SDK, which bypasses rules.
         "joinedAt": {
           ".write": "auth != null && auth.uid === $uid",
           ".read": "auth != null",
