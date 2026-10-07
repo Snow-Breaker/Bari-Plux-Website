@@ -2189,6 +2189,8 @@ const PAGE_FEATURE_CATALOG = {
         { key: 'tac_center_section_device_profiles', title: 'Tab: Device & Profiles', icon: 'fa-id-card', desc: 'Device model, saved profiles, 32-bit PUBG' },
         { key: 'tac_center_section_maintenance', title: 'Tab: Maintenance', icon: 'fa-wrench', desc: 'Doctor, backups, game cache' },
         { key: 'tac_center_section_keymap', title: 'Tab: Keymap', icon: 'fa-keyboard', desc: 'Keymap editor, layouts, lock, backup' },
+        { key: 'tac_center_discover_games', title: 'Discover games', icon: 'fa-store', desc: 'Library tab: popular games that are not installed yet, opened in the GameLoop store' },
+        { key: 'tac_emudesk_engine', title: 'Write engine: EmuDesk (switch)', icon: 'fa-shield-alt', desc: 'Enabled = EmuDesk engine for every GameLoop settings write: integrity check first, each change verified and rolled back if anything else changed, and FPS/resolution/device model locked instead of only self-healed. Disabled or never saved = BPT engine (default). Takes effect on the next Apply; TAC Doctor shows which one is active.' },
         { key: 'tac_pro_gating', title: 'TAC Pro features (switch)', icon: 'fa-crown', desc: 'Enabled = TAC Pro gates ON: FPS above 120, 4K picture, manual DPI, custom window size, device model, ready-made / saved layouts, auto-reapply, saved profiles, Smart Settings and presets need Pro. Disabled = all of TAC Center is free.' },
     ],
     procenter: [
