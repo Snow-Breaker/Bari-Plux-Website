@@ -2117,6 +2117,7 @@ const PAGE_FEATURE_CATALOG = {
         { key: 'settings_emulator_ldplayer9', title: 'LDPlayer 9 Profile', icon: 'fa-mobile-alt', desc: 'Show/hide the LDPlayer 9 radio in Settings → Emulator Profile' },
         { key: 'settings_emulator_bluestacks', title: 'BlueStacks Profile', icon: 'fa-mobile-alt', desc: 'Show/hide the BlueStacks radio in Settings → Emulator Profile' },
         { key: 'settings_emulator_tac', title: 'TAC Profile', icon: 'fa-mobile-alt', desc: 'Show/hide the TenStore Android Connect (TAC) radio in Settings → Emulator Profile' },
+        { key: 'settings_emulator_gameassist', title: 'GameAssist Profile', icon: 'fa-mobile-alt', desc: 'Show/hide the standalone GameAssist radio in Settings → Emulator Profile (recognition + safe-close only; shows by default, close this to hide it)' },
         { key: 'settings_ui_scale', title: 'UI Scale', icon: 'fa-text-height', desc: 'Window zoom / UI scale controls' },
         { key: 'settings_program_info', title: 'Program Information', icon: 'fa-info-circle', desc: 'App name, version, and build info' },
         { key: 'settings_system_specs', title: 'System Specifications', icon: 'fa-microchip', desc: 'CPU / RAM / display specs panel' },
