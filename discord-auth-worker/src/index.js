@@ -130,6 +130,11 @@ async function routeRequest(request, env) {
       return handleAdminRtdbWrite(request, env, corsHeaders);
     }
 
+    // POST /admin/user-payments — admin reads a user's full billing history (service account)
+    if (request.method === 'POST' && path === '/admin/user-payments') {
+      return handleAdminUserPayments(request, env, corsHeaders);
+    }
+
     // POST /admin/agent/publish — admin publishes a new Companion Agent APK build
     if (request.method === 'POST' && path === '/admin/agent/publish') {
       return handleAdminAgentPublish(request, env, corsHeaders);
@@ -931,6 +936,101 @@ async function handleAdminRtdbWrite(request, env, corsHeaders) {
   });
 }
 
+/**
+ * Admin-only: a user's complete billing picture, assembled server-side with the Admin SDK so the
+ * payment tables (stripe_orders / payhip_*, all .read:false to clients) never have to be opened to
+ * the browser. Body: { uid }. Returns current entitlement, the live subscription record, and the
+ * full Stripe order history (queried by the order's `uid` child), newest first, plus any legacy
+ * Payhip subscription.
+ */
+async function handleAdminUserPayments(request, env, corsHeaders) {
+  const idToken = getAuthUid(request);
+  const adminUser = await verifyFirebaseUser(idToken, env);
+  if (!adminUser || !isAdminFirebaseUser(adminUser)) {
+    return new Response(JSON.stringify({ error: 'Admin only' }),
+      { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+  }
+
+  let body;
+  try { body = await request.json(); } catch { body = {}; }
+  const uid = String(body?.uid || '').trim();
+  if (!isSafeRtdbKey(uid)) {
+    return new Response(JSON.stringify({ error: 'Invalid uid' }),
+      { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+  }
+
+  const tree = uid.startsWith('discord_') ? 'discordUsers' : 'users';
+  const [role, roles, lifetime, proExpiresAtMs, trialUsedAt, roleAssignedBy, roleAssignedAt,
+         custLive, custTest, sub, subTest, proDeviceId, proDeviceBoundAt, payhipSub,
+         ordersMap] = await Promise.all([
+    adminGetDatabaseAccess(`${tree}/${uid}/role`, env),
+    adminGetDatabaseAccess(`${tree}/${uid}/roles`, env),
+    adminGetDatabaseAccess(`${tree}/${uid}/lifetime`, env),
+    adminGetDatabaseAccess(`${tree}/${uid}/proExpiresAtMs`, env),
+    adminGetDatabaseAccess(`${tree}/${uid}/trialUsedAt`, env),
+    adminGetDatabaseAccess(`${tree}/${uid}/role_assigned_by`, env),
+    adminGetDatabaseAccess(`${tree}/${uid}/role_assigned_at`, env),
+    adminGetDatabaseAccess(`${tree}/${uid}/stripeCustomerId`, env),
+    adminGetDatabaseAccess(`${tree}/${uid}/stripeCustomerIdTest`, env),
+    adminGetDatabaseAccess(`${tree}/${uid}/stripeSub`, env),
+    adminGetDatabaseAccess(`${tree}/${uid}/stripeSubTest`, env),
+    adminGetDatabaseAccess(`${tree}/${uid}/proDeviceId`, env),
+    adminGetDatabaseAccess(`${tree}/${uid}/proDeviceBoundAt`, env),
+    adminGetDatabaseAccess(`payhip_subscriptions/${uid}`, env),
+    adminQueryByChildAccess('stripe_orders', 'uid', uid, env, 200),
+  ]);
+
+  const orders = Object.entries(ordersMap || {})
+    .map(([id, o]) => ({
+      id,
+      sessionId: o?.sessionId || null,
+      paymentIntent: o?.paymentIntent || null,
+      subscriptionId: o?.subscriptionId || null,
+      plan: o?.plan || null,
+      kind: o?.kind || 'checkout',
+      status: o?.status || 'unknown',
+      amountTotal: typeof o?.amountTotal === 'number' ? o.amountTotal : null,
+      currency: o?.currency || 'usd',
+      livemode: o?.livemode === true,
+      source: o?.source || 'stripe',
+      createdAt: o?.createdAt || o?.grantedAt || null,
+      grantedAt: o?.grantedAt || null,
+      durationMs: typeof o?.durationMs === 'number' ? o.durationMs : null,
+      amountRefunded: typeof o?.amountRefunded === 'number' ? o.amountRefunded : null,
+      refundedAt: o?.refundedAt || null,
+      refundType: o?.refundType || null,
+      reason: o?.reason || o?.error || null,
+    }))
+    .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+  const hasBilling = (typeof custLive === 'string' && custLive.length > 0) ||
+                     (typeof custTest === 'string' && custTest.length > 0);
+
+  return new Response(JSON.stringify({
+    ok: true,
+    uid,
+    tree,
+    account: {
+      role: role || 'free',
+      roles: Array.isArray(roles) ? roles : (roles ? Object.values(roles) : null),
+      lifetime: lifetime === true,
+      proExpiresAtMs: typeof proExpiresAtMs === 'number' ? proExpiresAtMs : null,
+      trialUsedAt: typeof trialUsedAt === 'number' ? trialUsedAt : null,
+      roleAssignedBy: roleAssignedBy || null,
+      roleAssignedAt: typeof roleAssignedAt === 'number' ? roleAssignedAt : null,
+      stripeCustomerId: typeof custLive === 'string' ? custLive : null,
+      stripeCustomerIdTest: typeof custTest === 'string' ? custTest : null,
+      proDeviceId: typeof proDeviceId === 'string' ? proDeviceId : null,
+      proDeviceBoundAt: typeof proDeviceBoundAt === 'number' ? proDeviceBoundAt : null,
+      hasBilling,
+    },
+    subscription: sub && typeof sub === 'object' ? sub : null,
+    subscriptionTest: subTest && typeof subTest === 'object' ? subTest : null,
+    payhip: payhipSub && typeof payhipSub === 'object' ? payhipSub : null,
+    orders,
+  }), { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+}
+
 async function handleAdminLegacyVersion(request, env, corsHeaders) {
   const idToken = getAuthUid(request);
   const adminUser = await verifyFirebaseUser(idToken, env);
@@ -1665,6 +1765,22 @@ async function adminGetDatabaseAccess(path, env) {
     return null;
   }
   return res.json();
+}
+
+/** Rule-bypassing child query (service account access_token): path ordered by `child` === `value`. */
+async function adminQueryByChildAccess(path, child, value, env, limit = 200) {
+  const accessToken = await getRtdbAccessToken(env);
+  const q = `orderBy=${encodeURIComponent(JSON.stringify(child))}` +
+    `&equalTo=${encodeURIComponent(JSON.stringify(value))}` +
+    `&limitToLast=${encodeURIComponent(limit)}`;
+  const url = `${getDatabaseUrl(env)}/${path}.json?${q}&access_token=${encodeURIComponent(accessToken)}`;
+  const res = await fetch(url);
+  if (!res.ok) {
+    if (res.status === 404) return {};
+    console.error(`[adminQueryByChildAccess] Failed: ${res.status} for ${path} ${child}=${value}`);
+    return {};
+  }
+  return (await res.json()) || {};
 }
 
 /** Rule-bypassing write (service account access_token). */

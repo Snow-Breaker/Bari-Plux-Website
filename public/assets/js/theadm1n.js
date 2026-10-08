@@ -1165,6 +1165,7 @@ function openUserModal(id) {
     document.getElementById('roleAssignedInfo').textContent = assignedInfo;
     renderDangerBtns(u);
     loadUserDevices(u.id);
+    loadUserPayments(u.id);
     document.getElementById('userModal').classList.add('show');
     document.body.style.overflow='hidden';
 }
@@ -1280,6 +1281,99 @@ function renderDangerBtns(u) {
     html += `<button class="danger-btn delete-user" data-act="askConfirm" data-a1="wipeCloud" data-a2="${esc(u.id)}" data-a3="${esc(u.name)}"><i class="fas fa-cloud"></i> Wipe Cloud Data</button>`;
     html += `<button class="danger-btn delete-user" data-act="askConfirm" data-a1="deleteUser" data-a2="${esc(u.id)}" data-a3="${esc(u.name)}"><i class="fas fa-trash-alt"></i> Delete User</button>`;
     div.innerHTML = html;
+}
+
+// ── Payments tab of the user modal ──────────────────────────────────────────
+// Served by the Worker's admin-only POST /admin/user-payments (service account), because the
+// stripe_orders / payhip_* tables are .read:false to every client - the owner's browser SDK
+// included. Shows the current entitlement, the live Stripe subscription, and the full order
+// history (checkouts, subscription renewals and refunds), newest first.
+function fmtMoney(cents, currency) {
+    if (typeof cents !== 'number' || !isFinite(cents)) return '—';
+    const cur = String(currency || 'usd').toUpperCase();
+    try { return new Intl.NumberFormat(undefined, { style: 'currency', currency: cur }).format(cents / 100); }
+    catch { return (cents / 100).toFixed(2) + ' ' + cur; }
+}
+const _ORDER_STATUS_COLOR = {
+    granted: 'var(--success, #2ecc71)', refunded: '#e67e22', failed: 'var(--danger, #e74c3c)',
+    ignored: 'var(--muted)', pending_account: '#f1c40f',
+};
+function orderStatusBadge(status) {
+    const c = _ORDER_STATUS_COLOR[status] || 'var(--muted)';
+    return `<span style="font-size:0.68rem;font-weight:600;color:${c};border:1px solid ${c};border-radius:6px;padding:1px 6px;text-transform:capitalize;">${esc(status)}</span>`;
+}
+
+async function loadUserPayments(uid) {
+    const list = document.getElementById('umPaymentsList');
+    const sum = document.getElementById('umPaymentsSummary');
+    const countEl = document.getElementById('umPaymentsCount');
+    if (!list) return;
+    list.innerHTML = `<div style="font-size:0.78rem;color:var(--muted);">Loading…</div>`;
+    if (sum) sum.innerHTML = '';
+    if (countEl) countEl.textContent = '';
+    try {
+        const idToken = await authUser.getIdToken(true);
+        const { ok, status, data } = await adminWorkerPost('/admin/user-payments', { uid }, idToken);
+        if (!ok) {
+            list.innerHTML = `<div style="font-size:0.78rem;color:var(--danger,#e74c3c);">Couldn't load payments (${status || 'error'}).</div>`;
+            return;
+        }
+        const a = data.account || {};
+        const sub = data.subscription || null;
+        const subTest = data.subscriptionTest || null;
+        const orders = Array.isArray(data.orders) ? data.orders : [];
+
+        // Current entitlement summary.
+        const rows = [];
+        const roleTxt = (a.roles && a.roles.length ? a.roles.join(' + ') : (a.role || 'free'));
+        rows.push(['Role', esc(roleTxt)]);
+        if (a.lifetime) rows.push(['Pro', 'Lifetime (never expires)']);
+        else if (a.proExpiresAtMs) {
+            const left = Math.round((a.proExpiresAtMs - Date.now()) / 86400000);
+            rows.push(['Pro expires', `${fmtDate(a.proExpiresAtMs)} <span style="color:var(--muted);">(${left < 0 ? 'expired' : left + 'd left'})</span>`]);
+        }
+        if (a.roleAssignedBy) rows.push(['Granted via', esc(a.roleAssignedBy) + (a.roleAssignedAt ? ` · ${fmtDate(a.roleAssignedAt)}` : '')]);
+        if (a.trialUsedAt) rows.push(['Trial used', fmtDate(a.trialUsedAt)]);
+        if (a.hasBilling) rows.push(['Billing account', 'Yes (Stripe customer)']);
+        if (a.stripeCustomerId) rows.push(['Customer ID', `<span style="font-family:'JetBrains Mono',monospace;font-size:0.72rem;">${esc(a.stripeCustomerId)}</span>`]);
+        if (a.stripeCustomerIdTest) rows.push(['Customer ID (test)', `<span style="font-family:'JetBrains Mono',monospace;font-size:0.72rem;">${esc(a.stripeCustomerIdTest)}</span>`]);
+        const renderSub = (s, label) => {
+            if (!s) return '';
+            const renew = s.cancelAtPeriodEnd ? 'Cancels at period end' : 'Auto-renews';
+            const end = s.currentPeriodEnd ? fmtDate(s.currentPeriodEnd) : '—';
+            return `<div style="font-size:0.76rem;margin-top:6px;padding:7px 9px;border:1px solid var(--border);border-radius:8px;">
+                <b>${label}:</b> ${esc(s.status || 'unknown')} · ${esc(renew)} · period ends ${end}${s.plan ? ' · ' + esc(s.plan) : ''}</div>`;
+        };
+        if (sum) {
+            sum.innerHTML = `<div style="display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:0.8rem;">`
+                + rows.map(([k, v]) => `<span style="color:var(--muted);">${esc(k)}</span><span>${v}</span>`).join('')
+                + `</div>` + renderSub(sub, 'Subscription') + renderSub(subTest, 'Subscription (test)')
+                + (data.payhip ? `<div style="font-size:0.76rem;margin-top:6px;color:var(--muted);">Legacy Payhip: ${esc(JSON.stringify(data.payhip).slice(0, 160))}</div>` : '');
+        }
+
+        if (countEl) countEl.textContent = orders.length ? `(${orders.length})` : '';
+        if (!orders.length) {
+            list.innerHTML = `<div style="font-size:0.78rem;color:var(--muted);">No Stripe orders on record.</div>`;
+            return;
+        }
+        list.innerHTML = orders.map(o => {
+            const amount = fmtMoney(o.amountTotal, o.currency);
+            const refunded = (o.amountRefunded ? ` · refunded ${fmtMoney(o.amountRefunded, o.currency)}${o.refundType ? ' (' + esc(o.refundType) + ')' : ''}` : '');
+            const planKind = `${o.plan ? esc(o.plan) : '—'} · ${esc(o.kind)}${o.livemode ? '' : ' · <span style="color:#f1c40f;">TEST</span>'}`;
+            const ref = o.subscriptionId ? `sub ${esc(o.subscriptionId)}` : (o.sessionId ? esc(o.sessionId) : esc(o.id));
+            return `<div style="padding:9px 11px;border:1px solid var(--border);border-radius:9px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+                    <span style="font-weight:600;">${amount}${refunded}</span>
+                    ${orderStatusBadge(o.status)}
+                </div>
+                <div style="font-size:0.74rem;color:var(--muted);margin-top:3px;">${planKind}</div>
+                <div style="font-size:0.72rem;color:var(--muted);margin-top:2px;">${o.createdAt ? fmtDate(o.createdAt) : '—'}${o.reason ? ' · ' + esc(o.reason) : ''}</div>
+                <div style="font-size:0.68rem;color:var(--muted);margin-top:2px;font-family:'JetBrains Mono',monospace;word-break:break-all;">${ref}</div>
+            </div>`;
+        }).join('');
+    } catch (e) {
+        list.innerHTML = `<div style="font-size:0.78rem;color:var(--danger,#e74c3c);">Couldn't load payments.</div>`;
+    }
 }
 
 function closeUserModal() { document.getElementById('userModal').classList.remove('show'); document.body.style.overflow=''; }

@@ -85,7 +85,8 @@
     },
     "stripe_orders": {
       ".read": false,
-      ".write": false
+      ".write": false,
+      ".indexOn": ["uid"]
     },
     "stripe_payment_intents": {
       ".read": false,
