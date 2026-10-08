@@ -243,3 +243,18 @@ that someone is Pro. What a free or unrelated account can no longer reach at all
 ## 7) Locked files (do not edit)
 
 `login.html`, `version.txt`, `Version2BPT`, `Version21BPT`, `Timer2BPT`
+
+## Admin panel duplication — how it stays in sync (2026-10-08)
+
+The admin panel is served from two hosts: **GitHub Pages reads the repo root**
+(`theadm1n.html`, `assets/js/theadm1n.js`) and **Firebase Hosting reads `public/`**.
+`public/` is the **single source of truth** — it is what we edit and what
+`firebase deploy` ships.
+
+Two guards keep the copies byte-identical:
+1. `.githooks/pre-commit` mirrors `public/` → root automatically on commit.
+   Enable once per clone: `git config core.hooksPath .githooks`
+2. `.github/workflows/admin-panel-sync-check.yml` fails the push if they ever
+   differ (backstop for anyone who committed without the hook enabled).
+
+Rule of thumb: **edit only `public/…`**; never hand-edit the root copies.

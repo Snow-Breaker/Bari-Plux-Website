@@ -1,0 +1,32 @@
+#!/bin/sh
+# Keep the two admin-panel copies byte-identical before every commit.
+#
+# The panel ships from two hosts: GitHub Pages serves the repo ROOT
+# (theadm1n.html, assets/js/theadm1n.js) and Firebase Hosting serves public/.
+# public/ is the single source of truth (it is what we edit and `firebase deploy`
+# ships); this hook mirrors public/ -> root whenever either copy is staged, so the
+# .github/workflows/admin-panel-sync-check.yml guard can never go red again.
+#
+# Enable once per clone:  git config core.hooksPath .githooks
+set -e
+root="$(git rev-parse --show-toplevel)"
+cd "$root"
+
+staged=$(git diff --cached --name-only)
+case "$staged" in
+  *theadm1n*) ;;
+  *) exit 0 ;;
+esac
+
+changed=0
+for f in theadm1n.html assets/js/theadm1n.js; do
+  if [ -f "public/$f" ] && ! cmp -s "public/$f" "$f"; then
+    cp "public/$f" "$f"
+    git add "$f"
+    changed=1
+    echo "pre-commit: synced $f <- public/$f"
+  fi
+done
+
+[ "$changed" = 1 ] && echo "pre-commit: root admin panel re-synced from public/ (source of truth)."
+exit 0
