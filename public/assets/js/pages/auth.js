@@ -703,11 +703,14 @@ function showLoggedInView(user) {
     localStorage.setItem('bariplux_user', JSON.stringify(user));
     syncLoginToFirebase(user).catch(e => console.error(e));
 
-    // Came here from the Pro page's "Sign in" (website, not the desktop flow): go back to buy.
+    // Came here from a page's "Sign in" (website, not the desktop flow): go back to it.
+    // Allowlist only - never an arbitrary stored value, so this can't become an open redirect.
     try {
-        if (!isDesktopFlow() && sessionStorage.getItem('bp_return_to') === '/Pro') {
+        const RETURN_OK = { '/Pro': 1, '/Account': 1 };
+        const back = sessionStorage.getItem('bp_return_to');
+        if (!isDesktopFlow() && RETURN_OK[back]) {
             sessionStorage.removeItem('bp_return_to');
-            setTimeout(() => location.replace('/Pro'), 600);
+            setTimeout(() => location.replace(back), 600);
         }
     } catch (e) { /* storage blocked - stay here */ }
 

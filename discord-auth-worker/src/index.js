@@ -152,6 +152,11 @@ async function routeRequest(request, env) {
       return handleFeatureEntitlement(request, env, corsHeaders);
     }
 
+    // POST /account/me — the signed-in user's own account summary (self only, curated fields)
+    if (request.method === 'POST' && path === '/account/me') {
+      return handleAccountMe(request, env, corsHeaders);
+    }
+
     // POST /pro/trial/status | /pro/trial/start — 3-day Pro trial (one per account and device)
     if (request.method === 'POST' && (path === '/pro/trial/status' || path === '/pro/trial/start')) {
       return handleProTrial(request, env, corsHeaders, path.endsWith('/start'));
@@ -934,6 +939,91 @@ async function handleAdminRtdbWrite(request, env, corsHeaders) {
     status: 200,
     headers: { ...corsHeaders, 'Content-Type': 'application/json' }
   });
+}
+
+/**
+ * The signed-in user's own account summary for the website's Account page. Self only: the uid is
+ * taken from the verified ID token, never from the body, so a user can only ever read their own
+ * record. Returns a deliberately minimal, curated set - profile basics, plan/expiry, auto-renew,
+ * last sign-in location and whether a Pro device is bound - and nothing operational
+ * (no stripeCustomerId, no raw device fingerprint, no roles internals, no moderation flags).
+ */
+async function handleAccountMe(request, env, corsHeaders) {
+  const idToken = getAuthUid(request);
+  const user = idToken ? await verifyFirebaseUser(idToken, env) : null;
+  if (!user || !user.localId) {
+    return new Response(JSON.stringify({ error: 'sign_in_required' }),
+      { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+  }
+
+  const uid = user.localId;
+  const tree = uid.startsWith('discord_') ? 'discordUsers' : 'users';
+  const [role, lifetime, proExpiresAtMs, assignedBy, sub, proDeviceId, deviceChangeAllowed,
+         joinedAt, lastActive, loginTime, country, city] = await Promise.all([
+    adminGetDatabaseAccess(`${tree}/${uid}/role`, env),
+    adminGetDatabaseAccess(`${tree}/${uid}/lifetime`, env),
+    adminGetDatabaseAccess(`${tree}/${uid}/proExpiresAtMs`, env),
+    adminGetDatabaseAccess(`${tree}/${uid}/role_assigned_by`, env),
+    adminGetDatabaseAccess(`${tree}/${uid}/stripeSub`, env),
+    adminGetDatabaseAccess(`${tree}/${uid}/proDeviceId`, env),
+    adminGetDatabaseAccess(`${tree}/${uid}/proDeviceChangeAllowed`, env),
+    adminGetDatabaseAccess(`${tree}/${uid}/joinedAt`, env),
+    adminGetDatabaseAccess(`${tree}/${uid}/lastActive`, env),
+    adminGetDatabaseAccess(`${tree}/${uid}/loginTime`, env),
+    adminGetDatabaseAccess(`${tree}/${uid}/country`, env),
+    adminGetDatabaseAccess(`${tree}/${uid}/city`, env),
+  ]);
+
+  const now = Date.now();
+  const exp = typeof proExpiresAtMs === 'number' && proExpiresAtMs > 0 ? proExpiresAtMs : null;
+  const isLifetime = lifetime === true;
+  const expired = role === 'pro' && !isLifetime && exp !== null && exp <= now;
+  const isPro = role === 'pro' && !expired;
+  const trial = isPro && assignedBy === 'trial';
+  const autoRenew = isPro && !isLifetime && sub && typeof sub === 'object' &&
+    ['active', 'trialing', 'past_due'].includes(sub.status) && sub.cancelAtPeriodEnd !== true;
+  const daysLeft = (isPro && !isLifetime && exp) ? Math.max(0, Math.ceil((exp - now) / 86400000)) : null;
+
+  let label = 'Free';
+  if (isPro) label = isLifetime ? 'Lifetime Pro' : (trial ? 'Pro (trial)' : 'Pro');
+
+  const providerId = Array.isArray(user.providerUserInfo) && user.providerUserInfo[0]
+    ? user.providerUserInfo[0].providerId : (uid.startsWith('discord_') ? 'discord' : 'password');
+  const memberSince = typeof joinedAt === 'number' ? joinedAt
+    : (Number(user.createdAt) > 0 ? Number(user.createdAt) : null);
+  const lastSignInMs = typeof lastActive === 'number' ? lastActive
+    : (Number(user.lastLoginAt) > 0 ? Number(user.lastLoginAt) : (loginTime ? Date.parse(loginTime) || null : null));
+
+  return new Response(JSON.stringify({
+    ok: true,
+    profile: {
+      name: user.displayName || null,
+      email: user.email || null,
+      emailVerified: user.emailVerified === true,
+      photoURL: user.photoUrl || null,
+      provider: providerId,
+      memberSince,
+    },
+    plan: {
+      tier: isPro ? 'pro' : 'free',
+      label,
+      lifetime: isLifetime && isPro,
+      trial,
+      proExpiresAtMs: isLifetime ? null : (isPro ? exp : null),
+      daysLeft,
+      autoRenew: !!autoRenew,
+      renewsOnMs: autoRenew && sub && typeof sub.currentPeriodEnd === 'number' ? sub.currentPeriodEnd : null,
+    },
+    lastSignIn: {
+      atMs: lastSignInMs || null,
+      country: typeof country === 'string' ? country : null,
+      city: typeof city === 'string' ? city : null,
+    },
+    proDevice: {
+      bound: typeof proDeviceId === 'string' && proDeviceId.length > 0,
+      changeAllowed: deviceChangeAllowed === true,
+    },
+  }), { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
 }
 
 /**

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta property="og:title" content="Your Bari Plux Account">
+  <meta property="og:description" content="Your Bari Plux account - plan, status and sign-in details.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://i.postimg.cc/CKj6nBJP/PLUX-Logo.png">
+  <meta property="og:url" content="https://bariplux.com/Account.html">
+  <meta property="og:site_name" content="Bari Plux">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Your Account - Bari Plux</title>
+  <meta name="description" content="Your Bari Plux account: plan and status, auto-renew, member since and last sign-in." />
+  <meta name="robots" content="noindex" />
+  <!-- Domain-lock -->
+  <script>
+  (function(){var h=location.hostname;var ok=h==='bariplux.com'||h==='localhost'||h==='127.0.0.1'||h.endsWith('.bariplux.com')||h.endsWith('.firebaseapp.com')||h.endsWith('.web.app');if(!ok){document.documentElement.innerHTML='';window.stop();location.replace('about:blank')}})();
+  </script>
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self' https:;
+             script-src 'self' https: 'unsafe-inline' 'unsafe-eval' blob:;
+             style-src 'self' https: 'unsafe-inline';
+             img-src 'self' https: data:;
+             font-src 'self' https: data:;
+             connect-src 'self' https:;
+             frame-src 'self' https:;
+             worker-src 'self' https: blob: 'unsafe-inline' 'unsafe-eval';
+             object-src 'none';
+             base-uri 'self';">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+  <link rel="icon" href="https://i.postimg.cc/CKj6nBJP/PLUX-Logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
+  <script src="assets/js/protect.js" defer></script>
+  <link rel="stylesheet" href="assets/css/bariplux.css?v=20260907dark">
+  <link rel="stylesheet" href="assets/css/site.css?v=20260729mnav">
+  <link rel="stylesheet" href="assets/css/shell.css?v=20260728ai">
+  <link rel="stylesheet" href="assets/css/widgets.css?v=20260728ai">
+  <script src="assets/js/boot.js?v=20260907dark"></script>
+  <script src="assets/js/signal-ambient.js?v=20260728ai" defer></script>
+  <script src="assets/js/site-shell.js?v=20260907dark" defer></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <style>
+    .ac-head { display:flex; align-items:center; gap:14px; margin-bottom:4px; }
+    .ac-avatar { width:60px; height:60px; border-radius:14px; flex-shrink:0; display:flex; align-items:center;
+      justify-content:center; font-weight:700; font-size:1.5rem; overflow:hidden;
+      background:rgba(124,108,255,0.16); color:#b9b0ff; border:1px solid rgba(255,255,255,0.12); }
+    .ac-avatar img { width:100%; height:100%; object-fit:cover; }
+    .ac-name { font-size:1.15rem; font-weight:700; line-height:1.2; }
+    .ac-email { font-size:0.85rem; opacity:0.72; word-break:break-all; }
+    .ac-badge { display:inline-flex; align-items:center; gap:5px; font-size:0.7rem; font-weight:700; letter-spacing:.03em;
+      padding:2px 9px; border-radius:999px; border:1px solid currentColor; }
+    .ac-badge--pro { color:#7c6cff; }
+    .ac-badge--life { color:#f5b94a; }
+    .ac-badge--free { color:#9aa0ab; }
+    .ac-badge--verify { color:#43c793; }
+    .ac-grid { display:grid; grid-template-columns:auto 1fr; gap:9px 16px; font-size:0.9rem; margin-top:10px; }
+    .ac-grid .k { color:rgba(255,255,255,0.56); }
+    .ac-grid .v { font-weight:500; }
+    .ac-actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:16px; }
+    .ac-plan-head { display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; }
+    [hidden] { display:none !important; }
+  </style>
+</head>
+<body class="bp-body">
+  <div id="bp-aurora" class="bp-aurora bp-ambient" aria-hidden="true"></div>
+
+  <main class="bp-page">
+    <div class="bp-wrap" style="padding: 56px 0 32px; max-width: 680px;">
+      <p class="bp-brand bp-reveal">Bari Plux</p>
+      <h1 class="bp-h1 bp-reveal">Your account</h1>
+      <p class="bp-lead bp-reveal">Everything on your Bari Plux account, in one place.</p>
+
+      <!-- Signed out -->
+      <section id="signedOut" class="bp-glass bp-glass--warn bp-reveal" hidden style="margin-bottom:16px;">
+        <div class="bp-glass__body">
+          <h2 class="bp-h2">Sign in first</h2>
+          <p class="bp-muted" style="margin:0 0 12px; line-height:1.55;">
+            Sign in with the same account you use in Bari Plux Tool to see your account details.
+          </p>
+          <button class="bp-btn bp-btn--primary" id="signInBtn" type="button">Sign in</button>
+        </div>
+      </section>
+
+      <!-- Loading -->
+      <section id="loading" class="bp-glass bp-reveal" hidden style="margin-bottom:16px;">
+        <div class="bp-glass__body"><p class="bp-muted" style="margin:0;">Loading your account…</p></div>
+      </section>
+
+      <!-- Error -->
+      <section id="errorBox" class="bp-glass bp-glass--warn bp-reveal" hidden style="margin-bottom:16px;">
+        <div class="bp-glass__body"><p class="bp-muted" id="errorText" style="margin:0;"></p></div>
+      </section>
+
+      <!-- Profile -->
+      <section id="profileCard" class="bp-glass bp-reveal" hidden style="margin-bottom:16px;">
+        <div class="bp-glass__body">
+          <div class="ac-head">
+            <div class="ac-avatar" id="acAvatar">?</div>
+            <div style="min-width:0;">
+              <div class="ac-name" id="acName">—</div>
+              <div class="ac-email" id="acEmail">—</div>
+            </div>
+          </div>
+          <div class="ac-grid">
+            <span class="k">Sign-in method</span><span class="v" id="acProvider">—</span>
+            <span class="k">Email verified</span><span class="v" id="acVerified">—</span>
+            <span class="k">Member since</span><span class="v" id="acSince">—</span>
+            <span class="k">Last sign-in</span><span class="v" id="acLastSignIn">—</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Plan -->
+      <section id="planCard" class="bp-glass bp-reveal" hidden style="margin-bottom:16px;">
+        <div class="bp-glass__body">
+          <div class="ac-plan-head">
+            <h2 class="bp-h2" style="margin:0;">Plan</h2>
+            <span class="ac-badge" id="acPlanBadge">—</span>
+          </div>
+          <div class="ac-grid" id="acPlanGrid"></div>
+          <div class="ac-actions">
+            <a class="bp-btn bp-btn--primary" id="acGetProBtn" href="/Pro" hidden>Get Pro</a>
+            <a class="bp-btn bp-btn--ghost" id="acExtendBtn" href="/Pro" hidden>Extend / change plan</a>
+            <button class="bp-btn bp-btn--ghost" id="acManageBtn" type="button" hidden>Manage subscription</button>
+          </div>
+          <div class="bp-status" id="acStatus"></div>
+        </div>
+      </section>
+
+      <!-- Footer actions -->
+      <section id="footerCard" class="bp-glass bp-reveal" hidden>
+        <div class="bp-glass__body" style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
+          <span class="bp-muted" style="font-size:0.82rem;">Signed in as <strong id="acFooterName"></strong></span>
+          <button class="bp-btn bp-btn--ghost" id="acSignOutBtn" type="button">Sign out</button>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    (function () {
+      var WORKER = 'https://discord-auth-worker.bariattaye2.workers.dev';
+
+      firebase.initializeApp({
+        apiKey: 'AIzaSyBH_t3Uue7fbb-DahwjSJGjG2-quCqiLEs',
+        authDomain: 'baripluxwebsite.firebaseapp.com',
+        databaseURL: 'https://baripluxwebsite-default-rtdb.firebaseio.com',
+        projectId: 'baripluxwebsite',
+        storageBucket: 'baripluxwebsite.firebasestorage.app',
+        messagingSenderId: '280043766563',
+        appId: '1:280043766563:web:409e6b78c1c24b568fc296'
+      });
+      var auth = firebase.auth();
+
+      function $(id) { return document.getElementById(id); }
+      function show(id, on) { var el = $(id); if (el) el.hidden = !on; }
+      function esc(s) { return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+      var PROVIDERS = {
+        'google.com': 'Google', 'github.com': 'GitHub', 'password': 'Email & password',
+        'discord': 'Discord', 'facebook.com': 'Facebook', 'apple.com': 'Apple'
+      };
+      function fmtDate(ms) {
+        if (!ms) return '—';
+        try { return new Date(ms).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }); }
+        catch (e) { return '—'; }
+      }
+      function fmtDateTime(ms) {
+        if (!ms) return '—';
+        try { var d = new Date(ms); return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) + ', ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); }
+        catch (e) { return '—'; }
+      }
+
+      function setStatus(text, kind) {
+        var el = $('acStatus');
+        el.textContent = text || '';
+        el.className = 'bp-status' + (kind ? ' is-' + kind : '');
+      }
+
+      async function render(me) {
+        var p = me.profile || {}, plan = me.plan || {}, last = me.lastSignIn || {};
+
+        // Profile
+        var av = $('acAvatar');
+        var initial = (p.name || p.email || '?').charAt(0).toUpperCase();
+        if (p.photoURL) {
+          av.innerHTML = '<img src="' + esc(p.photoURL) + '" alt="" onerror="this.parentElement.textContent=\'' + esc(initial) + '\'">';
+        } else { av.textContent = initial; }
+        $('acName').textContent = p.name || 'Your account';
+        $('acEmail').textContent = p.email || '—';
+        $('acProvider').textContent = PROVIDERS[p.provider] || p.provider || '—';
+        $('acVerified').innerHTML = p.emailVerified
+          ? '<span class="ac-badge ac-badge--verify">Verified</span>'
+          : (p.email ? 'Not verified' : '—');
+        $('acSince').textContent = fmtDate(p.memberSince);
+        var lastTxt = fmtDateTime(last.atMs);
+        var loc = [last.city, last.country].filter(Boolean).join(', ');
+        if (loc) lastTxt += ' · ' + esc(loc);
+        $('acLastSignIn').textContent = lastTxt;
+        show('profileCard', true);
+
+        // Plan
+        var badge = $('acPlanBadge');
+        var cls = plan.tier === 'pro' ? (plan.lifetime ? 'ac-badge--life' : 'ac-badge--pro') : 'ac-badge--free';
+        badge.className = 'ac-badge ' + cls;
+        badge.textContent = plan.label || (plan.tier === 'pro' ? 'Pro' : 'Free');
+
+        var rows = [];
+        if (plan.tier === 'pro') {
+          if (plan.lifetime) {
+            rows.push(['Status', 'Lifetime - never expires']);
+          } else {
+            if (plan.proExpiresAtMs) rows.push(['Expires', fmtDate(plan.proExpiresAtMs) + (plan.daysLeft != null ? ' (' + plan.daysLeft + ' day' + (plan.daysLeft === 1 ? '' : 's') + ' left)' : '')]);
+            rows.push(['Auto-renew', plan.autoRenew ? 'On' : 'Off']);
+            if (plan.autoRenew && plan.renewsOnMs) rows.push(['Renews on', fmtDate(plan.renewsOnMs)]);
+            if (plan.trial) rows.push(['Type', 'Free trial']);
+          }
+        } else {
+          rows.push(['Status', 'Free - upgrade to unlock every Pro feature']);
+        }
+        $('acPlanGrid').innerHTML = rows.map(function (r) {
+          return '<span class="k">' + esc(r[0]) + '</span><span class="v">' + esc(r[1]) + '</span>';
+        }).join('');
+
+        show('acGetProBtn', plan.tier !== 'pro');
+        show('acExtendBtn', plan.tier === 'pro' && !plan.lifetime);
+        show('acManageBtn', plan.tier === 'pro' && !plan.lifetime && plan.autoRenew);
+        show('planCard', true);
+      }
+
+      async function load() {
+        var user = auth.currentUser;
+        if (!user) return;
+        $('acFooterName').textContent = user.displayName || user.email || 'your account';
+        show('footerCard', true);
+        show('loading', true);
+        try {
+          var token = await user.getIdToken();
+          var res = await fetch(WORKER + '/account/me', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+            body: '{}'
+          });
+          var data = {};
+          try { data = await res.json(); } catch (e) { /* empty */ }
+          show('loading', false);
+          if (!res.ok || !data.ok) {
+            $('errorText').textContent = 'Could not load your account right now. Please refresh in a moment.';
+            show('errorBox', true);
+            return;
+          }
+          await render(data);
+        } catch (e) {
+          show('loading', false);
+          $('errorText').textContent = 'Could not load your account right now. Please check your connection and refresh.';
+          show('errorBox', true);
+        }
+      }
+
+      $('signInBtn').addEventListener('click', function () {
+        try { sessionStorage.setItem('bp_return_to', '/Account'); } catch (e) { /* ignore */ }
+        location.href = '/';
+      });
+
+      $('acSignOutBtn').addEventListener('click', function () {
+        auth.signOut().then(function () { location.href = '/'; });
+      });
+
+      $('acManageBtn').addEventListener('click', async function () {
+        var btn = $('acManageBtn');
+        btn.disabled = true;
+        setStatus('Opening subscription management…');
+        try {
+          var user = auth.currentUser;
+          var token = await user.getIdToken();
+          var res = await fetch(WORKER + '/stripe/portal', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+            body: '{}'
+          });
+          var data = {};
+          try { data = await res.json(); } catch (e) { /* empty */ }
+          if (res.ok && data.url) { location.href = data.url; return; }
+          setStatus(data.error === 'no_billing_account' ? 'No billing account found for this plan.' : 'Could not open subscription management. Try again.', 'err');
+          btn.disabled = false;
+        } catch (e) {
+          setStatus('Could not open subscription management. Try again.', 'err');
+          btn.disabled = false;
+        }
+      });
+
+      auth.onAuthStateChanged(function (user) {
+        show('signedOut', !user);
+        if (!user) {
+          ['loading', 'errorBox', 'profileCard', 'planCard', 'footerCard'].forEach(function (id) { show(id, false); });
+          return;
+        }
+        load();
+      });
+    })();
+  </script>
+</body>
+</html>

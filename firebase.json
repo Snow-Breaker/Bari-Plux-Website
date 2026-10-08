@@ -53,6 +53,14 @@
         "destination": "/Pro.html"
       },
       {
+        "source": "/Account",
+        "destination": "/Account.html"
+      },
+      {
+        "source": "/account",
+        "destination": "/Account.html"
+      },
+      {
         "source": "/tool",
         "destination": "/tool.html"
       },
