@@ -282,7 +282,7 @@
         },
         "$other": {
           ".write": "auth != null && auth.uid === $uid",
-          ".validate": "!newData.isString() || newData.val().length <= 2000"
+          ".validate": "newData.isString() ? newData.val().length <= 2000 : (newData.isNumber() || newData.isBoolean())"
         }
       }
     },
@@ -408,7 +408,7 @@
         },
         "$other": {
           ".write": "auth != null && auth.uid === $uid",
-          ".validate": "!newData.isString() || newData.val().length <= 2000"
+          ".validate": "newData.isString() ? newData.val().length <= 2000 : (newData.isNumber() || newData.isBoolean())"
         }
       }
     },
@@ -418,7 +418,10 @@
         ".write": "auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true)",
         "$sessionId": {
           ".read": "auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true)",
-          ".write": "auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true)"
+          ".write": "auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true)",
+          "$field": {
+            ".validate": "newData.isString() ? newData.val().length <= 4000 : (newData.isNumber() || newData.isBoolean())"
+          }
         }
       }
     },
@@ -440,7 +443,7 @@
       "$reportId": {
         ".validate": "$reportId.matches(/^[A-Za-z0-9_-]{1,64}$/) && (!newData.child('date').exists() || (newData.child('date').isString() && newData.child('date').val().length <= 40)) && (!newData.child('version').exists() || (newData.child('version').isString() && newData.child('version').val().length <= 40))",
         "images": {
-          "$i": { ".validate": "newData.isString() && newData.val().length <= 2000000" }
+          "$i": { ".validate": "$i.matches(/^[0-9]$/) && newData.isString() && newData.val().length <= 2000000" }
         },
         ".write": "auth != null && ((auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true) || root.child('users/' + auth.uid + '/role').val() === 'dev' || root.child('users/' + auth.uid + '/role').val() === 'founder') || (!data.exists() && newData.hasChild('description') && newData.child('description').isString() && newData.child('description').val().length > 0 && newData.child('description').val().length <= 8000 && newData.hasChild('status') && newData.child('status').val() === 'new' && newData.hasChild('timestamp')))"
       }
