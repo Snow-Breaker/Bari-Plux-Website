@@ -1312,6 +1312,8 @@ async function loadUserPayments(uid) {
     if (sum) sum.innerHTML = '';
     if (countEl) countEl.textContent = '';
     try {
+        const authUser = firebase.auth().currentUser;
+        if (!authUser) { list.innerHTML = `<div style="font-size:0.78rem;color:var(--danger,#e74c3c);">Not signed in.</div>`; return; }
         const idToken = await authUser.getIdToken(true);
         const { ok, status, data } = await adminWorkerPost('/admin/user-payments', { uid }, idToken);
         if (!ok) {
