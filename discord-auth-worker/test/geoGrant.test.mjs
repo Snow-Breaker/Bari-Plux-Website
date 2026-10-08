@@ -48,3 +48,9 @@ test('redeem code normalize accepts valid, rejects junk', () => {
   assert.ok(/^BPT-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(g));
   assert.equal(normalizeRedeemCode(g), g);
 });
+
+test('Afghanistan and Syria now auto-verify on a real local ISP ASN', () => {
+  assert.equal(evaluateGeo({ country: 'AF', asn: 38742 }, cfg).pass, true);   // Afghan Wireless
+  assert.equal(evaluateGeo({ country: 'SY', asn: 29256 }, cfg).pass, true);   // Syrian Telecom
+  assert.equal(evaluateGeo({ country: 'AF', asn: 16509 }, cfg).pass, false);  // AWS datacenter -> fail
+});
