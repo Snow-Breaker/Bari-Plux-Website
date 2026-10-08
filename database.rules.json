@@ -92,6 +92,10 @@
       ".read": false,
       ".write": false
     },
+    "redeem_codes": {
+      ".read": false,
+      ".write": false
+    },
     "device_accounts_3x": {
       "$deviceId": {
         ".read": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true)",
@@ -223,6 +227,10 @@
           ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true))",
           ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true)"
         },
+        "regionGrant": {
+          ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true))",
+          ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true)"
+        },
         "appVersion": {
           ".write": "auth != null && auth.uid === $uid",
           ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true))",
@@ -346,6 +354,10 @@
           ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true)"
         },
         "stripeSubTest": {
+          ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true))",
+          ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true)"
+        },
+        "regionGrant": {
           ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true))",
           ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true)"
         },

@@ -1185,6 +1185,32 @@
                 <div id="proFeaturesStatus" class="form-hint" style="margin-top:10px;"></div>
             </div>
 
+            <div id="redeemCodesCard" class="form-card">
+                <div class="form-card-title">
+                    <i class="fas fa-ticket" style="color:#43c793;"></i> Redeem codes (regional / no-banking access)
+                </div>
+                <div class="form-card-desc">
+                    Generate Pro redeem codes to hand out through trusted in-country communities (Iran etc.) where
+                    international cards don't work. Each code grants time-limited Pro when redeemed on the Account page.
+                    Codes are the human-vetted path - no geo check, so VPNs can't game them. Stored under
+                    <code style="color:var(--accent2);">redeem_codes</code> (worker-only).
+                </div>
+                <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-top:6px;">
+                    <label style="font-size:0.78rem;">Count<br><input id="rcCount" type="number" min="1" max="100" value="10" style="width:80px;"></label>
+                    <label style="font-size:0.78rem;">Days of Pro<br><input id="rcDays" type="number" min="1" max="3650" value="30" style="width:90px;"></label>
+                    <label style="font-size:0.78rem;">Uses per code<br><input id="rcUses" type="number" min="1" max="100000" value="1" style="width:90px;"></label>
+                    <label style="font-size:0.78rem;">Country (optional)<br><input id="rcCountry" type="text" maxlength="2" placeholder="IR" style="width:70px;text-transform:uppercase;"></label>
+                    <label style="font-size:0.78rem;flex:1;min-width:140px;">Note (optional)<br><input id="rcNote" type="text" maxlength="200" placeholder="e.g. Iran Telegram drop" style="width:100%;"></label>
+                    <button class="action-btn view" data-act="generateRedeemCodes" style="padding:9px 16px;font-size:0.82rem;font-weight:600;"><i class="fas fa-plus"></i> Generate</button>
+                </div>
+                <div id="rcGenerated" style="margin-top:12px;"></div>
+                <div style="margin-top:12px;display:flex;gap:8px;align-items:center;">
+                    <button class="action-btn review" data-act="loadRedeemCodes" style="padding:8px 14px;font-size:0.8rem;"><i class="fas fa-rotate"></i> Refresh list</button>
+                    <span id="redeemCodesStatus" class="form-hint"></span>
+                </div>
+                <div id="redeemCodesList" style="margin-top:10px;display:flex;flex-direction:column;gap:6px;"></div>
+            </div>
+
             <div class="ff-section-title" id="ffPagesSectionTitle"><i class="fas fa-th-large"></i> App Pages <span class="hint">Open a page to manage its capabilities · Show/Hide = menu · Enable/Disable = can open · Emulator(s) = which profile(s) see it, pick several or leave on All</span></div>
             <div id="ffPagesGrid" class="ff-pages-grid">
                 <div style="grid-column:1/-1;text-align:center;padding:28px;color:var(--muted);">Loading pages…</div>

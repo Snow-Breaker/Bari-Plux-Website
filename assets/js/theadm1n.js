@@ -4086,6 +4086,75 @@ async function saveProFeatures() {
     }
 }
 
+// ── Redeem codes (regional / no-banking access) ─────────────────────────────
+// Generated server-side (crypto RNG) via /admin/redeem/create; listed/revoked through the generic
+// admin RTDB proxy since redeem_codes is .read:false/.write:false to every client.
+async function generateRedeemCodes() {
+    const status = document.getElementById('redeemCodesStatus');
+    const out = document.getElementById('rcGenerated');
+    const authUser = firebase.auth().currentUser;
+    if (!authUser) { if (status) status.textContent = 'Not signed in.'; return; }
+    const body = {
+        count: parseInt(document.getElementById('rcCount').value, 10) || 10,
+        grantDays: parseInt(document.getElementById('rcDays').value, 10) || 30,
+        maxUses: parseInt(document.getElementById('rcUses').value, 10) || 1,
+        country: (document.getElementById('rcCountry').value || '').trim().toUpperCase() || null,
+        note: (document.getElementById('rcNote').value || '').trim() || null,
+    };
+    if (status) status.textContent = 'Generating…';
+    try {
+        const idToken = await authUser.getIdToken(true);
+        const { ok, status: st, data } = await adminWorkerPost('/admin/redeem/create', body, idToken);
+        if (!ok || !data || !data.codes) { if (status) status.textContent = 'Failed (' + (st || 'error') + ').'; return; }
+        if (status) status.textContent = 'Generated ' + data.codes.length + ' code(s).';
+        const text = data.codes.join('\n');
+        window.__lastRedeemCodes = text;
+        out.innerHTML = '<div style="font-size:0.75rem;color:var(--muted);margin-bottom:4px;">New codes (copy &amp; distribute):</div>'
+            + '<textarea readonly style="width:100%;height:120px;font-family:monospace;font-size:0.82rem;">' + esc(text) + '</textarea>'
+            + '<button class="action-btn view" data-act="copyRedeemCodes" style="margin-top:6px;padding:7px 12px;font-size:0.78rem;"><i class="fas fa-copy"></i> Copy all</button>';
+        loadRedeemCodes();
+    } catch (e) { if (status) status.textContent = 'Failed.'; }
+}
+function copyRedeemCodes() {
+    try { navigator.clipboard.writeText(window.__lastRedeemCodes || ''); showToast('✅ Copied', 'success'); } catch (e) { /* ignore */ }
+}
+async function loadRedeemCodes() {
+    const list = document.getElementById('redeemCodesList');
+    const authUser = firebase.auth().currentUser;
+    if (!authUser || !list) return;
+    list.innerHTML = '<div style="font-size:0.78rem;color:var(--muted);">Loading…</div>';
+    try {
+        const idToken = await authUser.getIdToken(true);
+        const { ok, data } = await adminWorkerPost('/admin/rtdb-get', { paths: ['redeem_codes'] }, idToken);
+        const map = (ok && data && data.data && data.data['redeem_codes']) || {};
+        const entries = Object.entries(map);
+        if (!entries.length) { list.innerHTML = '<div style="font-size:0.78rem;color:var(--muted);">No codes yet.</div>'; return; }
+        entries.sort((a, b) => (b[1].createdAt || 0) - (a[1].createdAt || 0));
+        list.innerHTML = entries.slice(0, 300).map(([code, c]) => {
+            const uses = Number(c.uses) || (c.usedBy ? Object.keys(c.usedBy).length : 0);
+            const max = Number(c.maxUses) || 1;
+            const active = c.active !== false && uses < max;
+            const color = active ? 'var(--success,#2ecc71)' : 'var(--muted)';
+            return '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:7px 10px;border:1px solid var(--border);border-radius:8px;font-size:0.78rem;flex-wrap:wrap;">'
+                + '<span style="font-family:monospace;">' + esc(code) + '</span>'
+                + '<span style="color:var(--muted);flex:1;">' + uses + '/' + max + ' used · ' + (c.grantDays || '?') + 'd'
+                + (c.country ? ' · ' + esc(c.country) : '') + (c.note ? ' · ' + esc(c.note) : '') + '</span>'
+                + '<span style="color:' + color + ';font-weight:600;">' + (active ? 'active' : 'inactive') + '</span>'
+                + (c.active !== false ? '<button class="action-btn" data-act="revokeRedeemCode" data-a1="' + esc(code) + '" style="padding:4px 9px;font-size:0.72rem;">Revoke</button>' : '')
+                + '</div>';
+        }).join('');
+    } catch (e) { list.innerHTML = '<div style="font-size:0.78rem;color:var(--danger,#e74c3c);">Couldn\'t load codes.</div>'; }
+}
+async function revokeRedeemCode(code) {
+    const authUser = firebase.auth().currentUser;
+    if (!authUser) return;
+    try {
+        const idToken = await authUser.getIdToken(true);
+        await adminWorkerPost('/admin/rtdb-write', { op: 'set', path: 'redeem_codes/' + code + '/active', data: false }, idToken);
+        loadRedeemCodes();
+    } catch (e) { /* ignore */ }
+}
+
 /** Chat slow mode (per role tier) + auto-delete sweep age, both admin-configurable knobs read
  * by LobbyChatService.SendIntervalMsForRole / SweepExpiredMessagesAsync (BPT). Same node as the
  * Remote Config card above (app_config/remote_config_3x) - a partial update() merges these four
@@ -4168,7 +4237,7 @@ function switchTab(tab, btn) {
     if(tab==='reports') loadReports();
     if(tab==='errors') loadErrors();
     if(tab==='chatMod') { loadChatMod(); loadChatSlowMode(); }
-    if(tab==='featureFlags') { loadFeatureFlags(); loadRemoteConfig(); loadDatabaseAssets(); loadProFeatures(); loadTacGraphicsApplyToggle(); }
+    if(tab==='featureFlags') { loadFeatureFlags(); loadRemoteConfig(); loadDatabaseAssets(); loadProFeatures(); loadTacGraphicsApplyToggle(); loadRedeemCodes(); }
     else if (typeof closePageFlagDetail === 'function') closePageFlagDetail();
     if(tab==='updates') { loadUpdateConfig(); loadEmulatorInstallerConfig(); }
     if(tab==='pause') loadPauseConfig();

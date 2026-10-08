@@ -131,6 +131,26 @@
         </div>
       </section>
 
+      <!-- Restricted-country access (shown to free users only) -->
+      <section id="regionCard" class="bp-glass bp-reveal" hidden style="margin-bottom:16px;">
+        <div class="bp-glass__body">
+          <h2 class="bp-h2">Can't pay from your country?</h2>
+          <p class="bp-muted" style="margin:0 0 12px; line-height:1.55;">
+            If international cards don't work where you are, you may be able to get Pro for free, or with a code from the community.
+          </p>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <button class="bp-btn bp-btn--primary" id="geoBtn" type="button">Check my access</button>
+          </div>
+          <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
+            <input id="redeemInput" type="text" placeholder="BPT-XXXX-XXXX" autocomplete="off" spellcheck="false"
+              style="flex:1; min-width:160px; padding:10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,0.16);
+                     background:rgba(255,255,255,0.04); color:inherit; font-family:'IBM Plex Mono',monospace; letter-spacing:1px; text-transform:uppercase;">
+            <button class="bp-btn bp-btn--ghost" id="redeemBtn" type="button">Redeem code</button>
+          </div>
+          <div class="bp-status" id="regionStatus"></div>
+        </div>
+      </section>
+
       <!-- Footer actions -->
       <section id="footerCard" class="bp-glass bp-reveal" hidden>
         <div class="bp-glass__body" style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
@@ -230,7 +250,80 @@
         show('acExtendBtn', plan.tier === 'pro' && !plan.lifetime);
         show('acManageBtn', plan.tier === 'pro' && !plan.lifetime && plan.autoRenew);
         show('planCard', true);
+
+        // Restricted-country access is only relevant to users who aren't already Pro.
+        show('regionCard', plan.tier !== 'pro');
       }
+
+      function setRegionStatus(text, kind) {
+        var el = $('regionStatus');
+        el.textContent = text || '';
+        el.className = 'bp-status' + (kind ? ' is-' + kind : '');
+      }
+
+      var REDEEM_ERR = {
+        bad_code: 'That doesn’t look like a valid code.',
+        invalid_code: 'This code is not valid.',
+        expired_code: 'This code has expired.',
+        already_used_by_you: 'You’ve already used this code.',
+        code_exhausted: 'This code has reached its usage limit.',
+        sign_in_required: 'Please sign in again.'
+      };
+
+      async function callAccount(path, extra) {
+        var user = auth.currentUser;
+        if (!user) throw new Error('sign_in_required');
+        var token = await user.getIdToken();
+        var res = await fetch(WORKER + path, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+          body: JSON.stringify(extra || {})
+        });
+        var data = {};
+        try { data = await res.json(); } catch (e) { /* empty */ }
+        return { ok: res.ok, data: data };
+      }
+
+      $('geoBtn').addEventListener('click', async function () {
+        var btn = $('geoBtn');
+        btn.disabled = true;
+        setRegionStatus('Checking…');
+        try {
+          var r = await callAccount('/account/geo-grant', {
+            tzOffset: -new Date().getTimezoneOffset(),
+            langs: (navigator.languages || [navigator.language || '']).slice(0, 5)
+          });
+          if (r.data && r.data.ok) {
+            setRegionStatus('You’re all set — Pro is on your account.', 'ok');
+            setTimeout(load, 900);
+          } else {
+            setRegionStatus('Automatic access isn’t available for your connection. If you have a code, enter it below.', 'err');
+          }
+        } catch (e) {
+          setRegionStatus('Couldn’t check right now. Please try again.', 'err');
+        }
+        btn.disabled = false;
+      });
+
+      $('redeemBtn').addEventListener('click', async function () {
+        var btn = $('redeemBtn');
+        var code = ($('redeemInput').value || '').trim();
+        if (!code) { setRegionStatus('Enter a code first.', 'err'); return; }
+        btn.disabled = true;
+        setRegionStatus('Redeeming…');
+        try {
+          var r = await callAccount('/account/redeem', { code: code });
+          if (r.data && r.data.ok) {
+            setRegionStatus('Code accepted — Pro is on your account.', 'ok');
+            setTimeout(load, 900);
+          } else {
+            setRegionStatus(REDEEM_ERR[r.data && r.data.error] || 'This code could not be redeemed.', 'err');
+          }
+        } catch (e) {
+          setRegionStatus('Couldn’t redeem right now. Please try again.', 'err');
+        }
+        btn.disabled = false;
+      });
 
       async function load() {
         var user = auth.currentUser;
