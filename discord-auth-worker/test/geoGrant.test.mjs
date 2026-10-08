@@ -25,7 +25,7 @@ test('non-eligible country fails even with some ASN', () => {
 });
 
 test('country with empty ASN allowlist fails closed (redeem code only)', () => {
-  const r = evaluateGeo({ country: 'CU', asn: 12345 }, cfg);
+  const r = evaluateGeo({ country: 'KP', asn: 12345 }, cfg);
   assert.equal(r.pass, false);
   assert.ok(r.reasons.includes('no_isp_list'));
 });
@@ -53,4 +53,11 @@ test('Afghanistan and Syria now auto-verify on a real local ISP ASN', () => {
   assert.equal(evaluateGeo({ country: 'AF', asn: 38742 }, cfg).pass, true);   // Afghan Wireless
   assert.equal(evaluateGeo({ country: 'SY', asn: 29256 }, cfg).pass, true);   // Syrian Telecom
   assert.equal(evaluateGeo({ country: 'AF', asn: 16509 }, cfg).pass, false);  // AWS datacenter -> fail
+});
+
+test('Cuba and Sudan now auto-verify on a real local ISP ASN', () => {
+  assert.equal(evaluateGeo({ country: 'CU', asn: 27725 }, cfg).pass, true);   // ETECSA
+  assert.equal(evaluateGeo({ country: 'SD', asn: 15706 }, cfg).pass, true);   // Sudatel
+  assert.equal(evaluateGeo({ country: 'SD', asn: 36998 }, cfg).pass, true);   // Zain Sudan
+  assert.equal(evaluateGeo({ country: 'CU', asn: 16509 }, cfg).pass, false);  // datacenter -> fail
 });

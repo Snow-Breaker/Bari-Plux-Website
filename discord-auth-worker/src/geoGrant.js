@@ -44,8 +44,8 @@ export const DEFAULT_GEO_CONFIG = {
     SY: { tz: [180], langs: ['ar'], asns: [
       29256, 29386, 201550, 48065, 214707, 216472, 210557
     ] },
-    SD: { tz: [120], langs: ['ar'], asns: [] },
-    CU: { tz: [-300, -240], langs: ['es'], asns: [] },
+    SD: { tz: [120], langs: ['ar'], asns: [15706, 36972, 36998, 33788] },
+    CU: { tz: [-300, -240], langs: ['es'], asns: [27725, 264713] },
     KP: { tz: [540], langs: ['ko'], asns: [] },
   },
 };
