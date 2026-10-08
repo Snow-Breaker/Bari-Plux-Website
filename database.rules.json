@@ -199,6 +199,29 @@
           ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true)",
           ".validate": "!newData.exists() || newData.isNumber()"
         },
+        "lifetime": {
+          ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true))",
+          ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true)",
+          ".validate": "!newData.exists() || newData.isBoolean()"
+        },
+        "stripeCustomerId": {
+          ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true))",
+          ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true)",
+          ".validate": "!newData.exists() || (newData.isString() && newData.val().length <= 128)"
+        },
+        "stripeCustomerIdTest": {
+          ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true))",
+          ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true)",
+          ".validate": "!newData.exists() || (newData.isString() && newData.val().length <= 128)"
+        },
+        "stripeSub": {
+          ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true))",
+          ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true)"
+        },
+        "stripeSubTest": {
+          ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true))",
+          ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true)"
+        },
         "appVersion": {
           ".write": "auth != null && auth.uid === $uid",
           ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true))",
@@ -301,6 +324,29 @@
           ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true))",
           ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true)",
           ".validate": "!newData.exists() || newData.isNumber()"
+        },
+        "lifetime": {
+          ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true))",
+          ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true)",
+          ".validate": "!newData.exists() || newData.isBoolean()"
+        },
+        "stripeCustomerId": {
+          ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true))",
+          ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true)",
+          ".validate": "!newData.exists() || (newData.isString() && newData.val().length <= 128)"
+        },
+        "stripeCustomerIdTest": {
+          ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true))",
+          ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true)",
+          ".validate": "!newData.exists() || (newData.isString() && newData.val().length <= 128)"
+        },
+        "stripeSub": {
+          ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true))",
+          ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true)"
+        },
+        "stripeSubTest": {
+          ".read": "auth != null && (auth.uid === $uid || auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true))",
+          ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true)"
         },
         "appVersion": {
           ".write": "auth != null && auth.uid === $uid",
@@ -519,6 +565,11 @@
           ".validate": "newData.isString() && newData.val().length <= 32"
         }
       }
+    },
+    "tac_image_hashes": {
+    ".read": true,
+    ".write": "auth.uid === 'ZHMxN5tZkNgLcxFnp98QUqfvw963' || (auth.token.email === 'mister.attaye@gmail.com' && auth.token.email_verified === true)",
+    ".validate": "newData.isString() && newData.val().length <= 200000"
     },
     "serverTime": {
       ".read": true,
