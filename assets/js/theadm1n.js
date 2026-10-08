@@ -737,6 +737,7 @@ function parseUserMap(d) {
         roles: normalizeRolesList(u.roles, u.role || 'free'),
         roleAssignedAt: u.role_assigned_at || null, roleAssignedBy: u.role_assigned_by || null,
         proExpiresAtMs: Number(u.proExpiresAtMs) || 0,
+        lifetime: u.lifetime === true,
         appVersion: u.appVersion || u.app_version || null,
         proDeviceId: u.proDeviceId || null,
         proDeviceBoundAt: u.proDeviceBoundAt || null,
@@ -950,13 +951,13 @@ function renderProUsers() {
     } else {
         tbody.innerHTML = list.map(u => {
             const days = proDaysLeft(u);
-            let daysHtml = '—';
-            if (days != null) {
+            let daysHtml = u.lifetime ? '<span style="color:#FFC107;font-weight:700;">Lifetime</span>' : '—';
+            if (!u.lifetime && days != null) {
                 const color = days < 0 ? '#F44336' : days <= 7 ? '#FF9800' : '#4CAF50';
                 daysHtml = `<span style="color:${color};font-weight:700;">${days < 0 ? 'Expired' : days + 'd'}</span>`;
             }
             const activated = u.roleAssignedAt ? fmtDate(u.roleAssignedAt) : '—';
-            const expires = u.proExpiresAtMs ? fmtDate(u.proExpiresAtMs) : '—';
+            const expires = u.lifetime ? 'Never' : (u.proExpiresAtMs ? fmtDate(u.proExpiresAtMs) : '—');
             const source = u.roleAssignedBy || '—';
             return `<tr style="cursor:pointer;" data-act="openUserModal" data-a1="${esc(u.id)}">
                 <td><div class="user-name">${esc(u.name)}</div><div class="user-id">${esc(displayIdFor(u))}</div></td>
@@ -1151,7 +1152,9 @@ function openUserModal(id) {
         : 'Default role';
     if (roleList.includes('pro')) {
         const days = proDaysLeft(u);
-        if (u.proExpiresAtMs) {
+        if (u.lifetime) {
+            assignedInfo += ' · Lifetime (never expires)';
+        } else if (u.proExpiresAtMs) {
             assignedInfo += ` · expires ${new Date(u.proExpiresAtMs).toLocaleDateString()}`;
             if (days != null) assignedInfo += ` (${days < 0 ? 'expired' : days + 'd left'})`;
         } else {
@@ -1162,6 +1165,7 @@ function openUserModal(id) {
     document.getElementById('roleAssignedInfo').textContent = assignedInfo;
     renderDangerBtns(u);
     loadUserDevices(u.id);
+    loadUserPayments(u.id);
     document.getElementById('userModal').classList.add('show');
     document.body.style.overflow='hidden';
 }
@@ -1277,6 +1281,99 @@ function renderDangerBtns(u) {
     html += `<button class="danger-btn delete-user" data-act="askConfirm" data-a1="wipeCloud" data-a2="${esc(u.id)}" data-a3="${esc(u.name)}"><i class="fas fa-cloud"></i> Wipe Cloud Data</button>`;
     html += `<button class="danger-btn delete-user" data-act="askConfirm" data-a1="deleteUser" data-a2="${esc(u.id)}" data-a3="${esc(u.name)}"><i class="fas fa-trash-alt"></i> Delete User</button>`;
     div.innerHTML = html;
+}
+
+// ── Payments tab of the user modal ──────────────────────────────────────────
+// Served by the Worker's admin-only POST /admin/user-payments (service account), because the
+// stripe_orders / payhip_* tables are .read:false to every client - the owner's browser SDK
+// included. Shows the current entitlement, the live Stripe subscription, and the full order
+// history (checkouts, subscription renewals and refunds), newest first.
+function fmtMoney(cents, currency) {
+    if (typeof cents !== 'number' || !isFinite(cents)) return '—';
+    const cur = String(currency || 'usd').toUpperCase();
+    try { return new Intl.NumberFormat(undefined, { style: 'currency', currency: cur }).format(cents / 100); }
+    catch { return (cents / 100).toFixed(2) + ' ' + cur; }
+}
+const _ORDER_STATUS_COLOR = {
+    granted: 'var(--success, #2ecc71)', refunded: '#e67e22', failed: 'var(--danger, #e74c3c)',
+    ignored: 'var(--muted)', pending_account: '#f1c40f',
+};
+function orderStatusBadge(status) {
+    const c = _ORDER_STATUS_COLOR[status] || 'var(--muted)';
+    return `<span style="font-size:0.68rem;font-weight:600;color:${c};border:1px solid ${c};border-radius:6px;padding:1px 6px;text-transform:capitalize;">${esc(status)}</span>`;
+}
+
+async function loadUserPayments(uid) {
+    const list = document.getElementById('umPaymentsList');
+    const sum = document.getElementById('umPaymentsSummary');
+    const countEl = document.getElementById('umPaymentsCount');
+    if (!list) return;
+    list.innerHTML = `<div style="font-size:0.78rem;color:var(--muted);">Loading…</div>`;
+    if (sum) sum.innerHTML = '';
+    if (countEl) countEl.textContent = '';
+    try {
+        const idToken = await authUser.getIdToken(true);
+        const { ok, status, data } = await adminWorkerPost('/admin/user-payments', { uid }, idToken);
+        if (!ok) {
+            list.innerHTML = `<div style="font-size:0.78rem;color:var(--danger,#e74c3c);">Couldn't load payments (${status || 'error'}).</div>`;
+            return;
+        }
+        const a = data.account || {};
+        const sub = data.subscription || null;
+        const subTest = data.subscriptionTest || null;
+        const orders = Array.isArray(data.orders) ? data.orders : [];
+
+        // Current entitlement summary.
+        const rows = [];
+        const roleTxt = (a.roles && a.roles.length ? a.roles.join(' + ') : (a.role || 'free'));
+        rows.push(['Role', esc(roleTxt)]);
+        if (a.lifetime) rows.push(['Pro', 'Lifetime (never expires)']);
+        else if (a.proExpiresAtMs) {
+            const left = Math.round((a.proExpiresAtMs - Date.now()) / 86400000);
+            rows.push(['Pro expires', `${fmtDate(a.proExpiresAtMs)} <span style="color:var(--muted);">(${left < 0 ? 'expired' : left + 'd left'})</span>`]);
+        }
+        if (a.roleAssignedBy) rows.push(['Granted via', esc(a.roleAssignedBy) + (a.roleAssignedAt ? ` · ${fmtDate(a.roleAssignedAt)}` : '')]);
+        if (a.trialUsedAt) rows.push(['Trial used', fmtDate(a.trialUsedAt)]);
+        if (a.hasBilling) rows.push(['Billing account', 'Yes (Stripe customer)']);
+        if (a.stripeCustomerId) rows.push(['Customer ID', `<span style="font-family:'JetBrains Mono',monospace;font-size:0.72rem;">${esc(a.stripeCustomerId)}</span>`]);
+        if (a.stripeCustomerIdTest) rows.push(['Customer ID (test)', `<span style="font-family:'JetBrains Mono',monospace;font-size:0.72rem;">${esc(a.stripeCustomerIdTest)}</span>`]);
+        const renderSub = (s, label) => {
+            if (!s) return '';
+            const renew = s.cancelAtPeriodEnd ? 'Cancels at period end' : 'Auto-renews';
+            const end = s.currentPeriodEnd ? fmtDate(s.currentPeriodEnd) : '—';
+            return `<div style="font-size:0.76rem;margin-top:6px;padding:7px 9px;border:1px solid var(--border);border-radius:8px;">
+                <b>${label}:</b> ${esc(s.status || 'unknown')} · ${esc(renew)} · period ends ${end}${s.plan ? ' · ' + esc(s.plan) : ''}</div>`;
+        };
+        if (sum) {
+            sum.innerHTML = `<div style="display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:0.8rem;">`
+                + rows.map(([k, v]) => `<span style="color:var(--muted);">${esc(k)}</span><span>${v}</span>`).join('')
+                + `</div>` + renderSub(sub, 'Subscription') + renderSub(subTest, 'Subscription (test)')
+                + (data.payhip ? `<div style="font-size:0.76rem;margin-top:6px;color:var(--muted);">Legacy Payhip: ${esc(JSON.stringify(data.payhip).slice(0, 160))}</div>` : '');
+        }
+
+        if (countEl) countEl.textContent = orders.length ? `(${orders.length})` : '';
+        if (!orders.length) {
+            list.innerHTML = `<div style="font-size:0.78rem;color:var(--muted);">No Stripe orders on record.</div>`;
+            return;
+        }
+        list.innerHTML = orders.map(o => {
+            const amount = fmtMoney(o.amountTotal, o.currency);
+            const refunded = (o.amountRefunded ? ` · refunded ${fmtMoney(o.amountRefunded, o.currency)}${o.refundType ? ' (' + esc(o.refundType) + ')' : ''}` : '');
+            const planKind = `${o.plan ? esc(o.plan) : '—'} · ${esc(o.kind)}${o.livemode ? '' : ' · <span style="color:#f1c40f;">TEST</span>'}`;
+            const ref = o.subscriptionId ? `sub ${esc(o.subscriptionId)}` : (o.sessionId ? esc(o.sessionId) : esc(o.id));
+            return `<div style="padding:9px 11px;border:1px solid var(--border);border-radius:9px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+                    <span style="font-weight:600;">${amount}${refunded}</span>
+                    ${orderStatusBadge(o.status)}
+                </div>
+                <div style="font-size:0.74rem;color:var(--muted);margin-top:3px;">${planKind}</div>
+                <div style="font-size:0.72rem;color:var(--muted);margin-top:2px;">${o.createdAt ? fmtDate(o.createdAt) : '—'}${o.reason ? ' · ' + esc(o.reason) : ''}</div>
+                <div style="font-size:0.68rem;color:var(--muted);margin-top:2px;font-family:'JetBrains Mono',monospace;word-break:break-all;">${ref}</div>
+            </div>`;
+        }).join('');
+    } catch (e) {
+        list.innerHTML = `<div style="font-size:0.78rem;color:var(--danger,#e74c3c);">Couldn't load payments.</div>`;
+    }
 }
 
 function closeUserModal() { document.getElementById('userModal').classList.remove('show'); document.body.style.overflow=''; }
@@ -1485,19 +1582,22 @@ async function assignRole() {
 
     const primary = primaryRoleOf(roles);
     let days = null;
+    let lifetime = false;
     if (roles.includes('pro')) {
-        const daysRaw = prompt('Pro duration in days (used if Pro is included; default 60):', '60');
+        const daysRaw = prompt('Pro duration in days (default 60). Enter 0 for Lifetime (never expires):', '60');
         if (daysRaw === null) return;
-        days = Math.min(Math.max(parseInt(daysRaw, 10) || 60, 1), 3650);
+        if (String(daysRaw).trim() === '0') lifetime = true;
+        else days = Math.min(Math.max(parseInt(daysRaw, 10) || 60, 1), 3650);
     }
 
-    const label = roles.map(r => r.toUpperCase()).join(' + ');
+    const label = roles.map(r => r.toUpperCase()).join(' + ') + (lifetime ? ' (LIFETIME)' : '');
     if (!confirm(`Assign roles [${label}] to this user?\n(Only admin can do this.)`)) return;
 
     try {
         const token = await currentUser.getIdToken(true);
         const body = { uid: userId, roles, email: _currentUser.email || null };
         if (days != null) body.days = days;
+        if (lifetime) body.lifetime = true;
         const { ok, data, status } = await adminWorkerPost('/admin/set-roles', body, token);
         if (!ok) throw new Error(data?.error || ('HTTP ' + status));
 
@@ -1511,7 +1611,8 @@ async function assignRole() {
             roles,
             roleAssignedAt: new Date().toISOString(),
             roleAssignedBy: 'admin',
-            proExpiresAtMs: roles.includes('pro') ? (exp || _currentUser.proExpiresAtMs || 0) : 0
+            proExpiresAtMs: roles.includes('pro') && !lifetime ? (exp || _currentUser.proExpiresAtMs || 0) : 0,
+            lifetime
         });
         renderUsers();
         renderProUsers();
@@ -2183,6 +2284,15 @@ const PAGE_FEATURE_CATALOG = {
         { key: 'tac_center_section_device_profiles', title: 'Tab: Device & Profiles', icon: 'fa-id-card', desc: 'Device model, saved profiles, 32-bit PUBG' },
         { key: 'tac_center_section_maintenance', title: 'Tab: Maintenance', icon: 'fa-wrench', desc: 'Doctor, backups, game cache' },
         { key: 'tac_center_section_keymap', title: 'Tab: Keymap', icon: 'fa-keyboard', desc: 'Keymap editor, layouts, lock, backup' },
+        { key: 'tac_center_discover_games', title: 'Discover games', icon: 'fa-store', desc: 'Library tab: popular games that are not installed yet, opened in the GameLoop store' },
+        { key: 'tac_center_market', title: 'Store (market)', icon: 'fa-store', desc: 'Library tab: the full curated catalog with per-title install state and GameLoop’s own artwork; clicking a tile opens that game’s GameLoop store page (GameLoop downloads/installs it). BPT installs nothing itself and hosts no APKs; uninstall stays on the Library grid.' },
+        { key: 'tac_launcher_repair', title: 'Launcher repair', icon: 'fa-wrench', desc: 'Maintenance tab: re-points GameLoop install/data/protocol registration at the real install when a shortcut or gameloop:// link stops working (needs admin, version-independent)' },
+        { key: 'tac_emulator_language', title: 'Emulator language', icon: 'fa-language', desc: 'Maintenance tab: picker for GameLoop’s own UI language, limited to the languages GameLoop already ships a translation for' },
+        { key: 'tac_download_center', title: 'Download Center', icon: 'fa-download', desc: 'Library tab: live view of GameLoop’s own aria2 downloads with pause/resume (read-only from GameLoop’s running downloader; shown only while a download is active)' },
+        { key: 'tac_image_repair', title: 'GameLoop health', icon: 'fa-heartbeat', desc: 'Maintenance tab: scans core files, manifest, registration, settings-db integrity and (when published in tac_image_hashes) component hashes; auto-fixes registration, hands file damage to GameLoop’s own installer. Expected per-version hashes live in the RTDB node tac_image_hashes and are editable without an app rebuild.' },
+        { key: 'tac_image_binary_repair', title: 'GameLoop binary repair', icon: 'fa-wrench', desc: 'Maintenance tab: shows the in-place binary-repair button. Overwrites a damaged component ONLY with bytes whose SHA-256 matches the pin in tac_image_hashes for the EXACT version, extracted from GameLoop’s own local archives and verified before any write, with backup + rollback. With no pins published it does nothing but point the user to Reinstall, so the real control is tac_image_hashes: only publish pins you have verified against a clean install of that exact version — a WRONG pin is the one thing that could brick a healthy install.' },
+        { key: 'tac_emudesk_engine', title: 'Write engine: EmuDesk (switch)', icon: 'fa-shield-alt', desc: 'Enabled = EmuDesk engine for every GameLoop settings write: integrity check first, each change verified and rolled back if anything else changed, and FPS/resolution/device model locked instead of only self-healed. Disabled or never saved = BPT engine (default). Takes effect on the next Apply; TAC Doctor shows which one is active.' },
+        { key: 'tac_pro_gating', title: 'TAC Pro features (switch)', icon: 'fa-crown', desc: 'Enabled = TAC Pro gates ON: FPS above 120, 4K picture, manual DPI, custom window size, device model, ready-made / saved layouts, auto-reapply, saved profiles, Smart Settings and presets need Pro. Disabled = all of TAC Center is free.' },
     ],
     procenter: [
         { key: 'procenter_comparison', title: 'Feature Comparison', icon: 'fa-table', desc: 'Free vs Pro feature comparison table' },
@@ -3223,6 +3333,63 @@ async function loadUpdateConfig() {
     }
 }
 
+// ── GameLoop (TAC) installer - app_config/emulator_config (EmulatorInstallerService) ──
+const EMU_CONFIG_PATH = 'app_config/emulator_config';
+
+async function loadEmulatorInstallerConfig() {
+    if (!db) return;
+    try {
+        const cfg = (await db.ref(EMU_CONFIG_PATH).once('value')).val();
+        document.getElementById('emuVersionInput').value = cfg?.version || '';
+        document.getElementById('emuUrlInput').value = cfg?.download_url || '';
+        document.getElementById('emuShaInput').value = cfg?.sha256 || '';
+        document.getElementById('emuSizeInput').value = cfg?.size_bytes ? Math.round(cfg.size_bytes / (1024 * 1024)) : '';
+        document.getElementById('emuLastUpdated').textContent = cfg
+            ? 'Published ' + (cfg.updated_at ? new Date(cfg.updated_at).toLocaleString() : '')
+            : 'Not published - BPT uses its built-in installer';
+    } catch (e) {
+        showToast('⚠️ Failed to load installer config: ' + e.message, 'danger');
+    }
+}
+
+async function saveEmulatorInstallerConfig() {
+    if (!db) return;
+    const version = (document.getElementById('emuVersionInput').value || '').trim();
+    const url = (document.getElementById('emuUrlInput').value || '').trim();
+    const sha256 = (document.getElementById('emuShaInput').value || '').trim().toLowerCase();
+    const sizeMb = Number(document.getElementById('emuSizeInput').value || 0);
+    if (!/^[0-9]+(\.[0-9]+){1,3}$/.test(version)) return showToast('Version must look like 7.0.107.0', 'danger');
+    // Same trust rule as the app (UpdateCheckService.IsTrustedDownloadHost) - anything else is ignored there.
+    if (!/^https:\/\/dl\.bariplux\.com\/[^\s]+$/i.test(url)) return showToast('URL must be https://dl.bariplux.com/...', 'danger');
+    if (sha256 && !/^[0-9a-f]{64}$/.test(sha256)) return showToast('SHA-256 must be 64 hex characters (or empty)', 'danger');
+    const payload = {
+        version,
+        download_url: url,
+        sha256: sha256 || null,
+        size_bytes: sizeMb > 0 ? Math.round(sizeMb * 1024 * 1024) : null,
+        updated_at: Date.now()
+    };
+    try {
+        await db.ref(EMU_CONFIG_PATH).set(payload);
+        showToast('✅ GameLoop installer published: ' + version, 'success');
+        loadEmulatorInstallerConfig();
+    } catch (e) {
+        showToast('⚠️ Failed to save: ' + e.message, 'danger');
+    }
+}
+
+async function clearEmulatorInstallerConfig() {
+    if (!db) return;
+    if (!confirm('Remove the published installer? BPT goes back to its built-in one.')) return;
+    try {
+        await db.ref(EMU_CONFIG_PATH).remove();
+        showToast('Built-in installer restored', 'success');
+        loadEmulatorInstallerConfig();
+    } catch (e) {
+        showToast('⚠️ Failed to clear: ' + e.message, 'danger');
+    }
+}
+
 async function publishAgentUpdate() {
     const version = (document.getElementById('agentVersionInput').value || '').trim();
     const fileInput = document.getElementById('agentApkInput');
@@ -3305,7 +3472,15 @@ async function saveUpdateConfig(line) {
     if (line === '3x') payload.sha256 = sha256 || null;
 
     try {
-        await db.ref(updateConfigPath(line)).set(payload);
+        // CI (publish-release.yml) also writes manifest_url / package_url / package_sha256 /
+        // package_from_version into update_3x. A full .set() from here used to erase them - the
+        // app then lost its integrity manifest (fell back to a 404 URL) and delta updates. Same
+        // version: keep CI's fields (update). Different version: they describe the old release,
+        // so replace the node (set) and let the next CI publish fill them again.
+        const ref = db.ref(updateConfigPath(line));
+        const existing = line === '3x' ? (await ref.once('value')).val() : null;
+        if (existing && existing.version === version) await ref.update(payload);
+        else await ref.set(payload);
         showToast(`✅ ${line === '3x' ? '3.x (WinUI3)' : '2.x (WPF)'} update config published: ${version}${payload.mandatory ? ' (mandatory)' : ''}`, 'success');
         loadUpdateConfig();
     } catch (e) {
@@ -3757,21 +3932,28 @@ async function saveDatabaseAssets() {
  * title typed here (only Persian is offered inline - add more languages to titles by hand if needed). */
 const PRO_FEATURE_DEFAULTS = [
     ['ProCenterFeatureCoreApp', 'All core app features', true],
-    ['ProCenterFeatureFpsAdvanced', 'Advanced FPS options', false],
-    ['ProCenterFeatureCloudBackup', 'Cloud backup', false],
+    ['ProCenterFeatureFpsAdvanced', 'Every FPS page preset (Ultra / Extreme / 120 FPS)', true],
+    ['ProCenterFeatureFpsBatchApply', 'FPS batch apply', true],
+    ['ProCenterFeatureApkManager', 'APK install', true],
+    ['ProCenterFeatureObbManager', 'OBB install', true],
+    ['ProCenterFeatureFpsCustomPresets', 'Saved FPS profiles', false],
+    ['ProCenterFeatureGameMode', 'Game Mode', false],
     ['ProCenterFeatureOneClickOptimize', 'One-click optimize', false],
+    ['ProCenterFeatureOptimizationTweaks', 'Advanced optimization tweaks', false],
     ['ProCenterFeatureDeepClean', 'Deep clean', false],
     ['ProCenterFeatureServiceOptimization', 'Background service optimization', false],
     ['ProCenterFeatureMemoryOptimization', 'Memory optimization', false],
-    ['ProCenterFeatureApkManager', 'APK manager', false],
-    ['ProCenterFeaturePakManager', 'PAK manager', false],
-    ['ProCenterFeatureObbManager', 'OBB manager', false],
-    ['ProCenterFeatureFpsCustomPresets', 'Custom FPS presets', false],
-    ['ProCenterFeatureFpsBatchApply', 'FPS batch apply', false],
+    ['ProCenterFeatureSmartAutomation', 'Smart automation', false],
+    ['ProCenterFeatureDnsApply', 'Apply DNS servers', false],
+    ['ProCenterFeatureToolsExtras', 'Advanced tools', false],
+    ['ProCenterFeaturePakManager', 'PAK backup / restore', false],
     ['ProCenterFeatureMouseDpiControl', 'Mouse DPI control', false],
+    ['ProCenterFeatureCustomView', 'Custom View presets, WASD speed & fallback keymapping', false],
+    ['ProCenterFeatureFileManagerRename', 'File Manager rename', false],
     ['ProCenterFeatureFileManagerAdvancedOps', 'Advanced File Manager operations', false],
     ['ProCenterFeatureFileManagerBatchRename', 'File Manager batch rename', false],
-    ['ProCenterFeatureSmartAutomation', 'Smart automation', false],
+    ['ProCenterFeatureCloudBackup', 'Cloud backup', false],
+    ['ProCenterFeatureClassicTheme', 'Classic BPT theme', false],
 ];
 let proFeatures = [];
 
@@ -3986,7 +4168,7 @@ function switchTab(tab, btn) {
     if(tab==='chatMod') { loadChatMod(); loadChatSlowMode(); }
     if(tab==='featureFlags') { loadFeatureFlags(); loadRemoteConfig(); loadDatabaseAssets(); loadProFeatures(); loadTacGraphicsApplyToggle(); }
     else if (typeof closePageFlagDetail === 'function') closePageFlagDetail();
-    if(tab==='updates') loadUpdateConfig();
+    if(tab==='updates') { loadUpdateConfig(); loadEmulatorInstallerConfig(); }
     if(tab==='pause') loadPauseConfig();
     if(tab==='access') loadAccessConfig();
     if(tab==='website') loadWebsiteConfig();
