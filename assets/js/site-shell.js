@@ -544,7 +544,9 @@
       profile.dataset.bpWired = '1';
       profile.addEventListener('click', function (e) {
         e.preventDefault();
-        window.location.assign(LOGIN_URL);
+        // The Account page needs the Firebase auth session, which lives on the auth host
+        // (login.bariplux.com) where sign-in happens - not on the bariplux.com origin.
+        window.location.assign(LOGIN_URL + 'Account');
       });
     }
 
