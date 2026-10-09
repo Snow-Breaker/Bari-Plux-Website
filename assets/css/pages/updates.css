@@ -1,0 +1,119 @@
+/* ============================================================
+   updates.css — PUBG Mobile "Version update" page on the
+   Obsidian glass design system. Reuses bariplux.css + site.css
+   tokens and components (.glass, .section-title, .bp-btn,
+   .footer*). No legacy all-styles.css dependency.
+   ============================================================ */
+
+/* ---- Scroll progress ---- */
+.scroll-progress {
+  position: fixed; top: 0; left: 0; height: 3px; width: 0; z-index: 1000;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  box-shadow: 0 0 12px var(--bp-accent-glow);
+  transition: width 0.1s linear;
+}
+
+/* ---- Hero ---- */
+.pm-hero {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(26px, 4vw, 48px);
+}
+.pm-hero::after {
+  content: "";
+  position: absolute; inset: 0; border-radius: inherit; z-index: 0;
+  background:
+    linear-gradient(115deg, rgba(10,10,18,0.9) 35%, rgba(10,10,18,0.5) 100%),
+    var(--pm-hero-img, none) center / cover no-repeat;
+  opacity: 0.9; pointer-events: none;
+}
+.pm-hero > * { position: relative; z-index: 1; }
+.pm-hero__kicker {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--font-m); font-size: 0.72rem; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--accent-2); margin: 0 0 12px;
+}
+.pm-hero h1 {
+  font-family: var(--font-d);
+  font-size: clamp(1.9rem, 4vw, 3rem); line-height: 1.08;
+  margin: 0 0 14px; color: var(--text); max-width: 20ch;
+}
+.pm-hero h1 .name-gradient {
+  background: linear-gradient(120deg, var(--accent-2), var(--accent));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.pm-hero__lead {
+  color: var(--text-2); font-size: 1.02rem; line-height: 1.6;
+  margin: 0 0 22px; max-width: 60ch;
+}
+
+/* ---- Update sections (New / Old / Popular) ---- */
+.updates-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: clamp(16px, 2vw, 24px);
+}
+.update-section { display: flex; flex-direction: column; padding: 0; overflow: hidden; }
+.update-header {
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--bp-glass-border-soft);
+  background: rgba(255,255,255,0.03);
+}
+.update-header h3 { margin: 0 0 4px; font-family: var(--font-d); font-size: 1.15rem; color: var(--text); }
+.update-header p { margin: 0; color: var(--text-3); font-size: 0.85rem; }
+.update-content { display: flex; flex-direction: column; gap: 14px; padding: 16px; }
+
+.update-item {
+  padding: 14px 16px;
+  border-radius: var(--bp-radius);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--bp-glass-border-soft);
+}
+.update-img {
+  width: 100%; aspect-ratio: 16 / 9; object-fit: cover;
+  border-radius: var(--bp-radius-sm); margin-bottom: 12px; display: block;
+}
+.update-item h4 { margin: 0 0 8px; font-family: var(--font-d); font-size: 1.02rem; color: var(--text); }
+.update-item p { margin: 0 0 12px; color: var(--text-2); font-size: 0.9rem; line-height: 1.55; }
+.update-item .date {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-family: var(--font-m); font-size: 0.74rem; color: var(--text-3);
+}
+
+/* ---- Key features ---- */
+.features-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: clamp(16px, 2vw, 24px);
+}
+.feature-card {
+  display: flex; flex-direction: column; overflow: hidden; padding: 0;
+  transition: transform var(--bp-dur) var(--bp-ease), box-shadow var(--bp-dur) var(--bp-ease);
+}
+.feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 44px rgba(0,0,0,0.42), inset 0 1px 0 var(--bp-glass-highlight);
+}
+.feature-img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block; border-bottom: 1px solid var(--bp-glass-border-soft); }
+.feature-content { padding: 18px 20px; }
+.feature-content h3 { margin: 0 0 8px; font-family: var(--font-d); font-size: 1.15rem; color: var(--text); }
+.feature-content p { margin: 0; color: var(--text-2); font-size: 0.92rem; line-height: 1.55; }
+
+/* ---- Downloads row ---- */
+.downloads-content { text-align: center; }
+.download-buttons {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 18px;
+}
+.download-buttons .bp-btn { min-width: 160px; justify-content: center; }
+
+/* ---- Footer (reuses site.css .footer*, just a responsive grid) ---- */
+.footer-content { grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+.footer .social-links { display: flex; gap: 10px; margin-top: 12px; }
+.footer .social-links a {
+  width: 38px; height: 38px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: rgba(255,255,255,0.05); border: 1px solid var(--bp-glass-border-soft);
+  color: var(--text-2);
+}
+.footer .social-links a:hover { color: var(--accent-2); border-color: var(--bp-accent-border); }
+.footer-col ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
