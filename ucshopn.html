@@ -419,6 +419,47 @@
 </head>
 <body>
     <div id="bp-aurora" class="bp-aurora bp-ambient" aria-hidden="true"></div>
+
+    <!-- Branded top bar: brand anchor + way back to the site (no dead-end) -->
+    <style>
+        .bp-ucshop-bar {
+            position: sticky; top: 0; z-index: 9999;
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 16px; padding: 10px 18px;
+            background: rgba(10, 10, 16, 0.72);
+            -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            font-family: 'Vazirmatn', sans-serif;
+        }
+        .bp-ucshop-bar__brand {
+            display: flex; align-items: center; gap: 10px;
+            color: #fff; text-decoration: none; font-weight: 700;
+        }
+        .bp-ucshop-bar__brand img { width: 30px; height: 30px; border-radius: 8px; }
+        .bp-ucshop-bar__brand span { font-size: 1.05rem; letter-spacing: 0.3px; }
+        .bp-ucshop-bar__back {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 8px 14px; border-radius: 10px;
+            color: #fff; text-decoration: none; font-weight: 600; font-size: 0.9rem;
+            background: rgba(129, 140, 248, 0.18);
+            border: 1px solid rgba(129, 140, 248, 0.45);
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+        .bp-ucshop-bar__back:hover { background: rgba(129, 140, 248, 0.32); transform: translateY(-1px); }
+        @media (max-width: 480px) {
+            .bp-ucshop-bar__brand span { display: none; }
+        }
+    </style>
+    <header class="bp-ucshop-bar">
+        <a class="bp-ucshop-bar__brand" href="index.html" aria-label="Bari Plux home">
+            <img src="https://i.postimg.cc/CKj6nBJP/PLUX-Logo.png" alt="Bari Plux">
+            <span>Bari Plux</span>
+        </a>
+        <a class="bp-ucshop-bar__back" href="index.html">
+            <i class="fas fa-arrow-left"></i> Back to site
+        </a>
+    </header>
+
     <!-- Security: Disable right-click and keyboard shortcuts -->
     <script>
         document.addEventListener('contextmenu', function(e) { e.preventDefault(); }, false);

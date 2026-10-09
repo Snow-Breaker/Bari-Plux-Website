@@ -25,8 +25,8 @@
     { href: '/weaponorg', label: 'Weapons', match: ['weaponorg.html', 'weaponorg', 'org.html'] },
     { href: '/news', label: 'News', match: ['news.html', 'news'] },
     { href: '/updates', label: 'Updates', match: ['updates.html', 'updates'] },
-    { href: '/tool', label: 'Tool', match: ['tool.html', 'tool'] },
-    { href: '/optimizationtools', label: 'Tools', match: ['optimizationtools.html', 'optimizationtools'] },
+    { href: '/tool', label: 'Plux Tool', match: ['tool.html', 'tool'] },
+    { href: '/optimizationtools', label: 'Optimization', match: ['optimizationtools.html', 'optimizationtools'] },
     { href: '/Pro', label: 'Pro', match: ['pro.html', 'pro'] }
   ];
 

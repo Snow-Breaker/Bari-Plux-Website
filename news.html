@@ -579,6 +579,14 @@
             color: var(--text);
         }
 
+        /* Wide desktop: the info card (side-box-hero) is only visible above
+           1200px; keep the hero copy from colliding with it there. Width
+           reserves the 300px side box (right:10%) plus a ~40px gutter. */
+        @media (min-width: 1201px) {
+            .hero-content { max-width: calc(80% - 340px); }
+            .side-box-hero { z-index: 2; }
+        }
+
         .btn {
             display: inline-flex;
             align-items: center;
@@ -1426,7 +1434,7 @@
     <link rel="stylesheet" href="assets/css/widgets.css?v=20260728ai">
     <script src="assets/js/boot.js?v=20261008acct"></script>
     <script src="assets/js/signal-ambient.js?v=20260728ai" defer></script>
-    <script src="assets/js/site-shell.js?v=20261008acct" defer></script>
+    <script src="assets/js/site-shell.js?v=20261010nav" defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;600;700&family=Rajdhani:wght@500;600;700&family=Poppins:wght@300;400;500;600;700;800&family=Montserrat:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 
 <script type="application/ld+json">
@@ -1557,7 +1565,7 @@
                 
                 <div class="news-item">
                     <div class="news-img">
-                        <img src="V3.8.jpg" alt="PUBG New Update">
+                        <img src="assets/img/blog/update.jpg" alt="PUBG New Update">
                     </div>
                     <div class="news-content">
                         <div class="news-date">
@@ -1621,7 +1629,7 @@
                 
                 <div class="news-item">
                     <div class="news-img">
-                        <img src="AOT.jpg" alt="PUBG Collaboration">
+                        <img src="assets/img/blog/weapon.jpg" alt="PUBG Collaboration">
                     </div>
                     <div class="news-content">
                         <div class="news-date">
@@ -1871,18 +1879,18 @@
             document.documentElement.style.setProperty('--dark-rgb', hexToRgb(darkColor));
         });
 
-        document.getElementById('navToggle').addEventListener('click', function() {
+        document.getElementById('navToggle')?.addEventListener('click', function() {
             document.getElementById('mainNav').classList.toggle('active');
         });
 
-        document.getElementById('searchBtn').addEventListener('click', function() {
+        document.getElementById('searchBtn')?.addEventListener('click', function() {
             document.getElementById('searchBox').classList.toggle('active');
             if (document.getElementById('searchBox').classList.contains('active')) {
                 document.getElementById('searchInput').focus();
             }
         });
 
-        document.getElementById('themeToggle').addEventListener('click', function() {
+        document.getElementById('themeToggle')?.addEventListener('click', function() {
             document.body.classList.toggle('light-mode');
             // Update RGB variables after theme change
             const darkColor = getComputedStyle(document.documentElement).getPropertyValue('--dark').trim();
@@ -1899,15 +1907,15 @@
                 document.body.classList.add('light-mode');
             }
             
-            document.getElementById('theme-toggle').addEventListener('click', function() {
+            document.getElementById('theme-toggle')?.addEventListener('click', function() {
                 document.body.classList.toggle('light-mode');
                 const isLight = document.body.classList.contains('light-mode');
                 localStorage.setItem('theme', isLight ? 'light' : 'dark');
             });
         })();
 
-        document.getElementById('searchSubmit').addEventListener('click', performSearch);
-        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+        document.getElementById('searchSubmit')?.addEventListener('click', performSearch);
+        document.getElementById('searchInput')?.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 performSearch();
             }
@@ -1955,7 +1963,7 @@
             });
         }
 
-        document.getElementById('submitComment').addEventListener('click', function() {
+        document.getElementById('submitComment')?.addEventListener('click', function() {
             var commentName = document.getElementById('comment-name').value;
             var commentEmail = document.getElementById('comment-email').value;
             var commentMessage = document.getElementById('comment-message').value;
