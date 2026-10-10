@@ -979,7 +979,7 @@ function initializeChatBot() {
             quickReplies: ['VT guide', 'Crash fix', 'Bari Plux Tool']
         },
         fps: {
-            message: "**FPS**\n• In Tool: Active.sav domain patch for 90/120 where supported\n• Smooth style, shadows/AA off if you need frames\n• Graphic packs 4.5: /optimizationtools (Balanced/HD/HDR/Ultra HDR ± enhanced lobby)\n• Cap expectations: CPU/GPU and emulator limits still apply",
+            message: "**FPS**\n• In Tool: Active.sav domain patch for 90/120 where supported\n• Smooth style, shadows/AA off if you need frames\n• Graphic packs 4.5: /optimization-tools (Balanced/HD/HDR/Ultra HDR ± enhanced lobby)\n• Cap expectations: CPU/GPU and emulator limits still apply",
             quickReplies: ['Graphic packs', 'Bari Plux Tool', 'Lag fix']
         },
         windows: {
@@ -987,11 +987,11 @@ function initializeChatBot() {
             quickReplies: ['Bari Plux Tool', 'Downloads']
         },
         downloads: {
-            message: "**Official downloads**\n• Bari Plux Tool → /tool\n• Optimization apps & graphic packs → /optimizationtools\n• PUBG Mobile → /pubgdown\n• GameLoop → /gameloopdown\nAvoid third-party mirrors of the Tool installer.",
+            message: "**Official downloads**\n• Bari Plux Tool → /tool\n• Optimization apps & graphic packs → /optimization-tools\n• PUBG Mobile → /pubgdown\n• GameLoop → /gameloopdown\nAvoid third-party mirrors of the Tool installer.",
             quickReplies: ['Bari Plux Tool', 'Graphic packs', 'GameLoop setup']
         },
         graphics: {
-            message: "**Graphics packs (season 4.5)** on /optimizationtools:\n• Balanced / HD / HDR / Ultra HDR\n• Each has Standard lobby vs Enhanced lobby builds\nApply one pack at a time; back up Active.sav / configs first.",
+            message: "**Graphics packs (season 4.5)** on /optimization-tools:\n• Balanced / HD / HDR / Ultra HDR\n• Each has Standard lobby vs Enhanced lobby builds\nApply one pack at a time; back up Active.sav / configs first.",
             quickReplies: ['FPS boost', 'Bari Plux Tool']
         },
         vt: {

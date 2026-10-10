@@ -37,6 +37,16 @@
         "source": "/mobile.html",
         "destination": "/",
         "type": 301
+      },
+      {
+        "source": "/optimizationtools",
+        "destination": "/optimization-tools",
+        "type": 301
+      },
+      {
+        "source": "/optimizationtools.html",
+        "destination": "/optimization-tools",
+        "type": 301
       }
     ],
     "rewrites": [
@@ -74,7 +84,7 @@
       },
       {
         "source": "/privacy-policy",
-        "destination": "/Legal Information.html"
+        "destination": "/legal-information.html"
       }
     ],
     "errorPages": [

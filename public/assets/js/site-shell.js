@@ -21,12 +21,12 @@
     { href: '/', label: 'Home', match: ['', 'index.html', 'index'] },
     { href: '/#downloads', label: 'Downloads' },
     { href: '/#videos', label: 'Videos' },
-    { href: '/mapspubg', label: 'Maps', match: ['mapspubg.html', 'mapspubg'] },
-    { href: '/weaponorg', label: 'Weapons', match: ['weaponorg.html', 'weaponorg', 'org.html'] },
+    { href: '/maps', label: 'Maps', match: ['maps.html', 'maps'] },
+    { href: '/weapons', label: 'Weapons', match: ['weapons.html', 'weapons', 'org.html'] },
     { href: '/news', label: 'News', match: ['news.html', 'news'] },
     { href: '/updates', label: 'Updates', match: ['updates.html', 'updates'] },
     { href: '/tool', label: 'Plux Tool', match: ['tool.html', 'tool'] },
-    { href: '/optimizationtools', label: 'Optimization', match: ['optimizationtools.html', 'optimizationtools'] },
+    { href: '/optimization-tools', label: 'Optimization', match: ['optimization-tools.html', 'optimization-tools'] },
     { href: '/Pro', label: 'Pro', match: ['pro.html', 'pro'] }
   ];
 

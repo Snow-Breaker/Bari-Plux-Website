@@ -28,11 +28,33 @@
   <script src="assets/js/signal-ambient.js?v=20260728ai" defer></script>
   <script src="assets/js/site-shell.js?v=20261010nav" defer></script>
   <script>
-    /* Soft-map clean URLs → .html on hosts that only have .html files */
+    /* 1) Permanent aliases for pages that were renamed (old links → new).
+       2) Soft-map remaining clean URLs → .html on hosts that only have .html files. */
     (function () {
-      var path = (location.pathname || '').replace(/\/$/, '');
-      if (!path || path === '/404' || /\.[a-z0-9]+$/i.test(path)) return;
-      var tryHtml = path + '.html';
+      var raw = (location.pathname || '').replace(/\/$/, '');
+      if (!raw || raw === '/404') return;
+
+      /* key: decoded old path, lowercased, no leading slash, no .html */
+      var ALIASES = {
+        'weaponorg': '/weapons',
+        'mapspubg': '/maps',
+        'optimizationtools': '/optimization-tools',
+        'legal information': '/legal-information',
+        'plux gaming times': '/plux-gaming-times',
+        'the fall of gameloop': '/the-fall-of-gameloop',
+        'the optimization illusion': '/the-optimization-illusion',
+        'why chinese gameloop is superior to the global version': '/why-chinese-gameloop-superior'
+      };
+      var key;
+      try { key = decodeURIComponent(raw); } catch (e) { key = raw; }
+      key = key.replace(/^\/+/, '').replace(/\.html$/i, '').toLowerCase();
+      if (ALIASES[key]) {
+        location.replace(ALIASES[key] + location.search + location.hash);
+        return;
+      }
+
+      if (/\.[a-z0-9]+$/i.test(raw)) return;
+      var tryHtml = raw + '.html';
       fetch(tryHtml, { method: 'HEAD', cache: 'no-store' }).then(function (r) {
         if (r && r.ok) location.replace(tryHtml + location.search + location.hash);
       }).catch(function () { /* stay on 404 */ });
