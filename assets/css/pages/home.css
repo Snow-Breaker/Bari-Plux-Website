@@ -721,3 +721,31 @@ html[data-theme="light"] .bp-tool-spot__list li {
   }
 }
 
+
+/* ───────── Blog card polish (P2): calm the stale screenshot images
+   and soften the badges so the cards sit in the glass system. ───────── */
+.blog-img { filter: saturate(0.72) brightness(0.92); }
+.blog-overlay {
+  background: linear-gradient(180deg,
+    rgba(7, 7, 14, 0.12) 0%,
+    rgba(7, 7, 14, 0.42) 48%,
+    rgba(7, 7, 14, 0.86) 100%) !important;
+}
+.blog-badge {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3) !important;
+}
+.blog-badge--new {
+  background: rgba(16, 90, 58, 0.55) !important;
+  border-color: rgba(52, 211, 153, 0.5) !important;
+  color: #6ee7b7 !important;
+}
+.blog-badge--guide {
+  background: rgba(79, 70, 229, 0.5) !important;
+  border-color: rgba(165, 180, 252, 0.5) !important;
+  color: #c7d2fe !important;
+}
+.blog-badge--strategy {
+  background: rgba(146, 64, 14, 0.5) !important;
+  border-color: rgba(251, 191, 36, 0.5) !important;
+  color: #fcd34d !important;
+}

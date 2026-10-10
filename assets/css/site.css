@@ -1277,11 +1277,7 @@ html[data-theme="light"] .bp-drawer__link:hover { color: #12131a; }
   opacity: 1; pointer-events: auto; transform: none;
 }
 
-.bp-reveal {
-  opacity: 0; transform: translate3d(0, 12px, 0);
-  transition: opacity 0.32s var(--ease), transform 0.32s var(--ease);
-}
-.bp-reveal.is-in { opacity: 1; transform: none; }
+/* .bp-reveal is defined once below (search "Reveal") — duplicate removed. */
 
 /* Utility classes (replacements for former inline styles) */
 .text-center { text-align: center; }

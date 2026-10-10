@@ -78,10 +78,17 @@
       });
     }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
 
+    var vh = window.innerHeight || document.documentElement.clientHeight || 0;
     nodes.forEach(function (el, i) {
       // Light stagger within groups
       el.setAttribute('data-delay', String(Math.min((i % 4) * 55, 165)));
-      io.observe(el);
+      // Above-the-fold elements reveal synchronously so they never paint
+      // at opacity:0 (no flash of invisible hero on first load).
+      if (el.getBoundingClientRect().top < vh * 0.92) {
+        el.classList.add('is-in');
+      } else {
+        io.observe(el);
+      }
     });
   }
 
