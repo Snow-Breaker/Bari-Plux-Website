@@ -724,7 +724,7 @@ html[data-theme="light"] .bp-tool-spot__list li {
 
 /* ───────── Blog card polish (P2): calm the stale screenshot images
    and soften the badges so the cards sit in the glass system. ───────── */
-.blog-img { filter: saturate(0.72) brightness(0.92); }
+.blog-img { filter: saturate(0.98) brightness(0.97); }
 .blog-overlay {
   background: linear-gradient(180deg,
     rgba(7, 7, 14, 0.12) 0%,
