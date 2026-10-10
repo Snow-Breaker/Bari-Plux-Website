@@ -2283,6 +2283,7 @@ const PAGE_FEATURE_CATALOG = {
         { key: 'tac_center_section_overview', title: 'Tab: Overview', icon: 'fa-th-large', desc: 'Current setup, health and quick actions' },
         { key: 'tac_center_section_library', title: 'Tab: Library', icon: 'fa-th', desc: 'Installed apps with launch / force stop / uninstall' },
         { key: 'tac_center_section_performance', title: 'Tab: Performance', icon: 'fa-tachometer-alt', desc: 'FPS, resolution, render engine, guards, VM resources' },
+        { key: 'tac_render_directx', title: 'DirectX renderer (D3D11)', icon: 'fa-microchip', desc: 'Performance tab: swaps GameLoop’s active ANGLE renderer DLLs for its OWN shipped Direct3D 11 build (renderer\\libGLESv2_d3d11.dll / libEGL_d3d11.dll) — same mechanism as the third-party TAC Panel Loop, no foreign payload. Backs up originals, refuses while GameLoop runs, fully reversible. NOT proven anti-cheat-safe: it changes the render path of a PUBG session, so it stays behind this flag + the TAC risk consent and is the user’s own decision.' },
         { key: 'tac_center_section_device_profiles', title: 'Tab: Device & Profiles', icon: 'fa-id-card', desc: 'Device model, saved profiles, 32-bit PUBG' },
         { key: 'tac_center_section_maintenance', title: 'Tab: Maintenance', icon: 'fa-wrench', desc: 'Doctor, backups, game cache' },
         { key: 'tac_center_section_keymap', title: 'Tab: Keymap', icon: 'fa-keyboard', desc: 'Keymap editor, layouts, lock, backup' },
